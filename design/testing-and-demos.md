@@ -20,18 +20,19 @@ tests/
 │       ├── test_<server>_contract.py      # envelope + schema + ordering + token budget
 │       ├── test_<server>_resilience.py    # outage/timeout/schema-drift behavior
 │       └── test_<server>_security.py      # terms gates, no-arbitrary-outbound, injection handling
-├── sources/
-│   └── test_manifest_validation.py        # every manifest, every activation rule, count printed
+├── test_manifest_validation.py            # every manifest, every activation rule, count printed
 ├── fixtures/
-│   └── sources/<source-id>/<capability>/  # recorded by `commonwealth source sample`
+│   └── sources/<source-id>/               # recorded by `commonwealth sources sample`
 └── toolsnaps/
-    └── <server>/<tool>.json               # committed tool-schema snapshots
+    └── <server>__<tool>.json              # committed tool-schema snapshots, flat
 ```
+
+(Tree corrected 2026-08-28 to the built layout: manifest validation sits at the tests root, not under a `sources/` subtree, and toolsnaps are flat `server__tool.json` files rather than per-server directories. Same content, simpler paths.)
 
 Adaptations from the surveyed patterns, with reasons:
 
 - **PNNL's uniform five-file taxonomy** becomes four here: their `performance` file merges into `resilience` (timeout/budget assertions) until there is a measured performance problem to test — a performance suite with no baseline is ceremony. The uniformity itself is the adopted part: a new server PR without the four files fails a repo-health test that iterates the server registry (never a hand-typed server list).
-- **congressMCP's known-failures discipline**, adapted: `tests/KNOWN_SOURCE_QUIRKS.md` + a test asserting the quirk register matches reality (a quirk that stops reproducing must be removed — stale exemptions are how gates rot). Quirks are per-source, dated, and linked from the source manifest's `known_limitations`. The dated upstream-reconciliation audit becomes a scheduled job producing `docs/audits/upstream-<date>.md`, run before each release: replay all fixtures against live sources, diff, file drift as `SourceSchemaChanged` findings.
+- **congressMCP's known-failures discipline**, adapted: `KNOWN_SOURCE_QUIRKS.md` (repo root, as built 2026-08-28 — it is reader-facing and the README links it), where every behaviour-affecting quirk names the offline test that pins it. A quirk that stops reproducing must be removed — stale exemptions are how gates rot — and because the offline tests replay recordings, only the reconciliation audit below can notice that a quirk has stopped reproducing upstream. Quirks are per-source, dated, and linked from the source manifest's `known_limitations`. The dated upstream-reconciliation audit becomes a scheduled job producing `docs/audits/upstream-<date>.md`, run before each release: replay all fixtures against live sources, diff, file drift as `SourceSchemaChanged` findings.
 - **github-mcp-server's toolsnaps**: tool schemas are snapshot-committed; changing a tool means updating registration, tests, and snap in one reviewed diff; renames require a deprecation alias entry (the alias table ships in Commonwealth Core from day one, empty, so the mechanism exists before the first rename).
 - **fastmcp's in-memory pattern** (or the official SDK's equivalent, per DECISIONS.md 0003): the `conftest.py` client fixture wraps server objects directly; no subprocess, no network in unit/contract tiers. Snapshot assertions use `inline-snapshot`; fuzzy fields (timestamps, cache ages) use `dirty-equals`.
 - **Recorded-fixture policy**: fixtures are recorded source responses (from `source sample`), never hand-written JSON — hand-written fixtures encode what the author believes the source returns, which is the drift this whole structure exists to catch. Fixtures carry their recording date; the reconciliation audit is what refreshes them deliberately.

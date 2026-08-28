@@ -1424,6 +1424,17 @@ Applied in this session's update to that document:
 7. New exemplars section needed (this document serves as it): Sentry, Stripe, Grafana, Supabase, Notion, osmmcp, civic-ai-tools, congressMCP, Census Bureau official server, fastmcp-as-framework.
 8. Weighting tables: unchanged in spirit (PNNL/Power-Agent still highest), but add osmmcp's composable-primitives philosophy to the comparison vocabulary, and note Power-Agent repos were not re-verified this pass (their layering lesson is stable; current activity unchecked).
 
+### 9. Re-checked 2026-08-28
+
+A verification pass run 2026-08-28, while evaluating the built geo vertical against this file. Live pages were fetched rather than assumed; corrections are listed here per this part's own rule, not edited into the sections above.
+
+1. **Protocol and SDK facts re-verified unchanged.** 2026-07-28 is still the current spec revision; ETags for tool-call results and server-side progressive discovery are still roadmap items (roadmap last updated 2026-08-22); `mcp==2.1.1` is still the latest official Python SDK release (a patch that points stale `mcp.server.fastmcp` imports at the migration guide). Part 1 and DECISIONS.md 0002/0003 stand as written.
+2. **GSA's hub catalog is at 37 servers**, up from § 1.6's 27 (github.com/GSA-TTS/mcp-server-hub-catalog). GSA is also running a "2026 MCP Server and AI Agent Hackathon" (gsa.gov, AI community of practice).
+3. **Two commercial entrants now sit in the parcels/geocoding lane.** Regrid ships an MCP server over its 160M-parcel national dataset — boundaries, ownership, assessed values, land use — behind a paid key (support.regrid.com/docs/mcp-server, announced 2026-07). Esri's ArcGIS Location Platform added MCP support in public beta around 2026-06-29 (geocoding, routing, places), which updates § 2's "closed hosted beta" line. Neither is a substitute for this project: both are keyed commercial surfaces without publisher-level provenance, and neither answers "whose government covers this point." They are what a paying GIS shop would compare this project against; the differences that hold up are the provenance envelope and keyless access to the publishers' own systems.
+4. **The civic gap (§ 5) holds as of 2026-08-28.** No state-scoped MCP suite exists in any state (nearest signal: an Alaska DOA RFI about agentic features, via statescoop.com), there is no official Open States/Plural server, and nothing found does jurisdiction resolution as a product.
+5. **Neighbor freshness:** standalone FastMCP is at 4.0.0b5 (released 2026-08-28; 4.0's stated purpose is running stateful apps on the sessionless protocol), and nepa-mcp is at v0.1.3 with 20 servers / 47 tools / 32 layers. § 6.5's instruction stands: treat these as moving projects and re-check before citing specifics.
+6. **Virginia specifics, verified for the backlog's two blockers.** LIS's developer API is JSON (40+ endpoints, JWT Bearer, key via lis.virginia.gov/apiregistration); public pages document no XML, so project docs should say JSON. VGIN's composite geocoder (`Geocoding/VGIN_Composite_Locator`, GeocodeServer) is live, and its official service-overview PDF states no username or password is necessary, offers batch geocoding explicitly, and publishes no terms-of-use or automated-use restriction; the service metadata carries none either. The registration-time terms review can therefore record "no published restrictions found as of 2026-08-28," with VGIN's contact (VBMP@VDEM.Virginia.gov) noted for confirmation — the same shape as Richmond's recorded terms gap.
+
 ---
 
 ## 4. What practitioners say
@@ -1963,3 +1974,4 @@ They are entries here instead.
 | 2026-08-26 | Ecosystem survey (part 3), community feedback (part 4), and the targeted tool review (part 5) collected. Part 3 lists its corrections to part 2 rather than editing them in. |
 | 2026-08-27 | Site and demo comparison added (part 6), before publishing `docs/index.html`. |
 | 2026-08-28 | Six documents merged into this one. No findings were rewritten or dropped; headings were demoted and each part notes the file it came from. `research/raw/` untracked at the same time — it is 25 MB of regenerable API snapshots, and the scripts above rebuild it. |
+| 2026-08-28 | Re-check pass added as part 3 § 9: protocol/SDK facts unchanged, GSA catalog 27 → 37, Regrid and ArcGIS Location Platform MCP betas noted in the parcels/geocoding lane, civic gap re-confirmed, LIS API is JSON (not XML), VGIN geocoder publishes no automated-use restriction. |

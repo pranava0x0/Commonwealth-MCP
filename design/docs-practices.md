@@ -1,6 +1,6 @@
 # Spec: Documentation Practices
 
-**Plugs into:** every public artifact; enforced by `tools/check_writing.py` and the conventions in ARCHITECTURE.md § 6.
+**Plugs into:** every public artifact; enforced by `tools/check_writing.py` and the diagram conventions in ARCHITECTURE.md § D6 (the "Flows, drawn" appendix — repointed 2026-08-28; "§ 6" had collided with the spec body's Recommended Architecture section).
 **Status:** Draft for review.
 **Why this exists:** Two research findings make docs a first-class engineering surface. First, generated-sounding prose now costs projects credibility outright ("obviously generated slop... makes me completely skip the project"; RESEARCH.md part 4 § 10). Second, tool descriptions and error strings are *agent-facing docs* whose quality measurably moves task success (Anthropic's description-refinement results; RESEARCH.md part 1 § 4). The practices below treat human docs and agent-facing strings as one discipline with two audiences.
 
@@ -15,7 +15,8 @@ docs/
 ├── index.md            # what this is, who it serves, 90-second orientation
 ├── primitives.md       # source manifest → adapter → tool → skill, one concept each
 ├── quickstart.md       # install → doctor → first query, measured against 10 minutes
-├── architecture.md     # the diagrams (already present)
+├── architecture.md     # the diagrams (today they live in root ARCHITECTURE.md's
+│                       #   "Flows, drawn" appendix; extract or link when this tree is built)
 ├── trust.md            # what Commonwealth can/cannot touch, terms policy, security posture
 ├── contributing/
 │   ├── sources.md      # the manifest workflow, aimed at data contributors
@@ -49,4 +50,4 @@ Rules:
 
 ## 5. Diagrams
 
-ARCHITECTURE.md § 6 conventions govern: Mermaid-in-Markdown, one question per diagram, real artifact names, no boxes without specs. Diagrams are reviewed like prose: a reviewer who cannot answer the diagram's stated question from the diagram rejects it.
+ARCHITECTURE.md § D6 conventions govern ("Flows, drawn" appendix): Mermaid-in-Markdown, one question per diagram, real artifact names, no boxes without specs. Diagrams are reviewed like prose: a reviewer who cannot answer the diagram's stated question from the diagram rejects it.

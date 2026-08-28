@@ -5,6 +5,42 @@ cause, status.
 
 ## Open
 
+- **2026-08-28 · envelope · wire emits singular `evidence_ref`; the
+  contract says `evidence_refs` array.** design/provenance-envelope.md § 2
+  and ARCHITECTURE.md § 10.1 (both from review round 2 § 2.2, a blocking
+  contract correction) require every material record to carry an
+  `evidence_refs` list; `geo.py`/`civic.py` emit a single string and the
+  contract tests pin that shape. Root cause: implementation predated
+  re-reading the revised spec, and the contract test was written from the
+  code. The multi-polygon-PIN zoning issue below is a live case wanting
+  several refs on one record. Recommendation: migrate to the array now,
+  while the wire has zero external consumers; spec § 2 carries the
+  divergence note. The architect decides.
+- **2026-08-28 · egress · rules 6–7 have no refusal fixtures, and no
+  decompression-expansion limit exists.** DECISIONS.md 0014 froze seven
+  baseline rules "each with a fixture-tested known-bad request";
+  tests/core/test_egress.py covers rules 1–5. Response-size capping
+  exists post-download (`MAX_RESPONSE_BYTES` in adapters/base.py) but has
+  no test, no streaming cutoff, and no expansion-ratio guard distinct
+  from the byte cap; per-host concurrency and retry budgets likewise run
+  untested. Root cause: the fixture suite was built rule-by-rule and
+  stopped early. Severity: low at V1 scale (registered .gov hosts only),
+  but the 0014 Choice text overclaims until these exist.
+- **2026-08-28 · toolsets · `default` includes `registry.resolve_jurisdiction`
+  via a `discovery-min` toolset; DECISIONS.md 0001's Choice says registry
+  tools ship outside `default`.** The refinement is defensible (every
+  walk starts with resolution; the meta tools stay out) and is now
+  documented in design/domain-servers.md § 1.7, but it amends a Chosen
+  record's letter and nothing recorded it. Needs the architect's
+  ratification — either a dated amendment note in 0001 or a revert.
+- **2026-08-28 · docs-in-code · two stale strings.** `core/envelope.py`'s
+  module docstring lists `conflict` among envelope fields that drop when
+  empty — no such field exists (`extra="forbid"`; the shipped block is
+  `data["comparison"]`). `adapters/virginia_law.py` cites "design § 27:
+  never guess" — the never-guess rule is provenance-envelope § 2 /
+  ARCHITECTURE § 10.1 (locators), not § 27. Both one-line fixes next time
+  those files are open.
+
 - **2026-08-27 · egress · DNS resolve-to-connect window (TOCTOU residual).**
   `EgressPolicy` resolves and checks addresses immediately before the
   request, but httpx re-resolves at connect, so a rebinding attacker with

@@ -3,6 +3,53 @@
 One entry per significant work session or delegated research task: why it
 ran, cost where relevant, and whether it was worth it.
 
+## 2026-08-28 — plan-vs-built review: on track, 18 drift findings, docs corrected
+
+An evaluation pass rather than a build session: the repo, demos, and
+specs were checked against the adopted plan and the live ecosystem. Two
+delegated agents ran — a code-vs-spec conformance audit, and a web
+fact-check of the research claims the architecture rests on — and the
+rest was verified directly. Suite at 163 passing; site verified
+in-browser (14 recorded calls, resolver playground answering "Fairfax"
+with two candidates, zero console errors).
+
+Where the milestone stands: the first two stages of the adopted sequence
+(ARCHITECTURE.md § 39 — the contract spike and the geo vertical) are
+substantially done. What milestone 1a still owes is exactly four things —
+the incorporated town, the `parcel-zoning-screen` skill, Tier-2 evals,
+and `configure` — so backlog.md was reprioritized to put those at the
+top of High, and statewide-source breadth moved behind them.
+
+The fact-check came back clean on everything structural: spec revision
+2026-07-28 still current, `mcp==2.1.1` still latest, ETags and
+progressive discovery still roadmap-only, the state/local civic gap
+still unoccupied. Two commercial entrants (Regrid's parcel MCP, Esri's
+Location Platform MCP beta) now sit in the parcels/geocoding lane;
+RESEARCH.md part 3 § 9 records the pass. One finding removes a blocker:
+VGIN's geocoder publishes no automated-use restriction at all, so
+address resolution is no longer waiting on a terms question.
+
+The conformance audit found 18 discrepancies; four were already fixed in
+this session's working tree before it landed. The doc-fixable rest were
+corrected in place with dated notes. Among them: the § 15 tool budget
+still said 12–25 against 0002's chosen 8–12/20; three files cited a
+"§ 17.6" the consolidation had silently dropped; several specs asserted
+`configure`, capability-route generation, an `authoritative_only` flag,
+resources, and `THIRD_PARTY_DATA.yml` in the present tense; the README
+called 14 table rows "fourteen localities" when 12 are.
+
+Four findings went to issues.md as code work with an architect call
+attached: the singular-`evidence_ref`-vs-plural-contract wire drift, the
+untested egress rules 6–7, `discovery-min` amending 0001's letter
+unrecorded, and two stale strings in code. One licensing gap got a High
+backlog item: a public repo whose pitch includes "reuse this registry"
+ships no LICENSE, NOTICE, or CC0 text — 0011 chose all of it, none is on
+disk.
+
+Worth it: yes. Nothing found argues with the architecture; what the
+review found is ordinary spec-vs-code drift, caught while it is still
+cheap to correct.
+
 ## 2026-08-28 — boundaries source, geo.find_boundaries, point-in-polygon
 
 Registered VGIN's Administrative Boundaries FeatureServer (a new

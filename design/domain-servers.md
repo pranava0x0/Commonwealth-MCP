@@ -14,7 +14,7 @@
 4. **Descriptions follow the template** in design/docs-practices.md § 3, each with a when-NOT clause naming the better tool; descriptions are bench-covered artifacts.
 5. **Ordering:** tool registration order is explicit and stable per server (contract-tested), for prompt-cache friendliness.
 6. **Deprecation aliases from day one:** the alias table exists (empty) in core; renames are additive with aliases, per the github-mcp-server mechanism.
-7. **Toolsets:** each server declares `default` (the small daily-driver set) plus named extras; `discovery` (registry tools) and `spatial` (geo primitives) stay out of `default` per DECISIONS.md 0001.
+7. **Toolsets:** each server declares `default` (the small daily-driver set) plus named extras; `discovery` (registry tools) and `spatial` (geo primitives) stay out of `default` per DECISIONS.md 0001. As built (recorded 2026-08-28): one registry tool, `registry.resolve_jurisdiction`, rides in `default` via a `discovery-min` toolset — every skill walk's step 1 is resolution (design/skills.md § 2), and the meta-tool selection hazard 0001 guards against lives in the search/describe/status tools, which stay out. A refinement of 0001's letter, not its reasoning; the architect's ratification is pending (issues.md).
 
 ## 2. `commonwealth-registry` (toolset: `discovery`)
 
@@ -25,7 +25,7 @@
 | `registry.describe_source` | one manifest, formatted for reading, terms and limitations prominent |
 | `registry.source_status` | health/degraded state, last-verified, recent probe history |
 
-`find_authoritative_source` from the design spec folds into `search_sources` (an `authoritative_only` flag) rather than being a separate tool — one search surface, fewer near-duplicate choices for the model. `list_capabilities` becomes a resource (`commonwealth://capabilities`), not a tool: it's static vocabulary, exactly what resources are for.
+`find_authoritative_source` from the design spec folds into `search_sources` (an `authoritative_only` flag) rather than being a separate tool — one search surface, fewer near-duplicate choices for the model. `list_capabilities` becomes a resource (`commonwealth://capabilities`), not a tool: it's static vocabulary, exactly what resources are for. (Neither is built as of 2026-08-28: `search_sources` takes text/jurisdiction/capability only, and no MCP resources are registered anywhere — the vocabulary ships as `sources/capabilities.yaml` alone. Both stand as the contract for when they land.)
 
 ## 3. `commonwealth-geo`
 
@@ -36,7 +36,7 @@ Primitives (toolset `spatial`): `geo.intersect`, `geo.buffer`, `geo.find_nearby`
 - Composites follow DECISIONS.md 0005 as **Chosen (architect override, 2026-08-26)**: no ranking, no mode parameter. A composite queries the **top two known-authoritative sources** for the capability in the resolved jurisdiction (`authority_level` decides which two, never a single winner) and always surfaces the per-source results — agreement or conflict — in `data`, with both sources in `provenance`. Where only one registered source exists, one is queried and coverage says so.
 - `find_zoning` and friends return the district plus overlay/floodplain flags *as findings with `next_actions`*, never as conclusions; the screening-only warning is structural (envelope § 5), not prose goodwill.
 - Geometry in results: simplified inline, full behind a resource, always 4326 (design/adapters.md § 3).
-- V1 sources: VGIN, Fairfax, Loudoun, Richmond via `arcgis`; parcel lookup routes locality-first per DECISIONS.md 0005's default until the authority table says otherwise.
+- V1 geo sources, as registered (corrected 2026-08-28; the original line predated the 0005 override and the revised § 6 seed set): VGIN statewide parcels, VGIN administrative boundaries, Fairfax County, Richmond City, and Charles City County, all via `arcgis`. The forcing set's incorporated town is still open and Loudoun follows after it (design/source-registry.md § 6). Routing is the top-two rule above — there is no authority table and no locality-first default (DECISIONS.md 0005, Chosen).
 
 **`geo.find_boundaries` shipped 2026-08-28** against a new statewide
 source (VGIN Administrative Boundaries, `boundary.lookup`). It follows the

@@ -27,7 +27,7 @@ Where a locality publishes its own parcel layer, that layer and VGIN's statewide
 
 ### What does not work yet
 
-Addresses. There is no geocoder registered, so jurisdictions resolve from names, FIPS codes, and coordinates only. Fourteen of Virginia's 133 localities have entries in the jurisdiction table, so a coordinate anywhere in the state will place itself, but most places will report that the boundary source knows the government and this project cannot yet route queries to it. Zoning stops at two localities. Everything the design sketches for finance, infrastructure, environment, and people is unbuilt on purpose.
+Addresses. There is no geocoder registered, so jurisdictions resolve from names, FIPS codes, and coordinates only. Twelve of Virginia's 133 localities have entries in the jurisdiction table (fourteen rows, counting the state itself and one town), so a coordinate anywhere in the state will place itself, but most places will report that the boundary source knows the government and this project cannot yet route queries to it. Zoning stops at two localities. Everything the design sketches for finance, infrastructure, environment, and people is unbuilt on purpose.
 
 [backlog.md](backlog.md) is the ordered list of what comes next, and [KNOWN_SOURCE_QUIRKS.md](KNOWN_SOURCE_QUIRKS.md) records the things real government data does that its schemas do not predict.
 
@@ -42,7 +42,7 @@ uv venv --python 3.12 .venv && uv pip install --python .venv/bin/python -e . --g
 
 ## The site
 
-[docs/index.html](docs/index.html) is a static page — no build step, no server needed — showing what is registered and a call-by-call audit trail of nine real calls: a resolution, an ambiguous one, live data, a clean empty result, a registry gap, discovery, and a typed error.
+[docs/index.html](docs/index.html) is a static page — no build step, no server needed — showing what is registered and a call-by-call audit trail of fourteen real calls: name and coordinate resolutions, an ambiguous one, live parcel and zoning data, a boundary that is two official polygons, a Code of Virginia section, a clean empty result, a registry gap, discovery, and a typed error.
 
 Three parts of it are interactive, and all three run on the recorded data rather than a mock-up of it. The resolver playground answers from the actual `JurisdictionTable.resolve()`, called at build time. The HTTP-exchange view shows the real outbound requests the live calls made to Fairfax County's ArcGIS service, with URLs, parameters, and response shapes. The coverage decoder links each warning and coverage value to whichever recorded call demonstrates it.
 

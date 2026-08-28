@@ -129,7 +129,7 @@ commonwealth source sample <file>            # runs each declared capability onc
 #   capability mapping sanity (does zoning.lookup really return districts?)
 ```
 
-`probe` and `sample` write their outputs under `tests/fixtures/sources/<id>/` so every merged source lands with a replayable fixture on day one. The recorded fixture is the contract test; a later schema change by the publisher fails the replay comparison loudly (`SourceSchemaChanged`), which is the drift alarm the health probe's `min_features` floor cannot provide. Fixtures are third-party payloads: each carries source and rights metadata and sits outside the repo's blanket data license (DECISIONS.md 0011; `THIRD_PARTY_DATA.yml` inventories them).
+`probe` and `sample` write their outputs under `tests/fixtures/sources/<id>/` so every merged source lands with a replayable fixture on day one. The recorded fixture is the contract test; a later schema change by the publisher fails the replay comparison loudly (`SourceSchemaChanged`), which is the drift alarm the health probe's `min_features` floor cannot provide. Fixtures are third-party payloads: each carries source and rights metadata and sits outside the repo's blanket data license (DECISIONS.md 0011). The per-fixture rights block is built and repo-health-tested; the `THIRD_PARTY_DATA.yml` inventory, NOTICE, and the license files themselves are not yet written (noted 2026-08-28; backlog High).
 
 External contributions have prerequisites beyond tooling: GOVERNANCE.md, CONTRIBUTING.md, a project SECURITY.md, and CODEOWNERS routing `sources/**` to named source reviewers exist before the first outside manifest PR is accepted (design/security-and-data-handling.md § 5).
 

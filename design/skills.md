@@ -40,7 +40,7 @@ Standing rule from the research: each skill's § 2 walk names the *capability* (
 
 - **Source manuals.** "How to use the Fairfax GIS portal" is registry/manifest content, not a skill.
 - **Tool restatement.** A skill that just lists tool names adds context cost and nothing else; the description already routes.
-- **Baked-in authority calls.** Which source wins a conflict is registry metadata + surfaced conflict, never skill prose (design spec § 17.6 territory).
+- **Baked-in authority calls.** Which source wins a conflict is registry metadata + surfaced conflict, never skill prose (DECISIONS.md 0005 territory; repointed 2026-08-28 from "design spec § 17.6", a subsection the consolidation dropped).
 - **Call-everything walks.** The escalation table exists so the skill consults sources *because of findings*, not to be thorough; bench scores efficiency.
 - **Slop register.** Skill prose is agent-facing but human-reviewed; `tools/check_writing.py` covers `skills/**/SKILL.md`.
 

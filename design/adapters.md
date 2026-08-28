@@ -21,7 +21,7 @@ class Adapter(Protocol):
 Rules, several lifted straight from research findings:
 
 1. **Read-only by construction.** Adapter clients are built without write verbs (no POST-to-mutate paths exist to call) — Supabase's data-layer enforcement idea applied at the client boundary. A future write adapter is a different class in a different package behind Gate F.
-2. **Adapters never rank, never interpret.** Authority, freshness policy, and semantics live in manifests and core; an adapter that knows "locality beats VGIN" is a bug (design spec § 17.6).
+2. **Adapters never rank, never interpret.** Authority, freshness policy, and semantics live in manifests and core; an adapter that knows "locality beats VGIN" is a bug (DECISIONS.md 0005; design/skills.md § 4 states the same rule for skills — repointed 2026-08-28 from "design spec § 17.6", a subsection the consolidation dropped).
 3. **Typed errors at the boundary.** Every failure normalizes to the § 22 error set before leaving the adapter; raw platform errors ride along as detail. Emptiness is not an adapter concept — adapters report what the platform returned; the coverage dimensions (`result: empty` vs `registry: none` vs `execution: partial`) are core's job to assemble.
 4. **TTL caching inside the adapter layer**, keyed by (manifest, query), honoring manifest `ttl_hint_seconds` — osmmcp's pattern in front of rate-limited public endpoints, and the source of the envelope's `cache_age_seconds`.
 5. **Politeness budget per source**: concurrency caps and backoff per manifest host; government endpoints are shared civic infrastructure and Commonwealth must be a courteous client. Rate-limit hits surface as `RateLimited` with retry-after when the platform says.
@@ -51,4 +51,4 @@ Design notes banked from the 2026-08-26 tools research (RESEARCH.md part 5) for 
 
 ## 4. Testing
 
-Per design/testing-and-demos.md: unit + contract per adapter, recorded fixtures from real Virginia endpoints, resilience tests simulating the platform's actual failure modes (ArcGIS's 200-with-error-body habit is a named fixture, not a surprise), and the reconciliation audit replaying fixtures against live services on schedule. The known-quirks register (`tests/KNOWN_SOURCE_QUIRKS.md`) is expected to fill up with ArcGIS locality variance first; that accumulation is the adapter layer doing its job in the open.
+Per design/testing-and-demos.md: unit + contract per adapter, recorded fixtures from real Virginia endpoints, resilience tests simulating the platform's actual failure modes (ArcGIS's 200-with-error-body habit is a named fixture, not a surprise), and the reconciliation audit replaying fixtures against live services on schedule. The known-quirks register (`KNOWN_SOURCE_QUIRKS.md`, repo root) is expected to fill up with ArcGIS locality variance first; that accumulation is the adapter layer doing its job in the open. The register held four entries as of 2026-08-28.

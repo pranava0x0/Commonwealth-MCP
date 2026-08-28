@@ -150,13 +150,13 @@ Commonwealth Core defines tools as plain typed functions + schemas; a small adap
 
 ### Recommendation
 
-**A: official SDK v2**, entered through a **two-day compatibility spike** (the review's addition, adopted: prove the server path against real clients before committing the milestone to it — the SDK is a month old). Pinning nuance also adopted: applications and deployments lock the exact version; the published `commonwealth-mcp` *library* declares a controlled compatible range (`>=2.x,<3`), because a library that exact-pins its own dependencies breaks its consumers. Tool logic stays in framework-free core modules (C's discipline without C's shim — now formalized as DECISIONS.md 0015's shared core). Revisit at Phase 3 if hosting needs (auth middleware, composition) start reinventing standalone FastMCP; by then its 4.x line's spec support is a checkable fact instead of a beta bet. Write "official MCP Python SDK (`mcp` v2)" everywhere; never the bare word FastMCP.
+**A: official SDK v2**, entered through a **compatibility spike** (the review's addition, adopted: prove the server path against real clients before committing the milestone to it — the SDK is a month old). Pinning nuance also adopted: applications and deployments lock the exact version; the published `commonwealth-mcp` *library* declares a controlled compatible range (`>=2.x,<3`), because a library that exact-pins its own dependencies breaks its consumers. Tool logic stays in framework-free core modules (C's discipline without C's shim — now formalized as DECISIONS.md 0015's shared core). Revisit at Phase 3 if hosting needs (auth middleware, composition) start reinventing standalone FastMCP; by then its 4.x line's spec support is a checkable fact instead of a beta bet. Write "official MCP Python SDK (`mcp` v2)" everywhere; never the bare word FastMCP.
 
 **What would change this:** standalone FastMCP 4.x stable with verified 2026-07-28 support before Commonwealth's first server lands; an official-SDK regression pattern (v2 is one month old — watch its issue tracker during Phase 0); Phase 5 auth requirements arriving early.
 
 ### Choice (2026-08-26)
 
-**A: official MCP Python SDK v2**, as recommended, entered through a two-day compatibility spike before committing the milestone to it. Applications/deployments exact-pin the SDK version; the published `commonwealth-mcp` library declares a ranged compatible version (`>=2.x,<3`). Tool logic stays in framework-free core modules. No change from the recommendation on file.
+**A: official MCP Python SDK v2**, as recommended, entered through a compatibility spike before committing the milestone to it. Applications/deployments exact-pin the SDK version; the published `commonwealth-mcp` library declares a ranged compatible version (`>=2.x,<3`). Tool logic stays in framework-free core modules. No change from the recommendation on file.
 
 **Spike result (2026-08-27):** passed, on `mcp==2.1.1`. Verified working: `MCPServer` + typed Pydantic returns → generated output schemas + `structured_content`; in-memory `Client(server)` testing; `result_type: complete`; dotted tool names; `ToolAnnotations(read_only_hint=...)`. Three traps found and handled, each with a regression test: (1) Python-side snake_case throughout (`output_schema`, not `outputSchema`); (2) `from __future__ import annotations` leaves tool hints as strings the SDK cannot resolve — bindings resolve signatures with `eval_str`; (3) the client validates `structured_content` against the output schema strictly, so the envelope schema must describe the exact wire shape, and typed errors must translate to the SDK's `ToolError` or the model sees a generic crash message. 0015's MCP-only note holds: since V1 uses none of standalone FastMCP's batteries, nothing observed argues for the extra layer.
 
@@ -223,7 +223,7 @@ Authority follows proximity to the record's originator: the locality's own syste
 A maintained table in the registry: for each (capability, jurisdiction-kind) pair, which source class is primary (parcels: locality-first; statewide road network: VDOT-first; addresses: VGIN composite first, because localities feed it on contract).
 
 - For: encodes real knowledge instead of a heuristic; VGIN genuinely is the better first stop for some layers (its address program is the state's system of record in practice); reviewable, testable, citable.
-- Against: a table to maintain and re-litigate; risks becoming skill logic in disguise (design-spec § 17.6's warning is about adapters, and the same smell applies anywhere central); needs an owner.
+- Against: a table to maintain and re-litigate; it would bake expert judgment about which source wins into central infrastructure — the same mistake design/adapters.md § 1 forbids inside adapters, moved up a layer (that cross-reference read "design-spec § 17.6" until the consolidation dropped the subsection; repointed 2026-08-28, argument unchanged); needs an owner.
 
 ### Option C: No central ranking; always query both, always surface both
 
@@ -392,7 +392,7 @@ Developers explore with `commonwealth sources probe/sample` and ordinary scripti
 
 ### Standing candidates to re-check at Phase 3
 
-Direct remote endpoints + reverse proxy (the null gateway — always the baseline to beat), GSA/Obot pattern (federal-adjacent credibility), Docker MCP toolkit/catalog, IBM ContextForge, whatever the ecosystem survey's successor finds then. The evaluation is a one-week spike scored against the ten criteria, written up as 0009's resolution.
+Direct remote endpoints + reverse proxy (the null gateway — always the baseline to beat), GSA/Obot pattern (federal-adjacent credibility), Docker MCP toolkit/catalog, IBM ContextForge, whatever the ecosystem survey's successor finds then. The evaluation is a bounded spike scored against the ten criteria, written up as 0009's resolution.
 
 **What would change this record:** a criterion proving wrong in practice (e.g., anonymous-first conflicting with abuse controls — rate limiting is the answer there, and the criterion should gain that nuance rather than fall).
 
@@ -998,3 +998,5 @@ Initial performance budgets should be hypotheses, measured during the spike, the
 | 2026-08-26 | Fourteen chosen in one architect pass; 0009 deferred to Phase 3 by design. 0005 and 0015 decided against their own recommendations, both recorded in place. |
 | 2026-08-26 | Review round 2 revised the recommendations in 0002, 0005, 0008 and 0010, and added 0013-0015. See [the review round](#review-round-2-2026-08-26) below. |
 | 2026-08-28 | Fifteen files merged into this one. **Every chosen record's own Status line still read "Open — architect to choose"**, correct only in the index table it was separated from; an agent reading a record directly would have been told the choice was still open. Statuses are now stated with each record. No option, recommendation, or choice text was altered. |
+| 2026-08-28 | Plan-vs-built review: 0005 option B's cross-reference to "design-spec § 17.6" — a subsection the ARCHITECTURE consolidation dropped — repointed to design/adapters.md § 1 and its sentence rewritten for clarity, argument unchanged. A repo-wide sweep found no other cited section number missing from the merged file. |
+| 2026-08-28 | Calendar-effort phrasing removed on the architect's instruction — development here is not paced in human days or weeks, so "two-day" came off the 0003 spike (in the recommendation and Choice) and "one-week" off the 0009 evaluation. The review round 2 memo below keeps its original wording; it is a historical record of what the reviewer wrote. |

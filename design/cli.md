@@ -2,6 +2,14 @@
 
 **Plugs into:** Design Spec § 25 (CLI), § 24 (Repository Strategy)
 **Status:** Draft for review.
+
+Built-vs-planned, marked 2026-08-28. Shipped: `doctor [--live]`, `serve
+[--profile] [--transport]`, `tools list|call`, `sources
+validate|probe|sample` — and the § 1 conventions (nonzero exit, printed
+denominators, envelope-first `tools call`) hold in all of them. Not yet
+built: `configure` (backlog High), `--json`, `--servers`/`--port` on
+serve, `sources search|inspect|scaffold|candidates|stats`, `catalog`,
+`eval`, `version`.
 **Why this exists:** Three audiences: developers who script (and who the CLI-vs-MCP research says will prefer a CLI for anything mechanical; RESEARCH.md part 4 § 3), contributors onboarding sources (the workflow in design/source-registry.md § 4 is CLI-shaped), and the project itself (base-files/CLAUDE.md: CLI-first so agents can self-validate; every gate the docs mention must be runnable locally). The CLI is also the demo surface: `commonwealth ask`-style flows show value before anyone configures a client.
 
 ---
