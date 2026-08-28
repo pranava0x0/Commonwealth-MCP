@@ -3,16 +3,30 @@
 **Plugs into:** Design Spec § 9.3 (Jurisdiction Resolution), § 7.1 (`commonwealth-registry` tools), § 28 (Source Selection)
 **Status:** Draft for review. The jurisdiction ID scheme freezes at Gate A.
 Point-in-polygon resolution (§ 2 `point` row, § 2.1 `point_in_polygon`
-basis, § 3 cases 2/4/7) shipped 2026-08-28 against VGIN's administrative
-boundaries; § 6's centroid property test was falsified by the real
-geometries and is amended in place. Address/ZIP resolution (§ 2 `address`
-and `zip` rows, § 4) remains unbuilt — both need a registered geocoder.
+basis, § 3 cases 2 and 7, and the point half of case 4) shipped 2026-08-28
+against VGIN's administrative boundaries; § 6's centroid property test was
+falsified by the real geometries and is amended in place. Address/ZIP
+resolution (§ 2 `address` and `zip` rows, § 4) remains unbuilt — both need
+a registered geocoder.
 
-Fixture accounting for § 3's eight traps, added 2026-08-28: 2, 3, and 6
-are built as tests; 4 is built by point rather than address; 1 and 5 wait
-on the geocoder; 7 ships as a warning rather than candidates (annotated
-below; policy call in backlog.md); 8 waits on Bedford's
+Fixture accounting for § 3's eight traps, added 2026-08-28 and corrected
+the same day after review: 2, 3, and 6 are built as tests; 1, 4, and 5
+wait on the geocoder; 7 ships as a warning rather than candidates
+(annotated below; policy call in backlog.md); 8 waits on Bedford's
 jurisdiction-table rows, which the 14-row seed does not carry.
+
+Case 4 was briefly counted as "built by point rather than address."
+That overstated it and is corrected here. Two Vienna paths are tested: a
+point inside the town resolves to the town with its county layered
+(`test_resolve_by_point.py::test_point_in_town_reports_town_and_its_county`),
+and the literal name "Vienna" resolves by alias
+(`test_jurisdiction.py::test_vienna_carries_parent_stack_and_id`).
+
+Neither is the trap. Case 4 names a postal *address*, and nothing in the
+suite parses or geocodes one. Counting it built would let the eventual
+address path ship without the regression this case exists to force, so it
+stays in the geocoder-blocked group with 1 and 5 until an address fixture
+exists.
 **Why this exists:** Every Commonwealth query starts by answering "whose government?" Virginia makes this genuinely hard: 95 counties and 38 independent cities that are *not* inside counties (Fairfax City is not in Fairfax County), towns inside counties, overlapping authorities (regional bodies, school divisions, service districts), and addresses whose postal city names a place that is not their jurisdiction (a "Alexandria, VA" mailing address can sit in Fairfax County). Getting this wrong silently returns the wrong government's records, which is worse than failing.
 
 ---
@@ -85,9 +99,9 @@ These are the required regression set; each is a named fixture:
 1. Mailing address "Alexandria, VA 22310" that is in Fairfax County, not Alexandria City.
 2. `name: "Fairfax"` → two candidates, city and county, with distinguishers.
 3. "Richmond" → Richmond City vs. Richmond County (opposite ends of the state).
-4. A Vienna address → town resolved, county in `layered_authorities`.
+4. A Vienna address → town resolved, county in `layered_authorities`. *(Unbuilt — geocoder-blocked, § 4. The point and name paths into Vienna are tested; the address path this case names is not, and it is the address that carries the trap.)*
 5. ZIP 24450 (Lexington + Rockbridge County mix) → candidates, not a guess.
-6. Charles City County by name → county, with a `not_to_be_confused_with` note absent (no such city exists; the trap is assuming it does).
+6. Charles City County by name → county, with a `not_to_be_confused_with` note absent (no such city exists; the trap is assuming it does). *(Both halves asserted: `test_jurisdiction.py::test_charles_city_county_is_a_county_not_a_city`. The absence assertion was added 2026-08-28 after review found the test checking only the `kind`.)*
 7. A point on the Fairfax City/County boundary line → both as candidates with `boundary_precision` warning. *(Shipped 2026-08-28 as the containing polygon plus a warning naming the neighbour, not candidates; the upgrade needs the when-does-a-warning-become-a-refusal policy call tracked in backlog.md. The test pinning today's behaviour: `test_resolve_by_point.py::point_near_a_boundary_warns_instead_of_asserting`.)*
 8. Bedford: the dissolved-city history (reverted to town, 2013) must not surface a stale `va:bedford-city`. *(No Bedford rows exist in the 14-row seed yet; lands with the full-table generator, backlog.md.)*
 

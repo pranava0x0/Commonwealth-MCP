@@ -33,6 +33,27 @@ cause, status.
   documented in design/domain-servers.md § 1.7, but it amends a Chosen
   record's letter and nothing recorded it. Needs the architect's
   ratification — either a dated amendment note in 0001 or a revert.
+- **2026-08-28 · toolsets · DECISIONS.md 0002's tool budget is only
+  half enforced, and `default` sits under its floor.**
+  `core/toolreg.expand_profile()` raises above `PROFILE_HARD_CEILING = 20`
+  and nothing else. `PROFILE_DEFAULT_CEILING = 12` is defined but never
+  read at runtime — only `tests/test_repo_health.py` asserts it, so an
+  oversized `default` fails CI rather than startup. The 8-tool floor 0002
+  chose has no check anywhere, and `default` currently expands to five
+  tools (`registry.resolve_jurisdiction`, `geo.find_parcel`,
+  `geo.find_zoning`, `geo.find_boundaries`, `civic.get_code_section`).
+  Root cause: the ceiling was implemented, the band was not; the floor is
+  also genuinely unmeetable today, since the domains that would fill it
+  (the rest of civic, the statewide-source capabilities) are unbuilt — a
+  hard floor check would refuse to start the server that exists. Found
+  2026-08-28 by review of the plan-vs-built pass, which had itself claimed
+  the module "enforces" both numbers; ARCHITECTURE.md § 15 now states what
+  is actually enforced. Two ways to close it, and the choice is the
+  architect's: enforce the default ceiling at expansion and add the floor
+  as a warning-at-startup rather than a refusal, or amend 0002 with a
+  dated note that the floor is an aspiration for a filled-out toolset and
+  the enforced contract is the 20-tool ceiling.
+
 - **2026-08-28 · docs-in-code · two stale strings.** `core/envelope.py`'s
   module docstring lists `conflict` among envelope fields that drop when
   empty — no such field exists (`extra="forbid"`; the shipped block is

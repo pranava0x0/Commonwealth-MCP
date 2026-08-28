@@ -1251,7 +1251,13 @@ Recommended developer default:
 
 The ecosystem may contain more than 100 tools eventually.
 
-The active agent context should contain 8–12 tools per profile, with a hard task-profile ceiling of 20 — the numbers DECISIONS.md 0002 chose and `core/toolreg.py` enforces. (History: this paragraph said "20–50", was revised 2026-08-26 to "12–25" on the measured accuracy cliffs, and still said "12–25" after 0002 settled on 8–12/20; corrected 2026-08-28. The measurements: selection accuracy falls below 90% at 10–15 tools for small models and 20–30 for mid-tier ones, and Anthropic's own guidance flags degradation past 30–50 — RESEARCH.md part 4 § 1. 0002 also covers deferred loading / tool search as the growth path.)
+The active agent context should contain 8–12 tools per profile, with a hard task-profile ceiling of 20 — the numbers DECISIONS.md 0002 chose.
+
+What `core/toolreg.py` enforces is narrower, and recording that is the point of this correction. `expand_profile()` raises only above `PROFILE_HARD_CEILING = 20`. `PROFILE_DEFAULT_CEILING = 12` is defined but never read at runtime — `tests/test_repo_health.py` asserts it, so an oversized `default` fails CI, not startup.
+
+The 8-tool floor is enforced nowhere, and `default` expands to five tools today: `registry.resolve_jurisdiction`, `geo.find_parcel`, `geo.find_zoning`, `geo.find_boundaries`, `civic.get_code_section`. That is under 0002's band because the domains that would fill it are unbuilt. Both gaps are logged in issues.md; closing them is either enforcement code or a dated 0002 amendment, and that call is the architect's.
+
+(History: this paragraph said "20–50", was revised 2026-08-26 to "12–25" on the measured accuracy cliffs, and still said "12–25" after 0002 settled on 8–12/20; corrected 2026-08-28. The measurements: selection accuracy falls below 90% at 10–15 tools for small models and 20–30 for mid-tier ones, and Anthropic's own guidance flags degradation past 30–50 — RESEARCH.md part 4 § 1. 0002 also covers deferred loading / tool search as the growth path.)
 
 Support:
 - default toolsets,
