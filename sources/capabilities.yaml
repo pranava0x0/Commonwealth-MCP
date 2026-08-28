@@ -1,0 +1,15 @@
+# Capability vocabulary (design/source-registry.md § 1 rule 2).
+# Adding an id is a reviewed change; routing tables derive from this file.
+# No authority_order blocks: DECISIONS.md 0005 (Chosen) removed central ranking —
+# selection takes the top two selectable sources and queries both.
+capabilities:
+  - id: parcel.lookup
+    description: Find a parcel record by parcel identifier (PIN) or point.
+  - id: zoning.lookup
+    description: Find the zoning district(s) applying to a parcel or point.
+  - id: code_section.lookup
+    description: Get the text of a Code of Virginia section by citation.
+  - id: boundary.lookup
+    description: >
+      Get a jurisdiction's official boundary polygon and identity
+      attributes (FIPS, GNIS, area, jurisdiction type).

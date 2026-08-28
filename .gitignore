@@ -1,0 +1,31 @@
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+*.egg-info/
+.DS_Store
+
+# base-files/ is a personal cross-project engineering-rules mirror, synced
+# in from elsewhere — not specific to Commonwealth-MCP; kept locally, not
+# published. AI-coding-tool config (editor/agent launch configs, local
+# task/session state) is local convenience, not project content — nothing
+# in README depends on it, since every command it runs is documented in
+# plain shell form too.
+base-files/
+.claude/
+.codex/
+.cursor/
+.agents/
+.vscode/
+
+# uv writes this when a contributor syncs a venv. Dependencies are already
+# exact-pinned in pyproject.toml per design/0003 (this is an application
+# tree, not a published library), so a lockfile would be a second, silently
+# diverging source of truth.
+uv.lock
+
+# Raw research output: ~25 MB of API snapshots (the MCP registry crawl alone
+# is 23 MB) that the stdlib scripts in tools/ regenerate on demand. It is
+# evidence, not source — RESEARCH.md cites it, and its "Reproducing the
+# collection" section rebuilds it. Kept out of the tree so a clone is small.
+research/raw/

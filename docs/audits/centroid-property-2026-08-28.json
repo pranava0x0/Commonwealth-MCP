@@ -1,0 +1,38 @@
+{
+ "check": "centroid-resolves-to-itself, all VGIN locality polygons",
+ "design_ref": "design/jurisdiction-resolution.md \u00a7 6",
+ "source_id": "va-vgin-admin-boundaries",
+ "layer": "localities",
+ "run_at": "2026-08-28",
+ "method": "For each of the layer's own polygons, take the platform's returnCentroid point and run it back through a point-in-polygon query against the same layer; record whether the polygon returned is the one the centroid came from.",
+ "checked": 134,
+ "passed": 130,
+ "failed": 4,
+ "failures": [
+  {
+   "fips": "51087",
+   "name": "Henrico County",
+   "centroid_lands_in": "51760 Richmond City",
+   "why": "Henrico County wraps Richmond City on three sides; the county's centre of mass falls in the hole, which is a different government."
+  },
+  {
+   "fips": "51089",
+   "name": "Henry County",
+   "centroid_lands_in": "51690 Martinsville City",
+   "why": "Henry County encloses Martinsville City; same donut shape."
+  },
+  {
+   "fips": "51161",
+   "name": "Roanoke County",
+   "centroid_lands_in": "51775 Salem City",
+   "why": "Roanoke County encloses Salem City; same donut shape."
+  },
+  {
+   "fips": "51199",
+   "name": "York County",
+   "centroid_lands_in": "51073 Gloucester County",
+   "why": "York County is deeply concave around the York River and Poquoson; its centre of mass falls across the water in another county. Not a donut \u2014 concavity alone is enough."
+  }
+ ],
+ "conclusion": "The design's proposed property test ('every jurisdiction's geometry centroid resolves to itself') is FALSE for Virginia and must not be shipped as written. Virginia's independent cities are excluded from the surrounding county's polygon, so counties that enclose one are topological donuts. A centroid is a label point, never a guaranteed interior point, and is never used here to decide which jurisdiction contains a place."
+}

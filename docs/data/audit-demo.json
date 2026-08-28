@@ -1,0 +1,2259 @@
+{
+ "generated_at": "2026-08-28T16:58:34Z",
+ "mode": "fixtures",
+ "call_count": 14,
+ "fixture_recorded_at": "2026-08-27T04:25:01Z",
+ "calls": [
+  {
+   "note": "Ambiguous on purpose: Fairfax City vs Fairfax County",
+   "is_error": false,
+   "envelope": {
+    "data": {
+     "resolved": null,
+     "candidates": [
+      {
+       "id": "va:fairfax-city",
+       "name": "Fairfax City",
+       "kind": "independent-city",
+       "distinguisher": "independent city, not a county"
+      },
+      {
+       "id": "va:fairfax-county",
+       "name": "Fairfax County",
+       "kind": "county",
+       "distinguisher": "county"
+      }
+     ],
+     "note": "Multiple Virginia jurisdictions match. Present the candidates and their distinguishers to the user; do not select one yourself."
+    },
+    "provenance": [
+     {
+      "id": "source_01",
+      "source_id": "commonwealth-jurisdictions",
+      "publisher": "Commonwealth-MCP project (derived from Census TIGER, verified 2026-08-27)",
+      "system": "project-data",
+      "dataset": "sources/jurisdictions",
+      "jurisdiction": "va",
+      "authority_level": "official_derived",
+      "access_path": "index",
+      "source_updated_at": null,
+      "retrieved_at": "2026-08-28T16:58:34Z",
+      "cache_age_seconds": 0
+     }
+    ],
+    "evidence": [],
+    "coverage": {
+     "registry": "covered",
+     "execution": "complete",
+     "pagination": "complete",
+     "source_claim": "unknown",
+     "result": "hit"
+    },
+    "warnings": [],
+    "requires_user_choice": true,
+    "_execution": {
+     "server": "commonwealth",
+     "server_version": "0.1.0.dev0",
+     "tool": "registry.resolve_jurisdiction",
+     "tool_contract_version": "2",
+     "envelope_version": "1",
+     "adapters": {
+      "arcgis": "0.1.0",
+      "virginia_law": "0.1.0"
+     },
+     "registry_revision": "2026-08-28",
+     "request_id": "d05224b892d24064be3a8a4f186f00b5"
+    }
+   },
+   "error_text": null,
+   "http_calls": [],
+   "audit": {
+    "ts": "2026-08-28T16:58:34Z",
+    "request_id": "d05224b892d24064be3a8a4f186f00b5",
+    "tool": "registry.resolve_jurisdiction",
+    "server": "commonwealth",
+    "server_version": "0.1.0.dev0",
+    "duration_ms": 0,
+    "args": {
+     "query": "fairfax"
+    },
+    "arg_names": [
+     "lat",
+     "lon",
+     "query"
+    ],
+    "coverage": {
+     "registry": "covered",
+     "execution": "complete",
+     "pagination": "complete",
+     "result": "hit"
+    },
+    "sources": [
+     {
+      "source_id": "commonwealth-jurisdictions",
+      "access_path": "index",
+      "cache_age_seconds": 0,
+      "authority_level": "official_derived"
+     }
+    ],
+    "evidence_count": 0,
+    "warning_codes": [],
+    "requires_user_choice": true,
+    "error": null,
+    "registry_revision": "2026-08-28"
+   }
+  },
+  {
+   "note": "Exact resolution with the authority stack",
+   "is_error": false,
+   "envelope": {
+    "data": {
+     "resolved": {
+      "id": "va:fairfax-county",
+      "name": "Fairfax County",
+      "kind": "county",
+      "fips": "51059",
+      "basis": "exact_name"
+     },
+     "layered_authorities": [
+      {
+       "id": "va",
+       "relationship": "parent-state"
+      },
+      {
+       "id": "va:fairfax-city",
+       "relationship": "not-to-be-confused-with"
+      }
+     ]
+    },
+    "provenance": [
+     {
+      "id": "source_01",
+      "source_id": "commonwealth-jurisdictions",
+      "publisher": "Commonwealth-MCP project (derived from Census TIGER, verified 2026-08-27)",
+      "system": "project-data",
+      "dataset": "sources/jurisdictions",
+      "jurisdiction": "va",
+      "authority_level": "official_derived",
+      "access_path": "index",
+      "source_updated_at": null,
+      "retrieved_at": "2026-08-28T16:58:34Z",
+      "cache_age_seconds": 0
+     }
+    ],
+    "evidence": [
+     {
+      "id": "evidence_01",
+      "source_ref": "source_01",
+      "record_id": "va:fairfax-county",
+      "locator": null,
+      "retrieved_at": "2026-08-28T16:58:34Z",
+      "effective_at": null,
+      "transformations": [],
+      "payload_hash": null,
+      "raw_recovery": "available"
+     }
+    ],
+    "coverage": {
+     "registry": "covered",
+     "execution": "complete",
+     "pagination": "complete",
+     "source_claim": "unknown",
+     "result": "hit"
+    },
+    "warnings": [],
+    "_execution": {
+     "server": "commonwealth",
+     "server_version": "0.1.0.dev0",
+     "tool": "registry.resolve_jurisdiction",
+     "tool_contract_version": "2",
+     "envelope_version": "1",
+     "adapters": {
+      "arcgis": "0.1.0",
+      "virginia_law": "0.1.0"
+     },
+     "registry_revision": "2026-08-28",
+     "request_id": "d92aad6ed575470ab3b6886a89cbf42a"
+    }
+   },
+   "error_text": null,
+   "http_calls": [],
+   "audit": {
+    "ts": "2026-08-28T16:58:34Z",
+    "request_id": "d92aad6ed575470ab3b6886a89cbf42a",
+    "tool": "registry.resolve_jurisdiction",
+    "server": "commonwealth",
+    "server_version": "0.1.0.dev0",
+    "duration_ms": 0,
+    "args": {
+     "query": "Fairfax County"
+    },
+    "arg_names": [
+     "lat",
+     "lon",
+     "query"
+    ],
+    "coverage": {
+     "registry": "covered",
+     "execution": "complete",
+     "pagination": "complete",
+     "result": "hit"
+    },
+    "sources": [
+     {
+      "source_id": "commonwealth-jurisdictions",
+      "access_path": "index",
+      "cache_age_seconds": 0,
+      "authority_level": "official_derived"
+     }
+    ],
+    "evidence_count": 1,
+    "warning_codes": [],
+    "requires_user_choice": false,
+    "error": null,
+    "registry_revision": "2026-08-28"
+   }
+  },
+  {
+   "note": "Parcel record with evidence and provenance",
+   "is_error": false,
+   "envelope": {
+    "data": {
+     "results": [
+      {
+       "source_ref": "source_01",
+       "source_id": "va-fairfax-parcels-zoning",
+       "records": [
+        {
+         "pin": "0102 14  0231",
+         "parcel_type": "ORDINARY",
+         "record_id": "OBJECTID:1",
+         "evidence_ref": "evidence_01"
+        }
+       ],
+       "record_count": 1
+      },
+      {
+       "source_ref": "source_02",
+       "source_id": "va-vgin-statewide-parcels",
+       "records": [
+        {
+         "pin": "0102 14  0231",
+         "locality": "Fairfax County",
+         "fips": "51059",
+         "record_id": "OBJECTID:1511920",
+         "evidence_ref": "evidence_02"
+        }
+       ],
+       "record_count": 1
+      }
+     ],
+     "comparison": {
+      "compared_field": "pin",
+      "agreement": true,
+      "per_source": [
+       {
+        "source_ref": "source_01",
+        "values": [
+         "0102 14  0231"
+        ]
+       },
+       {
+        "source_ref": "source_02",
+        "values": [
+         "0102 14  0231"
+        ]
+       }
+      ]
+     }
+    },
+    "provenance": [
+     {
+      "id": "source_01",
+      "source_id": "va-fairfax-parcels-zoning",
+      "publisher": "Fairfax County government (GIS and Mapping Services, Open Data)",
+      "system": "arcgis",
+      "dataset": "Fairfax County Parcels and Zoning (Open Data)",
+      "jurisdiction": "va:fairfax-county",
+      "authority_level": "primary",
+      "access_path": "live",
+      "source_updated_at": null,
+      "retrieved_at": "2026-08-28T16:58:34Z",
+      "cache_age_seconds": 0
+     },
+     {
+      "id": "source_02",
+      "source_id": "va-vgin-statewide-parcels",
+      "publisher": "Virginia Geographic Information Network (VGIN), part of the Virginia Department of Emergency Management",
+      "system": "arcgis",
+      "dataset": "Virginia Statewide Parcels (VGIN)",
+      "jurisdiction": "va",
+      "authority_level": "official_secondary",
+      "access_path": "live",
+      "source_updated_at": null,
+      "retrieved_at": "2026-08-28T16:58:34Z",
+      "cache_age_seconds": 0
+     }
+    ],
+    "evidence": [
+     {
+      "id": "evidence_01",
+      "source_ref": "source_01",
+      "record_id": "OBJECTID:1",
+      "locator": null,
+      "retrieved_at": "2026-08-28T16:58:34Z",
+      "effective_at": null,
+      "transformations": [
+       "field_mapping:v1"
+      ],
+      "payload_hash": "sha256:93e6503a4747673de760bf11046b1b42175872db5357007cbd3b782ef8873ca1",
+      "raw_recovery": "available"
+     },
+     {
+      "id": "evidence_02",
+      "source_ref": "source_02",
+      "record_id": "OBJECTID:1511920",
+      "locator": null,
+      "retrieved_at": "2026-08-28T16:58:34Z",
+      "effective_at": null,
+      "transformations": [
+       "field_mapping:v1"
+      ],
+      "payload_hash": "sha256:7d79a029798a77bae23cb1ca81688ca00f163f68e4931e8c2d289552207d94fd",
+      "raw_recovery": "available"
+     }
+    ],
+    "coverage": {
+     "registry": "covered",
+     "execution": "complete",
+     "pagination": "complete",
+     "source_claim": "unknown",
+     "result": "hit",
+     "jurisdictions_searched": [
+      "va:fairfax-county",
+      "va"
+     ],
+     "known_limitations": [
+      "Cartographic/analysis use only per the publisher's own disclaimer; not a legal description or survey.",
+      "Currency varies by locality and lags the locality's own live system; this is the statewide fallback, not the fast path, for any jurisdiction that also has a local manifest.",
+      "GIS zoning is a screening representation; the adopted zoning ordinance and official zoning map govern.",
+      "Layer publishes no machine-readable last-edit date at the layer level (a per-record LASTUPDATE field exists but is not exposed through this adapter's freshness path).",
+      "Neither layer publishes a machine-readable last-edit date.",
+      "No zoning equivalent published statewide; parcel.lookup only.",
+      "Parcel boundaries are not edge-matched across municipal boundaries."
+     ]
+    },
+    "warnings": [
+     {
+      "code": "freshness_unavailable",
+      "message": "The publisher exposes no machine-readable update date for this layer; retrieval time is known, data vintage is not.",
+      "source_id": "va-fairfax-parcels-zoning"
+     },
+     {
+      "code": "freshness_unavailable",
+      "message": "The publisher exposes no machine-readable update date for this layer; retrieval time is known, data vintage is not.",
+      "source_id": "va-vgin-statewide-parcels"
+     }
+    ],
+    "_execution": {
+     "server": "commonwealth",
+     "server_version": "0.1.0.dev0",
+     "tool": "geo.find_parcel",
+     "tool_contract_version": "1",
+     "envelope_version": "1",
+     "adapters": {
+      "arcgis": "0.1.0",
+      "virginia_law": "0.1.0"
+     },
+     "registry_revision": "2026-08-28",
+     "request_id": "c2af36aa7aa34794b8795f183ad444e8"
+    }
+   },
+   "error_text": null,
+   "http_calls": [
+    {
+     "url": "https://www.fairfaxcounty.gov/mercator/rest/services/OpenData/OpenData_A9/FeatureServer/0/query",
+     "params": {
+      "f": "json",
+      "outFields": "OBJECTID,PARCEL_TYPE,PIN",
+      "resultRecordCount": 50,
+      "returnGeometry": "false",
+      "where": "PIN = '0102 14  0231'"
+     },
+     "response": {
+      "features": 1
+     }
+    },
+    {
+     "url": "https://www.fairfaxcounty.gov/mercator/rest/services/OpenData/OpenData_A9/FeatureServer/0",
+     "params": {
+      "f": "json"
+     },
+     "response": {
+      "keys": [
+       "advancedEditingCapabilities",
+       "advancedQueryAnalyticCapabilities",
+       "advancedQueryCapabilities",
+       "allowGeometryUpdates",
+       "allowTrueCurvesUpdates",
+       "archivingInfo",
+       "canScaleSymbols",
+       "capabilities"
+      ]
+     }
+    },
+    {
+     "url": "https://vginmaps.vdem.virginia.gov/arcgis/rest/services/VA_Base_Layers/VA_Parcels/FeatureServer/0/query",
+     "params": {
+      "f": "json",
+      "outFields": "FIPS,LOCALITY,OBJECTID,PTM_ID",
+      "resultRecordCount": 50,
+      "returnGeometry": "false",
+      "where": "FIPS = '51059' AND PTM_ID = '0102 14  0231'"
+     },
+     "response": {
+      "features": 1
+     }
+    },
+    {
+     "url": "https://vginmaps.vdem.virginia.gov/arcgis/rest/services/VA_Base_Layers/VA_Parcels/FeatureServer/0",
+     "params": {
+      "f": "json"
+     },
+     "response": {
+      "keys": [
+       "advancedEditingCapabilities",
+       "advancedQueryAnalyticCapabilities",
+       "advancedQueryCapabilities",
+       "allowGeometryUpdates",
+       "allowTrueCurvesUpdates",
+       "archivingInfo",
+       "bigIntegerRestrictedTo53Bits",
+       "canScaleSymbols"
+      ]
+     }
+    }
+   ],
+   "audit": {
+    "ts": "2026-08-28T16:58:34Z",
+    "request_id": "c2af36aa7aa34794b8795f183ad444e8",
+    "tool": "geo.find_parcel",
+    "server": "commonwealth",
+    "server_version": "0.1.0.dev0",
+    "duration_ms": 0,
+    "args": {
+     "jurisdiction": "Fairfax County",
+     "pin": "0102 14  0231"
+    },
+    "arg_names": [
+     "jurisdiction",
+     "lat",
+     "lon",
+     "pin"
+    ],
+    "coverage": {
+     "registry": "covered",
+     "execution": "complete",
+     "pagination": "complete",
+     "result": "hit"
+    },
+    "sources": [
+     {
+      "source_id": "va-fairfax-parcels-zoning",
+      "access_path": "live",
+      "cache_age_seconds": 0,
+      "authority_level": "primary"
+     },
+     {
+      "source_id": "va-vgin-statewide-parcels",
+      "access_path": "live",
+      "cache_age_seconds": 0,
+      "authority_level": "official_secondary"
+     }
+    ],
+    "evidence_count": 2,
+    "warning_codes": [
+     "freshness_unavailable"
+    ],
+    "requires_user_choice": false,
+    "error": null,
+    "registry_revision": "2026-08-28"
+   }
+  },
+  {
+   "note": "Zoning via parcel-geometry intersection; screening warnings",
+   "is_error": false,
+   "envelope": {
+    "data": {
+     "results": [
+      {
+       "source_ref": "source_02",
+       "source_id": "va-fairfax-parcels-zoning",
+       "records": [
+        {
+         "district": "R-3",
+         "zone_type": "RESIDENTIAL",
+         "proffered": null,
+         "overlay_jurisdiction": "FAIRFAX COUNTY",
+         "record_id": "OBJECTID:46202",
+         "evidence_ref": "evidence_02"
+        }
+       ],
+       "record_count": 1,
+       "parcel_evidence_ref": "evidence_01"
+      }
+     ]
+    },
+    "provenance": [
+     {
+      "id": "source_01",
+      "source_id": "va-fairfax-parcels-zoning",
+      "publisher": "Fairfax County government (GIS and Mapping Services, Open Data)",
+      "system": "arcgis",
+      "dataset": "Fairfax County Parcels and Zoning (Open Data)",
+      "jurisdiction": "va:fairfax-county",
+      "authority_level": "primary",
+      "access_path": "live",
+      "source_updated_at": null,
+      "retrieved_at": "2026-08-28T16:58:34Z",
+      "cache_age_seconds": 0
+     },
+     {
+      "id": "source_02",
+      "source_id": "va-fairfax-parcels-zoning",
+      "publisher": "Fairfax County government (GIS and Mapping Services, Open Data)",
+      "system": "arcgis",
+      "dataset": "Fairfax County Parcels and Zoning (Open Data)",
+      "jurisdiction": "va:fairfax-county",
+      "authority_level": "primary",
+      "access_path": "live",
+      "source_updated_at": null,
+      "retrieved_at": "2026-08-28T16:58:34Z",
+      "cache_age_seconds": 0
+     }
+    ],
+    "evidence": [
+     {
+      "id": "evidence_01",
+      "source_ref": "source_01",
+      "record_id": "OBJECTID:1",
+      "locator": null,
+      "retrieved_at": "2026-08-28T16:58:34Z",
+      "effective_at": null,
+      "transformations": [
+       "field_mapping:v1",
+       "crs:source->EPSG4326"
+      ],
+      "payload_hash": "sha256:93e6503a4747673de760bf11046b1b42175872db5357007cbd3b782ef8873ca1",
+      "raw_recovery": "available"
+     },
+     {
+      "id": "evidence_02",
+      "source_ref": "source_02",
+      "record_id": "OBJECTID:46202",
+      "locator": null,
+      "retrieved_at": "2026-08-28T16:58:34Z",
+      "effective_at": null,
+      "transformations": [
+       "field_mapping:v1",
+       "parcel_geometry_intersection"
+      ],
+      "payload_hash": "sha256:108ae0cace454058ccdba2ba9e9a084e3cff4827c8d2429a735c0cc5098fe073",
+      "raw_recovery": "available"
+     }
+    ],
+    "coverage": {
+     "registry": "covered",
+     "execution": "complete",
+     "pagination": "complete",
+     "source_claim": "unknown",
+     "result": "hit",
+     "jurisdictions_searched": [
+      "va:fairfax-county",
+      "va"
+     ],
+     "known_limitations": [
+      "GIS zoning is a screening representation; the adopted zoning ordinance and official zoning map govern.",
+      "Neither layer publishes a machine-readable last-edit date."
+     ]
+    },
+    "warnings": [
+     {
+      "code": "freshness_unavailable",
+      "message": "The publisher exposes no machine-readable update date for this layer; retrieval time is known, data vintage is not.",
+      "source_id": "va-fairfax-parcels-zoning"
+     },
+     {
+      "code": "freshness_unavailable",
+      "message": "The publisher exposes no machine-readable update date for this layer; retrieval time is known, data vintage is not.",
+      "source_id": "va-fairfax-parcels-zoning"
+     },
+     {
+      "code": "screening_only",
+      "message": "GIS zoning is a screening layer. The adopted zoning ordinance and official zoning map govern; confirm before any legal reliance.",
+      "source_id": null
+     }
+    ],
+    "_execution": {
+     "server": "commonwealth",
+     "server_version": "0.1.0.dev0",
+     "tool": "geo.find_zoning",
+     "tool_contract_version": "1",
+     "envelope_version": "1",
+     "adapters": {
+      "arcgis": "0.1.0",
+      "virginia_law": "0.1.0"
+     },
+     "registry_revision": "2026-08-28",
+     "request_id": "4a4265f4256841b0b0160993cab77f3b"
+    }
+   },
+   "error_text": null,
+   "http_calls": [
+    {
+     "url": "https://www.fairfaxcounty.gov/mercator/rest/services/OpenData/OpenData_A9/FeatureServer/0/query",
+     "params": {
+      "f": "json",
+      "outFields": "OBJECTID,PARCEL_TYPE,PIN",
+      "resultRecordCount": 50,
+      "returnGeometry": "true",
+      "where": "PIN = '0102 14  0231'",
+      "outSR": "4326"
+     },
+     "response": {
+      "features": 1
+     }
+    },
+    {
+     "url": "https://www.fairfaxcounty.gov/mercator/rest/services/OpenData/OpenData_A9/FeatureServer/1/query",
+     "params": {
+      "f": "json",
+      "outFields": "JURISDICTION,OBJECTID,PROFFER,ZONECODE,ZONETYPE",
+      "resultRecordCount": 50,
+      "returnGeometry": "false",
+      "geometry": "<polygon geometry, 13 vertices>",
+      "geometryType": "esriGeometryPolygon",
+      "inSR": "4326",
+      "spatialRel": "esriSpatialRelIntersects"
+     },
+     "response": {
+      "features": 1
+     }
+    },
+    {
+     "url": "https://www.fairfaxcounty.gov/mercator/rest/services/OpenData/OpenData_A9/FeatureServer/1",
+     "params": {
+      "f": "json"
+     },
+     "response": {
+      "keys": [
+       "advancedEditingCapabilities",
+       "advancedQueryAnalyticCapabilities",
+       "advancedQueryCapabilities",
+       "allowGeometryUpdates",
+       "allowTrueCurvesUpdates",
+       "archivingInfo",
+       "canScaleSymbols",
+       "capabilities"
+      ]
+     }
+    }
+   ],
+   "audit": {
+    "ts": "2026-08-28T16:58:34Z",
+    "request_id": "4a4265f4256841b0b0160993cab77f3b",
+    "tool": "geo.find_zoning",
+    "server": "commonwealth",
+    "server_version": "0.1.0.dev0",
+    "duration_ms": 2,
+    "args": {
+     "jurisdiction": "Fairfax County",
+     "pin": "0102 14  0231"
+    },
+    "arg_names": [
+     "jurisdiction",
+     "lat",
+     "lon",
+     "pin"
+    ],
+    "coverage": {
+     "registry": "covered",
+     "execution": "complete",
+     "pagination": "complete",
+     "result": "hit"
+    },
+    "sources": [
+     {
+      "source_id": "va-fairfax-parcels-zoning",
+      "access_path": "live",
+      "cache_age_seconds": 0,
+      "authority_level": "primary"
+     },
+     {
+      "source_id": "va-fairfax-parcels-zoning",
+      "access_path": "live",
+      "cache_age_seconds": 0,
+      "authority_level": "primary"
+     }
+    ],
+    "evidence_count": 2,
+    "warning_codes": [
+     "freshness_unavailable",
+     "screening_only"
+    ],
+    "requires_user_choice": false,
+    "error": null,
+    "registry_revision": "2026-08-28"
+   }
+  },
+  {
+   "note": "A clean empty: covered registry, no record",
+   "is_error": false,
+   "envelope": {
+    "data": {
+     "results": [
+      {
+       "source_ref": "source_01",
+       "source_id": "va-fairfax-parcels-zoning",
+       "records": [],
+       "record_count": 0
+      },
+      {
+       "source_ref": "source_02",
+       "source_id": "va-vgin-statewide-parcels",
+       "records": [],
+       "record_count": 0
+      }
+     ],
+     "comparison": {
+      "compared_field": "pin",
+      "agreement": null,
+      "per_source": [
+       {
+        "source_ref": "source_01",
+        "values": []
+       },
+       {
+        "source_ref": "source_02",
+        "values": []
+       }
+      ],
+      "note": "At least one source returned no matching record; there is nothing to compare against the other source's answer."
+     }
+    },
+    "provenance": [
+     {
+      "id": "source_01",
+      "source_id": "va-fairfax-parcels-zoning",
+      "publisher": "Fairfax County government (GIS and Mapping Services, Open Data)",
+      "system": "arcgis",
+      "dataset": "Fairfax County Parcels and Zoning (Open Data)",
+      "jurisdiction": "va:fairfax-county",
+      "authority_level": "primary",
+      "access_path": "live",
+      "source_updated_at": null,
+      "retrieved_at": "2026-08-28T16:58:34Z",
+      "cache_age_seconds": 0
+     },
+     {
+      "id": "source_02",
+      "source_id": "va-vgin-statewide-parcels",
+      "publisher": "Virginia Geographic Information Network (VGIN), part of the Virginia Department of Emergency Management",
+      "system": "arcgis",
+      "dataset": "Virginia Statewide Parcels (VGIN)",
+      "jurisdiction": "va",
+      "authority_level": "official_secondary",
+      "access_path": "live",
+      "source_updated_at": null,
+      "retrieved_at": "2026-08-28T16:58:34Z",
+      "cache_age_seconds": 0
+     }
+    ],
+    "evidence": [],
+    "coverage": {
+     "registry": "covered",
+     "execution": "complete",
+     "pagination": "complete",
+     "source_claim": "unknown",
+     "result": "empty",
+     "jurisdictions_searched": [
+      "va:fairfax-county",
+      "va"
+     ],
+     "known_limitations": [
+      "Cartographic/analysis use only per the publisher's own disclaimer; not a legal description or survey.",
+      "Currency varies by locality and lags the locality's own live system; this is the statewide fallback, not the fast path, for any jurisdiction that also has a local manifest.",
+      "GIS zoning is a screening representation; the adopted zoning ordinance and official zoning map govern.",
+      "Layer publishes no machine-readable last-edit date at the layer level (a per-record LASTUPDATE field exists but is not exposed through this adapter's freshness path).",
+      "Neither layer publishes a machine-readable last-edit date.",
+      "No zoning equivalent published statewide; parcel.lookup only.",
+      "Parcel boundaries are not edge-matched across municipal boundaries."
+     ]
+    },
+    "warnings": [
+     {
+      "code": "freshness_unavailable",
+      "message": "The publisher exposes no machine-readable update date for this layer; retrieval time is known, data vintage is not.",
+      "source_id": "va-fairfax-parcels-zoning"
+     },
+     {
+      "code": "freshness_unavailable",
+      "message": "The publisher exposes no machine-readable update date for this layer; retrieval time is known, data vintage is not.",
+      "source_id": "va-vgin-statewide-parcels"
+     }
+    ],
+    "_execution": {
+     "server": "commonwealth",
+     "server_version": "0.1.0.dev0",
+     "tool": "geo.find_parcel",
+     "tool_contract_version": "1",
+     "envelope_version": "1",
+     "adapters": {
+      "arcgis": "0.1.0",
+      "virginia_law": "0.1.0"
+     },
+     "registry_revision": "2026-08-28",
+     "request_id": "763e6e2b230a4eac9f7a366a26f44e14"
+    }
+   },
+   "error_text": null,
+   "http_calls": [
+    {
+     "url": "https://www.fairfaxcounty.gov/mercator/rest/services/OpenData/OpenData_A9/FeatureServer/0/query",
+     "params": {
+      "f": "json",
+      "outFields": "OBJECTID,PARCEL_TYPE,PIN",
+      "resultRecordCount": 50,
+      "returnGeometry": "false",
+      "where": "PIN = 'NO SUCH PIN'"
+     },
+     "response": {
+      "features": 0
+     }
+    },
+    {
+     "url": "https://vginmaps.vdem.virginia.gov/arcgis/rest/services/VA_Base_Layers/VA_Parcels/FeatureServer/0/query",
+     "params": {
+      "f": "json",
+      "outFields": "FIPS,LOCALITY,OBJECTID,PTM_ID",
+      "resultRecordCount": 50,
+      "returnGeometry": "false",
+      "where": "FIPS = '51059' AND PTM_ID = 'NO SUCH PIN'"
+     },
+     "response": {
+      "features": 0
+     }
+    }
+   ],
+   "audit": {
+    "ts": "2026-08-28T16:58:34Z",
+    "request_id": "763e6e2b230a4eac9f7a366a26f44e14",
+    "tool": "geo.find_parcel",
+    "server": "commonwealth",
+    "server_version": "0.1.0.dev0",
+    "duration_ms": 0,
+    "args": {
+     "jurisdiction": "Fairfax County",
+     "pin": "NO SUCH PIN"
+    },
+    "arg_names": [
+     "jurisdiction",
+     "lat",
+     "lon",
+     "pin"
+    ],
+    "coverage": {
+     "registry": "covered",
+     "execution": "complete",
+     "pagination": "complete",
+     "result": "empty"
+    },
+    "sources": [
+     {
+      "source_id": "va-fairfax-parcels-zoning",
+      "access_path": "live",
+      "cache_age_seconds": 0,
+      "authority_level": "primary"
+     },
+     {
+      "source_id": "va-vgin-statewide-parcels",
+      "access_path": "live",
+      "cache_age_seconds": 0,
+      "authority_level": "official_secondary"
+     }
+    ],
+    "evidence_count": 0,
+    "warning_codes": [
+     "freshness_unavailable"
+    ],
+    "requires_user_choice": false,
+    "error": null,
+    "registry_revision": "2026-08-28"
+   }
+  },
+  {
+   "note": "A coordinate inside Fairfax City resolves to the CITY, never the county that surrounds it",
+   "is_error": false,
+   "envelope": {
+    "data": {
+     "point": {
+      "lon": -77.3064,
+      "lat": 38.8462
+     },
+     "resolved": {
+      "id": "va:fairfax-city",
+      "name": "Fairfax City",
+      "kind": "independent-city",
+      "fips": "51600",
+      "basis": "point_in_polygon"
+     },
+     "candidates": [],
+     "layered_authorities": [
+      {
+       "id": "va",
+       "relationship": "parent-state",
+       "name": "Virginia"
+      }
+     ],
+     "nearby_jurisdictions": [
+      "Fairfax County"
+     ]
+    },
+    "provenance": [
+     {
+      "id": "source_01",
+      "source_id": "va-vgin-admin-boundaries",
+      "publisher": "Virginia Geographic Information Network (VGIN), part of the Virginia Department of Emergency Management",
+      "system": "arcgis",
+      "dataset": "Virginia Administrative Boundaries (VGIN)",
+      "jurisdiction": "va",
+      "authority_level": "official_secondary",
+      "access_path": "live",
+      "source_updated_at": null,
+      "retrieved_at": "2026-08-28T16:58:34Z",
+      "cache_age_seconds": 0
+     }
+    ],
+    "evidence": [
+     {
+      "id": "evidence_01",
+      "source_ref": "source_01",
+      "record_id": "OBJECTID:106",
+      "locator": null,
+      "retrieved_at": "2026-08-28T16:58:34Z",
+      "effective_at": null,
+      "transformations": [
+       "field_mapping:v1"
+      ],
+      "payload_hash": "sha256:f2072aad87cf15374990d5a58c2bd561dcbd076acebe5122295e3829cae6272f",
+      "raw_recovery": "available"
+     }
+    ],
+    "coverage": {
+     "registry": "covered",
+     "execution": "complete",
+     "pagination": "complete",
+     "source_claim": "unknown",
+     "result": "hit",
+     "jurisdictions_searched": [
+      "va"
+     ],
+     "known_limitations": [
+      "Cartographic/analysis use only per the publisher's own disclaimer; not a legal description or a property survey. Boundary questions with legal consequence go to the locality, not this layer.",
+      "Geometry is returned simplified (server-side generalization) so a polygon fits an inline response; the unsimplified boundary is not exposed until the result-resource store exists. Simplified vertices can sit tens of metres off the true line \u2014 never use them to decide which side of a boundary a specific address falls on.",
+      "Layer publishes no layer-level last-edit date (editingInfo is absent on both layers), so envelope source_updated_at is null. The per-record LASTUPDATE field IS mapped and surfaced per boundary, so each returned record carries its own vintage even though the layer does not.",
+      "The localities layer carries 134 rows for Virginia's 133 counties and independent cities. Prince George County (FIPS 51149) is published as two separate polygons sharing one FIPS and GNIS, a 281 sq mi body and a 0.0076 sq mi sliver. Both are returned; neither is silently dropped. See KNOWN_SOURCE_QUIRKS.md.\n",
+      "Towns layer covers incorporated towns only. Virginia's unincorporated communities and CDPs have no polygon here, and absence is not evidence that a place does not exist."
+     ]
+    },
+    "warnings": [
+     {
+      "code": "freshness_unavailable",
+      "message": "The publisher exposes no machine-readable update date for this layer; retrieval time is known, data vintage is not.",
+      "source_id": "va-vgin-admin-boundaries"
+     },
+     {
+      "code": "boundary_precision",
+      "message": "This point is within 50 m of Fairfax County. The published boundary is cartographic and the publisher disclaims survey use, so which side of the line this point falls on is not settled by this answer. Confirm with the locality before relying on it.",
+      "source_id": "va-vgin-admin-boundaries"
+     }
+    ],
+    "_execution": {
+     "server": "commonwealth",
+     "server_version": "0.1.0.dev0",
+     "tool": "registry.resolve_jurisdiction",
+     "tool_contract_version": "2",
+     "envelope_version": "1",
+     "adapters": {
+      "arcgis": "0.1.0",
+      "virginia_law": "0.1.0"
+     },
+     "registry_revision": "2026-08-28",
+     "request_id": "72b6e3689aaa40478a0b012de5963c9d"
+    }
+   },
+   "error_text": null,
+   "http_calls": [
+    {
+     "url": "https://vginmaps.vdem.virginia.gov/arcgis/rest/services/VA_Base_Layers/VA_Admin_Boundaries/FeatureServer/1/query",
+     "params": {
+      "f": "json",
+      "outFields": "AREASQMI,GNIS,GSOURCE,JURISTYPE,LADOPT,LASTUPDATE,NAME,NAMELSAD,OBJECTID,STCOFIPS",
+      "resultRecordCount": 50,
+      "returnGeometry": "false",
+      "geometry": "{\"x\": -77.3064, \"y\": 38.8462, \"spatialReference\": {\"wkid\": 4326}}",
+      "geometryType": "esriGeometryPoint",
+      "inSR": "4326",
+      "spatialRel": "esriSpatialRelIntersects"
+     },
+     "response": {
+      "features": 1
+     }
+    },
+    {
+     "url": "https://vginmaps.vdem.virginia.gov/arcgis/rest/services/VA_Base_Layers/VA_Admin_Boundaries/FeatureServer/1",
+     "params": {
+      "f": "json"
+     },
+     "response": {
+      "keys": [
+       "advancedEditingCapabilities",
+       "advancedQueryAnalyticCapabilities",
+       "advancedQueryCapabilities",
+       "allowGeometryUpdates",
+       "allowTrueCurvesUpdates",
+       "archivingInfo",
+       "bigIntegerRestrictedTo53Bits",
+       "canScaleSymbols"
+      ]
+     }
+    },
+    {
+     "url": "https://vginmaps.vdem.virginia.gov/arcgis/rest/services/VA_Base_Layers/VA_Admin_Boundaries/FeatureServer/1/query",
+     "params": {
+      "f": "json",
+      "outFields": "AREASQMI,GNIS,GSOURCE,JURISTYPE,LADOPT,LASTUPDATE,NAME,NAMELSAD,OBJECTID,STCOFIPS",
+      "resultRecordCount": 50,
+      "returnGeometry": "false",
+      "geometry": "{\"x\": -77.3064, \"y\": 38.8462, \"spatialReference\": {\"wkid\": 4326}}",
+      "geometryType": "esriGeometryPoint",
+      "inSR": "4326",
+      "spatialRel": "esriSpatialRelIntersects",
+      "distance": 50,
+      "units": "esriSRUnit_Meter"
+     },
+     "response": {
+      "features": 2
+     }
+    },
+    {
+     "url": "https://vginmaps.vdem.virginia.gov/arcgis/rest/services/VA_Base_Layers/VA_Admin_Boundaries/FeatureServer/0/query",
+     "params": {
+      "f": "json",
+      "outFields": "AREASQMI,GNIS,GSOURCE,LADOPT,LASTUPDATE,NAME,NAMELSAD,OBJECTID,STPLFIPS",
+      "resultRecordCount": 50,
+      "returnGeometry": "false",
+      "geometry": "{\"x\": -77.3064, \"y\": 38.8462, \"spatialReference\": {\"wkid\": 4326}}",
+      "geometryType": "esriGeometryPoint",
+      "inSR": "4326",
+      "spatialRel": "esriSpatialRelIntersects"
+     },
+     "response": {
+      "features": 0
+     }
+    },
+    {
+     "url": "https://vginmaps.vdem.virginia.gov/arcgis/rest/services/VA_Base_Layers/VA_Admin_Boundaries/FeatureServer/0",
+     "params": {
+      "f": "json"
+     },
+     "response": {
+      "keys": [
+       "advancedEditingCapabilities",
+       "advancedQueryAnalyticCapabilities",
+       "advancedQueryCapabilities",
+       "allowGeometryUpdates",
+       "allowTrueCurvesUpdates",
+       "archivingInfo",
+       "bigIntegerRestrictedTo53Bits",
+       "canScaleSymbols"
+      ]
+     }
+    },
+    {
+     "url": "https://vginmaps.vdem.virginia.gov/arcgis/rest/services/VA_Base_Layers/VA_Admin_Boundaries/FeatureServer/0/query",
+     "params": {
+      "f": "json",
+      "outFields": "AREASQMI,GNIS,GSOURCE,LADOPT,LASTUPDATE,NAME,NAMELSAD,OBJECTID,STPLFIPS",
+      "resultRecordCount": 50,
+      "returnGeometry": "false",
+      "geometry": "{\"x\": -77.3064, \"y\": 38.8462, \"spatialReference\": {\"wkid\": 4326}}",
+      "geometryType": "esriGeometryPoint",
+      "inSR": "4326",
+      "spatialRel": "esriSpatialRelIntersects",
+      "distance": 50,
+      "units": "esriSRUnit_Meter"
+     },
+     "response": {
+      "features": 0
+     }
+    }
+   ],
+   "audit": {
+    "ts": "2026-08-28T16:58:34Z",
+    "request_id": "72b6e3689aaa40478a0b012de5963c9d",
+    "tool": "registry.resolve_jurisdiction",
+    "server": "commonwealth",
+    "server_version": "0.1.0.dev0",
+    "duration_ms": 0,
+    "args": {
+     "query": "",
+     "lon": -77.3064,
+     "lat": 38.8462
+    },
+    "arg_names": [
+     "lat",
+     "lon",
+     "query"
+    ],
+    "coverage": {
+     "registry": "covered",
+     "execution": "complete",
+     "pagination": "complete",
+     "result": "hit"
+    },
+    "sources": [
+     {
+      "source_id": "va-vgin-admin-boundaries",
+      "access_path": "live",
+      "cache_age_seconds": 0,
+      "authority_level": "official_secondary"
+     }
+    ],
+    "evidence_count": 1,
+    "warning_codes": [
+     "boundary_precision",
+     "freshness_unavailable"
+    ],
+    "requires_user_choice": false,
+    "error": null,
+    "registry_revision": "2026-08-28"
+   }
+  },
+  {
+   "note": "A coordinate in Vienna returns the town AND its county: both govern that ground",
+   "is_error": false,
+   "envelope": {
+    "data": {
+     "point": {
+      "lon": -77.2653,
+      "lat": 38.9012
+     },
+     "resolved": {
+      "id": "va:vienna-town",
+      "name": "Vienna (town)",
+      "kind": "town",
+      "fips": null,
+      "basis": "point_in_polygon"
+     },
+     "candidates": [],
+     "layered_authorities": [
+      {
+       "id": "va:fairfax-county",
+       "relationship": "containing-locality",
+       "name": "Fairfax County"
+      },
+      {
+       "id": "va",
+       "relationship": "parent-state",
+       "name": "Virginia"
+      }
+     ]
+    },
+    "provenance": [
+     {
+      "id": "source_01",
+      "source_id": "va-vgin-admin-boundaries",
+      "publisher": "Virginia Geographic Information Network (VGIN), part of the Virginia Department of Emergency Management",
+      "system": "arcgis",
+      "dataset": "Virginia Administrative Boundaries (VGIN)",
+      "jurisdiction": "va",
+      "authority_level": "official_secondary",
+      "access_path": "live",
+      "source_updated_at": null,
+      "retrieved_at": "2026-08-28T16:58:34Z",
+      "cache_age_seconds": 0
+     }
+    ],
+    "evidence": [
+     {
+      "id": "evidence_01",
+      "source_ref": "source_01",
+      "record_id": "OBJECTID:29",
+      "locator": null,
+      "retrieved_at": "2026-08-28T16:58:34Z",
+      "effective_at": null,
+      "transformations": [
+       "field_mapping:v1"
+      ],
+      "payload_hash": "sha256:c94f426004da855e4d63800937cc741074c654c0be10d4ae4827a9dd8a00e808",
+      "raw_recovery": "available"
+     },
+     {
+      "id": "evidence_02",
+      "source_ref": "source_01",
+      "record_id": "OBJECTID:106",
+      "locator": null,
+      "retrieved_at": "2026-08-28T16:58:34Z",
+      "effective_at": null,
+      "transformations": [
+       "field_mapping:v1"
+      ],
+      "payload_hash": "sha256:2c1eae68569e7a3298cc2d97f3625ba15e767e1538cc6d063d67911971f2fba1",
+      "raw_recovery": "available"
+     }
+    ],
+    "coverage": {
+     "registry": "covered",
+     "execution": "complete",
+     "pagination": "complete",
+     "source_claim": "unknown",
+     "result": "hit",
+     "jurisdictions_searched": [
+      "va"
+     ],
+     "known_limitations": [
+      "Cartographic/analysis use only per the publisher's own disclaimer; not a legal description or a property survey. Boundary questions with legal consequence go to the locality, not this layer.",
+      "Geometry is returned simplified (server-side generalization) so a polygon fits an inline response; the unsimplified boundary is not exposed until the result-resource store exists. Simplified vertices can sit tens of metres off the true line \u2014 never use them to decide which side of a boundary a specific address falls on.",
+      "Layer publishes no layer-level last-edit date (editingInfo is absent on both layers), so envelope source_updated_at is null. The per-record LASTUPDATE field IS mapped and surfaced per boundary, so each returned record carries its own vintage even though the layer does not.",
+      "The localities layer carries 134 rows for Virginia's 133 counties and independent cities. Prince George County (FIPS 51149) is published as two separate polygons sharing one FIPS and GNIS, a 281 sq mi body and a 0.0076 sq mi sliver. Both are returned; neither is silently dropped. See KNOWN_SOURCE_QUIRKS.md.\n",
+      "Towns layer covers incorporated towns only. Virginia's unincorporated communities and CDPs have no polygon here, and absence is not evidence that a place does not exist."
+     ]
+    },
+    "warnings": [
+     {
+      "code": "freshness_unavailable",
+      "message": "The publisher exposes no machine-readable update date for this layer; retrieval time is known, data vintage is not.",
+      "source_id": "va-vgin-admin-boundaries"
+     }
+    ],
+    "_execution": {
+     "server": "commonwealth",
+     "server_version": "0.1.0.dev0",
+     "tool": "registry.resolve_jurisdiction",
+     "tool_contract_version": "2",
+     "envelope_version": "1",
+     "adapters": {
+      "arcgis": "0.1.0",
+      "virginia_law": "0.1.0"
+     },
+     "registry_revision": "2026-08-28",
+     "request_id": "37ff109a0b0b402fb4e86817a3cfb6f7"
+    }
+   },
+   "error_text": null,
+   "http_calls": [
+    {
+     "url": "https://vginmaps.vdem.virginia.gov/arcgis/rest/services/VA_Base_Layers/VA_Admin_Boundaries/FeatureServer/1/query",
+     "params": {
+      "f": "json",
+      "outFields": "AREASQMI,GNIS,GSOURCE,JURISTYPE,LADOPT,LASTUPDATE,NAME,NAMELSAD,OBJECTID,STCOFIPS",
+      "resultRecordCount": 50,
+      "returnGeometry": "false",
+      "geometry": "{\"x\": -77.2653, \"y\": 38.9012, \"spatialReference\": {\"wkid\": 4326}}",
+      "geometryType": "esriGeometryPoint",
+      "inSR": "4326",
+      "spatialRel": "esriSpatialRelIntersects"
+     },
+     "response": {
+      "features": 1
+     }
+    },
+    {
+     "url": "https://vginmaps.vdem.virginia.gov/arcgis/rest/services/VA_Base_Layers/VA_Admin_Boundaries/FeatureServer/1/query",
+     "params": {
+      "f": "json",
+      "outFields": "AREASQMI,GNIS,GSOURCE,JURISTYPE,LADOPT,LASTUPDATE,NAME,NAMELSAD,OBJECTID,STCOFIPS",
+      "resultRecordCount": 50,
+      "returnGeometry": "false",
+      "geometry": "{\"x\": -77.2653, \"y\": 38.9012, \"spatialReference\": {\"wkid\": 4326}}",
+      "geometryType": "esriGeometryPoint",
+      "inSR": "4326",
+      "spatialRel": "esriSpatialRelIntersects",
+      "distance": 50,
+      "units": "esriSRUnit_Meter"
+     },
+     "response": {
+      "features": 1
+     }
+    },
+    {
+     "url": "https://vginmaps.vdem.virginia.gov/arcgis/rest/services/VA_Base_Layers/VA_Admin_Boundaries/FeatureServer/0/query",
+     "params": {
+      "f": "json",
+      "outFields": "AREASQMI,GNIS,GSOURCE,LADOPT,LASTUPDATE,NAME,NAMELSAD,OBJECTID,STPLFIPS",
+      "resultRecordCount": 50,
+      "returnGeometry": "false",
+      "geometry": "{\"x\": -77.2653, \"y\": 38.9012, \"spatialReference\": {\"wkid\": 4326}}",
+      "geometryType": "esriGeometryPoint",
+      "inSR": "4326",
+      "spatialRel": "esriSpatialRelIntersects"
+     },
+     "response": {
+      "features": 1
+     }
+    },
+    {
+     "url": "https://vginmaps.vdem.virginia.gov/arcgis/rest/services/VA_Base_Layers/VA_Admin_Boundaries/FeatureServer/0/query",
+     "params": {
+      "f": "json",
+      "outFields": "AREASQMI,GNIS,GSOURCE,LADOPT,LASTUPDATE,NAME,NAMELSAD,OBJECTID,STPLFIPS",
+      "resultRecordCount": 50,
+      "returnGeometry": "false",
+      "geometry": "{\"x\": -77.2653, \"y\": 38.9012, \"spatialReference\": {\"wkid\": 4326}}",
+      "geometryType": "esriGeometryPoint",
+      "inSR": "4326",
+      "spatialRel": "esriSpatialRelIntersects",
+      "distance": 50,
+      "units": "esriSRUnit_Meter"
+     },
+     "response": {
+      "features": 1
+     }
+    }
+   ],
+   "audit": {
+    "ts": "2026-08-28T16:58:34Z",
+    "request_id": "37ff109a0b0b402fb4e86817a3cfb6f7",
+    "tool": "registry.resolve_jurisdiction",
+    "server": "commonwealth",
+    "server_version": "0.1.0.dev0",
+    "duration_ms": 0,
+    "args": {
+     "query": "",
+     "lon": -77.2653,
+     "lat": 38.9012
+    },
+    "arg_names": [
+     "lat",
+     "lon",
+     "query"
+    ],
+    "coverage": {
+     "registry": "covered",
+     "execution": "complete",
+     "pagination": "complete",
+     "result": "hit"
+    },
+    "sources": [
+     {
+      "source_id": "va-vgin-admin-boundaries",
+      "access_path": "live",
+      "cache_age_seconds": 0,
+      "authority_level": "official_secondary"
+     }
+    ],
+    "evidence_count": 2,
+    "warning_codes": [
+     "freshness_unavailable"
+    ],
+    "requires_user_choice": false,
+    "error": null,
+    "registry_revision": "2026-08-28"
+   }
+  },
+  {
+   "note": "One jurisdiction, two official polygons under one FIPS \u2014 both returned, neither picked",
+   "is_error": false,
+   "envelope": {
+    "data": {
+     "jurisdiction": {
+      "id": "va:prince-george-county",
+      "name": "Prince George County",
+      "kind": "county"
+     },
+     "layered_authorities": [
+      {
+       "id": "va",
+       "relationship": "parent-state"
+      }
+     ],
+     "geometry_note": "Vertex coordinates are omitted at detail='concise'; bbox, centroid, and vertex counts are shown. Pass detail='full' for the generalized rings.",
+     "results": [
+      {
+       "source_ref": "source_01",
+       "source_id": "va-vgin-admin-boundaries",
+       "layer": "localities",
+       "records": [
+        {
+         "fips": "51149",
+         "name": "Prince George",
+         "full_name": "Prince George County",
+         "jurisdiction_type": "CO",
+         "area_sq_mi": 0.00758472,
+         "gnis": "1480160",
+         "geometry_source": "V",
+         "locally_adopted": "N",
+         "record_id": "OBJECTID:72",
+         "evidence_ref": "evidence_01",
+         "record_updated_at": "2025-09-03T00:00:00Z",
+         "bbox": [
+          -77.2974,
+          37.3091,
+          -77.29567,
+          37.31175
+         ],
+         "ring_count": 1,
+         "vertex_count": 7,
+         "centroid": {
+          "lon": -77.29658,
+          "lat": 37.31047,
+          "note": "Publisher's centre-of-mass label point. NOT guaranteed to lie inside this jurisdiction: a Virginia county that encloses an independent city is a donut and its centroid falls in the city. Never use it to decide containment."
+         }
+        },
+        {
+         "fips": "51149",
+         "name": "Prince George",
+         "full_name": "Prince George County",
+         "jurisdiction_type": "CO",
+         "area_sq_mi": 281.02037353,
+         "gnis": "1480160",
+         "geometry_source": "V",
+         "locally_adopted": "N",
+         "record_id": "OBJECTID:73",
+         "evidence_ref": "evidence_02",
+         "record_updated_at": "2026-04-30T00:00:00Z",
+         "bbox": [
+          -77.39981,
+          36.9927,
+          -76.97253,
+          37.32076
+         ],
+         "ring_count": 1,
+         "vertex_count": 425,
+         "centroid": {
+          "lon": -77.22387,
+          "lat": 37.18625,
+          "note": "Publisher's centre-of-mass label point. NOT guaranteed to lie inside this jurisdiction: a Virginia county that encloses an independent city is a donut and its centroid falls in the city. Never use it to decide containment."
+         }
+        }
+       ],
+       "record_count": 2,
+       "note": "2 separate polygons carry this jurisdiction's identifier. They are all returned; none is picked as the 'real' one. Prince George County is the known case \u2014 see the source's known_limitations."
+      }
+     ]
+    },
+    "provenance": [
+     {
+      "id": "source_01",
+      "source_id": "va-vgin-admin-boundaries",
+      "publisher": "Virginia Geographic Information Network (VGIN), part of the Virginia Department of Emergency Management",
+      "system": "arcgis",
+      "dataset": "Virginia Administrative Boundaries (VGIN)",
+      "jurisdiction": "va",
+      "authority_level": "official_secondary",
+      "access_path": "live",
+      "source_updated_at": null,
+      "retrieved_at": "2026-08-28T16:58:34Z",
+      "cache_age_seconds": 0
+     }
+    ],
+    "evidence": [
+     {
+      "id": "evidence_01",
+      "source_ref": "source_01",
+      "record_id": "OBJECTID:72",
+      "locator": null,
+      "retrieved_at": "2026-08-28T16:58:34Z",
+      "effective_at": null,
+      "transformations": [
+       "field_mapping:v1",
+       "crs:source->EPSG4326",
+       "geometry_simplified:maxAllowableOffset=0.0002deg"
+      ],
+      "payload_hash": "sha256:7be9d658c39b91fa45d18eac22fdcd7d11173f56d6ac1a7f10ce37e23b1de89b",
+      "raw_recovery": "available"
+     },
+     {
+      "id": "evidence_02",
+      "source_ref": "source_01",
+      "record_id": "OBJECTID:73",
+      "locator": null,
+      "retrieved_at": "2026-08-28T16:58:34Z",
+      "effective_at": null,
+      "transformations": [
+       "field_mapping:v1",
+       "crs:source->EPSG4326",
+       "geometry_simplified:maxAllowableOffset=0.0002deg"
+      ],
+      "payload_hash": "sha256:7be9d658c39b91fa45d18eac22fdcd7d11173f56d6ac1a7f10ce37e23b1de89b",
+      "raw_recovery": "available"
+     }
+    ],
+    "coverage": {
+     "registry": "covered",
+     "execution": "complete",
+     "pagination": "complete",
+     "source_claim": "unknown",
+     "result": "hit",
+     "jurisdictions_searched": [
+      "va:prince-george-county",
+      "va"
+     ],
+     "known_limitations": [
+      "Cartographic/analysis use only per the publisher's own disclaimer; not a legal description or a property survey. Boundary questions with legal consequence go to the locality, not this layer.",
+      "Geometry is returned simplified (server-side generalization) so a polygon fits an inline response; the unsimplified boundary is not exposed until the result-resource store exists. Simplified vertices can sit tens of metres off the true line \u2014 never use them to decide which side of a boundary a specific address falls on.",
+      "Layer publishes no layer-level last-edit date (editingInfo is absent on both layers), so envelope source_updated_at is null. The per-record LASTUPDATE field IS mapped and surfaced per boundary, so each returned record carries its own vintage even though the layer does not.",
+      "The localities layer carries 134 rows for Virginia's 133 counties and independent cities. Prince George County (FIPS 51149) is published as two separate polygons sharing one FIPS and GNIS, a 281 sq mi body and a 0.0076 sq mi sliver. Both are returned; neither is silently dropped. See KNOWN_SOURCE_QUIRKS.md.\n",
+      "Towns layer covers incorporated towns only. Virginia's unincorporated communities and CDPs have no polygon here, and absence is not evidence that a place does not exist."
+     ]
+    },
+    "warnings": [
+     {
+      "code": "freshness_unavailable",
+      "message": "The publisher exposes no machine-readable update date for this layer; retrieval time is known, data vintage is not.",
+      "source_id": "va-vgin-admin-boundaries"
+     },
+     {
+      "code": "boundary_precision",
+      "message": "Boundary geometry is generalized to 0.0002 degrees (~22 m) so it fits an inline response, and the publisher disclaims it for legal description or survey use. Do not use it to decide which side of a line a specific address falls on.",
+      "source_id": null
+     }
+    ],
+    "_execution": {
+     "server": "commonwealth",
+     "server_version": "0.1.0.dev0",
+     "tool": "geo.find_boundaries",
+     "tool_contract_version": "1",
+     "envelope_version": "1",
+     "adapters": {
+      "arcgis": "0.1.0",
+      "virginia_law": "0.1.0"
+     },
+     "registry_revision": "2026-08-28",
+     "request_id": "07931790df0b49c2b453958462b74e58"
+    }
+   },
+   "error_text": null,
+   "http_calls": [
+    {
+     "url": "https://vginmaps.vdem.virginia.gov/arcgis/rest/services/VA_Base_Layers/VA_Admin_Boundaries/FeatureServer/1/query",
+     "params": {
+      "f": "json",
+      "outFields": "AREASQMI,GNIS,GSOURCE,JURISTYPE,LADOPT,LASTUPDATE,NAME,NAMELSAD,OBJECTID,STCOFIPS",
+      "resultRecordCount": 50,
+      "returnGeometry": "true",
+      "where": "STCOFIPS = '51149'",
+      "returnCentroid": "true",
+      "outSR": "4326",
+      "maxAllowableOffset": 0.0002
+     },
+     "response": {
+      "features": 2
+     }
+    }
+   ],
+   "audit": {
+    "ts": "2026-08-28T16:58:34Z",
+    "request_id": "07931790df0b49c2b453958462b74e58",
+    "tool": "geo.find_boundaries",
+    "server": "commonwealth",
+    "server_version": "0.1.0.dev0",
+    "duration_ms": 0,
+    "args": {
+     "jurisdiction": "Prince George County",
+     "detail": "concise"
+    },
+    "arg_names": [
+     "detail",
+     "jurisdiction"
+    ],
+    "coverage": {
+     "registry": "covered",
+     "execution": "complete",
+     "pagination": "complete",
+     "result": "hit"
+    },
+    "sources": [
+     {
+      "source_id": "va-vgin-admin-boundaries",
+      "access_path": "live",
+      "cache_age_seconds": 0,
+      "authority_level": "official_secondary"
+     }
+    ],
+    "evidence_count": 2,
+    "warning_codes": [
+     "boundary_precision",
+     "freshness_unavailable"
+    ],
+    "requires_user_choice": false,
+    "error": null,
+    "registry_revision": "2026-08-28"
+   }
+  },
+  {
+   "note": "Code of Virginia section text with its own citation history",
+   "is_error": false,
+   "envelope": {
+    "data": {
+     "results": [
+      {
+       "source_ref": "source_01",
+       "source_id": "va-code-of-virginia",
+       "found": true,
+       "citation": "1-500",
+       "heading": "\u00a7 1-500. The great seal.",
+       "paragraphs": [
+        "The great seal of the Commonwealth shall consist of two metallic discs, two and one-fourth inches in diameter, with an ornamental border one fourth of an inch wide, with such words and figures engraved as follows: On the obverse, Virtus, the genius of the Commonwealth, dressed as an Amazon, resting on a spear in her right hand, point downward, touching the earth; and holding in her left hand, a sheathed sword, or parazonium, pointing upward; her head erect and face upturned; her left foot on the form of Tyranny represented by the prostrate body of a man, with his head to her left, his fallen crown nearby, a broken chain in his left hand, and a scourge in his right. Above the group and within the border conforming therewith, shall be the word \"Virginia,\" and, in the space below, on a curved line, shall be the motto, \"Sic Semper Tyrannis.\" On the reverse, shall be placed a group consisting of Libertas, holding a wand and pileus in her right hand; on her right, Aeternitas, with a globe and phoenix in her right hand; on the left of Libertas, Ceres, with a cornucopia in her left hand, and an ear of wheat in her right; over this device, in a curved line, the word \"Perseverando.\"",
+        "Code 1950, \u00a7 7-26; 1966, c. 102, \u00a7 7.1-26; 2005, c. 839."
+       ],
+       "source_url": "https://law.lis.virginia.gov/vacode/1-500/",
+       "evidence_ref": "evidence_01"
+      }
+     ]
+    },
+    "provenance": [
+     {
+      "id": "source_01",
+      "source_id": "va-code-of-virginia",
+      "publisher": "Division of Legislative Automated Systems (DLAS), Virginia General Assembly",
+      "system": "virginia_law",
+      "dataset": "Code of Virginia (law.lis.virginia.gov)",
+      "jurisdiction": "va",
+      "authority_level": "primary",
+      "access_path": "live",
+      "source_updated_at": null,
+      "retrieved_at": "2026-08-28T16:58:34Z",
+      "cache_age_seconds": 0
+     }
+    ],
+    "evidence": [
+     {
+      "id": "evidence_01",
+      "source_ref": "source_01",
+      "record_id": "1-500",
+      "locator": "https://law.lis.virginia.gov/vacode/1-500/",
+      "retrieved_at": "2026-08-28T16:58:34Z",
+      "effective_at": null,
+      "transformations": [],
+      "payload_hash": null,
+      "raw_recovery": "available"
+     }
+    ],
+    "coverage": {
+     "registry": "covered",
+     "execution": "complete",
+     "pagination": "complete",
+     "source_claim": "unknown",
+     "result": "hit",
+     "jurisdictions_searched": [
+      "va"
+     ],
+     "known_limitations": [
+      "Direct citation lookup only \u2014 this reads one section page per call; there is no full-text search against this adapter (the site's own search feature was not reverse-engineered).",
+      "HTML-page scraping, not a structured API \u2014 a redesign of the site's markup would break parsing before it broke any published contract.",
+      "No machine-readable last-edit date per section; retrieval time is known, the underlying text's amendment date is only what the section's own citation-history paragraph states in prose."
+     ]
+    },
+    "warnings": [
+     {
+      "code": "freshness_unavailable",
+      "message": "The publisher exposes no machine-readable update date for this layer; retrieval time is known, data vintage is not.",
+      "source_id": "va-code-of-virginia"
+     }
+    ],
+    "_execution": {
+     "server": "commonwealth",
+     "server_version": "0.1.0.dev0",
+     "tool": "civic.get_code_section",
+     "tool_contract_version": "1",
+     "envelope_version": "1",
+     "adapters": {
+      "arcgis": "0.1.0",
+      "virginia_law": "0.1.0"
+     },
+     "registry_revision": "2026-08-28",
+     "request_id": "e497ffb9d18746379a402bb9ba1a1252"
+    }
+   },
+   "error_text": null,
+   "http_calls": [],
+   "audit": {
+    "ts": "2026-08-28T16:58:34Z",
+    "request_id": "e497ffb9d18746379a402bb9ba1a1252",
+    "tool": "civic.get_code_section",
+    "server": "commonwealth",
+    "server_version": "0.1.0.dev0",
+    "duration_ms": 1,
+    "args": {
+     "citation": "1-500"
+    },
+    "arg_names": [
+     "citation"
+    ],
+    "coverage": {
+     "registry": "covered",
+     "execution": "complete",
+     "pagination": "complete",
+     "result": "hit"
+    },
+    "sources": [
+     {
+      "source_id": "va-code-of-virginia",
+      "access_path": "live",
+      "cache_age_seconds": 0,
+      "authority_level": "primary"
+     }
+    ],
+    "evidence_count": 1,
+    "warning_codes": [
+     "freshness_unavailable"
+    ],
+    "requires_user_choice": false,
+    "error": null,
+    "registry_revision": "2026-08-28"
+   }
+  },
+  {
+   "note": "A registry gap: coverage says none, not 'no results'",
+   "is_error": false,
+   "envelope": {
+    "data": {
+     "results": []
+    },
+    "provenance": [],
+    "evidence": [],
+    "coverage": {
+     "registry": "none",
+     "execution": "complete",
+     "pagination": "unknown",
+     "source_claim": "unknown",
+     "result": "empty",
+     "jurisdictions_unavailable": [
+      {
+       "jurisdiction": "va:craig-county",
+       "reason": "no_registered_source"
+      },
+      {
+       "jurisdiction": "va",
+       "reason": "no_registered_source"
+      }
+     ]
+    },
+    "warnings": [],
+    "_execution": {
+     "server": "commonwealth",
+     "server_version": "0.1.0.dev0",
+     "tool": "geo.find_zoning",
+     "tool_contract_version": "1",
+     "envelope_version": "1",
+     "adapters": {
+      "arcgis": "0.1.0",
+      "virginia_law": "0.1.0"
+     },
+     "registry_revision": "2026-08-28",
+     "request_id": "688c6d48306e454896ea10e3703c425c"
+    }
+   },
+   "error_text": null,
+   "http_calls": [],
+   "audit": {
+    "ts": "2026-08-28T16:58:34Z",
+    "request_id": "688c6d48306e454896ea10e3703c425c",
+    "tool": "geo.find_zoning",
+    "server": "commonwealth",
+    "server_version": "0.1.0.dev0",
+    "duration_ms": 0,
+    "args": {
+     "jurisdiction": "Craig County",
+     "pin": "123"
+    },
+    "arg_names": [
+     "jurisdiction",
+     "lat",
+     "lon",
+     "pin"
+    ],
+    "coverage": {
+     "registry": "none",
+     "execution": "complete",
+     "pagination": "unknown",
+     "result": "empty"
+    },
+    "sources": [],
+    "evidence_count": 0,
+    "warning_codes": [],
+    "requires_user_choice": false,
+    "error": null,
+    "registry_revision": "2026-08-28"
+   }
+  },
+  {
+   "note": "What covers zoning.lookup, with authority levels",
+   "is_error": false,
+   "envelope": {
+    "data": {
+     "sources": [
+      {
+       "id": "va-fairfax-parcels-zoning",
+       "name": "Fairfax County Parcels and Zoning (Open Data)",
+       "jurisdiction": "va:fairfax-county",
+       "capabilities": [
+        "parcel.lookup",
+        "zoning.lookup"
+       ],
+       "authority_level": "primary",
+       "declared_state": "active",
+       "operational_state": "unknown"
+      },
+      {
+       "id": "va-richmond-city-parcels-zoning",
+       "name": "Richmond City Parcels and Zoning (GIS Open Data)",
+       "jurisdiction": "va:richmond-city",
+       "capabilities": [
+        "parcel.lookup",
+        "zoning.lookup"
+       ],
+       "authority_level": "primary",
+       "declared_state": "active",
+       "operational_state": "unknown"
+      }
+     ],
+     "record_count": 2
+    },
+    "provenance": [
+     {
+      "id": "source_01",
+      "source_id": "commonwealth-jurisdictions",
+      "publisher": "Commonwealth-MCP project (derived from Census TIGER, verified 2026-08-27)",
+      "system": "project-data",
+      "dataset": "sources/jurisdictions",
+      "jurisdiction": "va",
+      "authority_level": "official_derived",
+      "access_path": "index",
+      "source_updated_at": null,
+      "retrieved_at": "2026-08-28T16:58:34Z",
+      "cache_age_seconds": 0
+     }
+    ],
+    "evidence": [
+     {
+      "id": "evidence_01",
+      "source_ref": "source_01",
+      "record_id": "va-fairfax-parcels-zoning",
+      "locator": null,
+      "retrieved_at": "2026-08-28T16:58:34Z",
+      "effective_at": null,
+      "transformations": [],
+      "payload_hash": null,
+      "raw_recovery": "available"
+     },
+     {
+      "id": "evidence_02",
+      "source_ref": "source_01",
+      "record_id": "va-richmond-city-parcels-zoning",
+      "locator": null,
+      "retrieved_at": "2026-08-28T16:58:34Z",
+      "effective_at": null,
+      "transformations": [],
+      "payload_hash": null,
+      "raw_recovery": "available"
+     }
+    ],
+    "coverage": {
+     "registry": "covered",
+     "execution": "complete",
+     "pagination": "complete",
+     "source_claim": "unknown",
+     "result": "hit"
+    },
+    "warnings": [],
+    "_execution": {
+     "server": "commonwealth",
+     "server_version": "0.1.0.dev0",
+     "tool": "registry.search_sources",
+     "tool_contract_version": "1",
+     "envelope_version": "1",
+     "adapters": {
+      "arcgis": "0.1.0",
+      "virginia_law": "0.1.0"
+     },
+     "registry_revision": "2026-08-28",
+     "request_id": "122320608c524d63862172924be6fcbc"
+    }
+   },
+   "error_text": null,
+   "http_calls": [],
+   "audit": {
+    "ts": "2026-08-28T16:58:34Z",
+    "request_id": "122320608c524d63862172924be6fcbc",
+    "tool": "registry.search_sources",
+    "server": "commonwealth",
+    "server_version": "0.1.0.dev0",
+    "duration_ms": 0,
+    "args": {
+     "text": "",
+     "jurisdiction": "",
+     "capability": "zoning.lookup"
+    },
+    "arg_names": [
+     "capability",
+     "jurisdiction",
+     "text"
+    ],
+    "coverage": {
+     "registry": "covered",
+     "execution": "complete",
+     "pagination": "complete",
+     "result": "hit"
+    },
+    "sources": [
+     {
+      "source_id": "commonwealth-jurisdictions",
+      "access_path": "index",
+      "cache_age_seconds": 0,
+      "authority_level": "official_derived"
+     }
+    ],
+    "evidence_count": 2,
+    "warning_codes": [],
+    "requires_user_choice": false,
+    "error": null,
+    "registry_revision": "2026-08-28"
+   }
+  },
+  {
+   "note": "Terms, limitations, and authority notes for the source",
+   "is_error": false,
+   "envelope": {
+    "data": {
+     "source": {
+      "id": "va-fairfax-parcels-zoning",
+      "name": "Fairfax County Parcels and Zoning (Open Data)",
+      "jurisdiction": "va:fairfax-county",
+      "publisher": "Fairfax County government (GIS and Mapping Services, Open Data)",
+      "authority_level": "primary",
+      "capabilities": [
+       "parcel.lookup",
+       "zoning.lookup"
+      ],
+      "terms_url": "https://www.fairfaxcounty.gov/maps/disclaimer",
+      "terms_notes": "County GIS disclaimer page (URL verified 2026-08-27). Layers are published through the county's public Open Data ArcGIS folder with anonymous query enabled. No bulk-restriction language located as of the review date; re-review with the standard 12-month cadence.\n",
+      "data_classification": "open",
+      "known_limitations": [
+       "GIS zoning is a screening representation; the adopted zoning ordinance and official zoning map govern.",
+       "Neither layer publishes a machine-readable last-edit date."
+      ],
+      "authority_notes": "County-published layers are the primary GIS representation for Fairfax County parcels and zoning. Screening evidence; confirm controlling adopted records where a legal determination is required.\n",
+      "declared_state": "active",
+      "last_verified": "2026-08-27"
+     }
+    },
+    "provenance": [
+     {
+      "id": "source_01",
+      "source_id": "commonwealth-jurisdictions",
+      "publisher": "Commonwealth-MCP project (derived from Census TIGER, verified 2026-08-27)",
+      "system": "project-data",
+      "dataset": "sources/jurisdictions",
+      "jurisdiction": "va",
+      "authority_level": "official_derived",
+      "access_path": "index",
+      "source_updated_at": null,
+      "retrieved_at": "2026-08-28T16:58:34Z",
+      "cache_age_seconds": 0
+     }
+    ],
+    "evidence": [
+     {
+      "id": "evidence_01",
+      "source_ref": "source_01",
+      "record_id": "va-fairfax-parcels-zoning",
+      "locator": null,
+      "retrieved_at": "2026-08-28T16:58:34Z",
+      "effective_at": null,
+      "transformations": [],
+      "payload_hash": null,
+      "raw_recovery": "available"
+     }
+    ],
+    "coverage": {
+     "registry": "covered",
+     "execution": "complete",
+     "pagination": "complete",
+     "source_claim": "unknown",
+     "result": "hit"
+    },
+    "warnings": [],
+    "_execution": {
+     "server": "commonwealth",
+     "server_version": "0.1.0.dev0",
+     "tool": "registry.describe_source",
+     "tool_contract_version": "1",
+     "envelope_version": "1",
+     "adapters": {
+      "arcgis": "0.1.0",
+      "virginia_law": "0.1.0"
+     },
+     "registry_revision": "2026-08-28",
+     "request_id": "904a5a73957b4ea4b0d3d4443b67640b"
+    }
+   },
+   "error_text": null,
+   "http_calls": [],
+   "audit": {
+    "ts": "2026-08-28T16:58:34Z",
+    "request_id": "904a5a73957b4ea4b0d3d4443b67640b",
+    "tool": "registry.describe_source",
+    "server": "commonwealth",
+    "server_version": "0.1.0.dev0",
+    "duration_ms": 0,
+    "args": {
+     "source_id": "va-fairfax-parcels-zoning"
+    },
+    "arg_names": [
+     "source_id"
+    ],
+    "coverage": {
+     "registry": "covered",
+     "execution": "complete",
+     "pagination": "complete",
+     "result": "hit"
+    },
+    "sources": [
+     {
+      "source_id": "commonwealth-jurisdictions",
+      "access_path": "index",
+      "cache_age_seconds": 0,
+      "authority_level": "official_derived"
+     }
+    ],
+    "evidence_count": 1,
+    "warning_codes": [],
+    "requires_user_choice": false,
+    "error": null,
+    "registry_revision": "2026-08-28"
+   }
+  },
+  {
+   "note": "Declared vs operational state for every registered source",
+   "is_error": false,
+   "envelope": {
+    "data": {
+     "sources": [
+      {
+       "id": "va-charles-city-county-parcels",
+       "declared_state": "active",
+       "operational_state": "unknown",
+       "last_verified": "2026-08-28"
+      },
+      {
+       "id": "va-code-of-virginia",
+       "declared_state": "active",
+       "operational_state": "unknown",
+       "last_verified": "2026-08-28"
+      },
+      {
+       "id": "va-fairfax-parcels-zoning",
+       "declared_state": "active",
+       "operational_state": "unknown",
+       "last_verified": "2026-08-27"
+      },
+      {
+       "id": "va-richmond-city-parcels-zoning",
+       "declared_state": "active",
+       "operational_state": "unknown",
+       "last_verified": "2026-08-28"
+      },
+      {
+       "id": "va-vgin-admin-boundaries",
+       "declared_state": "active",
+       "operational_state": "unknown",
+       "last_verified": "2026-08-28"
+      },
+      {
+       "id": "va-vgin-statewide-parcels",
+       "declared_state": "active",
+       "operational_state": "unknown",
+       "last_verified": "2026-08-28"
+      }
+     ],
+     "record_count": 6,
+     "note": "operational_state comes from runtime probes; 'unknown' means no probe has run in this process."
+    },
+    "provenance": [
+     {
+      "id": "source_01",
+      "source_id": "commonwealth-jurisdictions",
+      "publisher": "Commonwealth-MCP project (derived from Census TIGER, verified 2026-08-27)",
+      "system": "project-data",
+      "dataset": "sources/jurisdictions",
+      "jurisdiction": "va",
+      "authority_level": "official_derived",
+      "access_path": "index",
+      "source_updated_at": null,
+      "retrieved_at": "2026-08-28T16:58:34Z",
+      "cache_age_seconds": 0
+     }
+    ],
+    "evidence": [
+     {
+      "id": "evidence_01",
+      "source_ref": "source_01",
+      "record_id": "va-charles-city-county-parcels",
+      "locator": null,
+      "retrieved_at": "2026-08-28T16:58:34Z",
+      "effective_at": null,
+      "transformations": [],
+      "payload_hash": null,
+      "raw_recovery": "available"
+     },
+     {
+      "id": "evidence_02",
+      "source_ref": "source_01",
+      "record_id": "va-code-of-virginia",
+      "locator": null,
+      "retrieved_at": "2026-08-28T16:58:34Z",
+      "effective_at": null,
+      "transformations": [],
+      "payload_hash": null,
+      "raw_recovery": "available"
+     },
+     {
+      "id": "evidence_03",
+      "source_ref": "source_01",
+      "record_id": "va-fairfax-parcels-zoning",
+      "locator": null,
+      "retrieved_at": "2026-08-28T16:58:34Z",
+      "effective_at": null,
+      "transformations": [],
+      "payload_hash": null,
+      "raw_recovery": "available"
+     },
+     {
+      "id": "evidence_04",
+      "source_ref": "source_01",
+      "record_id": "va-richmond-city-parcels-zoning",
+      "locator": null,
+      "retrieved_at": "2026-08-28T16:58:34Z",
+      "effective_at": null,
+      "transformations": [],
+      "payload_hash": null,
+      "raw_recovery": "available"
+     },
+     {
+      "id": "evidence_05",
+      "source_ref": "source_01",
+      "record_id": "va-vgin-admin-boundaries",
+      "locator": null,
+      "retrieved_at": "2026-08-28T16:58:34Z",
+      "effective_at": null,
+      "transformations": [],
+      "payload_hash": null,
+      "raw_recovery": "available"
+     },
+     {
+      "id": "evidence_06",
+      "source_ref": "source_01",
+      "record_id": "va-vgin-statewide-parcels",
+      "locator": null,
+      "retrieved_at": "2026-08-28T16:58:34Z",
+      "effective_at": null,
+      "transformations": [],
+      "payload_hash": null,
+      "raw_recovery": "available"
+     }
+    ],
+    "coverage": {
+     "registry": "covered",
+     "execution": "complete",
+     "pagination": "complete",
+     "source_claim": "unknown",
+     "result": "hit"
+    },
+    "warnings": [],
+    "_execution": {
+     "server": "commonwealth",
+     "server_version": "0.1.0.dev0",
+     "tool": "registry.source_status",
+     "tool_contract_version": "1",
+     "envelope_version": "1",
+     "adapters": {
+      "arcgis": "0.1.0",
+      "virginia_law": "0.1.0"
+     },
+     "registry_revision": "2026-08-28",
+     "request_id": "9e720f0bd854417caae7feb2c9982c55"
+    }
+   },
+   "error_text": null,
+   "http_calls": [],
+   "audit": {
+    "ts": "2026-08-28T16:58:34Z",
+    "request_id": "9e720f0bd854417caae7feb2c9982c55",
+    "tool": "registry.source_status",
+    "server": "commonwealth",
+    "server_version": "0.1.0.dev0",
+    "duration_ms": 0,
+    "args": {
+     "source_id": ""
+    },
+    "arg_names": [
+     "source_id"
+    ],
+    "coverage": {
+     "registry": "covered",
+     "execution": "complete",
+     "pagination": "complete",
+     "result": "hit"
+    },
+    "sources": [
+     {
+      "source_id": "commonwealth-jurisdictions",
+      "access_path": "index",
+      "cache_age_seconds": 0,
+      "authority_level": "official_derived"
+     }
+    ],
+    "evidence_count": 6,
+    "warning_codes": [],
+    "requires_user_choice": false,
+    "error": null,
+    "registry_revision": "2026-08-28"
+   }
+  },
+  {
+   "note": "A typed error: unknown capability, said plainly",
+   "is_error": true,
+   "envelope": null,
+   "error_text": "Error executing tool registry.search_sources: InvalidQuery: capability 'unicorns.lookup' is not in the vocabulary; known: ['boundary.lookup', 'code_section.lookup', 'parcel.lookup', 'zoning.lookup']",
+   "http_calls": [],
+   "audit": {
+    "ts": "2026-08-28T16:58:34Z",
+    "request_id": "",
+    "tool": "registry.search_sources",
+    "server": "commonwealth",
+    "server_version": "0.1.0.dev0",
+    "duration_ms": 0,
+    "args": {
+     "text": "",
+     "jurisdiction": "",
+     "capability": "unicorns.lookup"
+    },
+    "arg_names": [
+     "capability",
+     "jurisdiction",
+     "text"
+    ],
+    "coverage": {},
+    "sources": [],
+    "evidence_count": 0,
+    "warning_codes": [],
+    "requires_user_choice": false,
+    "error": "InvalidQuery",
+    "registry_revision": "2026-08-28"
+   }
+  }
+ ]
+}

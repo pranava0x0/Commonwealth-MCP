@@ -1,0 +1,100 @@
+# Statewide layer, jurisdiction `va`: matches every jurisdiction's resolved
+# stack (DECISIONS.md 0005's canonical dual-source
+# example — a locality's own GIS layer plus VGIN's statewide aggregation),
+# so it is selected alongside any registered local source and queried
+# unranked (0005-C: query both, never merge). It is the only parcel.lookup
+# source for the 11 jurisdictions with no local manifest yet. Endpoint,
+# fields, and terms verified live 2026-08-28.
+id: va-vgin-statewide-parcels
+name: Virginia Statewide Parcels (VGIN)
+jurisdiction: va
+
+publisher:
+  agency: Virginia Geographic Information Network (VGIN), part of the
+    Virginia Department of Emergency Management
+  authority_level: official_secondary
+
+domains: [geo]
+
+capabilities:
+  - id: parcel.lookup
+    tool_hint: geo.find_parcel
+
+adapter:
+  type: arcgis
+  service_url: https://vginmaps.vdem.virginia.gov/arcgis/rest/services/VA_Base_Layers/VA_Parcels/FeatureServer
+  field_mapping_version: "1"
+  layers:
+    parcels:
+      layer_id: 0
+      id_field: OBJECTID
+      geometry: polygon
+      field_mapping:
+        pin: PTM_ID
+        locality: LOCALITY
+        fips: FIPS
+
+access:
+  mode: anonymous
+  automation_status: public_api
+  terms_url: https://vgin.vdem.virginia.gov/datasets/virginia-parcels/about
+  terms_notes: >
+    Hosted on VGIN's ArcGIS Hub (item id 29627d7c051a47dc8ce71b4484531ab3),
+    license "custom": "The Virginia Base Data layers are intended for
+    cartographic use and spatial analysis only, and not for use as a legal
+    description. Best efforts were undertaken to ensure the correctness of
+    ... Parcels ... data throughout the Commonwealth of Virginia, however,
+    all warranties regarding the accuracy of the map data ... are hereby
+    expressly disclaimed." No redistribution restriction found; anonymous
+    query access confirmed live. Re-review with the standard 12-month
+    cadence.
+  terms_reviewed_at: "2026-08-28"
+  data_classification: open
+
+freshness:
+  expected_cadence: unknown
+  cadence_source: >
+    Publisher states the statewide layer is rebuilt on VGIN's "Local
+    Government Data Call" cycle; localities are "encouraged to submit
+    data bi-annually" but the layer carries no enforced SLA per locality.
+  ttl_hint_seconds: 86400
+
+coverage:
+  geography: va
+  temporal: current
+  known_limitations:
+    - Cartographic/analysis use only per the publisher's own disclaimer;
+      not a legal description or survey.
+    - Parcel boundaries are not edge-matched across municipal boundaries.
+    - Currency varies by locality and lags the locality's own live system;
+      this is the statewide fallback, not the fast path, for any
+      jurisdiction that also has a local manifest.
+    - No zoning equivalent published statewide; parcel.lookup only.
+    - Layer publishes no machine-readable last-edit date at the layer
+      level (a per-record LASTUPDATE field exists but is not exposed
+      through this adapter's freshness path).
+
+authority_notes: >
+  DECISIONS.md 0005 names this exact pairing (a
+  locality's own layer vs. VGIN's statewide aggregation) as the standing
+  example for "query both, never rank." VGIN aggregates from local
+  submissions rather than maintaining primary records itself, hence
+  official_secondary, not primary. For Fairfax County and Richmond City
+  this source is queried alongside the local manifest and any
+  disagreement is shown, not reconciled; for the other 11 seed
+  jurisdictions it is currently the only parcel.lookup source registered.
+
+health:
+  probe: arcgis_layer_count
+  expect:
+    # Statewide count observed live 2026-08-28: 4,170,691. Floor set well
+    # under that; a single locality's data call lag should not flip this
+    # unhealthy.
+    min_features:
+      parcels: 3000000
+
+lifecycle:
+  declared_state: active
+  added: "2026-08-28"
+  last_verified: "2026-08-28"
+  verified_by: pranava

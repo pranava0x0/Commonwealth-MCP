@@ -1,0 +1,6 @@
+id: va:loudoun-county
+name: Loudoun County
+kind: county
+fips: "51107"
+parent: va
+aliases: ["County of Loudoun"]

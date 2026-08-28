@@ -1,0 +1,139 @@
+# Statewide layer, jurisdiction `va`: like VGIN's parcels layer it sits in
+# every jurisdiction's resolved stack, so it is selectable for any locality
+# — which is what makes it usable as the single boundary source behind both
+# `geo.find_boundaries` and point-in-polygon jurisdiction resolution
+# (design/jurisdiction-resolution.md § 2). Endpoint, both layers, field
+# names, counts, and terms verified live 2026-08-28.
+id: va-vgin-admin-boundaries
+name: Virginia Administrative Boundaries (VGIN)
+jurisdiction: va
+
+publisher:
+  agency: Virginia Geographic Information Network (VGIN), part of the
+    Virginia Department of Emergency Management
+  authority_level: official_secondary
+
+domains: [geo]
+
+capabilities:
+  - id: boundary.lookup
+    tool_hint: geo.find_boundaries
+
+adapter:
+  type: arcgis
+  service_url: https://vginmaps.vdem.virginia.gov/arcgis/rest/services/VA_Base_Layers/VA_Admin_Boundaries/FeatureServer
+  field_mapping_version: "1"
+  layers:
+    # Layer 1 holds counties AND independent cities together, which is the
+    # right shape for Virginia: an independent city is not inside a county,
+    # and this layer's polygons reflect that (a point in Fairfax City
+    # returns Fairfax City only, never Fairfax County — verified live).
+    localities:
+      layer_id: 1
+      id_field: OBJECTID
+      geometry: polygon
+      field_mapping:
+        fips: STCOFIPS
+        name: NAME
+        full_name: NAMELSAD
+        jurisdiction_type: JURISTYPE
+        area_sq_mi: AREASQMI
+        gnis: GNIS
+        geometry_source: GSOURCE
+        locally_adopted: LADOPT
+        last_update: LASTUPDATE
+    towns:
+      layer_id: 0
+      id_field: OBJECTID
+      geometry: polygon
+      field_mapping:
+        place_fips: STPLFIPS
+        name: NAME
+        full_name: NAMELSAD
+        area_sq_mi: AREASQMI
+        gnis: GNIS
+        geometry_source: GSOURCE
+        locally_adopted: LADOPT
+        last_update: LASTUPDATE
+
+access:
+  mode: anonymous
+  automation_status: public_api
+  terms_url: https://vgin.vdem.virginia.gov/datasets/VGIN::virginia-administrative-boundaries/about
+  terms_notes: >
+    Hosted on VGIN's ArcGIS Hub (item id
+    777890ecdb634d18a02eec604db522c6), license "custom": "The boundaries
+    are intended for cartographic use and spatial analysis only, and not
+    for use as legal descriptions or property surveys. Best efforts were
+    undertaken to ensure the correctness of Administrative Boundary data
+    throughout the Commonwealth of Virginia, however, all warranties
+    regarding the accuracy of the map data and any representation or
+    inferences derived there from are hereby expressly disclaimed." No
+    redistribution restriction found; anonymous query access confirmed
+    live 2026-08-28. Re-review with the standard 12-month cadence.
+  terms_reviewed_at: "2026-08-28"
+  data_classification: open
+
+freshness:
+  expected_cadence: unknown
+  cadence_source: >
+    Publisher describes the dataset as "the best available city, county,
+    and town boundary information provided to VGIN", maintained from
+    locality submissions via the Virginia Administrative Boundaries
+    Workgroup. No stated refresh SLA; per-record LASTUPDATE dates
+    observed spanning 2025-2026, so localities land at different times.
+  ttl_hint_seconds: 86400
+
+coverage:
+  geography: va
+  temporal: current
+  known_limitations:
+    - Cartographic/analysis use only per the publisher's own disclaimer;
+      not a legal description or a property survey. Boundary questions
+      with legal consequence go to the locality, not this layer.
+    - Layer publishes no layer-level last-edit date (editingInfo is
+      absent on both layers), so envelope source_updated_at is null. The
+      per-record LASTUPDATE field IS mapped and surfaced per boundary, so
+      each returned record carries its own vintage even though the layer
+      does not.
+    - Geometry is returned simplified (server-side generalization) so a
+      polygon fits an inline response; the unsimplified boundary is not
+      exposed until the result-resource store exists. Simplified vertices
+      can sit tens of metres off the true line — never use them to decide
+      which side of a boundary a specific address falls on.
+    - >
+      The localities layer carries 134 rows for Virginia's 133 counties
+      and independent cities. Prince George County (FIPS 51149) is
+      published as two separate polygons sharing one FIPS and GNIS, a
+      281 sq mi body and a 0.0076 sq mi sliver. Both are returned;
+      neither is silently dropped. See KNOWN_SOURCE_QUIRKS.md.
+    - Towns layer covers incorporated towns only. Virginia's
+      unincorporated communities and CDPs have no polygon here, and
+      absence is not evidence that a place does not exist.
+
+authority_notes: >
+  VGIN aggregates locality submissions rather than maintaining primary
+  boundary records itself, hence official_secondary, not primary — the
+  locality's own adopted boundary ordinance is the primary record. The
+  LADOPT field ("Local Data Adoption") is the publisher's own flag for
+  whether a locality has formally adopted the geometry, and it is mapped
+  and surfaced so callers can see that distinction rather than infer it.
+  This is currently the only registered boundary.lookup source, so
+  DECISIONS.md 0005's query-both discipline resolves to querying one and saying
+  so in coverage.
+
+health:
+  probe: arcgis_layer_count
+  expect:
+    # Observed live 2026-08-28: localities 134, towns 191. Floors set
+    # under those; a single locality's resubmission should not flip this
+    # unhealthy, but a layer emptying out must.
+    min_features:
+      localities: 130
+      towns: 150
+
+lifecycle:
+  declared_state: active
+  added: "2026-08-28"
+  last_verified: "2026-08-28"
+  verified_by: pranava

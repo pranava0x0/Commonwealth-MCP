@@ -1,0 +1,162 @@
+"""The docs site's baked data stays derived: committed JSON must match what
+the live registries produce, and every demo envelope must validate against
+the committed wire schema (generated output commits with its source)."""
+import json
+import re
+from pathlib import Path
+
+import jsonschema
+import pytest
+
+ROOT = Path(__file__).resolve().parents[1]
+SITE = ROOT / "docs" / "data" / "site.json"
+DEMO = ROOT / "docs" / "data" / "audit-demo.json"
+RESOLVER = ROOT / "docs" / "data" / "resolver-demo.json"
+REGEN = "regenerate: .venv/bin/python tools/build_site.py --fixtures"
+
+
+@pytest.fixture(scope="module")
+def site() -> dict:
+    assert SITE.exists(), f"missing {SITE}; {REGEN}"
+    return json.loads(SITE.read_text())
+
+
+@pytest.fixture(scope="module")
+def demo() -> dict:
+    assert DEMO.exists(), f"missing {DEMO}; {REGEN}"
+    return json.loads(DEMO.read_text())
+
+
+@pytest.fixture(scope="module")
+def resolver_demo() -> dict:
+    assert RESOLVER.exists(), f"missing {RESOLVER}; {REGEN}"
+    return json.loads(RESOLVER.read_text())
+
+
+def test_site_counts_match_live_registries(site):
+    import sys
+    sys.path.insert(0, str(ROOT / "tools"))
+    from build_site import build_catalog
+    current = build_catalog()
+    assert site["counts"] == current["counts"], REGEN
+    assert [t["name"] for t in site["tools"]] == \
+           [t["name"] for t in current["tools"]], REGEN
+    assert site["capabilities"] == current["capabilities"], REGEN
+    assert site["capability_coverage"] == current["capability_coverage"], REGEN
+    print(f"site.json counts verified against live registries: "
+          f"{site['counts']}")
+
+
+def test_demo_trail_covers_every_call(demo):
+    calls = demo["calls"]
+    assert demo["call_count"] == len(calls) and len(calls) >= 8
+    for c in calls:
+        assert "audit" in c, "a call without an audit record broke the trail"
+        assert c["audit"]["tool"]
+        if c["audit"]["args"] is not None:
+            assert None not in c["audit"]["args"].values(), (
+                "null default args are noise; the audit record drops them")
+    errors = [c for c in calls if c["is_error"]]
+    assert len(errors) == 1 and "InvalidQuery" in errors[0]["error_text"]
+    print(f"audit demo: {len(calls)} calls, 1 typed error, mode "
+          f"{demo['mode']}")
+
+
+def test_demo_envelopes_validate_against_committed_schema(demo,
+                                                          project_root):
+    schema = json.loads(
+        (project_root / "schemas" / "envelope.schema.json").read_text())
+    checked = 0
+    for c in demo["calls"]:
+        if c["is_error"]:
+            continue
+        jsonschema.validate(c["envelope"], schema)
+        checked += 1
+    assert checked >= 7, f"only {checked} envelopes checked"
+    print(f"validated {checked} demo envelopes against the wire schema")
+
+
+def test_demo_shows_the_three_distinct_empties(demo):
+    """The page's whole argument: a hit, a clean empty, and a registry gap
+    must be visibly different in the baked data."""
+    by_note = {c["note"]: c for c in demo["calls"]}
+    clean_empty = by_note["A clean empty: covered registry, no record"]
+    gap = by_note["A registry gap: coverage says none, not 'no results'"]
+    assert clean_empty["envelope"]["coverage"]["registry"] == "covered"
+    assert clean_empty["envelope"]["coverage"]["result"] == "empty"
+    assert gap["envelope"]["coverage"]["registry"] == "none"
+
+
+def test_page_embeds_data_matching_the_committed_json(site, demo,
+                                                       resolver_demo):
+    """The page must work opened as a raw file (drag into a browser, email
+    attachment) — fetch() rejects file:// URLs, so the data is embedded
+    inline, not fetched. This locks the embedded copy against the committed
+    docs/data/*.json so the two can't silently diverge."""
+    html = (ROOT / "docs" / "index.html").read_text()
+    assert "fetch(" not in html, \
+        "the page must not fetch its data — embed it so file:// works"
+    for block_id, expected in [("data-site", site), ("data-audit-demo", demo),
+                               ("data-resolver-demo", resolver_demo)]:
+        m = re.search(
+            rf'<script type="application/json" id="{block_id}">(.*?)</script>',
+            html, re.DOTALL)
+        assert m, f"missing embedded data block #{block_id}"
+        assert json.loads(m.group(1)) == expected, (
+            f"embedded #{block_id} does not match docs/data/ — {REGEN}")
+    assert "hand-typed" not in html  # the page renders, it never restates
+
+
+def test_demo_calls_that_hit_the_source_show_the_real_http_exchange(demo):
+    """The two calls with zoning/parcel geometry work must show the actual
+    ArcGIS URLs and record counts a visitor could hit themselves — not a
+    paraphrase of the tool call."""
+    by_note = {c["note"]: c for c in demo["calls"]}
+    zoning = by_note["Zoning via parcel-geometry intersection; "
+                      "screening warnings"]
+    assert zoning["http_calls"], "zoning lookup made no tracked HTTP calls"
+    for hc in zoning["http_calls"]:
+        assert hc["url"].startswith("https://www.fairfaxcounty.gov/")
+        assert "response" in hc and "params" in hc
+    no_source_calls = ["Ambiguous on purpose: Fairfax City vs Fairfax "
+                        "County", "A registry gap: coverage says none, "
+                        "not 'no results'"]
+    for note in no_source_calls:
+        assert by_note[note]["http_calls"] == [], (
+            f"{note!r} should need no outbound call — it never reaches a "
+            "source, and the demo should say so by showing none")
+
+
+def test_resolver_demo_matches_the_live_resolver(resolver_demo):
+    """Every precomputed answer in the playground must still be what the
+    real JurisdictionTable.resolve() returns today — this is the guard
+    against the playground silently drifting from the tool it mirrors."""
+    import sys
+    sys.path.insert(0, str(ROOT / "tools"))
+    from build_site import build_resolver_demo
+    from commonwealth.runtime import load_context
+
+    current = build_resolver_demo(load_context())
+    assert resolver_demo == current, REGEN
+    assert len(resolver_demo["queries"]) >= 50
+    # the trap pairs must show up as ambiguous, not silently resolved
+    for stem in ("fairfax", "richmond", "roanoke", "franklin"):
+        entry = resolver_demo["queries"][stem]
+        assert entry["resolved"] is None and len(entry["candidates"]) == 2, (
+            f"{stem!r} is a known name collision; the playground must "
+            "show candidates, never guess")
+    print(f"resolver playground: {len(resolver_demo['queries'])} queries, "
+          "verified against the live resolver")
+
+
+def test_coverage_and_warning_definitions_cover_every_enum_value(site):
+    from commonwealth.core.envelope import (
+        ExecutionCoverage, PaginationCoverage, RegistryCoverage,
+        ResultCoverage, WarningCode,
+    )
+    assert set(site["warning_definitions"]) == {c.value for c in WarningCode}
+    dims = {"registry": RegistryCoverage, "execution": ExecutionCoverage,
+            "pagination": PaginationCoverage, "result": ResultCoverage}
+    for dim, enum_cls in dims.items():
+        assert set(site["coverage_definitions"][dim]["values"]) == \
+            {c.value for c in enum_cls}

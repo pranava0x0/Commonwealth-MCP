@@ -1,0 +1,77 @@
+# The Code of Virginia is publicly readable at law.lis.virginia.gov with
+# no key or registration; the JSON/XML API the developer portal advertises
+# is a separate, key-gated program (backlog.md's civic-vertical note) that
+# this manifest does not use. The site itself is the primary published
+# text of the statute, so reading it directly is still reading the
+# authoritative source, not a lesser mirror of one. Endpoint structure and
+# the "not found" redirect behavior verified live 2026-08-28.
+id: va-code-of-virginia
+name: Code of Virginia (law.lis.virginia.gov)
+jurisdiction: va
+
+publisher:
+  agency: Division of Legislative Automated Systems (DLAS), Virginia General Assembly
+  authority_level: primary
+
+domains: [civic]
+
+capabilities:
+  - id: code_section.lookup
+    tool_hint: civic.get_code_section
+
+adapter:
+  type: virginia_law
+  service_url: https://law.lis.virginia.gov/vacode
+
+access:
+  mode: anonymous
+  automation_status: public_api
+  terms_url: https://law.lis.virginia.gov/vacode/
+  terms_notes: >
+    Publicly served, anonymous, no rate-limit or robots restriction found
+    on the section pages themselves as of the review date. The site's own
+    developer portal (law.lis.virginia.gov/developers/) advertises a
+    separate keyed JSON/XML API program for bulk/structured access; this
+    manifest reads the public HTML pages directly instead, since bulk
+    access needs a registration step this project doesn't automate
+    around (backlog.md). Re-review with the standard 12-month cadence.
+  terms_reviewed_at: "2026-08-28"
+  data_classification: open
+
+freshness:
+  expected_cadence: unknown
+  cadence_source: >
+    Updated on the legislature's own session/codification schedule; no
+    published SLA for how quickly a signed act reaches this page.
+  ttl_hint_seconds: 86400
+
+coverage:
+  geography: va
+  temporal: current
+  known_limitations:
+    - Direct citation lookup only — this reads one section page per call;
+      there is no full-text search against this adapter (the site's own
+      search feature was not reverse-engineered).
+    - HTML-page scraping, not a structured API — a redesign of the site's
+      markup would break parsing before it broke any published contract.
+    - No machine-readable last-edit date per section; retrieval time is
+      known, the underlying text's amendment date is only what the
+      section's own citation-history paragraph states in prose.
+
+authority_notes: >
+  This is the Division of Legislative Automated Systems' own publication
+  of the Code of Virginia — the primary published text, not a secondary
+  aggregation of it.
+
+health:
+  probe: virginia_law_section_fetch
+  expect:
+    # A known, stable section (unlikely to be repealed/renumbered) used
+    # as a liveness check: found=True and non-empty body text.
+    known_section: "1-500"
+
+lifecycle:
+  declared_state: active
+  added: "2026-08-28"
+  last_verified: "2026-08-28"
+  verified_by: pranava

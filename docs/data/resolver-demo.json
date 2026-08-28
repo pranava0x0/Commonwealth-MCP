@@ -1,0 +1,798 @@
+{
+ "queries": {
+  "va": {
+   "resolved": {
+    "id": "va",
+    "name": "Virginia",
+    "kind": "state"
+   },
+   "basis": "exact_id",
+   "candidates": []
+  },
+  "virginia": {
+   "resolved": {
+    "id": "va",
+    "name": "Virginia",
+    "kind": "state"
+   },
+   "basis": "exact_name",
+   "candidates": []
+  },
+  "51": {
+   "resolved": null,
+   "basis": null,
+   "candidates": []
+  },
+  "commonwealth of virginia": {
+   "resolved": {
+    "id": "va",
+    "name": "Virginia",
+    "kind": "state"
+   },
+   "basis": "alias",
+   "candidates": []
+  },
+  "va:charles-city-county": {
+   "resolved": {
+    "id": "va:charles-city-county",
+    "name": "Charles City County",
+    "kind": "county"
+   },
+   "basis": "exact_id",
+   "candidates": []
+  },
+  "charles city county": {
+   "resolved": {
+    "id": "va:charles-city-county",
+    "name": "Charles City County",
+    "kind": "county"
+   },
+   "basis": "exact_name",
+   "candidates": []
+  },
+  "51036": {
+   "resolved": {
+    "id": "va:charles-city-county",
+    "name": "Charles City County",
+    "kind": "county"
+   },
+   "basis": "exact_fips",
+   "candidates": []
+  },
+  "036": {
+   "resolved": {
+    "id": "va:charles-city-county",
+    "name": "Charles City County",
+    "kind": "county"
+   },
+   "basis": "exact_fips",
+   "candidates": []
+  },
+  "charles city": {
+   "resolved": {
+    "id": "va:charles-city-county",
+    "name": "Charles City County",
+    "kind": "county"
+   },
+   "basis": "alias",
+   "candidates": []
+  },
+  "va:craig-county": {
+   "resolved": {
+    "id": "va:craig-county",
+    "name": "Craig County",
+    "kind": "county"
+   },
+   "basis": "exact_id",
+   "candidates": []
+  },
+  "craig county": {
+   "resolved": {
+    "id": "va:craig-county",
+    "name": "Craig County",
+    "kind": "county"
+   },
+   "basis": "exact_name",
+   "candidates": []
+  },
+  "51045": {
+   "resolved": {
+    "id": "va:craig-county",
+    "name": "Craig County",
+    "kind": "county"
+   },
+   "basis": "exact_fips",
+   "candidates": []
+  },
+  "045": {
+   "resolved": {
+    "id": "va:craig-county",
+    "name": "Craig County",
+    "kind": "county"
+   },
+   "basis": "exact_fips",
+   "candidates": []
+  },
+  "county of craig": {
+   "resolved": {
+    "id": "va:craig-county",
+    "name": "Craig County",
+    "kind": "county"
+   },
+   "basis": "alias",
+   "candidates": []
+  },
+  "va:fairfax-city": {
+   "resolved": {
+    "id": "va:fairfax-city",
+    "name": "Fairfax City",
+    "kind": "independent-city"
+   },
+   "basis": "exact_id",
+   "candidates": []
+  },
+  "fairfax city": {
+   "resolved": {
+    "id": "va:fairfax-city",
+    "name": "Fairfax City",
+    "kind": "independent-city"
+   },
+   "basis": "exact_name",
+   "candidates": []
+  },
+  "51600": {
+   "resolved": {
+    "id": "va:fairfax-city",
+    "name": "Fairfax City",
+    "kind": "independent-city"
+   },
+   "basis": "exact_fips",
+   "candidates": []
+  },
+  "600": {
+   "resolved": {
+    "id": "va:fairfax-city",
+    "name": "Fairfax City",
+    "kind": "independent-city"
+   },
+   "basis": "exact_fips",
+   "candidates": []
+  },
+  "city of fairfax": {
+   "resolved": {
+    "id": "va:fairfax-city",
+    "name": "Fairfax City",
+    "kind": "independent-city"
+   },
+   "basis": "alias",
+   "candidates": []
+  },
+  "va:fairfax-county": {
+   "resolved": {
+    "id": "va:fairfax-county",
+    "name": "Fairfax County",
+    "kind": "county"
+   },
+   "basis": "exact_id",
+   "candidates": []
+  },
+  "fairfax county": {
+   "resolved": {
+    "id": "va:fairfax-county",
+    "name": "Fairfax County",
+    "kind": "county"
+   },
+   "basis": "exact_name",
+   "candidates": []
+  },
+  "51059": {
+   "resolved": {
+    "id": "va:fairfax-county",
+    "name": "Fairfax County",
+    "kind": "county"
+   },
+   "basis": "exact_fips",
+   "candidates": []
+  },
+  "059": {
+   "resolved": {
+    "id": "va:fairfax-county",
+    "name": "Fairfax County",
+    "kind": "county"
+   },
+   "basis": "exact_fips",
+   "candidates": []
+  },
+  "county of fairfax": {
+   "resolved": {
+    "id": "va:fairfax-county",
+    "name": "Fairfax County",
+    "kind": "county"
+   },
+   "basis": "alias",
+   "candidates": []
+  },
+  "fairfax co.": {
+   "resolved": {
+    "id": "va:fairfax-county",
+    "name": "Fairfax County",
+    "kind": "county"
+   },
+   "basis": "alias",
+   "candidates": []
+  },
+  "va:franklin-city": {
+   "resolved": {
+    "id": "va:franklin-city",
+    "name": "Franklin City",
+    "kind": "independent-city"
+   },
+   "basis": "exact_id",
+   "candidates": []
+  },
+  "franklin city": {
+   "resolved": {
+    "id": "va:franklin-city",
+    "name": "Franklin City",
+    "kind": "independent-city"
+   },
+   "basis": "exact_name",
+   "candidates": []
+  },
+  "51620": {
+   "resolved": {
+    "id": "va:franklin-city",
+    "name": "Franklin City",
+    "kind": "independent-city"
+   },
+   "basis": "exact_fips",
+   "candidates": []
+  },
+  "620": {
+   "resolved": {
+    "id": "va:franklin-city",
+    "name": "Franklin City",
+    "kind": "independent-city"
+   },
+   "basis": "exact_fips",
+   "candidates": []
+  },
+  "city of franklin": {
+   "resolved": {
+    "id": "va:franklin-city",
+    "name": "Franklin City",
+    "kind": "independent-city"
+   },
+   "basis": "alias",
+   "candidates": []
+  },
+  "va:franklin-county": {
+   "resolved": {
+    "id": "va:franklin-county",
+    "name": "Franklin County",
+    "kind": "county"
+   },
+   "basis": "exact_id",
+   "candidates": []
+  },
+  "franklin county": {
+   "resolved": {
+    "id": "va:franklin-county",
+    "name": "Franklin County",
+    "kind": "county"
+   },
+   "basis": "exact_name",
+   "candidates": []
+  },
+  "51067": {
+   "resolved": {
+    "id": "va:franklin-county",
+    "name": "Franklin County",
+    "kind": "county"
+   },
+   "basis": "exact_fips",
+   "candidates": []
+  },
+  "067": {
+   "resolved": {
+    "id": "va:franklin-county",
+    "name": "Franklin County",
+    "kind": "county"
+   },
+   "basis": "exact_fips",
+   "candidates": []
+  },
+  "county of franklin": {
+   "resolved": {
+    "id": "va:franklin-county",
+    "name": "Franklin County",
+    "kind": "county"
+   },
+   "basis": "alias",
+   "candidates": []
+  },
+  "va:loudoun-county": {
+   "resolved": {
+    "id": "va:loudoun-county",
+    "name": "Loudoun County",
+    "kind": "county"
+   },
+   "basis": "exact_id",
+   "candidates": []
+  },
+  "loudoun county": {
+   "resolved": {
+    "id": "va:loudoun-county",
+    "name": "Loudoun County",
+    "kind": "county"
+   },
+   "basis": "exact_name",
+   "candidates": []
+  },
+  "51107": {
+   "resolved": {
+    "id": "va:loudoun-county",
+    "name": "Loudoun County",
+    "kind": "county"
+   },
+   "basis": "exact_fips",
+   "candidates": []
+  },
+  "107": {
+   "resolved": {
+    "id": "va:loudoun-county",
+    "name": "Loudoun County",
+    "kind": "county"
+   },
+   "basis": "exact_fips",
+   "candidates": []
+  },
+  "county of loudoun": {
+   "resolved": {
+    "id": "va:loudoun-county",
+    "name": "Loudoun County",
+    "kind": "county"
+   },
+   "basis": "alias",
+   "candidates": []
+  },
+  "va:prince-george-county": {
+   "resolved": {
+    "id": "va:prince-george-county",
+    "name": "Prince George County",
+    "kind": "county"
+   },
+   "basis": "exact_id",
+   "candidates": []
+  },
+  "prince george county": {
+   "resolved": {
+    "id": "va:prince-george-county",
+    "name": "Prince George County",
+    "kind": "county"
+   },
+   "basis": "exact_name",
+   "candidates": []
+  },
+  "51149": {
+   "resolved": {
+    "id": "va:prince-george-county",
+    "name": "Prince George County",
+    "kind": "county"
+   },
+   "basis": "exact_fips",
+   "candidates": []
+  },
+  "149": {
+   "resolved": {
+    "id": "va:prince-george-county",
+    "name": "Prince George County",
+    "kind": "county"
+   },
+   "basis": "exact_fips",
+   "candidates": []
+  },
+  "prince george": {
+   "resolved": {
+    "id": "va:prince-george-county",
+    "name": "Prince George County",
+    "kind": "county"
+   },
+   "basis": "alias",
+   "candidates": []
+  },
+  "county of prince george": {
+   "resolved": {
+    "id": "va:prince-george-county",
+    "name": "Prince George County",
+    "kind": "county"
+   },
+   "basis": "alias",
+   "candidates": []
+  },
+  "va:richmond-city": {
+   "resolved": {
+    "id": "va:richmond-city",
+    "name": "Richmond City",
+    "kind": "independent-city"
+   },
+   "basis": "exact_id",
+   "candidates": []
+  },
+  "richmond city": {
+   "resolved": {
+    "id": "va:richmond-city",
+    "name": "Richmond City",
+    "kind": "independent-city"
+   },
+   "basis": "exact_name",
+   "candidates": []
+  },
+  "51760": {
+   "resolved": {
+    "id": "va:richmond-city",
+    "name": "Richmond City",
+    "kind": "independent-city"
+   },
+   "basis": "exact_fips",
+   "candidates": []
+  },
+  "760": {
+   "resolved": {
+    "id": "va:richmond-city",
+    "name": "Richmond City",
+    "kind": "independent-city"
+   },
+   "basis": "exact_fips",
+   "candidates": []
+  },
+  "city of richmond": {
+   "resolved": {
+    "id": "va:richmond-city",
+    "name": "Richmond City",
+    "kind": "independent-city"
+   },
+   "basis": "alias",
+   "candidates": []
+  },
+  "va:richmond-county": {
+   "resolved": {
+    "id": "va:richmond-county",
+    "name": "Richmond County",
+    "kind": "county"
+   },
+   "basis": "exact_id",
+   "candidates": []
+  },
+  "richmond county": {
+   "resolved": {
+    "id": "va:richmond-county",
+    "name": "Richmond County",
+    "kind": "county"
+   },
+   "basis": "exact_name",
+   "candidates": []
+  },
+  "51159": {
+   "resolved": {
+    "id": "va:richmond-county",
+    "name": "Richmond County",
+    "kind": "county"
+   },
+   "basis": "exact_fips",
+   "candidates": []
+  },
+  "159": {
+   "resolved": {
+    "id": "va:richmond-county",
+    "name": "Richmond County",
+    "kind": "county"
+   },
+   "basis": "exact_fips",
+   "candidates": []
+  },
+  "county of richmond": {
+   "resolved": {
+    "id": "va:richmond-county",
+    "name": "Richmond County",
+    "kind": "county"
+   },
+   "basis": "alias",
+   "candidates": []
+  },
+  "va:roanoke-city": {
+   "resolved": {
+    "id": "va:roanoke-city",
+    "name": "Roanoke City",
+    "kind": "independent-city"
+   },
+   "basis": "exact_id",
+   "candidates": []
+  },
+  "roanoke city": {
+   "resolved": {
+    "id": "va:roanoke-city",
+    "name": "Roanoke City",
+    "kind": "independent-city"
+   },
+   "basis": "exact_name",
+   "candidates": []
+  },
+  "51770": {
+   "resolved": {
+    "id": "va:roanoke-city",
+    "name": "Roanoke City",
+    "kind": "independent-city"
+   },
+   "basis": "exact_fips",
+   "candidates": []
+  },
+  "770": {
+   "resolved": {
+    "id": "va:roanoke-city",
+    "name": "Roanoke City",
+    "kind": "independent-city"
+   },
+   "basis": "exact_fips",
+   "candidates": []
+  },
+  "city of roanoke": {
+   "resolved": {
+    "id": "va:roanoke-city",
+    "name": "Roanoke City",
+    "kind": "independent-city"
+   },
+   "basis": "alias",
+   "candidates": []
+  },
+  "va:roanoke-county": {
+   "resolved": {
+    "id": "va:roanoke-county",
+    "name": "Roanoke County",
+    "kind": "county"
+   },
+   "basis": "exact_id",
+   "candidates": []
+  },
+  "roanoke county": {
+   "resolved": {
+    "id": "va:roanoke-county",
+    "name": "Roanoke County",
+    "kind": "county"
+   },
+   "basis": "exact_name",
+   "candidates": []
+  },
+  "51161": {
+   "resolved": {
+    "id": "va:roanoke-county",
+    "name": "Roanoke County",
+    "kind": "county"
+   },
+   "basis": "exact_fips",
+   "candidates": []
+  },
+  "161": {
+   "resolved": {
+    "id": "va:roanoke-county",
+    "name": "Roanoke County",
+    "kind": "county"
+   },
+   "basis": "exact_fips",
+   "candidates": []
+  },
+  "county of roanoke": {
+   "resolved": {
+    "id": "va:roanoke-county",
+    "name": "Roanoke County",
+    "kind": "county"
+   },
+   "basis": "alias",
+   "candidates": []
+  },
+  "va:vienna-town": {
+   "resolved": {
+    "id": "va:vienna-town",
+    "name": "Vienna (town)",
+    "kind": "town"
+   },
+   "basis": "exact_id",
+   "candidates": []
+  },
+  "vienna (town)": {
+   "resolved": {
+    "id": "va:vienna-town",
+    "name": "Vienna (town)",
+    "kind": "town"
+   },
+   "basis": "exact_name",
+   "candidates": []
+  },
+  "town of vienna": {
+   "resolved": {
+    "id": "va:vienna-town",
+    "name": "Vienna (town)",
+    "kind": "town"
+   },
+   "basis": "alias",
+   "candidates": []
+  },
+  "vienna": {
+   "resolved": {
+    "id": "va:vienna-town",
+    "name": "Vienna (town)",
+    "kind": "town"
+   },
+   "basis": "alias",
+   "candidates": []
+  },
+  "craig": {
+   "resolved": {
+    "id": "va:craig-county",
+    "name": "Craig County",
+    "kind": "county"
+   },
+   "basis": "exact_name",
+   "candidates": []
+  },
+  "fairfax": {
+   "resolved": null,
+   "basis": null,
+   "candidates": [
+    {
+     "id": "va:fairfax-city",
+     "name": "Fairfax City",
+     "kind": "independent-city",
+     "distinguisher": "independent city, not a county"
+    },
+    {
+     "id": "va:fairfax-county",
+     "name": "Fairfax County",
+     "kind": "county",
+     "distinguisher": "county"
+    }
+   ]
+  },
+  "franklin": {
+   "resolved": null,
+   "basis": null,
+   "candidates": [
+    {
+     "id": "va:franklin-city",
+     "name": "Franklin City",
+     "kind": "independent-city",
+     "distinguisher": "independent city, not a county"
+    },
+    {
+     "id": "va:franklin-county",
+     "name": "Franklin County",
+     "kind": "county",
+     "distinguisher": "county"
+    }
+   ]
+  },
+  "loudoun": {
+   "resolved": {
+    "id": "va:loudoun-county",
+    "name": "Loudoun County",
+    "kind": "county"
+   },
+   "basis": "exact_name",
+   "candidates": []
+  },
+  "richmond": {
+   "resolved": null,
+   "basis": null,
+   "candidates": [
+    {
+     "id": "va:richmond-city",
+     "name": "Richmond City",
+     "kind": "independent-city",
+     "distinguisher": "independent city, not a county"
+    },
+    {
+     "id": "va:richmond-county",
+     "name": "Richmond County",
+     "kind": "county",
+     "distinguisher": "county"
+    }
+   ]
+  },
+  "roanoke": {
+   "resolved": null,
+   "basis": null,
+   "candidates": [
+    {
+     "id": "va:roanoke-city",
+     "name": "Roanoke City",
+     "kind": "independent-city",
+     "distinguisher": "independent city, not a county"
+    },
+    {
+     "id": "va:roanoke-county",
+     "name": "Roanoke County",
+     "kind": "county",
+     "distinguisher": "county"
+    }
+   ]
+  }
+ },
+ "query_list": [
+  "036",
+  "045",
+  "059",
+  "067",
+  "107",
+  "149",
+  "159",
+  "161",
+  "51",
+  "51036",
+  "51045",
+  "51059",
+  "51067",
+  "51107",
+  "51149",
+  "51159",
+  "51161",
+  "51600",
+  "51620",
+  "51760",
+  "51770",
+  "600",
+  "620",
+  "760",
+  "770",
+  "charles city",
+  "charles city county",
+  "city of fairfax",
+  "city of franklin",
+  "city of richmond",
+  "city of roanoke",
+  "commonwealth of virginia",
+  "county of craig",
+  "county of fairfax",
+  "county of franklin",
+  "county of loudoun",
+  "county of prince george",
+  "county of richmond",
+  "county of roanoke",
+  "craig",
+  "craig county",
+  "fairfax",
+  "fairfax city",
+  "fairfax co.",
+  "fairfax county",
+  "franklin",
+  "franklin city",
+  "franklin county",
+  "loudoun",
+  "loudoun county",
+  "prince george",
+  "prince george county",
+  "richmond",
+  "richmond city",
+  "richmond county",
+  "roanoke",
+  "roanoke city",
+  "roanoke county",
+  "town of vienna",
+  "va",
+  "va:charles-city-county",
+  "va:craig-county",
+  "va:fairfax-city",
+  "va:fairfax-county",
+  "va:franklin-city",
+  "va:franklin-county",
+  "va:loudoun-county",
+  "va:prince-george-county",
+  "va:richmond-city",
+  "va:richmond-county",
+  "va:roanoke-city",
+  "va:roanoke-county",
+  "va:vienna-town",
+  "vienna",
+  "vienna (town)",
+  "virginia"
+ ]
+}

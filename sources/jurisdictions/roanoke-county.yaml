@@ -1,0 +1,7 @@
+id: va:roanoke-county
+name: Roanoke County
+kind: county
+fips: "51161"
+parent: va
+aliases: ["County of Roanoke"]
+not_to_be_confused_with: ["va:roanoke-city"]

@@ -1,0 +1,94 @@
+# Two manifests' worth of data behind one manifest: Richmond City publishes
+# Parcels and ZoningDistricts as separate FeatureServers on the same host
+# (not two layers of one service like Fairfax), so the zoning layer carries
+# its own service_url override (src/commonwealth/adapters/arcgis.py
+# LayerDecl.service_url). Endpoint, layer ids, and field names verified live
+# 2026-08-28. Neither layer publishes a jurisdiction-specific GIS disclaimer
+# page; terms_url points at the general Esri terms that govern anonymous
+# access to this ArcGIS Online org's public services.
+id: va-richmond-city-parcels-zoning
+name: Richmond City Parcels and Zoning (GIS Open Data)
+jurisdiction: va:richmond-city
+
+publisher:
+  agency: City of Richmond (Information Technology / Assessor of Real Estate)
+  authority_level: primary
+
+domains: [geo, planning]
+
+capabilities:
+  - id: parcel.lookup
+    tool_hint: geo.find_parcel
+  - id: zoning.lookup
+    tool_hint: geo.find_zoning
+
+adapter:
+  type: arcgis
+  service_url: https://services1.arcgis.com/k3vhq11XkBNeeOfM/arcgis/rest/services/Parcels/FeatureServer
+  field_mapping_version: "1"
+  layers:
+    parcels:
+      layer_id: 0
+      id_field: OBJECTID
+      geometry: polygon
+      field_mapping:
+        pin: PIN
+        parcel_type: PropertyClass
+    zoning:
+      layer_id: 0
+      id_field: OBJECTID
+      geometry: polygon
+      service_url: https://services1.arcgis.com/k3vhq11XkBNeeOfM/arcgis/rest/services/ZoningDistricts/FeatureServer
+      field_mapping:
+        district: Name
+        proffered: Conditional
+        ordinance: Ordinance
+
+access:
+  mode: anonymous
+  automation_status: public_api
+  terms_url: https://www.arcgis.com/home/termsofuse.html
+  terms_notes: >
+    Both FeatureServers are published anonymously through the city's ArcGIS
+    Online org (owningTenant k3vhq11XkBNeeOfM). No Richmond-specific GIS
+    disclaimer page was found (checked rva.gov/information-technology and
+    the gisdata-richmond.opendata.arcgis.com Hub site); the general Esri
+    terms of use govern anonymous access. Re-review with the standard
+    12-month cadence and replace with a jurisdiction-specific page if one
+    surfaces.
+  terms_reviewed_at: "2026-08-28"
+  data_classification: open
+
+freshness:
+  expected_cadence: daily
+  cadence_source: unknown
+  ttl_hint_seconds: 86400
+
+coverage:
+  geography: va:richmond-city
+  temporal: current
+  known_limitations:
+    - GIS zoning is a screening representation; the adopted zoning ordinance
+      and official zoning map govern.
+    - Parcels layer stacks multiple ownership records under one geometry for
+      multi-owner PINs (see the CountOfPIN field in the publisher's schema).
+
+authority_notes: >
+  City-published layers are the primary GIS representation for Richmond City
+  parcels and zoning. Screening evidence; confirm controlling adopted
+  records where a legal determination is required.
+
+health:
+  probe: arcgis_layer_count
+  expect:
+    # Per-layer floors: counts observed live 2026-08-28 were 76,879 parcels
+    # and 679 zoning polygons; floors sit ~20% under those.
+    min_features:
+      parcels: 60000
+      zoning: 500
+
+lifecycle:
+  declared_state: active
+  added: "2026-08-28"
+  last_verified: "2026-08-28"
+  verified_by: pranava

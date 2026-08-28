@@ -1,0 +1,782 @@
+{
+ "version": "0.1.0.dev0",
+ "registry_revision": "2026-08-28",
+ "counts": {
+  "servers": 1,
+  "tools": 8,
+  "packages": 3,
+  "sources": 6,
+  "capabilities": 4,
+  "jurisdictions": 14,
+  "trap_pairs": 4
+ },
+ "tools": [
+  {
+   "name": "civic.get_code_section",
+   "package": "civic",
+   "toolset": "default",
+   "contract_version": "1",
+   "description": "Get the text of a Code of Virginia section by its citation (e.g. '1-500', '18.2-57'). Direct lookup only \u2014 this is not a full-text search; the caller must already know or have found the section number. Results carry the section's own citation history exactly as published, with a link to the live page. A missing section (repealed, renumbered, or never existed) returns found=False, not an error."
+  },
+  {
+   "name": "geo.find_parcel",
+   "package": "geo",
+   "toolset": "default",
+   "contract_version": "1",
+   "description": "Find parcel records in a Virginia jurisdiction by parcel PIN or by a lon/lat point. Pass the user's jurisdiction string as given \u2014 resolution and its ambiguities are handled here, and candidate lists must go back to the user unchosen. Results carry provenance and coverage; an empty result with coverage.registry='none' means Commonwealth has no source there, not that no parcel exists. Not for street addresses yet (no geocoding in this release)."
+  },
+  {
+   "name": "geo.find_zoning",
+   "package": "geo",
+   "toolset": "default",
+   "contract_version": "1",
+   "description": "Find the zoning district(s) for a parcel PIN or lon/lat point in a Virginia jurisdiction. Screening only: results state the GIS layer's answer, never a legal determination \u2014 repeat the screening_only warning to the user. When two official sources are registered, both are queried and any disagreement is shown, not reconciled. Use geo.find_parcel first when you need the parcel record itself."
+  },
+  {
+   "name": "geo.find_boundaries",
+   "package": "geo",
+   "toolset": "default",
+   "contract_version": "1",
+   "description": "Get a Virginia jurisdiction's official boundary: FIPS, GNIS, area, jurisdiction type, bounding box, and the publisher's own centroid. Use to confirm WHICH government's territory is meant and how big it is. Independent cities are returned as their own territory, never as part of the county sharing their name. Screening geometry only \u2014 it is generalized and the publisher disclaims survey use, so never decide from it which side of a boundary an address sits on. Pass detail='full' for vertices. Not a containment test: to find which jurisdiction covers a point, use registry.resolve_jurisdiction with lon/lat."
+  },
+  {
+   "name": "registry.resolve_jurisdiction",
+   "package": "registry",
+   "toolset": "discovery-min",
+   "contract_version": "2",
+   "description": "Resolve a Virginia jurisdiction from a name, alias, or FIPS code, or from a lon/lat point by point-in-polygon against official boundaries. Use FIRST whenever a place is named or a coordinate is given: Virginia has independent cities that are not inside the counties sharing their names (Fairfax City is not in Fairfax County), and towns that sit inside a county so BOTH governments apply \u2014 read layered_authorities, do not assume the resolved leaf answers everything. Pass `query` OR lon/lat, never both. If the result carries candidates with requires_user_choice, present them to the user and never pick one yourself. Not for street addresses yet (no geocoding in this release)."
+  },
+  {
+   "name": "registry.search_sources",
+   "package": "registry",
+   "toolset": "discovery",
+   "contract_version": "1",
+   "description": "Search the Government Source Registry: which registered public systems cover a capability or jurisdiction, with authority level and current state. Use to answer 'what does Commonwealth cover?' before assuming coverage. Not a data query tool \u2014 use the geo.* tools for actual records."
+  },
+  {
+   "name": "registry.describe_source",
+   "package": "registry",
+   "toolset": "discovery",
+   "contract_version": "1",
+   "description": "Full registry entry for one source id: publisher, authority, terms, limitations. Use when the user asks where an answer came from or what a source's caveats are."
+  },
+  {
+   "name": "registry.source_status",
+   "package": "registry",
+   "toolset": "discovery",
+   "contract_version": "1",
+   "description": "Declared and operational state for registered sources. Use when a query reported a source failure and you need to say whether the source is known-down."
+  }
+ ],
+ "sources": [
+  {
+   "id": "va-charles-city-county-parcels",
+   "name": "Charles City County Tax Parcels (GIS Open Data)",
+   "jurisdiction": "va:charles-city-county",
+   "publisher": "Charles City County government (GIS)",
+   "authority_level": "primary",
+   "capabilities": [
+    "parcel.lookup"
+   ],
+   "data_classification": "open",
+   "declared_state": "active",
+   "terms_url": "https://dataportal-charlescityvagis.hub.arcgis.com/datasets/967223223e134e7b8b4411e9226d2872_0/about",
+   "known_limitations": [
+    "No zoning layer published for this jurisdiction; parcel.lookup only.",
+    "Only two fields exposed (OBJECTID, MAP_PIN) \u2014 no owner, valuation, or land-use attributes available through this source."
+   ]
+  },
+  {
+   "id": "va-code-of-virginia",
+   "name": "Code of Virginia (law.lis.virginia.gov)",
+   "jurisdiction": "va",
+   "publisher": "Division of Legislative Automated Systems (DLAS), Virginia General Assembly",
+   "authority_level": "primary",
+   "capabilities": [
+    "code_section.lookup"
+   ],
+   "data_classification": "open",
+   "declared_state": "active",
+   "terms_url": "https://law.lis.virginia.gov/vacode/",
+   "known_limitations": [
+    "Direct citation lookup only \u2014 this reads one section page per call; there is no full-text search against this adapter (the site's own search feature was not reverse-engineered).",
+    "HTML-page scraping, not a structured API \u2014 a redesign of the site's markup would break parsing before it broke any published contract.",
+    "No machine-readable last-edit date per section; retrieval time is known, the underlying text's amendment date is only what the section's own citation-history paragraph states in prose."
+   ]
+  },
+  {
+   "id": "va-fairfax-parcels-zoning",
+   "name": "Fairfax County Parcels and Zoning (Open Data)",
+   "jurisdiction": "va:fairfax-county",
+   "publisher": "Fairfax County government (GIS and Mapping Services, Open Data)",
+   "authority_level": "primary",
+   "capabilities": [
+    "parcel.lookup",
+    "zoning.lookup"
+   ],
+   "data_classification": "open",
+   "declared_state": "active",
+   "terms_url": "https://www.fairfaxcounty.gov/maps/disclaimer",
+   "known_limitations": [
+    "GIS zoning is a screening representation; the adopted zoning ordinance and official zoning map govern.",
+    "Neither layer publishes a machine-readable last-edit date."
+   ]
+  },
+  {
+   "id": "va-richmond-city-parcels-zoning",
+   "name": "Richmond City Parcels and Zoning (GIS Open Data)",
+   "jurisdiction": "va:richmond-city",
+   "publisher": "City of Richmond (Information Technology / Assessor of Real Estate)",
+   "authority_level": "primary",
+   "capabilities": [
+    "parcel.lookup",
+    "zoning.lookup"
+   ],
+   "data_classification": "open",
+   "declared_state": "active",
+   "terms_url": "https://www.arcgis.com/home/termsofuse.html",
+   "known_limitations": [
+    "GIS zoning is a screening representation; the adopted zoning ordinance and official zoning map govern.",
+    "Parcels layer stacks multiple ownership records under one geometry for multi-owner PINs (see the CountOfPIN field in the publisher's schema)."
+   ]
+  },
+  {
+   "id": "va-vgin-admin-boundaries",
+   "name": "Virginia Administrative Boundaries (VGIN)",
+   "jurisdiction": "va",
+   "publisher": "Virginia Geographic Information Network (VGIN), part of the Virginia Department of Emergency Management",
+   "authority_level": "official_secondary",
+   "capabilities": [
+    "boundary.lookup"
+   ],
+   "data_classification": "open",
+   "declared_state": "active",
+   "terms_url": "https://vgin.vdem.virginia.gov/datasets/VGIN::virginia-administrative-boundaries/about",
+   "known_limitations": [
+    "Cartographic/analysis use only per the publisher's own disclaimer; not a legal description or a property survey. Boundary questions with legal consequence go to the locality, not this layer.",
+    "Layer publishes no layer-level last-edit date (editingInfo is absent on both layers), so envelope source_updated_at is null. The per-record LASTUPDATE field IS mapped and surfaced per boundary, so each returned record carries its own vintage even though the layer does not.",
+    "Geometry is returned simplified (server-side generalization) so a polygon fits an inline response; the unsimplified boundary is not exposed until the result-resource store exists. Simplified vertices can sit tens of metres off the true line \u2014 never use them to decide which side of a boundary a specific address falls on.",
+    "The localities layer carries 134 rows for Virginia's 133 counties and independent cities. Prince George County (FIPS 51149) is published as two separate polygons sharing one FIPS and GNIS, a 281 sq mi body and a 0.0076 sq mi sliver. Both are returned; neither is silently dropped. See KNOWN_SOURCE_QUIRKS.md.\n",
+    "Towns layer covers incorporated towns only. Virginia's unincorporated communities and CDPs have no polygon here, and absence is not evidence that a place does not exist."
+   ]
+  },
+  {
+   "id": "va-vgin-statewide-parcels",
+   "name": "Virginia Statewide Parcels (VGIN)",
+   "jurisdiction": "va",
+   "publisher": "Virginia Geographic Information Network (VGIN), part of the Virginia Department of Emergency Management",
+   "authority_level": "official_secondary",
+   "capabilities": [
+    "parcel.lookup"
+   ],
+   "data_classification": "open",
+   "declared_state": "active",
+   "terms_url": "https://vgin.vdem.virginia.gov/datasets/virginia-parcels/about",
+   "known_limitations": [
+    "Cartographic/analysis use only per the publisher's own disclaimer; not a legal description or survey.",
+    "Parcel boundaries are not edge-matched across municipal boundaries.",
+    "Currency varies by locality and lags the locality's own live system; this is the statewide fallback, not the fast path, for any jurisdiction that also has a local manifest.",
+    "No zoning equivalent published statewide; parcel.lookup only.",
+    "Layer publishes no machine-readable last-edit date at the layer level (a per-record LASTUPDATE field exists but is not exposed through this adapter's freshness path)."
+   ]
+  }
+ ],
+ "capabilities": [
+  "boundary.lookup",
+  "code_section.lookup",
+  "parcel.lookup",
+  "zoning.lookup"
+ ],
+ "jurisdiction_kinds": {
+  "county": 8,
+  "independent-city": 4,
+  "state": 1,
+  "town": 1
+ },
+ "trap_pairs": [
+  [
+   "va:fairfax-city",
+   "va:fairfax-county"
+  ],
+  [
+   "va:franklin-city",
+   "va:franklin-county"
+  ],
+  [
+   "va:richmond-city",
+   "va:richmond-county"
+  ],
+  [
+   "va:roanoke-city",
+   "va:roanoke-county"
+  ]
+ ],
+ "profiles": {
+  "default": 5,
+  "discovery": 8,
+  "all": 8
+ },
+ "skills": [
+  {
+   "name": "parcel-zoning-screen",
+   "status": "planned (developer-product phase)",
+   "capabilities": [
+    "parcel.lookup",
+    "zoning.lookup"
+   ]
+  },
+  {
+   "name": "legislative-impact-analysis",
+   "status": "milestone 1b (civic)",
+   "capabilities": []
+  },
+  {
+   "name": "development-site-due-diligence",
+   "status": "deferred until coverage earns the name",
+   "capabilities": []
+  }
+ ],
+ "jurisdictions": [
+  {
+   "id": "va",
+   "name": "Virginia",
+   "kind": "state",
+   "fips": "51",
+   "place_fips": null,
+   "parent": null,
+   "aliases": [
+    "Commonwealth of Virginia"
+   ],
+   "not_to_be_confused_with": []
+  },
+  {
+   "id": "va:charles-city-county",
+   "name": "Charles City County",
+   "kind": "county",
+   "fips": "51036",
+   "place_fips": null,
+   "parent": "va",
+   "aliases": [
+    "Charles City"
+   ],
+   "not_to_be_confused_with": []
+  },
+  {
+   "id": "va:craig-county",
+   "name": "Craig County",
+   "kind": "county",
+   "fips": "51045",
+   "place_fips": null,
+   "parent": "va",
+   "aliases": [
+    "County of Craig"
+   ],
+   "not_to_be_confused_with": []
+  },
+  {
+   "id": "va:fairfax-city",
+   "name": "Fairfax City",
+   "kind": "independent-city",
+   "fips": "51600",
+   "place_fips": null,
+   "parent": "va",
+   "aliases": [
+    "City of Fairfax"
+   ],
+   "not_to_be_confused_with": [
+    "va:fairfax-county"
+   ]
+  },
+  {
+   "id": "va:fairfax-county",
+   "name": "Fairfax County",
+   "kind": "county",
+   "fips": "51059",
+   "place_fips": null,
+   "parent": "va",
+   "aliases": [
+    "County of Fairfax",
+    "Fairfax Co."
+   ],
+   "not_to_be_confused_with": [
+    "va:fairfax-city"
+   ]
+  },
+  {
+   "id": "va:franklin-city",
+   "name": "Franklin City",
+   "kind": "independent-city",
+   "fips": "51620",
+   "place_fips": null,
+   "parent": "va",
+   "aliases": [
+    "City of Franklin"
+   ],
+   "not_to_be_confused_with": [
+    "va:franklin-county"
+   ]
+  },
+  {
+   "id": "va:franklin-county",
+   "name": "Franklin County",
+   "kind": "county",
+   "fips": "51067",
+   "place_fips": null,
+   "parent": "va",
+   "aliases": [
+    "County of Franklin"
+   ],
+   "not_to_be_confused_with": [
+    "va:franklin-city"
+   ]
+  },
+  {
+   "id": "va:loudoun-county",
+   "name": "Loudoun County",
+   "kind": "county",
+   "fips": "51107",
+   "place_fips": null,
+   "parent": "va",
+   "aliases": [
+    "County of Loudoun"
+   ],
+   "not_to_be_confused_with": []
+  },
+  {
+   "id": "va:prince-george-county",
+   "name": "Prince George County",
+   "kind": "county",
+   "fips": "51149",
+   "place_fips": null,
+   "parent": "va",
+   "aliases": [
+    "Prince George",
+    "County of Prince George"
+   ],
+   "not_to_be_confused_with": []
+  },
+  {
+   "id": "va:richmond-city",
+   "name": "Richmond City",
+   "kind": "independent-city",
+   "fips": "51760",
+   "place_fips": null,
+   "parent": "va",
+   "aliases": [
+    "City of Richmond"
+   ],
+   "not_to_be_confused_with": [
+    "va:richmond-county"
+   ]
+  },
+  {
+   "id": "va:richmond-county",
+   "name": "Richmond County",
+   "kind": "county",
+   "fips": "51159",
+   "place_fips": null,
+   "parent": "va",
+   "aliases": [
+    "County of Richmond"
+   ],
+   "not_to_be_confused_with": [
+    "va:richmond-city"
+   ]
+  },
+  {
+   "id": "va:roanoke-city",
+   "name": "Roanoke City",
+   "kind": "independent-city",
+   "fips": "51770",
+   "place_fips": null,
+   "parent": "va",
+   "aliases": [
+    "City of Roanoke"
+   ],
+   "not_to_be_confused_with": [
+    "va:roanoke-county"
+   ]
+  },
+  {
+   "id": "va:roanoke-county",
+   "name": "Roanoke County",
+   "kind": "county",
+   "fips": "51161",
+   "place_fips": null,
+   "parent": "va",
+   "aliases": [
+    "County of Roanoke"
+   ],
+   "not_to_be_confused_with": [
+    "va:roanoke-city"
+   ]
+  },
+  {
+   "id": "va:vienna-town",
+   "name": "Vienna (town)",
+   "kind": "town",
+   "fips": null,
+   "place_fips": "81072",
+   "parent": "va:fairfax-county",
+   "aliases": [
+    "Town of Vienna",
+    "Vienna"
+   ],
+   "not_to_be_confused_with": []
+  }
+ ],
+ "capability_coverage": {
+  "boundary.lookup": {
+   "covered": [
+    {
+     "jurisdiction": "va",
+     "sources": [
+      "va-vgin-admin-boundaries"
+     ]
+    },
+    {
+     "jurisdiction": "va:charles-city-county",
+     "sources": [
+      "va-vgin-admin-boundaries"
+     ]
+    },
+    {
+     "jurisdiction": "va:craig-county",
+     "sources": [
+      "va-vgin-admin-boundaries"
+     ]
+    },
+    {
+     "jurisdiction": "va:fairfax-city",
+     "sources": [
+      "va-vgin-admin-boundaries"
+     ]
+    },
+    {
+     "jurisdiction": "va:fairfax-county",
+     "sources": [
+      "va-vgin-admin-boundaries"
+     ]
+    },
+    {
+     "jurisdiction": "va:franklin-city",
+     "sources": [
+      "va-vgin-admin-boundaries"
+     ]
+    },
+    {
+     "jurisdiction": "va:franklin-county",
+     "sources": [
+      "va-vgin-admin-boundaries"
+     ]
+    },
+    {
+     "jurisdiction": "va:loudoun-county",
+     "sources": [
+      "va-vgin-admin-boundaries"
+     ]
+    },
+    {
+     "jurisdiction": "va:prince-george-county",
+     "sources": [
+      "va-vgin-admin-boundaries"
+     ]
+    },
+    {
+     "jurisdiction": "va:richmond-city",
+     "sources": [
+      "va-vgin-admin-boundaries"
+     ]
+    },
+    {
+     "jurisdiction": "va:richmond-county",
+     "sources": [
+      "va-vgin-admin-boundaries"
+     ]
+    },
+    {
+     "jurisdiction": "va:roanoke-city",
+     "sources": [
+      "va-vgin-admin-boundaries"
+     ]
+    },
+    {
+     "jurisdiction": "va:roanoke-county",
+     "sources": [
+      "va-vgin-admin-boundaries"
+     ]
+    },
+    {
+     "jurisdiction": "va:vienna-town",
+     "sources": [
+      "va-vgin-admin-boundaries"
+     ]
+    }
+   ],
+   "gaps": []
+  },
+  "code_section.lookup": {
+   "covered": [
+    {
+     "jurisdiction": "va",
+     "sources": [
+      "va-code-of-virginia"
+     ]
+    },
+    {
+     "jurisdiction": "va:charles-city-county",
+     "sources": [
+      "va-code-of-virginia"
+     ]
+    },
+    {
+     "jurisdiction": "va:craig-county",
+     "sources": [
+      "va-code-of-virginia"
+     ]
+    },
+    {
+     "jurisdiction": "va:fairfax-city",
+     "sources": [
+      "va-code-of-virginia"
+     ]
+    },
+    {
+     "jurisdiction": "va:fairfax-county",
+     "sources": [
+      "va-code-of-virginia"
+     ]
+    },
+    {
+     "jurisdiction": "va:franklin-city",
+     "sources": [
+      "va-code-of-virginia"
+     ]
+    },
+    {
+     "jurisdiction": "va:franklin-county",
+     "sources": [
+      "va-code-of-virginia"
+     ]
+    },
+    {
+     "jurisdiction": "va:loudoun-county",
+     "sources": [
+      "va-code-of-virginia"
+     ]
+    },
+    {
+     "jurisdiction": "va:prince-george-county",
+     "sources": [
+      "va-code-of-virginia"
+     ]
+    },
+    {
+     "jurisdiction": "va:richmond-city",
+     "sources": [
+      "va-code-of-virginia"
+     ]
+    },
+    {
+     "jurisdiction": "va:richmond-county",
+     "sources": [
+      "va-code-of-virginia"
+     ]
+    },
+    {
+     "jurisdiction": "va:roanoke-city",
+     "sources": [
+      "va-code-of-virginia"
+     ]
+    },
+    {
+     "jurisdiction": "va:roanoke-county",
+     "sources": [
+      "va-code-of-virginia"
+     ]
+    },
+    {
+     "jurisdiction": "va:vienna-town",
+     "sources": [
+      "va-code-of-virginia"
+     ]
+    }
+   ],
+   "gaps": []
+  },
+  "parcel.lookup": {
+   "covered": [
+    {
+     "jurisdiction": "va",
+     "sources": [
+      "va-vgin-statewide-parcels"
+     ]
+    },
+    {
+     "jurisdiction": "va:charles-city-county",
+     "sources": [
+      "va-charles-city-county-parcels",
+      "va-vgin-statewide-parcels"
+     ]
+    },
+    {
+     "jurisdiction": "va:craig-county",
+     "sources": [
+      "va-vgin-statewide-parcels"
+     ]
+    },
+    {
+     "jurisdiction": "va:fairfax-city",
+     "sources": [
+      "va-vgin-statewide-parcels"
+     ]
+    },
+    {
+     "jurisdiction": "va:fairfax-county",
+     "sources": [
+      "va-fairfax-parcels-zoning",
+      "va-vgin-statewide-parcels"
+     ]
+    },
+    {
+     "jurisdiction": "va:franklin-city",
+     "sources": [
+      "va-vgin-statewide-parcels"
+     ]
+    },
+    {
+     "jurisdiction": "va:franklin-county",
+     "sources": [
+      "va-vgin-statewide-parcels"
+     ]
+    },
+    {
+     "jurisdiction": "va:loudoun-county",
+     "sources": [
+      "va-vgin-statewide-parcels"
+     ]
+    },
+    {
+     "jurisdiction": "va:prince-george-county",
+     "sources": [
+      "va-vgin-statewide-parcels"
+     ]
+    },
+    {
+     "jurisdiction": "va:richmond-city",
+     "sources": [
+      "va-richmond-city-parcels-zoning",
+      "va-vgin-statewide-parcels"
+     ]
+    },
+    {
+     "jurisdiction": "va:richmond-county",
+     "sources": [
+      "va-vgin-statewide-parcels"
+     ]
+    },
+    {
+     "jurisdiction": "va:roanoke-city",
+     "sources": [
+      "va-vgin-statewide-parcels"
+     ]
+    },
+    {
+     "jurisdiction": "va:roanoke-county",
+     "sources": [
+      "va-vgin-statewide-parcels"
+     ]
+    },
+    {
+     "jurisdiction": "va:vienna-town",
+     "sources": [
+      "va-fairfax-parcels-zoning",
+      "va-vgin-statewide-parcels"
+     ]
+    }
+   ],
+   "gaps": []
+  },
+  "zoning.lookup": {
+   "covered": [
+    {
+     "jurisdiction": "va:fairfax-county",
+     "sources": [
+      "va-fairfax-parcels-zoning"
+     ]
+    },
+    {
+     "jurisdiction": "va:richmond-city",
+     "sources": [
+      "va-richmond-city-parcels-zoning"
+     ]
+    },
+    {
+     "jurisdiction": "va:vienna-town",
+     "sources": [
+      "va-fairfax-parcels-zoning"
+     ]
+    }
+   ],
+   "gaps": [
+    "va",
+    "va:charles-city-county",
+    "va:craig-county",
+    "va:fairfax-city",
+    "va:franklin-city",
+    "va:franklin-county",
+    "va:loudoun-county",
+    "va:prince-george-county",
+    "va:richmond-county",
+    "va:roanoke-city",
+    "va:roanoke-county"
+   ]
+  }
+ },
+ "coverage_definitions": {
+  "registry": {
+   "question": "Does the Source Registry cover the requested place/capability/time at all?",
+   "values": {
+    "covered": "A registered source should answer this.",
+    "partial": "Some but not all of what was asked is covered.",
+    "none": "Commonwealth has no source for this \u2014 the gap is named, never reported as \u201cno results.\u201d",
+    "unknown": "Coverage could not be determined."
+   }
+  },
+  "execution": {
+   "question": "Did the queries that should have run actually finish?",
+   "values": {
+    "complete": "Every source that should have been queried was.",
+    "partial": "Named sources could not be checked; the answer says which.",
+    "failed": "The call failed outright; the typed error rides alongside this envelope."
+   }
+  },
+  "pagination": {
+   "question": "Was the record set fully paged?",
+   "values": {
+    "complete": "Every page was retrieved.",
+    "truncated": "The source's own transfer limit cut the result short (ArcGIS exceededTransferLimit); honestly labeled, not silently dropped.",
+    "unknown": "Paging completeness could not be determined."
+   }
+  },
+  "result": {
+   "question": "Did anything match?",
+   "values": {
+    "hit": "At least one record matched.",
+    "empty": "Nothing matched \u2014 a successful state, not an error."
+   }
+  }
+ },
+ "warning_definitions": {
+  "screening_only": "GIS zoning is a screening layer. The adopted zoning ordinance and official zoning map govern; confirm before any legal reliance.",
+  "stale_source": "The source's own update cadence was missed.",
+  "freshness_unavailable": "The publisher exposes no machine-readable update date for this layer; retrieval time is known, data vintage isn't.",
+  "boundary_precision": "Parcel or boundary geometry is generalized, not surveyed.",
+  "alias_match": "The entity matched via a registered alias, not its exact id.",
+  "mixed_vintages": "Results combine records with different as-of dates.",
+  "terms_note": "The source's terms constrain reuse of this data.",
+  "sensitive_public_data": "The source is classified sensitive_public: technically public, but redistribution is field-allowlisted and reviewed before the source may go active.",
+  "insecure_transport": "This source is reached over plain HTTP, per a reviewed manifest exception, not HTTPS.",
+  "truncated_inline": "More records were retrieved than are shown inline; narrow the query for the rest."
+ }
+}

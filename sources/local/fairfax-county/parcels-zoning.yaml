@@ -1,0 +1,87 @@
+# One manifest per source system: Fairfax County's OpenData_A9 FeatureServer
+# carries both the Parcels and Zoning layers. Endpoint, layer ids, and field
+# names verified live 2026-08-27 (service root -> OpenData folder -> layers
+# 0/1); neither layer publishes editingInfo.lastEditDate, so source_updated_at
+# is genuinely null at query time (freshness_unavailable warning).
+id: va-fairfax-parcels-zoning
+name: Fairfax County Parcels and Zoning (Open Data)
+jurisdiction: va:fairfax-county
+
+publisher:
+  agency: Fairfax County government (GIS and Mapping Services, Open Data)
+  authority_level: primary
+
+domains: [geo, planning]
+
+capabilities:
+  - id: parcel.lookup
+    tool_hint: geo.find_parcel
+  - id: zoning.lookup
+    tool_hint: geo.find_zoning
+
+adapter:
+  type: arcgis
+  service_url: https://www.fairfaxcounty.gov/mercator/rest/services/OpenData/OpenData_A9/FeatureServer
+  field_mapping_version: "1"
+  layers:
+    parcels:
+      layer_id: 0
+      id_field: OBJECTID
+      geometry: polygon
+      field_mapping:
+        pin: PIN
+        parcel_type: PARCEL_TYPE
+    zoning:
+      layer_id: 1
+      id_field: OBJECTID
+      geometry: polygon
+      field_mapping:
+        district: ZONECODE
+        zone_type: ZONETYPE
+        proffered: PROFFER
+        overlay_jurisdiction: JURISDICTION
+
+access:
+  mode: anonymous
+  automation_status: public_api
+  terms_url: https://www.fairfaxcounty.gov/maps/disclaimer
+  terms_notes: >
+    County GIS disclaimer page (URL verified 2026-08-27). Layers are published
+    through the county's public Open Data ArcGIS folder with anonymous query
+    enabled. No bulk-restriction language located as of the review date;
+    re-review with the standard 12-month cadence.
+  terms_reviewed_at: "2026-08-27"
+  data_classification: open
+
+freshness:
+  expected_cadence: daily
+  cadence_source: unknown
+  ttl_hint_seconds: 86400
+
+coverage:
+  geography: va:fairfax-county
+  temporal: current
+  known_limitations:
+    - GIS zoning is a screening representation; the adopted zoning ordinance
+      and official zoning map govern.
+    - Neither layer publishes a machine-readable last-edit date.
+
+authority_notes: >
+  County-published layers are the primary GIS representation for Fairfax
+  County parcels and zoning. Screening evidence; confirm controlling adopted
+  records where a legal determination is required.
+
+health:
+  probe: arcgis_layer_count
+  expect:
+    # Per-layer floors: counts observed live 2026-08-27 were 369,392 parcels
+    # and 6,440 zoning polygons; floors sit ~20% under those.
+    min_features:
+      parcels: 300000
+      zoning: 5000
+
+lifecycle:
+  declared_state: active
+  added: "2026-08-27"
+  last_verified: "2026-08-27"
+  verified_by: pranava

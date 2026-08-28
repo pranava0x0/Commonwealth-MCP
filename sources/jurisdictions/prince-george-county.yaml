@@ -1,0 +1,12 @@
+# Added 2026-08-28 to the pilot seed specifically because VGIN's boundary
+# layer publishes this county as TWO polygons under one FIPS (a 281 sq mi
+# body and a 0.0076 sq mi sliver). Registering it makes that real source
+# quirk reachable through geo.find_boundaries and testable over the
+# recorded fixture, rather than a note nothing exercises.
+# See KNOWN_SOURCE_QUIRKS.md.
+id: va:prince-george-county
+name: Prince George County
+kind: county
+fips: "51149"
+parent: va
+aliases: ["Prince George", "County of Prince George"]

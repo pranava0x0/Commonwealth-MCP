@@ -1,0 +1,7 @@
+id: va:franklin-county
+name: Franklin County
+kind: county
+fips: "51067"
+parent: va
+aliases: ["County of Franklin"]
+not_to_be_confused_with: ["va:franklin-city"]

@@ -1,0 +1,7 @@
+id: va:fairfax-city
+name: Fairfax City
+kind: independent-city
+fips: "51600"
+parent: va
+aliases: ["City of Fairfax"]
+not_to_be_confused_with: ["va:fairfax-county"]

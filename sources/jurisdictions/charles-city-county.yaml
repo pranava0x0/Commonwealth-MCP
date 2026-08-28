@@ -1,0 +1,6 @@
+id: va:charles-city-county
+name: Charles City County
+kind: county
+fips: "51036"
+parent: va
+aliases: ["Charles City"]

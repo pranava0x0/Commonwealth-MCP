@@ -1,0 +1,6 @@
+id: va:craig-county
+name: Craig County
+kind: county
+fips: "51045"
+parent: va
+aliases: ["County of Craig"]

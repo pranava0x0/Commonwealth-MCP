@@ -1,0 +1,7 @@
+id: va:roanoke-city
+name: Roanoke City
+kind: independent-city
+fips: "51770"
+parent: va
+aliases: ["City of Roanoke"]
+not_to_be_confused_with: ["va:roanoke-county"]

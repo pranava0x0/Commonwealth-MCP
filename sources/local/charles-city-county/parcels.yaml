@@ -1,0 +1,79 @@
+# Charles City County: a genuinely small rural county (~6,900 residents),
+# the "one rural county" item from design/source-registry.md § 6's
+# forcing set — deliberately picked to be a much smaller/simpler dataset
+# than Fairfax/Richmond, not a scaled-down copy of them. The public Hub
+# view exposes only two fields (OBJECTID, MAP_PIN); no zoning layer is
+# published, so this manifest carries parcel.lookup only. Endpoint,
+# fields, and terms verified live 2026-08-28.
+id: va-charles-city-county-parcels
+name: Charles City County Tax Parcels (GIS Open Data)
+jurisdiction: va:charles-city-county
+
+publisher:
+  agency: Charles City County government (GIS)
+  authority_level: primary
+
+domains: [geo]
+
+capabilities:
+  - id: parcel.lookup
+    tool_hint: geo.find_parcel
+
+adapter:
+  type: arcgis
+  service_url: https://services5.arcgis.com/7ELQsoO4nWXrJNri/arcgis/rest/services/Parcels_with_Sales_Valuation_and_Reports_View/FeatureServer
+  field_mapping_version: "1"
+  layers:
+    parcels:
+      layer_id: 0
+      id_field: OBJECTID
+      geometry: polygon
+      field_mapping:
+        pin: MAP_PIN
+
+access:
+  mode: anonymous
+  automation_status: public_api
+  terms_url: https://dataportal-charlescityvagis.hub.arcgis.com/datasets/967223223e134e7b8b4411e9226d2872_0/about
+  terms_notes: >
+    County-published Hub item, license "custom": "Charles City County will
+    provide Geographic Information System maps and data as a public
+    information service ... intended for informational purposes only ...
+    Charles City County assumes no liability arising from use of these
+    maps or data." No redistribution restriction found; anonymous query
+    access confirmed live. The public view exposes only OBJECTID and
+    MAP_PIN — the underlying item name ("Parcels_with_Sales_Valuation_and_
+    Reports_View") suggests a richer internal dataset exists, but this
+    view is the only thing this manifest can see or expose.
+  terms_reviewed_at: "2026-08-28"
+  data_classification: open
+
+freshness:
+  expected_cadence: unknown
+  cadence_source: unknown
+  ttl_hint_seconds: 86400
+
+coverage:
+  geography: va:charles-city-county
+  temporal: current
+  known_limitations:
+    - No zoning layer published for this jurisdiction; parcel.lookup only.
+    - Only two fields exposed (OBJECTID, MAP_PIN) — no owner, valuation,
+      or land-use attributes available through this source.
+
+authority_notes: >
+  County-published Hub view is the primary GIS representation for Charles
+  City County parcels available through public query access.
+
+health:
+  probe: arcgis_layer_count
+  expect:
+    # Count observed live 2026-08-28: 6,514. Floor set ~20% under that.
+    min_features:
+      parcels: 5000
+
+lifecycle:
+  declared_state: active
+  added: "2026-08-28"
+  last_verified: "2026-08-28"
+  verified_by: pranava

@@ -1,0 +1,7 @@
+id: va:richmond-county
+name: Richmond County
+kind: county
+fips: "51159"
+parent: va
+aliases: ["County of Richmond"]
+not_to_be_confused_with: ["va:richmond-city"]

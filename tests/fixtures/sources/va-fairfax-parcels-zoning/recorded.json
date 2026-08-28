@@ -1,0 +1,6407 @@
+{
+  "source_id": "va-fairfax-parcels-zoning",
+  "recorded_at": "2026-08-27T04:25:01Z",
+  "rights": {
+    "publisher": "Fairfax County government (GIS and Mapping Services, Open Data)",
+    "terms_url": "https://www.fairfaxcounty.gov/maps/disclaimer",
+    "note": "Recorded government-published responses; third-party content excluded from the repo's CC0 grant (DECISIONS.md 0011)."
+  },
+  "summary": {
+    "health:parcels": {
+      "layer": "parcels",
+      "feature_count": 369392,
+      "min_expected": 300000,
+      "healthy": true
+    },
+    "health:zoning": {
+      "layer": "zoning",
+      "feature_count": 6440,
+      "min_expected": 5000,
+      "healthy": true
+    },
+    "sample_pin": "0102 14  0231",
+    "no_match_pin": "NO SUCH PIN",
+    "no_match_count": 0,
+    "zoning_districts": [
+      "R-3"
+    ]
+  },
+  "exchanges": [
+    {
+      "url": "https://www.fairfaxcounty.gov/mercator/rest/services/OpenData/OpenData_A9/FeatureServer/0/query",
+      "params": {
+        "f": "json",
+        "where": "1=1",
+        "returnCountOnly": "true"
+      },
+      "response": {
+        "count": 369392
+      }
+    },
+    {
+      "url": "https://www.fairfaxcounty.gov/mercator/rest/services/OpenData/OpenData_A9/FeatureServer/1/query",
+      "params": {
+        "f": "json",
+        "where": "1=1",
+        "returnCountOnly": "true"
+      },
+      "response": {
+        "count": 6440
+      }
+    },
+    {
+      "url": "https://www.fairfaxcounty.gov/mercator/rest/services/OpenData/OpenData_A9/FeatureServer/0/query",
+      "params": {
+        "f": "json",
+        "outFields": "OBJECTID,PARCEL_TYPE,PIN",
+        "resultRecordCount": "2",
+        "returnGeometry": "true",
+        "where": "1=1",
+        "outSR": "4326"
+      },
+      "response": {
+        "objectIdFieldName": "OBJECTID",
+        "globalIdFieldName": "GlobalID",
+        "geometryType": "esriGeometryPolygon",
+        "spatialReference": {
+          "wkid": 4326,
+          "latestWkid": 4326
+        },
+        "fields": [
+          {
+            "name": "OBJECTID",
+            "alias": "OBJECTID",
+            "type": "esriFieldTypeOID"
+          },
+          {
+            "name": "PARCEL_TYPE",
+            "alias": "Parcel Type",
+            "type": "esriFieldTypeString",
+            "length": 25
+          },
+          {
+            "name": "PIN",
+            "alias": "Parcel Identification Number",
+            "type": "esriFieldTypeString",
+            "length": 15
+          }
+        ],
+        "features": [
+          {
+            "attributes": {
+              "OBJECTID": 1,
+              "PARCEL_TYPE": "ORDINARY",
+              "PIN": "0102 14  0231"
+            },
+            "geometry": {
+              "rings": [
+                [
+                  [
+                    -77.38312164379414,
+                    38.99932094254951
+                  ],
+                  [
+                    -77.38331833733109,
+                    38.99932108261819
+                  ],
+                  [
+                    -77.38344708311362,
+                    38.999639623660734
+                  ],
+                  [
+                    -77.38341494588312,
+                    38.9996458812302
+                  ],
+                  [
+                    -77.38338317245595,
+                    38.99965318017651
+                  ],
+                  [
+                    -77.38335181925362,
+                    38.99966151279786
+                  ],
+                  [
+                    -77.38332094282597,
+                    38.99967086315634
+                  ],
+                  [
+                    -77.3832905927289,
+                    38.99968121250171
+                  ],
+                  [
+                    -77.383260822037,
+                    38.99969254211721
+                  ],
+                  [
+                    -77.38323168730037,
+                    38.999704836065
+                  ],
+                  [
+                    -77.38303548056861,
+                    38.99938996802828
+                  ],
+                  [
+                    -77.38305285667172,
+                    38.99937779588575
+                  ],
+                  [
+                    -77.38312164379414,
+                    38.99932094254951
+                  ]
+                ]
+              ]
+            }
+          },
+          {
+            "attributes": {
+              "OBJECTID": 2,
+              "PARCEL_TYPE": "ORDINARY",
+              "PIN": "0102 10  0022"
+            },
+            "geometry": {
+              "rings": [
+                [
+                  [
+                    -77.37965557547155,
+                    38.99873197429147
+                  ],
+                  [
+                    -77.37970013129625,
+                    38.999031227267125
+                  ],
+                  [
+                    -77.37935116928647,
+                    38.99904391193477
+                  ],
+                  [
+                    -77.37932018674464,
+                    38.99883870460556
+                  ],
+                  [
+                    -77.37931906616706,
+                    38.99883250751881
+                  ],
+                  [
+                    -77.37931862553302,
+                    38.99882625924637
+                  ],
+                  [
+                    -77.37931885716138,
+                    38.99882000090293
+                  ],
+                  [
+                    -77.37931977083383,
+                    38.998813782007026
+                  ],
+                  [
+                    -77.37932134827129,
+                    38.998807646318205
+                  ],
+                  [
+                    -77.37932358531089,
+                    38.998801634984645
+                  ],
+                  [
+                    -77.37932646714894,
+                    38.998795794544826
+                  ],
+                  [
+                    -77.37932996855557,
+                    38.9987901632003
+                  ],
+                  [
+                    -77.37933406773331,
+                    38.99878478467709
+                  ],
+                  [
+                    -77.37933873250158,
+                    38.99877969161877
+                  ],
+                  [
+                    -77.37934393402628,
+                    38.99877492768439
+                  ],
+                  [
+                    -77.37934962961477,
+                    38.99877052267152
+                  ],
+                  [
+                    -77.37935578361115,
+                    38.99876650644492
+                  ],
+                  [
+                    -77.37936234976148,
+                    38.99876291151409
+                  ],
+                  [
+                    -77.37936928194084,
+                    38.99875976215236
+                  ],
+                  [
+                    -77.37937653054884,
+                    38.99875707985395
+                  ],
+                  [
+                    -77.37938404246681,
+                    38.9987548860797
+                  ],
+                  [
+                    -77.37939176474784,
+                    38.99875319130864
+                  ],
+                  [
+                    -77.37939964079804,
+                    38.998752014222575
+                  ],
+                  [
+                    -77.37940761775637,
+                    38.998751359809674
+                  ],
+                  [
+                    -77.37965557547155,
+                    38.99873197429147
+                  ]
+                ]
+              ]
+            }
+          }
+        ],
+        "exceededTransferLimit": true
+      }
+    },
+    {
+      "url": "https://www.fairfaxcounty.gov/mercator/rest/services/OpenData/OpenData_A9/FeatureServer/0",
+      "params": {
+        "f": "json"
+      },
+      "response": {
+        "currentVersion": 10.91,
+        "cimVersion": "2.9.0",
+        "id": 0,
+        "name": "Parcels",
+        "type": "Feature Layer",
+        "parentLayer": null,
+        "defaultVisibility": false,
+        "minScale": 0,
+        "maxScale": 0,
+        "canScaleSymbols": false,
+        "geometryType": "esriGeometryPolygon",
+        "description": "This layer contains polygon features representing the cadastral (property) information for Fairfax County, Virginia. Attributes include: parcel ID number and type (ordinary, condo). Additional attribute information is provided separately as non-spatial tables.",
+        "copyrightText": "The data set was created by Analytical Surveys Incorporated (ASI) and Landata under contract to Fairfax County. Quality control checks were performed by Engineering Systems Incorporated and Dewberry and Davis. Staff from the GIS branch were also used for quality control checking. Since 2001 Fairfax County staff have been solely responsible for maintaining this data.",
+        "editFieldsInfo": null,
+        "ownershipBasedAccessControlForFeatures": null,
+        "syncCanReturnChanges": true,
+        "relationships": [],
+        "isDataVersioned": true,
+        "isDataArchived": true,
+        "infoInEstimates": [
+          "extent"
+        ],
+        "isDataBranchVersioned": false,
+        "isDataReplicaTracked": false,
+        "isCoGoEnabled": false,
+        "supportsRollbackOnFailureParameter": false,
+        "archivingInfo": {
+          "supportsQueryWithHistoricMoment": true,
+          "startArchivingMoment": 1631342520000
+        },
+        "supportsStatistics": true,
+        "supportsExceedsLimitStatistics": true,
+        "supportsAdvancedQueries": true,
+        "supportsValidateSQL": true,
+        "supportsCoordinatesQuantization": true,
+        "supportsQuantizationEditMode": true,
+        "supportsCalculate": true,
+        "supportsASyncCalculate": true,
+        "supportsDatumTransformation": true,
+        "advancedQueryCapabilities": {
+          "supportsPagination": true,
+          "supportsTrueCurve": true,
+          "supportsQueryWithDistance": true,
+          "supportsReturningQueryExtent": true,
+          "supportsStatistics": true,
+          "supportsPercentileStatistics": true,
+          "supportsHavingClause": true,
+          "supportsOrderBy": true,
+          "supportsDistinct": true,
+          "supportsCountDistinct": true,
+          "supportsQueryWithResultType": true,
+          "supportsReturningGeometryCentroid": true,
+          "supportsSqlExpression": true,
+          "supportsQueryWithDatumTransformation": true,
+          "supportsLod": false,
+          "supportsQueryWithLodSR": false,
+          "supportsQueryAnalytic": true
+        },
+        "advancedQueryAnalyticCapabilities": {
+          "supportsLinearRegression": true,
+          "supportsAsync": false,
+          "supportsPercentileAnalytic": true
+        },
+        "advancedEditingCapabilities": {
+          "supportedSqlFormatsInCalculate": [
+            "standard"
+          ],
+          "supportsAsyncApplyEdits": true
+        },
+        "hasGeometryProperties": true,
+        "geometryProperties": {
+          "shapeAreaFieldName": "Shape__Area",
+          "shapeLengthFieldName": "Shape__Length",
+          "units": "esriFeet"
+        },
+        "hasMetadata": false,
+        "extent": {
+          "xmin": 11757193.368,
+          "ymin": 6910478.684,
+          "xmax": 11899000.429000005,
+          "ymax": 7070364.256999999,
+          "spatialReference": {
+            "wkid": 102746,
+            "latestWkid": 2283,
+            "xyTolerance": 0.002,
+            "zTolerance": 2,
+            "mTolerance": 2,
+            "falseX": -110512500,
+            "falseY": -88858000,
+            "xyUnits": 36916142.964165,
+            "falseZ": 0,
+            "zUnits": 1,
+            "falseM": -100000,
+            "mUnits": 10000
+          }
+        },
+        "sourceSpatialReference": {
+          "wkid": 102746,
+          "latestWkid": 2283,
+          "xyTolerance": 0.002,
+          "zTolerance": 2,
+          "mTolerance": 2,
+          "falseX": -110512500,
+          "falseY": -88858000,
+          "xyUnits": 4000,
+          "falseZ": 0,
+          "zUnits": 1,
+          "falseM": 0,
+          "mUnits": 1
+        },
+        "drawingInfo": {
+          "renderer": {
+            "type": "simple",
+            "symbol": {
+              "type": "esriSFS",
+              "style": "esriSFSSolid",
+              "color": [
+                198,
+                221,
+                247,
+                255
+              ],
+              "outline": {
+                "type": "esriSLS",
+                "style": "esriSLSSolid",
+                "color": [
+                  110,
+                  110,
+                  110,
+                  255
+                ],
+                "width": 0.4
+              }
+            }
+          },
+          "scaleSymbols": true,
+          "transparency": 0,
+          "labelingInfo": null
+        },
+        "hasM": false,
+        "hasZ": false,
+        "allowGeometryUpdates": false,
+        "allowTrueCurvesUpdates": false,
+        "onlyAllowTrueCurveUpdatesByTrueCurveClients": false,
+        "hasAttachments": false,
+        "supportsApplyEditsWithGlobalIds": false,
+        "htmlPopupType": "esriServerHTMLPopupTypeAsHTMLText",
+        "objectIdField": "OBJECTID",
+        "globalIdField": "GlobalID",
+        "displayField": "PIN",
+        "typeIdField": "",
+        "subtypeField": "",
+        "fields": [
+          {
+            "name": "PARCEL_KEY",
+            "type": "esriFieldTypeDouble",
+            "alias": "PARCEL_KEY",
+            "domain": null,
+            "editable": true,
+            "nullable": true,
+            "defaultValue": null,
+            "modelName": "PARCEL_KEY"
+          },
+          {
+            "name": "Shape__Area",
+            "type": "esriFieldTypeDouble",
+            "alias": "SHAPE.STArea()",
+            "domain": null,
+            "editable": false,
+            "nullable": false,
+            "defaultValue": null,
+            "modelName": "SHAPE.STArea()"
+          },
+          {
+            "name": "Shape__Length",
+            "type": "esriFieldTypeDouble",
+            "alias": "SHAPE.STLength()",
+            "domain": null,
+            "editable": false,
+            "nullable": false,
+            "defaultValue": null,
+            "modelName": "SHAPE.STLength()"
+          },
+          {
+            "name": "OBJECTID",
+            "type": "esriFieldTypeOID",
+            "alias": "OBJECTID",
+            "domain": null,
+            "editable": false,
+            "nullable": false,
+            "defaultValue": null,
+            "modelName": "OBJECTID"
+          },
+          {
+            "name": "PIN",
+            "type": "esriFieldTypeString",
+            "alias": "Parcel Identification Number",
+            "domain": null,
+            "editable": true,
+            "nullable": true,
+            "length": 15,
+            "defaultValue": null,
+            "modelName": "PIN"
+          },
+          {
+            "name": "PARCEL_TYPE",
+            "type": "esriFieldTypeString",
+            "alias": "Parcel Type",
+            "domain": {
+              "type": "codedValue",
+              "name": "GIS_X_Parcel_Type",
+              "description": "Parcel type",
+              "codedValues": [
+                {
+                  "name": "ORDINARY",
+                  "code": "ORDINARY"
+                },
+                {
+                  "name": "CONDO",
+                  "code": "CONDO"
+                }
+              ],
+              "mergePolicy": "esriMPTDefaultValue",
+              "splitPolicy": "esriSPTDefaultValue"
+            },
+            "editable": true,
+            "nullable": true,
+            "length": 25,
+            "defaultValue": null,
+            "modelName": "PARCEL_TYPE"
+          },
+          {
+            "name": "SRC_CONTROL",
+            "type": "esriFieldTypeString",
+            "alias": "Source Control",
+            "domain": {
+              "type": "codedValue",
+              "name": "GIS_X_Source_Control",
+              "description": "Parcel source contol type",
+              "codedValues": [
+                {
+                  "name": "VSCOG",
+                  "code": "VSCOG"
+                },
+                {
+                  "name": "AVCOG (VSCOG)",
+                  "code": "AVCOG"
+                },
+                {
+                  "name": "COGO",
+                  "code": "COGO"
+                },
+                {
+                  "name": "AJCOG (COGO)",
+                  "code": "AJCOG"
+                },
+                {
+                  "name": "SVCOG",
+                  "code": "SVCOG"
+                },
+                {
+                  "name": "ADJSV (SVCOG)",
+                  "code": "ADJSV"
+                },
+                {
+                  "name": "VCS83",
+                  "code": "VCS83"
+                },
+                {
+                  "name": "ADJVS (VCS83)",
+                  "code": "ADJVS"
+                },
+                {
+                  "name": "NONE",
+                  "code": "NONE"
+                },
+                {
+                  "name": "UNKN",
+                  "code": "UNKN"
+                }
+              ],
+              "mergePolicy": "esriMPTDefaultValue",
+              "splitPolicy": "esriSPTDefaultValue"
+            },
+            "editable": true,
+            "nullable": true,
+            "length": 5,
+            "defaultValue": null,
+            "modelName": "SRC_CONTROL"
+          },
+          {
+            "name": "GlobalID",
+            "type": "esriFieldTypeGlobalID",
+            "alias": "GlobalID",
+            "domain": null,
+            "editable": false,
+            "nullable": false,
+            "length": 38,
+            "defaultValue": null,
+            "modelName": "GlobalID"
+          }
+        ],
+        "geometryField": {
+          "name": "SHAPE",
+          "type": "esriFieldTypeGeometry",
+          "alias": "SHAPE",
+          "domain": null,
+          "editable": false,
+          "nullable": true,
+          "defaultValue": null,
+          "modelName": "SHAPE"
+        },
+        "indexes": [
+          {
+            "name": "R7543_pk",
+            "fields": "OBJECTID",
+            "isAscending": true,
+            "isUnique": true,
+            "description": ""
+          },
+          {
+            "name": "I12778PIN",
+            "fields": "PIN",
+            "isAscending": true,
+            "isUnique": false,
+            "description": ""
+          },
+          {
+            "name": "UUID_7543",
+            "fields": "GlobalID",
+            "isAscending": true,
+            "isUnique": true,
+            "description": ""
+          },
+          {
+            "name": "UUID_OID_7543",
+            "fields": "GlobalID,OBJECTID",
+            "isAscending": true,
+            "isUnique": true,
+            "description": ""
+          },
+          {
+            "name": "S5249_idx",
+            "fields": "SHAPE",
+            "isAscending": true,
+            "isUnique": true,
+            "description": ""
+          }
+        ],
+        "datesInUnknownTimezone": false,
+        "dateFieldsTimeReference": {
+          "timeZone": "UTC",
+          "respectsDaylightSaving": false
+        },
+        "preferredTimeReference": null,
+        "types": [],
+        "templates": [
+          {
+            "name": "Parcels",
+            "description": "",
+            "prototype": {
+              "attributes": {
+                "SRC_CONTROL": null,
+                "PARCEL_KEY": null,
+                "PIN": null,
+                "PARCEL_TYPE": null
+              }
+            },
+            "drawingTool": "esriFeatureEditToolPolygon"
+          }
+        ],
+        "maxRecordCount": 1000,
+        "supportedQueryFormats": "JSON, geoJSON, PBF",
+        "supportedExportFormats": "sqlite,filegdb",
+        "capabilities": "Query",
+        "useStandardizedQueries": true,
+        "supportedSpatialRelationships": [
+          "esriSpatialRelIntersects",
+          "esriSpatialRelContains",
+          "esriSpatialRelCrosses",
+          "esriSpatialRelEnvelopeIntersects",
+          "esriSpatialRelIndexIntersects",
+          "esriSpatialRelOverlaps",
+          "esriSpatialRelTouches",
+          "esriSpatialRelWithin",
+          "esriSpatialRelRelation"
+        ],
+        "standardMaxRecordCount": 4000,
+        "tileMaxRecordCount": 4000,
+        "standardMaxRecordCountNoGeometry": 32000,
+        "maxRecordCountFactor": 1
+      }
+    },
+    {
+      "url": "https://www.fairfaxcounty.gov/mercator/rest/services/OpenData/OpenData_A9/FeatureServer/0/query",
+      "params": {
+        "f": "json",
+        "outFields": "OBJECTID,PARCEL_TYPE,PIN",
+        "resultRecordCount": "50",
+        "returnGeometry": "false",
+        "where": "PIN = '0102 14  0231'"
+      },
+      "response": {
+        "objectIdFieldName": "OBJECTID",
+        "globalIdFieldName": "GlobalID",
+        "geometryType": "esriGeometryPolygon",
+        "spatialReference": {
+          "wkid": 102746,
+          "latestWkid": 2283
+        },
+        "fields": [
+          {
+            "name": "OBJECTID",
+            "alias": "OBJECTID",
+            "type": "esriFieldTypeOID"
+          },
+          {
+            "name": "PARCEL_TYPE",
+            "alias": "Parcel Type",
+            "type": "esriFieldTypeString",
+            "length": 25
+          },
+          {
+            "name": "PIN",
+            "alias": "Parcel Identification Number",
+            "type": "esriFieldTypeString",
+            "length": 15
+          }
+        ],
+        "features": [
+          {
+            "attributes": {
+              "OBJECTID": 1,
+              "PARCEL_TYPE": "ORDINARY",
+              "PIN": "0102 14  0231"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "url": "https://www.fairfaxcounty.gov/mercator/rest/services/OpenData/OpenData_A9/FeatureServer/0/query",
+      "params": {
+        "f": "json",
+        "outFields": "OBJECTID,PARCEL_TYPE,PIN",
+        "resultRecordCount": "50",
+        "returnGeometry": "false",
+        "where": "PIN = 'NO SUCH PIN'"
+      },
+      "response": {
+        "objectIdFieldName": "OBJECTID",
+        "globalIdFieldName": "GlobalID",
+        "geometryType": "esriGeometryPolygon",
+        "spatialReference": {
+          "wkid": 102746,
+          "latestWkid": 2283
+        },
+        "features": []
+      }
+    },
+    {
+      "url": "https://www.fairfaxcounty.gov/mercator/rest/services/OpenData/OpenData_A9/FeatureServer/0/query",
+      "params": {
+        "f": "json",
+        "outFields": "OBJECTID,PARCEL_TYPE,PIN",
+        "resultRecordCount": "50",
+        "returnGeometry": "true",
+        "where": "PIN = '0102 14  0231'",
+        "outSR": "4326"
+      },
+      "response": {
+        "objectIdFieldName": "OBJECTID",
+        "globalIdFieldName": "GlobalID",
+        "geometryType": "esriGeometryPolygon",
+        "spatialReference": {
+          "wkid": 4326,
+          "latestWkid": 4326
+        },
+        "fields": [
+          {
+            "name": "OBJECTID",
+            "alias": "OBJECTID",
+            "type": "esriFieldTypeOID"
+          },
+          {
+            "name": "PARCEL_TYPE",
+            "alias": "Parcel Type",
+            "type": "esriFieldTypeString",
+            "length": 25
+          },
+          {
+            "name": "PIN",
+            "alias": "Parcel Identification Number",
+            "type": "esriFieldTypeString",
+            "length": 15
+          }
+        ],
+        "features": [
+          {
+            "attributes": {
+              "OBJECTID": 1,
+              "PARCEL_TYPE": "ORDINARY",
+              "PIN": "0102 14  0231"
+            },
+            "geometry": {
+              "rings": [
+                [
+                  [
+                    -77.38312164379414,
+                    38.99932094254951
+                  ],
+                  [
+                    -77.38331833733109,
+                    38.99932108261819
+                  ],
+                  [
+                    -77.38344708311362,
+                    38.999639623660734
+                  ],
+                  [
+                    -77.38341494588312,
+                    38.9996458812302
+                  ],
+                  [
+                    -77.38338317245595,
+                    38.99965318017651
+                  ],
+                  [
+                    -77.38335181925362,
+                    38.99966151279786
+                  ],
+                  [
+                    -77.38332094282597,
+                    38.99967086315634
+                  ],
+                  [
+                    -77.3832905927289,
+                    38.99968121250171
+                  ],
+                  [
+                    -77.383260822037,
+                    38.99969254211721
+                  ],
+                  [
+                    -77.38323168730037,
+                    38.999704836065
+                  ],
+                  [
+                    -77.38303548056861,
+                    38.99938996802828
+                  ],
+                  [
+                    -77.38305285667172,
+                    38.99937779588575
+                  ],
+                  [
+                    -77.38312164379414,
+                    38.99932094254951
+                  ]
+                ]
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "url": "https://www.fairfaxcounty.gov/mercator/rest/services/OpenData/OpenData_A9/FeatureServer/1/query",
+      "params": {
+        "f": "json",
+        "outFields": "JURISDICTION,OBJECTID,PROFFER,ZONECODE,ZONETYPE",
+        "resultRecordCount": "50",
+        "returnGeometry": "false",
+        "geometry": "{\"rings\": [[[-77.38312164379414, 38.99932094254951], [-77.38331833733109, 38.99932108261819], [-77.38344708311362, 38.999639623660734], [-77.38341494588312, 38.9996458812302], [-77.38338317245595, 38.99965318017651], [-77.38335181925362, 38.99966151279786], [-77.38332094282597, 38.99967086315634], [-77.3832905927289, 38.99968121250171], [-77.383260822037, 38.99969254211721], [-77.38323168730037, 38.999704836065], [-77.38303548056861, 38.99938996802828], [-77.38305285667172, 38.99937779588575], [-77.38312164379414, 38.99932094254951]]], \"spatialReference\": {\"wkid\": 4326}}",
+        "geometryType": "esriGeometryPolygon",
+        "inSR": "4326",
+        "spatialRel": "esriSpatialRelIntersects"
+      },
+      "response": {
+        "objectIdFieldName": "OBJECTID",
+        "globalIdFieldName": "GlobalID",
+        "geometryType": "esriGeometryPolygon",
+        "spatialReference": {
+          "wkid": 102746,
+          "latestWkid": 2283
+        },
+        "fields": [
+          {
+            "name": "JURISDICTION",
+            "alias": "JURISDICTION",
+            "type": "esriFieldTypeString",
+            "length": 20
+          },
+          {
+            "name": "OBJECTID",
+            "alias": "OBJECTID",
+            "type": "esriFieldTypeOID"
+          },
+          {
+            "name": "PROFFER",
+            "alias": "PROFFER",
+            "type": "esriFieldTypeString",
+            "length": 3
+          },
+          {
+            "name": "ZONECODE",
+            "alias": "ZONECODE",
+            "type": "esriFieldTypeString",
+            "length": 8
+          },
+          {
+            "name": "ZONETYPE",
+            "alias": "ZONETYPE",
+            "type": "esriFieldTypeString",
+            "length": 25
+          }
+        ],
+        "features": [
+          {
+            "attributes": {
+              "JURISDICTION": "FAIRFAX COUNTY",
+              "OBJECTID": 46202,
+              "PROFFER": null,
+              "ZONECODE": "R-3",
+              "ZONETYPE": "RESIDENTIAL"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "url": "https://www.fairfaxcounty.gov/mercator/rest/services/OpenData/OpenData_A9/FeatureServer/1",
+      "params": {
+        "f": "json"
+      },
+      "response": {
+        "currentVersion": 10.91,
+        "cimVersion": "2.9.0",
+        "id": 1,
+        "name": "Zoning",
+        "type": "Feature Layer",
+        "parentLayer": null,
+        "defaultVisibility": false,
+        "minScale": 0,
+        "maxScale": 0,
+        "canScaleSymbols": false,
+        "geometryType": "esriGeometryPolygon",
+        "description": "This data contains polygon features representing zoning areas in Fairfax County. This layer also includes zoning for the Town of Vienna and Town of Herndon.",
+        "copyrightText": "",
+        "editFieldsInfo": {
+          "creationDateField": "created_date",
+          "creatorField": "created_user",
+          "editDateField": "last_edited_date",
+          "editorField": "last_edited_user"
+        },
+        "ownershipBasedAccessControlForFeatures": null,
+        "syncCanReturnChanges": true,
+        "relationships": [],
+        "isDataVersioned": true,
+        "isDataArchived": true,
+        "infoInEstimates": [
+          "extent"
+        ],
+        "isDataBranchVersioned": false,
+        "isDataReplicaTracked": false,
+        "isCoGoEnabled": false,
+        "supportsRollbackOnFailureParameter": false,
+        "archivingInfo": {
+          "supportsQueryWithHistoricMoment": true,
+          "startArchivingMoment": 1631366181000
+        },
+        "supportsStatistics": true,
+        "supportsExceedsLimitStatistics": true,
+        "supportsAdvancedQueries": true,
+        "supportsValidateSQL": true,
+        "supportsCoordinatesQuantization": true,
+        "supportsQuantizationEditMode": true,
+        "supportsCalculate": true,
+        "supportsASyncCalculate": true,
+        "supportsDatumTransformation": true,
+        "advancedQueryCapabilities": {
+          "supportsPagination": true,
+          "supportsTrueCurve": true,
+          "supportsQueryWithDistance": true,
+          "supportsReturningQueryExtent": true,
+          "supportsStatistics": true,
+          "supportsPercentileStatistics": true,
+          "supportsHavingClause": true,
+          "supportsOrderBy": true,
+          "supportsDistinct": true,
+          "supportsCountDistinct": true,
+          "supportsQueryWithResultType": true,
+          "supportsReturningGeometryCentroid": true,
+          "supportsSqlExpression": true,
+          "supportsQueryWithDatumTransformation": true,
+          "supportsLod": false,
+          "supportsQueryWithLodSR": false,
+          "supportsQueryAnalytic": true
+        },
+        "advancedQueryAnalyticCapabilities": {
+          "supportsLinearRegression": true,
+          "supportsAsync": false,
+          "supportsPercentileAnalytic": true
+        },
+        "advancedEditingCapabilities": {
+          "supportedSqlFormatsInCalculate": [
+            "standard"
+          ],
+          "supportsAsyncApplyEdits": true
+        },
+        "hasGeometryProperties": true,
+        "geometryProperties": {
+          "shapeAreaFieldName": "Shape__Area",
+          "shapeLengthFieldName": "Shape__Length",
+          "units": "esriFeet"
+        },
+        "hasMetadata": false,
+        "extent": {
+          "xmin": 11757193.368,
+          "ymin": 6910478.684,
+          "xmax": 11898988.349000007,
+          "ymax": 7070364.261000007,
+          "spatialReference": {
+            "wkid": 102746,
+            "latestWkid": 2283,
+            "xyTolerance": 0.002,
+            "zTolerance": 2,
+            "mTolerance": 2,
+            "falseX": -110512500,
+            "falseY": -88858000,
+            "xyUnits": 36916142.964165,
+            "falseZ": 0,
+            "zUnits": 1,
+            "falseM": -100000,
+            "mUnits": 10000
+          }
+        },
+        "sourceSpatialReference": {
+          "wkid": 102746,
+          "latestWkid": 2283,
+          "xyTolerance": 0.002,
+          "zTolerance": 2,
+          "mTolerance": 2,
+          "falseX": -110512500,
+          "falseY": -88858000,
+          "xyUnits": 4000,
+          "falseZ": 0,
+          "zUnits": 1,
+          "falseM": 0,
+          "mUnits": 1
+        },
+        "drawingInfo": {
+          "renderer": {
+            "type": "uniqueValue",
+            "field1": "ZONECODE",
+            "defaultSymbol": {
+              "type": "esriSFS",
+              "style": "esriSFSSolid",
+              "color": [
+                0,
+                0,
+                0,
+                255
+              ],
+              "outline": {
+                "type": "esriSLS",
+                "style": "esriSLSSolid",
+                "color": [
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                "width": 0.1
+              }
+            },
+            "defaultLabel": "<all other values>",
+            "uniqueValueInfos": [
+              {
+                "symbol": {
+                  "type": "esriSFS",
+                  "style": "esriSFSSolid",
+                  "color": [
+                    240,
+                    234,
+                    253,
+                    255
+                  ],
+                  "outline": {
+                    "type": "esriSLS",
+                    "style": "esriSLSSolid",
+                    "color": [
+                      0,
+                      0,
+                      0,
+                      0
+                    ],
+                    "width": 0.1
+                  }
+                },
+                "value": "C-0",
+                "label": "C-0"
+              },
+              {
+                "symbol": {
+                  "type": "esriSFS",
+                  "style": "esriSFSSolid",
+                  "color": [
+                    217,
+                    207,
+                    239,
+                    255
+                  ],
+                  "outline": {
+                    "type": "esriSLS",
+                    "style": "esriSLSSolid",
+                    "color": [
+                      0,
+                      0,
+                      0,
+                      0
+                    ],
+                    "width": 0.1
+                  }
+                },
+                "value": "C-1",
+                "label": "C-1"
+              },
+              {
+                "symbol": {
+                  "type": "esriSFS",
+                  "style": "esriSFSSolid",
+                  "color": [
+                    229,
+                    174,
+                    254,
+                    255
+                  ],
+                  "outline": {
+                    "type": "esriSLS",
+                    "style": "esriSLSSolid",
+                    "color": [
+                      0,
+                      0,
+                      0,
+                      0
+                    ],
+                    "width": 0.1
+                  }
+                },
+                "value": "C-2",
+                "label": "C-2"
+              },
+              {
+                "symbol": {
+                  "type": "esriSFS",
+                  "style": "esriSFSSolid",
+                  "color": [
+                    240,
+                    85,
+                    254,
+                    255
+                  ],
+                  "outline": {
+                    "type": "esriSLS",
+                    "style": "esriSLSSolid",
+                    "color": [
+                      0,
+                      0,
+                      0,
+                      0
+                    ],
+                    "width": 0.1
+                  }
+                },
+                "value": "C-3",
+                "label": "C-3"
+              },
+              {
+                "symbol": {
+                  "type": "esriSFS",
+                  "style": "esriSFSSolid",
+                  "color": [
+                    187,
+                    0,
+                    208,
+                    255
+                  ],
+                  "outline": {
+                    "type": "esriSLS",
+                    "style": "esriSLSSolid",
+                    "color": [
+                      0,
+                      0,
+                      0,
+                      0
+                    ],
+                    "width": 0.1
+                  }
+                },
+                "value": "C-4",
+                "label": "C-4"
+              },
+              {
+                "symbol": {
+                  "type": "esriSFS",
+                  "style": "esriSFSSolid",
+                  "color": [
+                    254,
+                    179,
+                    179,
+                    255
+                  ],
+                  "outline": {
+                    "type": "esriSLS",
+                    "style": "esriSLSSolid",
+                    "color": [
+                      0,
+                      0,
+                      0,
+                      0
+                    ],
+                    "width": 0.1
+                  }
+                },
+                "value": "C-5",
+                "label": "C-5"
+              },
+              {
+                "symbol": {
+                  "type": "esriSFS",
+                  "style": "esriSFSSolid",
+                  "color": [
+                    254,
+                    80,
+                    80,
+                    255
+                  ],
+                  "outline": {
+                    "type": "esriSLS",
+                    "style": "esriSLSSolid",
+                    "color": [
+                      0,
+                      0,
+                      0,
+                      0
+                    ],
+                    "width": 0.1
+                  }
+                },
+                "value": "C-6",
+                "label": "C-6"
+              },
+              {
+                "symbol": {
+                  "type": "esriSFS",
+                  "style": "esriSFSSolid",
+                  "color": [
+                    229,
+                    0,
+                    0,
+                    255
+                  ],
+                  "outline": {
+                    "type": "esriSLS",
+                    "style": "esriSLSSolid",
+                    "color": [
+                      0,
+                      0,
+                      0,
+                      0
+                    ],
+                    "width": 0.1
+                  }
+                },
+                "value": "C-7",
+                "label": "C-7"
+              },
+              {
+                "symbol": {
+                  "type": "esriSFS",
+                  "style": "esriSFSSolid",
+                  "color": [
+                    169,
+                    0,
+                    0,
+                    255
+                  ],
+                  "outline": {
+                    "type": "esriSLS",
+                    "style": "esriSLSSolid",
+                    "color": [
+                      0,
+                      0,
+                      0,
+                      0
+                    ],
+                    "width": 0.1
+                  }
+                },
+                "value": "C-8",
+                "label": "C-8"
+              },
+              {
+                "symbol": {
+                  "type": "esriSFS",
+                  "style": "esriSFSSolid",
+                  "color": [
+                    233,
+                    233,
+                    233,
+                    255
+                  ],
+                  "outline": {
+                    "type": "esriSLS",
+                    "style": "esriSLSSolid",
+                    "color": [
+                      0,
+                      0,
+                      0,
+                      0
+                    ],
+                    "width": 0.1
+                  }
+                },
+                "value": "I-I",
+                "label": "I-I"
+              },
+              {
+                "symbol": {
+                  "type": "esriSFS",
+                  "style": "esriSFSSolid",
+                  "color": [
+                    224,
+                    224,
+                    224,
+                    255
+                  ],
+                  "outline": {
+                    "type": "esriSLS",
+                    "style": "esriSLSSolid",
+                    "color": [
+                      0,
+                      0,
+                      0,
+                      0
+                    ],
+                    "width": 0.1
+                  }
+                },
+                "value": "I-0",
+                "label": "I-1"
+              },
+              {
+                "symbol": {
+                  "type": "esriSFS",
+                  "style": "esriSFSSolid",
+                  "color": [
+                    194,
+                    194,
+                    194,
+                    255
+                  ],
+                  "outline": {
+                    "type": "esriSLS",
+                    "style": "esriSLSSolid",
+                    "color": [
+                      0,
+                      0,
+                      0,
+                      0
+                    ],
+                    "width": 0.1
+                  }
+                },
+                "value": "I-2",
+                "label": "I-2"
+              },
+              {
+                "symbol": {
+                  "type": "esriSFS",
+                  "style": "esriSFSSolid",
+                  "color": [
+                    149,
+                    149,
+                    149,
+                    255
+                  ],
+                  "outline": {
+                    "type": "esriSLS",
+                    "style": "esriSLSSolid",
+                    "color": [
+                      0,
+                      0,
+                      0,
+                      0
+                    ],
+                    "width": 0.1
+                  }
+                },
+                "value": "I-3",
+                "label": "I-3"
+              },
+              {
+                "symbol": {
+                  "type": "esriSFS",
+                  "style": "esriSFSSolid",
+                  "color": [
+                    109,
+                    109,
+                    109,
+                    255
+                  ],
+                  "outline": {
+                    "type": "esriSLS",
+                    "style": "esriSLSSolid",
+                    "color": [
+                      0,
+                      0,
+                      0,
+                      0
+                    ],
+                    "width": 0.1
+                  }
+                },
+                "value": "I-4",
+                "label": "I-4"
+              },
+              {
+                "symbol": {
+                  "type": "esriSFS",
+                  "style": "esriSFSSolid",
+                  "color": [
+                    59,
+                    59,
+                    59,
+                    255
+                  ],
+                  "outline": {
+                    "type": "esriSLS",
+                    "style": "esriSLSSolid",
+                    "color": [
+                      0,
+                      0,
+                      0,
+                      0
+                    ],
+                    "width": 0.1
+                  }
+                },
+                "value": "I-5",
+                "label": "I-5"
+              },
+              {
+                "symbol": {
+                  "type": "esriSFS",
+                  "style": "esriSFSSolid",
+                  "color": [
+                    45,
+                    45,
+                    45,
+                    255
+                  ],
+                  "outline": {
+                    "type": "esriSLS",
+                    "style": "esriSLSSolid",
+                    "color": [
+                      0,
+                      0,
+                      0,
+                      0
+                    ],
+                    "width": 0.1
+                  }
+                },
+                "value": "I-6",
+                "label": "I-6"
+              },
+              {
+                "symbol": {
+                  "type": "esriSFS",
+                  "style": "esriSFSSolid",
+                  "color": [
+                    145,
+                    0,
+                    254,
+                    255
+                  ],
+                  "outline": {
+                    "type": "esriSLS",
+                    "style": "esriSLSSolid",
+                    "color": [
+                      0,
+                      0,
+                      0,
+                      0
+                    ],
+                    "width": 0.1
+                  }
+                },
+                "value": "PDC",
+                "label": "PDC"
+              },
+              {
+                "symbol": {
+                  "type": "esriSFS",
+                  "style": "esriSFSSolid",
+                  "color": [
+                    120,
+                    0,
+                    150,
+                    255
+                  ],
+                  "outline": {
+                    "type": "esriSLS",
+                    "style": "esriSLSNull",
+                    "color": [
+                      110,
+                      110,
+                      110,
+                      255
+                    ],
+                    "width": 0
+                  }
+                },
+                "value": "PTC",
+                "label": "PTC"
+              },
+              {
+                "symbol": {
+                  "type": "esriSFS",
+                  "style": "esriSFSBackwardDiagonal",
+                  "color": [
+                    255,
+                    255,
+                    255,
+                    255
+                  ],
+                  "outline": null
+                },
+                "value": "PDH-1",
+                "label": "PDH-1"
+              },
+              {
+                "symbol": {
+                  "type": "esriSFS",
+                  "style": "esriSFSBackwardDiagonal",
+                  "color": [
+                    255,
+                    255,
+                    255,
+                    255
+                  ],
+                  "outline": null
+                },
+                "value": "PDH-2",
+                "label": "PDH-2"
+              },
+              {
+                "symbol": {
+                  "type": "esriSFS",
+                  "style": "esriSFSBackwardDiagonal",
+                  "color": [
+                    255,
+                    255,
+                    255,
+                    255
+                  ],
+                  "outline": null
+                },
+                "value": "PDH-3",
+                "label": "PDH-3"
+              },
+              {
+                "symbol": {
+                  "type": "esriSFS",
+                  "style": "esriSFSBackwardDiagonal",
+                  "color": [
+                    255,
+                    255,
+                    255,
+                    255
+                  ],
+                  "outline": null
+                },
+                "value": "PDH-4",
+                "label": "PDH-4"
+              },
+              {
+                "symbol": {
+                  "type": "esriSFS",
+                  "style": "esriSFSBackwardDiagonal",
+                  "color": [
+                    255,
+                    255,
+                    255,
+                    255
+                  ],
+                  "outline": null
+                },
+                "value": "PDH-5",
+                "label": "PDH-5"
+              },
+              {
+                "symbol": {
+                  "type": "esriSFS",
+                  "style": "esriSFSBackwardDiagonal",
+                  "color": [
+                    255,
+                    255,
+                    255,
+                    255
+                  ],
+                  "outline": null
+                },
+                "value": "PDH-8",
+                "label": "PDH-8"
+              },
+              {
+                "symbol": {
+                  "type": "esriSFS",
+                  "style": "esriSFSBackwardDiagonal",
+                  "color": [
+                    255,
+                    255,
+                    255,
+                    255
+                  ],
+                  "outline": null
+                },
+                "value": "PDH-12",
+                "label": "PDH-12"
+              },
+              {
+                "symbol": {
+                  "type": "esriSFS",
+                  "style": "esriSFSBackwardDiagonal",
+                  "color": [
+                    255,
+                    255,
+                    255,
+                    255
+                  ],
+                  "outline": null
+                },
+                "value": "PDH-16",
+                "label": "PDH-16"
+              },
+              {
+                "symbol": {
+                  "type": "esriSFS",
+                  "style": "esriSFSBackwardDiagonal",
+                  "color": [
+                    255,
+                    255,
+                    255,
+                    255
+                  ],
+                  "outline": null
+                },
+                "value": "PDH-20",
+                "label": "PDH-20"
+              },
+              {
+                "symbol": {
+                  "type": "esriSFS",
+                  "style": "esriSFSBackwardDiagonal",
+                  "color": [
+                    255,
+                    255,
+                    255,
+                    255
+                  ],
+                  "outline": null
+                },
+                "value": "PDH-30",
+                "label": "PDH-30"
+              },
+              {
+                "symbol": {
+                  "type": "esriSFS",
+                  "style": "esriSFSBackwardDiagonal",
+                  "color": [
+                    255,
+                    255,
+                    255,
+                    255
+                  ],
+                  "outline": null
+                },
+                "value": "PDH-40",
+                "label": "PDH-40"
+              },
+              {
+                "symbol": {
+                  "type": "esriSFS",
+                  "style": "esriSFSSolid",
+                  "color": [
+                    86,
+                    51,
+                    19,
+                    255
+                  ],
+                  "outline": {
+                    "type": "esriSLS",
+                    "style": "esriSLSSolid",
+                    "color": [
+                      110,
+                      110,
+                      110,
+                      255
+                    ],
+                    "width": 0
+                  }
+                },
+                "value": "PRM",
+                "label": "PRM"
+              },
+              {
+                "symbol": {
+                  "type": "esriSFS",
+                  "style": "esriSFSSolid",
+                  "color": [
+                    173,
+                    215,
+                    253,
+                    255
+                  ],
+                  "outline": {
+                    "type": "esriSLS",
+                    "style": "esriSLSSolid",
+                    "color": [
+                      0,
+                      0,
+                      0,
+                      0
+                    ],
+                    "width": 0.1
+                  }
+                },
+                "value": "PRC",
+                "label": "PRC"
+              },
+              {
+                "symbol": {
+                  "type": "esriSFS",
+                  "style": "esriSFSSolid",
+                  "color": [
+                    16,
+                    109,
+                    0,
+                    255
+                  ],
+                  "outline": {
+                    "type": "esriSLS",
+                    "style": "esriSLSSolid",
+                    "color": [
+                      0,
+                      0,
+                      0,
+                      0
+                    ],
+                    "width": 0.1
+                  }
+                },
+                "value": "R-A",
+                "label": "R-A"
+              },
+              {
+                "symbol": {
+                  "type": "esriSFS",
+                  "style": "esriSFSSolid",
+                  "color": [
+                    16,
+                    109,
+                    0,
+                    255
+                  ],
+                  "outline": null
+                },
+                "value": "R-P",
+                "label": "R-P"
+              },
+              {
+                "symbol": {
+                  "type": "esriSFS",
+                  "style": "esriSFSSolid",
+                  "color": [
+                    8,
+                    153,
+                    0,
+                    255
+                  ],
+                  "outline": {
+                    "type": "esriSLS",
+                    "style": "esriSLSSolid",
+                    "color": [
+                      0,
+                      0,
+                      0,
+                      0
+                    ],
+                    "width": 0.1
+                  }
+                },
+                "value": "R-C",
+                "label": "R-C"
+              },
+              {
+                "symbol": {
+                  "type": "esriSFS",
+                  "style": "esriSFSSolid",
+                  "color": [
+                    27,
+                    210,
+                    0,
+                    255
+                  ],
+                  "outline": {
+                    "type": "esriSLS",
+                    "style": "esriSLSSolid",
+                    "color": [
+                      0,
+                      0,
+                      0,
+                      0
+                    ],
+                    "width": 0.1
+                  }
+                },
+                "value": "R-E",
+                "label": "R-E"
+              },
+              {
+                "symbol": {
+                  "type": "esriSFS",
+                  "style": "esriSFSSolid",
+                  "color": [
+                    106,
+                    253,
+                    89,
+                    255
+                  ],
+                  "outline": {
+                    "type": "esriSLS",
+                    "style": "esriSLSSolid",
+                    "color": [
+                      0,
+                      0,
+                      0,
+                      0
+                    ],
+                    "width": 0.1
+                  }
+                },
+                "value": "R-1",
+                "label": "R-1"
+              },
+              {
+                "symbol": {
+                  "type": "esriSFS",
+                  "style": "esriSFSSolid",
+                  "color": [
+                    200,
+                    251,
+                    197,
+                    255
+                  ],
+                  "outline": {
+                    "type": "esriSLS",
+                    "style": "esriSLSSolid",
+                    "color": [
+                      0,
+                      0,
+                      0,
+                      0
+                    ],
+                    "width": 0.1
+                  }
+                },
+                "value": "R-2",
+                "label": "R-2"
+              },
+              {
+                "symbol": {
+                  "type": "esriSFS",
+                  "style": "esriSFSSolid",
+                  "color": [
+                    249,
+                    252,
+                    183,
+                    255
+                  ],
+                  "outline": {
+                    "type": "esriSLS",
+                    "style": "esriSLSSolid",
+                    "color": [
+                      0,
+                      0,
+                      0,
+                      0
+                    ],
+                    "width": 0.1
+                  }
+                },
+                "value": "R-3",
+                "label": "R-3"
+              },
+              {
+                "symbol": {
+                  "type": "esriSFS",
+                  "style": "esriSFSSolid",
+                  "color": [
+                    243,
+                    234,
+                    100,
+                    255
+                  ],
+                  "outline": {
+                    "type": "esriSLS",
+                    "style": "esriSLSSolid",
+                    "color": [
+                      0,
+                      0,
+                      0,
+                      0
+                    ],
+                    "width": 0.1
+                  }
+                },
+                "value": "R-4",
+                "label": "R-4"
+              },
+              {
+                "symbol": {
+                  "type": "esriSFS",
+                  "style": "esriSFSSolid",
+                  "color": [
+                    254,
+                    208,
+                    0,
+                    255
+                  ],
+                  "outline": {
+                    "type": "esriSLS",
+                    "style": "esriSLSSolid",
+                    "color": [
+                      0,
+                      0,
+                      0,
+                      0
+                    ],
+                    "width": 0.1
+                  }
+                },
+                "value": "R-5",
+                "label": "R-5"
+              },
+              {
+                "symbol": {
+                  "type": "esriSFS",
+                  "style": "esriSFSSolid",
+                  "color": [
+                    254,
+                    167,
+                    0,
+                    255
+                  ],
+                  "outline": {
+                    "type": "esriSLS",
+                    "style": "esriSLSSolid",
+                    "color": [
+                      0,
+                      0,
+                      0,
+                      0
+                    ],
+                    "width": 0.1
+                  }
+                },
+                "value": "R-8",
+                "label": "R-8"
+              },
+              {
+                "symbol": {
+                  "type": "esriSFS",
+                  "style": "esriSFSSolid",
+                  "color": [
+                    251,
+                    128,
+                    54,
+                    255
+                  ],
+                  "outline": {
+                    "type": "esriSLS",
+                    "style": "esriSLSSolid",
+                    "color": [
+                      0,
+                      0,
+                      0,
+                      0
+                    ],
+                    "width": 0.1
+                  }
+                },
+                "value": "R-12",
+                "label": "R-12"
+              },
+              {
+                "symbol": {
+                  "type": "esriSFS",
+                  "style": "esriSFSSolid",
+                  "color": [
+                    220,
+                    77,
+                    0,
+                    255
+                  ],
+                  "outline": {
+                    "type": "esriSLS",
+                    "style": "esriSLSSolid",
+                    "color": [
+                      0,
+                      0,
+                      0,
+                      0
+                    ],
+                    "width": 0.1
+                  }
+                },
+                "value": "R-16",
+                "label": "R-16"
+              },
+              {
+                "symbol": {
+                  "type": "esriSFS",
+                  "style": "esriSFSSolid",
+                  "color": [
+                    169,
+                    36,
+                    0,
+                    255
+                  ],
+                  "outline": {
+                    "type": "esriSLS",
+                    "style": "esriSLSSolid",
+                    "color": [
+                      0,
+                      0,
+                      0,
+                      0
+                    ],
+                    "width": 0.1
+                  }
+                },
+                "value": "R-20",
+                "label": "R-20"
+              },
+              {
+                "symbol": {
+                  "type": "esriSFS",
+                  "style": "esriSFSSolid",
+                  "color": [
+                    123,
+                    14,
+                    0,
+                    255
+                  ],
+                  "outline": {
+                    "type": "esriSLS",
+                    "style": "esriSLSSolid",
+                    "color": [
+                      0,
+                      0,
+                      0,
+                      0
+                    ],
+                    "width": 0.1
+                  }
+                },
+                "value": "R-30",
+                "label": "R-30"
+              },
+              {
+                "symbol": {
+                  "type": "esriSFS",
+                  "style": "esriSFSSolid",
+                  "color": [
+                    154,
+                    89,
+                    89,
+                    255
+                  ],
+                  "outline": {
+                    "type": "esriSLS",
+                    "style": "esriSLSSolid",
+                    "color": [
+                      0,
+                      0,
+                      0,
+                      0
+                    ],
+                    "width": 0.1
+                  }
+                },
+                "value": "R-MHP",
+                "label": "R-MHP"
+              },
+              {
+                "symbol": {
+                  "type": "esriSFS",
+                  "style": "esriSFSForwardDiagonal",
+                  "color": [
+                    0,
+                    0,
+                    0,
+                    255
+                  ],
+                  "outline": null
+                },
+                "value": "T",
+                "label": "Other"
+              },
+              {
+                "symbol": {
+                  "type": "esriSFS",
+                  "style": "esriSFSForwardDiagonal",
+                  "color": [
+                    0,
+                    0,
+                    0,
+                    255
+                  ],
+                  "outline": null
+                },
+                "value": "CS",
+                "label": "Other"
+              },
+              {
+                "symbol": {
+                  "type": "esriSFS",
+                  "style": "esriSFSForwardDiagonal",
+                  "color": [
+                    0,
+                    0,
+                    0,
+                    255
+                  ],
+                  "outline": null
+                },
+                "value": "RS-16",
+                "label": "Other"
+              },
+              {
+                "symbol": {
+                  "type": "esriSFS",
+                  "style": "esriSFSForwardDiagonal",
+                  "color": [
+                    0,
+                    0,
+                    0,
+                    255
+                  ],
+                  "outline": null
+                },
+                "value": "PD-TOC",
+                "label": "Other"
+              },
+              {
+                "symbol": {
+                  "type": "esriSFS",
+                  "style": "esriSFSForwardDiagonal",
+                  "color": [
+                    0,
+                    0,
+                    0,
+                    255
+                  ],
+                  "outline": null
+                },
+                "value": "RTC",
+                "label": "Other"
+              },
+              {
+                "symbol": {
+                  "type": "esriSFS",
+                  "style": "esriSFSForwardDiagonal",
+                  "color": [
+                    0,
+                    0,
+                    0,
+                    255
+                  ],
+                  "outline": null
+                },
+                "value": "R-10",
+                "label": "Other"
+              },
+              {
+                "symbol": {
+                  "type": "esriSFS",
+                  "style": "esriSFSForwardDiagonal",
+                  "color": [
+                    0,
+                    0,
+                    0,
+                    255
+                  ],
+                  "outline": null
+                },
+                "value": "PD-W",
+                "label": "Other"
+              },
+              {
+                "symbol": {
+                  "type": "esriSFS",
+                  "style": "esriSFSForwardDiagonal",
+                  "color": [
+                    0,
+                    0,
+                    0,
+                    255
+                  ],
+                  "outline": null
+                },
+                "value": "C-1B",
+                "label": "Other"
+              },
+              {
+                "symbol": {
+                  "type": "esriSFS",
+                  "style": "esriSFSForwardDiagonal",
+                  "color": [
+                    0,
+                    0,
+                    0,
+                    255
+                  ],
+                  "outline": null
+                },
+                "value": "CO",
+                "label": "Other"
+              },
+              {
+                "symbol": {
+                  "type": "esriSFS",
+                  "style": "esriSFSForwardDiagonal",
+                  "color": [
+                    0,
+                    0,
+                    0,
+                    255
+                  ],
+                  "outline": null
+                },
+                "value": "RM",
+                "label": "Other"
+              },
+              {
+                "symbol": {
+                  "type": "esriSFS",
+                  "style": "esriSFSForwardDiagonal",
+                  "color": [
+                    0,
+                    0,
+                    0,
+                    255
+                  ],
+                  "outline": null
+                },
+                "value": "C-1A",
+                "label": "Other"
+              },
+              {
+                "symbol": {
+                  "type": "esriSFS",
+                  "style": "esriSFSForwardDiagonal",
+                  "color": [
+                    0,
+                    0,
+                    0,
+                    255
+                  ],
+                  "outline": null
+                },
+                "value": "PD-D",
+                "label": "Other"
+              },
+              {
+                "symbol": {
+                  "type": "esriSFS",
+                  "style": "esriSFSForwardDiagonal",
+                  "color": [
+                    0,
+                    0,
+                    0,
+                    255
+                  ],
+                  "outline": null
+                },
+                "value": "RS-12.5",
+                "label": "Other"
+              },
+              {
+                "symbol": {
+                  "type": "esriSFS",
+                  "style": "esriSFSForwardDiagonal",
+                  "color": [
+                    0,
+                    0,
+                    0,
+                    255
+                  ],
+                  "outline": null
+                },
+                "value": "CM",
+                "label": "Other"
+              },
+              {
+                "symbol": {
+                  "type": "esriSFS",
+                  "style": "esriSFSForwardDiagonal",
+                  "color": [
+                    0,
+                    0,
+                    0,
+                    255
+                  ],
+                  "outline": null
+                },
+                "value": "RS-10",
+                "label": "Other"
+              },
+              {
+                "symbol": {
+                  "type": "esriSFS",
+                  "style": "esriSFSForwardDiagonal",
+                  "color": [
+                    0,
+                    0,
+                    0,
+                    255
+                  ],
+                  "outline": null
+                },
+                "value": "PD-B",
+                "label": "Other"
+              },
+              {
+                "symbol": {
+                  "type": "esriSFS",
+                  "style": "esriSFSForwardDiagonal",
+                  "color": [
+                    0,
+                    0,
+                    0,
+                    255
+                  ],
+                  "outline": null
+                },
+                "value": "PD-R",
+                "label": "Other"
+              },
+              {
+                "symbol": {
+                  "type": "esriSFS",
+                  "style": "esriSFSForwardDiagonal",
+                  "color": [
+                    0,
+                    0,
+                    0,
+                    255
+                  ],
+                  "outline": null
+                },
+                "value": "PD-TD",
+                "label": "Other"
+              },
+              {
+                "symbol": {
+                  "type": "esriSFS",
+                  "style": "esriSFSForwardDiagonal",
+                  "color": [
+                    0,
+                    0,
+                    0,
+                    255
+                  ],
+                  "outline": null
+                },
+                "value": "O&LI",
+                "label": "Other"
+              },
+              {
+                "symbol": {
+                  "type": "esriSFS",
+                  "style": "esriSFSForwardDiagonal",
+                  "color": [
+                    0,
+                    0,
+                    0,
+                    255
+                  ],
+                  "outline": null
+                },
+                "value": "PC",
+                "label": "Other"
+              },
+              {
+                "symbol": {
+                  "type": "esriSFS",
+                  "style": "esriSFSForwardDiagonal",
+                  "color": [
+                    0,
+                    0,
+                    0,
+                    255
+                  ],
+                  "outline": null
+                },
+                "value": "PR",
+                "label": "Other"
+              },
+              {
+                "symbol": {
+                  "type": "esriSFS",
+                  "style": "esriSFSForwardDiagonal",
+                  "color": [
+                    0,
+                    0,
+                    0,
+                    255
+                  ],
+                  "outline": null
+                },
+                "value": "RTH",
+                "label": "Other"
+              },
+              {
+                "symbol": {
+                  "type": "esriSFS",
+                  "style": "esriSFSForwardDiagonal",
+                  "color": [
+                    0,
+                    0,
+                    0,
+                    255
+                  ],
+                  "outline": null
+                },
+                "value": "CMP",
+                "label": "Other"
+              },
+              {
+                "symbol": {
+                  "type": "esriSFS",
+                  "style": "esriSFSForwardDiagonal",
+                  "color": [
+                    0,
+                    0,
+                    0,
+                    255
+                  ],
+                  "outline": null
+                },
+                "value": "R-15",
+                "label": "Other"
+              },
+              {
+                "symbol": {
+                  "type": "esriSFS",
+                  "style": "esriSFSForwardDiagonal",
+                  "color": [
+                    0,
+                    0,
+                    0,
+                    255
+                  ],
+                  "outline": null
+                },
+                "value": "RM-2",
+                "label": "Other"
+              },
+              {
+                "symbol": {
+                  "type": "esriSFS",
+                  "style": "esriSFSForwardDiagonal",
+                  "color": [
+                    0,
+                    0,
+                    0,
+                    255
+                  ],
+                  "outline": null
+                },
+                "value": "CC",
+                "label": "Other"
+              }
+            ],
+            "fieldDelimiter": ",",
+            "authoringInfo": {
+              "colorRamp": {
+                "type": "multipart",
+                "colorRamps": [
+                  {
+                    "type": "algorithmic",
+                    "algorithm": "esriCIELabAlgorithm",
+                    "fromColor": [
+                      242,
+                      252,
+                      204,
+                      255
+                    ],
+                    "toColor": [
+                      242,
+                      252,
+                      204,
+                      255
+                    ]
+                  },
+                  {
+                    "type": "algorithmic",
+                    "algorithm": "esriCIELabAlgorithm",
+                    "fromColor": [
+                      233,
+                      179,
+                      252,
+                      255
+                    ],
+                    "toColor": [
+                      233,
+                      179,
+                      252,
+                      255
+                    ]
+                  },
+                  {
+                    "type": "algorithmic",
+                    "algorithm": "esriCIELabAlgorithm",
+                    "fromColor": [
+                      179,
+                      227,
+                      252,
+                      255
+                    ],
+                    "toColor": [
+                      179,
+                      227,
+                      252,
+                      255
+                    ]
+                  },
+                  {
+                    "type": "algorithmic",
+                    "algorithm": "esriCIELabAlgorithm",
+                    "fromColor": [
+                      252,
+                      184,
+                      182,
+                      255
+                    ],
+                    "toColor": [
+                      252,
+                      184,
+                      182,
+                      255
+                    ]
+                  },
+                  {
+                    "type": "algorithmic",
+                    "algorithm": "esriCIELabAlgorithm",
+                    "fromColor": [
+                      187,
+                      252,
+                      233,
+                      255
+                    ],
+                    "toColor": [
+                      187,
+                      252,
+                      233,
+                      255
+                    ]
+                  },
+                  {
+                    "type": "algorithmic",
+                    "algorithm": "esriCIELabAlgorithm",
+                    "fromColor": [
+                      179,
+                      252,
+                      183,
+                      255
+                    ],
+                    "toColor": [
+                      179,
+                      252,
+                      183,
+                      255
+                    ]
+                  },
+                  {
+                    "type": "algorithmic",
+                    "algorithm": "esriCIELabAlgorithm",
+                    "fromColor": [
+                      252,
+                      212,
+                      241,
+                      255
+                    ],
+                    "toColor": [
+                      252,
+                      212,
+                      241,
+                      255
+                    ]
+                  },
+                  {
+                    "type": "algorithmic",
+                    "algorithm": "esriCIELabAlgorithm",
+                    "fromColor": [
+                      179,
+                      191,
+                      252,
+                      255
+                    ],
+                    "toColor": [
+                      179,
+                      191,
+                      252,
+                      255
+                    ]
+                  },
+                  {
+                    "type": "algorithmic",
+                    "algorithm": "esriCIELabAlgorithm",
+                    "fromColor": [
+                      252,
+                      227,
+                      210,
+                      255
+                    ],
+                    "toColor": [
+                      252,
+                      227,
+                      210,
+                      255
+                    ]
+                  },
+                  {
+                    "type": "algorithmic",
+                    "algorithm": "esriCIELabAlgorithm",
+                    "fromColor": [
+                      252,
+                      179,
+                      224,
+                      255
+                    ],
+                    "toColor": [
+                      252,
+                      179,
+                      224,
+                      255
+                    ]
+                  },
+                  {
+                    "type": "algorithmic",
+                    "algorithm": "esriCIELabAlgorithm",
+                    "fromColor": [
+                      218,
+                      215,
+                      252,
+                      255
+                    ],
+                    "toColor": [
+                      218,
+                      215,
+                      252,
+                      255
+                    ]
+                  },
+                  {
+                    "type": "algorithmic",
+                    "algorithm": "esriCIELabAlgorithm",
+                    "fromColor": [
+                      215,
+                      251,
+                      252,
+                      255
+                    ],
+                    "toColor": [
+                      215,
+                      251,
+                      252,
+                      255
+                    ]
+                  },
+                  {
+                    "type": "algorithmic",
+                    "algorithm": "esriCIELabAlgorithm",
+                    "fromColor": [
+                      222,
+                      252,
+                      182,
+                      255
+                    ],
+                    "toColor": [
+                      222,
+                      252,
+                      182,
+                      255
+                    ]
+                  },
+                  {
+                    "type": "algorithmic",
+                    "algorithm": "esriCIELabAlgorithm",
+                    "fromColor": [
+                      252,
+                      207,
+                      212,
+                      255
+                    ],
+                    "toColor": [
+                      252,
+                      207,
+                      212,
+                      255
+                    ]
+                  },
+                  {
+                    "type": "algorithmic",
+                    "algorithm": "esriCIELabAlgorithm",
+                    "fromColor": [
+                      252,
+                      217,
+                      179,
+                      255
+                    ],
+                    "toColor": [
+                      252,
+                      217,
+                      179,
+                      255
+                    ]
+                  },
+                  {
+                    "type": "algorithmic",
+                    "algorithm": "esriCIELabAlgorithm",
+                    "fromColor": [
+                      227,
+                      197,
+                      252,
+                      255
+                    ],
+                    "toColor": [
+                      227,
+                      197,
+                      252,
+                      255
+                    ]
+                  },
+                  {
+                    "type": "algorithmic",
+                    "algorithm": "esriCIELabAlgorithm",
+                    "fromColor": [
+                      210,
+                      252,
+                      215,
+                      255
+                    ],
+                    "toColor": [
+                      210,
+                      252,
+                      215,
+                      255
+                    ]
+                  },
+                  {
+                    "type": "algorithmic",
+                    "algorithm": "esriCIELabAlgorithm",
+                    "fromColor": [
+                      252,
+                      187,
+                      211,
+                      255
+                    ],
+                    "toColor": [
+                      252,
+                      187,
+                      211,
+                      255
+                    ]
+                  },
+                  {
+                    "type": "algorithmic",
+                    "algorithm": "esriCIELabAlgorithm",
+                    "fromColor": [
+                      202,
+                      179,
+                      252,
+                      255
+                    ],
+                    "toColor": [
+                      202,
+                      179,
+                      252,
+                      255
+                    ]
+                  },
+                  {
+                    "type": "algorithmic",
+                    "algorithm": "esriCIELabAlgorithm",
+                    "fromColor": [
+                      252,
+                      204,
+                      189,
+                      255
+                    ],
+                    "toColor": [
+                      252,
+                      204,
+                      189,
+                      255
+                    ]
+                  },
+                  {
+                    "type": "algorithmic",
+                    "algorithm": "esriCIELabAlgorithm",
+                    "fromColor": [
+                      182,
+                      205,
+                      252,
+                      255
+                    ],
+                    "toColor": [
+                      182,
+                      205,
+                      252,
+                      255
+                    ]
+                  },
+                  {
+                    "type": "algorithmic",
+                    "algorithm": "esriCIELabAlgorithm",
+                    "fromColor": [
+                      184,
+                      252,
+                      206,
+                      255
+                    ],
+                    "toColor": [
+                      184,
+                      252,
+                      206,
+                      255
+                    ]
+                  },
+                  {
+                    "type": "algorithmic",
+                    "algorithm": "esriCIELabAlgorithm",
+                    "fromColor": [
+                      252,
+                      249,
+                      182,
+                      255
+                    ],
+                    "toColor": [
+                      252,
+                      249,
+                      182,
+                      255
+                    ]
+                  },
+                  {
+                    "type": "algorithmic",
+                    "algorithm": "esriCIELabAlgorithm",
+                    "fromColor": [
+                      202,
+                      252,
+                      192,
+                      255
+                    ],
+                    "toColor": [
+                      202,
+                      252,
+                      192,
+                      255
+                    ]
+                  },
+                  {
+                    "type": "algorithmic",
+                    "algorithm": "esriCIELabAlgorithm",
+                    "fromColor": [
+                      192,
+                      252,
+                      248,
+                      255
+                    ],
+                    "toColor": [
+                      192,
+                      252,
+                      248,
+                      255
+                    ]
+                  },
+                  {
+                    "type": "algorithmic",
+                    "algorithm": "esriCIELabAlgorithm",
+                    "fromColor": [
+                      252,
+                      246,
+                      194,
+                      255
+                    ],
+                    "toColor": [
+                      252,
+                      246,
+                      194,
+                      255
+                    ]
+                  },
+                  {
+                    "type": "algorithmic",
+                    "algorithm": "esriCIELabAlgorithm",
+                    "fromColor": [
+                      252,
+                      187,
+                      250,
+                      255
+                    ],
+                    "toColor": [
+                      252,
+                      187,
+                      250,
+                      255
+                    ]
+                  },
+                  {
+                    "type": "algorithmic",
+                    "algorithm": "esriCIELabAlgorithm",
+                    "fromColor": [
+                      205,
+                      197,
+                      252,
+                      255
+                    ],
+                    "toColor": [
+                      205,
+                      197,
+                      252,
+                      255
+                    ]
+                  },
+                  {
+                    "type": "algorithmic",
+                    "algorithm": "esriCIELabAlgorithm",
+                    "fromColor": [
+                      204,
+                      229,
+                      252,
+                      255
+                    ],
+                    "toColor": [
+                      204,
+                      229,
+                      252,
+                      255
+                    ]
+                  },
+                  {
+                    "type": "algorithmic",
+                    "algorithm": "esriCIELabAlgorithm",
+                    "fromColor": [
+                      215,
+                      252,
+                      230,
+                      255
+                    ],
+                    "toColor": [
+                      215,
+                      252,
+                      230,
+                      255
+                    ]
+                  },
+                  {
+                    "type": "algorithmic",
+                    "algorithm": "esriCIELabAlgorithm",
+                    "fromColor": [
+                      179,
+                      179,
+                      252,
+                      255
+                    ],
+                    "toColor": [
+                      179,
+                      179,
+                      252,
+                      255
+                    ]
+                  },
+                  {
+                    "type": "algorithmic",
+                    "algorithm": "esriCIELabAlgorithm",
+                    "fromColor": [
+                      252,
+                      194,
+                      244,
+                      255
+                    ],
+                    "toColor": [
+                      252,
+                      194,
+                      244,
+                      255
+                    ]
+                  },
+                  {
+                    "type": "algorithmic",
+                    "algorithm": "esriCIELabAlgorithm",
+                    "fromColor": [
+                      194,
+                      248,
+                      252,
+                      255
+                    ],
+                    "toColor": [
+                      194,
+                      248,
+                      252,
+                      255
+                    ]
+                  },
+                  {
+                    "type": "algorithmic",
+                    "algorithm": "esriCIELabAlgorithm",
+                    "fromColor": [
+                      252,
+                      229,
+                      192,
+                      255
+                    ],
+                    "toColor": [
+                      252,
+                      229,
+                      192,
+                      255
+                    ]
+                  },
+                  {
+                    "type": "algorithmic",
+                    "algorithm": "esriCIELabAlgorithm",
+                    "fromColor": [
+                      199,
+                      222,
+                      252,
+                      255
+                    ],
+                    "toColor": [
+                      199,
+                      222,
+                      252,
+                      255
+                    ]
+                  },
+                  {
+                    "type": "algorithmic",
+                    "algorithm": "esriCIELabAlgorithm",
+                    "fromColor": [
+                      247,
+                      210,
+                      252,
+                      255
+                    ],
+                    "toColor": [
+                      247,
+                      210,
+                      252,
+                      255
+                    ]
+                  },
+                  {
+                    "type": "algorithmic",
+                    "algorithm": "esriCIELabAlgorithm",
+                    "fromColor": [
+                      252,
+                      215,
+                      230,
+                      255
+                    ],
+                    "toColor": [
+                      252,
+                      215,
+                      230,
+                      255
+                    ]
+                  },
+                  {
+                    "type": "algorithmic",
+                    "algorithm": "esriCIELabAlgorithm",
+                    "fromColor": [
+                      239,
+                      215,
+                      252,
+                      255
+                    ],
+                    "toColor": [
+                      239,
+                      215,
+                      252,
+                      255
+                    ]
+                  },
+                  {
+                    "type": "algorithmic",
+                    "algorithm": "esriCIELabAlgorithm",
+                    "fromColor": [
+                      252,
+                      212,
+                      204,
+                      255
+                    ],
+                    "toColor": [
+                      252,
+                      212,
+                      204,
+                      255
+                    ]
+                  },
+                  {
+                    "type": "algorithmic",
+                    "algorithm": "esriCIELabAlgorithm",
+                    "fromColor": [
+                      252,
+                      247,
+                      212,
+                      255
+                    ],
+                    "toColor": [
+                      252,
+                      247,
+                      212,
+                      255
+                    ]
+                  },
+                  {
+                    "type": "algorithmic",
+                    "algorithm": "esriCIELabAlgorithm",
+                    "fromColor": [
+                      222,
+                      252,
+                      199,
+                      255
+                    ],
+                    "toColor": [
+                      222,
+                      252,
+                      199,
+                      255
+                    ]
+                  },
+                  {
+                    "type": "algorithmic",
+                    "algorithm": "esriCIELabAlgorithm",
+                    "fromColor": [
+                      192,
+                      252,
+                      221,
+                      255
+                    ],
+                    "toColor": [
+                      192,
+                      252,
+                      221,
+                      255
+                    ]
+                  },
+                  {
+                    "type": "algorithmic",
+                    "algorithm": "esriCIELabAlgorithm",
+                    "fromColor": [
+                      212,
+                      240,
+                      252,
+                      255
+                    ],
+                    "toColor": [
+                      212,
+                      240,
+                      252,
+                      255
+                    ]
+                  },
+                  {
+                    "type": "algorithmic",
+                    "algorithm": "esriCIELabAlgorithm",
+                    "fromColor": [
+                      252,
+                      184,
+                      197,
+                      255
+                    ],
+                    "toColor": [
+                      252,
+                      184,
+                      197,
+                      255
+                    ]
+                  },
+                  {
+                    "type": "algorithmic",
+                    "algorithm": "esriCIELabAlgorithm",
+                    "fromColor": [
+                      232,
+                      252,
+                      194,
+                      255
+                    ],
+                    "toColor": [
+                      232,
+                      252,
+                      194,
+                      255
+                    ]
+                  },
+                  {
+                    "type": "algorithmic",
+                    "algorithm": "esriCIELabAlgorithm",
+                    "fromColor": [
+                      198,
+                      187,
+                      252,
+                      255
+                    ],
+                    "toColor": [
+                      198,
+                      187,
+                      252,
+                      255
+                    ]
+                  },
+                  {
+                    "type": "algorithmic",
+                    "algorithm": "esriCIELabAlgorithm",
+                    "fromColor": [
+                      187,
+                      221,
+                      252,
+                      255
+                    ],
+                    "toColor": [
+                      187,
+                      221,
+                      252,
+                      255
+                    ]
+                  }
+                ]
+              }
+            }
+          },
+          "scaleSymbols": true,
+          "transparency": 0,
+          "labelingInfo": null
+        },
+        "hasM": false,
+        "hasZ": false,
+        "allowGeometryUpdates": false,
+        "allowTrueCurvesUpdates": false,
+        "onlyAllowTrueCurveUpdatesByTrueCurveClients": false,
+        "hasAttachments": false,
+        "supportsApplyEditsWithGlobalIds": false,
+        "htmlPopupType": "esriServerHTMLPopupTypeAsHTMLText",
+        "objectIdField": "OBJECTID",
+        "globalIdField": "GlobalID",
+        "displayField": "ZONECODE",
+        "typeIdField": "ZONECODE",
+        "subtypeField": "",
+        "fields": [
+          {
+            "name": "OBJECTID",
+            "type": "esriFieldTypeOID",
+            "alias": "OBJECTID",
+            "domain": null,
+            "editable": false,
+            "nullable": false,
+            "defaultValue": null,
+            "modelName": "OBJECTID"
+          },
+          {
+            "name": "ZONECODE",
+            "type": "esriFieldTypeString",
+            "alias": "ZONECODE",
+            "domain": null,
+            "editable": true,
+            "nullable": true,
+            "length": 8,
+            "defaultValue": null,
+            "modelName": "ZONECODE"
+          },
+          {
+            "name": "PROFFER",
+            "type": "esriFieldTypeString",
+            "alias": "PROFFER",
+            "domain": {
+              "type": "codedValue",
+              "name": "GIS_YES_NO",
+              "description": "For use in all yes no fields",
+              "codedValues": [
+                {
+                  "name": "YES",
+                  "code": "YES"
+                },
+                {
+                  "name": "NO",
+                  "code": "NO"
+                }
+              ],
+              "mergePolicy": "esriMPTDefaultValue",
+              "splitPolicy": "esriSPTDefaultValue"
+            },
+            "editable": true,
+            "nullable": true,
+            "length": 3,
+            "defaultValue": null,
+            "modelName": "PROFFER"
+          },
+          {
+            "name": "ZONETYPE",
+            "type": "esriFieldTypeString",
+            "alias": "ZONETYPE",
+            "domain": {
+              "type": "codedValue",
+              "name": "GIS_ZONING_TYPE",
+              "description": "All types of zoning for all jurisdictions",
+              "codedValues": [
+                {
+                  "name": "RESIDENTIAL",
+                  "code": "RESIDENTIAL"
+                },
+                {
+                  "name": "COMMERCIAL",
+                  "code": "COMMERCIAL"
+                },
+                {
+                  "name": "INDUSTRIAL",
+                  "code": "INDUSTRIAL"
+                },
+                {
+                  "name": "PLANNED UNITS",
+                  "code": "PLANNED UNITS"
+                },
+                {
+                  "name": "OTHER",
+                  "code": "OTHER"
+                },
+                {
+                  "name": "TYSON",
+                  "code": "TYSON"
+                }
+              ],
+              "mergePolicy": "esriMPTDefaultValue",
+              "splitPolicy": "esriSPTDefaultValue"
+            },
+            "editable": true,
+            "nullable": true,
+            "length": 25,
+            "defaultValue": null,
+            "modelName": "ZONETYPE"
+          },
+          {
+            "name": "PUBLIC_LAND",
+            "type": "esriFieldTypeString",
+            "alias": "PUBLIC_LAND",
+            "domain": {
+              "type": "codedValue",
+              "name": "GIS_YES_NO",
+              "description": "For use in all yes no fields",
+              "codedValues": [
+                {
+                  "name": "YES",
+                  "code": "YES"
+                },
+                {
+                  "name": "NO",
+                  "code": "NO"
+                }
+              ],
+              "mergePolicy": "esriMPTDefaultValue",
+              "splitPolicy": "esriSPTDefaultValue"
+            },
+            "editable": true,
+            "nullable": true,
+            "length": 3,
+            "defaultValue": null,
+            "modelName": "PUBLIC_LAND"
+          },
+          {
+            "name": "JURISDICTION",
+            "type": "esriFieldTypeString",
+            "alias": "JURISDICTION",
+            "domain": {
+              "type": "codedValue",
+              "name": "GIS_ZONING_JURISDICTION",
+              "description": "All of the jurisdictions for zoning",
+              "codedValues": [
+                {
+                  "name": "FAIRFAX COUNTY",
+                  "code": "FAIRFAX COUNTY"
+                },
+                {
+                  "name": "TOWN OF VIENNA",
+                  "code": "TOWN OF VIENNA"
+                },
+                {
+                  "name": "TOWN OF HERNDON",
+                  "code": "TOWN OF HERNDON"
+                }
+              ],
+              "mergePolicy": "esriMPTDefaultValue",
+              "splitPolicy": "esriSPTDefaultValue"
+            },
+            "editable": true,
+            "nullable": true,
+            "length": 20,
+            "defaultValue": null,
+            "modelName": "JURISDICTION"
+          },
+          {
+            "name": "CLUSTER_",
+            "type": "esriFieldTypeString",
+            "alias": "CLUSTER",
+            "domain": {
+              "type": "codedValue",
+              "name": "GIS_YES_NO",
+              "description": "For use in all yes no fields",
+              "codedValues": [
+                {
+                  "name": "YES",
+                  "code": "YES"
+                },
+                {
+                  "name": "NO",
+                  "code": "NO"
+                }
+              ],
+              "mergePolicy": "esriMPTDefaultValue",
+              "splitPolicy": "esriSPTDefaultValue"
+            },
+            "editable": true,
+            "nullable": true,
+            "length": 4,
+            "defaultValue": null,
+            "modelName": "CLUSTER_"
+          },
+          {
+            "name": "Shape__Area",
+            "type": "esriFieldTypeDouble",
+            "alias": "SHAPE.STArea()",
+            "domain": null,
+            "editable": false,
+            "nullable": false,
+            "defaultValue": null,
+            "modelName": "SHAPE.STArea()"
+          },
+          {
+            "name": "Shape__Length",
+            "type": "esriFieldTypeDouble",
+            "alias": "SHAPE.STLength()",
+            "domain": null,
+            "editable": false,
+            "nullable": false,
+            "defaultValue": null,
+            "modelName": "SHAPE.STLength()"
+          },
+          {
+            "name": "GlobalID",
+            "type": "esriFieldTypeGlobalID",
+            "alias": "GlobalID",
+            "domain": null,
+            "editable": false,
+            "nullable": false,
+            "length": 38,
+            "defaultValue": null,
+            "modelName": "GlobalID"
+          }
+        ],
+        "geometryField": {
+          "name": "SHAPE",
+          "type": "esriFieldTypeGeometry",
+          "alias": "SHAPE",
+          "domain": null,
+          "editable": false,
+          "nullable": true,
+          "defaultValue": null,
+          "modelName": "SHAPE"
+        },
+        "indexes": [
+          {
+            "name": "R7934_pk",
+            "fields": "OBJECTID",
+            "isAscending": true,
+            "isUnique": true,
+            "description": ""
+          },
+          {
+            "name": "UUID_7934",
+            "fields": "GlobalID",
+            "isAscending": true,
+            "isUnique": false,
+            "description": ""
+          },
+          {
+            "name": "UUID_OID_7934",
+            "fields": "GlobalID,OBJECTID",
+            "isAscending": true,
+            "isUnique": true,
+            "description": ""
+          },
+          {
+            "name": "S5546_idx",
+            "fields": "SHAPE",
+            "isAscending": true,
+            "isUnique": true,
+            "description": ""
+          }
+        ],
+        "datesInUnknownTimezone": false,
+        "dateFieldsTimeReference": {
+          "timeZone": "UTC",
+          "respectsDaylightSaving": false
+        },
+        "preferredTimeReference": null,
+        "types": [
+          {
+            "id": "C-0",
+            "name": "C-0",
+            "domains": {
+              "PROFFER": {
+                "type": "inherited"
+              },
+              "ZONETYPE": {
+                "type": "inherited"
+              },
+              "PUBLIC_LAND": {
+                "type": "inherited"
+              },
+              "JURISDICTION": {
+                "type": "inherited"
+              },
+              "CLUSTER_": {
+                "type": "inherited"
+              }
+            },
+            "templates": [
+              {
+                "name": "C-0",
+                "description": "",
+                "prototype": {
+                  "attributes": {
+                    "JURISDICTION": null,
+                    "CLUSTER_": null,
+                    "ZONECODE": "C-0",
+                    "PROFFER": null,
+                    "ZONETYPE": null,
+                    "PUBLIC_LAND": null
+                  }
+                },
+                "drawingTool": "esriFeatureEditToolPolygon"
+              }
+            ]
+          },
+          {
+            "id": "C-1",
+            "name": "C-1",
+            "domains": {
+              "PROFFER": {
+                "type": "inherited"
+              },
+              "ZONETYPE": {
+                "type": "inherited"
+              },
+              "PUBLIC_LAND": {
+                "type": "inherited"
+              },
+              "JURISDICTION": {
+                "type": "inherited"
+              },
+              "CLUSTER_": {
+                "type": "inherited"
+              }
+            },
+            "templates": [
+              {
+                "name": "C-1",
+                "description": "",
+                "prototype": {
+                  "attributes": {
+                    "JURISDICTION": null,
+                    "CLUSTER_": null,
+                    "ZONECODE": "C-1",
+                    "PROFFER": null,
+                    "ZONETYPE": null,
+                    "PUBLIC_LAND": null
+                  }
+                },
+                "drawingTool": "esriFeatureEditToolPolygon"
+              }
+            ]
+          },
+          {
+            "id": "C-2",
+            "name": "C-2",
+            "domains": {
+              "PROFFER": {
+                "type": "inherited"
+              },
+              "ZONETYPE": {
+                "type": "inherited"
+              },
+              "PUBLIC_LAND": {
+                "type": "inherited"
+              },
+              "JURISDICTION": {
+                "type": "inherited"
+              },
+              "CLUSTER_": {
+                "type": "inherited"
+              }
+            },
+            "templates": [
+              {
+                "name": "C-2",
+                "description": "",
+                "prototype": {
+                  "attributes": {
+                    "JURISDICTION": null,
+                    "CLUSTER_": null,
+                    "ZONECODE": "C-2",
+                    "PROFFER": null,
+                    "ZONETYPE": null,
+                    "PUBLIC_LAND": null
+                  }
+                },
+                "drawingTool": "esriFeatureEditToolPolygon"
+              }
+            ]
+          },
+          {
+            "id": "C-3",
+            "name": "C-3",
+            "domains": {
+              "PROFFER": {
+                "type": "inherited"
+              },
+              "ZONETYPE": {
+                "type": "inherited"
+              },
+              "PUBLIC_LAND": {
+                "type": "inherited"
+              },
+              "JURISDICTION": {
+                "type": "inherited"
+              },
+              "CLUSTER_": {
+                "type": "inherited"
+              }
+            },
+            "templates": [
+              {
+                "name": "C-3",
+                "description": "",
+                "prototype": {
+                  "attributes": {
+                    "JURISDICTION": null,
+                    "CLUSTER_": null,
+                    "ZONECODE": "C-3",
+                    "PROFFER": null,
+                    "ZONETYPE": null,
+                    "PUBLIC_LAND": null
+                  }
+                },
+                "drawingTool": "esriFeatureEditToolPolygon"
+              }
+            ]
+          },
+          {
+            "id": "C-4",
+            "name": "C-4",
+            "domains": {
+              "PROFFER": {
+                "type": "inherited"
+              },
+              "ZONETYPE": {
+                "type": "inherited"
+              },
+              "PUBLIC_LAND": {
+                "type": "inherited"
+              },
+              "JURISDICTION": {
+                "type": "inherited"
+              },
+              "CLUSTER_": {
+                "type": "inherited"
+              }
+            },
+            "templates": [
+              {
+                "name": "C-4",
+                "description": "",
+                "prototype": {
+                  "attributes": {
+                    "JURISDICTION": null,
+                    "CLUSTER_": null,
+                    "ZONECODE": "C-4",
+                    "PROFFER": null,
+                    "ZONETYPE": null,
+                    "PUBLIC_LAND": null
+                  }
+                },
+                "drawingTool": "esriFeatureEditToolPolygon"
+              }
+            ]
+          },
+          {
+            "id": "C-5",
+            "name": "C-5",
+            "domains": {
+              "PROFFER": {
+                "type": "inherited"
+              },
+              "ZONETYPE": {
+                "type": "inherited"
+              },
+              "PUBLIC_LAND": {
+                "type": "inherited"
+              },
+              "JURISDICTION": {
+                "type": "inherited"
+              },
+              "CLUSTER_": {
+                "type": "inherited"
+              }
+            },
+            "templates": [
+              {
+                "name": "C-5",
+                "description": "",
+                "prototype": {
+                  "attributes": {
+                    "JURISDICTION": null,
+                    "CLUSTER_": null,
+                    "ZONECODE": "C-5",
+                    "PROFFER": null,
+                    "ZONETYPE": null,
+                    "PUBLIC_LAND": null
+                  }
+                },
+                "drawingTool": "esriFeatureEditToolPolygon"
+              }
+            ]
+          },
+          {
+            "id": "C-6",
+            "name": "C-6",
+            "domains": {
+              "PROFFER": {
+                "type": "inherited"
+              },
+              "ZONETYPE": {
+                "type": "inherited"
+              },
+              "PUBLIC_LAND": {
+                "type": "inherited"
+              },
+              "JURISDICTION": {
+                "type": "inherited"
+              },
+              "CLUSTER_": {
+                "type": "inherited"
+              }
+            },
+            "templates": [
+              {
+                "name": "C-6",
+                "description": "",
+                "prototype": {
+                  "attributes": {
+                    "JURISDICTION": null,
+                    "CLUSTER_": null,
+                    "ZONECODE": "C-6",
+                    "PROFFER": null,
+                    "ZONETYPE": null,
+                    "PUBLIC_LAND": null
+                  }
+                },
+                "drawingTool": "esriFeatureEditToolPolygon"
+              }
+            ]
+          },
+          {
+            "id": "C-7",
+            "name": "C-7",
+            "domains": {
+              "PROFFER": {
+                "type": "inherited"
+              },
+              "ZONETYPE": {
+                "type": "inherited"
+              },
+              "PUBLIC_LAND": {
+                "type": "inherited"
+              },
+              "JURISDICTION": {
+                "type": "inherited"
+              },
+              "CLUSTER_": {
+                "type": "inherited"
+              }
+            },
+            "templates": [
+              {
+                "name": "C-7",
+                "description": "",
+                "prototype": {
+                  "attributes": {
+                    "JURISDICTION": null,
+                    "CLUSTER_": null,
+                    "ZONECODE": "C-7",
+                    "PROFFER": null,
+                    "ZONETYPE": null,
+                    "PUBLIC_LAND": null
+                  }
+                },
+                "drawingTool": "esriFeatureEditToolPolygon"
+              }
+            ]
+          },
+          {
+            "id": "C-8",
+            "name": "C-8",
+            "domains": {
+              "PROFFER": {
+                "type": "inherited"
+              },
+              "ZONETYPE": {
+                "type": "inherited"
+              },
+              "PUBLIC_LAND": {
+                "type": "inherited"
+              },
+              "JURISDICTION": {
+                "type": "inherited"
+              },
+              "CLUSTER_": {
+                "type": "inherited"
+              }
+            },
+            "templates": [
+              {
+                "name": "C-8",
+                "description": "",
+                "prototype": {
+                  "attributes": {
+                    "JURISDICTION": null,
+                    "CLUSTER_": null,
+                    "ZONECODE": "C-8",
+                    "PROFFER": null,
+                    "ZONETYPE": null,
+                    "PUBLIC_LAND": null
+                  }
+                },
+                "drawingTool": "esriFeatureEditToolPolygon"
+              }
+            ]
+          },
+          {
+            "id": "I-I",
+            "name": "I-I",
+            "domains": {
+              "PROFFER": {
+                "type": "inherited"
+              },
+              "ZONETYPE": {
+                "type": "inherited"
+              },
+              "PUBLIC_LAND": {
+                "type": "inherited"
+              },
+              "JURISDICTION": {
+                "type": "inherited"
+              },
+              "CLUSTER_": {
+                "type": "inherited"
+              }
+            },
+            "templates": [
+              {
+                "name": "I-I",
+                "description": "",
+                "prototype": {
+                  "attributes": {
+                    "JURISDICTION": null,
+                    "CLUSTER_": null,
+                    "ZONECODE": "I-I",
+                    "PROFFER": null,
+                    "ZONETYPE": null,
+                    "PUBLIC_LAND": null
+                  }
+                },
+                "drawingTool": "esriFeatureEditToolPolygon"
+              }
+            ]
+          },
+          {
+            "id": "I-0",
+            "name": "I-1",
+            "domains": {
+              "PROFFER": {
+                "type": "inherited"
+              },
+              "ZONETYPE": {
+                "type": "inherited"
+              },
+              "PUBLIC_LAND": {
+                "type": "inherited"
+              },
+              "JURISDICTION": {
+                "type": "inherited"
+              },
+              "CLUSTER_": {
+                "type": "inherited"
+              }
+            },
+            "templates": [
+              {
+                "name": "I-0",
+                "description": "",
+                "prototype": {
+                  "attributes": {
+                    "JURISDICTION": null,
+                    "CLUSTER_": null,
+                    "ZONECODE": "I-0",
+                    "PROFFER": null,
+                    "ZONETYPE": null,
+                    "PUBLIC_LAND": null
+                  }
+                },
+                "drawingTool": "esriFeatureEditToolPolygon"
+              }
+            ]
+          },
+          {
+            "id": "I-2",
+            "name": "I-2",
+            "domains": {
+              "PROFFER": {
+                "type": "inherited"
+              },
+              "ZONETYPE": {
+                "type": "inherited"
+              },
+              "PUBLIC_LAND": {
+                "type": "inherited"
+              },
+              "JURISDICTION": {
+                "type": "inherited"
+              },
+              "CLUSTER_": {
+                "type": "inherited"
+              }
+            },
+            "templates": [
+              {
+                "name": "I-2",
+                "description": "",
+                "prototype": {
+                  "attributes": {
+                    "JURISDICTION": null,
+                    "CLUSTER_": null,
+                    "ZONECODE": "I-2",
+                    "PROFFER": null,
+                    "ZONETYPE": null,
+                    "PUBLIC_LAND": null
+                  }
+                },
+                "drawingTool": "esriFeatureEditToolPolygon"
+              }
+            ]
+          },
+          {
+            "id": "I-3",
+            "name": "I-3",
+            "domains": {
+              "PROFFER": {
+                "type": "inherited"
+              },
+              "ZONETYPE": {
+                "type": "inherited"
+              },
+              "PUBLIC_LAND": {
+                "type": "inherited"
+              },
+              "JURISDICTION": {
+                "type": "inherited"
+              },
+              "CLUSTER_": {
+                "type": "inherited"
+              }
+            },
+            "templates": [
+              {
+                "name": "I-3",
+                "description": "",
+                "prototype": {
+                  "attributes": {
+                    "JURISDICTION": null,
+                    "CLUSTER_": null,
+                    "ZONECODE": "I-3",
+                    "PROFFER": null,
+                    "ZONETYPE": null,
+                    "PUBLIC_LAND": null
+                  }
+                },
+                "drawingTool": "esriFeatureEditToolPolygon"
+              }
+            ]
+          },
+          {
+            "id": "I-4",
+            "name": "I-4",
+            "domains": {
+              "PROFFER": {
+                "type": "inherited"
+              },
+              "ZONETYPE": {
+                "type": "inherited"
+              },
+              "PUBLIC_LAND": {
+                "type": "inherited"
+              },
+              "JURISDICTION": {
+                "type": "inherited"
+              },
+              "CLUSTER_": {
+                "type": "inherited"
+              }
+            },
+            "templates": [
+              {
+                "name": "I-4",
+                "description": "",
+                "prototype": {
+                  "attributes": {
+                    "JURISDICTION": null,
+                    "CLUSTER_": null,
+                    "ZONECODE": "I-4",
+                    "PROFFER": null,
+                    "ZONETYPE": null,
+                    "PUBLIC_LAND": null
+                  }
+                },
+                "drawingTool": "esriFeatureEditToolPolygon"
+              }
+            ]
+          },
+          {
+            "id": "I-5",
+            "name": "I-5",
+            "domains": {
+              "PROFFER": {
+                "type": "inherited"
+              },
+              "ZONETYPE": {
+                "type": "inherited"
+              },
+              "PUBLIC_LAND": {
+                "type": "inherited"
+              },
+              "JURISDICTION": {
+                "type": "inherited"
+              },
+              "CLUSTER_": {
+                "type": "inherited"
+              }
+            },
+            "templates": [
+              {
+                "name": "I-5",
+                "description": "",
+                "prototype": {
+                  "attributes": {
+                    "JURISDICTION": null,
+                    "CLUSTER_": null,
+                    "ZONECODE": "I-5",
+                    "PROFFER": null,
+                    "ZONETYPE": null,
+                    "PUBLIC_LAND": null
+                  }
+                },
+                "drawingTool": "esriFeatureEditToolPolygon"
+              }
+            ]
+          },
+          {
+            "id": "I-6",
+            "name": "I-6",
+            "domains": {
+              "PROFFER": {
+                "type": "inherited"
+              },
+              "ZONETYPE": {
+                "type": "inherited"
+              },
+              "PUBLIC_LAND": {
+                "type": "inherited"
+              },
+              "JURISDICTION": {
+                "type": "inherited"
+              },
+              "CLUSTER_": {
+                "type": "inherited"
+              }
+            },
+            "templates": [
+              {
+                "name": "I-6",
+                "description": "",
+                "prototype": {
+                  "attributes": {
+                    "JURISDICTION": null,
+                    "CLUSTER_": null,
+                    "ZONECODE": "I-6",
+                    "PROFFER": null,
+                    "ZONETYPE": null,
+                    "PUBLIC_LAND": null
+                  }
+                },
+                "drawingTool": "esriFeatureEditToolPolygon"
+              }
+            ]
+          },
+          {
+            "id": "PDC",
+            "name": "PDC",
+            "domains": {
+              "PROFFER": {
+                "type": "inherited"
+              },
+              "ZONETYPE": {
+                "type": "inherited"
+              },
+              "PUBLIC_LAND": {
+                "type": "inherited"
+              },
+              "JURISDICTION": {
+                "type": "inherited"
+              },
+              "CLUSTER_": {
+                "type": "inherited"
+              }
+            },
+            "templates": [
+              {
+                "name": "PDC",
+                "description": "",
+                "prototype": {
+                  "attributes": {
+                    "JURISDICTION": null,
+                    "CLUSTER_": null,
+                    "ZONECODE": "PDC",
+                    "PROFFER": null,
+                    "ZONETYPE": null,
+                    "PUBLIC_LAND": null
+                  }
+                },
+                "drawingTool": "esriFeatureEditToolPolygon"
+              }
+            ]
+          },
+          {
+            "id": "PTC",
+            "name": "PTC",
+            "domains": {
+              "PROFFER": {
+                "type": "inherited"
+              },
+              "ZONETYPE": {
+                "type": "inherited"
+              },
+              "PUBLIC_LAND": {
+                "type": "inherited"
+              },
+              "JURISDICTION": {
+                "type": "inherited"
+              },
+              "CLUSTER_": {
+                "type": "inherited"
+              }
+            },
+            "templates": [
+              {
+                "name": "PTC",
+                "description": "",
+                "prototype": {
+                  "attributes": {
+                    "JURISDICTION": null,
+                    "CLUSTER_": null,
+                    "ZONECODE": "PTC",
+                    "PROFFER": null,
+                    "ZONETYPE": null,
+                    "PUBLIC_LAND": null
+                  }
+                },
+                "drawingTool": "esriFeatureEditToolPolygon"
+              }
+            ]
+          },
+          {
+            "id": "PDH-1",
+            "name": "PDH-1",
+            "domains": {
+              "PROFFER": {
+                "type": "inherited"
+              },
+              "ZONETYPE": {
+                "type": "inherited"
+              },
+              "PUBLIC_LAND": {
+                "type": "inherited"
+              },
+              "JURISDICTION": {
+                "type": "inherited"
+              },
+              "CLUSTER_": {
+                "type": "inherited"
+              }
+            },
+            "templates": [
+              {
+                "name": "PDH-1",
+                "description": "",
+                "prototype": {
+                  "attributes": {
+                    "JURISDICTION": null,
+                    "CLUSTER_": null,
+                    "ZONECODE": "PDH-1",
+                    "PROFFER": null,
+                    "ZONETYPE": null,
+                    "PUBLIC_LAND": null
+                  }
+                },
+                "drawingTool": "esriFeatureEditToolPolygon"
+              }
+            ]
+          },
+          {
+            "id": "PDH-2",
+            "name": "PDH-2",
+            "domains": {
+              "PROFFER": {
+                "type": "inherited"
+              },
+              "ZONETYPE": {
+                "type": "inherited"
+              },
+              "PUBLIC_LAND": {
+                "type": "inherited"
+              },
+              "JURISDICTION": {
+                "type": "inherited"
+              },
+              "CLUSTER_": {
+                "type": "inherited"
+              }
+            },
+            "templates": [
+              {
+                "name": "PDH-2",
+                "description": "",
+                "prototype": {
+                  "attributes": {
+                    "JURISDICTION": null,
+                    "CLUSTER_": null,
+                    "ZONECODE": "PDH-2",
+                    "PROFFER": null,
+                    "ZONETYPE": null,
+                    "PUBLIC_LAND": null
+                  }
+                },
+                "drawingTool": "esriFeatureEditToolPolygon"
+              }
+            ]
+          },
+          {
+            "id": "PDH-3",
+            "name": "PDH-3",
+            "domains": {
+              "PROFFER": {
+                "type": "inherited"
+              },
+              "ZONETYPE": {
+                "type": "inherited"
+              },
+              "PUBLIC_LAND": {
+                "type": "inherited"
+              },
+              "JURISDICTION": {
+                "type": "inherited"
+              },
+              "CLUSTER_": {
+                "type": "inherited"
+              }
+            },
+            "templates": [
+              {
+                "name": "PDH-3",
+                "description": "",
+                "prototype": {
+                  "attributes": {
+                    "JURISDICTION": null,
+                    "CLUSTER_": null,
+                    "ZONECODE": "PDH-3",
+                    "PROFFER": null,
+                    "ZONETYPE": null,
+                    "PUBLIC_LAND": null
+                  }
+                },
+                "drawingTool": "esriFeatureEditToolPolygon"
+              }
+            ]
+          },
+          {
+            "id": "PDH-4",
+            "name": "PDH-4",
+            "domains": {
+              "PROFFER": {
+                "type": "inherited"
+              },
+              "ZONETYPE": {
+                "type": "inherited"
+              },
+              "PUBLIC_LAND": {
+                "type": "inherited"
+              },
+              "JURISDICTION": {
+                "type": "inherited"
+              },
+              "CLUSTER_": {
+                "type": "inherited"
+              }
+            },
+            "templates": [
+              {
+                "name": "PDH-4",
+                "description": "",
+                "prototype": {
+                  "attributes": {
+                    "JURISDICTION": null,
+                    "CLUSTER_": null,
+                    "ZONECODE": "PDH-4",
+                    "PROFFER": null,
+                    "ZONETYPE": null,
+                    "PUBLIC_LAND": null
+                  }
+                },
+                "drawingTool": "esriFeatureEditToolPolygon"
+              }
+            ]
+          },
+          {
+            "id": "PDH-5",
+            "name": "PDH-5",
+            "domains": {
+              "PROFFER": {
+                "type": "inherited"
+              },
+              "ZONETYPE": {
+                "type": "inherited"
+              },
+              "PUBLIC_LAND": {
+                "type": "inherited"
+              },
+              "JURISDICTION": {
+                "type": "inherited"
+              },
+              "CLUSTER_": {
+                "type": "inherited"
+              }
+            },
+            "templates": [
+              {
+                "name": "PDH-5",
+                "description": "",
+                "prototype": {
+                  "attributes": {
+                    "JURISDICTION": null,
+                    "CLUSTER_": null,
+                    "ZONECODE": "PDH-5",
+                    "PROFFER": null,
+                    "ZONETYPE": null,
+                    "PUBLIC_LAND": null
+                  }
+                },
+                "drawingTool": "esriFeatureEditToolPolygon"
+              }
+            ]
+          },
+          {
+            "id": "PDH-8",
+            "name": "PDH-8",
+            "domains": {
+              "PROFFER": {
+                "type": "inherited"
+              },
+              "ZONETYPE": {
+                "type": "inherited"
+              },
+              "PUBLIC_LAND": {
+                "type": "inherited"
+              },
+              "JURISDICTION": {
+                "type": "inherited"
+              },
+              "CLUSTER_": {
+                "type": "inherited"
+              }
+            },
+            "templates": [
+              {
+                "name": "PDH-8",
+                "description": "",
+                "prototype": {
+                  "attributes": {
+                    "JURISDICTION": null,
+                    "CLUSTER_": null,
+                    "ZONECODE": "PDH-8",
+                    "PROFFER": null,
+                    "ZONETYPE": null,
+                    "PUBLIC_LAND": null
+                  }
+                },
+                "drawingTool": "esriFeatureEditToolPolygon"
+              }
+            ]
+          },
+          {
+            "id": "PDH-12",
+            "name": "PDH-12",
+            "domains": {
+              "PROFFER": {
+                "type": "inherited"
+              },
+              "ZONETYPE": {
+                "type": "inherited"
+              },
+              "PUBLIC_LAND": {
+                "type": "inherited"
+              },
+              "JURISDICTION": {
+                "type": "inherited"
+              },
+              "CLUSTER_": {
+                "type": "inherited"
+              }
+            },
+            "templates": [
+              {
+                "name": "PDH-12",
+                "description": "",
+                "prototype": {
+                  "attributes": {
+                    "JURISDICTION": null,
+                    "CLUSTER_": null,
+                    "ZONECODE": "PDH-12",
+                    "PROFFER": null,
+                    "ZONETYPE": null,
+                    "PUBLIC_LAND": null
+                  }
+                },
+                "drawingTool": "esriFeatureEditToolPolygon"
+              }
+            ]
+          },
+          {
+            "id": "PDH-16",
+            "name": "PDH-16",
+            "domains": {
+              "PROFFER": {
+                "type": "inherited"
+              },
+              "ZONETYPE": {
+                "type": "inherited"
+              },
+              "PUBLIC_LAND": {
+                "type": "inherited"
+              },
+              "JURISDICTION": {
+                "type": "inherited"
+              },
+              "CLUSTER_": {
+                "type": "inherited"
+              }
+            },
+            "templates": [
+              {
+                "name": "PDH-16",
+                "description": "",
+                "prototype": {
+                  "attributes": {
+                    "JURISDICTION": null,
+                    "CLUSTER_": null,
+                    "ZONECODE": "PDH-16",
+                    "PROFFER": null,
+                    "ZONETYPE": null,
+                    "PUBLIC_LAND": null
+                  }
+                },
+                "drawingTool": "esriFeatureEditToolPolygon"
+              }
+            ]
+          },
+          {
+            "id": "PDH-20",
+            "name": "PDH-20",
+            "domains": {
+              "PROFFER": {
+                "type": "inherited"
+              },
+              "ZONETYPE": {
+                "type": "inherited"
+              },
+              "PUBLIC_LAND": {
+                "type": "inherited"
+              },
+              "JURISDICTION": {
+                "type": "inherited"
+              },
+              "CLUSTER_": {
+                "type": "inherited"
+              }
+            },
+            "templates": [
+              {
+                "name": "PDH-20",
+                "description": "",
+                "prototype": {
+                  "attributes": {
+                    "JURISDICTION": null,
+                    "CLUSTER_": null,
+                    "ZONECODE": "PDH-20",
+                    "PROFFER": null,
+                    "ZONETYPE": null,
+                    "PUBLIC_LAND": null
+                  }
+                },
+                "drawingTool": "esriFeatureEditToolPolygon"
+              }
+            ]
+          },
+          {
+            "id": "PDH-30",
+            "name": "PDH-30",
+            "domains": {
+              "PROFFER": {
+                "type": "inherited"
+              },
+              "ZONETYPE": {
+                "type": "inherited"
+              },
+              "PUBLIC_LAND": {
+                "type": "inherited"
+              },
+              "JURISDICTION": {
+                "type": "inherited"
+              },
+              "CLUSTER_": {
+                "type": "inherited"
+              }
+            },
+            "templates": [
+              {
+                "name": "PDH-30",
+                "description": "",
+                "prototype": {
+                  "attributes": {
+                    "JURISDICTION": null,
+                    "CLUSTER_": null,
+                    "ZONECODE": "PDH-30",
+                    "PROFFER": null,
+                    "ZONETYPE": null,
+                    "PUBLIC_LAND": null
+                  }
+                },
+                "drawingTool": "esriFeatureEditToolPolygon"
+              }
+            ]
+          },
+          {
+            "id": "PDH-40",
+            "name": "PDH-40",
+            "domains": {
+              "PROFFER": {
+                "type": "inherited"
+              },
+              "ZONETYPE": {
+                "type": "inherited"
+              },
+              "PUBLIC_LAND": {
+                "type": "inherited"
+              },
+              "JURISDICTION": {
+                "type": "inherited"
+              },
+              "CLUSTER_": {
+                "type": "inherited"
+              }
+            },
+            "templates": [
+              {
+                "name": "PDH-40",
+                "description": "",
+                "prototype": {
+                  "attributes": {
+                    "JURISDICTION": null,
+                    "CLUSTER_": null,
+                    "ZONECODE": "PDH-40",
+                    "PROFFER": null,
+                    "ZONETYPE": null,
+                    "PUBLIC_LAND": null
+                  }
+                },
+                "drawingTool": "esriFeatureEditToolPolygon"
+              }
+            ]
+          },
+          {
+            "id": "PRM",
+            "name": "PRM",
+            "domains": {
+              "PROFFER": {
+                "type": "inherited"
+              },
+              "ZONETYPE": {
+                "type": "inherited"
+              },
+              "PUBLIC_LAND": {
+                "type": "inherited"
+              },
+              "JURISDICTION": {
+                "type": "inherited"
+              },
+              "CLUSTER_": {
+                "type": "inherited"
+              }
+            },
+            "templates": [
+              {
+                "name": "PRM",
+                "description": "",
+                "prototype": {
+                  "attributes": {
+                    "JURISDICTION": null,
+                    "CLUSTER_": null,
+                    "ZONECODE": "PRM",
+                    "PROFFER": null,
+                    "ZONETYPE": null,
+                    "PUBLIC_LAND": null
+                  }
+                },
+                "drawingTool": "esriFeatureEditToolPolygon"
+              }
+            ]
+          },
+          {
+            "id": "PRC",
+            "name": "PRC",
+            "domains": {
+              "PROFFER": {
+                "type": "inherited"
+              },
+              "ZONETYPE": {
+                "type": "inherited"
+              },
+              "PUBLIC_LAND": {
+                "type": "inherited"
+              },
+              "JURISDICTION": {
+                "type": "inherited"
+              },
+              "CLUSTER_": {
+                "type": "inherited"
+              }
+            },
+            "templates": [
+              {
+                "name": "PRC",
+                "description": "",
+                "prototype": {
+                  "attributes": {
+                    "JURISDICTION": null,
+                    "CLUSTER_": null,
+                    "ZONECODE": "PRC",
+                    "PROFFER": null,
+                    "ZONETYPE": null,
+                    "PUBLIC_LAND": null
+                  }
+                },
+                "drawingTool": "esriFeatureEditToolPolygon"
+              }
+            ]
+          },
+          {
+            "id": "R-A",
+            "name": "R-A",
+            "domains": {
+              "PROFFER": {
+                "type": "inherited"
+              },
+              "ZONETYPE": {
+                "type": "inherited"
+              },
+              "PUBLIC_LAND": {
+                "type": "inherited"
+              },
+              "JURISDICTION": {
+                "type": "inherited"
+              },
+              "CLUSTER_": {
+                "type": "inherited"
+              }
+            },
+            "templates": [
+              {
+                "name": "R-A",
+                "description": "",
+                "prototype": {
+                  "attributes": {
+                    "JURISDICTION": null,
+                    "CLUSTER_": null,
+                    "ZONECODE": "R-A",
+                    "PROFFER": null,
+                    "ZONETYPE": null,
+                    "PUBLIC_LAND": null
+                  }
+                },
+                "drawingTool": "esriFeatureEditToolPolygon"
+              }
+            ]
+          },
+          {
+            "id": "R-P",
+            "name": "R-P",
+            "domains": {
+              "PROFFER": {
+                "type": "inherited"
+              },
+              "ZONETYPE": {
+                "type": "inherited"
+              },
+              "PUBLIC_LAND": {
+                "type": "inherited"
+              },
+              "JURISDICTION": {
+                "type": "inherited"
+              },
+              "CLUSTER_": {
+                "type": "inherited"
+              }
+            },
+            "templates": [
+              {
+                "name": "R-P",
+                "description": "",
+                "prototype": {
+                  "attributes": {
+                    "JURISDICTION": null,
+                    "CLUSTER_": null,
+                    "ZONECODE": "R-P",
+                    "PROFFER": null,
+                    "ZONETYPE": null,
+                    "PUBLIC_LAND": null
+                  }
+                },
+                "drawingTool": "esriFeatureEditToolPolygon"
+              }
+            ]
+          },
+          {
+            "id": "R-C",
+            "name": "R-C",
+            "domains": {
+              "PROFFER": {
+                "type": "inherited"
+              },
+              "ZONETYPE": {
+                "type": "inherited"
+              },
+              "PUBLIC_LAND": {
+                "type": "inherited"
+              },
+              "JURISDICTION": {
+                "type": "inherited"
+              },
+              "CLUSTER_": {
+                "type": "inherited"
+              }
+            },
+            "templates": [
+              {
+                "name": "R-C",
+                "description": "",
+                "prototype": {
+                  "attributes": {
+                    "JURISDICTION": null,
+                    "CLUSTER_": null,
+                    "ZONECODE": "R-C",
+                    "PROFFER": null,
+                    "ZONETYPE": null,
+                    "PUBLIC_LAND": null
+                  }
+                },
+                "drawingTool": "esriFeatureEditToolPolygon"
+              }
+            ]
+          },
+          {
+            "id": "R-E",
+            "name": "R-E",
+            "domains": {
+              "PROFFER": {
+                "type": "inherited"
+              },
+              "ZONETYPE": {
+                "type": "inherited"
+              },
+              "PUBLIC_LAND": {
+                "type": "inherited"
+              },
+              "JURISDICTION": {
+                "type": "inherited"
+              },
+              "CLUSTER_": {
+                "type": "inherited"
+              }
+            },
+            "templates": [
+              {
+                "name": "R-E",
+                "description": "",
+                "prototype": {
+                  "attributes": {
+                    "JURISDICTION": null,
+                    "CLUSTER_": null,
+                    "ZONECODE": "R-E",
+                    "PROFFER": null,
+                    "ZONETYPE": null,
+                    "PUBLIC_LAND": null
+                  }
+                },
+                "drawingTool": "esriFeatureEditToolPolygon"
+              }
+            ]
+          },
+          {
+            "id": "R-1",
+            "name": "R-1",
+            "domains": {
+              "PROFFER": {
+                "type": "inherited"
+              },
+              "ZONETYPE": {
+                "type": "inherited"
+              },
+              "PUBLIC_LAND": {
+                "type": "inherited"
+              },
+              "JURISDICTION": {
+                "type": "inherited"
+              },
+              "CLUSTER_": {
+                "type": "inherited"
+              }
+            },
+            "templates": [
+              {
+                "name": "R-1",
+                "description": "",
+                "prototype": {
+                  "attributes": {
+                    "JURISDICTION": null,
+                    "CLUSTER_": null,
+                    "ZONECODE": "R-1",
+                    "PROFFER": null,
+                    "ZONETYPE": null,
+                    "PUBLIC_LAND": null
+                  }
+                },
+                "drawingTool": "esriFeatureEditToolPolygon"
+              }
+            ]
+          },
+          {
+            "id": "R-2",
+            "name": "R-2",
+            "domains": {
+              "PROFFER": {
+                "type": "inherited"
+              },
+              "ZONETYPE": {
+                "type": "inherited"
+              },
+              "PUBLIC_LAND": {
+                "type": "inherited"
+              },
+              "JURISDICTION": {
+                "type": "inherited"
+              },
+              "CLUSTER_": {
+                "type": "inherited"
+              }
+            },
+            "templates": [
+              {
+                "name": "R-2",
+                "description": "",
+                "prototype": {
+                  "attributes": {
+                    "JURISDICTION": null,
+                    "CLUSTER_": null,
+                    "ZONECODE": "R-2",
+                    "PROFFER": null,
+                    "ZONETYPE": null,
+                    "PUBLIC_LAND": null
+                  }
+                },
+                "drawingTool": "esriFeatureEditToolPolygon"
+              }
+            ]
+          },
+          {
+            "id": "R-3",
+            "name": "R-3",
+            "domains": {
+              "PROFFER": {
+                "type": "inherited"
+              },
+              "ZONETYPE": {
+                "type": "inherited"
+              },
+              "PUBLIC_LAND": {
+                "type": "inherited"
+              },
+              "JURISDICTION": {
+                "type": "inherited"
+              },
+              "CLUSTER_": {
+                "type": "inherited"
+              }
+            },
+            "templates": [
+              {
+                "name": "R-3",
+                "description": "",
+                "prototype": {
+                  "attributes": {
+                    "JURISDICTION": null,
+                    "CLUSTER_": null,
+                    "ZONECODE": "R-3",
+                    "PROFFER": null,
+                    "ZONETYPE": null,
+                    "PUBLIC_LAND": null
+                  }
+                },
+                "drawingTool": "esriFeatureEditToolPolygon"
+              }
+            ]
+          },
+          {
+            "id": "R-4",
+            "name": "R-4",
+            "domains": {
+              "PROFFER": {
+                "type": "inherited"
+              },
+              "ZONETYPE": {
+                "type": "inherited"
+              },
+              "PUBLIC_LAND": {
+                "type": "inherited"
+              },
+              "JURISDICTION": {
+                "type": "inherited"
+              },
+              "CLUSTER_": {
+                "type": "inherited"
+              }
+            },
+            "templates": [
+              {
+                "name": "R-4",
+                "description": "",
+                "prototype": {
+                  "attributes": {
+                    "JURISDICTION": null,
+                    "CLUSTER_": null,
+                    "ZONECODE": "R-4",
+                    "PROFFER": null,
+                    "ZONETYPE": null,
+                    "PUBLIC_LAND": null
+                  }
+                },
+                "drawingTool": "esriFeatureEditToolPolygon"
+              }
+            ]
+          },
+          {
+            "id": "R-5",
+            "name": "R-5",
+            "domains": {
+              "PROFFER": {
+                "type": "inherited"
+              },
+              "ZONETYPE": {
+                "type": "inherited"
+              },
+              "PUBLIC_LAND": {
+                "type": "inherited"
+              },
+              "JURISDICTION": {
+                "type": "inherited"
+              },
+              "CLUSTER_": {
+                "type": "inherited"
+              }
+            },
+            "templates": [
+              {
+                "name": "R-5",
+                "description": "",
+                "prototype": {
+                  "attributes": {
+                    "JURISDICTION": null,
+                    "CLUSTER_": null,
+                    "ZONECODE": "R-5",
+                    "PROFFER": null,
+                    "ZONETYPE": null,
+                    "PUBLIC_LAND": null
+                  }
+                },
+                "drawingTool": "esriFeatureEditToolPolygon"
+              }
+            ]
+          },
+          {
+            "id": "R-8",
+            "name": "R-8",
+            "domains": {
+              "PROFFER": {
+                "type": "inherited"
+              },
+              "ZONETYPE": {
+                "type": "inherited"
+              },
+              "PUBLIC_LAND": {
+                "type": "inherited"
+              },
+              "JURISDICTION": {
+                "type": "inherited"
+              },
+              "CLUSTER_": {
+                "type": "inherited"
+              }
+            },
+            "templates": [
+              {
+                "name": "R-8",
+                "description": "",
+                "prototype": {
+                  "attributes": {
+                    "JURISDICTION": null,
+                    "CLUSTER_": null,
+                    "ZONECODE": "R-8",
+                    "PROFFER": null,
+                    "ZONETYPE": null,
+                    "PUBLIC_LAND": null
+                  }
+                },
+                "drawingTool": "esriFeatureEditToolPolygon"
+              }
+            ]
+          },
+          {
+            "id": "R-12",
+            "name": "R-12",
+            "domains": {
+              "PROFFER": {
+                "type": "inherited"
+              },
+              "ZONETYPE": {
+                "type": "inherited"
+              },
+              "PUBLIC_LAND": {
+                "type": "inherited"
+              },
+              "JURISDICTION": {
+                "type": "inherited"
+              },
+              "CLUSTER_": {
+                "type": "inherited"
+              }
+            },
+            "templates": [
+              {
+                "name": "R-12",
+                "description": "",
+                "prototype": {
+                  "attributes": {
+                    "JURISDICTION": null,
+                    "CLUSTER_": null,
+                    "ZONECODE": "R-12",
+                    "PROFFER": null,
+                    "ZONETYPE": null,
+                    "PUBLIC_LAND": null
+                  }
+                },
+                "drawingTool": "esriFeatureEditToolPolygon"
+              }
+            ]
+          },
+          {
+            "id": "R-16",
+            "name": "R-16",
+            "domains": {
+              "PROFFER": {
+                "type": "inherited"
+              },
+              "ZONETYPE": {
+                "type": "inherited"
+              },
+              "PUBLIC_LAND": {
+                "type": "inherited"
+              },
+              "JURISDICTION": {
+                "type": "inherited"
+              },
+              "CLUSTER_": {
+                "type": "inherited"
+              }
+            },
+            "templates": [
+              {
+                "name": "R-16",
+                "description": "",
+                "prototype": {
+                  "attributes": {
+                    "JURISDICTION": null,
+                    "CLUSTER_": null,
+                    "ZONECODE": "R-16",
+                    "PROFFER": null,
+                    "ZONETYPE": null,
+                    "PUBLIC_LAND": null
+                  }
+                },
+                "drawingTool": "esriFeatureEditToolPolygon"
+              }
+            ]
+          },
+          {
+            "id": "R-20",
+            "name": "R-20",
+            "domains": {
+              "PROFFER": {
+                "type": "inherited"
+              },
+              "ZONETYPE": {
+                "type": "inherited"
+              },
+              "PUBLIC_LAND": {
+                "type": "inherited"
+              },
+              "JURISDICTION": {
+                "type": "inherited"
+              },
+              "CLUSTER_": {
+                "type": "inherited"
+              }
+            },
+            "templates": [
+              {
+                "name": "R-20",
+                "description": "",
+                "prototype": {
+                  "attributes": {
+                    "JURISDICTION": null,
+                    "CLUSTER_": null,
+                    "ZONECODE": "R-20",
+                    "PROFFER": null,
+                    "ZONETYPE": null,
+                    "PUBLIC_LAND": null
+                  }
+                },
+                "drawingTool": "esriFeatureEditToolPolygon"
+              }
+            ]
+          },
+          {
+            "id": "R-30",
+            "name": "R-30",
+            "domains": {
+              "PROFFER": {
+                "type": "inherited"
+              },
+              "ZONETYPE": {
+                "type": "inherited"
+              },
+              "PUBLIC_LAND": {
+                "type": "inherited"
+              },
+              "JURISDICTION": {
+                "type": "inherited"
+              },
+              "CLUSTER_": {
+                "type": "inherited"
+              }
+            },
+            "templates": [
+              {
+                "name": "R-30",
+                "description": "",
+                "prototype": {
+                  "attributes": {
+                    "JURISDICTION": null,
+                    "CLUSTER_": null,
+                    "ZONECODE": "R-30",
+                    "PROFFER": null,
+                    "ZONETYPE": null,
+                    "PUBLIC_LAND": null
+                  }
+                },
+                "drawingTool": "esriFeatureEditToolPolygon"
+              }
+            ]
+          },
+          {
+            "id": "R-MHP",
+            "name": "R-MHP",
+            "domains": {
+              "PROFFER": {
+                "type": "inherited"
+              },
+              "ZONETYPE": {
+                "type": "inherited"
+              },
+              "PUBLIC_LAND": {
+                "type": "inherited"
+              },
+              "JURISDICTION": {
+                "type": "inherited"
+              },
+              "CLUSTER_": {
+                "type": "inherited"
+              }
+            },
+            "templates": [
+              {
+                "name": "R-MHP",
+                "description": "",
+                "prototype": {
+                  "attributes": {
+                    "JURISDICTION": null,
+                    "CLUSTER_": null,
+                    "ZONECODE": "R-MHP",
+                    "PROFFER": null,
+                    "ZONETYPE": null,
+                    "PUBLIC_LAND": null
+                  }
+                },
+                "drawingTool": "esriFeatureEditToolPolygon"
+              }
+            ]
+          },
+          {
+            "id": "T",
+            "name": "Other",
+            "domains": {
+              "PROFFER": {
+                "type": "inherited"
+              },
+              "ZONETYPE": {
+                "type": "inherited"
+              },
+              "PUBLIC_LAND": {
+                "type": "inherited"
+              },
+              "JURISDICTION": {
+                "type": "inherited"
+              },
+              "CLUSTER_": {
+                "type": "inherited"
+              }
+            },
+            "templates": [
+              {
+                "name": "T",
+                "description": "",
+                "prototype": {
+                  "attributes": {
+                    "JURISDICTION": null,
+                    "CLUSTER_": null,
+                    "ZONECODE": "T",
+                    "PROFFER": null,
+                    "ZONETYPE": null,
+                    "PUBLIC_LAND": null
+                  }
+                },
+                "drawingTool": "esriFeatureEditToolPolygon"
+              }
+            ]
+          },
+          {
+            "id": "CS",
+            "name": "Other",
+            "domains": {
+              "PROFFER": {
+                "type": "inherited"
+              },
+              "ZONETYPE": {
+                "type": "inherited"
+              },
+              "PUBLIC_LAND": {
+                "type": "inherited"
+              },
+              "JURISDICTION": {
+                "type": "inherited"
+              },
+              "CLUSTER_": {
+                "type": "inherited"
+              }
+            },
+            "templates": [
+              {
+                "name": "CS",
+                "description": "",
+                "prototype": {
+                  "attributes": {
+                    "JURISDICTION": null,
+                    "CLUSTER_": null,
+                    "ZONECODE": "CS",
+                    "PROFFER": null,
+                    "ZONETYPE": null,
+                    "PUBLIC_LAND": null
+                  }
+                },
+                "drawingTool": "esriFeatureEditToolPolygon"
+              }
+            ]
+          },
+          {
+            "id": "RS-16",
+            "name": "Other",
+            "domains": {
+              "PROFFER": {
+                "type": "inherited"
+              },
+              "ZONETYPE": {
+                "type": "inherited"
+              },
+              "PUBLIC_LAND": {
+                "type": "inherited"
+              },
+              "JURISDICTION": {
+                "type": "inherited"
+              },
+              "CLUSTER_": {
+                "type": "inherited"
+              }
+            },
+            "templates": [
+              {
+                "name": "RS-16",
+                "description": "",
+                "prototype": {
+                  "attributes": {
+                    "JURISDICTION": null,
+                    "CLUSTER_": null,
+                    "ZONECODE": "RS-16",
+                    "PROFFER": null,
+                    "ZONETYPE": null,
+                    "PUBLIC_LAND": null
+                  }
+                },
+                "drawingTool": "esriFeatureEditToolPolygon"
+              }
+            ]
+          },
+          {
+            "id": "PD-TOC",
+            "name": "Other",
+            "domains": {
+              "PROFFER": {
+                "type": "inherited"
+              },
+              "ZONETYPE": {
+                "type": "inherited"
+              },
+              "PUBLIC_LAND": {
+                "type": "inherited"
+              },
+              "JURISDICTION": {
+                "type": "inherited"
+              },
+              "CLUSTER_": {
+                "type": "inherited"
+              }
+            },
+            "templates": [
+              {
+                "name": "PD-TOC",
+                "description": "",
+                "prototype": {
+                  "attributes": {
+                    "JURISDICTION": null,
+                    "CLUSTER_": null,
+                    "ZONECODE": "PD-TOC",
+                    "PROFFER": null,
+                    "ZONETYPE": null,
+                    "PUBLIC_LAND": null
+                  }
+                },
+                "drawingTool": "esriFeatureEditToolPolygon"
+              }
+            ]
+          },
+          {
+            "id": "RTC",
+            "name": "Other",
+            "domains": {
+              "PROFFER": {
+                "type": "inherited"
+              },
+              "ZONETYPE": {
+                "type": "inherited"
+              },
+              "PUBLIC_LAND": {
+                "type": "inherited"
+              },
+              "JURISDICTION": {
+                "type": "inherited"
+              },
+              "CLUSTER_": {
+                "type": "inherited"
+              }
+            },
+            "templates": [
+              {
+                "name": "RTC",
+                "description": "",
+                "prototype": {
+                  "attributes": {
+                    "JURISDICTION": null,
+                    "CLUSTER_": null,
+                    "ZONECODE": "RTC",
+                    "PROFFER": null,
+                    "ZONETYPE": null,
+                    "PUBLIC_LAND": null
+                  }
+                },
+                "drawingTool": "esriFeatureEditToolPolygon"
+              }
+            ]
+          },
+          {
+            "id": "R-10",
+            "name": "Other",
+            "domains": {
+              "PROFFER": {
+                "type": "inherited"
+              },
+              "ZONETYPE": {
+                "type": "inherited"
+              },
+              "PUBLIC_LAND": {
+                "type": "inherited"
+              },
+              "JURISDICTION": {
+                "type": "inherited"
+              },
+              "CLUSTER_": {
+                "type": "inherited"
+              }
+            },
+            "templates": [
+              {
+                "name": "R-10",
+                "description": "",
+                "prototype": {
+                  "attributes": {
+                    "JURISDICTION": null,
+                    "CLUSTER_": null,
+                    "ZONECODE": "R-10",
+                    "PROFFER": null,
+                    "ZONETYPE": null,
+                    "PUBLIC_LAND": null
+                  }
+                },
+                "drawingTool": "esriFeatureEditToolPolygon"
+              }
+            ]
+          },
+          {
+            "id": "PD-W",
+            "name": "Other",
+            "domains": {
+              "PROFFER": {
+                "type": "inherited"
+              },
+              "ZONETYPE": {
+                "type": "inherited"
+              },
+              "PUBLIC_LAND": {
+                "type": "inherited"
+              },
+              "JURISDICTION": {
+                "type": "inherited"
+              },
+              "CLUSTER_": {
+                "type": "inherited"
+              }
+            },
+            "templates": [
+              {
+                "name": "PD-W",
+                "description": "",
+                "prototype": {
+                  "attributes": {
+                    "JURISDICTION": null,
+                    "CLUSTER_": null,
+                    "ZONECODE": "PD-W",
+                    "PROFFER": null,
+                    "ZONETYPE": null,
+                    "PUBLIC_LAND": null
+                  }
+                },
+                "drawingTool": "esriFeatureEditToolPolygon"
+              }
+            ]
+          },
+          {
+            "id": "C-1B",
+            "name": "Other",
+            "domains": {
+              "PROFFER": {
+                "type": "inherited"
+              },
+              "ZONETYPE": {
+                "type": "inherited"
+              },
+              "PUBLIC_LAND": {
+                "type": "inherited"
+              },
+              "JURISDICTION": {
+                "type": "inherited"
+              },
+              "CLUSTER_": {
+                "type": "inherited"
+              }
+            },
+            "templates": [
+              {
+                "name": "C-1B",
+                "description": "",
+                "prototype": {
+                  "attributes": {
+                    "JURISDICTION": null,
+                    "CLUSTER_": null,
+                    "ZONECODE": "C-1B",
+                    "PROFFER": null,
+                    "ZONETYPE": null,
+                    "PUBLIC_LAND": null
+                  }
+                },
+                "drawingTool": "esriFeatureEditToolPolygon"
+              }
+            ]
+          },
+          {
+            "id": "CO",
+            "name": "Other",
+            "domains": {
+              "PROFFER": {
+                "type": "inherited"
+              },
+              "ZONETYPE": {
+                "type": "inherited"
+              },
+              "PUBLIC_LAND": {
+                "type": "inherited"
+              },
+              "JURISDICTION": {
+                "type": "inherited"
+              },
+              "CLUSTER_": {
+                "type": "inherited"
+              }
+            },
+            "templates": [
+              {
+                "name": "CO",
+                "description": "",
+                "prototype": {
+                  "attributes": {
+                    "JURISDICTION": null,
+                    "CLUSTER_": null,
+                    "ZONECODE": "CO",
+                    "PROFFER": null,
+                    "ZONETYPE": null,
+                    "PUBLIC_LAND": null
+                  }
+                },
+                "drawingTool": "esriFeatureEditToolPolygon"
+              }
+            ]
+          },
+          {
+            "id": "RM",
+            "name": "Other",
+            "domains": {
+              "PROFFER": {
+                "type": "inherited"
+              },
+              "ZONETYPE": {
+                "type": "inherited"
+              },
+              "PUBLIC_LAND": {
+                "type": "inherited"
+              },
+              "JURISDICTION": {
+                "type": "inherited"
+              },
+              "CLUSTER_": {
+                "type": "inherited"
+              }
+            },
+            "templates": [
+              {
+                "name": "RM",
+                "description": "",
+                "prototype": {
+                  "attributes": {
+                    "JURISDICTION": null,
+                    "CLUSTER_": null,
+                    "ZONECODE": "RM",
+                    "PROFFER": null,
+                    "ZONETYPE": null,
+                    "PUBLIC_LAND": null
+                  }
+                },
+                "drawingTool": "esriFeatureEditToolPolygon"
+              }
+            ]
+          },
+          {
+            "id": "C-1A",
+            "name": "Other",
+            "domains": {
+              "PROFFER": {
+                "type": "inherited"
+              },
+              "ZONETYPE": {
+                "type": "inherited"
+              },
+              "PUBLIC_LAND": {
+                "type": "inherited"
+              },
+              "JURISDICTION": {
+                "type": "inherited"
+              },
+              "CLUSTER_": {
+                "type": "inherited"
+              }
+            },
+            "templates": [
+              {
+                "name": "C-1A",
+                "description": "",
+                "prototype": {
+                  "attributes": {
+                    "JURISDICTION": null,
+                    "CLUSTER_": null,
+                    "ZONECODE": "C-1A",
+                    "PROFFER": null,
+                    "ZONETYPE": null,
+                    "PUBLIC_LAND": null
+                  }
+                },
+                "drawingTool": "esriFeatureEditToolPolygon"
+              }
+            ]
+          },
+          {
+            "id": "PD-D",
+            "name": "Other",
+            "domains": {
+              "PROFFER": {
+                "type": "inherited"
+              },
+              "ZONETYPE": {
+                "type": "inherited"
+              },
+              "PUBLIC_LAND": {
+                "type": "inherited"
+              },
+              "JURISDICTION": {
+                "type": "inherited"
+              },
+              "CLUSTER_": {
+                "type": "inherited"
+              }
+            },
+            "templates": [
+              {
+                "name": "PD-D",
+                "description": "",
+                "prototype": {
+                  "attributes": {
+                    "JURISDICTION": null,
+                    "CLUSTER_": null,
+                    "ZONECODE": "PD-D",
+                    "PROFFER": null,
+                    "ZONETYPE": null,
+                    "PUBLIC_LAND": null
+                  }
+                },
+                "drawingTool": "esriFeatureEditToolPolygon"
+              }
+            ]
+          },
+          {
+            "id": "RS-12.5",
+            "name": "Other",
+            "domains": {
+              "PROFFER": {
+                "type": "inherited"
+              },
+              "ZONETYPE": {
+                "type": "inherited"
+              },
+              "PUBLIC_LAND": {
+                "type": "inherited"
+              },
+              "JURISDICTION": {
+                "type": "inherited"
+              },
+              "CLUSTER_": {
+                "type": "inherited"
+              }
+            },
+            "templates": [
+              {
+                "name": "RS-12.5",
+                "description": "",
+                "prototype": {
+                  "attributes": {
+                    "JURISDICTION": null,
+                    "CLUSTER_": null,
+                    "ZONECODE": "RS-12.5",
+                    "PROFFER": null,
+                    "ZONETYPE": null,
+                    "PUBLIC_LAND": null
+                  }
+                },
+                "drawingTool": "esriFeatureEditToolPolygon"
+              }
+            ]
+          },
+          {
+            "id": "CM",
+            "name": "Other",
+            "domains": {
+              "PROFFER": {
+                "type": "inherited"
+              },
+              "ZONETYPE": {
+                "type": "inherited"
+              },
+              "PUBLIC_LAND": {
+                "type": "inherited"
+              },
+              "JURISDICTION": {
+                "type": "inherited"
+              },
+              "CLUSTER_": {
+                "type": "inherited"
+              }
+            },
+            "templates": [
+              {
+                "name": "CM",
+                "description": "",
+                "prototype": {
+                  "attributes": {
+                    "JURISDICTION": null,
+                    "CLUSTER_": null,
+                    "ZONECODE": "CM",
+                    "PROFFER": null,
+                    "ZONETYPE": null,
+                    "PUBLIC_LAND": null
+                  }
+                },
+                "drawingTool": "esriFeatureEditToolPolygon"
+              }
+            ]
+          },
+          {
+            "id": "RS-10",
+            "name": "Other",
+            "domains": {
+              "PROFFER": {
+                "type": "inherited"
+              },
+              "ZONETYPE": {
+                "type": "inherited"
+              },
+              "PUBLIC_LAND": {
+                "type": "inherited"
+              },
+              "JURISDICTION": {
+                "type": "inherited"
+              },
+              "CLUSTER_": {
+                "type": "inherited"
+              }
+            },
+            "templates": [
+              {
+                "name": "RS-10",
+                "description": "",
+                "prototype": {
+                  "attributes": {
+                    "JURISDICTION": null,
+                    "CLUSTER_": null,
+                    "ZONECODE": "RS-10",
+                    "PROFFER": null,
+                    "ZONETYPE": null,
+                    "PUBLIC_LAND": null
+                  }
+                },
+                "drawingTool": "esriFeatureEditToolPolygon"
+              }
+            ]
+          },
+          {
+            "id": "PD-B",
+            "name": "Other",
+            "domains": {
+              "PROFFER": {
+                "type": "inherited"
+              },
+              "ZONETYPE": {
+                "type": "inherited"
+              },
+              "PUBLIC_LAND": {
+                "type": "inherited"
+              },
+              "JURISDICTION": {
+                "type": "inherited"
+              },
+              "CLUSTER_": {
+                "type": "inherited"
+              }
+            },
+            "templates": [
+              {
+                "name": "PD-B",
+                "description": "",
+                "prototype": {
+                  "attributes": {
+                    "JURISDICTION": null,
+                    "CLUSTER_": null,
+                    "ZONECODE": "PD-B",
+                    "PROFFER": null,
+                    "ZONETYPE": null,
+                    "PUBLIC_LAND": null
+                  }
+                },
+                "drawingTool": "esriFeatureEditToolPolygon"
+              }
+            ]
+          },
+          {
+            "id": "PD-R",
+            "name": "Other",
+            "domains": {
+              "PROFFER": {
+                "type": "inherited"
+              },
+              "ZONETYPE": {
+                "type": "inherited"
+              },
+              "PUBLIC_LAND": {
+                "type": "inherited"
+              },
+              "JURISDICTION": {
+                "type": "inherited"
+              },
+              "CLUSTER_": {
+                "type": "inherited"
+              }
+            },
+            "templates": [
+              {
+                "name": "PD-R",
+                "description": "",
+                "prototype": {
+                  "attributes": {
+                    "JURISDICTION": null,
+                    "CLUSTER_": null,
+                    "ZONECODE": "PD-R",
+                    "PROFFER": null,
+                    "ZONETYPE": null,
+                    "PUBLIC_LAND": null
+                  }
+                },
+                "drawingTool": "esriFeatureEditToolPolygon"
+              }
+            ]
+          },
+          {
+            "id": "PD-TD",
+            "name": "Other",
+            "domains": {
+              "PROFFER": {
+                "type": "inherited"
+              },
+              "ZONETYPE": {
+                "type": "inherited"
+              },
+              "PUBLIC_LAND": {
+                "type": "inherited"
+              },
+              "JURISDICTION": {
+                "type": "inherited"
+              },
+              "CLUSTER_": {
+                "type": "inherited"
+              }
+            },
+            "templates": [
+              {
+                "name": "PD-TD",
+                "description": "",
+                "prototype": {
+                  "attributes": {
+                    "JURISDICTION": null,
+                    "CLUSTER_": null,
+                    "ZONECODE": "PD-TD",
+                    "PROFFER": null,
+                    "ZONETYPE": null,
+                    "PUBLIC_LAND": null
+                  }
+                },
+                "drawingTool": "esriFeatureEditToolPolygon"
+              }
+            ]
+          },
+          {
+            "id": "O&LI",
+            "name": "Other",
+            "domains": {
+              "PROFFER": {
+                "type": "inherited"
+              },
+              "ZONETYPE": {
+                "type": "inherited"
+              },
+              "PUBLIC_LAND": {
+                "type": "inherited"
+              },
+              "JURISDICTION": {
+                "type": "inherited"
+              },
+              "CLUSTER_": {
+                "type": "inherited"
+              }
+            },
+            "templates": [
+              {
+                "name": "O&LI",
+                "description": "",
+                "prototype": {
+                  "attributes": {
+                    "JURISDICTION": null,
+                    "CLUSTER_": null,
+                    "ZONECODE": "O&LI",
+                    "PROFFER": null,
+                    "ZONETYPE": null,
+                    "PUBLIC_LAND": null
+                  }
+                },
+                "drawingTool": "esriFeatureEditToolPolygon"
+              }
+            ]
+          },
+          {
+            "id": "PC",
+            "name": "Other",
+            "domains": {
+              "PROFFER": {
+                "type": "inherited"
+              },
+              "ZONETYPE": {
+                "type": "inherited"
+              },
+              "PUBLIC_LAND": {
+                "type": "inherited"
+              },
+              "JURISDICTION": {
+                "type": "inherited"
+              },
+              "CLUSTER_": {
+                "type": "inherited"
+              }
+            },
+            "templates": [
+              {
+                "name": "PC",
+                "description": "",
+                "prototype": {
+                  "attributes": {
+                    "JURISDICTION": null,
+                    "CLUSTER_": null,
+                    "ZONECODE": "PC",
+                    "PROFFER": null,
+                    "ZONETYPE": null,
+                    "PUBLIC_LAND": null
+                  }
+                },
+                "drawingTool": "esriFeatureEditToolPolygon"
+              }
+            ]
+          },
+          {
+            "id": "PR",
+            "name": "Other",
+            "domains": {
+              "PROFFER": {
+                "type": "inherited"
+              },
+              "ZONETYPE": {
+                "type": "inherited"
+              },
+              "PUBLIC_LAND": {
+                "type": "inherited"
+              },
+              "JURISDICTION": {
+                "type": "inherited"
+              },
+              "CLUSTER_": {
+                "type": "inherited"
+              }
+            },
+            "templates": [
+              {
+                "name": "PR",
+                "description": "",
+                "prototype": {
+                  "attributes": {
+                    "JURISDICTION": null,
+                    "CLUSTER_": null,
+                    "ZONECODE": "PR",
+                    "PROFFER": null,
+                    "ZONETYPE": null,
+                    "PUBLIC_LAND": null
+                  }
+                },
+                "drawingTool": "esriFeatureEditToolPolygon"
+              }
+            ]
+          },
+          {
+            "id": "RTH",
+            "name": "Other",
+            "domains": {
+              "PROFFER": {
+                "type": "inherited"
+              },
+              "ZONETYPE": {
+                "type": "inherited"
+              },
+              "PUBLIC_LAND": {
+                "type": "inherited"
+              },
+              "JURISDICTION": {
+                "type": "inherited"
+              },
+              "CLUSTER_": {
+                "type": "inherited"
+              }
+            },
+            "templates": [
+              {
+                "name": "RTH",
+                "description": "",
+                "prototype": {
+                  "attributes": {
+                    "JURISDICTION": null,
+                    "CLUSTER_": null,
+                    "ZONECODE": "RTH",
+                    "PROFFER": null,
+                    "ZONETYPE": null,
+                    "PUBLIC_LAND": null
+                  }
+                },
+                "drawingTool": "esriFeatureEditToolPolygon"
+              }
+            ]
+          },
+          {
+            "id": "CMP",
+            "name": "Other",
+            "domains": {
+              "PROFFER": {
+                "type": "inherited"
+              },
+              "ZONETYPE": {
+                "type": "inherited"
+              },
+              "PUBLIC_LAND": {
+                "type": "inherited"
+              },
+              "JURISDICTION": {
+                "type": "inherited"
+              },
+              "CLUSTER_": {
+                "type": "inherited"
+              }
+            },
+            "templates": [
+              {
+                "name": "CMP",
+                "description": "",
+                "prototype": {
+                  "attributes": {
+                    "JURISDICTION": null,
+                    "CLUSTER_": null,
+                    "ZONECODE": "CMP",
+                    "PROFFER": null,
+                    "ZONETYPE": null,
+                    "PUBLIC_LAND": null
+                  }
+                },
+                "drawingTool": "esriFeatureEditToolPolygon"
+              }
+            ]
+          },
+          {
+            "id": "R-15",
+            "name": "Other",
+            "domains": {
+              "PROFFER": {
+                "type": "inherited"
+              },
+              "ZONETYPE": {
+                "type": "inherited"
+              },
+              "PUBLIC_LAND": {
+                "type": "inherited"
+              },
+              "JURISDICTION": {
+                "type": "inherited"
+              },
+              "CLUSTER_": {
+                "type": "inherited"
+              }
+            },
+            "templates": [
+              {
+                "name": "R-15",
+                "description": "",
+                "prototype": {
+                  "attributes": {
+                    "JURISDICTION": null,
+                    "CLUSTER_": null,
+                    "ZONECODE": "R-15",
+                    "PROFFER": null,
+                    "ZONETYPE": null,
+                    "PUBLIC_LAND": null
+                  }
+                },
+                "drawingTool": "esriFeatureEditToolPolygon"
+              }
+            ]
+          },
+          {
+            "id": "RM-2",
+            "name": "Other",
+            "domains": {
+              "PROFFER": {
+                "type": "inherited"
+              },
+              "ZONETYPE": {
+                "type": "inherited"
+              },
+              "PUBLIC_LAND": {
+                "type": "inherited"
+              },
+              "JURISDICTION": {
+                "type": "inherited"
+              },
+              "CLUSTER_": {
+                "type": "inherited"
+              }
+            },
+            "templates": [
+              {
+                "name": "RM-2",
+                "description": "",
+                "prototype": {
+                  "attributes": {
+                    "JURISDICTION": null,
+                    "CLUSTER_": null,
+                    "ZONECODE": "RM-2",
+                    "PROFFER": null,
+                    "ZONETYPE": null,
+                    "PUBLIC_LAND": null
+                  }
+                },
+                "drawingTool": "esriFeatureEditToolPolygon"
+              }
+            ]
+          },
+          {
+            "id": "CC",
+            "name": "Other",
+            "domains": {
+              "PROFFER": {
+                "type": "inherited"
+              },
+              "ZONETYPE": {
+                "type": "inherited"
+              },
+              "PUBLIC_LAND": {
+                "type": "inherited"
+              },
+              "JURISDICTION": {
+                "type": "inherited"
+              },
+              "CLUSTER_": {
+                "type": "inherited"
+              }
+            },
+            "templates": [
+              {
+                "name": "CC",
+                "description": "",
+                "prototype": {
+                  "attributes": {
+                    "JURISDICTION": null,
+                    "CLUSTER_": null,
+                    "ZONECODE": "CC",
+                    "PROFFER": null,
+                    "ZONETYPE": null,
+                    "PUBLIC_LAND": null
+                  }
+                },
+                "drawingTool": "esriFeatureEditToolPolygon"
+              }
+            ]
+          }
+        ],
+        "templates": [],
+        "maxRecordCount": 1000,
+        "supportedQueryFormats": "JSON, geoJSON, PBF",
+        "supportedExportFormats": "sqlite,filegdb",
+        "capabilities": "Query",
+        "useStandardizedQueries": true,
+        "supportedSpatialRelationships": [
+          "esriSpatialRelIntersects",
+          "esriSpatialRelContains",
+          "esriSpatialRelCrosses",
+          "esriSpatialRelEnvelopeIntersects",
+          "esriSpatialRelIndexIntersects",
+          "esriSpatialRelOverlaps",
+          "esriSpatialRelTouches",
+          "esriSpatialRelWithin",
+          "esriSpatialRelRelation"
+        ],
+        "standardMaxRecordCount": 4000,
+        "tileMaxRecordCount": 4000,
+        "standardMaxRecordCountNoGeometry": 32000,
+        "maxRecordCountFactor": 1
+      }
+    },
+    {
+      "url": "https://www.fairfaxcounty.gov/mercator/rest/services/OpenData/OpenData_A9/FeatureServer/1/query",
+      "params": {
+        "f": "json",
+        "outFields": "JURISDICTION,OBJECTID,PROFFER,ZONECODE,ZONETYPE",
+        "resultRecordCount": "50",
+        "returnGeometry": "false",
+        "geometry": "{\"x\": -77.38312164379414, \"y\": 38.99932094254951, \"spatialReference\": {\"wkid\": 4326}}",
+        "geometryType": "esriGeometryPoint",
+        "inSR": "4326",
+        "spatialRel": "esriSpatialRelIntersects"
+      },
+      "response": {
+        "objectIdFieldName": "OBJECTID",
+        "globalIdFieldName": "GlobalID",
+        "geometryType": "esriGeometryPolygon",
+        "spatialReference": {
+          "wkid": 102746,
+          "latestWkid": 2283
+        },
+        "fields": [
+          {
+            "name": "JURISDICTION",
+            "alias": "JURISDICTION",
+            "type": "esriFieldTypeString",
+            "length": 20
+          },
+          {
+            "name": "OBJECTID",
+            "alias": "OBJECTID",
+            "type": "esriFieldTypeOID"
+          },
+          {
+            "name": "PROFFER",
+            "alias": "PROFFER",
+            "type": "esriFieldTypeString",
+            "length": 3
+          },
+          {
+            "name": "ZONECODE",
+            "alias": "ZONECODE",
+            "type": "esriFieldTypeString",
+            "length": 8
+          },
+          {
+            "name": "ZONETYPE",
+            "alias": "ZONETYPE",
+            "type": "esriFieldTypeString",
+            "length": 25
+          }
+        ],
+        "features": [
+          {
+            "attributes": {
+              "JURISDICTION": "FAIRFAX COUNTY",
+              "OBJECTID": 46202,
+              "PROFFER": null,
+              "ZONECODE": "R-3",
+              "ZONETYPE": "RESIDENTIAL"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "url": "https://www.fairfaxcounty.gov/mercator/rest/services/OpenData/OpenData_A9/FeatureServer/0/query",
+      "params": {
+        "f": "json",
+        "outFields": "OBJECTID,PARCEL_TYPE,PIN",
+        "resultRecordCount": "50",
+        "returnGeometry": "false",
+        "geometry": "{\"x\": -77.38312164379414, \"y\": 38.99932094254951, \"spatialReference\": {\"wkid\": 4326}}",
+        "geometryType": "esriGeometryPoint",
+        "inSR": "4326",
+        "spatialRel": "esriSpatialRelIntersects"
+      },
+      "response": {
+        "objectIdFieldName": "OBJECTID",
+        "globalIdFieldName": "GlobalID",
+        "geometryType": "esriGeometryPolygon",
+        "spatialReference": {
+          "wkid": 102746,
+          "latestWkid": 2283
+        },
+        "fields": [
+          {
+            "name": "OBJECTID",
+            "alias": "OBJECTID",
+            "type": "esriFieldTypeOID"
+          },
+          {
+            "name": "PARCEL_TYPE",
+            "alias": "Parcel Type",
+            "type": "esriFieldTypeString",
+            "length": 25
+          },
+          {
+            "name": "PIN",
+            "alias": "Parcel Identification Number",
+            "type": "esriFieldTypeString",
+            "length": 15
+          }
+        ],
+        "features": [
+          {
+            "attributes": {
+              "OBJECTID": 1,
+              "PARCEL_TYPE": "ORDINARY",
+              "PIN": "0102 14  0231"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "url": "https://www.fairfaxcounty.gov/mercator/rest/services/OpenData/OpenData_A9/FeatureServer/0/query",
+      "params": {
+        "f": "json",
+        "outFields": "OBJECTID,PARCEL_TYPE,PIN",
+        "outSR": "4326",
+        "resultRecordCount": 50,
+        "returnGeometry": "true",
+        "where": "PIN = 'NO SUCH PIN'"
+      },
+      "response": {
+        "objectIdFieldName": "OBJECTID",
+        "globalIdFieldName": "GlobalID",
+        "geometryType": "esriGeometryPolygon",
+        "spatialReference": {
+          "wkid": 4326,
+          "latestWkid": 4326
+        },
+        "features": []
+      }
+    }
+  ]
+}

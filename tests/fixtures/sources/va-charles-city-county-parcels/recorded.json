@@ -1,0 +1,823 @@
+{
+ "source_id": "va-charles-city-county-parcels",
+ "recorded_at": "2026-08-28T15:48:14Z",
+ "rights": {
+  "publisher": "Charles City County government (GIS)",
+  "terms_url": "https://dataportal-charlescityvagis.hub.arcgis.com/datasets/967223223e134e7b8b4411e9226d2872_0/about",
+  "note": "Recorded government-published responses; third-party content excluded from the repo's CC0 grant (DECISIONS.md 0011)."
+ },
+ "summary": {
+  "health:parcels": {
+   "layer": "parcels",
+   "feature_count": 6514,
+   "min_expected": 5000,
+   "healthy": true
+  },
+  "sample_pin": "7-4-B-2",
+  "no_match_pin": "NO SUCH PIN",
+  "no_match_count": 0
+ },
+ "exchanges": [
+  {
+   "url": "https://services5.arcgis.com/7ELQsoO4nWXrJNri/arcgis/rest/services/Parcels_with_Sales_Valuation_and_Reports_View/FeatureServer/0/query",
+   "params": {
+    "f": "json",
+    "where": "1=1",
+    "returnCountOnly": "true"
+   },
+   "response": {
+    "count": 6514
+   }
+  },
+  {
+   "url": "https://services5.arcgis.com/7ELQsoO4nWXrJNri/arcgis/rest/services/Parcels_with_Sales_Valuation_and_Reports_View/FeatureServer/0/query",
+   "params": {
+    "f": "json",
+    "outFields": "MAP_PIN,OBJECTID",
+    "resultRecordCount": "2",
+    "returnGeometry": "true",
+    "where": "1=1",
+    "outSR": "4326"
+   },
+   "response": {
+    "objectIdFieldName": "OBJECTID",
+    "uniqueIdField": {
+     "name": "OBJECTID",
+     "isSystemMaintained": true
+    },
+    "globalIdFieldName": "",
+    "geometryProperties": {
+     "shapeAreaFieldName": "Shape__Area",
+     "shapeLengthFieldName": "Shape__Length",
+     "units": "esriMeters"
+    },
+    "geometryType": "esriGeometryPolygon",
+    "spatialReference": {
+     "wkid": 4326,
+     "latestWkid": 4326
+    },
+    "fields": [
+     {
+      "name": "MAP_PIN",
+      "type": "esriFieldTypeString",
+      "alias": "MAP_PIN",
+      "sqlType": "sqlTypeOther",
+      "length": 50,
+      "domain": null,
+      "defaultValue": null
+     },
+     {
+      "name": "OBJECTID",
+      "type": "esriFieldTypeOID",
+      "alias": "OBJECTID",
+      "sqlType": "sqlTypeOther",
+      "domain": null,
+      "defaultValue": null,
+      "required": true
+     }
+    ],
+    "exceededTransferLimit": true,
+    "features": [
+     {
+      "attributes": {
+       "MAP_PIN": "7-4-B-2",
+       "OBJECTID": 1
+      },
+      "geometry": {
+       "rings": [
+        [
+         [
+          -77.175754541981,
+          37.4363216597252
+         ],
+         [
+          -77.1764855720946,
+          37.4347460923904
+         ],
+         [
+          -77.1768689919225,
+          37.4348571444344
+         ],
+         [
+          -77.1768779777703,
+          37.4348597465627
+         ],
+         [
+          -77.1769353271164,
+          37.4348763565276
+         ],
+         [
+          -77.1762682813055,
+          37.436266290664
+         ],
+         [
+          -77.1761813890647,
+          37.4364473475203
+         ],
+         [
+          -77.1761383480845,
+          37.4364345140493
+         ],
+         [
+          -77.1758566112586,
+          37.4363505101104
+         ],
+         [
+          -77.175754541981,
+          37.4363216597252
+         ]
+        ]
+       ]
+      }
+     },
+     {
+      "attributes": {
+       "MAP_PIN": "7-4-A-8",
+       "OBJECTID": 2
+      },
+      "geometry": {
+       "rings": [
+        [
+         [
+          -77.177136199397,
+          37.4367624566206
+         ],
+         [
+          -77.1771497513814,
+          37.4367355351163
+         ],
+         [
+          -77.1776047354964,
+          37.4358317000659
+         ],
+         [
+          -77.1779289437707,
+          37.4351876396836
+         ],
+         [
+          -77.1780129919453,
+          37.4352149904376
+         ],
+         [
+          -77.1780611084068,
+          37.4352306480693
+         ],
+         [
+          -77.1784097688231,
+          37.4353441067754
+         ],
+         [
+          -77.1783946250241,
+          37.4353700430026
+         ],
+         [
+          -77.178296796693,
+          37.4355375986172
+         ],
+         [
+          -77.1775100764217,
+          37.4368850244873
+         ],
+         [
+          -77.1774961175005,
+          37.4369089316032
+         ],
+         [
+          -77.1772669689496,
+          37.4368143951317
+         ],
+         [
+          -77.177136199397,
+          37.4367624566206
+         ]
+        ]
+       ]
+      }
+     }
+    ]
+   }
+  },
+  {
+   "url": "https://services5.arcgis.com/7ELQsoO4nWXrJNri/arcgis/rest/services/Parcels_with_Sales_Valuation_and_Reports_View/FeatureServer/0",
+   "params": {
+    "f": "json"
+   },
+   "response": {
+    "currentVersion": 12,
+    "id": 0,
+    "name": "Tax_Parcels",
+    "type": "Feature Layer",
+    "serviceItemId": "967223223e134e7b8b4411e9226d2872",
+    "cacheMaxAge": 30,
+    "isView": true,
+    "isUpdatableView": true,
+    "sourceSchemaChangesAllowed": true,
+    "displayField": "",
+    "description": "",
+    "copyrightText": "",
+    "defaultVisibility": true,
+    "editingInfo": {
+     "lastEditDate": 1787586367697,
+     "schemaLastEditDate": 1787586367697,
+     "dataLastEditDate": 1787586367697
+    },
+    "relationships": [],
+    "isDataVersioned": false,
+    "hasContingentValuesDefinition": false,
+    "supportsAppend": true,
+    "supportsCalculate": true,
+    "supportsASyncCalculate": true,
+    "supportsTruncate": false,
+    "supportsAttachmentsByUploadId": true,
+    "supportsAttachmentsResizing": true,
+    "supportsRollbackOnFailureParameter": true,
+    "supportsStatistics": true,
+    "supportsExceedsLimitStatistics": true,
+    "supportsAdvancedQueries": true,
+    "supportsValidateSql": true,
+    "supportsCoordinatesQuantization": true,
+    "supportsLayerOverrides": true,
+    "supportsTilesAndBasicQueriesMode": true,
+    "supportsFieldDescriptionProperty": true,
+    "supportsQuantizationEditMode": true,
+    "supportsColumnStoreIndex": true,
+    "supportsApplyEditsWithGlobalIds": false,
+    "supportsMultiScaleGeometry": true,
+    "supportsReturningQueryGeometry": true,
+    "enableNullGeometry": false,
+    "hasGeometryProperties": true,
+    "geometryProperties": {
+     "shapeAreaFieldName": "Shape__Area",
+     "shapeLengthFieldName": "Shape__Length",
+     "units": "esriMeters"
+    },
+    "advancedQueryCapabilities": {
+     "supportsPagination": true,
+     "supportsPaginationOnAggregatedQueries": true,
+     "supportsQueryRelatedPagination": true,
+     "supportsQueryWithDistance": true,
+     "supportsOutDistance": true,
+     "supportsReturningQueryExtent": true,
+     "supportsStatistics": true,
+     "supportsOrderBy": true,
+     "supportsDistinct": true,
+     "supportsQueryWithResultType": true,
+     "supportsSqlExpression": true,
+     "supportsTimeRelation": true,
+     "supportsAdvancedQueryRelated": true,
+     "supportsCountDistinct": true,
+     "supportsPercentileStatistics": true,
+     "supportsApproxPercentileStatistics": true,
+     "supportsSpatialAggregationStatistics": true,
+     "supportsTrueCurve": true,
+     "supportedSpatialAggregationStatistics": [
+      "EnvelopeAggregate",
+      "CentroidAggregate",
+      "ConvexHullAggregate"
+     ],
+     "supportsQueryAttachments": true,
+     "supportsQueryAttachmentsCountOnly": true,
+     "supportsQueryAttachmentOrderByFields": true,
+     "supportsQueryAttachmentWithTypeWildcard": true,
+     "supportsLod": true,
+     "supportsQueryWithLodSR": false,
+     "supportedLodTypes": [
+      "geohash"
+     ],
+     "supportsReturningGeometryCentroid": true,
+     "supportsReturningGeometryEnvelope": true,
+     "supportsReturningGeometryProperties": true,
+     "supportsQueryWithDatumTransformation": true,
+     "supportsCurrentUserQueries": true,
+     "supportsHavingClause": true,
+     "supportsOutFieldSQLExpression": true,
+     "supportsMaxRecordCountFactor": true,
+     "supportsTopFeaturesQuery": true,
+     "supportsDisjointSpatialRel": true,
+     "supportsQueryWithCacheHint": true,
+     "supportedOperationsWithCacheHint": [
+      "query",
+      "queryTopFilter",
+      "queryAnalytics",
+      "queryAttachments",
+      "queryRelated",
+      "queryBins",
+      "queryPivot"
+     ],
+     "supportsQueryAttachmentsWithReturnUrl": true,
+     "supportsQueryAnalytic": true,
+     "supportsQueryPivot": true,
+     "supportsQueryBins": true,
+     "supportsDefaultSR": true,
+     "supportsTranslations": false,
+     "supportsAggIds": true,
+     "supportsQueryWithCollation": true,
+     "supportsISODOW": true,
+     "supportsISOWeek": true,
+     "supportsFullTextSearch": true,
+     "fullTextSearchCapabilities": {
+      "supportsAccentSensitivity": true,
+      "supportsStopWords": true,
+      "supportsSearchOperator": true,
+      "supportsOperator": true
+     }
+    },
+    "advancedQueryAnalyticCapabilities": {
+     "supportsLinearRegression": true,
+     "supportsTrendlineRegression": true,
+     "supportsAsync": true,
+     "supportsPercentileAnalytic": true
+    },
+    "queryBinsCapabilities": {
+     "supportsAsync": true,
+     "supportsAutoIntervalBin": true,
+     "supportsFixedIntervalBin": true,
+     "supportsFixedBoundariesBin": true,
+     "supportsDateBin": true,
+     "supportsClassificationBin": true,
+     "supportsStackBy": true,
+     "supportsSplitBy": true,
+     "supportsFirstDayOfWeek": true,
+     "supportsSnapToData": true,
+     "supportsReturnFullIntervalBin": true,
+     "supportsReturnStackValueRange": true,
+     "supportsNormalization": true,
+     "supportedStatisticTypes": [
+      "COUNT",
+      "SUM",
+      "AVG",
+      "VAR",
+      "STDDEV",
+      "MIN",
+      "MAX",
+      "PERCENTILE_CONT",
+      "PERCENTILE_DISC",
+      "APPROX_PERCENTILE_CONT",
+      "APPROX_PERCENTILE_DISC",
+      "CentroidAggregate",
+      "EnvelopeAggregate",
+      "ConvexHullAggregate"
+     ],
+     "supportedNormalizationTypes": [
+      "boxCox",
+      "field",
+      "inverse",
+      "log",
+      "naturalLog",
+      "percentOfTotal",
+      "squareRoot"
+     ]
+    },
+    "supportedOperationsWithCollation": "query,addField,updateField",
+    "advancedEditingCapabilities": {
+     "supportedSqlFormatsInCalculate": [
+      "standard"
+     ],
+     "supportsAsyncApplyEdits": true,
+     "supportsReturnEditResults": true,
+     "supportsApplyEditsbyUploadID": true,
+     "supportedApplyEditsUploadIDFormats": "JSON,PBF",
+     "supportsTranslation": false,
+     "supportsMaxTranslations": 10
+    },
+    "infoInEstimates": [
+     "extent",
+     "count"
+    ],
+    "useStandardizedQueries": true,
+    "geometryType": "esriGeometryPolygon",
+    "minScale": 288896,
+    "maxScale": 1128,
+    "extent": {
+     "xmin": -8606791.7333,
+     "ymin": 4469742.615599997,
+     "xmax": -8550701.8431,
+     "ymax": 4511492.0217999965,
+     "spatialReference": {
+      "wkid": 102100,
+      "latestWkid": 3857
+     }
+    },
+    "spatialReference": {
+     "wkid": 102100,
+     "latestWkid": 3857
+    },
+    "drawingInfo": {
+     "renderer": {
+      "type": "simple",
+      "symbol": {
+       "type": "esriSFS",
+       "style": "esriSFSSolid",
+       "color": [
+        76,
+        129,
+        205,
+        191
+       ],
+       "outline": {
+        "type": "esriSLS",
+        "style": "esriSLSSolid",
+        "color": [
+         0,
+         0,
+         0,
+         255
+        ],
+        "width": 0.75
+       }
+      }
+     },
+     "transparency": 0,
+     "labelingInfo": null
+    },
+    "allowGeometryUpdates": true,
+    "trueCurveSupportMode": "OGC",
+    "supportedCurveTypes": [
+     "esriGeometryCircularArc"
+    ],
+    "supportedTrueCurvePbfFeatureEncodings": [
+     "esriCompressedShapeBuffer",
+     "esriDefault"
+    ],
+    "allowTrueCurvesUpdates": true,
+    "onlyAllowTrueCurveUpdatesByTrueCurveClients": false,
+    "hasAttachments": true,
+    "viewSourceHasAttachments": true,
+    "attachmentProperties": [
+     {
+      "name": "id",
+      "fieldName": "ATTACHMENTID",
+      "isEnabled": true
+     },
+     {
+      "name": "globalId",
+      "fieldName": "AttachmentGlobalID",
+      "isEnabled": true
+     },
+     {
+      "name": "name",
+      "fieldName": "ATT_NAME",
+      "isEnabled": true
+     },
+     {
+      "name": "size",
+      "fieldName": "DATA_SIZE",
+      "isEnabled": true
+     },
+     {
+      "name": "contentType",
+      "fieldName": "CONTENT_TYPE",
+      "isEnabled": true
+     },
+     {
+      "name": "keywords",
+      "fieldName": "Keywords",
+      "isEnabled": true
+     },
+     {
+      "name": "exifInfo",
+      "fieldName": "ExifInfo",
+      "isEnabled": true
+     }
+    ],
+    "htmlPopupType": "esriServerHTMLPopupTypeNone",
+    "hasMetadata": true,
+    "hasM": false,
+    "hasZ": false,
+    "objectIdField": "OBJECTID",
+    "uniqueIdField": {
+     "name": "OBJECTID",
+     "isSystemMaintained": true
+    },
+    "globalIdField": "",
+    "typeIdField": "",
+    "collation": {
+     "locale": "neutral",
+     "caseSensitive": false,
+     "accentSensitive": true
+    },
+    "fields": [
+     {
+      "name": "OBJECTID",
+      "type": "esriFieldTypeOID",
+      "alias": "OBJECTID",
+      "sqlType": "sqlTypeOther",
+      "nullable": false,
+      "editable": false,
+      "domain": null,
+      "defaultValue": null,
+      "required": true
+     },
+     {
+      "name": "MAP_PIN",
+      "type": "esriFieldTypeString",
+      "alias": "MAP_PIN",
+      "sqlType": "sqlTypeOther",
+      "length": 50,
+      "nullable": true,
+      "editable": true,
+      "domain": null,
+      "defaultValue": null
+     }
+    ],
+    "indexes": [
+     {
+      "name": "PK__PARCELS___F4B70D85CB8B2EF3",
+      "fields": "OBJECTID",
+      "isAscending": true,
+      "isUnique": true,
+      "description": "clustered, unique, primary key",
+      "indexType": "Attribute"
+     },
+     {
+      "name": "user_68550.PARCELS_WITH_SALES_VALUATION_AND_REPORTS_TAX_PARCELS_Shape_sidx",
+      "fields": "Shape",
+      "isAscending": true,
+      "isUnique": false,
+      "description": "Shape Index",
+      "indexType": "Spatial"
+     },
+     {
+      "name": "MAP_PIN_Index",
+      "fields": "MAP_PIN",
+      "isAscending": true,
+      "isUnique": false,
+      "description": "MAP_PIN_Index",
+      "indexType": "Attribute"
+     }
+    ],
+    "dateFieldsTimeReference": {
+     "timeZone": "UTC",
+     "timeZoneIANA": "Etc/UTC",
+     "respectsDaylightSaving": false
+    },
+    "preferredTimeReference": null,
+    "types": [],
+    "templates": [
+     {
+      "name": "New Feature",
+      "description": "",
+      "drawingTool": "esriFeatureEditToolPolygon",
+      "prototype": {
+       "attributes": {
+        "CAMA_PIN": null,
+        "MAP_PIN": null,
+        "EDITOR": null,
+        "DATE_MODIFY": null,
+        "Sheet_Type": null,
+        "Plat": null,
+        "Link_Status": null,
+        "Acct_Num": null,
+        "Deed_Book": null,
+        "Deed_Page": null,
+        "Prop_Address": null,
+        "Prop_City": null,
+        "Prop_State": null,
+        "Prop_Zip": null,
+        "Owner_Line1": null,
+        "Owner_Line2": null,
+        "Owner_Line3": null,
+        "Owner_City": null,
+        "Owner_State": null,
+        "Owner_Zip": null,
+        "Sale_Date": null,
+        "Sale_Amount": null,
+        "Total_Sqft": null,
+        "Occupancy": null,
+        "Dwl_Type": null,
+        "Use_Class": null,
+        "Year_Assd": null,
+        "Zoning": null,
+        "Dist": null,
+        "Year_Built": null,
+        "Year_Rmld": null,
+        "Year_Efft": null,
+        "Condition": null,
+        "Review_Date": null,
+        "Acreage": null,
+        "Land_Use": null,
+        "Total_Mineral": null,
+        "Total_Land": null,
+        "Total_Imp": null,
+        "Total_Value": null,
+        "Legal_Desc": null,
+        "Num_Rooms": null,
+        "Num_Bedrooms": null,
+        "Num_Baths": null,
+        "Num_Half_Baths": null,
+        "Longitude": null,
+        "Latitude": null,
+        "Tax_Rate": null
+       }
+      }
+     }
+    ],
+    "supportedQueryFormats": "JSON, geoJSON, PBF",
+    "supportedAppendFormats": "sqlite,geoPackage,shapefile,filegdb,featureCollection,geojson,csv,excel,jsonl,featureService,pbf,imageCollection",
+    "supportedAppendSourceFilterFormats": "sqlite,geoPackage,shapefile,filegdb,featureService",
+    "supportedExportFormats": "csv,shapefile,sqlite,geoPackage,filegdb,featureCollection,geojson,kml,excel,parquet",
+    "supportedConvertFileFormats": "JSON,PBF,Parquet",
+    "supportedConvertContentFormats": "LayerEditCollection,FeatureCollection",
+    "supportedSpatialRelationships": [
+     "esriSpatialRelIntersects",
+     "esriSpatialRelContains",
+     "esriSpatialRelCrosses",
+     "esriSpatialRelEnvelopeIntersects",
+     "esriSpatialRelIndexIntersects",
+     "esriSpatialRelOverlaps",
+     "esriSpatialRelTouches",
+     "esriSpatialRelWithin",
+     "esriSpatialRelDisjoint",
+     "esriSpatialRelRelation"
+    ],
+    "guidFormat": "",
+    "supportsContingentValues": true,
+    "supportsEditingContingentValues": true,
+    "supportedContingentValuesFormats": "JSON, PBF",
+    "supportsFieldGroups": true,
+    "supportedSyncDataOptions": 260,
+    "hasStaticData": true,
+    "maxRecordCount": 2000,
+    "standardMaxRecordCount": 2000,
+    "maxIdsCount": 1000000,
+    "standardMaxRecordCountNoGeometry": 32000,
+    "tileMaxRecordCount": 4000,
+    "maxRecordCountFactor": 1,
+    "capabilities": "Query,Extract"
+   }
+  },
+  {
+   "url": "https://services5.arcgis.com/7ELQsoO4nWXrJNri/arcgis/rest/services/Parcels_with_Sales_Valuation_and_Reports_View/FeatureServer/0/query",
+   "params": {
+    "f": "json",
+    "outFields": "MAP_PIN,OBJECTID",
+    "resultRecordCount": "50",
+    "returnGeometry": "false",
+    "where": "MAP_PIN = '7-4-B-2'"
+   },
+   "response": {
+    "objectIdFieldName": "OBJECTID",
+    "uniqueIdField": {
+     "name": "OBJECTID",
+     "isSystemMaintained": true
+    },
+    "globalIdFieldName": "",
+    "geometryType": "esriGeometryPolygon",
+    "spatialReference": {
+     "wkid": 102100,
+     "latestWkid": 3857
+    },
+    "fields": [
+     {
+      "name": "MAP_PIN",
+      "type": "esriFieldTypeString",
+      "alias": "MAP_PIN",
+      "sqlType": "sqlTypeOther",
+      "length": 50,
+      "domain": null,
+      "defaultValue": null
+     },
+     {
+      "name": "OBJECTID",
+      "type": "esriFieldTypeOID",
+      "alias": "OBJECTID",
+      "sqlType": "sqlTypeOther",
+      "domain": null,
+      "defaultValue": null,
+      "required": true
+     }
+    ],
+    "features": [
+     {
+      "attributes": {
+       "MAP_PIN": "7-4-B-2",
+       "OBJECTID": 1
+      }
+     }
+    ]
+   }
+  },
+  {
+   "url": "https://services5.arcgis.com/7ELQsoO4nWXrJNri/arcgis/rest/services/Parcels_with_Sales_Valuation_and_Reports_View/FeatureServer/0/query",
+   "params": {
+    "f": "json",
+    "outFields": "MAP_PIN,OBJECTID",
+    "resultRecordCount": "50",
+    "returnGeometry": "false",
+    "where": "MAP_PIN = 'NO SUCH PIN'"
+   },
+   "response": {
+    "objectIdFieldName": "OBJECTID",
+    "uniqueIdField": {
+     "name": "OBJECTID",
+     "isSystemMaintained": true
+    },
+    "globalIdFieldName": "",
+    "features": []
+   }
+  },
+  {
+   "url": "https://services5.arcgis.com/7ELQsoO4nWXrJNri/arcgis/rest/services/Parcels_with_Sales_Valuation_and_Reports_View/FeatureServer/0/query",
+   "params": {
+    "f": "json",
+    "outFields": "MAP_PIN,OBJECTID",
+    "resultRecordCount": "50",
+    "returnGeometry": "true",
+    "where": "MAP_PIN = '7-4-B-2'",
+    "outSR": "4326"
+   },
+   "response": {
+    "objectIdFieldName": "OBJECTID",
+    "uniqueIdField": {
+     "name": "OBJECTID",
+     "isSystemMaintained": true
+    },
+    "globalIdFieldName": "",
+    "geometryProperties": {
+     "shapeAreaFieldName": "Shape__Area",
+     "shapeLengthFieldName": "Shape__Length",
+     "units": "esriMeters"
+    },
+    "geometryType": "esriGeometryPolygon",
+    "spatialReference": {
+     "wkid": 4326,
+     "latestWkid": 4326
+    },
+    "fields": [
+     {
+      "name": "MAP_PIN",
+      "type": "esriFieldTypeString",
+      "alias": "MAP_PIN",
+      "sqlType": "sqlTypeOther",
+      "length": 50,
+      "domain": null,
+      "defaultValue": null
+     },
+     {
+      "name": "OBJECTID",
+      "type": "esriFieldTypeOID",
+      "alias": "OBJECTID",
+      "sqlType": "sqlTypeOther",
+      "domain": null,
+      "defaultValue": null,
+      "required": true
+     }
+    ],
+    "features": [
+     {
+      "attributes": {
+       "MAP_PIN": "7-4-B-2",
+       "OBJECTID": 1
+      },
+      "geometry": {
+       "rings": [
+        [
+         [
+          -77.175754541981,
+          37.4363216597252
+         ],
+         [
+          -77.1764855720946,
+          37.4347460923904
+         ],
+         [
+          -77.1768689919225,
+          37.4348571444344
+         ],
+         [
+          -77.1768779777703,
+          37.4348597465627
+         ],
+         [
+          -77.1769353271164,
+          37.4348763565276
+         ],
+         [
+          -77.1762682813055,
+          37.436266290664
+         ],
+         [
+          -77.1761813890647,
+          37.4364473475203
+         ],
+         [
+          -77.1761383480845,
+          37.4364345140493
+         ],
+         [
+          -77.1758566112586,
+          37.4363505101104
+         ],
+         [
+          -77.175754541981,
+          37.4363216597252
+         ]
+        ]
+       ]
+      }
+     }
+    ]
+   }
+  }
+ ]
+}
