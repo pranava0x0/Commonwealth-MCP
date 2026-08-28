@@ -53,7 +53,6 @@ cause, status.
   as a warning-at-startup rather than a refusal, or amend 0002 with a
   dated note that the floor is an aspiration for a filled-out toolset and
   the enforced contract is the 20-tool ceiling.
-
 - **2026-08-28 · docs-in-code · two stale strings.** `core/envelope.py`'s
   module docstring lists `conflict` among envelope fields that drop when
   empty — no such field exists (`extra="forbid"`; the shipped block is
