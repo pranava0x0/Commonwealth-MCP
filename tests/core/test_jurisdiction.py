@@ -47,8 +47,14 @@ def test_alias_resolves(table):
 
 
 def test_charles_city_county_is_a_county_not_a_city(table):
+    """§ 3.6. Two halves, and the second is the actual trap: Charles City
+    County is a county, AND there is no Charles City to be confused with,
+    so no `not-to-be-confused-with` row may appear. Seeding one would
+    invent a government."""
     r = table.resolve("Charles City County")
     assert r.resolved.kind == JurisdictionKind.county
+    assert not [x for x in r.layered_authorities
+                if x["relationship"] == "not-to-be-confused-with"]
 
 
 def test_vienna_carries_parent_stack_and_id(table):

@@ -52,6 +52,8 @@ Two linked levels, so a mixed-source result can prove which source supports whic
 
 **Evidence objects** — one per retrieved record or record-set that any material fact rests on, each with an `id` (`evidence_01`) and a `source_ref` naming its source entry. Every material record in `data` (a planning case, a chronology event, a finding) carries `evidence_refs: [...]`; a record with no evidence ref is a contract-test failure, which is what makes the skill-level evidence matrix mechanically checkable.
 
+> **Divergence, found 2026-08-28 (issues.md):** the shipped wire emits a singular `evidence_ref` string per record, not this section's `evidence_refs` array — the review round 2 § 2.2 shape was adopted here but not implemented. The array is still the contract this spec intends: issues.md already records a live case needing it (a multi-polygon PIN whose zoning answer rests on several parcel geometries). Recommendation on file: migrate the wire to the plural array while it has zero external consumers. The architect decides.
+
 ```json
 {
   "provenance": [
@@ -154,7 +156,7 @@ Carried per response, distinguishable from data provenance, primarily for logs a
 
 One JSON Schema (versioned with the envelope, shipped in-repo and generated into docs/reference/) defines exactly where everything lives on the MCP wire, so no tool author decides placement (review § 2.3):
 
-- The envelope is the tool result's `structuredContent`; the human-readable `content` block carries a short rendering of `data` plus the coverage reading, generated, never hand-assembled per tool.
+- The envelope is the tool result's `structuredContent`; the human-readable `content` block carries a short rendering of `data` plus the coverage reading, generated, never hand-assembled per tool. (The generated rendering is unbuilt as of 2026-08-28; the SDK's default serialization stands in, and this line remains the contract.)
 - Execution provenance rides inside `structuredContent` under the reserved `_execution` key — the one underscore-prefixed key, signaling "not part of the answer."
 - MCP `resultType` is `"complete"` for ordinary results; `"input_required"` appears only if/when DECISIONS.md 0004 layers MRTR on.
 - MCP `isError: true` carries only § 7 total failures; the envelope still rides along with `coverage.execution: "failed"`.
@@ -172,7 +174,11 @@ Structured, typed, and few. A warning changes how the reader should use the data
  "source_id": "va-fairfax-zoning"}
 ```
 
-Initial warning codes: `screening_only`, `stale_source` (source's own update cadence missed), `boundary_precision` (parcel/boundary geometry generalized), `alias_match` (entity matched via alias, not exact ID), `mixed_vintages` (results combine different as-of dates), `terms_note` (source terms constrain reuse). Codes are an enum in Commonwealth Core; adding one is a reviewed change, and every code's definition text is a spec that the dataset can be grepped against (a record matching a code's own example phrasing must carry that code).
+Initial warning codes: `screening_only`, `stale_source` (source's own update cadence missed), `boundary_precision` (parcel/boundary geometry generalized), `alias_match` (entity matched via alias, not exact ID), `mixed_vintages` (results combine different as-of dates), `terms_note` (source terms constrain reuse).
+
+Four more codes were added during implementation without the review the rule below requires; this note, added 2026-08-28, records them: `freshness_unavailable` (publisher exposes no update date; the envelope says so instead of guessing), `sensitive_public_data` (allowlisted fields withheld per classification), `insecure_transport` (a manifest-declared HTTP-only source), `truncated_inline` (more records retrieved than shown, count and narrowing advice attached).
+
+Codes are an enum in Commonwealth Core; adding one is a reviewed change, and every code's definition text is a spec that the dataset can be grepped against (a record matching a code's own example phrasing must carry that code).
 
 ## 6. next_actions
 
@@ -214,7 +220,7 @@ Question: "solar permits in Craig County". No registered Craig County permit sou
 
 ### 8.4 Conflicting official records
 
-Two official sources disagree (locality parcel layer vs. statewide VGIN aggregate). `data` presents both values labeled by source; a `conflict` block names the disagreement; provenance carries both entries with their authority levels; the tool does not pick a winner (Design Spec § 28: return the conflict).
+Two official sources disagree (locality parcel layer vs. statewide VGIN aggregate). `data` presents both values labeled by source; a `comparison` block names the agreement or disagreement; provenance carries both entries with their authority levels; the tool does not pick a winner (Design Spec § 28: return the conflict). (Renamed 2026-08-28 from this spec's proposed `conflict` to the shipped `comparison` — the block appears on agreement too, which DECISIONS.md 0005 as Chosen requires, so the shipped name is the accurate one.)
 
 ## 9. Testing hooks
 

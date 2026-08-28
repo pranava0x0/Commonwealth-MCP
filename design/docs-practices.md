@@ -1,6 +1,6 @@
 # Spec: Documentation Practices
 
-**Plugs into:** every public artifact; enforced by `tools/check_writing.py` and the conventions in ARCHITECTURE.md § 6.
+**Plugs into:** every public artifact; enforced by `tools/check_writing.py` and the diagram conventions in ARCHITECTURE.md § D6 (the "Flows, drawn" appendix — repointed 2026-08-28; "§ 6" had collided with the spec body's Recommended Architecture section).
 **Status:** Draft for review.
 **Why this exists:** Two research findings make docs a first-class engineering surface. First, generated-sounding prose now costs projects credibility outright ("obviously generated slop... makes me completely skip the project"; RESEARCH.md part 4 § 10). Second, tool descriptions and error strings are *agent-facing docs* whose quality measurably moves task success (Anthropic's description-refinement results; RESEARCH.md part 1 § 4). The practices below treat human docs and agent-facing strings as one discipline with two audiences.
 
@@ -15,7 +15,8 @@ docs/
 ├── index.md            # what this is, who it serves, 90-second orientation
 ├── primitives.md       # source manifest → adapter → tool → skill, one concept each
 ├── quickstart.md       # install → doctor → first query, measured against 10 minutes
-├── architecture.md     # the diagrams (already present)
+├── architecture.md     # the diagrams (today they live in root ARCHITECTURE.md's
+│                       #   "Flows, drawn" appendix; extract or link when this tree is built)
 ├── trust.md            # what Commonwealth can/cannot touch, terms policy, security posture
 ├── contributing/
 │   ├── sources.md      # the manifest workflow, aimed at data contributors
@@ -34,6 +35,7 @@ Rules:
 - `tools/check_writing.py` runs over docs, specs, decisions, skills prose, and (once code exists) tool descriptions and error strings extracted from the tool registry. FAIL findings block; WARN findings need a human reading, and exemptions carry written reasons in the script's allowlist.
 - The base-files DESIGN.md § 11.1 register rules apply in full: lead with the specific (a number, a county, a date), no marketing vapor, no negation slogans, no announced virtue. "Tracks 133 Virginia localities' zoning through one tool contract" beats any adjective.
 - READMEs get the strictest read: they are the artifact the community judges first, and the corpus shows judgment is swift.
+- **The WARN count is the gate, and the script has no diff mode** (learned 2026-08-28). "0 banned, N review" is only meaningful against the count before the edit, and `check_writing.py` scans the working tree with no way to ask "what did this change add?" To claim the count is unchanged, save the edited file, put HEAD's version in its place, run the script, then restore — the restore is the step that is easy to forget and it clobbers the edit: `cp <path> /tmp/new && git show HEAD:<path> > <path> && python tools/check_writing.py; cp /tmp/new <path>`. Doing this caught two `wall-paragraph` WARNs that a single correction paragraph had added — both fixed by splitting the paragraph, not by rewording.
 
 ## 3. Agent-facing strings are documentation
 
@@ -49,4 +51,4 @@ Rules:
 
 ## 5. Diagrams
 
-ARCHITECTURE.md § 6 conventions govern: Mermaid-in-Markdown, one question per diagram, real artifact names, no boxes without specs. Diagrams are reviewed like prose: a reviewer who cannot answer the diagram's stated question from the diagram rejects it.
+ARCHITECTURE.md § D6 conventions govern ("Flows, drawn" appendix): Mermaid-in-Markdown, one question per diagram, real artifact names, no boxes without specs. Diagrams are reviewed like prose: a reviewer who cannot answer the diagram's stated question from the diagram rejects it.

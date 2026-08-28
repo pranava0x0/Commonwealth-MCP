@@ -5,6 +5,62 @@ cause, status.
 
 ## Open
 
+- **2026-08-28 · envelope · wire emits singular `evidence_ref`; the
+  contract says `evidence_refs` array.** design/provenance-envelope.md § 2
+  and ARCHITECTURE.md § 10.1 (both from review round 2 § 2.2, a blocking
+  contract correction) require every material record to carry an
+  `evidence_refs` list; `geo.py`/`civic.py` emit a single string and the
+  contract tests pin that shape. Root cause: implementation predated
+  re-reading the revised spec, and the contract test was written from the
+  code. The multi-polygon-PIN zoning issue below is a live case wanting
+  several refs on one record. Recommendation: migrate to the array now,
+  while the wire has zero external consumers; spec § 2 carries the
+  divergence note. The architect decides.
+- **2026-08-28 · egress · rules 6–7 have no refusal fixtures, and no
+  decompression-expansion limit exists.** DECISIONS.md 0014 froze seven
+  baseline rules "each with a fixture-tested known-bad request";
+  tests/core/test_egress.py covers rules 1–5. Response-size capping
+  exists post-download (`MAX_RESPONSE_BYTES` in adapters/base.py) but has
+  no test, no streaming cutoff, and no expansion-ratio guard distinct
+  from the byte cap; per-host concurrency and retry budgets likewise run
+  untested. Root cause: the fixture suite was built rule-by-rule and
+  stopped early. Severity: low at V1 scale (registered .gov hosts only),
+  but the 0014 Choice text overclaims until these exist.
+- **2026-08-28 · toolsets · `default` includes `registry.resolve_jurisdiction`
+  via a `discovery-min` toolset; DECISIONS.md 0001's Choice says registry
+  tools ship outside `default`.** The refinement is defensible (every
+  walk starts with resolution; the meta tools stay out) and is now
+  documented in design/domain-servers.md § 1.7, but it amends a Chosen
+  record's letter and nothing recorded it. Needs the architect's
+  ratification — either a dated amendment note in 0001 or a revert.
+- **2026-08-28 · toolsets · DECISIONS.md 0002's tool budget is only
+  half enforced, and `default` sits under its floor.**
+  `core/toolreg.expand_profile()` raises above `PROFILE_HARD_CEILING = 20`
+  and nothing else. `PROFILE_DEFAULT_CEILING = 12` is defined but never
+  read at runtime — only `tests/test_repo_health.py` asserts it, so an
+  oversized `default` fails CI rather than startup. The 8-tool floor 0002
+  chose has no check anywhere, and `default` currently expands to five
+  tools (`registry.resolve_jurisdiction`, `geo.find_parcel`,
+  `geo.find_zoning`, `geo.find_boundaries`, `civic.get_code_section`).
+  Root cause: the ceiling was implemented, the band was not; the floor is
+  also genuinely unmeetable today, since the domains that would fill it
+  (the rest of civic, the statewide-source capabilities) are unbuilt — a
+  hard floor check would refuse to start the server that exists. Found
+  2026-08-28 by review of the plan-vs-built pass, which had itself claimed
+  the module "enforces" both numbers; ARCHITECTURE.md § 15 now states what
+  is actually enforced. Two ways to close it, and the choice is the
+  architect's: enforce the default ceiling at expansion and add the floor
+  as a warning-at-startup rather than a refusal, or amend 0002 with a
+  dated note that the floor is an aspiration for a filled-out toolset and
+  the enforced contract is the 20-tool ceiling.
+- **2026-08-28 · docs-in-code · two stale strings.** `core/envelope.py`'s
+  module docstring lists `conflict` among envelope fields that drop when
+  empty — no such field exists (`extra="forbid"`; the shipped block is
+  `data["comparison"]`). `adapters/virginia_law.py` cites "design § 27:
+  never guess" — the never-guess rule is provenance-envelope § 2 /
+  ARCHITECTURE § 10.1 (locators), not § 27. Both one-line fixes next time
+  those files are open.
+
 - **2026-08-27 · egress · DNS resolve-to-connect window (TOCTOU residual).**
   `EgressPolicy` resolves and checks addresses immediately before the
   request, but httpx re-resolves at connect, so a rebinding attacker with

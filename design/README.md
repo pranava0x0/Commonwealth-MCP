@@ -34,3 +34,4 @@ Conventions all specs follow: `Status: Draft for review` until the architect acc
 |---|---|
 | 2026-08-26 | Specs and decision records written together in this folder. |
 | 2026-08-28 | The fifteen decision records moved to [DECISIONS.md](../DECISIONS.md). The specs stayed as files: source code cites them by filename in 34 places, and each is meant to be read alone. |
+| 2026-08-28 | Plan-vs-built review pass: dated built/unbuilt annotations added where specs asserted unshipped things in the present tense (cli, hub-catalog, domain-servers, provenance-envelope, source-registry, jurisdiction-resolution, testing-and-demos); three citations of the merge-dropped "design spec § 17.6" repointed; provenance-envelope's `conflict` example renamed to the shipped `comparison`; four implementation-added warning codes recorded. Contract-level divergences went to issues.md, not silent edits. |

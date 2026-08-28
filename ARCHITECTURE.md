@@ -17,7 +17,7 @@ This is the map. Three other places hold what it deliberately does not:
 Sections are numbered and referenced from code comments and specs as
 "§ N", so the numbering is load-bearing — renumbering is a breaking change.
 
-**Status:** Proposed architecture for implementation  
+**Status:** Adopted, under implementation (updated 2026-08-28). Every blocking decision is Chosen (§ 35); the registry and geo packages, the envelope contract, and the first civic tool are built; § 33 and § 39 name what remains.  
 **Audience:** Human architect, coding agents, open-source contributors  
 **Snapshot date:** 2026-08-26  
 **Revision note (2026-08-26, research pass):** This spec now has companion documents that carry its detail and its evidence. Read them where the spec points:
@@ -1251,7 +1251,13 @@ Recommended developer default:
 
 The ecosystem may contain more than 100 tools eventually.
 
-The active agent context should usually contain approximately 12–25 tools. (Revised 2026-08-26 from "20–50": measured accuracy cliffs sit below 90% at 10–15 tools for small models and 20–30 for mid-tier ones, and Anthropic's own guidance flags degradation past 30–50 — see RESEARCH.md part 4 § 1 and DECISIONS.md 0002, which also covers deferred loading / tool search as the growth path.)
+The active agent context should contain 8–12 tools per profile, with a hard task-profile ceiling of 20 — the numbers DECISIONS.md 0002 chose.
+
+What `core/toolreg.py` enforces is narrower, and recording that is the point of this correction. `expand_profile()` raises only above `PROFILE_HARD_CEILING = 20`. `PROFILE_DEFAULT_CEILING = 12` is defined but never read at runtime — `tests/test_repo_health.py` asserts it, so an oversized `default` fails CI, not startup.
+
+The 8-tool floor is enforced nowhere, and `default` expands to five tools today: `registry.resolve_jurisdiction`, `geo.find_parcel`, `geo.find_zoning`, `geo.find_boundaries`, `civic.get_code_section`. That is under 0002's band because the domains that would fill it are unbuilt. Both gaps are logged in issues.md; closing them is either enforcement code or a dated 0002 amendment, and that call is the architect's.
+
+(History: this paragraph said "20–50", was revised 2026-08-26 to "12–25" on the measured accuracy cliffs, and still said "12–25" after 0002 settled on 8–12/20; corrected 2026-08-28. The measurements: selection accuracy falls below 90% at 10–15 tools for small models and 20–30 for mid-tier ones, and Anthropic's own guidance flags degradation past 30–50 — RESEARCH.md part 4 § 1. 0002 also covers deferred loading / tool search as the growth path.)
 
 Support:
 - default toolsets,
@@ -1273,17 +1279,17 @@ infrastructure
 all
 ```
 
-A development task might activate:
+A development task might activate (example corrected 2026-08-28 — the previous one summed to ~28 tools, and a profile that size fails startup under 0002's ceiling; task profiles pick 3–6 tools per domain rather than taking every domain's full default set):
 
 ```text
-registry: 4 tools
-geo: 7 tools
-civic: 6 tools
-environment: 6 tools
-infrastructure: 5 tools
+registry: 2 tools
+geo: 5 tools
+civic: 4 tools
+environment: 4 tools
+infrastructure: 3 tools
 ```
 
-Total: ~28 tools.
+Total: 18 tools, inside the ceiling of 20.
 
 ---
 
@@ -2065,7 +2071,7 @@ Validate boundaries before building breadth.
 
 The 2026-08-26 architecture review's verdict was adopted: the original Phase 1 attempted two domains, three adapters, many sources, and two flagship skills at once — many partial systems, no single convincing path. Phase 1 now proves one complete vertical, then repeats it.
 
-**Milestone 1a — the geo vertical** (the revised 90-day plan in DECISIONS.md review round 2 § 6 is the working schedule):
+**Milestone 1a — the geo vertical** (the revised plan in DECISIONS.md review round 2 § 6 is the adopted sequence):
 - registry + geo packages in one process,
 - government source registry with terms/classification review flow,
 - source health probes (runtime state, not manifest PRs),
@@ -2208,7 +2214,7 @@ Each area below now has a decision record with its options fleshed out: § 35.1 
 |---|---|---|
 | [0001](DECISIONS.md 0001) | Server topology | One process, three internal packages (registry/geo/civic), no deployment split until a named trigger fires |
 | [0002](DECISIONS.md 0002) | Toolset sizing | 8-12 tools/profile default, ceiling 20; profiles generated from skill metadata |
-| [0003](DECISIONS.md 0003) | Python framework | Official MCP Python SDK v2, entered via a two-day compatibility spike |
+| [0003](DECISIONS.md 0003) | Python framework | Official MCP Python SDK v2, entered via a compatibility spike |
 | [0004](DECISIONS.md 0004) | Ambiguity interaction | Candidates-in-data as the universal floor, hardened by contract + bench; MRTR layered in only per-client once tested |
 | [0005](DECISIONS.md 0005) | Source authority rules | **Architect override of the R2 recommendation:** no central ranking — query the top two known authorities, always surface agreement/conflict |
 | [0006](DECISIONS.md 0006) | Data retention | TTL cache + result-resource store for V1; historical snapshots only as individually Gate-E'd, per-source proposals |
@@ -2322,9 +2328,9 @@ Status as of the 2026-08-26 research pass — answered items name their evidence
 
 1. ~~Current official MCP Registry metadata and discovery capabilities.~~ **Answered:** preview status, `/v0.1` API, reverse-DNS verified namespaces, aggregator consumption model — RESEARCH.md part 1 § 3.
 2. ~~Current support for server-side tool filtering/capability negotiation.~~ **Answered:** client-side tool search shipped (>85% context savings); server-side progressive discovery is on the protocol roadmap, unshipped — RESEARCH.md part 1 § 4; DECISIONS.md 0002 **(Chosen 2026-08-26: 8-12 tools/profile, ceiling 20; adopt progressive discovery once client support is verified)**.
-3. ~~FastMCP vs official SDK tradeoffs.~~ **Chosen** (DECISIONS.md 0003, 2026-08-26): official MCP Python SDK v2, via a two-day compatibility spike — despite evidence both ways, including PNNL running standalone FastMCP.
+3. ~~FastMCP vs official SDK tradeoffs.~~ **Chosen** (DECISIONS.md 0003, 2026-08-26): official MCP Python SDK v2, via a compatibility spike — despite evidence both ways, including PNNL running standalone FastMCP.
 4. Current remote authentication patterns per client. **Partially answered:** EMA is a stable extension with thin client support; DCR deprecated for Client ID Metadata Documents; per-client depth remains implementation-time work (no maintained core-feature matrix exists) — RESEARCH.md part 1 § 7.
-5. ~~GSA/Obot gateway maturity.~~ **Answered:** live, 27 servers including PNNL's NEPA set, Obot underneath; catalog schema is obot-platform/mcp-catalog format; still treat as export target, not internal schema — RESEARCH.md part 3 § 1.6, § 4.
+5. ~~GSA/Obot gateway maturity.~~ **Answered:** live, 27 servers at the 2026-08-26 check (37 by 2026-08-28) including PNNL's NEPA set, Obot underneath; catalog schema is obot-platform/mcp-catalog format; still treat as export target, not internal schema — RESEARCH.md part 3 § 1.6, § 4, § 9.
 6. Current public Virginia source terms (LIS, VGIN, data.virginia.gov, VDOT, local ArcGIS). **Open — Phase 0/1 work**, structured by design/source-registry.md § 3 (terms fields are required manifest content; unknown blocks activation).
 7. ArcGIS field/schema variance across localities. **Open — Phase 1**; the three-locality onboarding is the designed experiment (design/source-registry.md § 6), and design/adapters.md § 4 expects the quirks register to fill here first.
 8. VGIN vs locality-first routing per layer. **Open — Phase 1** work remains (which layer routes where), but the ranking mechanism itself is Chosen (DECISIONS.md 0005, 2026-08-26, architect override of the R2 recommendation): no central authority table — query the top two known authorities per capability and always surface agreement/conflict, never pick a silent winner.
@@ -2391,20 +2397,20 @@ Performance budgets start as hypotheses, are measured during the contract spike,
 
 ---
 
-## 39. Suggested First 90 Days
+## 39. Delivery Sequence
 
-Superseded 2026-08-26 by the revised plan in DECISIONS.md review round 2 § 6, adopted as the working schedule. Its shape, for this document's record:
+Superseded 2026-08-26 by the revised plan in DECISIONS.md review round 2 § 6, adopted as the working sequence. (Retitled from "Suggested First 90 Days" with its week-numbered stage labels dropped, 2026-08-28: development here is not paced in calendar weeks; the ordering and the exit criteria are the content.) Its shape, for this document's record:
 
-### Weeks 1–2 — contract spike
+### Stage 1 — contract spike
 Blocking decisions chosen; official-SDK server path proven; one ArcGIS source registered; envelope wire schema + coverage dimensions defined; exact jurisdiction lookup; egress policy; Tier-1 contract tests. Exit: one address/parcel query returns valid evidence and honest coverage.
 
-### Weeks 3–5 — geo vertical
+### Stage 2 — geo vertical
 Registry + geo packages in one process; `geo.find_parcel` and `geo.find_zoning`; Fairfax County, Richmond City, one rural county, one nested town; recorded fixtures; `doctor`, direct tool calls, source validation, profile activation. Exit: a new ArcGIS locality lands through a manifest with no server-code change.
 
-### Weeks 6–8 — developer product
+### Stage 3 — developer product
 Source-authoring and capability-extension contracts published; idempotent `configure` with `--dry-run`; terms and sensitive-data review flow complete; Tier-2 tool-selection evals; ship `parcel-zoning-screen`. Exit: an outside developer adds a source and builds a working tool without maintainer help.
 
-### Weeks 9–12 — hardening and beta
+### Stage 4 — hardening and beta
 Result-resource storage (per DECISIONS.md 0013); runtime health overlay; injection and source-failure fixtures; privacy and logging rules enforced; four representative MCP clients tested; benchmark baseline, limits, and coverage published; public beta.
 
 The civic/LIS vertical (milestone 1b) starts after this exit. Hub, Explorer, finance, infrastructure, environment, authenticated sources, and writes all stay out of the first milestone.
@@ -2439,11 +2445,11 @@ Virginia should be the first deployment, not the hard-coded boundary of the arch
 
 <sub>Was `docs/architecture.md` — “Commonwealth-MCP Architecture Diagrams”.</sub>
 
-Companion to the Design Spec: the flows, drawn. Mermaid source renders on GitHub and most doc tooling; keep diagrams in this file (not screenshots) so diffs review like code. Each diagram states what question it answers; a diagram that answers no question gets deleted.
+Companion to the Design Spec: the flows, drawn. Mermaid source renders on GitHub and most doc tooling; keep diagrams in this file (not screenshots) so diffs review like code. Each diagram states what question it answers; a diagram that answers no question gets deleted. Subsections here are numbered D1–D6 (renamed 2026-08-28) so they never collide with the spec's own § 1–6.
 
 ---
 
-### 1. The five layers and who owns what
+### D1. The five layers and who owns what
 
 Answers: what are the moving parts, and which artifact governs each?
 
@@ -2497,7 +2503,7 @@ flowchart TB
     bench -.evaluates.-> toolplane
 ```
 
-### 2. One request, end to end
+### D2. One request, end to end
 
 Answers: what actually happens on `geo.find_zoning("123 Main St, Vienna VA")`, and where provenance/coverage come from.
 
@@ -2524,7 +2530,7 @@ sequenceDiagram
     Note over M: screening_only warning surfaces in the answer
 ```
 
-### 3. Where a new source enters (and where it can be stopped)
+### D3. Where a new source enters (and where it can be stopped)
 
 Answers: what stands between "found a county endpoint" and "agents can query it".
 
@@ -2546,7 +2552,7 @@ flowchart LR
     review -->|changes requested| scaffold
 ```
 
-### 4. Skill escalation: findings drive the walk
+### D4. Skill escalation: findings drive the walk
 
 Answers: why a due-diligence run touches four servers on one site and one server on another.
 
@@ -2567,7 +2573,7 @@ flowchart TB
     env --> gaps
 ```
 
-### 5. Deployment: V1 vs hosted
+### D5. Deployment: V1 vs hosted
 
 Answers: what changes between a laptop install and the Phase 3 hosted story — and what deliberately doesn't (stateless servers, same catalog).
 
@@ -2592,7 +2598,7 @@ flowchart LR
     catalog -.-> gw
 ```
 
-### 6. Diagram conventions for this repo
+### D6. Diagram conventions for this repo
 
 - Mermaid in Markdown, one diagram per question, question stated above each.
 - Dashed arrows are data/config reads; solid arrows are request flow.
@@ -2608,3 +2614,5 @@ flowchart LR
 | 2026-08-26 | Design specification written, then revised through review round 2 (recorded in [DECISIONS.md](DECISIONS.md#review-round-2-2026-08-26)): coverage dimensions split, evidence references added, wire schema committed, declared/operational lifecycle separated, data classification introduced. |
 | 2026-08-27 | Flow diagrams added (last section), drawn from the implementation as built rather than from the plan. |
 | 2026-08-28 | Design specification and flow diagrams merged into this file. Heading levels were normalized — the spec had used H1 for most sections but H2 for § 1, so the two were indistinguishable to a table-of-contents generator. Section numbers are unchanged, because code and specs cite them. |
+| 2026-08-28 | Plan-vs-built review: Status line updated from "Proposed" to adopted-under-implementation; § 36.5's GSA catalog count updated with a dated note (27 → 37, RESEARCH.md part 3 § 9); § 15's tool budget corrected to DECISIONS.md 0002's chosen 8–12/20 and its example resized to fit the ceiling. One merge defect found and fixed downstream: § 17.6 was dropped, and the three files citing it now point at DECISIONS.md 0005 / design/adapters.md § 1 / design/skills.md § 4 instead. |
+| 2026-08-28 | Calendar framing removed on the architect's instruction — development here is not paced in human days or weeks. § 39 retitled "Delivery Sequence" with its week-numbered stage labels replaced by Stage 1–4; "90-day plan" wording dropped from § 33; "two-day" dropped from the § 35/§ 36 mentions of the 0003 spike. Separately, the "Flows, drawn" appendix subsections were renumbered D1–D6 so they stop colliding with spec § 1–6. |
