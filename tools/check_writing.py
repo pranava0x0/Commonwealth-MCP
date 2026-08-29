@@ -50,15 +50,25 @@ DOC_GLOBS = (
     "design/**/*.md",
     "research/*.md",
     "research/notes/*.md",
+    # The site is the copy most people read first, and it was drifting the
+    # same way the docs were. Scanned as prose with tags stripped, so class
+    # names, URLs, and the embedded JSON blocks never reach a rule.
+    "docs/index.html",
 )
 EXCLUDE_PARTS = {"raw", "base-files", "node_modules", ".git"}
 
 
 class Rule:
-    def __init__(self, rule_id: str, level: str, pattern: str, why: str) -> None:
+    def __init__(self, rule_id: str, level: str, pattern: str, why: str,
+                 cased: bool = False) -> None:
         self.id = rule_id
         self.level = level  # FAIL | WARN
-        self.rx = re.compile(pattern, re.I)
+        # Most rules match a phrase, where capitalization is noise. A few
+        # match a SHAPE that only exists in one case — a Title Case slogan
+        # heading is a slogan precisely because it is Title Case, and
+        # matching it case-insensitively flags every ordinary sentence
+        # heading instead.
+        self.rx = re.compile(pattern, 0 if cased else re.I)
         self.why = why
 
 
@@ -89,7 +99,14 @@ BANNED = [
     Rule("self-praise", "FAIL",
          r"\b(the honest (?:version|answer|read|gap)|here'?s the thing|"
          r"rigorous(?:ly)? (?:designed|engineered)|"
-         r"we take \w+ seriously)\b",
+         r"we take \w+ seriously|"
+         # Added 2026-08-29. The site told the reader "the tool never
+         # guesses" while showing them the two candidates it returned. The
+         # demonstration was already there; the boast added nothing and
+         # invited doubt. Show the behaviour, drop the claim about it.
+         r"(?:the )?tools? never (?:guess|guesses|lie|lies|invents?)\b|"
+         r"never (?:guesses|invents|fabricates|makes (?:it|them) up)\b|"
+         r"refuses? to (?:guess|invent|pretend)\b)",
          "announcing virtue instead of showing the fact"),
     Rule("hand-curated", "FAIL", r"\bhand[-\s]curated\b",
          "usually untrue of AI-drafted text; say how it was produced"),
@@ -115,6 +132,33 @@ BANNED = [
          r"successfully (?:completed|implemented|delivered|integrated)|"
          r"as (?:per|of) the adopted plan)\b",
          "status-report register; say what works and what does not"),
+    # Added 2026-08-29. The docs and the site had drifted into writing
+    # proverbs about the project instead of sentences a reader can use:
+    # "Publisher-side quirks are not bugs to fix silently", "The trail is
+    # not a log bolted on afterward", "telling those apart is the product".
+    # Each states a principle and leaves the reader no better able to use
+    # the thing. Say what the code does and let the reader draw the moral.
+    Rule("maxim-voice", "FAIL",
+         r"(?:is|are) not (?:an? )?\w+s? to \w+ (?:silently|quietly|away)"
+         r"|\bnot (?:an?|the) [\w-]+ (?:bolted|tacked|glued|slapped|welded) on"
+         r"|\b(?:is|are) the (?:product|point|whole (?:design|idea|thing))\b"
+         r"|\b(?:is|are) what (?:matters|the \w+ is for)\b"
+         r"|\b(?:are|is) (?:all )?(?:in|on) the \w+ on purpose\b"
+         r"|\bthat is the distinction that matters\b",
+         "proverb voice; say what the code does, not what it stands for"),
+    # Same pass: "Authority Before Convenience", "Semantic Tools, Boring
+    # Adapters", "Evidence Over Confidence Scores". A heading is a label a
+    # reader scans to find something. A slogan makes them read the section
+    # to learn what the section is about.
+    Rule("slogan-heading", "FAIL",
+         r"^#{2,6}\s+(?:[\d.]+\s+)?"
+         r"[A-Z][\w-]*(?:\s+[A-Z][\w-]*)*\s+"
+         r"(?:Before|Over|Without|Beyond|Versus|Vs\.?|Not|Then)\s+"
+         r"[A-Z][\w-]*(?:\s+[A-Z][\w-]*)*\s*$"
+         r"|^#{2,6}\s+(?:[\d.]+\s+)?"
+         r"[A-Z][\w-]*(?:\s+[A-Z][\w-]*)+,\s+"
+         r"[A-Z][\w-]*(?:\s+[A-Z][\w-]*)+\s*$",
+         "slogan heading; name what the section covers", cased=True),
 ]
 
 REVIEW = [
@@ -146,6 +190,38 @@ REVIEW = [
     Rule("stage-direction", "WARN",
          r"\b(consider this:|picture this:|think of it (?:as|like) a\b)\b",
          "stage direction to the reader; cut the device"),
+    # Added 2026-08-29 with maxim-voice, for the softer form of the same
+    # habit: "A quirk that affects behaviour has a test." True, and written
+    # as folk wisdom. An instruction ("List the test name; if there is no
+    # test, say so") tells a contributor what to do.
+    Rule("aphorism-voice", "WARN",
+         r"\bAn? [a-z][\w-]* (?:that|which) [^.;]{5,70}?\s"
+         r"(?:has|needs|gets|carries|becomes|means|costs|wins|counts)\s",
+         "aphorism voice; write it as an instruction — who does what"),
+    # "A Chosen record is not permanent, but reopening one costs more than
+    # proposing a new one." The reader has to hold a negation, a
+    # concession, and a comparison to extract one rule.
+    Rule("not-but-maxim", "WARN",
+         r"\bis not \w+[^,.;]{0,40}, but \w+ing\b"
+         r"|\bis not (?:a |an |the )?[\w-]+, but\b",
+         "'not X, but Y' balance; state the rule, then the exception"),
+    # "Calls that reach the live service show the real requests…; calls
+    # that never leave the registry say so…". Mirrored clauses read as
+    # composed rather than informative. Two plain sentences carry it.
+    Rule("antithesis-parallel", "WARN",
+         r"\b(\w+) that [^;.]{10,140}; \1 that\b",
+         "mirrored 'X that…; X that…' clauses; use two plain sentences"),
+    # "…prove which source supports which record — full contract in
+    # design/provenance-envelope.md". A pointer welded to the end of a
+    # sentence that was already full. Make it its own sentence.
+    Rule("welded-crossref", "WARN",
+         r"—\s*(?:full |the )?"
+         r"(?:contract|details?|spec|rest|rationale|record|list|evidence)\b"
+         r"[^.]{0,30}\b(?:in|at|lives in|see)\b"
+         r"|—\s*(?:implementation|the code|callers?|clients?)\s+"
+         r"(?:may|might|can|will|already)\b",
+         "cross-reference welded on with an em dash; give it its own "
+         "sentence"),
 ]
 
 RULES = BANNED + REVIEW
@@ -166,6 +242,12 @@ STRUCTURE = [
     Rule("mega-sentence", "WARN", r"$never$",
          f"over {MEGA_SENTENCE_WORDS} words in one sentence; it has more "
          "than one idea in it"),
+    # Added 2026-08-29. "A recorded walk across the registry and geo tools,
+    # one card per call." reads like a caption, not a sentence: no verb, so
+    # nothing is asserted and the reader has to supply the claim. The site
+    # opened three sections this way.
+    Rule("appositive-fragment", "WARN", r"$never$",
+         "sentence with no verb; say what the thing does"),
 ]
 STRUCTURE_BY_ID = {r.id: r for r in STRUCTURE}
 
@@ -204,16 +286,89 @@ def _blank_out(text: str, pattern: str) -> str:
                   flags=re.S)
 
 
+def _drop_quotes(text: str) -> str:
+    """Blank out double-quoted spans of 12+ chars, keeping line numbers.
+
+    Verbatim quotes are exempt (DESIGN.md 11.1). These docs quote sources
+    and community comments as written, and a commit message explaining why
+    a phrase was removed has to name the phrase. Curly and straight quotes
+    both count. Do not use quotes to smuggle your own prose past a rule.
+
+    Run over the whole text rather than line by line: prose wraps, so a
+    quotation routinely opens on one line and closes on the next. Scanning
+    per line saw an unterminated quote and flagged the phrase inside it —
+    which is the one case the exemption exists for.
+    """
+    return re.sub(r"[\"\u201c][^\"\u201d]{12,}?[\"\u201d]",
+                  lambda m: "\n" * m.group(0).count("\n"), text, flags=re.S)
+
+
 def prose_lines_md(text: str) -> Iterator[tuple[int, str]]:
     text = _blank_out(text, r"```.*?```")
+    text = _drop_quotes(text)
     for i, raw in enumerate(text.splitlines(), 1):
         line = re.sub(r"`[^`]*`", " ", raw)            # inline code
         line = re.sub(r"\]\([^)]*\)", "] ", line)      # link targets
         line = re.sub(r"<[^>]*>", " ", line)           # html tags
-        # Verbatim quotes are exempt (DESIGN.md 11.1): blank double-quoted
-        # spans of 12+ chars. Curly and straight quotes both count.
-        line = re.sub(r"[\"“][^\"”]{12,}[\"”]", " ", line)
         yield i, line
+
+
+def prose_lines_html(text: str) -> Iterator[tuple[int, str]]:
+    """Visible copy from the site. Comments, <script>, and <style> go first
+    (the embedded data blocks are script tags full of source-published
+    strings, and a publisher's own field names are not this repo's prose),
+    then tags — which takes every attribute value and URL with them."""
+    text = _blank_out(text, r"<!--.*?-->")
+    text = _blank_out(text, r"<script\b.*?</script>")
+    text = _blank_out(text, r"<style\b.*?</style>")
+    for i, raw in enumerate(text.splitlines(), 1):
+        yield i, re.sub(r"<[^>]*>", " ", raw)
+
+
+def prose_lines_js_in_html(text: str) -> Iterator[tuple[int, str]]:
+    """String literals from the page's own script.
+
+    Half this site's visible copy is built in JS and inserted at load time,
+    so stripping <script> — which prose_lines_html has to do, or the
+    embedded JSON data blocks would be scanned as prose — hid it from every
+    rule. That is where "the tool never guesses" survived a full pass.
+
+    Only quoted literals are yielded, and only ones that look like a
+    sentence fragment rather than a selector, a class name, or a URL.
+    """
+    for m in re.finditer(r"<script(?![^>]*application/json)[^>]*>(.*?)</script>",
+                         text, re.S):
+        base = text[:m.start()].count("\n") + 1
+        body = m.group(1)
+        body = _blank_out(body, r"/\*.*?\*/")
+        for i, raw in enumerate(body.splitlines()):
+            if raw.lstrip().startswith("//"):
+                continue          # engineering note, not copy
+            parts = []
+            for lit in re.finditer(r"""(["'`])((?:[^"'`\\\n]|\\.){10,}?)\1""",
+                                   raw):
+                s = lit.group(2)
+                if " " not in s or s.lstrip()[:1] in "#.<":
+                    continue
+                if s.startswith("http") or "${" in s and " " not in s:
+                    continue
+                parts.append(s)
+            if parts:
+                yield base + i, " ".join(parts)
+
+
+def prose_paragraphs_html(text: str) -> Iterator[tuple[int, str]]:
+    """One block per <p>/<li>/<h*>, so a sentence wrapped across source
+    lines is measured whole rather than as three short lines."""
+    text = _blank_out(text, r"<!--.*?-->")
+    text = _blank_out(text, r"<script\b.*?</script>")
+    text = _blank_out(text, r"<style\b.*?</style>")
+    for m in re.finditer(r"<(p|li|h[1-6])\b[^>]*>(.*?)</\1>", text, re.S):
+        body = re.sub(r"<[^>]*>", " ", m.group(2))
+        body = re.sub(r"&[a-z]+;|&#\d+;", " ", body)
+        body = " ".join(body.split())
+        if body:
+            yield text[:m.start()].count("\n") + 1, body
 
 
 def allowed_spans(line: str) -> list[tuple[int, int]]:
@@ -276,6 +431,51 @@ def _is_prose(block: str) -> bool:
     return not re.match(r"^\d+[.)]\s", head)
 
 
+# A fragment has no finite verb, so it asserts nothing — the reader has to
+# guess the claim. Detecting that needs a verb list rather than a regex.
+# Kept to auxiliaries plus the verbs this corpus actually uses, and paired
+# with two guards (opens on a determiner, contains a comma) so an ordinary
+# sentence built from a verb not on the list cannot trip it.
+_FINITE_VERBS = frozenset("""
+is are was were be been being am has have had do does did can could may might
+must shall should will would returns return carries carry says say makes make
+gets get gives give takes take shows show holds hold names name reports report
+means mean needs need lives live sits sit runs run ships ship fails fail
+passes pass comes come goes go knows know sees see keeps keep puts put uses use
+works work covers cover queries query resolves resolve emits emit raises raise
+adds add stops stop starts start finds find picks pick answers answer counts
+count appears appear exists exist becomes become stays stay costs cost affects
+affect declares declare publishes publish records record surfaces surface
+falls fall rises rise remains remain contains contain includes include
+requires require applies apply chooses choose synthesizes synthesize
+retrieves retrieve invests invest shrank succeeds succeed survived pitch
+pitches reads read wants want assigns assign backs back
+""".split())
+
+_FRAGMENT_LEAD = re.compile(
+    r"^(?:A|An|The|One|Two|Three|Four|Five|Six|Seven|Eight|Nine|Ten|Every"
+    r"|Each|No)\b", re.I)
+
+# Below this a verbless clause is a caption or a label, not a failed
+# sentence; above it the writer meant to make a claim and did not.
+FRAGMENT_MIN_WORDS = 7
+
+
+def _is_appositive_fragment(sentence: str) -> bool:
+    words = re.findall(r"[A-Za-z][A-Za-z'-]*", sentence)
+    if len(words) < FRAGMENT_MIN_WORDS or "," not in sentence:
+        return False
+    # A colon introduces a list or an example, and the clause before it is
+    # a label by design ("The measurements: selection accuracy falls…").
+    # That is a different construction from a sentence that meant to have
+    # a verb and lost it.
+    if ":" in sentence:
+        return False
+    if not _FRAGMENT_LEAD.match(sentence.strip()):
+        return False
+    return not any(w.lower() in _FINITE_VERBS for w in words)
+
+
 def scan_structure(source: str,
                    paragraphs: Iterable[tuple[int, str]]) -> Iterator[Hit]:
     for line_no, block in paragraphs:
@@ -292,6 +492,9 @@ def scan_structure(source: str,
             if n > MEGA_SENTENCE_WORDS:
                 yield Hit(STRUCTURE_BY_ID["mega-sentence"], source, line_no,
                           f"{n} words", sentence)
+            if _is_appositive_fragment(sentence):
+                yield Hit(STRUCTURE_BY_ID["appositive-fragment"], source,
+                          line_no, sentence.strip()[:60], sentence)
 
 
 def prose_lines_py(text: str) -> Iterator[tuple[int, str]]:
@@ -361,8 +564,9 @@ def main() -> int:
 
     if args.stdin:
         text = sys.stdin.read()
-        hits += list(scan_text("<stdin>",
-                               enumerate(text.splitlines(), 1), rules))
+        hits += list(scan_text(
+            "<stdin>",
+            enumerate(_drop_quotes(text).splitlines(), 1), rules))
     else:
         targets = ([Path(f).resolve() for f in args.files]
                    if args.files else collect_files())
@@ -381,10 +585,18 @@ def main() -> int:
             if path.suffix == ".py":
                 hits += list(scan_text(rel, prose_lines_py(text), rules))
                 continue
+            if path.suffix == ".html":
+                hits += list(scan_text(rel, prose_lines_html(text), rules))
+                hits += list(scan_text(rel, prose_lines_js_in_html(text),
+                                       rules))
+                if not args.only:
+                    hits += list(scan_structure(
+                        rel, prose_paragraphs_html(text)))
+                continue
             hits += list(scan_text(rel, prose_lines_md(text), rules))
             # Structural rules judge authored prose. research/notes/ is raw
             # captured research kept for provenance, dense by intent and
-            # superseded by RESEARCH.md; length is not a defect there.
+            # superseded by ../research/README.md; length is not a defect there.
             if not args.only and "notes" not in path.parts:
                 hits += list(scan_structure(rel, prose_paragraphs_md(text)))
 

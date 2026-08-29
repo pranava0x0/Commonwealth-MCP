@@ -1,4 +1,4 @@
-"""Typed error taxonomy (Design Spec § 22, as revised 2026-08-26).
+"""Typed error taxonomy (../../../design/architecture.md § 22, as revised 2026-08-26).
 
 Emptiness and partial coverage are NOT errors — they are coverage dimensions
 (envelope.Coverage). These classes exist only for conditions that prevent a
@@ -41,7 +41,7 @@ class InvalidQuery(CommonwealthError):
 class AmbiguousEntity(CommonwealthError):
     """Raised only when ambiguity cannot be expressed as candidates-in-data.
 
-    The normal path (DECISIONS.md 0004) returns candidates in the envelope with
+    The normal path (../../../design/architecture.md decision 0004) returns candidates in the envelope with
     requires_user_choice=true; this error is for malformed/contradictory input.
     """
 
@@ -59,7 +59,7 @@ class TermsRestricted(CommonwealthError):
 class EgressRefused(CommonwealthError):
     """A request violated the egress policy (design/security-and-data-handling.md § 2).
 
-    Not in the Design Spec § 22 wire list: egress refusals are internal policy
+    Not in the ../../../design/architecture.md § 22 wire list: egress refusals are internal policy
     failures that surface to callers as SourceUnavailable with a policy note,
     never as an invitation to relax the policy from the tool surface.
     """

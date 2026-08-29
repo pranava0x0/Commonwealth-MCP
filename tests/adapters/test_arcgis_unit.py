@@ -31,7 +31,7 @@ def adapter() -> ArcGISAdapter:
 
 
 async def test_sensitive_public_filters_before_cache_and_mapping():
-    """DECISIONS.md 0014 § 3: exposure_allowlist must actually filter the
+    """../../design/architecture.md decision 0014 § 3: exposure_allowlist must actually filter the
     response before it is cached or mapped into a canonical record — a
     field the reviewer never allowlisted must never leave the adapter,
     not even as a `raw` value on the evidence path."""

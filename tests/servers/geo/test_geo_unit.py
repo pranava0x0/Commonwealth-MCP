@@ -9,7 +9,7 @@ from tests.conftest import (build_ctx, make_secondary_manifest,
 
 async def test_find_parcel_by_pin(cw_ctx, sample_pin):
     """Fairfax County has two real parcel.lookup sources on file (its own
-    county layer plus VGIN's statewide aggregation — DECISIONS.md 0005-C: query
+    county layer plus VGIN's statewide aggregation — ../../../design/architecture.md decision 0005-C: query
     both, never rank), and the fixture PIN is real in both."""
     env = await find_parcel(cw_ctx, jurisdiction="Fairfax County",
                             pin=sample_pin)

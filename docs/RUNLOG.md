@@ -14,10 +14,10 @@ in-browser (14 recorded calls, resolver playground answering "Fairfax"
 with two candidates, zero console errors).
 
 Where the milestone stands: the first two stages of the adopted sequence
-(ARCHITECTURE.md § 39 — the contract spike and the geo vertical) are
+(../design/architecture.md § 39 — the contract spike and the geo vertical) are
 substantially done. What milestone 1a still owes is exactly four things —
 the incorporated town, the `parcel-zoning-screen` skill, Tier-2 evals,
-and `configure` — so backlog.md was reprioritized to put those at the
+and `configure` — so the GitHub issues was reprioritized to put those at the
 top of High, and statewide-source breadth moved behind them.
 
 The fact-check came back clean on everything structural: spec revision
@@ -25,7 +25,7 @@ The fact-check came back clean on everything structural: spec revision
 progressive discovery still roadmap-only, the state/local civic gap
 still unoccupied. Two commercial entrants (Regrid's parcel MCP, Esri's
 Location Platform MCP beta) now sit in the parcels/geocoding lane;
-RESEARCH.md part 3 § 9 records the pass. One finding removes a blocker:
+../research/README.md part 3 § 9 records the pass. One finding removes a blocker:
 VGIN's geocoder publishes no automated-use restriction at all, so
 address resolution is no longer waiting on a terms question.
 
@@ -38,7 +38,7 @@ still said 12–25 against 0002's chosen 8–12/20; three files cited a
 resources, and `THIRD_PARTY_DATA.yml` in the present tense; the README
 called 14 table rows "fourteen localities" when 12 are.
 
-Four findings went to issues.md as code work with an architect call
+Four findings went to the GitHub issues as code work with an architect call
 attached: the singular-`evidence_ref`-vs-plural-contract wire drift, the
 untested egress rules 6–7, `discovery-min` amending 0001's letter
 unrecorded, and two stale strings in code. One licensing gap got a High
@@ -56,7 +56,7 @@ Registered VGIN's Administrative Boundaries FeatureServer (a new
 `boundary.lookup` capability; two layers — 134 counties/independent cities,
 191 towns) and built two things on it: `geo.find_boundaries`, the third of
 four geo default tools, and point-in-polygon jurisdiction resolution, the
-top High item in backlog.md. One source onboarding closed two milestones
+top High item in the GitHub issues. One source onboarding closed two milestones
 because both questions are the same query against the same polygons.
 
 Adapter work was the enabling piece: server-side geometry generalization
@@ -95,7 +95,7 @@ Three findings the live data forced, none of them predictable from schemas:
    project-chosen 50 m tolerance (VGIN publishes no accuracy figure and
    the code says so rather than inventing one).
 
-All three are written up in the new `KNOWN_SOURCE_QUIRKS.md`, closing that
+All three are written up in the new `../design/source-quirks.md`, closing that
 backlog item with observed variances rather than hypotheticals; each entry
 names the test that holds it.
 
@@ -110,9 +110,9 @@ claimed its own honesty. Rewritten around what works, what does not, and a
 coverage table.
 
 Then the doc tree: 45 prose files down to 25. Six research documents became
-`RESEARCH.md`, fifteen decision records and the review round that revised
-them became `DECISIONS.md`, and the design spec plus flow diagrams became
-`ARCHITECTURE.md`. The merge surfaced a real defect — every one of the
+`../research/README.md`, fifteen decision records and the review round that revised
+them became `../design/architecture.md Part 2`, and the design spec plus flow diagrams became
+`../design/architecture.md`. The merge surfaced a real defect — every one of the
 fourteen *chosen* decision records still said `Status: Open — architect to
 choose` in its own header, correct only in the index table the records had
 been separated from. The `design/` specs deliberately stayed separate
@@ -141,7 +141,7 @@ county — 6,514 parcels behind a deliberately minimal 2-field public
 view, no zoning layer) closes the "rural county" half of design/
 source-registry.md § 6's forcing set; a live search for Vienna's own GIS
 (the "incorporated town" half) found only a zoning-map viewer app, no
-queryable endpoint — likely genuinely thin, logged in backlog.md rather
+queryable endpoint — likely genuinely thin, logged in the GitHub issues rather
 than forced.
 
 Bigger: `civic.get_code_section`, the first civic-vertical tool, and a
@@ -223,7 +223,7 @@ served copy.
 Registered `va-vgin-statewide-parcels` (jurisdiction `va`), Virginia's
 statewide parcels layer aggregated by VGIN from local submissions. Because
 its jurisdiction is the state itself, it matches every jurisdiction's
-resolved stack — DECISIONS.md 0005 names this exact
+resolved stack — ../design/architecture.md decision 0005 names this exact
 pairing (a locality's own layer plus VGIN's statewide aggregation) as the
 canonical example for "query both, never rank" (0005-C), and it now works
 live: a Fairfax County parcel lookup queries both sources and returns
@@ -291,7 +291,7 @@ nepa-mcp, Power-Agent (confirmed Harvard SEAS-affiliated), civic-ai-tools,
 github-mcp-server, fastmcp, and modelcontextprotocol.io — live pages
 fetched, not guessed from repo names. Found civic-ai-tools is the only
 checked project with a genuinely live in-browser demo; findings and what
-was/wasn't adopted are in RESEARCH.md part 6. Worth it:
+was/wasn't adopted are in ../research/README.md part 6. Worth it:
 yes — it caught that Power-Agent's tool→skill→benchmark layering (cited in
 the reference evaluation) has no public visual demonstration anywhere,
 which is why Commonwealth's site doesn't try to copy a pattern that doesn't
@@ -318,7 +318,7 @@ Repo initialized and synced to https://github.com/pranava0x0/Commonwealth-MCP.
 
 Single session, no delegated tasks. Shipped the contract-spike phase
 per the adopted plan: package scaffold on the official MCP SDK v2
-(compatibility spike passed — result recorded in DECISIONS.md 0003), envelope +
+(compatibility spike passed — result recorded in ../design/architecture.md decision 0003), envelope +
 coverage dimensions + evidence refs as Pydantic contracts with the committed
 wire schema, exact jurisdiction resolution (13 seed rows, FIPS verified
 against TIGERweb), egress policy with per-rule refusal fixtures, source
@@ -331,7 +331,7 @@ audit records derived from envelopes, wired into the server binding; a
 deterministic 9-call demo generator (`tools/build_site.py`); and a static
 GitHub-Pages-ready site (docs/index.html) rendering catalog + audit trail,
 verified in the browser (DOM assertions + screenshots, zero console errors).
-Four real bugs found and fixed during the build are logged in issues.md.
+Four real bugs found and fixed during the build are logged in the GitHub issues.
 
 ## 2026-08-26 — research phase (design/spec session)
 
@@ -345,8 +345,8 @@ Script runs (not delegated research, logged for completeness): `search_hn.py` (2
 ## 2026-08-26 — review round 2 integration (external review feedback)
 
 The user ran an external automated code review that produced
-`DECISIONS.md review round 2` and
-`RESEARCH.md part 5`. Integration: verified the
+`../design/architecture.md Part 2 review round 2` and
+`../research/README.md part 5`. Integration: verified the
 review's sharpest factual claim (`ttlMs`/`cacheScope` scope) against the
 previously-fetched changelog before applying; adopted the
 coverage-dimension split, evidence references, wire-schema commitment,

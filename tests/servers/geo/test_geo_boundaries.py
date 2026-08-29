@@ -1,5 +1,5 @@
 """geo.find_boundaries: the boundary contract and the real source quirks
-it has to survive (KNOWN_SOURCE_QUIRKS.md 1-3). Everything replays the
+it has to survive (../../../design/source-quirks.md 1-3). Everything replays the
 committed VGIN recording — no live network, no synthesized shapes."""
 import json
 
@@ -33,7 +33,7 @@ async def test_independent_city_is_its_own_territory(cw_ctx):
 
 
 async def test_split_polygon_locality_returns_both(cw_ctx):
-    """KNOWN_SOURCE_QUIRKS.md 1: Prince George County ships as two polygons
+    """../../../design/source-quirks.md 1: Prince George County ships as two polygons
     under one FIPS. Both come back, each with its own evidence, and nothing
     silently picks one."""
     env = await find_boundaries(cw_ctx, "Prince George County")
@@ -48,7 +48,7 @@ async def test_split_polygon_locality_returns_both(cw_ctx):
 
 
 async def test_centroid_is_labelled_as_a_label_point(cw_ctx):
-    """KNOWN_SOURCE_QUIRKS.md 2: for 4 of 134 Virginia localities the
+    """../../../design/source-quirks.md 2: for 4 of 134 Virginia localities the
     centroid lands in a NEIGHBOURING government, so it can never be
     presented as 'a point inside this place'."""
     env = await find_boundaries(cw_ctx, "Fairfax County")
@@ -59,7 +59,7 @@ async def test_centroid_is_labelled_as_a_label_point(cw_ctx):
 
 
 async def test_record_vintage_survives_absent_layer_vintage(cw_ctx):
-    """KNOWN_SOURCE_QUIRKS.md 3: the layer publishes no editingInfo, so the
+    """../../../design/source-quirks.md 3: the layer publishes no editingInfo, so the
     envelope must still say the layer vintage is unknown — while the
     per-record date it DOES publish is surfaced rather than thrown away."""
     env = await find_boundaries(cw_ctx, "Fairfax County")

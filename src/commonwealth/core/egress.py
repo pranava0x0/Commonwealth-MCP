@@ -1,10 +1,10 @@
-"""Egress policy (design/security-and-data-handling.md § 2; DECISIONS.md 0014, frozen).
+"""Egress policy (design/security-and-data-handling.md § 2; ../../../design/architecture.md decision 0014, frozen).
 
 Adapters are the only outbound path, and every request URL passes through
 `EgressPolicy.validate_url` immediately before use. DNS is resolved and
 checked here, at request time; the small resolve-to-connect window that a
 custom pinned-IP transport would close is a known residual, recorded in
-issues.md, not a silent gap.
+the GitHub issues, not a silent gap.
 
 Every rule has a known-bad fixture in tests/core/test_egress.py that must be
 refused — an egress rule without its refusal test is prose, not policy.

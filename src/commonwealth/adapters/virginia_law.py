@@ -2,7 +2,7 @@
 lookup by citation.
 
 No JSON/XML API is reachable without registering for an LIS API key
-(backlog.md, civic vertical note); the public website itself is plain,
+(the GitHub issues, civic vertical note); the public website itself is plain,
 anonymous, server-rendered HTML with a stable structure, so this adapter
 reads that directly rather than waiting on a credential this project
 can't self-register for. A missing section is not a 404 — the site

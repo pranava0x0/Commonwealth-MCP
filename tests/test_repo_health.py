@@ -14,7 +14,7 @@ SRC = ROOT / "src" / "commonwealth"
 
 
 def test_core_imports_no_framework_or_upper_layers():
-    """DECISIONS.md 0003+0015: core stays import-clean of mcp/servers/cli."""
+    """../design/architecture.md decision 0003+0015: core stays import-clean of mcp/servers/cli."""
     offenders = []
     files = sorted((SRC / "core").rglob("*.py"))
     assert files, "core package vanished?"
@@ -123,7 +123,7 @@ def test_capability_vocab_is_the_single_source_of_truth():
 
 
 def test_committed_fixture_carries_rights_metadata():
-    """DECISIONS.md 0011: recorded third-party payloads carry source+rights."""
+    """../design/architecture.md decision 0011: recorded third-party payloads carry source+rights."""
     fixture_files = sorted((ROOT / "tests" / "fixtures" / "sources")
                            .rglob("recorded.json"))
     assert fixture_files, "no recorded fixtures found"

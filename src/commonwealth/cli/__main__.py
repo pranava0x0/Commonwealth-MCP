@@ -378,7 +378,7 @@ def _write_fixture(m: SourceManifest, recorder: "_RecordingFetcher",
             "terms_url": m.access.terms_url,
             "note": "Recorded government-published responses; third-party "
                     "content excluded from the repo's CC0 grant "
-                    "(DECISIONS.md 0011).",
+                    "(../../../design/architecture.md decision 0011).",
         },
         "summary": summary,
         "exchanges": recorder.exchanges,

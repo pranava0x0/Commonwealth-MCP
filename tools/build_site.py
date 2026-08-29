@@ -32,7 +32,7 @@ FIXTURE = FIXTURES_DIR / "va-fairfax-parcels-zoning" / "recorded.json"
 def _all_recorded_exchanges() -> list[dict]:
     """Every committed source's own fixture, merged. The demo queries the
     real (multi-source) registry, so a call can legitimately reach more
-    than one source (DECISIONS.md 0005-C) — the replay pool has to cover
+    than one source (../design/architecture.md decision 0005-C) — the replay pool has to cover
     whichever ones actually get queried, not just Fairfax's."""
     exchanges: list[dict] = []
     for path in sorted(FIXTURES_DIR.glob("*/recorded.json")):
@@ -271,7 +271,7 @@ def build_catalog() -> dict:
         "registry_revision": ctx.sources.revision,
         "counts": {
             # Declared, not derived from a collection: build_server() always
-            # returns exactly one MCPServer (DECISIONS.md 0001, "one process").
+            # returns exactly one MCPServer (../design/architecture.md decision 0001, "one process").
             "servers": 1,
             "tools": len(tools),
             "packages": len(regs),

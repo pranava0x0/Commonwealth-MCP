@@ -1,4 +1,4 @@
-"""Audit-record redaction (DECISIONS.md 0014 § 3 structural minimization)."""
+"""Audit-record redaction (../../design/architecture.md decision 0014 § 3 structural minimization)."""
 import yaml
 
 from commonwealth.core.audit import error_record

@@ -156,7 +156,7 @@
     "Cartographic/analysis use only per the publisher's own disclaimer; not a legal description or a property survey. Boundary questions with legal consequence go to the locality, not this layer.",
     "Layer publishes no layer-level last-edit date (editingInfo is absent on both layers), so envelope source_updated_at is null. The per-record LASTUPDATE field IS mapped and surfaced per boundary, so each returned record carries its own vintage even though the layer does not.",
     "Geometry is returned simplified (server-side generalization) so a polygon fits an inline response; the unsimplified boundary is not exposed until the result-resource store exists. Simplified vertices can sit tens of metres off the true line \u2014 never use them to decide which side of a boundary a specific address falls on.",
-    "The localities layer carries 134 rows for Virginia's 133 counties and independent cities. Prince George County (FIPS 51149) is published as two separate polygons sharing one FIPS and GNIS, a 281 sq mi body and a 0.0076 sq mi sliver. Both are returned; neither is silently dropped. See KNOWN_SOURCE_QUIRKS.md.\n",
+    "The localities layer carries 134 rows for Virginia's 133 counties and independent cities. Prince George County (FIPS 51149) is published as two separate polygons sharing one FIPS and GNIS, a 281 sq mi body and a 0.0076 sq mi sliver. Both are returned; neither is silently dropped. See ../../design/source-quirks.md.\n",
     "Towns layer covers incorporated towns only. Virginia's unincorporated communities and CDPs have no polygon here, and absence is not evidence that a place does not exist."
    ]
   },

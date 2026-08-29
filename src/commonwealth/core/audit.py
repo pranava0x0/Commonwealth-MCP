@@ -3,7 +3,7 @@
 The envelope already carries the trail (sources consulted, evidence,
 coverage, execution provenance); an audit record is its operational
 summary — one JSON object per tool call, safe to log and to publish.
-Structural minimization (DECISIONS.md 0014 § 3) applies here the same as in
+Structural minimization (../../../design/architecture.md decision 0014 § 3) applies here the same as in
 adapter logs: when any consulted source is sensitive_public, argument
 VALUES are dropped and only argument names remain.
 """
@@ -88,7 +88,7 @@ def error_record(tool: str, args: dict[str, Any], error_code: str,
     """`sensitive` is registry-wide (RuntimeContext.has_sensitive_sources),
     not per-call: a failure can occur before it's known which source a call
     would have reached, so this errs conservative rather than assuming
-    safe (DECISIONS.md 0014 § 3 structural minimization, same rule as the
+    safe (../../../design/architecture.md decision 0014 § 3 structural minimization, same rule as the
     success path in record_from_envelope)."""
     return AuditRecord(
         ts=utc_now_iso(), request_id="", tool=tool, server=server,

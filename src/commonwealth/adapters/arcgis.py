@@ -115,7 +115,7 @@ def _layer_root(p: ArcGISParams, layer: LayerDecl) -> str:
 
 def _apply_exposure_allowlist(manifest: SourceManifest, payload: dict,
                               layer: LayerDecl | None) -> dict:
-    """DECISIONS.md 0014 § 3: for a `sensitive_public` source, `exposure_
+    """../../../design/architecture.md decision 0014 § 3: for a `sensitive_public` source, `exposure_
     allowlist` is a field-level gate on what may ever leave this function —
     not just a manifest-schema requirement that the source has one.
     Filtering here, before the response reaches the cache, means a
@@ -216,7 +216,7 @@ class ArcGISAdapter:
                     sample_rows: int | None = None) -> ArcGISQueryResult:
         """`where_equals` takes CANONICAL field names (the manifest's
         field_mapping keys) — callers never speak vendor field names
-        (design spec § 27). Values are escaped and matched exactly.
+        (../../../design/architecture.md § 27). Values are escaped and matched exactly.
 
         `simplify_tolerance` is degrees of allowable offset, passed to the
         platform's own `maxAllowableOffset` generalization so a polygon

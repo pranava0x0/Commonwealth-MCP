@@ -26,7 +26,7 @@ from ..core.registry import DataClassification, SourceManifest
 log = logging.getLogger("commonwealth.adapters")
 
 PER_HOST_CONCURRENCY = 2
-RETRY_BUDGET = 1  # one retry inside the request deadline (design spec § 38)
+RETRY_BUDGET = 1  # one retry inside the request deadline (../../../design/architecture.md § 38)
 REQUEST_TIMEOUT_SECONDS = 30.0
 
 _host_semaphores: dict[str, asyncio.Semaphore] = {}
@@ -169,7 +169,7 @@ class FetchResult:
 class TTLCache:
     """Response cache keyed by (source_id, url, params). Classification-aware:
     sensitive_public payloads are field-filtered BEFORE storage by the caller-
-    supplied filter (structural minimization, DECISIONS.md 0014 § 3)."""
+    supplied filter (structural minimization, ../../../design/architecture.md decision 0014 § 3)."""
 
     def __init__(self) -> None:
         self._store: dict[str, tuple[float, str, dict]] = {}
@@ -213,7 +213,7 @@ def shared_cache() -> TTLCache:
 
 def log_source_call(manifest: SourceManifest, operation: str,
                     params: dict[str, Any], record_count: int | None) -> None:
-    """Structural log minimization (DECISIONS.md 0014 § 3): open sources log
+    """Structural log minimization (../../../design/architecture.md decision 0014 § 3): open sources log
     params; sensitive_public sources log names only, never values."""
     if manifest.access.data_classification == DataClassification.sensitive_public:
         detail = f"params={sorted(params)}"

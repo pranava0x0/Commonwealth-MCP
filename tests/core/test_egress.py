@@ -1,4 +1,4 @@
-"""Every egress rule has its known-bad refusal (DECISIONS.md 0014 § 1: an
+"""Every egress rule has its known-bad refusal (../../design/architecture.md decision 0014 § 1: an
 egress rule without its refusal test is prose, not policy)."""
 import pytest
 

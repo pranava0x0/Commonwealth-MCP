@@ -2,7 +2,7 @@
 and top-two source selection.
 
 Contract: design/source-registry.md (revised 2026-08-26). Selection follows
-DECISIONS.md 0005 as Chosen (architect override): no central ranking, no derived
+../../../design/architecture.md decision 0005 as Chosen (architect override): no central ranking, no derived
 primary — pick the top two selectable candidates for a (jurisdiction,
 capability), query both, surface both. `authority_level` orders the *which
 two* question only.
@@ -272,7 +272,7 @@ class SourceRegistry:
 
     def select(self, capability: str,
                jurisdiction_ids: list[str]) -> list[SourceManifest]:
-        """DECISIONS.md 0005 (Chosen): the top TWO selectable sources for the
+        """../../../design/architecture.md decision 0005 (Chosen): the top TWO selectable sources for the
         capability across the given jurisdiction stack. Ordering exists only
         to answer *which two* — authority_level, then freshness cadence hint.
         Callers query every returned source and surface every result."""

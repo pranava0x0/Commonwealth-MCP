@@ -1,8 +1,8 @@
 # Spec: Provenance and Evidence Envelope
 
-**Plugs into:** Design Spec § 10 (Provenance and Evidence Contract), § 22 (Error Model), § 16 (Resources)
-**Status:** Draft for review, revised 2026-08-26 after the architecture review (DECISIONS.md review round 2 § 2.1-2.3): coverage became independent dimensions, evidence references became explicit, and the wire placement became a published-schema commitment. Field names are proposals until Gate A (canonical model freeze).
-**Why this exists:** No surveyed MCP server, commercial or civic, returns source provenance with results (RESEARCH.md part 4, "What did NOT show up"). For government data the provenance IS the product: an answer about zoning that cannot say which county system produced it, as of when, is not usable for real decisions. This contract is Commonwealth's main differentiator and its most load-bearing interface.
+**Plugs into:** architecture.md § 10 (Provenance and Evidence Contract), § 22 (Error Model), § 16 (Resources)
+**Status:** Draft for review, revised 2026-08-26 after the architecture review (architecture.md Part 2 review round 2 § 2.1-2.3): coverage became independent dimensions, evidence references became explicit, and the wire placement became a published-schema commitment. Field names are proposals until Gate A (canonical model freeze).
+**Why this exists:** Of the MCP servers surveyed, commercial and civic, none return source provenance with their results (../research/README.md part 4, "What did NOT show up"). Government data needs it. A zoning answer that cannot name the county system it came from, and the date it was fetched, will not support a decision anyone has to defend. Every other contract in this repo depends on this one.
 
 ---
 
@@ -30,14 +30,14 @@ Every semantic tool returns exactly this shape. No tool returns a bare list, a b
 | `coverage` | Coverage | yes | The five dimensions of what was and was not searched (§ 3) |
 | `warnings` | array of Warning | yes, often empty | Caveats that change interpretation |
 | `next_actions` | array of NextAction | no | Machine-readable escalation hints for skills |
-| `resources` | array of ResourceRef | no | Handles to full payloads too large for context (backend per DECISIONS.md 0013) |
-| `requires_user_choice` | boolean | no (absent = false) | Set when `data` carries candidates awaiting a human decision (ambiguous jurisdiction/entity); the model must present them, never self-select (DECISIONS.md 0004, Chosen) |
+| `resources` | array of ResourceRef | no | Handles to full payloads too large for context (backend per architecture.md decision 0013) |
+| `requires_user_choice` | boolean | no (absent = false) | Set when `data` carries candidates awaiting a human decision (ambiguous jurisdiction/entity); the model must present them, never self-select (architecture.md decision 0004, Chosen) |
 
 The envelope is versioned as a whole: `envelope_version` is carried in execution provenance (§ 4), not in the body, so the body stays clean for the model.
 
 ### 1.1 Token budget
 
-Community-measured failure mode: raw tool dumps consume 25K+ tokens per call and starve the model (RESEARCH.md part 4 § 1, § 7). Rules:
+Community-measured failure mode: raw tool dumps consume 25K+ tokens per call and starve the model (../research/README.md part 4 § 1, § 7). Rules:
 
 1. `data` targets ≤ 2,000 tokens serialized. Soft limit, enforced by contract test with a small allowlist of exceptions (each with a stated reason).
 2. A result set larger than the budget returns: `record_count`, up to N exemplar records (N documented per tool, default 5), aggregate fields the tool documents, and a `resources` handle to the full set.
@@ -52,7 +52,7 @@ Two linked levels, so a mixed-source result can prove which source supports whic
 
 **Evidence objects** — one per retrieved record or record-set that any material fact rests on, each with an `id` (`evidence_01`) and a `source_ref` naming its source entry. Every material record in `data` (a planning case, a chronology event, a finding) carries `evidence_refs: [...]`; a record with no evidence ref is a contract-test failure, which is what makes the skill-level evidence matrix mechanically checkable.
 
-> **Divergence, found 2026-08-28 (issues.md):** the shipped wire emits a singular `evidence_ref` string per record, not this section's `evidence_refs` array — the review round 2 § 2.2 shape was adopted here but not implemented. The array is still the contract this spec intends: issues.md already records a live case needing it (a multi-polygon PIN whose zoning answer rests on several parcel geometries). Recommendation on file: migrate the wire to the plural array while it has zero external consumers. The architect decides.
+> **Divergence, found 2026-08-28 (the GitHub issues):** the shipped wire emits a singular `evidence_ref` string per record, not this section's `evidence_refs` array — the review round 2 § 2.2 shape was adopted here but not implemented. The array is still the contract this spec intends: the GitHub issues already records a live case needing it (a multi-polygon PIN whose zoning answer rests on several parcel geometries). Recommendation on file: migrate the wire to the plural array while it has zero external consumers. The architect decides.
 
 ```json
 {
@@ -86,7 +86,7 @@ Two linked levels, so a mixed-source result can prove which source supports whic
 }
 ```
 
-Evidence field rules: `locator` is a stable human-openable URL when one exists and is omitted (never guessed) when the platform cannot produce one — a wrong link is worse than no link (BetaNYC lesson, RESEARCH.md part 5 § 5). `payload_hash` is present when raw retention is permitted; `raw_recovery` is `available | forbidden_by_terms | expired`, with the reason carried so "why can't I see the raw record" always has an answer. `access_path` on the source entry is `live | cache | index` — a result served from a local index (future Legistar-style adapters) must say so and carry the index vintage in `source_updated_at`.
+Evidence field rules: `locator` is a stable human-openable URL when one exists and is omitted (never guessed) when the platform cannot produce one — a wrong link is worse than no link (BetaNYC lesson, ../research/README.md part 5 § 5). `payload_hash` is present when raw retention is permitted; `raw_recovery` is `available | forbidden_by_terms | expired`, with the reason carried so "why can't I see the raw record" always has an answer. `access_path` on the source entry is `live | cache | index` — a result served from a local index (future Legistar-style adapters) must say so and carry the index vintage in `source_updated_at`.
 
 Source-entry field rules:
 
@@ -158,7 +158,7 @@ One JSON Schema (versioned with the envelope, shipped in-repo and generated into
 
 - The envelope is the tool result's `structuredContent`; the human-readable `content` block carries a short rendering of `data` plus the coverage reading, generated, never hand-assembled per tool. (The generated rendering is unbuilt as of 2026-08-28; the SDK's default serialization stands in, and this line remains the contract.)
 - Execution provenance rides inside `structuredContent` under the reserved `_execution` key — the one underscore-prefixed key, signaling "not part of the answer."
-- MCP `resultType` is `"complete"` for ordinary results; `"input_required"` appears only if/when DECISIONS.md 0004 layers MRTR on.
+- MCP `resultType` is `"complete"` for ordinary results; `"input_required"` appears only if/when architecture.md decision 0004 layers MRTR on.
 - MCP `isError: true` carries only § 7 total failures; the envelope still rides along with `coverage.execution: "failed"`.
 - Result handles appear both as envelope `resources` entries and as MCP resource links, same URIs.
 - Protocol `_meta` carries only protocol-defined keys (version, OTel trace context); nothing Commonwealth-specific hides there.
@@ -182,7 +182,7 @@ Codes are an enum in Commonwealth Core; adding one is a reviewed change, and eve
 
 ## 6. next_actions
 
-Escalation hints that skills consume (Design Spec § 18). Machine-readable, advisory, never auto-executed:
+Escalation hints that skills consume (architecture.md § 18). Machine-readable, advisory, never auto-executed:
 
 ```json
 {"finding": "parcel_intersects_flood_zone",
@@ -194,7 +194,7 @@ Rules: a `next_action` names a capability, not a tool on a specific server, so r
 
 ## 7. Error model integration
 
-Typed errors (Design Spec § 22) surface inside the envelope, not instead of it, and the taxonomy shrank with the coverage redesign: `NoResults` and `PartialResults` are no longer errors — an empty match is `coverage.result: "empty"` and a partial run is `coverage.execution: "partial"`, both successful responses. Errors are reserved for conditions that prevent a valid answer (`SourceUnavailable`, `InvalidQuery`, `AmbiguousEntity`, `TermsRestricted`, ...). A failed source inside an otherwise-successful call goes to `coverage.source_failures`. A totally failed call still returns the envelope with `coverage.execution: "failed"` plus the typed error in MCP's `isError` result, message formatted for the model: error class, what it means, what to try.
+Typed errors (architecture.md § 22) surface inside the envelope, not instead of it, and the taxonomy shrank with the coverage redesign: `NoResults` and `PartialResults` are no longer errors — an empty match is `coverage.result: "empty"` and a partial run is `coverage.execution: "partial"`, both successful responses. Errors are reserved for conditions that prevent a valid answer (`SourceUnavailable`, `InvalidQuery`, `AmbiguousEntity`, `TermsRestricted`, ...). A failed source inside an otherwise-successful call goes to `coverage.source_failures`. A totally failed call still returns the envelope with `coverage.execution: "failed"` plus the typed error in MCP's `isError` result, message formatted for the model: error class, what it means, what to try.
 
 ```text
 SourceUnavailable: Loudoun County's planning ArcGIS service did not respond
@@ -220,7 +220,7 @@ Question: "solar permits in Craig County". No registered Craig County permit sou
 
 ### 8.4 Conflicting official records
 
-Two official sources disagree (locality parcel layer vs. statewide VGIN aggregate). `data` presents both values labeled by source; a `comparison` block names the agreement or disagreement; provenance carries both entries with their authority levels; the tool does not pick a winner (Design Spec § 28: return the conflict). (Renamed 2026-08-28 from this spec's proposed `conflict` to the shipped `comparison` — the block appears on agreement too, which DECISIONS.md 0005 as Chosen requires, so the shipped name is the accurate one.)
+Two official sources disagree (locality parcel layer vs. statewide VGIN aggregate). `data` presents both values labeled by source; a `comparison` block names the agreement or disagreement; provenance carries both entries with their authority levels; the tool does not pick a winner (architecture.md § 28: return the conflict). (Renamed 2026-08-28 from this spec's proposed `conflict` to the shipped `comparison` — the block appears on agreement too, which architecture.md decision 0005 as Chosen requires, so the shipped name is the accurate one.)
 
 ## 9. Testing hooks
 
