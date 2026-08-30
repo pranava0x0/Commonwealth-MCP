@@ -20,7 +20,7 @@ from pydantic import BaseModel, ConfigDict, Field, model_validator
 from ..core.errors import InvalidQuery, SourceUnavailable
 from ..core.registry import (DataClassification, SourceManifest,
                              register_adapter_params)
-from .base import (FetchResult, Fetcher, HttpFetcher, TTLCache,
+from .base import (FetchResult, Fetcher, HttpFetcher, TTLCache, log,
                    egress_policy_for, log_source_call, shared_cache)
 
 
@@ -166,12 +166,26 @@ def _epoch_ms_to_iso(ms: int | None) -> str | None:
         "%Y-%m-%dT%H:%M:%SZ")
 
 
+def _first_record_id(features: list[dict]) -> object:
+    """Identity of a page's first row, for spotting a repeated page.
+
+    Returns None for an empty list, which never equals a real page's
+    identity, so an empty batch is not mistaken for a repeat.
+    """
+    if not features:
+        return None
+    attrs = features[0].get("attributes") or {}
+    return tuple(sorted(attrs.items(), key=lambda kv: kv[0])) or None
+
+
 # Each extra page is another request to a government service, so the
 # walk is bounded rather than open-ended. Five pages at the default
 # record count covers every query this project issues today; past that
 # the answer is reported as truncated, which is what the caller got
 # before pagination existed at all.
 MAX_QUERY_PAGES = 5
+
+
 class ArcGISAdapter:
     version = "0.1.0"
 
@@ -314,11 +328,6 @@ class ArcGISAdapter:
                 "simplify_tolerance only applies when return_geometry is "
                 "set; refusing to silently ignore it")
 
-        info = await self.layer_info(manifest, layer_key)
-        paging_supported = bool(
-            (info.get("advancedQueryCapabilities") or {})
-            .get("supportsPagination"))
-
         result = await self._get(manifest, url, params, layer=layer)
         payload = result.payload
 
@@ -335,16 +344,41 @@ class ArcGISAdapter:
         # government service and the politeness budget is real.
         pages_read = 1
         more_remains = bool(payload.get("exceededTransferLimit"))
-        while (more_remains and paging_supported
-               and pages_read < MAX_QUERY_PAGES):
+        # `features` is the list inside the cached page-one payload, and
+        # TTLCache hands out its stored dict by reference. Extending it in
+        # place rewrote that cache entry, so a repeat of the same query
+        # resumed from the accumulated length and grew without bound
+        # (measured: 250, 450, 650, 850 records on four identical calls).
+        # The walk builds its own list.
+        features = list(features)
+        # `sample_rows` is a deliberately tiny bounded read for fixture
+        # recording. Any layer with more rows than the sample sets
+        # exceededTransferLimit on the first response, so paging here would
+        # fetch five pages of a thing the caller asked to cap at five rows.
+        # layer_info is a second request, so it is fetched only once
+        # there is actually a second page to consider. A query that fails
+        # on a missing `features` key above never pays for it.
+        may_page = more_remains and sample_rows is None
+        info = await self.layer_info(manifest, layer_key)
+        if may_page:
+            may_page = bool((info.get("advancedQueryCapabilities") or {})
+                            .get("supportsPagination"))
+        while more_remains and may_page and pages_read < MAX_QUERY_PAGES:
             page_params = dict(params)
             page_params["resultOffset"] = len(features)
             page = await self._get(manifest, url, page_params, layer=layer)
             batch = page.payload.get("features")
             if not batch:
-                # A service that ignores resultOffset would otherwise
-                # return the first page forever.
                 more_remains = False
+                break
+            # A layer can advertise supportsPagination and still ignore
+            # resultOffset, which returns page one again — non-empty, so
+            # the check above cannot see it. Compare the first record
+            # instead: observed behaviour rather than an advertised claim.
+            if _first_record_id(batch) == _first_record_id(features):
+                log.warning("%s ignored resultOffset on layer %s; stopped "
+                            "the page walk to avoid duplicate rows",
+                            manifest.id, layer_key)
                 break
             features.extend(batch)
             pages_read += 1

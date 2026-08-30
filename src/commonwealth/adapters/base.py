@@ -40,17 +40,13 @@ def _semaphore_for(host: str) -> asyncio.Semaphore:
     return _host_semaphores[host]
 
 
-def _raw_bytes(response: httpx.Response) -> int:
-    """Bytes that crossed the wire, before any content decoding.
+def _declared_length(response: httpx.Response) -> int:
+    """Content-Length, or 0 when absent or unparseable.
 
-    `num_bytes_downloaded` is the real measure, but it is only tracked by
-    network transports — under a mock it stays 0 — so Content-Length is the
-    fallback. A server could lie about that header, but only by inflating
-    it, which makes the expansion ratio look smaller. The byte cap still
-    applies to the decoded size, so the pair holds either way.
+    Read once per response rather than once per chunk: it is fixed before
+    the first byte arrives, and re-parsing it thousands of times down a
+    20 MB stream buys nothing.
     """
-    if response.num_bytes_downloaded:
-        return response.num_bytes_downloaded
     declared = response.headers.get("content-length")
     return int(declared) if declared and declared.isdigit() else 0
 
@@ -101,7 +97,7 @@ class HttpFetcher:
         return self._decode_html(response, host), response.url
 
     async def _fetch(self, url: str,
-                     params: dict[str, Any]) -> tuple[httpx.Response, str]:
+                     params: dict[str, Any]) -> tuple[_Body, str]:
         current = url
         for hop in range(4):  # initial request + MAX_REDIRECTS
             self.policy.validate_url(current)
@@ -179,6 +175,12 @@ class HttpFetcher:
         response = await client.send(request, stream=True)
         chunks: list[bytes] = []
         decoded = 0
+        # `num_bytes_downloaded` is the real on-the-wire measure, but only
+        # network transports track it — under a mock it stays 0 — so the
+        # declared length is the fallback. A server can only inflate that
+        # header, which makes the expansion ratio look smaller, and the
+        # byte cap still applies to the decoded size.
+        declared = _declared_length(response)
         try:
             if response.status_code == 200:
                 async for chunk in response.aiter_bytes():
@@ -188,7 +190,7 @@ class HttpFetcher:
                             f"{host} response exceeded the "
                             f"{MAX_RESPONSE_BYTES}-byte egress cap; "
                             "transfer stopped")
-                    raw = _raw_bytes(response)
+                    raw = response.num_bytes_downloaded or declared
                     if (decoded > DECOMPRESSION_RATIO_FLOOR_BYTES and raw > 0
                             and decoded / raw > MAX_DECOMPRESSION_RATIO):
                         raise SourceUnavailable(

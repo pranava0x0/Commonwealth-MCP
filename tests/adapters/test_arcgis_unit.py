@@ -205,6 +205,8 @@ class _PagingService:
                  supports_pagination: bool = True):
         self.total, self.page_size = total, page_size
         self.supports_pagination = supports_pagination
+        # A layer can advertise pagination and still ignore resultOffset.
+        self.honours_offset = True
         self.offsets: list[int] = []
 
     async def fetch_json(self, url: str, params: dict) -> dict:
@@ -216,15 +218,16 @@ class _PagingService:
             }
         offset = int(params.get("resultOffset", 0))
         self.offsets.append(offset)
-        if not self.supports_pagination:
+        if not (self.supports_pagination and self.honours_offset):
             offset = 0                   # a service that ignores the param
-        rows = range(offset, min(offset + self.page_size, self.total))
+        size = int(params.get("resultRecordCount", self.page_size))
+        rows = range(offset, min(offset + size, self.total))
         return {
             "features": [
                 {"attributes": {"OBJECTID": i, "PIN": f"pin-{i}"}}
                 for i in rows
             ],
-            "exceededTransferLimit": offset + self.page_size < self.total,
+            "exceededTransferLimit": offset + size < self.total,
         }
 
 
@@ -280,3 +283,44 @@ async def test_paging_is_recorded_in_transformations():
     result = await _paging_adapter(svc).query(
         _real_manifest(), "parcels", where_equals={"pin": "x"})
     assert "pagination:pages=3" in result.transformations
+
+
+async def test_repeating_a_paged_query_returns_the_same_answer():
+    """The paging walk used to extend the list held inside the cached
+    page-one payload, and TTLCache hands out its stored dict by reference.
+    A repeat resumed from the accumulated length: four identical calls
+    returned 250, 450, 650, then 850 records."""
+    svc = _PagingService(total=10_000)
+    adapter = _paging_adapter(svc)          # one adapter, one cache
+    manifest = _real_manifest()
+    counts = []
+    for _ in range(4):
+        result = await adapter.query(manifest, "parcels",
+                                     where_equals={"pin": "x"})
+        counts.append(len(result.records))
+    assert counts == [MAX_QUERY_PAGES * 50] * 4, counts
+
+
+async def test_sample_mode_stays_capped_and_does_not_page():
+    """`sources sample` asks for a tiny bounded read to record a fixture.
+    Any layer bigger than the sample sets exceededTransferLimit on the
+    first response, so paging would fetch five pages of a thing the caller
+    explicitly capped."""
+    svc = _PagingService(total=10_000)
+    result = await _paging_adapter(svc).query(
+        _real_manifest(), "parcels", sample_rows=5)
+    assert len(result.records) == 5
+    assert len(svc.offsets) == 1, "sample mode paged anyway"
+
+
+async def test_a_layer_that_ignores_result_offset_does_not_duplicate_rows():
+    """A layer can advertise supportsPagination and still ignore
+    resultOffset, returning page one again. That batch is non-empty, so the
+    empty-batch check cannot see it; the first-record comparison can."""
+    svc = _PagingService(total=10_000)
+    svc.honours_offset = False
+    result = await _paging_adapter(svc).query(
+        _real_manifest(), "parcels", where_equals={"pin": "x"})
+    ids = [r.canonical.get("pin") for r in result.records]
+    assert len(ids) == len(set(ids)), "returned duplicate rows"
+    assert len(result.records) == 50

@@ -34,6 +34,7 @@ Usage:
 from __future__ import annotations
 
 import argparse
+import html
 import json
 import re
 import sys
@@ -315,24 +316,32 @@ ALLOW_PHRASES: list[tuple[str, str]] = [
 
 
 class Hit:
-    def __init__(self, rule: Rule, source: str, line_no: int,
+    def __init__(self, rule: Rule, source: str, line_no: int | str,
                  matched: str, context: str) -> None:
         self.rule = rule
         self.source = source
-        self.line_no = line_no
+        # A JSON finding is located by document path, not line number.
+        # Keeping both in `line` gave --json two types in one field, which
+        # breaks anything that sorts by it or feeds it to an editor jump.
+        self.locator = str(line_no) if isinstance(line_no, str) else ""
+        self.line_no = 0 if self.locator else int(line_no)
         self.matched = matched
         self.context = context
 
     def line(self) -> str:
-        loc = f"{self.source}:{self.line_no}" if self.line_no else self.source
+        where = self.locator or self.line_no
+        loc = f"{self.source}:{where}" if where else self.source
         return (f"[{self.rule.level}] {self.rule.id:26} {loc:52} "
                 f"{self.matched!r} — {self.rule.why}\n"
                 f"         … {self.context.strip()[:150]}")
 
     def to_dict(self) -> dict[str, Any]:
-        return {"rule": self.rule.id, "level": self.rule.level,
-                "source": self.source, "line": self.line_no,
-                "matched": self.matched, "why": self.rule.why}
+        out = {"rule": self.rule.id, "level": self.rule.level,
+               "source": self.source, "line": self.line_no,
+               "matched": self.matched, "why": self.rule.why}
+        if self.locator:
+            out["locator"] = self.locator
+        return out
 
 
 def _blank_out(text: str, pattern: str) -> str:
@@ -413,6 +422,8 @@ def prose_lines_html(text: str) -> Iterator[tuple[int, str]]:
     text = _blank_out(text, r"<!--.*?-->")
     text = _blank_out(text, r"<script\b.*?</script>")
     text = _blank_out(text, r"<style\b.*?</style>")
+    text = html.unescape(text)
+    text = _drop_quotes(text)
     for i, raw in enumerate(text.splitlines(), 1):
         yield i, re.sub(r"<[^>]*>", " ", raw)
 
@@ -437,8 +448,12 @@ def prose_lines_js_in_html(text: str) -> Iterator[tuple[int, str]]:
             if raw.lstrip().startswith("//"):
                 continue          # engineering note, not copy
             parts = []
-            for lit in re.finditer(r"""(["'`])((?:[^"'`\\\n]|\\.){10,}?)\1""",
-                                   raw):
+            # Exclude only the delimiter that opened this literal, via a
+            # backreference in the character class. Excluding all three
+            # quote characters skipped every double-quoted string holding
+            # an apostrophe — which is most English prose.
+            for lit in re.finditer(
+                    r"""(["'`])((?:(?!\1)[^\\\n]|\\.){10,}?)\1""", raw):
                 s = lit.group(2)
                 if " " not in s or s.lstrip()[:1] in "#.<":
                     continue
@@ -475,7 +490,7 @@ def allowed_spans(line: str) -> list[tuple[int, int]]:
     return spans
 
 
-def scan_text(source: str, units: Iterable[tuple[int, str]],
+def scan_text(source: str, units: Iterable[tuple[int | str, str]],
               rules: list[Rule]) -> Iterator[Hit]:
     for loc, line in units:
         if not line.strip():

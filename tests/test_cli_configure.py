@@ -135,3 +135,65 @@ def test_every_client_the_help_names_is_handled():
     the failure is a user typing a name the help offered."""
     named = {"claude", "claude-code", "codex", "cursor", "vscode"}
     assert named == set(cfg.CLIENTS) | cfg.TOML_CLIENTS
+
+
+def test_an_installed_console_script_is_used_when_one_is_on_path(tmp_path):
+    """The branch real users hit.
+
+    Every other test here runs with a PATH that has no `commonwealth` on
+    it, so they all take the sys.executable fallback and the console-script
+    branch shipped untested.
+    """
+    bindir = tmp_path / "bin"
+    bindir.mkdir()
+    script = bindir / "commonwealth"
+    script.write_text("#!/bin/sh\nexit 0\n")
+    script.chmod(0o755)
+
+    target = tmp_path / ".mcp.json"
+    out = subprocess.run(
+        [sys.executable, "-m", "commonwealth.cli", "configure",
+         "claude-code", "--path", str(target)],
+        capture_output=True, text=True, cwd=tmp_path,
+        env={"PATH": f"{bindir}:/usr/bin:/bin", "HOME": str(tmp_path),
+             "PYTHONPATH": str(ROOT / "src")})
+    assert out.returncode == 0, out.stderr
+
+    entry = json.loads(target.read_text())["mcpServers"]["commonwealth"]
+    assert entry["command"] == str(script), entry
+    # No `-m commonwealth.cli` in front of the subcommand when the console
+    # script carries its own environment.
+    assert entry["args"] == ["serve", "--profile", "default"], entry
+
+
+def test_an_unknown_profile_is_refused_before_anything_is_written(tmp_path):
+    """A typo was accepted, written into the client config, and only
+    rejected later by expand_profile — at which point the server would not
+    start and the config on disk was already wrong."""
+    target = tmp_path / ".mcp.json"
+    out = _run("claude-code", "--profile", "defualt", "--path", str(target),
+               cwd=tmp_path)
+    assert out.returncode == 2
+    assert "unknown profile" in out.stderr
+    assert "default" in out.stderr
+    assert not target.exists(), "wrote a config for an unknown profile"
+
+
+def test_an_unknown_profile_is_refused_for_toml_clients_too(tmp_path):
+    """The TOML branch returns before the client lookup, so it needs its
+    own check or it prints a block naming a profile that cannot start."""
+    out = _run("codex", "--profile", "defualt", cwd=tmp_path)
+    assert out.returncode == 2
+    assert "unknown profile" in out.stderr
+
+
+def test_a_non_object_servers_block_is_refused(tmp_path):
+    """read_config validated the top level only, so this reached dict()
+    and produced a raw ValueError traceback."""
+    target = tmp_path / ".mcp.json"
+    target.write_text(json.dumps({"mcpServers": "oops"}))
+    out = _run("claude-code", "--path", str(target), cwd=tmp_path)
+    assert out.returncode == 1
+    assert "where an object of server entries belongs" in out.stderr
+    assert "Traceback" not in out.stderr
+    assert json.loads(target.read_text()) == {"mcpServers": "oops"}

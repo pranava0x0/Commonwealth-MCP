@@ -8,10 +8,10 @@ import re
 
 from ..core.assemble import (EnvelopeBuilder, failure, result_dim,
                              selection_coverage)
-from ..core.registry import SourceManifest
 from ..core.envelope import (AccessPath, AuthorityLevel, Coverage, Envelope,
                              ExecutionCoverage, PaginationCoverage,
                              RegistryCoverage, ResultCoverage, WarningCode)
+from ..core.registry import SourceManifest
 from ..core.errors import CommonwealthError, InvalidQuery
 from ..core.toolreg import ToolRegistry, ToolSpec
 from ..runtime import PROJECT_SOURCE, RuntimeContext
@@ -305,12 +305,19 @@ def _search_terms(text: str) -> list[str]:
 
 def _matches_terms(terms: list[str], m: SourceManifest) -> bool:
     """True when every query term matches a word in the manifest's name,
-    id, jurisdiction, or publisher.
+    id, jurisdiction, publisher, or capabilities.
 
     Every term has to match (AND), so extra words narrow rather than widen.
     A term matches a word by prefix, so "parcel" finds "parcels" without
     "road" finding "crossroads".
+
+    An empty term list means the query had nothing matchable in it — all
+    punctuation, or characters outside a-z0-9. That matches nothing, which
+    is not the same as matching everything; the caller checks whether a
+    query was given at all before consulting this.
     """
+    if not terms:
+        return False
     haystack = " ".join([
         m.name, m.id, m.jurisdiction or "", m.publisher.agency or "",
         " ".join(sorted(m.capability_ids())),
@@ -328,9 +335,10 @@ async def search_sources(ctx: RuntimeContext, text: str = "",
                            f"vocabulary; known: "
                            f"{sorted(ctx.sources.capability_vocab)}")
     hits = []
+    searching = bool(text.strip())
     terms = _search_terms(text)
     for m in ctx.sources.manifests.values():
-        if terms and not _matches_terms(terms, m):
+        if searching and not _matches_terms(terms, m):
             continue
         if jurisdiction and m.jurisdiction != jurisdiction:
             continue

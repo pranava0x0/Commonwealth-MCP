@@ -146,6 +146,22 @@ def read_config(path: Path) -> tuple[dict, str]:
     return parsed, raw
 
 
+def check_servers_block(config: dict, client: Client, path: Path) -> None:
+    """The servers block has to be an object before it can be merged.
+
+    Checking only the top level left `{"mcpServers": "oops"}` to reach
+    `dict(...)`, which raised a bare ValueError and printed a traceback. A
+    list is worse: `dict([])` succeeds and silently drops whatever was
+    there.
+    """
+    block = config.get(client.key)
+    if block is not None and not isinstance(block, dict):
+        raise ValueError(
+            f"{path} has a {type(block).__name__} under {client.key!r} "
+            "where an object of server entries belongs; refusing to "
+            "overwrite it.")
+
+
 def render(config: dict) -> str:
     return json.dumps(config, indent=2) + "\n"
 

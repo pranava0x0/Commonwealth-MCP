@@ -417,6 +417,15 @@ def cmd_serve(args: argparse.Namespace) -> int:
 def cmd_configure(args: argparse.Namespace) -> int:
     from . import configure as cfg
 
+    # An unknown profile is otherwise accepted here and only rejected
+    # later by expand_profile, at which point it has already been written
+    # into the user's client config and the server will not start.
+    from ..core import toolreg
+    if args.profile not in toolreg.PROFILES:
+        print(f"unknown profile {args.profile!r}; known: "
+              f"{', '.join(sorted(toolreg.PROFILES))}", file=sys.stderr)
+        return 2
+
     client_name = args.client
     if client_name in cfg.TOML_CLIENTS:
         print(f"{client_name} keeps its MCP config in TOML, which this "
@@ -434,6 +443,7 @@ def cmd_configure(args: argparse.Namespace) -> int:
     path = cfg.config_path(client, args.path)
     try:
         existing, before = cfg.read_config(path)
+        cfg.check_servers_block(existing, client, path)
     except ValueError as err:
         print(str(err), file=sys.stderr)
         return 1

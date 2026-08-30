@@ -41,6 +41,24 @@ HEADER = """\
 """
 
 
+FIXTURE_ROOT = ROOT / "tests" / "fixtures" / "sources"
+
+
+def orphaned_fixtures(known_ids: set[str]) -> list[str]:
+    """Fixture directories with no manifest behind them.
+
+    The inventory is built by walking manifests, so deleting a manifest or
+    changing its `id` silently drops its recorded government responses from
+    this file while those files stay in the tree. That is the moment the
+    licensing record most needs to notice them, so they are listed rather
+    than omitted.
+    """
+    if not FIXTURE_ROOT.exists():
+        return []
+    return sorted(d.name for d in FIXTURE_ROOT.iterdir()
+                  if d.is_dir() and d.name not in known_ids)
+
+
 def manifests() -> list[dict]:
     out = []
     for path in sorted((ROOT / "sources").rglob("*.yaml")):
@@ -67,30 +85,45 @@ def manifests() -> list[dict]:
     return out
 
 
-def render() -> str:
-    body = yaml.safe_dump({"sources": manifests()}, sort_keys=False,
-                          allow_unicode=True, width=78)
+def render(rows: list[dict] | None = None) -> str:
+    rows = manifests() if rows is None else rows
+    doc: dict = {"sources": rows}
+    orphans = orphaned_fixtures({r["id"] for r in rows})
+    if orphans:
+        doc["orphaned_fixture_directories"] = orphans
+    body = yaml.safe_dump(doc, sort_keys=False, allow_unicode=True, width=78)
     return HEADER + "\n" + body
 
 
 def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--check", action="store_true",
-                    help="Exit non-zero if the committed file is stale.")
+                    help="Exit non-zero if the file is stale, or if a "
+                         "fixture directory has no manifest behind it.")
     args = ap.parse_args()
 
-    text = render()
+    rows = manifests()
+    text = render(rows)
+    orphans = orphaned_fixtures({r["id"] for r in rows})
     if args.check:
         current = OUT.read_text() if OUT.exists() else ""
         if current != text:
             print("THIRD_PARTY_DATA.yml is stale; run "
                   "tools/build_third_party_data.py", file=sys.stderr)
             return 1
-        print(f"THIRD_PARTY_DATA.yml current ({len(manifests())} sources)")
+        if orphans:
+            print(f"fixture directories with no manifest: "
+                  f"{', '.join(orphans)}", file=sys.stderr)
+            return 1
+        print(f"THIRD_PARTY_DATA.yml current ({len(rows)} sources)")
         return 0
 
     OUT.write_text(text)
-    print(f"wrote {OUT.name}: {len(manifests())} sources")
+    print(f"wrote {OUT.name}: {len(rows)} sources")
+    if orphans:
+        print(f"  warning: {len(orphans)} fixture director"
+              f"{'y' if len(orphans) == 1 else 'ies'} with no manifest: "
+              f"{', '.join(orphans)}")
     return 0
 
 

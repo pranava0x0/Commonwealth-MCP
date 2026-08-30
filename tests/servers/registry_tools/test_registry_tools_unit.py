@@ -104,3 +104,24 @@ def test_empty_query_matches_nothing_by_itself():
     """An empty query yields no terms, and the caller skips filtering."""
     assert _search_terms("") == []
     assert _search_terms("   ,  ") == []
+
+
+async def test_a_query_that_can_match_nothing_returns_nothing(cw_ctx):
+    """A search with no ASCII alphanumerics tokenised to an empty term
+    list, which the filter read as "no query given" and returned every
+    source. A query that cannot match is not the same as no query."""
+    for text in ("!!!", "***", "日本", "   ,  "):
+        env = await search_sources(cw_ctx, text=text)
+        assert env.data["record_count"] == 0, f"{text!r} matched everything"
+        assert env.coverage.result.value == "empty"
+
+
+async def test_an_absent_query_still_returns_everything(cw_ctx):
+    """The other half of that distinction: no text filter at all lists the
+    whole registry, which is what the discovery tool is for."""
+    env = await search_sources(cw_ctx, text="")
+    assert env.data["record_count"] == len(cw_ctx.sources.manifests)
+
+
+def test_empty_terms_match_no_manifest():
+    assert _matches_terms([], FAIRFAX) is False

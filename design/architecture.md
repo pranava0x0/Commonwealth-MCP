@@ -2693,7 +2693,7 @@ Apache-2.0 for code (explicit patent grant, contribution terms enterprises' coun
 ### Option C: AGPL code (+ open data)
 
 - For: keeps hosted forks honest (a company running a closed, modified Commonwealth service must share).
-- Against: kills the adoption goal for a real slice of industry users whose policies ban AGPL outright; contradicts the project's own dependency rule (the § 35.9 already flags AGPL dependencies as a decision — shipping AGPL while avoiding AGPL deps would be incoherent); the "hosted fork" threat is small for a project whose moat is maintenance and authority, not code secrecy.
+- Against: kills the adoption goal for a real slice of industry users whose policies ban AGPL outright; contradicts this record's own sub-decision on external code, which treats an AGPL dependency as a licensing decision in its own right — shipping AGPL while avoiding AGPL dependencies would be incoherent; the "hosted fork" threat is small for a project whose moat is maintenance and authority, not code secrecy.
 
 ### Sub-decision: external code incorporation
 
@@ -3403,8 +3403,8 @@ flowchart LR
 
 | Date | What changed |
 |---|---|
-| 2026-08-26 | Design specification written, then revised through review round 2 (recorded in [Part 2](Part 2#review-round-2-2026-08-26)): coverage dimensions split, evidence references added, wire schema committed, declared/operational lifecycle separated, data classification introduced. |
+| 2026-08-26 | Design specification written, then revised through review round 2 (recorded in [Part 2](#review-round-2-2026-08-26)): coverage dimensions split, evidence references added, wire schema committed, declared/operational lifecycle separated, data classification introduced. |
 | 2026-08-27 | Flow diagrams added (last section), drawn from the implementation as built rather than from the plan. |
 | 2026-08-28 | Design specification and flow diagrams merged into this file. Heading levels were normalized — the spec had used H1 for most sections but H2 for § 1, so the two were indistinguishable to a table-of-contents generator. Section numbers are unchanged, because code and specs cite them. |
-| 2026-08-28 | Plan-vs-built review: Status line updated from "Proposed" to adopted-under-implementation; § 36.5's GSA catalog count updated with a dated note (27 → 37, [research part 3](../research/README.md) § 9); § 15's tool budget corrected to decision 0002's chosen 8–12/20 and its example resized to fit the ceiling. One merge defect found and fixed downstream: § 17.6 was dropped, and the three files citing it now point at decision 0005 / adapters.md § 1 / skills.md § 4 instead. |
-| 2026-08-28 | Calendar framing removed on the architect's instruction — development here is not paced in human days or weeks. § 39 retitled "Delivery Sequence" with its week-numbered stage labels replaced by Stage 1–4; "90-day plan" wording dropped from § 33; "two-day" dropped from the § 35/§ 36 mentions of the 0003 spike. Separately, the "Flows, drawn" appendix subsections were renumbered D1–D6 so they stop colliding with spec § 1–6. |
+| 2026-08-28 | Plan-vs-built review: Status line updated from "Proposed" to adopted-under-implementation; the GSA catalog count in the since-dropped § 36.5 updated with a dated note (27 → 37, [research part 3](../research/README.md) § 9); § 15's tool budget corrected to decision 0002's chosen 8–12/20 and its example resized to fit the ceiling. One merge defect found and fixed downstream: § 17.6 was dropped, and the three files citing it now point at decision 0005 / adapters.md § 1 / skills.md § 4 instead. |
+| 2026-08-28 | Calendar framing removed on the architect's instruction — development here is not paced in human days or weeks. § 39 retitled "Delivery Sequence" with its week-numbered stage labels replaced by Stage 1–4; "90-day plan" wording dropped from § 33; "two-day" dropped from the § 35/§ 36 mentions of the 0003 spike (both sections were later dropped in the 2026-08-29 consolidation). Separately, the "Flows, drawn" appendix subsections were renumbered D1–D6 so they stop colliding with spec § 1–6. |
