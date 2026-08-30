@@ -686,18 +686,22 @@ async def find_address(ctx: RuntimeContext, jurisdiction: str,
     queries: list[ArcGISQueryResult] = []
     for m in selected:
         try:
+            # Scoped on BOTH paths. The string path needs it so a street
+            # name shared across Virginia does not answer from the wrong
+            # locality; the point path needs it because the buffer reaches
+            # 100 m and a point near a line pulls in the neighbouring
+            # locality's addresses — which the envelope would then report
+            # under `jurisdictions_searched: [the one you asked for]`.
+            where = _scoped_where(ctx, m, "addresses", stack, {})
             if address:
-                # A prefix match on the publisher's own spelling, scoped to
-                # the jurisdiction so a street name shared across Virginia
-                # does not answer from the wrong locality.
-                where = _scoped_where(ctx, m, "addresses", stack, {})
                 q = await ctx.arcgis.query(
                     m, "addresses", where_equals=where or None,
                     where_prefix={"full_address": address.upper()})
             else:
-                q = await ctx.arcgis.query(m, "addresses",
-                                           geometry_point=(lon, lat),
-                                           distance_meters=ADDRESS_POINT_RADIUS_M)
+                q = await ctx.arcgis.query(
+                    m, "addresses", where_equals=where or None,
+                    geometry_point=(lon, lat),
+                    distance_meters=ADDRESS_POINT_RADIUS_M)
         except CommonwealthError as err:
             failures.append(failure(m.id, err.code, str(err)))
             continue
@@ -1135,6 +1139,7 @@ async def find_buildings(ctx: RuntimeContext, jurisdiction: str,
                                             stack, selected)
     parcel_geometry: dict | None = None
     parcel_note: str | None = None
+    parcel_evidence_ref: str | None = None
     failures = []
     if pin:
         # Composing with the parcel sources rather than duplicating them:
@@ -1154,6 +1159,18 @@ async def find_buildings(ctx: RuntimeContext, jurisdiction: str,
             if pq.records:
                 parcel_geometry = dict(pq.records[0].geometry or {})
                 parcel_geometry.setdefault("spatialReference", {"wkid": 4326})
+                # The parcel query is a consulted source: its polygon is
+                # what every building below rests on, and with more than
+                # one parcel source selectable a caller cannot otherwise
+                # tell which one drew the boundary. Same discipline
+                # find_zoning already applies to its parcel step.
+                parcel_ref = _source_entry(b, pm, pq)
+                parcel_evidence_ref = b.add_evidence(
+                    source_ref=parcel_ref,
+                    record_id=pq.records[0].record_id,
+                    retrieved_at=pq.retrieved_at,
+                    transformations=pq.transformations,
+                    payload_hash=pq.payload_hash())
                 if len(pq.records) > 1:
                     parcel_note = (
                         f"PIN {pin!r} matched {len(pq.records)} parcel "
@@ -1218,6 +1235,11 @@ async def find_buildings(ctx: RuntimeContext, jurisdiction: str,
                 else "footprint_area_web_mercator_sq_m is the publisher's "
                      "own value in EPSG:3857 and is NOT ground area; no "
                      "latitude was available to convert it.")
+        if parcel_evidence_ref is not None:
+            block["parcel_evidence_ref"] = parcel_evidence_ref
+            for row in block["records"]:
+                row["evidence_refs"] = (list(row["evidence_refs"])
+                                        + [parcel_evidence_ref])
         blocks.append(block)
 
     if any(blk["record_count"] for blk in blocks):

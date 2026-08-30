@@ -1,6 +1,6 @@
 {
  "source_id": "va-vgin-address-points",
- "recorded_at": "2026-08-30T03:03:07Z",
+ "recorded_at": "2026-08-30T13:33:25Z",
  "rights": {
   "publisher": "Virginia Geographic Information Network (VGIN), part of the Virginia Department of Emergency Management",
   "terms_url": "https://vgin.vdem.virginia.gov/datasets/virginia-address-points/about",
@@ -817,6 +817,7 @@
     "outFields": "ADDPTKEY,ADDRCLASS,CAPTUREMETH,FIPS,FULLADDR,FULLNAME,LASTUPDATE,MUNICIPALITY,OBJECTID,PLACENAME,POINTTYPE,PO_NAME,SITEADDID,STATUS,ZIP_5",
     "resultRecordCount": "50",
     "returnGeometry": "false",
+    "where": "FIPS = '51059'",
     "geometry": "{\"x\": -77.26436153964, \"y\": 38.90067620715, \"spatialReference\": {\"wkid\": 4326}}",
     "geometryType": "esriGeometryPoint",
     "inSR": "4326",

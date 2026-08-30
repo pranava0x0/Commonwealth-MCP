@@ -424,7 +424,11 @@ async def _sample_addresses(adapter, m, params, ctx) -> dict:
                                  r.canonical.get("locality"))
                                 for r in trap.records[:3]]}
 
+    # FIPS-scoped, like the tool's own point query: the 100 m buffer
+    # reaches across a locality line and an unscoped recording would not
+    # replay what geo.find_address actually sends.
     point = await adapter.query(m, "addresses",
+                                where_equals={"fips": "51059"},
                                 geometry_point=(-77.26436153964, 38.90067620715),
                                 distance_meters=100.0)
     out["by_point"] = {"record_count": len(point.records),
@@ -730,7 +734,7 @@ def _sample_geocoder(m, ctx) -> int:
         return out
 
     try:
-        summary = asyncio.run(run_with_crosschecks())
+        summary = asyncio.run(run())
     except CommonwealthError as err:
         return _fail(f"{err.code}: {err}")
     return _write_fixture(m, recorder, summary)

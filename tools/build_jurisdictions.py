@@ -328,7 +328,8 @@ def load_existing() -> dict[str, tuple[Path, dict]]:
 
 
 IDENTITY = ("name", "kind", "fips", "place_fips")
-EDITORIAL = ("parent", "aliases", "not_to_be_confused_with")
+EDITORIAL_LISTS = ("aliases", "not_to_be_confused_with", "former_names")
+EDITORIAL = ("parent",) + EDITORIAL_LISTS
 
 
 def leading_comment(path: Path) -> str:
@@ -355,7 +356,12 @@ def render(doc: dict, header: str = "") -> str:
             lines.append(f'{key}: "{doc[key]}"')
     if doc.get("parent"):
         lines.append(f"parent: {doc['parent']}")
-    for key in ("aliases", "not_to_be_confused_with"):
+    # Every list field a row may carry. Omitting one here does not fail
+    # loudly, it silently deletes that field on the next --write: this
+    # dropped `former_names` off the three reverted-city rows, which
+    # reopens design/jurisdiction-resolution.md § 3's Bedford trap without
+    # touching a test.
+    for key in EDITORIAL_LISTS:
         if doc.get(key):
             items = ", ".join(json.dumps(a) for a in doc[key])
             lines.append(f"{key}: [{items}]")
