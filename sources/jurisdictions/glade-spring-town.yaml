@@ -1,0 +1,6 @@
+id: va:glade-spring-town
+name: Glade Spring (town)
+kind: town
+place_fips: "31056"
+parent: va:washington-county
+aliases: ["Town of Glade Spring"]

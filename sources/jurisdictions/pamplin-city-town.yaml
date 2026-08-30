@@ -1,0 +1,6 @@
+id: va:pamplin-city-town
+name: Pamplin City (town)
+kind: town
+place_fips: "60488"
+parent: va:appomattox-county
+aliases: ["Town of Pamplin City"]

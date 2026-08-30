@@ -1,0 +1,6 @@
+id: va:phenix-town
+name: Phenix (town)
+kind: town
+place_fips: "61896"
+parent: va:charlotte-county
+aliases: ["Town of Phenix"]

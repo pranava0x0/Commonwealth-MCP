@@ -1,0 +1,6 @@
+id: va:tangier-town
+name: Tangier (town)
+kind: town
+place_fips: "77520"
+parent: va:accomack-county
+aliases: ["Town of Tangier"]

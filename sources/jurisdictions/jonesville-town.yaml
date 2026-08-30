@@ -1,0 +1,6 @@
+id: va:jonesville-town
+name: Jonesville (town)
+kind: town
+place_fips: "41272"
+parent: va:lee-county
+aliases: ["Town of Jonesville"]

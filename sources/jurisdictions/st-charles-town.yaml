@@ -1,0 +1,6 @@
+id: va:st-charles-town
+name: St. Charles (town)
+kind: town
+place_fips: "69792"
+parent: va:lee-county
+aliases: ["Town of St. Charles"]

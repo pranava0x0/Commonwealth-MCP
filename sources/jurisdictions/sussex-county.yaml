@@ -1,0 +1,6 @@
+id: va:sussex-county
+name: Sussex County
+kind: county
+fips: "51183"
+parent: va
+aliases: ["County of Sussex"]

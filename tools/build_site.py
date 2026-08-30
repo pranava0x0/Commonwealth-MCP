@@ -329,6 +329,8 @@ def build_resolver_demo(ctx) -> dict:
                             "distinguisher": c.distinguisher}
                            for c in res.candidates],
         }
+        if res.matched_former_name:
+            queries[key]["former_name"] = res.matched_former_name
 
     stems: set[str] = set()
     for jid in sorted(table.ids()):
@@ -340,6 +342,10 @@ def build_resolver_demo(ctx) -> dict:
             record(j.fips[-3:])
         for a in j.aliases:
             record(a)
+        # A dissolved city's name is exactly what someone types out of an
+        # old record, so the playground has to answer it.
+        for f in j.former_names:
+            record(f)
         low = j.name.lower()
         for suffix in (" county", " city", " (town)"):
             if low.endswith(suffix):

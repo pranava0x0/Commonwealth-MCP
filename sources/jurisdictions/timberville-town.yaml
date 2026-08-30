@@ -1,0 +1,6 @@
+id: va:timberville-town
+name: Timberville (town)
+kind: town
+place_fips: "78736"
+parent: va:rockingham-county
+aliases: ["Town of Timberville"]

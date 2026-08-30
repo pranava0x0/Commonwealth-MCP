@@ -1,0 +1,6 @@
+id: va:jarratt-town
+name: Jarratt (town)
+kind: town
+place_fips: "40536"
+parent: va:greensville-county
+aliases: ["Town of Jarratt"]

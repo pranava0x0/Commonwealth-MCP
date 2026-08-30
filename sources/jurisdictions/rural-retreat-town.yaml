@@ -1,0 +1,6 @@
+id: va:rural-retreat-town
+name: Rural Retreat (town)
+kind: town
+place_fips: "69456"
+parent: va:wythe-county
+aliases: ["Town of Rural Retreat"]

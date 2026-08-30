@@ -1,0 +1,6 @@
+id: va:emporia-city
+name: Emporia City
+kind: independent-city
+fips: "51595"
+parent: va
+aliases: ["City of Emporia"]

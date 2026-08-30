@@ -1,0 +1,6 @@
+id: va:poquoson-city
+name: Poquoson City
+kind: independent-city
+fips: "51735"
+parent: va
+aliases: ["City of Poquoson"]

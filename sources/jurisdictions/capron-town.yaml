@@ -1,0 +1,6 @@
+id: va:capron-town
+name: Capron (town)
+kind: town
+place_fips: "12904"
+parent: va:southampton-county
+aliases: ["Town of Capron"]

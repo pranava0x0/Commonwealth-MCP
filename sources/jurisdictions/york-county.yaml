@@ -1,0 +1,6 @@
+id: va:york-county
+name: York County
+kind: county
+fips: "51199"
+parent: va
+aliases: ["County of York"]

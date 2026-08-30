@@ -1,0 +1,6 @@
+id: va:weber-city-town
+name: Weber City (town)
+kind: town
+place_fips: "83808"
+parent: va:scott-county
+aliases: ["Town of Weber City"]

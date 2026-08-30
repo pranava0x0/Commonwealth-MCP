@@ -1,0 +1,6 @@
+id: va:new-market-town
+name: New Market (town)
+kind: town
+place_fips: "55848"
+parent: va:shenandoah-county
+aliases: ["Town of New Market"]

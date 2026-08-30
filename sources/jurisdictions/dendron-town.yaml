@@ -1,0 +1,6 @@
+id: va:dendron-town
+name: Dendron (town)
+kind: town
+place_fips: "22160"
+parent: va:surry-county
+aliases: ["Town of Dendron"]

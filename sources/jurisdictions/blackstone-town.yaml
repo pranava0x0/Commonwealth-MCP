@@ -1,0 +1,6 @@
+id: va:blackstone-town
+name: Blackstone (town)
+kind: town
+place_fips: "07832"
+parent: va:nottoway-county
+aliases: ["Town of Blackstone"]

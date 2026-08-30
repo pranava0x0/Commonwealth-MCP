@@ -1,0 +1,6 @@
+id: va:mckenney-town
+name: McKenney (town)
+kind: town
+place_fips: "48344"
+parent: va:dinwiddie-county
+aliases: ["Town of McKenney"]

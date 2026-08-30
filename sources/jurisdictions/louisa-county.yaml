@@ -1,0 +1,6 @@
+id: va:louisa-county
+name: Louisa County
+kind: county
+fips: "51109"
+parent: va
+aliases: ["County of Louisa"]

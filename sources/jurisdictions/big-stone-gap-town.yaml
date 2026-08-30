@@ -1,0 +1,6 @@
+id: va:big-stone-gap-town
+name: Big Stone Gap (town)
+kind: town
+place_fips: "07480"
+parent: va:wise-county
+aliases: ["Town of Big Stone Gap"]

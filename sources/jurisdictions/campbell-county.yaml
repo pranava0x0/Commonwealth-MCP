@@ -1,0 +1,6 @@
+id: va:campbell-county
+name: Campbell County
+kind: county
+fips: "51031"
+parent: va
+aliases: ["County of Campbell"]

@@ -1,0 +1,6 @@
+id: va:lunenburg-county
+name: Lunenburg County
+kind: county
+fips: "51111"
+parent: va
+aliases: ["County of Lunenburg"]

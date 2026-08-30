@@ -1,0 +1,6 @@
+id: va:culpeper-county
+name: Culpeper County
+kind: county
+fips: "51047"
+parent: va
+aliases: ["County of Culpeper"]

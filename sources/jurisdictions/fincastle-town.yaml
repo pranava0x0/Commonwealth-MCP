@@ -1,0 +1,6 @@
+id: va:fincastle-town
+name: Fincastle (town)
+kind: town
+place_fips: "27824"
+parent: va:botetourt-county
+aliases: ["Town of Fincastle"]

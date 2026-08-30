@@ -1,0 +1,6 @@
+id: va:pearisburg-town
+name: Pearisburg (town)
+kind: town
+place_fips: "61208"
+parent: va:giles-county
+aliases: ["Town of Pearisburg"]

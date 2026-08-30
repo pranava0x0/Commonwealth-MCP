@@ -1,0 +1,6 @@
+id: va:hamilton-town
+name: Hamilton (town)
+kind: town
+place_fips: "34240"
+parent: va:loudoun-county
+aliases: ["Town of Hamilton"]

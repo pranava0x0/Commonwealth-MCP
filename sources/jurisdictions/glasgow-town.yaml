@@ -1,0 +1,6 @@
+id: va:glasgow-town
+name: Glasgow (town)
+kind: town
+place_fips: "31136"
+parent: va:rockbridge-county
+aliases: ["Town of Glasgow"]

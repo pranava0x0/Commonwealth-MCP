@@ -1,0 +1,6 @@
+id: va:alberta-town
+name: Alberta (town)
+kind: town
+place_fips: "00724"
+parent: va:brunswick-county
+aliases: ["Town of Alberta"]

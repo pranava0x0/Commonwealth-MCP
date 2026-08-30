@@ -1,0 +1,6 @@
+id: va:fluvanna-county
+name: Fluvanna County
+kind: county
+fips: "51065"
+parent: va
+aliases: ["County of Fluvanna"]

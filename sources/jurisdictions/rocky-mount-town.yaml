@@ -1,0 +1,6 @@
+id: va:rocky-mount-town
+name: Rocky Mount (town)
+kind: town
+place_fips: "68496"
+parent: va:franklin-county
+aliases: ["Town of Rocky Mount"]

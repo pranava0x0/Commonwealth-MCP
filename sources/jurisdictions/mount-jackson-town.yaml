@@ -1,0 +1,6 @@
+id: va:mount-jackson-town
+name: Mount Jackson (town)
+kind: town
+place_fips: "53992"
+parent: va:shenandoah-county
+aliases: ["Town of Mount Jackson"]

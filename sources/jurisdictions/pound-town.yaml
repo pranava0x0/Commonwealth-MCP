@@ -1,0 +1,6 @@
+id: va:pound-town
+name: Pound (town)
+kind: town
+place_fips: "64272"
+parent: va:wise-county
+aliases: ["Town of Pound"]

@@ -1,0 +1,6 @@
+id: va:victoria-town
+name: Victoria (town)
+kind: town
+place_fips: "81024"
+parent: va:lunenburg-county
+aliases: ["Town of Victoria"]

@@ -1,0 +1,6 @@
+id: va:chatham-town
+name: Chatham (town)
+kind: town
+place_fips: "15000"
+parent: va:pittsylvania-county
+aliases: ["Town of Chatham"]

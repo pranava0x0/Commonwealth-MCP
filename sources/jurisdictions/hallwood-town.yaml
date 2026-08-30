@@ -1,0 +1,6 @@
+id: va:hallwood-town
+name: Hallwood (town)
+kind: town
+place_fips: "34176"
+parent: va:accomack-county
+aliases: ["Town of Hallwood"]

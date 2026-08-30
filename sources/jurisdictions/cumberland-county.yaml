@@ -1,0 +1,6 @@
+id: va:cumberland-county
+name: Cumberland County
+kind: county
+fips: "51049"
+parent: va
+aliases: ["County of Cumberland"]

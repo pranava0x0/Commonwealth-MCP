@@ -1,0 +1,6 @@
+id: va:bristol-city
+name: Bristol City
+kind: independent-city
+fips: "51520"
+parent: va
+aliases: ["City of Bristol"]

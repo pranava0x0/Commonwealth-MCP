@@ -1,0 +1,6 @@
+id: va:richlands-town
+name: Richlands (town)
+kind: town
+place_fips: "66928"
+parent: va:tazewell-county
+aliases: ["Town of Richlands"]

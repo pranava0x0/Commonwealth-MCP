@@ -1,0 +1,6 @@
+id: va:craigsville-town
+name: Craigsville (town)
+kind: town
+place_fips: "19904"
+parent: va:augusta-county
+aliases: ["Town of Craigsville"]

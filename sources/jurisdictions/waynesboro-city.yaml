@@ -1,0 +1,6 @@
+id: va:waynesboro-city
+name: Waynesboro City
+kind: independent-city
+fips: "51820"
+parent: va
+aliases: ["City of Waynesboro"]

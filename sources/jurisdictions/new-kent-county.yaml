@@ -1,0 +1,6 @@
+id: va:new-kent-county
+name: New Kent County
+kind: county
+fips: "51127"
+parent: va
+aliases: ["County of New Kent"]

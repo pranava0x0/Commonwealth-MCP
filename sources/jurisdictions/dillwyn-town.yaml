@@ -1,0 +1,6 @@
+id: va:dillwyn-town
+name: Dillwyn (town)
+kind: town
+place_fips: "22560"
+parent: va:buckingham-county
+aliases: ["Town of Dillwyn"]

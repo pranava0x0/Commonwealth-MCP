@@ -1,0 +1,6 @@
+id: va:patrick-county
+name: Patrick County
+kind: county
+fips: "51141"
+parent: va
+aliases: ["County of Patrick"]

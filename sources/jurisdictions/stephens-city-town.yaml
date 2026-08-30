@@ -1,0 +1,6 @@
+id: va:stephens-city-town
+name: Stephens City (town)
+kind: town
+place_fips: "75344"
+parent: va:frederick-county
+aliases: ["Town of Stephens City"]

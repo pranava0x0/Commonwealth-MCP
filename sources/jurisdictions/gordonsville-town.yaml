@@ -1,0 +1,6 @@
+id: va:gordonsville-town
+name: Gordonsville (town)
+kind: town
+place_fips: "31936"
+parent: va:orange-county
+aliases: ["Town of Gordonsville"]

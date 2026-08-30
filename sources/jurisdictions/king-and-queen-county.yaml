@@ -1,0 +1,6 @@
+id: va:king-and-queen-county
+name: King and Queen County
+kind: county
+fips: "51097"
+parent: va
+aliases: ["County of King and Queen"]

@@ -1,0 +1,6 @@
+id: va:clarke-county
+name: Clarke County
+kind: county
+fips: "51043"
+parent: va
+aliases: ["County of Clarke"]

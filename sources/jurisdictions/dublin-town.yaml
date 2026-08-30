@@ -1,0 +1,6 @@
+id: va:dublin-town
+name: Dublin (town)
+kind: town
+place_fips: "23648"
+parent: va:pulaski-county
+aliases: ["Town of Dublin"]

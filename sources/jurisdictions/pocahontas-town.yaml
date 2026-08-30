@@ -1,0 +1,6 @@
+id: va:pocahontas-town
+name: Pocahontas (town)
+kind: town
+place_fips: "63288"
+parent: va:tazewell-county
+aliases: ["Town of Pocahontas"]

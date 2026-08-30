@@ -1,0 +1,6 @@
+id: va:saxis-town
+name: Saxis (town)
+kind: town
+place_fips: "70576"
+parent: va:accomack-county
+aliases: ["Town of Saxis"]

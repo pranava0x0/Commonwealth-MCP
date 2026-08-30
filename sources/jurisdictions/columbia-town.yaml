@@ -1,0 +1,17 @@
+# Parent written by hand: the generator declined it. Columbia's polygon
+# intersects both Fluvanna and Goochland counties (it sits at the
+# Rivanna/James confluence, on the county line), so the containment test
+# returned two answers and would not pick. Its centroid falls in Fluvanna
+# County (51065) — verified live against VGIN's own localities layer,
+# 2026-08-29 — and Fluvanna is the county of record.
+#
+# Columbia is also one of two towns VGIN publishes a polygon for that
+# Census TIGERweb's current Incorporated Places layer does not carry (the
+# other is St. Charles), which is why its parent had no interior point to
+# derive from in the first place.
+id: va:columbia-town
+name: Columbia (town)
+kind: town
+place_fips: "18624"
+parent: va:fluvanna-county
+aliases: ["Town of Columbia"]

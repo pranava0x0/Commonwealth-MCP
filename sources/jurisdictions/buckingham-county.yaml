@@ -1,0 +1,6 @@
+id: va:buckingham-county
+name: Buckingham County
+kind: county
+fips: "51029"
+parent: va
+aliases: ["County of Buckingham"]

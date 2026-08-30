@@ -1,0 +1,6 @@
+id: va:irvington-town
+name: Irvington (town)
+kind: town
+place_fips: "40088"
+parent: va:lancaster-county
+aliases: ["Town of Irvington"]

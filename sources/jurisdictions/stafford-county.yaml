@@ -1,0 +1,6 @@
+id: va:stafford-county
+name: Stafford County
+kind: county
+fips: "51179"
+parent: va
+aliases: ["County of Stafford"]

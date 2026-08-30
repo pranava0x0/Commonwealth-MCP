@@ -1,0 +1,6 @@
+id: va:henry-county
+name: Henry County
+kind: county
+fips: "51089"
+parent: va
+aliases: ["County of Henry"]

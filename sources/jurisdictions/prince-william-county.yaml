@@ -1,0 +1,6 @@
+id: va:prince-william-county
+name: Prince William County
+kind: county
+fips: "51153"
+parent: va
+aliases: ["County of Prince William"]

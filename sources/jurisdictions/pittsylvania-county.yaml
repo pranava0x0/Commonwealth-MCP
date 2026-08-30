@@ -1,0 +1,6 @@
+id: va:pittsylvania-county
+name: Pittsylvania County
+kind: county
+fips: "51143"
+parent: va
+aliases: ["County of Pittsylvania"]

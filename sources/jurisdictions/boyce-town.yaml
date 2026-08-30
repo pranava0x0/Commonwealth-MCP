@@ -1,0 +1,6 @@
+id: va:boyce-town
+name: Boyce (town)
+kind: town
+place_fips: "08984"
+parent: va:clarke-county
+aliases: ["Town of Boyce"]

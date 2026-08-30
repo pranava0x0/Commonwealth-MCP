@@ -1,0 +1,6 @@
+id: va:berryville-town
+name: Berryville (town)
+kind: town
+place_fips: "06968"
+parent: va:clarke-county
+aliases: ["Town of Berryville"]

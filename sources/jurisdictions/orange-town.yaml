@@ -1,0 +1,6 @@
+id: va:orange-town
+name: Orange (town)
+kind: town
+place_fips: "59496"
+parent: va:orange-county
+aliases: ["Town of Orange"]

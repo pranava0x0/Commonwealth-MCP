@@ -1,0 +1,6 @@
+id: va:manassas-city
+name: Manassas City
+kind: independent-city
+fips: "51683"
+parent: va
+aliases: ["City of Manassas"]

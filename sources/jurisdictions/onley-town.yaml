@@ -1,0 +1,6 @@
+id: va:onley-town
+name: Onley (town)
+kind: town
+place_fips: "59384"
+parent: va:accomack-county
+aliases: ["Town of Onley"]

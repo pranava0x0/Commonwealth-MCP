@@ -1,0 +1,6 @@
+id: va:galax-city
+name: Galax City
+kind: independent-city
+fips: "51640"
+parent: va
+aliases: ["City of Galax"]

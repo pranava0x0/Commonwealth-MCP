@@ -1,0 +1,6 @@
+id: va:bloxom-town
+name: Bloxom (town)
+kind: town
+place_fips: "08120"
+parent: va:accomack-county
+aliases: ["Town of Bloxom"]

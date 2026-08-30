@@ -1,0 +1,6 @@
+id: va:westmoreland-county
+name: Westmoreland County
+kind: county
+fips: "51193"
+parent: va
+aliases: ["County of Westmoreland"]

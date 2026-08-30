@@ -1,0 +1,6 @@
+id: va:eastville-town
+name: Eastville (town)
+kind: town
+place_fips: "24752"
+parent: va:northampton-county
+aliases: ["Town of Eastville"]

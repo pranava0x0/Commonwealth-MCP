@@ -1,0 +1,6 @@
+id: va:appomattox-town
+name: Appomattox (town)
+kind: town
+place_fips: "02072"
+parent: va:appomattox-county
+aliases: ["Town of Appomattox"]

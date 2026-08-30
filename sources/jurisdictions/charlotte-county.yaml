@@ -1,0 +1,6 @@
+id: va:charlotte-county
+name: Charlotte County
+kind: county
+fips: "51037"
+parent: va
+aliases: ["County of Charlotte"]

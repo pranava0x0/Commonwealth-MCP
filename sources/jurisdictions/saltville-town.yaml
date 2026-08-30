@@ -1,0 +1,6 @@
+id: va:saltville-town
+name: Saltville (town)
+kind: town
+place_fips: "70096"
+parent: va:smyth-county
+aliases: ["Town of Saltville"]

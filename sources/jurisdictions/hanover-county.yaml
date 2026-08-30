@@ -1,0 +1,6 @@
+id: va:hanover-county
+name: Hanover County
+kind: county
+fips: "51085"
+parent: va
+aliases: ["County of Hanover"]

@@ -1,0 +1,6 @@
+id: va:giles-county
+name: Giles County
+kind: county
+fips: "51071"
+parent: va
+aliases: ["County of Giles"]

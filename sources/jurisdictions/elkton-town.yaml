@@ -1,0 +1,6 @@
+id: va:elkton-town
+name: Elkton (town)
+kind: town
+place_fips: "25408"
+parent: va:rockingham-county
+aliases: ["Town of Elkton"]

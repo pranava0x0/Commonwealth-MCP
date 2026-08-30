@@ -1,0 +1,6 @@
+id: va:mount-crawford-town
+name: Mount Crawford (town)
+kind: town
+place_fips: "53864"
+parent: va:rockingham-county
+aliases: ["Town of Mount Crawford"]

@@ -1,0 +1,6 @@
+id: va:round-hill-town
+name: Round Hill (town)
+kind: town
+place_fips: "69168"
+parent: va:loudoun-county
+aliases: ["Town of Round Hill"]

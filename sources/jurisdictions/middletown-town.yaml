@@ -1,0 +1,6 @@
+id: va:middletown-town
+name: Middletown (town)
+kind: town
+place_fips: "51512"
+parent: va:frederick-county
+aliases: ["Town of Middletown"]

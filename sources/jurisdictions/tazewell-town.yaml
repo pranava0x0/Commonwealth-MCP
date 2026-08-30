@@ -1,0 +1,6 @@
+id: va:tazewell-town
+name: Tazewell (town)
+kind: town
+place_fips: "77792"
+parent: va:tazewell-county
+aliases: ["Town of Tazewell"]

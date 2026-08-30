@@ -1,0 +1,6 @@
+id: va:stuart-town
+name: Stuart (town)
+kind: town
+place_fips: "76256"
+parent: va:patrick-county
+aliases: ["Town of Stuart"]

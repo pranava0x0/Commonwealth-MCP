@@ -1,0 +1,6 @@
+id: va:wachapreague-town
+name: Wachapreague (town)
+kind: town
+place_fips: "82320"
+parent: va:accomack-county
+aliases: ["Town of Wachapreague"]

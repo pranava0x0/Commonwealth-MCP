@@ -1,0 +1,6 @@
+id: va:cedar-bluff-town
+name: Cedar Bluff (town)
+kind: town
+place_fips: "13784"
+parent: va:tazewell-county
+aliases: ["Town of Cedar Bluff"]

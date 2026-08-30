@@ -1,0 +1,6 @@
+id: va:virgilina-town
+name: Virgilina (town)
+kind: town
+place_fips: "81312"
+parent: va:halifax-county
+aliases: ["Town of Virgilina"]

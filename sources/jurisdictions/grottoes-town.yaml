@@ -1,0 +1,6 @@
+id: va:grottoes-town
+name: Grottoes (town)
+kind: town
+place_fips: "33488"
+parent: va:rockingham-county
+aliases: ["Town of Grottoes"]

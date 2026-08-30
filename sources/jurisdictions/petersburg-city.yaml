@@ -1,0 +1,6 @@
+id: va:petersburg-city
+name: Petersburg City
+kind: independent-city
+fips: "51730"
+parent: va
+aliases: ["City of Petersburg"]

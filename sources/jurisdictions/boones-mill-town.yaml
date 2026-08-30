@@ -1,0 +1,6 @@
+id: va:boones-mill-town
+name: Boones Mill (town)
+kind: town
+place_fips: "08584"
+parent: va:franklin-county
+aliases: ["Town of Boones Mill"]

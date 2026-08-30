@@ -1,0 +1,6 @@
+id: va:grayson-county
+name: Grayson County
+kind: county
+fips: "51077"
+parent: va
+aliases: ["County of Grayson"]

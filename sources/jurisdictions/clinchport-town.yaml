@@ -1,0 +1,6 @@
+id: va:clinchport-town
+name: Clinchport (town)
+kind: town
+place_fips: "17536"
+parent: va:scott-county
+aliases: ["Town of Clinchport"]

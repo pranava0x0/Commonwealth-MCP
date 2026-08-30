@@ -1,0 +1,6 @@
+id: va:bath-county
+name: Bath County
+kind: county
+fips: "51017"
+parent: va
+aliases: ["County of Bath"]

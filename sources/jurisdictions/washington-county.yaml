@@ -1,0 +1,6 @@
+id: va:washington-county
+name: Washington County
+kind: county
+fips: "51191"
+parent: va
+aliases: ["County of Washington"]

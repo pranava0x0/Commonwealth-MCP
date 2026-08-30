@@ -1,0 +1,6 @@
+id: va:the-plains-town
+name: The Plains (town)
+kind: town
+place_fips: "78192"
+parent: va:fauquier-county
+aliases: ["Town of The Plains"]

@@ -1,0 +1,6 @@
+id: va:duffield-town
+name: Duffield (town)
+kind: town
+place_fips: "23680"
+parent: va:scott-county
+aliases: ["Town of Duffield"]

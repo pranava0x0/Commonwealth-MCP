@@ -1,0 +1,6 @@
+id: va:halifax-town
+name: Halifax (town)
+kind: town
+place_fips: "34064"
+parent: va:halifax-county
+aliases: ["Town of Halifax"]

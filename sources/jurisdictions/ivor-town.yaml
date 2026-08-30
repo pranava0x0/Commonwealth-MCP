@@ -1,0 +1,6 @@
+id: va:ivor-town
+name: Ivor (town)
+kind: town
+place_fips: "40232"
+parent: va:southampton-county
+aliases: ["Town of Ivor"]

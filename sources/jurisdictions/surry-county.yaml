@@ -1,0 +1,6 @@
+id: va:surry-county
+name: Surry County
+kind: county
+fips: "51181"
+parent: va
+aliases: ["County of Surry"]

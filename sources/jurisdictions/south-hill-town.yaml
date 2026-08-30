@@ -1,0 +1,6 @@
+id: va:south-hill-town
+name: South Hill (town)
+kind: town
+place_fips: "73904"
+parent: va:mecklenburg-county
+aliases: ["Town of South Hill"]

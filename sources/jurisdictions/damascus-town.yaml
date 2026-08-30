@@ -1,0 +1,6 @@
+id: va:damascus-town
+name: Damascus (town)
+kind: town
+place_fips: "21184"
+parent: va:washington-county
+aliases: ["Town of Damascus"]

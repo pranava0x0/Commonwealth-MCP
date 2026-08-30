@@ -1,0 +1,6 @@
+id: va:lee-county
+name: Lee County
+kind: county
+fips: "51105"
+parent: va
+aliases: ["County of Lee"]

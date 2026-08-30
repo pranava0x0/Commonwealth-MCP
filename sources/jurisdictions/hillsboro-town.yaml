@@ -1,0 +1,6 @@
+id: va:hillsboro-town
+name: Hillsboro (town)
+kind: town
+place_fips: "37288"
+parent: va:loudoun-county
+aliases: ["Town of Hillsboro"]

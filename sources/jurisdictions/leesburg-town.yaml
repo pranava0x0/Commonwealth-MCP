@@ -1,0 +1,6 @@
+id: va:leesburg-town
+name: Leesburg (town)
+kind: town
+place_fips: "44984"
+parent: va:loudoun-county
+aliases: ["Town of Leesburg"]

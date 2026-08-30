@@ -1,0 +1,6 @@
+id: va:troutville-town
+name: Troutville (town)
+kind: town
+place_fips: "79472"
+parent: va:botetourt-county
+aliases: ["Town of Troutville"]

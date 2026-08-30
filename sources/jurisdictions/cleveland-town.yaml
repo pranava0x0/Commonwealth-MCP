@@ -1,0 +1,6 @@
+id: va:cleveland-town
+name: Cleveland (town)
+kind: town
+place_fips: "17296"
+parent: va:russell-county
+aliases: ["Town of Cleveland"]

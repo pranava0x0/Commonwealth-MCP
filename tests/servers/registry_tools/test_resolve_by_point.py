@@ -52,12 +52,34 @@ async def test_interior_point_does_not_cry_boundary(cw_ctx):
                 if w.code.value == "boundary_precision"]
 
 
-async def test_locality_outside_the_pilot_table_is_reported_not_discarded(cw_ctx):
-    """The boundary source covers all 133 localities; the pilot jurisdiction
-    table does not. A sourced answer must not be thrown away just because
-    Commonwealth has no va: id for it — and it must not be dressed up as a
-    resolution either."""
+async def test_every_locality_the_boundary_source_knows_is_now_in_the_table(
+        cw_ctx):
+    """Issue #25's point. Virginia Beach used to come back as
+    `unmapped_match` because the 14-row seed had no row for it. The table
+    now carries all 133, so the same coordinate resolves."""
     env = await resolve_jurisdiction(cw_ctx, lon=-75.9780, lat=36.8529)
+    assert env.data["resolved"]["id"] == "va:virginia-beach-city"
+    assert env.data["resolved"]["fips"] == "51810"
+    assert "unmapped_match" not in env.data
+
+
+async def test_a_locality_missing_from_the_table_is_reported_not_discarded():
+    """The unmapped path is still the drift alarm: if VGIN adds a locality
+    the table does not carry, a sourced answer must not be thrown away —
+    and must not be dressed up as a resolution either.
+
+    The shipped table no longer has that gap, so the gap is made on
+    purpose here. Deleting this test with the last unmapped row would
+    leave the branch that handles the next one untested."""
+    from commonwealth.core.jurisdiction import JurisdictionTable
+    from tests.conftest import build_ctx
+
+    ctx = build_ctx()
+    full = ctx.jurisdictions
+    ctx.jurisdictions = JurisdictionTable(
+        [full.get(jid) for jid in sorted(full.ids())
+         if jid != "va:virginia-beach-city"])
+    env = await resolve_jurisdiction(ctx, lon=-75.9780, lat=36.8529)
     assert env.data["resolved"] is None
     unmapped = env.data["unmapped_match"]
     assert unmapped["source_name"] == "Virginia Beach City"

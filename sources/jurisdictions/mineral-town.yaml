@@ -1,0 +1,6 @@
+id: va:mineral-town
+name: Mineral (town)
+kind: town
+place_fips: "52120"
+parent: va:louisa-county
+aliases: ["Town of Mineral"]

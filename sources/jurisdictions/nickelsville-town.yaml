@@ -1,0 +1,6 @@
+id: va:nickelsville-town
+name: Nickelsville (town)
+kind: town
+place_fips: "56304"
+parent: va:scott-county
+aliases: ["Town of Nickelsville"]

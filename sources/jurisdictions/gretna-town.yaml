@@ -1,0 +1,6 @@
+id: va:gretna-town
+name: Gretna (town)
+kind: town
+place_fips: "33232"
+parent: va:pittsylvania-county
+aliases: ["Town of Gretna"]

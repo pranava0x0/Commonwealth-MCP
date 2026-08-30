@@ -1,0 +1,6 @@
+id: va:herndon-town
+name: Herndon (town)
+kind: town
+place_fips: "36648"
+parent: va:fairfax-county
+aliases: ["Town of Herndon"]

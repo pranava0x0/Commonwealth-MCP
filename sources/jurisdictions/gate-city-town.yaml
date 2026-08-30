@@ -1,0 +1,6 @@
+id: va:gate-city-town
+name: Gate City (town)
+kind: town
+place_fips: "30496"
+parent: va:scott-county
+aliases: ["Town of Gate City"]

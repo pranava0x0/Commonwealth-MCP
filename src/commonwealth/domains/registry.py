@@ -261,6 +261,22 @@ async def resolve_jurisdiction(ctx: RuntimeContext, query: str = "",
                          "fips": j.fips, "basis": resolution.basis},
             "layered_authorities": resolution.layered_authorities,
         }
+        if resolution.matched_former_name:
+            # The caller named a government that no longer exists. Saying
+            # so is the whole point: silently answering as the successor
+            # would let a record's own vintage disappear.
+            data["former_name_match"] = {
+                "queried": resolution.matched_former_name,
+                "resolved_to": j.id,
+                "note": f"{resolution.matched_former_name!r} names a "
+                        "Virginia government that no longer exists under "
+                        f"that name. {j.name} governs that territory now. "
+                        "A record using the old name predates the change; "
+                        "check its date before treating it as current."}
+            b.warn(WarningCode.alias_match,
+                   f"Resolved {resolution.matched_former_name!r} to "
+                   f"{j.id} by former name, not by a current name. Tell "
+                   "the user the name they used is historical.")
         return b.build(data, Coverage(
             registry=RegistryCoverage.covered,
             execution=ExecutionCoverage.complete,

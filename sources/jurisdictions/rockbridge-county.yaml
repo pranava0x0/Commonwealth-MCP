@@ -1,0 +1,6 @@
+id: va:rockbridge-county
+name: Rockbridge County
+kind: county
+fips: "51163"
+parent: va
+aliases: ["County of Rockbridge"]

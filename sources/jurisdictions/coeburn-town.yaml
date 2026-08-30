@@ -1,0 +1,6 @@
+id: va:coeburn-town
+name: Coeburn (town)
+kind: town
+place_fips: "17952"
+parent: va:wise-county
+aliases: ["Town of Coeburn"]

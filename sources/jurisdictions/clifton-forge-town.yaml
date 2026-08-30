@@ -1,0 +1,10 @@
+# Clifton Forge was an independent city until 2001, when it reverted to a
+# town inside Alleghany County — the same reversion pattern as Bedford and
+# South Boston. See design/jurisdiction-resolution.md § 3 trap 8.
+id: va:clifton-forge-town
+name: Clifton Forge (town)
+kind: town
+place_fips: "17264"
+parent: va:alleghany-county
+aliases: ["Town of Clifton Forge"]
+former_names: ["Clifton Forge City", "City of Clifton Forge"]

@@ -1,0 +1,6 @@
+id: va:halifax-county
+name: Halifax County
+kind: county
+fips: "51083"
+parent: va
+aliases: ["County of Halifax"]

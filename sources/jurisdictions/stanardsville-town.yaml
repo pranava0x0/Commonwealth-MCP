@@ -1,0 +1,6 @@
+id: va:stanardsville-town
+name: Stanardsville (town)
+kind: town
+place_fips: "75008"
+parent: va:greene-county
+aliases: ["Town of Stanardsville"]

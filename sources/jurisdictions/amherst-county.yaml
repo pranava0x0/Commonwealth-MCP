@@ -1,0 +1,6 @@
+id: va:amherst-county
+name: Amherst County
+kind: county
+fips: "51009"
+parent: va
+aliases: ["County of Amherst"]

@@ -1,0 +1,6 @@
+id: va:danville-city
+name: Danville City
+kind: independent-city
+fips: "51590"
+parent: va
+aliases: ["City of Danville"]

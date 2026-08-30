@@ -1,0 +1,6 @@
+id: va:honaker-town
+name: Honaker (town)
+kind: town
+place_fips: "38280"
+parent: va:russell-county
+aliases: ["Town of Honaker"]

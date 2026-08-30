@@ -1,0 +1,6 @@
+id: va:henrico-county
+name: Henrico County
+kind: county
+fips: "51087"
+parent: va
+aliases: ["County of Henrico"]

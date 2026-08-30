@@ -1,0 +1,6 @@
+id: va:surry-town
+name: Surry (town)
+kind: town
+place_fips: "76880"
+parent: va:surry-county
+aliases: ["Town of Surry"]

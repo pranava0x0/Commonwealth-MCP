@@ -1,0 +1,6 @@
+id: va:mathews-county
+name: Mathews County
+kind: county
+fips: "51115"
+parent: va
+aliases: ["County of Mathews"]

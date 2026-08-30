@@ -1,0 +1,6 @@
+id: va:wise-town
+name: Wise (town)
+kind: town
+place_fips: "87072"
+parent: va:wise-county
+aliases: ["Town of Wise"]

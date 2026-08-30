@@ -1,0 +1,6 @@
+id: va:lawrenceville-town
+name: Lawrenceville (town)
+kind: town
+place_fips: "44520"
+parent: va:brunswick-county
+aliases: ["Town of Lawrenceville"]

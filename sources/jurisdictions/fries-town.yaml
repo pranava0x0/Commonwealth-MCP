@@ -1,0 +1,6 @@
+id: va:fries-town
+name: Fries (town)
+kind: town
+place_fips: "29920"
+parent: va:grayson-county
+aliases: ["Town of Fries"]

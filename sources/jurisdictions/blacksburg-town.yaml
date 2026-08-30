@@ -1,0 +1,6 @@
+id: va:blacksburg-town
+name: Blacksburg (town)
+kind: town
+place_fips: "07784"
+parent: va:montgomery-county
+aliases: ["Town of Blacksburg"]

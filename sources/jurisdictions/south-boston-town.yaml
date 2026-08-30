@@ -1,0 +1,10 @@
+# South Boston was an independent city until 1995, when it reverted to a
+# town inside Halifax County — the earliest of Virginia's three reversions.
+# See design/jurisdiction-resolution.md § 3 trap 8.
+id: va:south-boston-town
+name: South Boston (town)
+kind: town
+place_fips: "73760"
+parent: va:halifax-county
+aliases: ["Town of South Boston"]
+former_names: ["South Boston City", "City of South Boston"]

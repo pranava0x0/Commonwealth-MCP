@@ -65,7 +65,7 @@ The tests replay recorded government responses, so they run offline:
 
 | Question | Coverage |
 |---|---|
-| Which government covers this? | By name, FIPS code, or coordinates, statewide |
+| Which government covers this? | By name, FIPS code, or coordinates: all 133 localities and 191 towns |
 | What is this parcel? | Fairfax County, Richmond City, Charles City County, VGIN statewide |
 | How is it zoned? | Fairfax County and Richmond City |
 | Where does this jurisdiction end? | Statewide: 133 localities, 191 towns |
@@ -101,11 +101,12 @@ so every time.
 **Addresses.** No geocoder is registered, so a jurisdiction resolves from
 a name, a FIPS code, or coordinates. Street addresses do not work yet.
 
-**Most localities.** 12 of the 133 have an entry in the jurisdiction
-table. A coordinate anywhere in Virginia will find the right government —
-that part works statewide — but for the other 121, the answer is "the
-boundary source knows which government this is, and this project cannot
-route a query to it yet".
+**Data for most localities.** Every one of the 133 counties and
+independent cities is in the jurisdiction table, along with all 191
+incorporated towns, so a name or a coordinate anywhere in Virginia finds
+the right government. What most of them do not have is a source of their
+own: three localities publish a parcel layer this project reads, and the
+rest are answered by VGIN's statewide layers or not at all.
 
 **Zoning outside two localities.** Fairfax County and Richmond City are
 registered. Everywhere else returns a registry gap.

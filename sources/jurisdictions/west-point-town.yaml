@@ -1,0 +1,6 @@
+id: va:west-point-town
+name: West Point (town)
+kind: town
+place_fips: "84960"
+parent: va:king-william-county
+aliases: ["Town of West Point"]

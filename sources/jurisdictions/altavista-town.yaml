@@ -1,0 +1,6 @@
+id: va:altavista-town
+name: Altavista (town)
+kind: town
+place_fips: "01528"
+parent: va:campbell-county
+aliases: ["Town of Altavista"]

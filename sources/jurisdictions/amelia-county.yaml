@@ -1,0 +1,6 @@
+id: va:amelia-county
+name: Amelia County
+kind: county
+fips: "51007"
+parent: va
+aliases: ["County of Amelia"]

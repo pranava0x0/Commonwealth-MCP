@@ -1,0 +1,6 @@
+id: va:floyd-county
+name: Floyd County
+kind: county
+fips: "51063"
+parent: va
+aliases: ["County of Floyd"]

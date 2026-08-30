@@ -1,0 +1,6 @@
+id: va:wythe-county
+name: Wythe County
+kind: county
+fips: "51197"
+parent: va
+aliases: ["County of Wythe"]

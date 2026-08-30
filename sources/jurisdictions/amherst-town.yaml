@@ -1,0 +1,6 @@
+id: va:amherst-town
+name: Amherst (town)
+kind: town
+place_fips: "01672"
+parent: va:amherst-county
+aliases: ["Town of Amherst"]

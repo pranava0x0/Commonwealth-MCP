@@ -1,0 +1,6 @@
+id: va:woodstock-town
+name: Woodstock (town)
+kind: town
+place_fips: "87712"
+parent: va:shenandoah-county
+aliases: ["Town of Woodstock"]

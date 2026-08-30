@@ -1,0 +1,6 @@
+id: va:tappahannock-town
+name: Tappahannock (town)
+kind: town
+place_fips: "77568"
+parent: va:essex-county
+aliases: ["Town of Tappahannock"]

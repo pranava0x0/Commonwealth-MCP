@@ -1,0 +1,6 @@
+id: va:cape-charles-town
+name: Cape Charles (town)
+kind: town
+place_fips: "12808"
+parent: va:northampton-county
+aliases: ["Town of Cape Charles"]

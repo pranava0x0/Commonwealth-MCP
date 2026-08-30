@@ -1,0 +1,6 @@
+id: va:boydton-town
+name: Boydton (town)
+kind: town
+place_fips: "09016"
+parent: va:mecklenburg-county
+aliases: ["Town of Boydton"]

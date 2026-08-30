@@ -1,0 +1,6 @@
+id: va:kenbridge-town
+name: Kenbridge (town)
+kind: town
+place_fips: "41832"
+parent: va:lunenburg-county
+aliases: ["Town of Kenbridge"]

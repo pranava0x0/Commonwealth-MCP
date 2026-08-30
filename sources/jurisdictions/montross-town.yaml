@@ -1,0 +1,6 @@
+id: va:montross-town
+name: Montross (town)
+kind: town
+place_fips: "52952"
+parent: va:westmoreland-county
+aliases: ["Town of Montross"]

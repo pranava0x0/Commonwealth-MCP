@@ -1,0 +1,6 @@
+id: va:colonial-beach-town
+name: Colonial Beach (town)
+kind: town
+place_fips: "18400"
+parent: va:westmoreland-county
+aliases: ["Town of Colonial Beach"]

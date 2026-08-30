@@ -1,0 +1,6 @@
+id: va:abingdon-town
+name: Abingdon (town)
+kind: town
+place_fips: "00148"
+parent: va:washington-county
+aliases: ["Town of Abingdon"]
