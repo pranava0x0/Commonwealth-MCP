@@ -289,6 +289,48 @@ def cmd_sources_probe(args: argparse.Namespace) -> int:
         m = ctx.sources.get(sid)
         if m is None:
             return _fail(f"unknown source {sid!r}")
+        if m.adapter.type == "arcgis_geocode":
+            # A real declared probe with a real implementation, and this
+            # command skipped it — `sources probe <locator>` reported
+            # "no probe", examined zero layers, and exited nonzero.
+            checked += 1
+            try:
+                h = asyncio.run(ctx.geocoder.health(m))
+            except CommonwealthError as err:
+                print(f"✗ {sid}: {err.code}: {err}")
+                problems += 1
+                continue
+            mark = "✓" if h["healthy"] else "✗"
+            print(f"{mark} {sid}: {h['address']!r} -> {h['candidates']} "
+                  f"candidate(s), best score {h['best_score']} "
+                  f"(min {h['min_score']})")
+            if not h["healthy"]:
+                problems += 1
+            continue
+        if m.adapter.type == "virginia_law":
+            # Also had a declared probe and no branch here. `doctor
+            # --live` ran it and `sources probe` did not, which is the
+            # same split the geocoder was in — one dispatch table grew
+            # and the other did not.
+            checked += 1
+            known = m.health.expect.get("known_section")
+            try:
+                section = asyncio.run(ctx.virginia_law.get_section(m, known))
+            except CommonwealthError as err:
+                print(f"✗ {sid}: {err.code}: {err}")
+                problems += 1
+                continue
+            mark = "✓" if section is not None else "✗"
+            print(f"{mark} {sid}: known section {known!r} "
+                  f"{'found' if section is not None else 'NOT FOUND'}")
+            if section is None:
+                problems += 1
+            continue
+        if m.adapter.type == INVENTORY_ADAPTER:
+            # Inventory has no endpoint by construction, so "not probed"
+            # is the correct outcome rather than a gap.
+            print(f"- {sid}: inventory only, nothing to probe")
+            continue
         if m.adapter.type != "arcgis":
             print(f"- {sid}: no probe for adapter {m.adapter.type!r}")
             continue
@@ -398,6 +440,27 @@ async def _sample_boundaries(adapter, m, params, ctx) -> dict:
                    "point_geocoded_alexandria_mailing_address")
     await at_point(-77.26436153964, 38.90067620715,
                    "point_geocoded_vienna_address")
+    # The SECOND confident candidate for the same Vienna address. The
+    # locator's address-point and road-centerline elements both match it
+    # at score 100, ~40 m apart, and geo.resolve_location places every
+    # distinct confident coordinate to check they agree on a government
+    # before answering — so both need recording.
+    await at_point(-77.264736107181, 38.901130384578,
+                   "point_geocoded_vienna_address_second_candidate")
+    # The four distinct confident matches for one misspelled address
+    # ("Cntr Steet Viena VA"), which land in DIFFERENT governments —
+    # Falls Church City and three points around Vienna. geo.resolve_
+    # location places every one before answering, so it can tell a
+    # locator returning the same address twice from a locator returning
+    # two different places.
+    await at_point(-77.210242068451, 38.893300414287,
+                   "point_ambiguous_falls_church_22043")
+    await at_point(-77.2764070531, 38.911192903897,
+                   "point_ambiguous_vienna_22181")
+    await at_point(-77.261239794994, 38.898531734273,
+                   "point_ambiguous_vienna_22180")
+    await at_point(-77.270304330621, 38.905490629705,
+                   "point_ambiguous_vienna_22180")
     return out
 
 
@@ -575,7 +638,7 @@ async def _sample_roads(adapter, m, params, ctx) -> dict:
     disagreement between them replays as a comparison rather than as a
     hand-written conflict."""
     from ..domains.geo import (ROAD_RADIUS_M, _jurisdiction_filter,
-                               _road_layer)
+                               _jurisdiction_scope, _road_layer)
     out: dict[str, Any] = {}
     for layer in sorted(params.layers):
         out[f"health:{layer}"] = await adapter.health(m, layer)
@@ -597,8 +660,13 @@ async def _sample_roads(adapter, m, params, ctx) -> dict:
             "names": sorted({str(r.canonical.get("street_name"))
                              for r in q.records})[:6]}
 
-    point_scope = _jurisdiction_filter(
-        ctx, m, layer_key, ["va:vienna-town", "va:fairfax-county", "va"])
+    # A point query drops a NAME-keyed scope (the routes that span
+    # localities leave the name blank and are meant to be found this
+    # way), so the recording has to match that shape rather than the
+    # scoped one.
+    scope = _jurisdiction_scope(ctx, m, layer_key,
+                                ["va:vienna-town", "va:fairfax-county", "va"])
+    point_scope = None if scope.mode == "jurisdiction_names" else scope.groups
     pq = await adapter.query(m, layer_key,
                              geometry_point=(-77.2653, 38.9012),
                              distance_meters=ROAD_RADIUS_M,
@@ -626,6 +694,7 @@ async def _sample_buildings(adapter, m, params, ctx) -> dict:
         out[f"health:{layer}"] = await adapter.health(m, layer)
 
     quiet = await adapter.query(m, "buildings",
+                                where_equals={"fips": "51059"},
                                 geometry_point=(-77.26436153964,
                                                 38.90067620715),
                                 distance_meters=BUILDING_RADIUS_M)
@@ -637,6 +706,7 @@ async def _sample_buildings(adapter, m, params, ctx) -> dict:
     # truncation path is proven against real density rather than a
     # synthesized flag.
     dense = await adapter.query(m, "buildings",
+                                where_equals={"fips": "51760"},
                                 geometry_point=(-77.4360, 37.5407),
                                 distance_meters=800.0)
     out["dense_urban_point"] = {"record_count": len(dense.records),
@@ -724,6 +794,11 @@ def _sample_geocoder(m, ctx) -> int:
                 # A bare ZIP, recorded to prove the locator answers it with
                 # ONE centroid — which is why the ZIP path does not use it.
                 ("bare_zip", "24450"),
+                # Four matches, all at or above the threshold, in
+                # DIFFERENT governments — Falls Church City and two
+                # places in Vienna. The case where taking the locator's
+                # first result picks a government the caller never chose.
+                ("ambiguous_across_governments", "Cntr Steet Viena VA"),
                 ("no_match", "zzzz nowhere at all qqq")):
             result = await adapter.geocode(m, text)
             out[label] = {

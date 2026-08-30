@@ -289,3 +289,65 @@ the jurisdiction it actually reaches. When those differ, the answer
 carries a `widened_scope` note naming both — "this source has no key for
 Vienna (town), so the query was narrowed to Fairfax County instead". A
 source whose scope is exact says nothing, so the note stays meaningful.
+
+---
+
+## 12. VGIN's towns layer carries places whose charters are gone
+
+- **Source:** `va-vgin-admin-boundaries` (towns layer)
+- **Observed:** 2026-08-30, live, in review
+- **Test:** `tests/test_codex_round_3.py::test_a_dissolved_town_has_no_row`
+
+The layer publishes 191 town polygons. Two of them are not towns.
+Columbia and St. Charles both appear in Census TIGERweb as **Census
+Designated Places** — `FUNCSTAT: 'S'`, a statistical area with no
+government — in the current layer and in the 2020 one, and in neither
+case as an Incorporated Place.
+
+VGIN's own metadata agrees for one of them without saying so outright:
+Columbia carries `GSOURCE: 'T'` (TIGER-derived rather than
+locality-submitted) and `LADOPT: 'N'` (no locality has adopted the
+boundary).
+
+Both were registered as live governments on 2026-08-29 and removed on
+2026-08-30. The generator had seen the evidence and misread it: the run
+log recorded "absent from TIGERweb's current Incorporated Places" as a
+quirk of Census coverage and worked around it by deriving the parent from
+polygon intersection instead. The absence WAS the finding.
+
+**What the code does:** `tools/build_jurisdictions.py` skips any town
+Census does not list as an Incorporated Place and prints why, so the
+towns half of the table is cross-checked against two sources like the
+localities half always was. The two names resolve through their county's
+`former_names` — Columbia to Fluvanna County, St. Charles to Lee County —
+because the territory reverted to county governance, which is the Bedford
+rule one level down.
+
+---
+
+## 13. The locator returns one address as several candidates, and several addresses as several candidates
+
+- **Source:** `va-vgin-composite-locator`
+- **Observed:** 2026-08-30, live
+- **Test:** `tests/test_codex_round_3.py::test_confident_geocodes_in_one_place_still_resolve`
+
+Two shapes that look identical in the response and mean opposite things.
+
+"127 Center St S, Vienna, VA 22180" returns the same address twice at
+score 100, from the address-point element and the road-centerline element,
+about 40 m apart. That is one place described twice.
+
+"Cntr Steet Viena VA" returns four matches between 96.45 and 97.12 that
+are four different places, two in Vienna town and two in Fairfax County.
+Taking the locator's first result there picks one of two governments.
+
+Distance does not separate them: any rounding fine enough to tell Vienna
+from Fairfax County also splits the 40 m pair. **What the code does:**
+`geo.resolve_location` places every distinct confident coordinate (up to
+four) and compares the GOVERNMENTS, resolving when they agree and
+returning candidates with `requires_user_choice` when they do not.
+
+The first of those four candidates is addressed FALLS CHURCH and places
+into Fairfax County — the postal-city trap turning up inside the
+ambiguity check, and one more reason the comparison is on placed
+governments rather than on the strings the locator returned.

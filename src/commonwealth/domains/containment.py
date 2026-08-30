@@ -53,6 +53,15 @@ class Containment:
     town: list[dict] = field(default_factory=list)
     locality: list[dict] = field(default_factory=list)
     nearby: list[str] = field(default_factory=list)
+    # Layers that errored. A failure of the TOWNS layer is not the same
+    # as a failure of the localities layer: towns are the narrower
+    # government, so losing that query means the narrowest answer is
+    # unknown rather than absent, and the county below it is a plausible
+    # wrong answer rather than a partial one.
+    failed_layers: list[str] = field(default_factory=list)
+    # Evidence ids for the polygons that were actually hit, so a caller
+    # can trace which boundary supports the government it was given.
+    evidence_refs: list[str] = field(default_factory=list)
 
     @property
     def unreachable(self) -> bool:
@@ -64,10 +73,26 @@ class Containment:
         return not self.town and not self.locality
 
     @property
+    def narrowest_unknown(self) -> bool:
+        """True when the towns layer failed while localities answered.
+
+        The county is then a plausible WRONG government rather than a
+        partial answer: the point may sit in a town whose polygon was
+        never retrieved, and a caller routing later queries through the
+        county would get the wrong government's records with no sign
+        anything was missed. Coverage says partial either way, which is
+        not enough — the material answer has to be withheld."""
+        return "towns" in self.failed_layers and bool(self.locality)
+
+    @property
     def leaf(self) -> dict | None:
         """The narrowest government containing the point. A town is
         narrower than the locality that contains it; the locality is
-        reported alongside, never replaced."""
+        reported alongside, never replaced.
+
+        None when the towns layer failed: see `narrowest_unknown`."""
+        if self.narrowest_unknown:
+            return None
         hits = self.town or self.locality
         return hits[0] if hits else None
 
@@ -138,6 +163,7 @@ async def resolve_point(ctx: RuntimeContext, b: EnvelopeBuilder,
                 distance_meters=BOUNDARY_PROXIMITY_METERS)
         except CommonwealthError as err:
             out.failures.append(failure(m.id, err.code, str(err)))
+            out.failed_layers.append(layer)
             continue
         if out.source_ref is None:
             out.source_ref = b.add_source(
@@ -152,10 +178,11 @@ async def resolve_point(ctx: RuntimeContext, b: EnvelopeBuilder,
                 cache_age_seconds=q.cache_age_seconds,
                 terms_gap=m.access.terms_gap)
         for r in q.records:
-            b.add_evidence(source_ref=out.source_ref, record_id=r.record_id,
-                           retrieved_at=q.retrieved_at,
-                           transformations=q.transformations,
-                           payload_hash=q.payload_hash())
+            out.evidence_refs.append(b.add_evidence(
+                source_ref=out.source_ref, record_id=r.record_id,
+                retrieved_at=q.retrieved_at,
+                transformations=q.transformations,
+                payload_hash=q.payload_hash()))
         hits[layer] = q.records
         near[layer] = buffered.records
 

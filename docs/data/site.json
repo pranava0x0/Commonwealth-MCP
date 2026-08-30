@@ -9,7 +9,7 @@
   "sources_active": 13,
   "sources_proposed": 4,
   "capabilities": 10,
-  "jurisdictions": 325,
+  "jurisdictions": 323,
   "trap_pairs": 5
  },
  "tools": [
@@ -446,7 +446,7 @@
   "county": 95,
   "independent-city": 38,
   "state": 1,
-  "town": 191
+  "town": 189
  },
  "trap_pairs": [
   [
@@ -1421,18 +1421,6 @@
    "parent": "va",
    "aliases": [
     "City of Colonial Heights"
-   ],
-   "not_to_be_confused_with": []
-  },
-  {
-   "id": "va:columbia-town",
-   "name": "Columbia (town)",
-   "kind": "town",
-   "fips": null,
-   "place_fips": "18624",
-   "parent": "va:fluvanna-county",
-   "aliases": [
-    "Town of Columbia"
    ],
    "not_to_be_confused_with": []
   },
@@ -3807,18 +3795,6 @@
    "not_to_be_confused_with": []
   },
   {
-   "id": "va:st-charles-town",
-   "name": "St. Charles (town)",
-   "kind": "town",
-   "fips": null,
-   "place_fips": "69792",
-   "parent": "va:lee-county",
-   "aliases": [
-    "Town of St. Charles"
-   ],
-   "not_to_be_confused_with": []
-  },
-  {
    "id": "va:st-paul-town",
    "name": "St. Paul (town)",
    "kind": "town",
@@ -4886,12 +4862,6 @@
      ]
     },
     {
-     "jurisdiction": "va:columbia-town",
-     "sources": [
-      "va-vgin-address-points"
-     ]
-    },
-    {
      "jurisdiction": "va:courtland-town",
      "sources": [
       "va-vgin-address-points"
@@ -6063,12 +6033,6 @@
     },
     {
      "jurisdiction": "va:spotsylvania-county",
-     "sources": [
-      "va-vgin-address-points"
-     ]
-    },
-    {
-     "jurisdiction": "va:st-charles-town",
      "sources": [
       "va-vgin-address-points"
      ]
@@ -6841,12 +6805,6 @@
      ]
     },
     {
-     "jurisdiction": "va:columbia-town",
-     "sources": [
-      "va-vgin-admin-boundaries"
-     ]
-    },
-    {
      "jurisdiction": "va:courtland-town",
      "sources": [
       "va-vgin-admin-boundaries"
@@ -8018,12 +7976,6 @@
     },
     {
      "jurisdiction": "va:spotsylvania-county",
-     "sources": [
-      "va-vgin-admin-boundaries"
-     ]
-    },
-    {
-     "jurisdiction": "va:st-charles-town",
      "sources": [
       "va-vgin-admin-boundaries"
      ]
@@ -8796,12 +8748,6 @@
      ]
     },
     {
-     "jurisdiction": "va:columbia-town",
-     "sources": [
-      "va-vgin-building-footprints"
-     ]
-    },
-    {
      "jurisdiction": "va:courtland-town",
      "sources": [
       "va-vgin-building-footprints"
@@ -9973,12 +9919,6 @@
     },
     {
      "jurisdiction": "va:spotsylvania-county",
-     "sources": [
-      "va-vgin-building-footprints"
-     ]
-    },
-    {
-     "jurisdiction": "va:st-charles-town",
      "sources": [
       "va-vgin-building-footprints"
      ]
@@ -10751,12 +10691,6 @@
      ]
     },
     {
-     "jurisdiction": "va:columbia-town",
-     "sources": [
-      "va-code-of-virginia"
-     ]
-    },
-    {
      "jurisdiction": "va:courtland-town",
      "sources": [
       "va-code-of-virginia"
@@ -11928,12 +11862,6 @@
     },
     {
      "jurisdiction": "va:spotsylvania-county",
-     "sources": [
-      "va-code-of-virginia"
-     ]
-    },
-    {
-     "jurisdiction": "va:st-charles-town",
      "sources": [
       "va-code-of-virginia"
      ]
@@ -12706,12 +12634,6 @@
      ]
     },
     {
-     "jurisdiction": "va:columbia-town",
-     "sources": [
-      "va-deq-water-quality-stations"
-     ]
-    },
-    {
      "jurisdiction": "va:courtland-town",
      "sources": [
       "va-deq-water-quality-stations"
@@ -13883,12 +13805,6 @@
     },
     {
      "jurisdiction": "va:spotsylvania-county",
-     "sources": [
-      "va-deq-water-quality-stations"
-     ]
-    },
-    {
-     "jurisdiction": "va:st-charles-town",
      "sources": [
       "va-deq-water-quality-stations"
      ]
@@ -14661,12 +14577,6 @@
      ]
     },
     {
-     "jurisdiction": "va:columbia-town",
-     "sources": [
-      "va-vgin-composite-locator"
-     ]
-    },
-    {
      "jurisdiction": "va:courtland-town",
      "sources": [
       "va-vgin-composite-locator"
@@ -15838,12 +15748,6 @@
     },
     {
      "jurisdiction": "va:spotsylvania-county",
-     "sources": [
-      "va-vgin-composite-locator"
-     ]
-    },
-    {
-     "jurisdiction": "va:st-charles-town",
      "sources": [
       "va-vgin-composite-locator"
      ]
@@ -16616,12 +16520,6 @@
      ]
     },
     {
-     "jurisdiction": "va:columbia-town",
-     "sources": [
-      "va-vgin-landmarks"
-     ]
-    },
-    {
      "jurisdiction": "va:courtland-town",
      "sources": [
       "va-vgin-landmarks"
@@ -17798,12 +17696,6 @@
      ]
     },
     {
-     "jurisdiction": "va:st-charles-town",
-     "sources": [
-      "va-vgin-landmarks"
-     ]
-    },
-    {
      "jurisdiction": "va:st-paul-town",
      "sources": [
       "va-vgin-landmarks"
@@ -18568,12 +18460,6 @@
     },
     {
      "jurisdiction": "va:colonial-heights-city",
-     "sources": [
-      "va-vgin-statewide-parcels"
-     ]
-    },
-    {
-     "jurisdiction": "va:columbia-town",
      "sources": [
       "va-vgin-statewide-parcels"
      ]
@@ -19758,12 +19644,6 @@
      ]
     },
     {
-     "jurisdiction": "va:st-charles-town",
-     "sources": [
-      "va-vgin-statewide-parcels"
-     ]
-    },
-    {
      "jurisdiction": "va:st-paul-town",
      "sources": [
       "va-vgin-statewide-parcels"
@@ -20603,13 +20483,6 @@
     },
     {
      "jurisdiction": "va:colonial-heights-city",
-     "sources": [
-      "va-vdot-lrs-routes",
-      "va-vgin-road-centerlines"
-     ]
-    },
-    {
-     "jurisdiction": "va:columbia-town",
      "sources": [
       "va-vdot-lrs-routes",
       "va-vgin-road-centerlines"
@@ -21988,13 +21861,6 @@
      ]
     },
     {
-     "jurisdiction": "va:st-charles-town",
-     "sources": [
-      "va-vdot-lrs-routes",
-      "va-vgin-road-centerlines"
-     ]
-    },
-    {
      "jurisdiction": "va:st-paul-town",
      "sources": [
       "va-vdot-lrs-routes",
@@ -22457,7 +22323,6 @@
     "va:coeburn-town",
     "va:colonial-beach-town",
     "va:colonial-heights-city",
-    "va:columbia-town",
     "va:courtland-town",
     "va:covington-city",
     "va:craig-county",
@@ -22651,7 +22516,6 @@
     "va:south-hill-town",
     "va:southampton-county",
     "va:spotsylvania-county",
-    "va:st-charles-town",
     "va:st-paul-town",
     "va:stafford-county",
     "va:stanardsville-town",

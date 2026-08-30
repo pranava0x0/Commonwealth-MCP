@@ -12,7 +12,8 @@ import re
 from dataclasses import dataclass
 
 from ..adapters.arcgis import ArcGISQueryResult
-from ..adapters.arcgis_geocode import GeocodeResult
+from ..adapters.arcgis_geocode import (GeocodeCandidate,
+                                       GeocodeResult)
 from ..core.assemble import (EnvelopeBuilder, failure, result_dim,
                              selection_coverage)
 from ..core.envelope import (AccessPath, Coverage, Envelope,
@@ -81,6 +82,19 @@ def _resolve_frame(ctx: RuntimeContext, b: EnvelopeBuilder,
     if resolution.resolved is not None:
         j = resolution.resolved
         stack = [j.id] + [p.id for p in ctx.jurisdictions.parents_of(j)]
+        if resolution.matched_former_name:
+            # Every geo tool's description tells the caller to pass the
+            # jurisdiction string as given, so a historical name reaches
+            # here as readily as it reaches registry.resolve_jurisdiction
+            # — and answering it silently returns current data under a
+            # government that no longer exists.
+            b.warn(WarningCode.alias_match,
+                   f"{resolution.matched_former_name!r} names a Virginia "
+                   "government that no longer exists under that name. "
+                   f"This answer is about {j.name}, which governs that "
+                   "territory now. A record using the old name predates "
+                   "the change; check its date before treating this as "
+                   "current.")
         return _Frame(stack=stack)
     if resolution.candidates:
         env = b.build(
@@ -208,6 +222,9 @@ class _Scope:
 
     groups: list[dict[str, str]] | None = None
     narrowed_to: str | None = None
+    # The declared scope mode, so a caller can tell a name-keyed layer
+    # from a code-keyed one without re-reading the manifest.
+    mode: str | None = None
 
     def note(self, ctx: RuntimeContext, requested: str) -> str | None:
         if self.narrowed_to is None or self.narrowed_to == requested:
@@ -250,13 +267,14 @@ def _jurisdiction_scope(ctx: RuntimeContext, m: SourceManifest,
         # Names key on the leaf directly: VDOT writes "Town of Vienna",
         # which is the town and not its county.
         return _Scope([{field: n} for n in names] or None,
-                      stack[0] if names and stack else None)
+                      stack[0] if names and stack else None, scope.mode)
     fips, owner = _fips_scope(ctx, stack)
     if fips is None:
         return _Scope()
     if scope.mode == "fips":
-        return _Scope([{scope.fields[0]: fips}], owner)
-    return _Scope([{field: fips} for field in scope.fields], owner)
+        return _Scope([{scope.fields[0]: fips}], owner, scope.mode)
+    return _Scope([{field: fips} for field in scope.fields], owner,
+                  scope.mode)
 
 
 def _jurisdiction_filter(ctx: RuntimeContext, m: SourceManifest,
@@ -836,6 +854,13 @@ GEO_TOOLS.register(ToolSpec(
 # touches — the difference between a convenience and an answer.
 ZIP_PATTERN = re.compile(r"^\d{5}$")
 
+# How many distinct confident geocode coordinates get placed before the
+# tool stops checking whether they disagree. Each placement is two more
+# queries against a government service, and a locator returning more
+# than a handful of equally confident matches in different places has
+# already told the caller the address is underspecified.
+MAX_GEOCODE_CONTAINMENT_CHECKS = 4
+
 
 def _geocode_source(b: EnvelopeBuilder, m: SourceManifest,
                     g: GeocodeResult) -> str:
@@ -1028,8 +1053,18 @@ async def resolve_location(ctx: RuntimeContext, address: str = "",
         # same instruction to the caller — do not proceed on this — but
         # they are different facts, so they read differently.
         data["resolved"] = None
+        # These are the records whose ambiguity the caller has to judge,
+        # so they are material and name their evidence like any other.
+        weak_refs = {
+            c.record_id: b.add_evidence(
+                source_ref=geo_ref, record_id=c.record_id,
+                retrieved_at=g.retrieved_at,
+                transformations=g.transformations,
+                payload_hash=g.payload_hash())
+            for c in g.candidates[:INLINE_RECORD_CAP]}
         data["candidates"] = [
-            {**c.canonical(), "distinguisher":
+            {**c.canonical(), "evidence_refs": [weak_refs[c.record_id]],
+             "distinguisher":
                 f"score {c.score} is under the {g.min_score} threshold; "
                 f"matched by {c.matched_by or 'an unnamed locator element'}"}
             for c in g.candidates[:INLINE_RECORD_CAP]]
@@ -1051,12 +1086,71 @@ async def resolve_location(ctx: RuntimeContext, address: str = "",
             known_limitations=sorted(m.coverage.known_limitations)),
             requires_user_choice=bool(g.candidates))
 
+    # Several candidates can clear the threshold, and the locator's own
+    # ranking settles ties within one place — not between two places. An
+    # underspecified address can return equally confident matches in
+    # different localities, and taking [0] there picks a government the
+    # caller never chose.
+    #
+    # Distance is the wrong test for that, which the first attempt at
+    # this got wrong: the address-point and road-centerline elements
+    # routinely return the SAME address tens of metres apart, and any
+    # rounding fine enough to separate two localities also separates
+    # those. What matters is whether the candidates land in different
+    # GOVERNMENTS, so each distinct coordinate is placed and the results
+    # compared. Bounded, because each placement is two more queries.
+    if len(confident) > 1:
+        seen: dict[tuple[float, float], GeocodeCandidate] = {}
+        for cand in confident:
+            seen.setdefault((round(cand.lon, 5), round(cand.lat, 5)), cand)
+        distinct = list(seen.values())[:MAX_GEOCODE_CONTAINMENT_CHECKS]
+        if len(distinct) > 1:
+            placed = []
+            for cand in distinct:
+                cont = await resolve_point(ctx, b, cand.lon, cand.lat)
+                leaf = cont.leaf
+                placed.append((cand, (leaf or {}).get("jurisdiction")))
+            if len({j.id if j else None for _, j in placed}) > 1:
+                refs = {
+                    cand.record_id: b.add_evidence(
+                        source_ref=geo_ref, record_id=cand.record_id,
+                        retrieved_at=g.retrieved_at,
+                        transformations=g.transformations,
+                        payload_hash=g.payload_hash())
+                    for cand, _ in placed}
+                data["resolved"] = None
+                data["candidates"] = [
+                    {**cand.canonical(),
+                     "evidence_refs": [refs[cand.record_id]],
+                     "jurisdiction": j.id if j else None,
+                     "jurisdiction_name": j.name if j else None,
+                     "distinguisher":
+                         f"score {cand.score}, matched by "
+                         f"{cand.matched_by or 'an unnamed locator element'}"
+                         + (f", in {j.name}" if j
+                            else ", in no mapped jurisdiction")}
+                    for cand, j in placed]
+                data["note"] = (
+                    f"{len(distinct)} matches scored at or above "
+                    f"{g.min_score} and they are in different governments. "
+                    "Picking one would choose a government the user did "
+                    "not. Present them and let the user choose, or pass a "
+                    "fuller address.")
+                return b.build(data, Coverage(
+                    registry=registry_dim,
+                    execution=ExecutionCoverage.complete,
+                    pagination=PaginationCoverage.complete,
+                    result=ResultCoverage.hit,
+                    jurisdictions_searched=["va"],
+                    known_limitations=sorted(m.coverage.known_limitations)),
+                    requires_user_choice=True)
+
     best = confident[0]
     ev = b.add_evidence(source_ref=geo_ref, record_id=best.record_id,
                         retrieved_at=g.retrieved_at,
                         transformations=g.transformations,
                         payload_hash=g.payload_hash())
-    data["geocode"].update({**best.canonical(), "evidence_ref": ev})
+    data["geocode"].update({**best.canonical(), "evidence_refs": [ev]})
     if best.address_type.lower() in ("postal", "postalext", "locality"):
         b.warn(WarningCode.boundary_precision,
                f"The locator matched this address at the {best.address_type} "
@@ -1089,6 +1183,22 @@ async def resolve_location(ctx: RuntimeContext, address: str = "",
             jurisdictions_unavailable=c.gaps,
             source_failures=c.failures))
 
+    if c.narrowest_unknown:
+        data["resolved"] = None
+        data["candidates"] = []
+        data["note"] = (
+            "The address geocoded, but the town boundary layer could not "
+            "be reached, so the narrowest government at that coordinate is "
+            "unknown. A county polygon was found; the address may sit in "
+            "an incorporated town inside it, and naming the county would "
+            "be a plausible wrong answer. The coordinate is in `geocode` "
+            "and can be retried.")
+        return b.build(data, Coverage(
+            registry=registry_dim, execution=ExecutionCoverage.partial,
+            pagination=PaginationCoverage.complete,
+            result=ResultCoverage.hit,
+            jurisdictions_searched=["va"], source_failures=c.failures))
+
     if c.empty:
         data["resolved"] = None
         data["candidates"] = []
@@ -1111,7 +1221,10 @@ async def resolve_location(ctx: RuntimeContext, address: str = "",
         data["resolved"] = {"id": resolved_j.id, "name": resolved_j.name,
                             "kind": resolved_j.kind.value,
                             "fips": resolved_j.fips,
-                            "basis": "geocode_then_point_in_polygon"}
+                            "basis": "geocode_then_point_in_polygon",
+                            # The geocode evidence AND the boundary
+                            # polygons: this answer rests on both steps.
+                            "evidence_refs": [ev] + c.evidence_refs}
     else:
         data["resolved"] = None
         data["unmapped_match"] = {
@@ -1231,6 +1344,11 @@ async def find_buildings(ctx: RuntimeContext, jurisdiction: str,
             except CommonwealthError as err:
                 failures.append(failure(pm.id, err.code, str(err)))
                 continue
+            # Registered whether or not it matched. A source that answered
+            # "no such PIN" was contacted, and its identity and freshness
+            # belong in the envelope — an empty answer with empty
+            # provenance hides which sources were even asked.
+            parcel_ref = _source_entry(b, pm, pq)
             if pq.records:
                 parcel_geometry = dict(pq.records[0].geometry or {})
                 parcel_geometry.setdefault("spatialReference", {"wkid": 4326})
@@ -1277,9 +1395,16 @@ async def find_buildings(ctx: RuntimeContext, jurisdiction: str,
                                            intersect_geometry=parcel_geometry)
                 q.transformations.append("parcel_geometry_intersection")
             else:
-                q = await ctx.arcgis.query(m, "buildings",
-                                           geometry_point=(lon, lat),
-                                           distance_meters=radius_meters)
+                # Scoped like every other point path. The buffer reaches
+                # `radius_meters`, so a point near a locality line returns
+                # the neighbour's footprints while the envelope reports
+                # only the jurisdiction that was asked for.
+                q = await ctx.arcgis.query(
+                    m, "buildings",
+                    where_equals=_scoped_where(ctx, m, "buildings", stack,
+                                               {}) or None,
+                    geometry_point=(lon, lat),
+                    distance_meters=radius_meters)
         except CommonwealthError as err:
             failures.append(failure(m.id, err.code, str(err)))
             continue
@@ -1295,6 +1420,10 @@ async def find_buildings(ctx: RuntimeContext, jurisdiction: str,
             q.transformations.append(
                 f"area:web_mercator_to_ground(lat={round(ref_lat, 4)})")
         block = _records_block(b, _source_entry(b, m, q), q, m)
+        if parcel_geometry is None:
+            note = _widened_note(ctx, m, "buildings", stack)
+            if note:
+                block["widened_scope"] = note
         for row in block["records"]:
             row["record_updated_at"] = _epoch_ms_to_iso(
                 row.pop("last_update", None))
@@ -1500,11 +1629,23 @@ async def find_roads(ctx: RuntimeContext, jurisdiction: str,
     failures = []
     queries: list[ArcGISQueryResult] = []
     unscoped: list[str] = []
+    unscoped_by_geometry: list[str] = []
     widened: dict[str, str] = {}
     for m in selected:
         layer_key = _road_layer(ctx, m)
         scope = _jurisdiction_scope(ctx, m, layer_key, stack)
-        if scope.groups is None:
+        by_point = lon is not None
+        if by_point and scope.mode == "jurisdiction_names":
+            # VDOT leaves RTE_JURIS_PROPER_NM null on about 6,500 routes
+            # — the interstates and frontage roads that span localities —
+            # and its own manifest says those are meant to be found by
+            # proximity. ANDing a name equality onto a geometry filter
+            # drops exactly those, so a query beside an interstate would
+            # not return the interstate. The point already bounds the
+            # answer; the name filter has nothing left to add.
+            scope = _Scope(narrowed_to=stack[0] if stack else None)
+            unscoped_by_geometry.append(m.id)
+        if scope.groups is None and not by_point:
             unscoped.append(m.id)
         note = scope.note(ctx, stack[0])
         if note:
@@ -1561,6 +1702,14 @@ async def find_roads(ctx: RuntimeContext, jurisdiction: str,
                     "jurisdiction key or the jurisdiction supplies no "
                     "value for it — so their results are statewide for "
                     "the query. Read them accordingly."}
+    if unscoped_by_geometry:
+        data["geometry_scoped_sources"] = {
+            "source_ids": unscoped_by_geometry,
+            "note": "These sources key jurisdiction on a NAME, and some of "
+                    "their records leave it blank — the routes that span "
+                    "localities. The point and its radius bound this "
+                    "answer instead, so a road with no jurisdiction "
+                    "recorded is still found."}
     if widened:
         # A town has no FIPS of its own, so a layer keyed on FIPS reaches
         # its county and no further. Saying so is the difference between

@@ -74,6 +74,28 @@ async def _resolve_by_point(ctx: RuntimeContext, b: EnvelopeBuilder,
                      result=ResultCoverage.empty,
                      source_failures=c.failures))
 
+    if c.narrowest_unknown:
+        # The county was retrieved and is not the answer: the point may
+        # sit in a town whose polygon was never fetched, so naming the
+        # county would be a plausible wrong government rather than a
+        # partial one.
+        return b.build(
+            {"resolved": None, "candidates": [],
+             "point": {"lon": lon, "lat": lat},
+             "note": "The town boundary layer could not be reached, so the "
+                     "narrowest government at this point is unknown. A "
+                     "county polygon was found, but this point may sit in "
+                     "an incorporated town inside it. Retry, or name the "
+                     "jurisdiction directly."},
+            Coverage(registry=c.registry_dim,
+                     execution=ExecutionCoverage.partial,
+                     pagination=PaginationCoverage.complete,
+                     result=ResultCoverage.empty,
+                     jurisdictions_searched=STATEWIDE_STACK,
+                     source_failures=c.failures,
+                     known_limitations=sorted(
+                         c.manifest.coverage.known_limitations)))
+
     if c.empty:
         return b.build(
             {"resolved": None, "candidates": [],
@@ -99,7 +121,11 @@ async def _resolve_by_point(ctx: RuntimeContext, b: EnvelopeBuilder,
         data["resolved"] = {"id": resolved_j.id, "name": resolved_j.name,
                             "kind": resolved_j.kind.value,
                             "fips": resolved_j.fips,
-                            "basis": "point_in_polygon"}
+                            "basis": "point_in_polygon",
+                            # Which boundary polygons support this
+                            # government — for a town, both the town's
+                            # and its locality's.
+                            "evidence_refs": c.evidence_refs}
         data["candidates"] = []
     else:
         # The boundary source knows this government; Commonwealth's own

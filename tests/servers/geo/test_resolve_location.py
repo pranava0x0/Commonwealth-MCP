@@ -90,7 +90,8 @@ async def test_the_geocode_step_is_visible_in_the_envelope(cw_ctx):
     geo = env.data["geocode"]
     assert geo["matched_by"] == "AddressPoint"
     assert geo["score"] >= geo["min_score"]
-    ev = next(e for e in env.evidence if e.id == geo["evidence_ref"])
+    ev = next(e for e in env.evidence
+             if e.id == geo["evidence_refs"][0])
     assert "geocode:findAddressCandidates" in ev.transformations
     src = next(s for s in env.provenance if s.id == geo["source_ref"])
     assert src.source_id == "va-vgin-composite-locator"

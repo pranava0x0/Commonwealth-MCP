@@ -2628,33 +2628,6 @@
    "basis": "alias",
    "candidates": []
   },
-  "va:columbia-town": {
-   "resolved": {
-    "id": "va:columbia-town",
-    "name": "Columbia (town)",
-    "kind": "town"
-   },
-   "basis": "exact_id",
-   "candidates": []
-  },
-  "columbia (town)": {
-   "resolved": {
-    "id": "va:columbia-town",
-    "name": "Columbia (town)",
-    "kind": "town"
-   },
-   "basis": "exact_name",
-   "candidates": []
-  },
-  "town of columbia": {
-   "resolved": {
-    "id": "va:columbia-town",
-    "name": "Columbia (town)",
-    "kind": "town"
-   },
-   "basis": "alias",
-   "candidates": []
-  },
   "va:courtland-town": {
    "resolved": {
     "id": "va:courtland-town",
@@ -3878,6 +3851,26 @@
    },
    "basis": "alias",
    "candidates": []
+  },
+  "town of columbia": {
+   "resolved": {
+    "id": "va:fluvanna-county",
+    "name": "Fluvanna County",
+    "kind": "county"
+   },
+   "basis": "former_name",
+   "candidates": [],
+   "former_name": "Town of Columbia"
+  },
+  "columbia town": {
+   "resolved": {
+    "id": "va:fluvanna-county",
+    "name": "Fluvanna County",
+    "kind": "county"
+   },
+   "basis": "former_name",
+   "candidates": [],
+   "former_name": "Columbia town"
   },
   "va:franklin-city": {
    "resolved": {
@@ -5966,6 +5959,26 @@
    },
    "basis": "alias",
    "candidates": []
+  },
+  "town of st. charles": {
+   "resolved": {
+    "id": "va:lee-county",
+    "name": "Lee County",
+    "kind": "county"
+   },
+   "basis": "former_name",
+   "candidates": [],
+   "former_name": "Town of St. Charles"
+  },
+  "st. charles town": {
+   "resolved": {
+    "id": "va:lee-county",
+    "name": "Lee County",
+    "kind": "county"
+   },
+   "basis": "former_name",
+   "candidates": [],
+   "former_name": "St. Charles town"
   },
   "va:leesburg-town": {
    "resolved": {
@@ -9587,33 +9600,6 @@
    "basis": "alias",
    "candidates": []
   },
-  "va:st-charles-town": {
-   "resolved": {
-    "id": "va:st-charles-town",
-    "name": "St. Charles (town)",
-    "kind": "town"
-   },
-   "basis": "exact_id",
-   "candidates": []
-  },
-  "st. charles (town)": {
-   "resolved": {
-    "id": "va:st-charles-town",
-    "name": "St. Charles (town)",
-    "kind": "town"
-   },
-   "basis": "exact_name",
-   "candidates": []
-  },
-  "town of st. charles": {
-   "resolved": {
-    "id": "va:st-charles-town",
-    "name": "St. Charles (town)",
-    "kind": "town"
-   },
-   "basis": "alias",
-   "candidates": []
-  },
   "va:st-paul-town": {
    "resolved": {
     "id": "va:st-paul-town",
@@ -11936,15 +11922,6 @@
    "basis": "exact_name",
    "candidates": []
   },
-  "columbia": {
-   "resolved": {
-    "id": "va:columbia-town",
-    "name": "Columbia (town)",
-    "kind": "town"
-   },
-   "basis": "exact_name",
-   "candidates": []
-  },
   "courtland": {
    "resolved": {
     "id": "va:courtland-town",
@@ -13700,15 +13677,6 @@
    "basis": "exact_name",
    "candidates": []
   },
-  "st. charles": {
-   "resolved": {
-    "id": "va:st-charles-town",
-    "name": "St. Charles (town)",
-    "kind": "town"
-   },
-   "basis": "exact_name",
-   "candidates": []
-  },
   "st. paul": {
    "resolved": {
     "id": "va:st-paul-town",
@@ -14610,8 +14578,7 @@
   "colonial beach (town)",
   "colonial heights",
   "colonial heights city",
-  "columbia",
-  "columbia (town)",
+  "columbia town",
   "commonwealth of virginia",
   "county of accomack",
   "county of albemarle",
@@ -15089,8 +15056,7 @@
   "southampton county",
   "spotsylvania",
   "spotsylvania county",
-  "st. charles",
-  "st. charles (town)",
+  "st. charles town",
   "st. paul",
   "st. paul (town)",
   "stafford",
@@ -15403,7 +15369,6 @@
   "va:coeburn-town",
   "va:colonial-beach-town",
   "va:colonial-heights-city",
-  "va:columbia-town",
   "va:courtland-town",
   "va:covington-city",
   "va:craig-county",
@@ -15600,7 +15565,6 @@
   "va:south-hill-town",
   "va:southampton-county",
   "va:spotsylvania-county",
-  "va:st-charles-town",
   "va:st-paul-town",
   "va:stafford-county",
   "va:stanardsville-town",

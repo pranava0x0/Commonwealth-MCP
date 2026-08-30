@@ -1,0 +1,266 @@
+"""Regressions for the eleven findings in PR #38's later review rounds.
+
+Nine of the eleven are three classes I fixed in one place and not the
+others: jurisdiction scoping on point paths, `evidence_refs` on material
+records, and provenance for a source that answered with nothing. Where a
+class can be checked as a class rather than per tool, it is — that is the
+only thing that stops the next instance slipping.
+"""
+import asyncio
+
+import pytest
+import yaml
+
+from commonwealth.core.jurisdiction import JurisdictionTable
+from commonwealth.domains.geo import (find_address, find_buildings,
+                                      find_landmarks, find_parcel,
+                                      find_roads, find_zoning,
+                                      resolve_location)
+from commonwealth.domains.registry import resolve_jurisdiction
+from commonwealth.runtime import SOURCES_DIR
+
+JURISDICTIONS = SOURCES_DIR / "jurisdictions"
+
+
+# --- class: every point path is scoped to the jurisdiction ----------------
+
+@pytest.mark.parametrize("tool,kwargs,layer", [
+    (find_address, {"lon": -77.26436153964, "lat": 38.90067620715},
+     "addresses"),
+    (find_buildings, {"lon": -77.26436153964, "lat": 38.90067620715},
+     "buildings"),
+    (find_landmarks, {"lon": -77.2653, "lat": 38.9012}, "landmarks"),
+])
+async def test_every_buffered_point_path_carries_the_jurisdiction_filter(
+        cw_ctx, monkeypatch, tool, kwargs, layer):
+    """A buffered point query near a locality line returns the
+    neighbour's records while the envelope reports only the jurisdiction
+    that was asked for. Addresses were fixed in one round and buildings
+    were still open in the next, which is why this is parametrized over
+    the tools rather than written once per tool."""
+    seen: list[dict] = []
+    real = cw_ctx.arcgis.query
+
+    async def spy(manifest, layer_key, **kw):
+        if layer_key == layer:
+            seen.append(kw)
+        return await real(manifest, layer_key, **kw)
+
+    monkeypatch.setattr(cw_ctx.arcgis, "query", spy)
+    await tool(cw_ctx, jurisdiction="Vienna", **kwargs)
+    assert seen, f"no {layer} query was issued"
+    assert seen[0].get("where_equals") == {"fips": "51059"}, seen[0]
+
+
+async def test_a_name_keyed_source_is_not_name_filtered_by_a_point_query(
+        cw_ctx):
+    """VDOT leaves its jurisdiction NAME blank on the ~6,500 routes that
+    span localities, and its own manifest says those are meant to be
+    found by proximity. ANDing the name onto a geometry filter dropped
+    exactly those — a query beside an interstate would not return the
+    interstate."""
+    env = await find_roads(cw_ctx, jurisdiction="Vienna",
+                           lon=-77.2653, lat=38.9012)
+    assert env.data["geometry_scoped_sources"]["source_ids"] == [
+        "va-vdot-lrs-routes"]
+    counts = {b["source_id"]: b["record_count"] for b in env.data["results"]}
+    assert counts["va-vdot-lrs-routes"] == 3, (
+        "the name-scoped version of this query found 2")
+
+
+# --- class: a material record names the evidence it rests on --------------
+
+async def test_a_resolved_address_names_both_the_geocode_and_the_boundary(
+        cw_ctx):
+    env = await resolve_location(
+        cw_ctx, address="6800 Beulah St, Alexandria, VA 22310")
+    ids = {e.id for e in env.evidence}
+    resolved = env.data["resolved"]
+    assert len(resolved["evidence_refs"]) > 1, (
+        "the answer rests on a geocode AND a boundary polygon")
+    assert set(resolved["evidence_refs"]) <= ids
+    assert "evidence_ref" not in env.data["geocode"], "singular field"
+    assert set(env.data["geocode"]["evidence_refs"]) <= ids
+
+
+async def test_a_resolved_point_names_the_boundary_polygons(cw_ctx):
+    env = await resolve_jurisdiction(cw_ctx, lon=-77.2653, lat=38.9012)
+    resolved = env.data["resolved"]
+    assert resolved["evidence_refs"], "no evidence on a point resolution"
+    assert set(resolved["evidence_refs"]) <= {e.id for e in env.evidence}
+
+
+async def test_ambiguous_candidates_name_their_evidence_and_government(
+        cw_ctx):
+    """"Cntr Steet Viena VA" returns four matches at or above the
+    threshold. Two place into Vienna town and two into Fairfax County, so
+    taking the locator's first result picked one of two governments
+    silently.
+
+    The first candidate is addressed FALLS CHURCH and places into Fairfax
+    County, which is the postal-city trap turning up inside the ambiguity
+    check — one more reason the comparison is on placed governments and
+    not on the strings the locator returned.
+
+    They are also the records whose ambiguity the caller has to judge, so
+    they are material and name their evidence like any other."""
+    env = await resolve_location(cw_ctx, address="Cntr Steet Viena VA")
+    assert env.data["resolved"] is None
+    assert env.requires_user_choice is True
+    assert "in different governments" in env.data["note"]
+    ids = {e.id for e in env.evidence}
+    governments = set()
+    for cand in env.data["candidates"]:
+        assert cand["evidence_refs"] and set(cand["evidence_refs"]) <= ids
+        assert cand["distinguisher"]
+        governments.add(cand["jurisdiction"])
+    assert governments == {"va:vienna-town", "va:fairfax-county"}, governments
+    falls_church = next(c for c in env.data["candidates"]
+                        if "FALLS CHURCH" in c["matched_address"])
+    assert falls_church["jurisdiction"] == "va:fairfax-county", (
+        "a FALLS CHURCH postal address that sits in Fairfax County")
+
+
+# --- class: a source that answered with nothing was still consulted -------
+
+async def test_a_parcel_miss_still_names_the_sources_that_answered(cw_ctx):
+    """An empty answer with empty provenance hides which sources were
+    even asked, and their retrieval and freshness metadata with them."""
+    env = await find_buildings(cw_ctx, jurisdiction="Richmond City",
+                               pin="NO SUCH PIN")
+    assert env.data["results"] == []
+    assert env.provenance, "no source registered for a lookup that ran"
+    assert "va-richmond-city-parcels-zoning" in {
+        s.source_id for s in env.provenance}
+
+
+# --- a plausible wrong government is worse than no answer -----------------
+
+async def test_a_town_layer_failure_withholds_the_county(cw_ctx,
+                                                         monkeypatch):
+    """If the towns query fails while localities succeeds, the county is
+    a plausible WRONG answer: the point may sit in a town whose polygon
+    was never retrieved, and a caller would route later queries through
+    the wrong government with no sign anything was missed."""
+    from commonwealth.core.errors import SourceUnavailable
+
+    real = cw_ctx.arcgis.query
+
+    async def flaky(manifest, layer_key, **kw):
+        if layer_key == "towns":
+            raise SourceUnavailable("towns layer is down (test)")
+        return await real(manifest, layer_key, **kw)
+
+    monkeypatch.setattr(cw_ctx.arcgis, "query", flaky)
+    env = await resolve_jurisdiction(cw_ctx, lon=-77.2653, lat=38.9012)
+    assert env.data["resolved"] is None, (
+        "returned a government while the narrower layer was unreachable")
+    assert "may sit in an incorporated town" in env.data["note"]
+    assert env.coverage.execution.value == "partial"
+    assert env.coverage.source_failures
+
+
+async def test_confident_geocodes_in_one_place_still_resolve(cw_ctx):
+    """The ambiguity check compares GOVERNMENTS, not distance. The
+    locator's address-point and road-centerline elements return the same
+    Vienna address ~40 m apart at score 100, and a distance test flagged
+    that as ambiguous when it is one place."""
+    env = await resolve_location(
+        cw_ctx, address="127 Center St S, Vienna, VA 22180")
+    assert env.data["resolved"]["id"] == "va:vienna-town"
+    assert env.requires_user_choice is False
+
+
+# --- data: two dissolved towns were registered as live governments --------
+
+@pytest.mark.parametrize("slug", ["columbia-town", "st-charles-town"])
+def test_a_dissolved_town_has_no_row(slug):
+    """Columbia and St. Charles are Census Designated Places — statistical
+    areas with no government (FUNCSTAT 'S' in TIGERweb's current and 2020
+    layers, checked 2026-08-30). VGIN's towns layer still carries their
+    polygons, and reading that absence as a Census coverage quirk is how
+    both got registered as live towns. Same trap as Bedford, two rows
+    over."""
+    assert not (JURISDICTIONS / f"{slug}.yaml").exists()
+    table = JurisdictionTable.load(JURISDICTIONS)
+    assert table.get(f"va:{slug.replace('-town', '')}-town") is None
+
+
+@pytest.mark.parametrize("name,successor", [
+    ("Town of Columbia", "va:fluvanna-county"),
+    ("Town of St. Charles", "va:lee-county"),
+])
+def test_a_dissolved_towns_name_resolves_to_its_county(name, successor):
+    """The territory reverted to county governance, so the county is the
+    successor — the same rule Bedford uses, one level down."""
+    table = JurisdictionTable.load(JURISDICTIONS)
+    r = table.resolve(name)
+    assert r.resolved is not None and r.resolved.id == successor, name
+    assert r.basis == "former_name"
+
+
+def test_the_generator_refuses_a_place_census_calls_unincorporated():
+    """The towns half of the cross-check, which did not exist: VGIN's
+    layer is the only source that had to agree with itself."""
+    import sys
+    from commonwealth.runtime import PROJECT_ROOT
+    sys.path.insert(0, str(PROJECT_ROOT / "tools"))
+    import build_jurisdictions as gen
+    import inspect
+
+    src = inspect.getsource(gen.town_rows)
+    assert "Incorporated Places" in src and "continue" in src, (
+        "a town absent from Census's incorporated list must be skipped")
+    assert not hasattr(gen, "intersecting_localities"), (
+        "the polygon-intersection workaround existed to give those places "
+        "a parent; it should be gone with them")
+
+
+# --- a historical name must not answer silently ---------------------------
+
+async def test_a_geo_tool_warns_on_a_historical_jurisdiction_name(cw_ctx):
+    """Every geo tool's description tells the caller to pass the
+    jurisdiction string as given, so a historical name reaches them as
+    readily as it reaches registry.resolve_jurisdiction — and answering
+    it silently returns current data under a dead government's name."""
+    # find_zoning, because Bedford has no registered zoning source: the
+    # warning has to fire on the RESOLUTION, before any source is
+    # queried, which is also what keeps this test offline.
+    env = await find_zoning(cw_ctx, jurisdiction="Bedford City",
+                            pin="ANY-PIN")
+    warning = next(w for w in env.warnings if w.code.value == "alias_match")
+    assert "no longer exists" in warning.message
+    assert "Bedford (town)" in warning.message
+
+
+async def test_a_current_jurisdiction_name_raises_no_such_warning(cw_ctx):
+    env = await find_zoning(cw_ctx, jurisdiction="Richmond City",
+                            pin="C0010126019")
+    assert not [w for w in env.warnings if w.code.value == "alias_match"]
+
+
+# --- the geocoder's declared probe was unreachable from the CLI -----------
+
+def test_sources_probe_dispatches_on_every_active_adapter_type():
+    """`sources probe <locator>` reported "no probe", examined zero
+    layers, and exited nonzero, while the manifest declared a real probe
+    and the adapter implemented it. Checked by reading the dispatch, so
+    the test stays offline."""
+    import ast
+    from commonwealth.runtime import PROJECT_ROOT
+
+    tree = ast.parse((PROJECT_ROOT / "src" / "commonwealth" / "cli" /
+                      "__main__.py").read_text())
+    fn = next(n for n in ast.walk(tree)
+              if isinstance(n, ast.FunctionDef)
+              and n.name == "cmd_sources_probe")
+    handled = {n.value for n in ast.walk(fn)
+               if isinstance(n, ast.Constant) and isinstance(n.value, str)}
+    from commonwealth.core.registry import SourceRegistry
+    active = {m.adapter.type for m in
+              SourceRegistry.load(SOURCES_DIR).manifests.values()
+              if m.lifecycle.declared_state.value == "active"}
+    missing = sorted(a for a in active if a not in handled)
+    assert missing == [], (
+        f"`sources probe` has no branch for active adapter type(s): "
+        f"{missing}")

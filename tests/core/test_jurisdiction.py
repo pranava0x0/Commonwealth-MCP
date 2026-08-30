@@ -13,20 +13,25 @@ def table() -> JurisdictionTable:
 
 
 def test_table_covers_every_virginia_locality(table):
-    """133 counties and independent cities, 191 incorporated towns, plus
+    """133 counties and independent cities, 189 incorporated towns, plus
     the state itself (issue #25). The counts come from the two lists the
     generator cross-checked — VGIN's boundary layer and Census TIGERweb
     agreed on all 133 on 2026-08-29 — so a drop here means rows were lost,
-    not that Virginia reorganised."""
+    not that Virginia reorganised.
+
+    189, not the 191 polygons VGIN's towns layer carries: Columbia and
+    St. Charles are Census Designated Places, statistical areas with no
+    government, and both were registered as live towns until 2026-08-30.
+    Their names resolve through their county's `former_names`."""
     kinds: dict[str, int] = {}
     for jid in sorted(table.ids()):
         kinds[table.get(jid).kind.value] = kinds.get(
             table.get(jid).kind.value, 0) + 1
     assert kinds["county"] == 95
     assert kinds["independent-city"] == 38
-    assert kinds["town"] == 191
+    assert kinds["town"] == 189
     assert kinds["state"] == 1
-    assert len(table) == 325
+    assert len(table) == 323
 
 
 def test_every_locality_sits_under_the_state(table):

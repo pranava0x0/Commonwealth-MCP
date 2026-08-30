@@ -6,9 +6,14 @@ Two independent sources seed it and check each other:
 - VGIN's Administrative Boundaries localities layer, already registered
   here, which carries all 133 with FIPS, GNIS, and the publisher's own
   jurisdiction type.
-- Census TIGERweb, the federal list, which carries FIPS and the legal name.
+- Census TIGERweb, the federal list, which carries FIPS and the legal
+  name, and — for towns — whether a place is still incorporated at all.
 
-Neither is trusted alone. Where they disagree the row is still written and
+Neither is trusted alone. The towns half matters as much as the
+localities half: VGIN's towns layer carries places whose charters are
+gone, and a place Census lists as a Census Designated Place rather than
+an Incorporated Place is a statistical area with no government. Those are
+skipped and reported. Where they disagree the row is still written and
 the disagreement is reported for a human to look at, because a disagreement
 between two official lists is a finding, not a merge conflict to resolve
 silently.
@@ -244,28 +249,6 @@ def point_in_rings(lon: float, lat: float, rings: list) -> bool:
     return inside
 
 
-def intersecting_localities(place_fips: str) -> list[str]:
-    """Locality FIPS codes whose polygon intersects one town's polygon,
-    asked of VGIN directly. The fallback for a town Census no longer
-    carries as an incorporated place."""
-    town = fetch(VGIN_TOWNS, {
-        "f": "json", "where": f"STPLFIPS = '{STATE_FIPS}{place_fips}'",
-        "returnGeometry": "true", "outFields": "STPLFIPS", "outSR": "4326",
-        "resultRecordCount": "5"})
-    features = town.get("features") or []
-    if not features:
-        return []
-    geometry = dict(features[0].get("geometry") or {})
-    geometry.setdefault("spatialReference", {"wkid": 4326})
-    hit = fetch(VGIN_LOCALITIES, {
-        "f": "json", "geometry": json.dumps(geometry),
-        "geometryType": "esriGeometryPolygon", "inSR": "4326",
-        "spatialRel": "esriSpatialRelIntersects", "returnGeometry": "false",
-        "outFields": "STCOFIPS", "resultRecordCount": "10"})
-    return sorted({str(f["attributes"]["STCOFIPS"])
-                   for f in hit.get("features") or []})
-
-
 def town_rows(towns: dict[str, dict], localities: list[dict],
               ) -> tuple[list[dict], list[str]]:
     """Towns get a `place_fips` and a `parent`.
@@ -286,21 +269,31 @@ def town_rows(towns: dict[str, dict], localities: list[dict],
                "name": f"{t['name']} (town)", "kind": "town",
                "place_fips": place_fips}
         point = points.get(place_fips)
-        if point is not None:
-            basis = "TIGERweb interior point"
-            containing = sorted({fips for fips, rings in polygons
-                                 if point_in_rings(point[0], point[1], rings)})
-        else:
-            # VGIN publishes a polygon for a place TIGERweb's current
-            # Incorporated Places layer does not. Rather than dropping the
-            # parent, ask the same publisher: which locality polygons does
-            # this town's own polygon intersect? That is one extra request
-            # per case (two in the 2026-08-29 run) and needs no interior-
-            # point assumption at all.
-            basis = ("not in TIGERweb's Incorporated Places; VGIN polygon "
-                     "intersection instead")
-            containing = intersecting_localities(place_fips)
-            notes.append(f"town {place_fips} ({t['name']}): {basis}")
+        if point is None:
+            # NOT a quirk of Census coverage, which is how this read on
+            # 2026-08-29 and why two dissolved towns were registered as
+            # live governments. VGIN's towns layer still carries a place
+            # whose charter is gone; Census moved it to a Census
+            # Designated Place, a statistical area with no government.
+            # Absence from Incorporated Places is the signal, and the
+            # right response is to leave it out and say so, not to work
+            # around it.
+            #
+            # The two found in the 2026-08-29 run were Columbia (charter
+            # gone, now a CDP, territory reverted to Fluvanna County) and
+            # St. Charles (same, Lee County). Both are recorded as
+            # `former_names` on their county, so a record naming either
+            # still resolves to the government that covers that ground.
+            notes.append(
+                f"town {place_fips} ({t['name']}): NOT in TIGERweb's "
+                "Incorporated Places, so it is not an incorporated town. "
+                "Skipped. If it was one, it dissolved — add its name to "
+                "the successor government's `former_names` rather than "
+                "adding a row here.")
+            continue
+        basis = "TIGERweb interior point"
+        containing = sorted({fips for fips, rings in polygons
+                             if point_in_rings(point[0], point[1], rings)})
         parents = [by_fips[f] for f in containing if f in by_fips]
         if len(parents) == 1:
             row["parent"] = parents[0]

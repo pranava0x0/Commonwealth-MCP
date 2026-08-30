@@ -74,12 +74,18 @@ async def test_the_vdot_source_is_scoped_by_name_not_by_fips(cw_ctx):
 
 
 async def test_by_point_with_a_radius(cw_ctx):
+    """VDOT returns three here, not the two a name-scoped query found.
+    Its jurisdiction key is a NAME and it leaves that blank on the ~6,500
+    routes that span localities, so ANDing the name onto a geometry
+    filter dropped exactly the routes proximity is for."""
     env = await find_roads(cw_ctx, jurisdiction="Vienna",
                            lon=-77.2653, lat=38.9012)
     counts = {blk["source_id"]: blk["record_count"]
               for blk in env.data["results"]}
     assert counts["va-vgin-road-centerlines"] == 4
-    assert counts["va-vdot-lrs-routes"] == 2
+    assert counts["va-vdot-lrs-routes"] == 3
+    assert env.data["geometry_scoped_sources"]["source_ids"] == [
+        "va-vdot-lrs-routes"]
 
 
 async def test_a_screening_warning_says_a_centerline_is_not_a_boundary(

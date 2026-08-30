@@ -1,6 +1,6 @@
 {
  "source_id": "va-vdot-lrs-routes",
- "recorded_at": "2026-08-30T03:23:59Z",
+ "recorded_at": "2026-08-30T15:01:48Z",
  "rights": {
   "publisher": "Virginia Department of Transportation (VDOT)",
   "terms_url": "https://www.virginiaroads.org/",
@@ -28,10 +28,11 @@
    "names": []
   },
   "near_point": {
-   "record_count": 2,
+   "record_count": 3,
    "names": [
     "Center ST N (PR - Town of Vienna)",
-    "Center ST S (PR - Town of Vienna)"
+    "Center ST S (PR - Town of Vienna)",
+    "VA-123N"
    ]
   },
   "no_match": {
@@ -1761,7 +1762,6 @@
     "outFields": "LEN,LRM_CURRENCY_DT,OBJECTID,RTE_CATEGORY_NM,RTE_COMMON_NM,RTE_JURIS_CD,RTE_JURIS_PROPER_NM,RTE_NBR,RTE_NM,RTE_STATUS_NM,RTE_STREET_NM,RTE_TYPE_NM",
     "resultRecordCount": "50",
     "returnGeometry": "false",
-    "where": "((RTE_JURIS_PROPER_NM = 'Town of Vienna') OR (RTE_JURIS_PROPER_NM = 'Vienna'))",
     "geometry": "{\"x\": -77.2653, \"y\": 38.9012, \"spatialReference\": {\"wkid\": 4326}}",
     "geometryType": "esriGeometryPoint",
     "inSR": "4326",
@@ -1889,6 +1889,22 @@
      }
     ],
     "features": [
+     {
+      "attributes": {
+       "LEN": null,
+       "LRM_CURRENCY_DT": 1767049000000,
+       "OBJECTID": 97724,
+       "RTE_CATEGORY_NM": "State Highway Primary",
+       "RTE_COMMON_NM": "VA-123N",
+       "RTE_JURIS_CD": null,
+       "RTE_JURIS_PROPER_NM": null,
+       "RTE_NBR": 123,
+       "RTE_NM": "R-VA   SR00123NB",
+       "RTE_STATUS_NM": null,
+       "RTE_STREET_NM": null,
+       "RTE_TYPE_NM": "State Route"
+      }
+     },
      {
       "attributes": {
        "LEN": null,
