@@ -1,6 +1,6 @@
 # The Code of Virginia is publicly readable at law.lis.virginia.gov with
 # no key or registration; the JSON/XML API the developer portal advertises
-# is a separate, key-gated program (backlog.md's civic-vertical note) that
+# is a separate, key-gated program (the GitHub issues's civic-vertical note) that
 # this manifest does not use. The site itself is the primary published
 # text of the statute, so reading it directly is still reading the
 # authoritative source, not a lesser mirror of one. Endpoint structure and
@@ -34,7 +34,7 @@ access:
     separate keyed JSON/XML API program for bulk/structured access; this
     manifest reads the public HTML pages directly instead, since bulk
     access needs a registration step this project doesn't automate
-    around (backlog.md). Re-review with the standard 12-month cadence.
+    around (the GitHub issues). Re-review with the standard 12-month cadence.
   terms_reviewed_at: "2026-08-28"
   data_classification: open
 
@@ -74,4 +74,4 @@ lifecycle:
   declared_state: active
   added: "2026-08-28"
   last_verified: "2026-08-28"
-  verified_by: pranava
+  verified_by: pranava0x0

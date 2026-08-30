@@ -1,9 +1,9 @@
 """Geo tools: find_parcel and find_zoning (design/domain-servers.md § 3).
 
-Selection discipline is DECISIONS.md 0005 as Chosen: up to the top two
+Selection discipline is ../../../design/architecture.md decision 0005 as Chosen: up to the top two
 selectable sources are queried and every per-source result is surfaced;
 nothing reconciles two official answers into one. Ambiguous jurisdictions
-return candidates with requires_user_choice (DECISIONS.md 0004). Registry gaps,
+return candidates with requires_user_choice (../../../design/architecture.md decision 0004). Registry gaps,
 outages, and empty results are three different coverage shapes, never one.
 """
 from __future__ import annotations

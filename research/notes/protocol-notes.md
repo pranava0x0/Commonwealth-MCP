@@ -166,7 +166,7 @@ Concrete recommendations and numbers:
 - **Configurable response verbosity**: tools should support a `"concise"` vs `"detailed"` response mode. Cited example: a Slack thread response was **206 tokens in detailed form vs 72 tokens in concise form** (~65% reduction).
 - **Token efficiency defaults**: pagination, filtering, and truncation with sensible defaults; Claude Code caps tool responses at **25,000 tokens by default**; steer agents toward targeted searches over broad ones.
 - **Error messages**: return actionable, specific guidance (not opaque codes) so the agent can self-correct parameter mistakes.
-- **Tool descriptions matter a lot**: "small refinements to tool descriptions can yield dramatic improvements" — the post cites Claude Sonnet 3.5 reaching state-of-the-art on SWE-bench Verified partly via precise tool-description refinement (exact delta not specified in fetched content).
+- **Tool descriptions matter a lot**: "small refinements to tool descriptions can yield dramatic improvements" — the post cites Claude Sonnet 3.5 reaching the top score on SWE-bench Verified partly via precise tool-description refinement (exact delta not specified in fetched content).
 - **Semantic identifiers over technical ones**: returning human-readable/semantic identifiers instead of raw UUIDs "significantly improves Claude's precision in retrieval tasks" (no percentage given).
 
 ### (b) "Code execution with MCP" — https://www.anthropic.com/engineering/code-execution-with-mcp

@@ -3,7 +3,7 @@
 Spike scope: exact lookup by id / FIPS / name / alias. Point-in-polygon and
 address geocoding arrive with the geo-vertical milestone; nothing here guesses.
 Ambiguity is a first-class result: `resolve` returns candidates and never
-picks (DECISIONS.md 0004).
+picks (../../../design/architecture.md decision 0004).
 
 The jurisdiction table is data (sources/jurisdictions/*.yaml), versioned and
 reviewed like source manifests. FIPS codes in the seed set were verified

@@ -1,0 +1,34 @@
+Commonwealth-MCP documentation
+==============================
+
+The prose in this repository is licensed under the Creative Commons
+Attribution 4.0 International License (CC-BY-4.0).
+
+  Full text:  https://creativecommons.org/licenses/by/4.0/legalcode
+  Summary:    https://creativecommons.org/licenses/by/4.0/
+
+WHAT THIS COVERS
+
+  design/**       the architecture, the decision records, the specs
+  research/**     the research write-ups
+  docs/**         the site copy and the run log
+  *.md            the Markdown files at the repository root
+
+WHAT THIS DOES NOT COVER
+
+  Code, including code samples inside these documents, is Apache-2.0.
+  See LICENSE.
+
+  The source registry under sources/ is CC0. See sources/LICENSE.
+
+  Recorded government responses under tests/fixtures/ are third-party
+  content under their publishers' terms. See THIRD_PARTY_DATA.yml.
+
+  Quoted material. These documents quote government pages, community
+  discussions, and other projects' documentation. A quotation stays under
+  its own terms, and each is attributed where it appears.
+
+ATTRIBUTION
+
+  "Commonwealth-MCP contributors", with a link to
+  https://github.com/pranava0x0/Commonwealth-MCP

@@ -1,6 +1,6 @@
 """Assemble the MCPServer from domain tool registries.
 
-One process, domain packages, toolset profiles (DECISIONS.md 0001, 0002).
+One process, domain packages, toolset profiles (../../../design/architecture.md decision 0001, 0002).
 Registration order is deterministic: profile order, then registry order.
 Every tool is read-only and annotated as such. The deprecation-alias
 mechanism registers alias names that call the same handler; the table is

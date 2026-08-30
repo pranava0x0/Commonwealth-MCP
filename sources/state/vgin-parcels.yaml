@@ -1,5 +1,5 @@
 # Statewide layer, jurisdiction `va`: matches every jurisdiction's resolved
-# stack (DECISIONS.md 0005's canonical dual-source
+# stack (../../design/architecture.md decision 0005's canonical dual-source
 # example — a locality's own GIS layer plus VGIN's statewide aggregation),
 # so it is selected alongside any registered local source and queried
 # unranked (0005-C: query both, never merge). It is the only parcel.lookup
@@ -75,7 +75,7 @@ coverage:
       through this adapter's freshness path).
 
 authority_notes: >
-  DECISIONS.md 0005 names this exact pairing (a
+  ../../design/architecture.md decision 0005 names this exact pairing (a
   locality's own layer vs. VGIN's statewide aggregation) as the standing
   example for "query both, never rank." VGIN aggregates from local
   submissions rather than maintaining primary records itself, hence
@@ -97,4 +97,4 @@ lifecycle:
   declared_state: active
   added: "2026-08-28"
   last_verified: "2026-08-28"
-  verified_by: pranava
+  verified_by: pranava0x0

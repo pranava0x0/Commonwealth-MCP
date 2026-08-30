@@ -6,7 +6,7 @@ report, and which existing tools are worth federating with instead of
 rebuilding.
 
 Read this when you want to know *why* a decision went the way it did.
-[DECISIONS.md](DECISIONS.md) holds the choices themselves with their
+[../design/architecture.md Part 2](../design/architecture.md) holds the choices themselves with their
 alternatives intact; this file is the material those choices were made
 from. Nothing here is a plan. Where a finding changed the plan, the
 decision record says so.
@@ -53,7 +53,7 @@ What changed that matters here:
 | Protocol is now stateless: no `initialize` handshake, no `Mcp-Session-Id`; version/capabilities ride in `_meta` per request; new `server/discover` RPC (SEP-2575, SEP-2567) | Hosted deployment gets much simpler: any replica answers any request, no session affinity. Public read-only servers are the best case for this model. Design servers stateless from day one; cross-call state (cursors, cached result handles) must be explicit server-minted handles passed as tool arguments, which is exactly how the result-resource pattern already works. |
 | `ttlMs` and `cacheScope` now required on list/read results (SEP-2549); ETags for tool results on the roadmap | Scope matters (correction 2026-08-26, second review round): these fields attach to `tools/list`, `resources/read`, and peers — **not to ordinary `tools/call` results** — so tool-result freshness stays a Commonwealth-envelope job. The protocol hints apply to result *resources* and catalogs: manifests' cadence maps to `ttlMs` there, with `cacheScope: "public"` for the public surface. |
 | Servers SHOULD return `tools/list` in deterministic order (prompt-cache friendliness) | Trivial to comply, easy to get wrong with dict-ordered registries. Make tool ordering a contract test. |
-| Sampling, Roots, and Logging deprecated (SEP-2577); server-initiated requests replaced by MRTR: server returns `resultType: "input_required"` with `inputRequests`, client retries with `inputResponses` (SEP-2322) | Do not design anything on sampling/roots/logging. Ambiguity handling (jurisdiction disambiguation) has two viable shapes: return candidates in `data` (portable everywhere) or MRTR input-required (protocol-blessed, newer clients). Decision record DECISIONS.md 0004 covers the choice. |
+| Sampling, Roots, and Logging deprecated (SEP-2577); server-initiated requests replaced by MRTR: server returns `resultType: "input_required"` with `inputRequests`, client retries with `inputResponses` (SEP-2322) | Do not design anything on sampling/roots/logging. Ambiguity handling (jurisdiction disambiguation) has two viable shapes: return candidates in `data` (portable everywhere) or MRTR input-required (protocol-blessed, newer clients). Decision record ../design/architecture.md decision 0004 covers the choice. |
 | Tasks are an official extension (`io.modelcontextprotocol/tasks`), polling-based (SEP-2663) | Long-running work (bulk exports, big spatial scans) has a sanctioned pattern; V1 mostly won't need it, Phase 2+ bulk tooling should use the extension rather than inventing job tools. |
 | SSE resumability removed; HTTP+SSE transport formally deprecated | Matches the design spec's existing "no new SSE" stance. A dropped stream means re-issue the request; idempotent read tools make that free. |
 | Dynamic Client Registration deprecated in favor of Client ID Metadata Documents; `iss` validation required; per-issuer credential keying | Affects Phase 5 (authenticated tiers) only, but write the auth spec against CIMD + EMA, not DCR. |
@@ -98,7 +98,7 @@ Agent Skills now lives at agentskills.io as a cross-vendor spec (the Anthropic r
 - Standalone FastMCP (jlowin, gofastmcp.com): 3.4.7 stable, 4.0 in beta; the larger-framework option (auth providers, middleware, composition); whether released versions fully speak 2026-07-28 was not verifiable at research time.
 - TypeScript SDK v2 tracks the new spec (stable status unverified at research time).
 
-**For Commonwealth:** this is a real decision with a decision record (DECISIONS.md 0003): official SDK v2 (spec-tracking, minimal) vs standalone FastMCP 3.x/4.x (batteries, its own cadence). Whatever is chosen, pin exactly and never write the unqualified word "FastMCP" in docs without saying which one.
+**For Commonwealth:** this is a real decision with a decision record (../design/architecture.md decision 0003): official SDK v2 (spec-tracking, minimal) vs standalone FastMCP 3.x/4.x (batteries, its own cadence). Whatever is chosen, pin exactly and never write the unqualified word "FastMCP" in docs without saying which one.
 
 ### 7. MCP Apps shipped; client feature matrices are extension-shaped now
 
@@ -131,7 +131,7 @@ The long-form evaluation that shaped the architecture: twelve reference projects
 **Snapshot date:** 2026-08-26  
 **Scope:** MCP server architecture, tool exposure, skills, gateways/catalogs, data normalization, evaluation, security, and long-tail integration patterns
 
-**Revision note (2026-08-26, verification pass):** the repo reviews below were re-verified against live repos and docs the same day, and several moved. Per-section "Update 2026-08-26" blocks carry the corrections; the full current picture, plus exemplars this document predates (Sentry, Stripe, Grafana, Supabase, Notion's redesign, osmmcp, the civic/federal field, gateways), lives in [RESEARCH.md part 3](RESEARCH.md part 3). Protocol-level changes that reshape several conclusions here (the 2026-07-28 stateless spec revision, registry status, skills spec, SDK renames) are in [RESEARCH.md part 1](RESEARCH.md part 1), and practitioner findings in [RESEARCH.md part 4](RESEARCH.md part 4). This document remains the reasoning record; the research documents are the current facts.
+**Revision note (2026-08-26, verification pass):** the repo reviews below were re-verified against live repos and docs the same day, and several moved. Per-section "Update 2026-08-26" blocks carry the corrections; the full current picture, plus exemplars this document predates (Sentry, Stripe, Grafana, Supabase, Notion's redesign, osmmcp, the civic/federal field, gateways), lives in [../research/README.md part 3](#3-the-ecosystem-since-that-evaluation). Protocol-level changes that reshape several conclusions here (the 2026-07-28 stateless spec revision, registry status, skills spec, SDK renames) are in [../research/README.md part 1](#1-the-protocol-we-build-on), and practitioner findings in [../research/README.md part 4](#4-what-practitioners-say). This document remains the reasoning record; the research documents are the current facts.
 
 ---
 
@@ -793,7 +793,7 @@ As long-tail fallback: very high.
 
 ##### Update 2026-08-26 (covers § 7 and § 8)
 
-Cloudflare now documents the two strategies as permanent siblings, which strengthens this document's split-the-difference reading: the Code Mode server covers ~2,500 endpoints with 3 tools (their own table: ~1,100 tokens vs ~1.17M for full schemas, with a `?codemode=false` reversion to 2,594 individual tools), executing model-written JS in isolated Workers via the Dynamic Worker Loader; the ~16 domain servers continue separately, migrated to stateless SDK v2 with legacy SSE endpoints returning 410 Gone. The isolate-grade sandbox detail matters for Commonwealth: it is the reference bar DECISIONS.md 0008 sets for ever adopting code-mode execution in Explorer.
+Cloudflare now documents the two strategies as permanent siblings, which strengthens this document's split-the-difference reading: the Code Mode server covers ~2,500 endpoints with 3 tools (their own table: ~1,100 tokens vs ~1.17M for full schemas, with a `?codemode=false` reversion to 2,594 individual tools), executing model-written JS in isolated Workers via the Dynamic Worker Loader; the ~16 domain servers continue separately, migrated to stateless SDK v2 with legacy SSE endpoints returning 410 Gone. The isolate-grade sandbox detail matters for Commonwealth: it is the reference bar ../design/architecture.md decision 0008 sets for ever adopting code-mode execution in Explorer.
 
 ---
 
@@ -989,7 +989,7 @@ Do not treat as a production topology model.
 
 ##### Update 2026-08-26
 
-The repo shrank deliberately: 7 reference servers remain (Everything, Fetch, Filesystem, Git, Memory, Sequential Thinking, Time); 13 former servers (GitHub, Slack, Postgres, Puppeteer, Brave, ...) moved to `servers-archived` with successors named, and the README now routes discovery to the official MCP Registry. The stewards' own repo no longer models "many first-party servers in one place" — consistent with this document's advice, and with treating the registry (RESEARCH.md part 1 § 3) as the ecosystem's discovery layer.
+The repo shrank deliberately: 7 reference servers remain (Everything, Fetch, Filesystem, Git, Memory, Sequential Thinking, Time); 13 former servers (GitHub, Slack, Postgres, Puppeteer, Brave, ...) moved to `servers-archived` with successors named, and the README now routes discovery to the official MCP Registry. The stewards' own repo no longer models "many first-party servers in one place" — consistent with this document's advice, and with treating the registry (../research/README.md part 1 § 3) as the ecosystem's discovery layer.
 
 ---
 
@@ -1265,10 +1265,10 @@ Source terms must be explicit.
 
 Before coding, an agent should read (updated 2026-08-26):
 
-1. `ARCHITECTURE.md` (with its revision-note map of companions)
-2. `RESEARCH.md part 1` — the protocol facts the code must target (2026-07-28 stateless revision, SDK v2, registry, skills spec)
-3. `RESEARCH.md part 3` — current exemplar state and test patterns
-4. `RESEARCH.md part 4` — the failure modes practitioners report
+1. `../design/architecture.md` (with its revision-note map of companions)
+2. `../research/README.md part 1` — the protocol facts the code must target (2026-07-28 stateless revision, SDK v2, registry, skills spec)
+3. `../research/README.md part 3` — current exemplar state and test patterns
+4. `../research/README.md part 4` — the failure modes practitioners report
 5. This evaluation document — the reasoning behind the layer assignments
 6. The relevant spec for whatever is being built, and the decision records it depends on — both in `design/*.md` (build nothing whose decision record is unchosen)
 7. Primary sources as needed: PNNL `nepa-mcp` README + one server + the `nepa-screening` skill; PowerMCP/PowerSkills/PowerAgentBench READMEs; GSA hub catalog README + schema; GitHub MCP `docs/tool-renaming.md` and remote toolset docs; Cloudflare Code Mode README; sentry-mcp testing playbooks; the 2026-07-28 spec changelog.
@@ -1330,7 +1330,7 @@ A later sweep that updates part 2, adds exemplars it missed, and corrects it whe
 
 <sub>Was `research/mcp-ecosystem-survey.md` — “MCP Ecosystem Survey — 2026-08-26”.</sub>
 
-**Purpose:** What the exemplar MCP projects look like now, what changed since the reference-architecture evaluation's snapshot, which new exemplars matter, and the test/demo patterns worth adopting. This document updates and extends `RESEARCH.md part 2`; corrections to that document are listed in § 8.
+**Purpose:** What the exemplar MCP projects look like now, what changed since the reference-architecture evaluation's snapshot, which new exemplars matter, and the test/demo patterns worth adopting. This document updates and extends `../research/README.md part 2`; corrections to that document are listed in § 8.
 **Evidence:** research/notes/ecosystem-notes.md (per-claim URLs, unverified flags; gathered via `gh api`/raw fetches plus 10 web searches), research/raw/github/ (script sweeps), plus main-session verification of contested claims.
 
 ---
@@ -1352,11 +1352,11 @@ A later sweep that updates part 2, adds exemplars it missed, and corrects it whe
 
 **Open-data-portal servers (Socrata/CKAN)** — no official vendor server on either platform (a search-surfaced `socrata/odp-mcp` does not exist; verified 404). The norm is many narrow namespaced tools (ondata/ckan-mcp-server: 21 tools, 57★; city-scoped Zurich/Berlin servers exist). Standout: **npstorey/civic-ai-tools** (41★, active) targets all 559 Socrata portals with an explicit anti-hallucination layer — "record packages" aiming at inspectable, reproducible, cryptographically verifiable analyses, ADRs, trust-and-evidence docs, and runnable `examples/` scripts against live data. Closest philosophical neighbor to Commonwealth's provenance envelope found anywhere.
 
-**Federal/civic servers** — two genuinely official federal servers verified: **uscensusbureau/us-census-bureau-data-api-mcp** (92★, official Census Bureau, tools like `fetch-aggregate-data`/`resolve-geography-fips`; quiet since 2026-03; local Docker/Postgres setup, no verified hosted endpoint) and **GPO's GovInfo MCP** — a public-preview hosted endpoint at `https://api.govinfo.gov/mcp` (api.data.gov key; two tools, `searchGovInfo` + `describePackageOrGranule`), documented at `usgpo/api` (`docs/mcp.md`), which resolves this survey's earlier "repo location unverified" gap (found in the 2026-08-26 second research round: RESEARCH.md part 5 § 3). Also official: Data Commons' hosted MCP (compact six-tool statistical surface, ibid. § 2). CMS and Treasury list MCP in AI inventories. Everything else is community: congressMCP (32★, keyless-first, 19-client compatibility docs) is the most developed; SLED-scoped `cliwant/mcp-sam-gov` claims 150 tools across federal and state/local contracting; a recognizable one-author-many-servers family (cyanheads) covers census/usaspending/socrata. Three independent projects converge on "keyless-first, verifiable citations, honesty-hardened" framing — the niche's felt need, and Commonwealth's design center, arrived at independently.
+**Federal/civic servers** — two genuinely official federal servers verified: **uscensusbureau/us-census-bureau-data-api-mcp** (92★, official Census Bureau, tools like `fetch-aggregate-data`/`resolve-geography-fips`; quiet since 2026-03; local Docker/Postgres setup, no verified hosted endpoint) and **GPO's GovInfo MCP** — a public-preview hosted endpoint at `https://api.govinfo.gov/mcp` (api.data.gov key; two tools, `searchGovInfo` + `describePackageOrGranule`), documented at `usgpo/api` (`docs/mcp.md`), which resolves this survey's earlier "repo location unverified" gap (found in the 2026-08-26 second research round: ../research/README.md part 5 § 3). Also official: Data Commons' hosted MCP (compact six-tool statistical surface, ibid. § 2). CMS and Treasury list MCP in AI inventories. Everything else is community: congressMCP (32★, keyless-first, 19-client compatibility docs) is the most developed; SLED-scoped `cliwant/mcp-sam-gov` claims 150 tools across federal and state/local contracting; a recognizable one-author-many-servers family (cyanheads) covers census/usaspending/socrata. Three independent projects converge on "keyless-first, verifiable citations, honesty-hardened" framing — the niche's felt need, and Commonwealth's design center, arrived at independently.
 
 **stripe/agent-toolkit ("Stripe AI")** — one capability layer shipped three ways: Python/TS SDKs, a hosted OAuth MCP server, and harness-native skill plugins (Claude/Codex/Cursor marketplaces). Plus the most rigorous eval convention surveyed: per-task `environment/` (agent-visible), `grader/` (hidden), `solutions/` (hidden), best-of-3 scoring, human-reviewed winning transcripts, dated results CSV.
 
-**jlowin/fastmcp (PrefectHQ stewardship)** — 27K★, 3.4.7 stable / 4.0 beta; claims a dominant ecosystem share (self-reported). Ships auth providers, middleware, composition, tool transformation, versioned docs, and two ideas of independent interest: documented in-memory-transport pytest pattern (§ 7 pattern 5) and `tool-fingerprinting` (schema hashing against drift/rug-pull tampering). Its commercial gateway (Prefect Horizon) signals where its maintainers see governance heading. Note for DECISIONS.md 0003: PNNL — the closest domain analog — builds on standalone FastMCP 3.4.4, which is real evidence against the official-SDK-only reading.
+**jlowin/fastmcp (PrefectHQ stewardship)** — 27K★, 3.4.7 stable / 4.0 beta; claims a dominant ecosystem share (self-reported). Ships auth providers, middleware, composition, tool transformation, versioned docs, and two ideas of independent interest: documented in-memory-transport pytest pattern (§ 7 pattern 5) and `tool-fingerprinting` (schema hashing against drift/rug-pull tampering). Its commercial gateway (Prefect Horizon) signals where its maintainers see governance heading. Note for ../design/architecture.md decision 0003: PNNL — the closest domain analog — builds on standalone FastMCP 3.4.4, which is real evidence against the official-SDK-only reading.
 
 **grafana/mcp-grafana** — the "many narrow tools at scale" template done carefully: 97 tools in ~28 product-mirroring categories; the tool table declares required RBAC permissions and scopes per tool; read-only mode enumerates every disabled tool by name; the server instruments itself (metrics, tracing, slow-request logs).
 
@@ -1382,7 +1382,7 @@ Commonwealth's semantic-tool design is philosophy 1 at the user surface with phi
 - **IBM ContextForge**: 4.4K★ federation gateway (MCP+A2A+REST), OTel-first, Kubernetes-scale; enterprise shape.
 - **Obot**: governance/identity-first, composes virtual servers from selected tools across servers, request/response filters; the one a federal agency (GSA) actually runs.
 - Discovery-only: Smithery, Glama (tracking ~37K servers mid-2026, secondhand), PulseMCP (hand-reviewed), mcp.so, awesome-mcp-servers; common advice is to list in several.
-Consequences live in DECISIONS.md 0009 (criteria over a pick) and design/hub-catalog.md; the official registry's aggregator model (RESEARCH.md part 1 § 3) is the piece that makes "publish once, appear everywhere" plausible.
+Consequences live in ../design/architecture.md decision 0009 (criteria over a pick) and design/hub-catalog.md; the official registry's aggregator model (../research/README.md part 1 § 3) is the piece that makes "publish once, appear everywhere" plausible.
 
 ### 5. Civic gap, stated plainly
 
@@ -1393,8 +1393,8 @@ Nothing occupies the state/county/municipal layer: no state government publishes
 1. **Adopt the alias discipline before it's needed.** Tool renames are inevitable; github-mcp-server's deprecation-alias map + toolsnaps is the compatibility mechanism, cheap to build from day one (design/testing-and-demos.md).
 2. **Ship read-only as enumeration + construction, not adjective.** Grafana's named-tools read-only list and Supabase's data-layer enforcement combine into: every Commonwealth server documents its (empty in V1) write-tool list, and adapters are constructed read-only.
 3. **Borrow the lockdown idea for content trust.** `X-MCP-Lockdown` is a server-side mitigation for untrusted content inside trusted sources; Commonwealth's analog is the injection-trap bench tasks plus the manifest's `data_classification`/content-trust fields; a filtering mode is a plausible later feature.
-4. **The skills-as-tool-groups pattern (Sentry) and per-request group selection** reinforce toolset design (DECISIONS.md 0002); the `?skills=` query-param mechanism is worth copying for remote deployments.
-5. **Watch nepa-mcp as a moving neighbor, not a snapshot.** It ships weekly, uses standalone FastMCP, and GSA already catalogs it; federation with it (design spec § 17's environmental screen) is integration with an active project, and its conventions (doctor CLI, 5-file test taxonomy) are current, not historical.
+4. **The skills-as-tool-groups pattern (Sentry) and per-request group selection** reinforce toolset design (../design/architecture.md decision 0002); the `?skills=` query-param mechanism is worth copying for remote deployments.
+5. **Watch nepa-mcp as a moving neighbor, not a snapshot.** It ships weekly, uses standalone FastMCP, and GSA already catalogs it; federation with it (../design/architecture.md § 17's environmental screen) is integration with an active project, and its conventions (doctor CLI, 5-file test taxonomy) are current, not historical.
 
 ### 7. Test/demo patterns worth copying (ranked)
 
@@ -1428,7 +1428,7 @@ Applied in this session's update to that document:
 
 A verification pass run 2026-08-28, while evaluating the built geo vertical against this file. Live pages were fetched rather than assumed; corrections are listed here per this part's own rule, not edited into the sections above.
 
-1. **Protocol and SDK facts re-verified unchanged.** 2026-07-28 is still the current spec revision; ETags for tool-call results and server-side progressive discovery are still roadmap items (roadmap last updated 2026-08-22); `mcp==2.1.1` is still the latest official Python SDK release (a patch that points stale `mcp.server.fastmcp` imports at the migration guide). Part 1 and DECISIONS.md 0002/0003 stand as written.
+1. **Protocol and SDK facts re-verified unchanged.** 2026-07-28 is still the current spec revision; ETags for tool-call results and server-side progressive discovery are still roadmap items (roadmap last updated 2026-08-22); `mcp==2.1.1` is still the latest official Python SDK release (a patch that points stale `mcp.server.fastmcp` imports at the migration guide). Part 1 and ../design/architecture.md decision 0002/0003 stand as written.
 2. **GSA's hub catalog is at 37 servers**, up from § 1.6's 27 (github.com/GSA-TTS/mcp-server-hub-catalog). GSA is also running a "2026 MCP Server and AI Agent Hackathon" (gsa.gov, AI community of practice).
 3. **Two commercial entrants now sit in the parcels/geocoding lane.** Regrid ships an MCP server over its 160M-parcel national dataset — boundaries, ownership, assessed values, land use — behind a paid key (support.regrid.com/docs/mcp-server, announced 2026-07). Esri's ArcGIS Location Platform added MCP support in public beta around 2026-06-29 (geocoding, routing, places), which updates § 2's "closed hosted beta" line. Neither is a substitute for this project: both are keyed commercial surfaces without publisher-level provenance, and neither answers "whose government covers this point." They are what a paying GIS shop would compare this project against; the differences that hold up are the provenance envelope and keyless access to the publishers' own systems.
 4. **The civic gap (§ 5) holds as of 2026-08-28.** No state-scoped MCP suite exists in any state (nearest signal: an Alaska DOA RFI about agentic features, via statescoop.com), there is no official Open States/Plural server, and nothing found does jurisdiction resolution as a product.
@@ -1478,7 +1478,7 @@ The rebuttals that survived contact, mostly from the Zero-Touch OAuth thread ([H
 
 1. **Auth isolation.** MCP keeps credentials out of the model's context and out of the harness. "Maybe the idealized form of MCP is just an auth gateway for the API" (sean_lynch). Skills and CLIs put secrets in reach of generated code.
 2. **The semantic layer travels with the server.** "Skills are client side and don't know the server's capabilities. MCP lets the server explain its API... so clients who have no prior knowledge of the server can use it intelligently" (brookst, a self-described convert after building two large servers).
-3. **Audit and centralized control.** Per-tool audit trails, org-level rollout, and revocation have no skills equivalent; the state of the art for deploying skills is "copy this file into this place" (mooreds).
+3. **Audit and centralized control.** Per-tool audit trails, org-level rollout, and revocation have no skills equivalent; the current best practice for deploying skills is "copy this file into this place" (mooreds).
 4. **No local runtime required.** Hosted agents in restricted containers can't run arbitrary CLIs; remote MCP is how non-developer users connect anything at all (9dev, lavataco).
 5. **Non-binary.** "Which is better, a knife or a saw?" (Ferret7446). Teams increasingly ship MCP for connection/auth/data and skills for workflow knowledge on top.
 
@@ -1527,7 +1527,7 @@ From the Mapbox geospatial MCP thread: given a fuzzy place-search tool, the mode
 ### 9. Determinism, testing, and evals are the ecosystem's weak spot
 
 - "It amazes me that they're so good at coding when they're so bad at tool use" ([HN 45347914](https://news.ycombinator.com/item?id=45347914)); teams that measured tool-use quality (Strata, Notion) treated eval numbers as the product claim.
-- The skills-vs-MCP determinism argument ("MCPs are deterministic, SKILLS.md isn't") was picked apart in-thread: the tool may be deterministic, the system isn't, so only end-to-end evals say anything.
+- The skills-vs-MCP determinism argument ("MCPs are deterministic, SKILLS.md isn't") was picked apart in-thread: the tool may be deterministic, the system isn't, so only evals over the whole system say anything.
 - Very few servers ship benchmarks at all; reviewers asking "is there a benchmark?" of new tools became a refrain.
 
 **Implication for Commonwealth.** Shipping Commonwealth Bench alongside V1 is a differentiator, and the public/hidden split the spec borrows from PowerAgentBench matches what the strongest teams do privately. Publishing per-toolset accuracy numbers would be nearly unique among civic data projects.
@@ -1539,7 +1539,7 @@ Two threads in the corpus turned on writing quality rather than code:
 - On mcp2cli: "This post and the project README are obviously generated slop, which personally makes me completely skip the project altogether, even if it works. If you want humans to spend time reading your prose, then spend time actually writing it" ([HN 47305149](https://news.ycombinator.com/item?id=47305149)). A second commenter quoted the tell ("We measured this. Not estimates — actual token counts...").
 - The Octelium launch drew sustained criticism for a buzzword README that hid a real system; the fix praised in-thread was the doc page that "starts by explaining the core primitives... and builds up from there" ([HN 44412207](https://news.ycombinator.com/item?id=44412207)).
 
-**Implication for Commonwealth.** House anti-slop rules (base-files/DESIGN.md § 11.1, enforced by `tools/check_writing.py`) apply to the READMEs, tool descriptions, and error messages, which are themselves agent-facing surfaces. Structure docs primitives-first: source registry → adapters → tools → skills, one concept per page, before any feature list.
+**Implication for Commonwealth.** The anti-slop rules enforced by `tools/check_writing.py` apply to the READMEs, tool descriptions, and error messages, which are themselves agent-facing surfaces. Structure docs primitives-first: source registry → adapters → tools → skills, one concept per page, before any feature list.
 
 ### 11. Scattered practical advice worth keeping
 
@@ -1556,7 +1556,7 @@ Two threads in the corpus turned on writing quality rather than code:
 Three absences worth recording, because they are opportunities:
 
 1. **No state-level government MCP suite exists.** Federal precedent is real (Census Bureau and GPO ship official servers; CMS and Treasury list MCP in AI inventories; France and India have national equivalents) ([Paubox](https://www.paubox.com/blog/feds-adopt-open-source-protocol-to-connect-ai-chatbots-with-public-data)), and community civic servers exist for federal APIs, but nobody has shipped the state/county/municipal layer Commonwealth targets.
-2. **Provenance envelopes are almost unshipped.** No mainstream server returns publisher/authority/coverage metadata with results. The nearest prior art surfaced later in the repo survey: npstorey/civic-ai-tools' "verifiable record package" framework and a small cluster of civic servers self-describing as "verifiable citations, keyless-first" (RESEARCH.md part 3 § 2, § 5) — same instinct, no shared contract. Commonwealth's envelope would still be the first systematic version, with those projects as allies rather than templates.
+2. **Provenance envelopes are almost unshipped.** No mainstream server returns publisher/authority/coverage metadata with results. The nearest prior art surfaced later in the repo survey: npstorey/civic-ai-tools' "verifiable record package" framework and a small cluster of civic servers self-describing as "verifiable citations, keyless-first" (../research/README.md part 3 § 2, § 5) — same instinct, no shared contract. Commonwealth's envelope would still be the first systematic version, with those projects as allies rather than templates.
 3. **Almost nobody publishes evals.** Section 9; the gap is the opening.
 
 ---
@@ -1846,11 +1846,11 @@ verified rather than assumed from repo names.
 
 - **PNNL's nepa-mcp** (github.com/pnnl/nepa-mcp, part of "PermitAI") — the
   closest domain neighbor already tracked in
-  RESEARCH.md part 3 § 1.5 for its test discipline; checked
+  ../research/README.md part 3 § 1.5 for its test discipline; checked
   here for its *web* presentation.
 - **Power-Agent / PowerMCP** (github.com/Power-Agent/PowerMCP,
   .../PowerSkills, .../PowerAgentBench) — the tool/skill/bench layering
-  cited in RESEARCH.md part 2 § 4;
+  cited in ../research/README.md part 2 § 4;
   confirmed here as Harvard SEAS-affiliated and checked for a project site.
 - **npstorey/civic-ai-tools** — already the closest philosophical sibling
   per the ecosystem survey § 2 (Socrata civic data, an explicit

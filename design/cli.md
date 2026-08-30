@@ -1,16 +1,21 @@
 # Spec: The `commonwealth` CLI
 
-**Plugs into:** Design Spec § 25 (CLI), § 24 (Repository Strategy)
+**Plugs into:** architecture.md § 25 (CLI), § 24 (Repository Strategy)
 **Status:** Draft for review.
 
 Built-vs-planned, marked 2026-08-28. Shipped: `doctor [--live]`, `serve
 [--profile] [--transport]`, `tools list|call`, `sources
 validate|probe|sample` — and the § 1 conventions (nonzero exit, printed
-denominators, envelope-first `tools call`) hold in all of them. Not yet
-built: `configure` (backlog High), `--json`, `--servers`/`--port` on
-serve, `sources search|inspect|scaffold|candidates|stats`, `catalog`,
-`eval`, `version`.
-**Why this exists:** Three audiences: developers who script (and who the CLI-vs-MCP research says will prefer a CLI for anything mechanical; RESEARCH.md part 4 § 3), contributors onboarding sources (the workflow in design/source-registry.md § 4 is CLI-shaped), and the project itself (base-files/CLAUDE.md: CLI-first so agents can self-validate; every gate the docs mention must be runnable locally). The CLI is also the demo surface: `commonwealth ask`-style flows show value before anyone configures a client.
+denominators, envelope-first `tools call`) hold in all of them.
+
+`configure` shipped 2026-08-29. It writes JSON client configs for
+claude-code, cursor, vscode and Claude Desktop, converges when re-run, and
+shows the diff under `--dry-run`. TOML clients get a block to paste, since
+the standard library reads TOML and does not write it.
+
+Not yet built: `--json`, `--servers`/`--port` on serve, `sources
+search|inspect|scaffold|candidates|stats`, `catalog`, `eval`, `version`.
+**Why this exists:** Three audiences: developers who script (and who the CLI-vs-MCP research says will prefer a CLI for anything mechanical; ../research/README.md part 4 § 3), contributors onboarding sources (the workflow in source-registry.md § 4 is CLI-shaped), and the project itself (CLI-first, so agents can validate their own work: every gate the docs mention must be runnable locally). The CLI is also the demo surface: `commonwealth ask`-style flows show value before anyone configures a client.
 
 ---
 
@@ -56,7 +61,7 @@ Conventions:
 
 - Every command exits nonzero on failure and prints the count of things it actually checked (the "0 verified = error, print the denominator" rule; a validator that saw an empty directory must say so and fail).
 - `--json` on every read command; human tables are the default. Agents and CI consume `--json`; no screen-scraping our own tool.
-- `tools call` prints the full envelope pretty-printed with provenance and coverage visible, because the envelope is the product and the debug loop should stare at it.
+- `tools call` prints the whole envelope, formatted, with provenance and coverage visible. Debugging a tool means reading what the model would have read.
 - No command name stutters the project ("commonwealth cw-sources"); no abbreviations in command names (flags may abbreviate).
 
 ## 2. Install and first-run
@@ -71,7 +76,7 @@ commonwealth configure claude-code
 
 ## 3. What the CLI is not
 
-- Not a supported public API (DECISIONS.md 0015, Chosen: MCP-only V1): the CLI is the contributor/debug surface, and its `--json` output is a convenience, not a semver-governed contract. The core stays framework-free so a public library remains an additive promotion later.
+- Not a supported public API (architecture.md decision 0015, Chosen: MCP-only V1): the CLI is the contributor/debug surface, and its `--json` output is a convenience, not a semver-governed contract. The core stays framework-free so a public library remains an additive promotion later.
 - Not a second data plane: every `sources`/`tools` command calls the same adapter and core code paths the servers use; no CLI-only query logic to drift.
 - Not an agent: no LLM calls inside the CLI in V1 (`eval run` invokes models through the eval harness, which is explicit about cost). A conversational `commonwealth ask` demo stays in `examples/`, not in the tool.
 - Not privileged: anything the CLI can reach, the servers can reach; the CLI adds no bypass of terms gates or registry allowlists.

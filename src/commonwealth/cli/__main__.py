@@ -110,6 +110,14 @@ def cmd_doctor(args: argparse.Namespace) -> int:
         print("(live source probes skipped; pass --live)")
 
     print(f"{'✗' if problems else '✓'} doctor: {problems} problem(s)")
+    if not problems:
+        # design/cli.md § 2: doctor is the front door and ends with a
+        # copy-pasteable next step. Until `configure` existed there was
+        # nothing to point at.
+        print("\nnext: point a client at it")
+        print("  commonwealth configure claude-code")
+        print("  commonwealth configure --help    # claude, codex, cursor, "
+              "vscode")
     return 1 if problems else 0
 
 
@@ -378,7 +386,7 @@ def _write_fixture(m: SourceManifest, recorder: "_RecordingFetcher",
             "terms_url": m.access.terms_url,
             "note": "Recorded government-published responses; third-party "
                     "content excluded from the repo's CC0 grant "
-                    "(DECISIONS.md 0011).",
+                    "(../../../design/architecture.md decision 0011).",
         },
         "summary": summary,
         "exchanges": recorder.exchanges,
@@ -403,6 +411,65 @@ def cmd_serve(args: argparse.Namespace) -> int:
         server.run(transport="stdio")
     else:
         server.run(transport="streamable-http")
+    return 0
+
+
+def cmd_configure(args: argparse.Namespace) -> int:
+    from . import configure as cfg
+
+    # An unknown profile is otherwise accepted here and only rejected
+    # later by expand_profile, at which point it has already been written
+    # into the user's client config and the server will not start.
+    from ..core import toolreg
+    if args.profile not in toolreg.PROFILES:
+        print(f"unknown profile {args.profile!r}; known: "
+              f"{', '.join(sorted(toolreg.PROFILES))}", file=sys.stderr)
+        return 2
+
+    client_name = args.client
+    if client_name in cfg.TOML_CLIENTS:
+        print(f"{client_name} keeps its MCP config in TOML, which this "
+              "command does not write. Add this block to it:\n")
+        print(cfg.render_toml_block(args.profile))
+        return 0
+
+    client = cfg.CLIENTS.get(client_name)
+    if client is None:
+        known = ", ".join(sorted(set(cfg.CLIENTS) | cfg.TOML_CLIENTS))
+        print(f"unknown client {client_name!r}; known: {known}",
+              file=sys.stderr)
+        return 2
+
+    path = cfg.config_path(client, args.path)
+    try:
+        existing, before = cfg.read_config(path)
+        cfg.check_servers_block(existing, client, path)
+    except ValueError as err:
+        print(str(err), file=sys.stderr)
+        return 1
+
+    after = cfg.render(cfg.merged(existing, client, args.profile))
+    if before == after:
+        print(f"{path} already points at profile {args.profile!r}; "
+              "nothing to do")
+        return 0
+
+    patch = cfg.diff(path, before, after)
+    if args.dry_run:
+        print(patch or f"would create {path}")
+        return 0
+
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(after)
+    verb = "updated" if before else "created"
+    print(f"{verb} {path}")
+    print(f"  server {cfg.SERVER_KEY!r}, profile {args.profile!r}")
+    if client.note:
+        print(f"  note: {client.note}")
+    others = [k for k in (existing.get(client.key) or {})
+              if k != cfg.SERVER_KEY]
+    if others:
+        print(f"  left alone: {', '.join(sorted(others))}")
     return 0
 
 
@@ -435,6 +502,17 @@ def main() -> int:
     ss = ssub.add_parser("sample")
     ss.add_argument("source_id")
     ss.set_defaults(fn=cmd_sources_sample)
+
+    cfgp = sub.add_parser("configure",
+                          help="point an MCP client at this server")
+    cfgp.add_argument("client",
+                      help="claude, claude-code, codex, cursor, or vscode")
+    cfgp.add_argument("--profile", default="default")
+    cfgp.add_argument("--path", default=None,
+                      help="write this file instead of the client default")
+    cfgp.add_argument("--dry-run", action="store_true",
+                      help="print the diff without writing")
+    cfgp.set_defaults(fn=cmd_configure)
 
     sv2 = sub.add_parser("serve", help="run the MCP server")
     sv2.add_argument("--profile", default="default")

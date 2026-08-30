@@ -156,7 +156,7 @@
     "Cartographic/analysis use only per the publisher's own disclaimer; not a legal description or a property survey. Boundary questions with legal consequence go to the locality, not this layer.",
     "Layer publishes no layer-level last-edit date (editingInfo is absent on both layers), so envelope source_updated_at is null. The per-record LASTUPDATE field IS mapped and surfaced per boundary, so each returned record carries its own vintage even though the layer does not.",
     "Geometry is returned simplified (server-side generalization) so a polygon fits an inline response; the unsimplified boundary is not exposed until the result-resource store exists. Simplified vertices can sit tens of metres off the true line \u2014 never use them to decide which side of a boundary a specific address falls on.",
-    "The localities layer carries 134 rows for Virginia's 133 counties and independent cities. Prince George County (FIPS 51149) is published as two separate polygons sharing one FIPS and GNIS, a 281 sq mi body and a 0.0076 sq mi sliver. Both are returned; neither is silently dropped. See KNOWN_SOURCE_QUIRKS.md.\n",
+    "The localities layer carries 134 rows for Virginia's 133 counties and independent cities. Prince George County (FIPS 51149) is published as two separate polygons sharing one FIPS and GNIS, a 281 sq mi body and a 0.0076 sq mi sliver. Both are returned; neither is silently dropped. See ../../design/source-quirks.md.\n",
     "Towns layer covers incorporated towns only. Virginia's unincorporated communities and CDPs have no polygon here, and absence is not evidence that a place does not exist."
    ]
   },
@@ -232,7 +232,7 @@
   },
   {
    "name": "development-site-due-diligence",
-   "status": "deferred until coverage earns the name",
+   "status": "deferred until there is coverage to justify it",
    "capabilities": []
   }
  ],
@@ -739,7 +739,7 @@
    "values": {
     "covered": "A registered source should answer this.",
     "partial": "Some but not all of what was asked is covered.",
-    "none": "Commonwealth has no source for this \u2014 the gap is named, never reported as \u201cno results.\u201d",
+    "none": "No source is registered for this place. The answer says so, and says which place it means.",
     "unknown": "Coverage could not be determined."
    }
   },
@@ -755,7 +755,7 @@
    "question": "Was the record set fully paged?",
    "values": {
     "complete": "Every page was retrieved.",
-    "truncated": "The source's own transfer limit cut the result short (ArcGIS exceededTransferLimit); honestly labeled, not silently dropped.",
+    "truncated": "The source's own transfer limit cut the result short (ArcGIS exceededTransferLimit). The answer is labelled as partial.",
     "unknown": "Paging completeness could not be determined."
    }
   },
@@ -763,14 +763,14 @@
    "question": "Did anything match?",
    "values": {
     "hit": "At least one record matched.",
-    "empty": "Nothing matched \u2014 a successful state, not an error."
+    "empty": "The search ran and matched nothing. That is a result, and it is reported separately from a failure."
    }
   }
  },
  "warning_definitions": {
   "screening_only": "GIS zoning is a screening layer. The adopted zoning ordinance and official zoning map govern; confirm before any legal reliance.",
   "stale_source": "The source's own update cadence was missed.",
-  "freshness_unavailable": "The publisher exposes no machine-readable update date for this layer; retrieval time is known, data vintage isn't.",
+  "freshness_unavailable": "The publisher gives no machine-readable update date for this layer. The fetch time is known; how old the data itself is cannot be established.",
   "boundary_precision": "Parcel or boundary geometry is generalized, not surveyed.",
   "alias_match": "The entity matched via a registered alias, not its exact id.",
   "mixed_vintages": "Results combine records with different as-of dates.",

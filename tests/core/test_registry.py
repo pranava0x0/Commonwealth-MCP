@@ -1,4 +1,4 @@
-"""Source-registry gates and top-two selection (DECISIONS.md 0005 Chosen)."""
+"""Source-registry gates and top-two selection (../../design/architecture.md decision 0005 Chosen)."""
 import pytest
 import yaml
 

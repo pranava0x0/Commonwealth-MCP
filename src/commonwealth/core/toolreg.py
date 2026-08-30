@@ -58,7 +58,7 @@ class ToolRegistry:
         return {t.toolset for t in self._tools}
 
 
-# Profiles: ordered (package, toolset) pairs. Sized per DECISIONS.md 0002
+# Profiles: ordered (package, toolset) pairs. Sized per ../../../design/architecture.md decision 0002
 # (8-12 default, ceiling 20 — asserted by a contract test).
 PROFILES: dict[str, list[tuple[str, str]]] = {
     "default": [("registry", "discovery-min"), ("geo", "default"),
@@ -89,5 +89,5 @@ def expand_profile(profile: str,
     if len(out) > PROFILE_HARD_CEILING:
         raise ValueError(
             f"profile {profile!r} expands to {len(out)} tools, over the "
-            f"DECISIONS.md 0002 ceiling of {PROFILE_HARD_CEILING}")
+            f"../../../design/architecture.md decision 0002 ceiling of {PROFILE_HARD_CEILING}")
     return out

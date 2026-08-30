@@ -2,13 +2,13 @@
 lookup by citation.
 
 No JSON/XML API is reachable without registering for an LIS API key
-(backlog.md, civic vertical note); the public website itself is plain,
+(the GitHub issues, civic vertical note); the public website itself is plain,
 anonymous, server-rendered HTML with a stable structure, so this adapter
 reads that directly rather than waiting on a credential this project
 can't self-register for. A missing section is not a 404 — the site
 302-redirects to the enclosing title's chapter listing, a page with a
-different, detectable shape (design § 27: never guess, detect the real
-signal).
+different, detectable shape (design/provenance-envelope.md § 2: never
+guess, detect the real signal).
 """
 from __future__ import annotations
 

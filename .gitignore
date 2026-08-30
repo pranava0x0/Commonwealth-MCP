@@ -5,12 +5,10 @@ __pycache__/
 *.egg-info/
 .DS_Store
 
-# base-files/ is a personal cross-project engineering-rules mirror, synced
-# in from elsewhere — not specific to Commonwealth-MCP; kept locally, not
-# published. AI-coding-tool config (editor/agent launch configs, local
-# task/session state) is local convenience, not project content — nothing
-# in README depends on it, since every command it runs is documented in
-# plain shell form too.
+# Local-only material: reference notes kept outside this project, and
+# AI-coding-tool config (editor/agent launch configs, session state). None
+# of it is project content — every command the README runs is documented in
+# plain shell form, so nothing here depends on any of it.
 base-files/
 .claude/
 .codex/
@@ -29,3 +27,10 @@ uv.lock
 # evidence, not source — RESEARCH.md cites it, and its "Reproducing the
 # collection" section rebuilds it. Kept out of the tree so a clone is small.
 research/raw/
+
+# Local working backlog. Maintainer-facing notes — which spec ruling is
+# owed, which one-line fixes to make next time a file is open — that would
+# be noise in the public issue tracker. It points at GitHub issue numbers
+# rather than copying them, so the issues stay the record and this stays
+# the reading order.
+backlog.md

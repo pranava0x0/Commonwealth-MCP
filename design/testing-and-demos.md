@@ -1,8 +1,8 @@
 # Spec: Test and Demo Structure
 
-**Plugs into:** Design Spec § 24 (repo layout), § 31 (evaluation); companion to design/bench.md (which owns the model-in-the-loop tiers).
+**Plugs into:** architecture.md § 24 (repo layout), § 31 (evaluation); companion to bench.md (which owns the model-in-the-loop tiers).
 **Status:** Draft for review.
-**Why this exists:** The ecosystem survey produced eight named, attributed test/demo patterns (RESEARCH.md part 3 § 7). This spec turns the adopted ones into the repo's actual structure so the first server lands inside it, instead of test structure accreting per-author.
+**Why this exists:** The ecosystem survey produced eight named, attributed test/demo patterns (../research/README.md part 3 § 7). This spec turns the adopted ones into the repo's actual structure so the first server lands inside it, instead of test structure accreting per-author.
 
 ---
 
@@ -32,9 +32,9 @@ tests/
 Adaptations from the surveyed patterns, with reasons:
 
 - **PNNL's uniform five-file taxonomy** becomes four here: their `performance` file merges into `resilience` (timeout/budget assertions) until there is a measured performance problem to test — a performance suite with no baseline is ceremony. The uniformity itself is the adopted part: a new server PR without the four files fails a repo-health test that iterates the server registry (never a hand-typed server list).
-- **congressMCP's known-failures discipline**, adapted: `KNOWN_SOURCE_QUIRKS.md` (repo root, as built 2026-08-28 — it is reader-facing and the README links it), where every behaviour-affecting quirk names the offline test that pins it. A quirk that stops reproducing must be removed — stale exemptions are how gates rot — and because the offline tests replay recordings, only the reconciliation audit below can notice that a quirk has stopped reproducing upstream. Quirks are per-source, dated, and linked from the source manifest's `known_limitations`. The dated upstream-reconciliation audit becomes a scheduled job producing `docs/audits/upstream-<date>.md`, run before each release: replay all fixtures against live sources, diff, file drift as `SourceSchemaChanged` findings.
+- **congressMCP's known-failures discipline**, adapted: `source-quirks.md` (repo root, as built 2026-08-28 — it is reader-facing and the README links it), where every behaviour-affecting quirk names the offline test that pins it. A quirk that stops reproducing must be removed — stale exemptions are how gates rot — and because the offline tests replay recordings, only the reconciliation audit below can notice that a quirk has stopped reproducing upstream. Quirks are per-source, dated, and linked from the source manifest's `known_limitations`. The dated upstream-reconciliation audit becomes a scheduled job producing `docs/audits/upstream-<date>.md`, run before each release: replay all fixtures against live sources, diff, file drift as `SourceSchemaChanged` findings.
 - **github-mcp-server's toolsnaps**: tool schemas are snapshot-committed; changing a tool means updating registration, tests, and snap in one reviewed diff; renames require a deprecation alias entry (the alias table ships in Commonwealth Core from day one, empty, so the mechanism exists before the first rename).
-- **fastmcp's in-memory pattern** (or the official SDK's equivalent, per DECISIONS.md 0003): the `conftest.py` client fixture wraps server objects directly; no subprocess, no network in unit/contract tiers. Snapshot assertions use `inline-snapshot`; fuzzy fields (timestamps, cache ages) use `dirty-equals`.
+- **fastmcp's in-memory pattern** (or the official SDK's equivalent, per architecture.md decision 0003): the `conftest.py` client fixture wraps server objects directly; no subprocess, no network in unit/contract tiers. Snapshot assertions use `inline-snapshot`; fuzzy fields (timestamps, cache ages) use `dirty-equals`.
 - **Recorded-fixture policy**: fixtures are recorded source responses (from `source sample`), never hand-written JSON — hand-written fixtures encode what the author believes the source returns, which is the drift this whole structure exists to catch. Fixtures carry their recording date; the reconciliation audit is what refreshes them deliberately.
 
 ## 2. What runs where
@@ -48,7 +48,7 @@ Adaptations from the surveyed patterns, with reasons:
 | bench Tier 2 (tool selection) | release + contract-touching PRs | none | yes |
 | bench Tier 3 (workflows) | release candidates | none | yes |
 
-CI never depends on government uptime; live checks are scheduled and produce reviewable artifacts instead of red PRs (the base-files rule about time/VCS-drift checks being advisory applies to upstream drift too).
+CI never depends on government uptime; live checks are scheduled and produce reviewable artifacts instead of red PRs (the rule that time and VCS drift checks stay advisory applies to upstream drift too).
 
 ## 3. Demos
 

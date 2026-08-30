@@ -20,7 +20,7 @@ from pydantic import BaseModel, ConfigDict, Field, model_validator
 from ..core.errors import InvalidQuery, SourceUnavailable
 from ..core.registry import (DataClassification, SourceManifest,
                              register_adapter_params)
-from .base import (FetchResult, Fetcher, HttpFetcher, TTLCache,
+from .base import (FetchResult, Fetcher, HttpFetcher, TTLCache, log,
                    egress_policy_for, log_source_call, shared_cache)
 
 
@@ -115,7 +115,7 @@ def _layer_root(p: ArcGISParams, layer: LayerDecl) -> str:
 
 def _apply_exposure_allowlist(manifest: SourceManifest, payload: dict,
                               layer: LayerDecl | None) -> dict:
-    """DECISIONS.md 0014 § 3: for a `sensitive_public` source, `exposure_
+    """../../../design/architecture.md decision 0014 § 3: for a `sensitive_public` source, `exposure_
     allowlist` is a field-level gate on what may ever leave this function —
     not just a manifest-schema requirement that the source has one.
     Filtering here, before the response reaches the cache, means a
@@ -164,6 +164,26 @@ def _epoch_ms_to_iso(ms: int | None) -> str | None:
     from datetime import datetime, timezone
     return datetime.fromtimestamp(ms / 1000, tz=timezone.utc).strftime(
         "%Y-%m-%dT%H:%M:%SZ")
+
+
+def _first_record_id(features: list[dict]) -> object:
+    """Identity of a page's first row, for spotting a repeated page.
+
+    Returns None for an empty list, which never equals a real page's
+    identity, so an empty batch is not mistaken for a repeat.
+    """
+    if not features:
+        return None
+    attrs = features[0].get("attributes") or {}
+    return tuple(sorted(attrs.items(), key=lambda kv: kv[0])) or None
+
+
+# Each extra page is another request to a government service, so the
+# walk is bounded rather than open-ended. Five pages at the default
+# record count covers every query this project issues today; past that
+# the answer is reported as truncated, which is what the caller got
+# before pagination existed at all.
+MAX_QUERY_PAGES = 5
 
 
 class ArcGISAdapter:
@@ -216,7 +236,7 @@ class ArcGISAdapter:
                     sample_rows: int | None = None) -> ArcGISQueryResult:
         """`where_equals` takes CANONICAL field names (the manifest's
         field_mapping keys) — callers never speak vendor field names
-        (design spec § 27). Values are escaped and matched exactly.
+        (../../../design/architecture.md § 27). Values are escaped and matched exactly.
 
         `simplify_tolerance` is degrees of allowable offset, passed to the
         platform's own `maxAllowableOffset` generalization so a polygon
@@ -317,6 +337,62 @@ class ArcGISAdapter:
                 f"ArcGIS response from {manifest.id} has no `features` key — "
                 "the service schema changed or the endpoint moved")
 
+        # The service caps how many rows one response may carry and sets
+        # exceededTransferLimit when it did. Reporting that is honest but
+        # still leaves the caller with a partial answer, so follow the
+        # pages — bounded, because each one is another request to a
+        # government service and the politeness budget is real.
+        pages_read = 1
+        more_remains = bool(payload.get("exceededTransferLimit"))
+        # `features` is the list inside the cached page-one payload, and
+        # TTLCache hands out its stored dict by reference. Extending it in
+        # place rewrote that cache entry, so a repeat of the same query
+        # resumed from the accumulated length and grew without bound
+        # (measured: 250, 450, 650, 850 records on four identical calls).
+        # The walk builds its own list.
+        features = list(features)
+        # Provenance is per page. Page one can come from cache while a
+        # later page is fetched live (an earlier walk cached page one and
+        # then failed, or the pages straddle the TTL), and reporting only
+        # page one's would label later-page evidence with the wrong access
+        # path and retrieval time.
+        page_results = [result]
+        # `sample_rows` is a deliberately tiny bounded read for fixture
+        # recording. Any layer with more rows than the sample sets
+        # exceededTransferLimit on the first response, so paging here would
+        # fetch five pages of a thing the caller asked to cap at five rows.
+        # layer_info is a second request, so it is fetched only once
+        # there is actually a second page to consider. A query that fails
+        # on a missing `features` key above never pays for it.
+        may_page = more_remains and sample_rows is None
+        info = await self.layer_info(manifest, layer_key)
+        if may_page:
+            may_page = bool((info.get("advancedQueryCapabilities") or {})
+                            .get("supportsPagination"))
+        while more_remains and may_page and pages_read < MAX_QUERY_PAGES:
+            page_params = dict(params)
+            page_params["resultOffset"] = len(features)
+            page = await self._get(manifest, url, page_params, layer=layer)
+            batch = page.payload.get("features")
+            if not batch:
+                more_remains = False
+                break
+            # A layer can advertise supportsPagination and still ignore
+            # resultOffset, which returns page one again — non-empty, so
+            # the check above cannot see it. Compare the first record
+            # instead: observed behaviour rather than an advertised claim.
+            if _first_record_id(batch) == _first_record_id(features):
+                log.warning("%s ignored resultOffset on layer %s; stopped "
+                            "the page walk to avoid duplicate rows",
+                            manifest.id, layer_key)
+                break
+            features.extend(batch)
+            page_results.append(page)
+            pages_read += 1
+            more_remains = bool(page.payload.get("exceededTransferLimit"))
+        if pages_read > 1:
+            transformations.append(f"pagination:pages={pages_read}")
+
         records = []
         for feat in features:
             attrs = feat.get("attributes", {})
@@ -330,19 +406,23 @@ class ArcGISAdapter:
                 geometry=feat.get("geometry"),
                 centroid=feat.get("centroid")))
 
-        info = await self.layer_info(manifest, layer_key)
         updated = _epoch_ms_to_iso(
             (info.get("editingInfo") or {}).get("lastEditDate"))
 
         log_source_call(manifest, f"query:{layer_key}",
                         params, len(records))
+        # Report the weakest link across the pages. Claiming the freshest
+        # page's numbers for the whole set would overstate how current the
+        # answer is, which is the one thing this envelope exists not to do.
         return ArcGISQueryResult(
             records=records,
-            retrieved_at=result.retrieved_at,
-            cache_age_seconds=result.cache_age_seconds,
-            from_cache=result.from_cache,
+            retrieved_at=min(r.retrieved_at for r in page_results),
+            cache_age_seconds=max(r.cache_age_seconds for r in page_results),
+            from_cache=any(r.from_cache for r in page_results),
             source_updated_at=updated,
-            exceeded_transfer_limit=bool(payload.get("exceededTransferLimit")),
+            # True only when rows remain AFTER the page budget ran out,
+            # so a result that paged to completion is not called partial.
+            exceeded_transfer_limit=more_remains,
             transformations=transformations,
             request_url=result.request_url)
 

@@ -31,7 +31,7 @@ def adapter() -> ArcGISAdapter:
 
 
 async def test_sensitive_public_filters_before_cache_and_mapping():
-    """DECISIONS.md 0014 § 3: exposure_allowlist must actually filter the
+    """../../design/architecture.md decision 0014 § 3: exposure_allowlist must actually filter the
     response before it is cached or mapped into a canonical record — a
     field the reviewer never allowlisted must never leave the adapter,
     not even as a `raw` value on the evidence path."""
@@ -183,3 +183,183 @@ async def test_where_value_quotes_are_escaped(adapter, sample_pin):
     with pytest.raises(AssertionError, match=r"O''Brien"):
         await adapter.query(_real_manifest(), "parcels",
                             where_equals={"pin": "O'Brien"})
+
+
+# --------------------------------------------------------------------------
+# Pagination (GitHub issue #34). A query used to return the service's first
+# page and report `pagination: truncated` when more remained. Accurate, and
+# still a partial answer.
+#
+# ReplayFetcher needs an exact recorded exchange per request, so these use a
+# purpose-built fake that behaves like a paging FeatureServer.
+# --------------------------------------------------------------------------
+from commonwealth.adapters.arcgis import MAX_QUERY_PAGES
+
+
+class _PagingService:
+    """An ArcGIS layer holding `total` rows and serving `page_size` at a
+    time, exactly as the platform does: honour resultOffset, and set
+    exceededTransferLimit whenever rows remain."""
+
+    def __init__(self, total: int, page_size: int = 50,
+                 supports_pagination: bool = True):
+        self.total, self.page_size = total, page_size
+        self.supports_pagination = supports_pagination
+        # A layer can advertise pagination and still ignore resultOffset.
+        self.honours_offset = True
+        self.offsets: list[int] = []
+
+    async def fetch_json(self, url: str, params: dict) -> dict:
+        if not url.endswith("/query"):
+            return {                     # layer_info
+                "editingInfo": {"lastEditDate": 1_700_000_000_000},
+                "advancedQueryCapabilities": {
+                    "supportsPagination": self.supports_pagination},
+            }
+        offset = int(params.get("resultOffset", 0))
+        self.offsets.append(offset)
+        if not (self.supports_pagination and self.honours_offset):
+            offset = 0                   # a service that ignores the param
+        size = int(params.get("resultRecordCount", self.page_size))
+        rows = range(offset, min(offset + size, self.total))
+        return {
+            "features": [
+                {"attributes": {"OBJECTID": i, "PIN": f"pin-{i}"}}
+                for i in rows
+            ],
+            "exceededTransferLimit": offset + size < self.total,
+        }
+
+
+def _paging_adapter(service: _PagingService) -> ArcGISAdapter:
+    return ArcGISAdapter(fetcher=service, cache=TTLCache())
+
+
+async def test_a_single_page_result_is_not_called_truncated():
+    svc = _PagingService(total=30)
+    result = await _paging_adapter(svc).query(
+        _real_manifest(), "parcels", where_equals={"pin": "x"})
+    assert len(result.records) == 30
+    assert result.exceeded_transfer_limit is False
+    assert svc.offsets == [0], "asked for a second page it did not need"
+
+
+async def test_pages_are_followed_until_the_rows_run_out():
+    svc = _PagingService(total=120)      # three pages at 50
+    result = await _paging_adapter(svc).query(
+        _real_manifest(), "parcels", where_equals={"pin": "x"})
+    assert len(result.records) == 120
+    assert result.exceeded_transfer_limit is False, (
+        "paged to completion, so nothing remains to report as truncated")
+    assert svc.offsets == [0, 50, 100]
+
+
+async def test_the_page_budget_bounds_the_walk_and_still_reports_truncation():
+    """Each page is another request to a government service, so the walk is
+    bounded. Hitting the bound is the case that must still say truncated."""
+    svc = _PagingService(total=10_000)
+    result = await _paging_adapter(svc).query(
+        _real_manifest(), "parcels", where_equals={"pin": "x"})
+    assert len(svc.offsets) == MAX_QUERY_PAGES
+    assert result.exceeded_transfer_limit is True
+    assert len(result.records) == MAX_QUERY_PAGES * 50
+
+
+async def test_a_service_without_paging_support_is_not_paged():
+    """resultOffset on a layer that does not advertise pagination returns
+    the first page again. Walking that would duplicate every row."""
+    svc = _PagingService(total=10_000, supports_pagination=False)
+    result = await _paging_adapter(svc).query(
+        _real_manifest(), "parcels", where_equals={"pin": "x"})
+    assert svc.offsets == [0]
+    assert result.exceeded_transfer_limit is True
+    assert len(result.records) == 50
+
+
+async def test_paging_is_recorded_in_transformations():
+    """A caller reading the envelope can see the answer was assembled from
+    several responses rather than returned by one."""
+    svc = _PagingService(total=120)
+    result = await _paging_adapter(svc).query(
+        _real_manifest(), "parcels", where_equals={"pin": "x"})
+    assert "pagination:pages=3" in result.transformations
+
+
+async def test_repeating_a_paged_query_returns_the_same_answer():
+    """The paging walk used to extend the list held inside the cached
+    page-one payload, and TTLCache hands out its stored dict by reference.
+    A repeat resumed from the accumulated length: four identical calls
+    returned 250, 450, 650, then 850 records."""
+    svc = _PagingService(total=10_000)
+    adapter = _paging_adapter(svc)          # one adapter, one cache
+    manifest = _real_manifest()
+    counts = []
+    for _ in range(4):
+        result = await adapter.query(manifest, "parcels",
+                                     where_equals={"pin": "x"})
+        counts.append(len(result.records))
+    assert counts == [MAX_QUERY_PAGES * 50] * 4, counts
+
+
+async def test_sample_mode_stays_capped_and_does_not_page():
+    """`sources sample` asks for a tiny bounded read to record a fixture.
+    Any layer bigger than the sample sets exceededTransferLimit on the
+    first response, so paging would fetch five pages of a thing the caller
+    explicitly capped."""
+    svc = _PagingService(total=10_000)
+    result = await _paging_adapter(svc).query(
+        _real_manifest(), "parcels", sample_rows=5)
+    assert len(result.records) == 5
+    assert len(svc.offsets) == 1, "sample mode paged anyway"
+
+
+async def test_a_layer_that_ignores_result_offset_does_not_duplicate_rows():
+    """A layer can advertise supportsPagination and still ignore
+    resultOffset, returning page one again. That batch is non-empty, so the
+    empty-batch check cannot see it; the first-record comparison can."""
+    svc = _PagingService(total=10_000)
+    svc.honours_offset = False
+    result = await _paging_adapter(svc).query(
+        _real_manifest(), "parcels", where_equals={"pin": "x"})
+    ids = [r.canonical.get("pin") for r in result.records]
+    assert len(ids) == len(set(ids)), "returned duplicate rows"
+    assert len(result.records) == 50
+
+
+async def test_provenance_reports_the_weakest_page_not_the_first():
+    """A walk can mix cached and live pages, and the stale one is not
+    always page one.
+
+    Reporting page one's provenance for the whole set claims the answer is
+    fresher than it is, and labels later-page evidence with an access path
+    it did not take. The discriminating case is a LIVE first page with a
+    CACHED later one: taking page one's values reports `from_cache=False`
+    for a result that is partly served from cache.
+    """
+    svc = _PagingService(total=120)
+    cache = TTLCache()
+    adapter = ArcGISAdapter(fetcher=svc, cache=cache)
+    manifest = _real_manifest()
+
+    # First walk caches all three pages.
+    first = await adapter.query(manifest, "parcels",
+                                where_equals={"pin": "x"})
+    assert len(first.records) == 120
+    assert first.from_cache is False
+
+    # Evict page one only, leaving pages two and three cached. That is the
+    # state a short-TTL eviction or a partial cache clear produces.
+    page_one = [k for k in cache._store if '"resultOffset"' not in k
+                and "/query" in k]
+    assert len(page_one) == 1, page_one
+    del cache._store[page_one[0]]
+
+    result = await adapter.query(manifest, "parcels",
+                                 where_equals={"pin": "x"})
+
+    assert len(result.records) == 120
+    assert result.from_cache is True, (
+        "page one was live and the later pages came from cache; reporting "
+        "page one's provenance calls the whole answer fresh")
+
+

@@ -1,6 +1,6 @@
 # Spec: Government Source Registry
 
-**Plugs into:** Design Spec § 11 (Government Source Registry), § 20 (Legal/Terms), § 28 (Source Selection)
+**Plugs into:** architecture.md § 11 (Government Source Registry), § 20 (Legal/Terms), § 28 (Source Selection)
 **Status:** Draft for review. Manifest schema v1 freezes when the first three localities are onboarded and have forced the schema to be accurate.
 **Why this exists:** The registry is the project's most durable asset: a machine-readable inventory of what Virginia public systems exist, who publishes them, how to access them lawfully, and how they map into capabilities. Everything else (adapters, tools, skills) consumes it. If the registry is right, adding locality #4 through #133 is data entry plus review; if it is wrong, every locality is a software project.
 
@@ -89,19 +89,19 @@ Schema rules:
 1. **Every field above except `layers.*.field_mapping` extras is required.** A manifest missing `terms_url`/`terms_notes` does not validate; "unknown" is written explicitly (`automation_status: unknown`) and blocks activation (§ 3).
 2. **`capabilities[].id` comes from a controlled vocabulary** (`capabilities.yaml` in the registry root). Adding a capability ID is a reviewed change; this is what keeps source-to-tool routing coherent, and every routing table iterates the vocabulary file rather than restating it.
 3. **`adapter.type` must name a registered adapter**; the manifest validator loads the adapter's own parameter schema and validates the block against it (an `arcgis` block validates layer IDs and field mappings; a `socrata` block validates dataset IDs and SoQL field names).
-4. **Field mappings map source fields to canonical fields**, and the canonical field names come from the entity schemas in Commonwealth Core. The validator rejects a mapping onto a canonical field that does not exist. This is the single-source-of-truth discipline from base-files/CLAUDE.md applied to data plumbing.
+4. **Field mappings map source fields to canonical fields**, and the canonical field names come from the entity schemas in Commonwealth Core. The validator rejects a mapping onto a canonical field that does not exist. This is single-source-of-truth discipline applied to data plumbing.
 5. **No secrets in manifests, ever.** `access.mode: api_key` names an env var (`credential_ref: VDOT_API_KEY`), never a value.
 
 ## 2. Source selection metadata
 
-Selection follows DECISIONS.md 0005 as **Chosen (architect override, 2026-08-26)**: no central ranking and no derived "primary." For a (jurisdiction, capability) request, selection picks the **top two** candidate sources — filtered to selectable ones, ordered by `authority_level` then freshness for the *which two* question only — queries both, and surfaces both results. The registry supplies every input:
+Selection follows architecture.md decision 0005 as **Chosen (architect override, 2026-08-26)**: no central ranking and no derived "primary." For a (jurisdiction, capability) request, selection picks the **top two** candidate sources — filtered to selectable ones, ordered by `authority_level` then freshness for the *which two* question only — queries both, and surfaces both results. The registry supplies every input:
 
 - Selection inputs come only from manifest fields plus live operational state; nothing hard-codes "Fairfax first," and nothing anywhere reconciles two official answers into one.
 - `operational_state: unavailable` (probe failing > N hours, held in runtime storage) drops a source from default selection and surfaces it in `coverage.source_failures` when it would have been used; `impaired` keeps it selectable with a warning. Unavailable is not retired: the agent learns the source exists and is down, and no manifest edit occurs.
 
 ## 3. Terms, automation status, and the activation gate
 
-`automation_status` vocabulary, unchanged from design spec § 20: `permitted | public_api | public_download | manual_review_required | restricted | do_not_automate | unknown`.
+`automation_status` vocabulary, unchanged from architecture.md § 20: `permitted | public_api | public_download | manual_review_required | restricted | do_not_automate | unknown`.
 
 Hard rules enforced by the validator and CI, not by convention:
 
@@ -129,7 +129,7 @@ commonwealth source sample <file>            # runs each declared capability onc
 #   capability mapping sanity (does zoning.lookup really return districts?)
 ```
 
-`probe` and `sample` write their outputs under `tests/fixtures/sources/<id>/` so every merged source lands with a replayable fixture on day one. The recorded fixture is the contract test; a later schema change by the publisher fails the replay comparison loudly (`SourceSchemaChanged`), which is the drift alarm the health probe's `min_features` floor cannot provide. Fixtures are third-party payloads: each carries source and rights metadata and sits outside the repo's blanket data license (DECISIONS.md 0011). The per-fixture rights block is built and repo-health-tested; the `THIRD_PARTY_DATA.yml` inventory, NOTICE, and the license files themselves are not yet written (noted 2026-08-28; backlog High).
+`probe` and `sample` write their outputs under `tests/fixtures/sources/<id>/` so every merged source lands with a replayable fixture on day one. The recorded fixture is the contract test; a later schema change by the publisher fails the replay comparison loudly (`SourceSchemaChanged`), which is the drift alarm the health probe's `min_features` floor cannot provide. Fixtures are third-party payloads: each carries source and rights metadata and sits outside the repo's blanket data license (architecture.md decision 0011). The per-fixture rights block is built and repo-health-tested; the `THIRD_PARTY_DATA.yml` inventory, NOTICE, and the license files themselves are not yet written (noted 2026-08-28; backlog High).
 
 External contributions have prerequisites beyond tooling: GOVERNANCE.md, CONTRIBUTING.md, a project SECURITY.md, and CODEOWNERS routing `sources/**` to named source reviewers exist before the first outside manifest PR is accepted (design/security-and-data-handling.md § 5).
 
@@ -144,7 +144,7 @@ External contributions have prerequisites beyond tooling: GOVERNANCE.md, CONTRIB
 The registry is also the project's research notebook made executable. Phase 0/1 sequencing:
 
 1. Seed `sources/state/` with the known majors (VGIN, Virginia Open Data, LIS, Virginia Law, VDOT, DEQ, VDH, eVA/procurement, SCC) as manifests even where `status: proposed`, terms not yet reviewed.
-2. Seed four localities end to end through the full workflow including terms review: Fairfax County, Richmond City, one rural county, and one incorporated town inside a county (revised per the 2026-08-26 review — the rural and nested-town cases exercise the jurisdiction traps and thin-data reality that two big suburban counties cannot; Loudoun follows right after). These force the schema to be honest before it freezes.
+2. Seed four localities through the full workflow including terms review: Fairfax County, Richmond City, one rural county, and one incorporated town inside a county (revised per the 2026-08-26 review — the rural and nested-town cases exercise the jurisdiction traps and thin-data reality that two big suburban counties cannot; Loudoun follows right after). These force the schema to be honest before it freezes.
 3. Every "we should cover X someday" idea becomes a `proposed` manifest instead of a backlog line; the registry's proposed/active split then measures coverage debt for free (`commonwealth sources stats`).
 
 ## 7. Testing hooks

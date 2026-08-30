@@ -106,7 +106,7 @@ coverage:
       and independent cities. Prince George County (FIPS 51149) is
       published as two separate polygons sharing one FIPS and GNIS, a
       281 sq mi body and a 0.0076 sq mi sliver. Both are returned;
-      neither is silently dropped. See KNOWN_SOURCE_QUIRKS.md.
+      neither is silently dropped. See ../../design/source-quirks.md.
     - Towns layer covers incorporated towns only. Virginia's
       unincorporated communities and CDPs have no polygon here, and
       absence is not evidence that a place does not exist.
@@ -119,7 +119,7 @@ authority_notes: >
   whether a locality has formally adopted the geometry, and it is mapped
   and surfaced so callers can see that distinction rather than infer it.
   This is currently the only registered boundary.lookup source, so
-  DECISIONS.md 0005's query-both discipline resolves to querying one and saying
+  ../../design/architecture.md decision 0005's query-both discipline resolves to querying one and saying
   so in coverage.
 
 health:
@@ -136,4 +136,4 @@ lifecycle:
   declared_state: active
   added: "2026-08-28"
   last_verified: "2026-08-28"
-  verified_by: pranava
+  verified_by: pranava0x0

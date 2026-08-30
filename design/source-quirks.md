@@ -6,14 +6,15 @@ data does that a reasonable person would not predict from the schema.
 Rules for this file:
 
 - **Only observed quirks.** Every entry names how it was found and when.
-  No "this could happen" entries; those belong in backlog.md.
-- **A quirk that affects behaviour has a test.** The test name is listed.
-  A quirk with no test is a note, and it says so.
-- **Publisher-side quirks are not bugs to fix silently.** The project's
-  job is to surface them accurately, not to normalize them away and make
-  the source look tidier than it is.
+  No "this could happen" entries; those belong in the GitHub issues.
+- **Write a test if the quirk changes what the code does**, and list the
+  test name here. If there is no test, label the entry a note.
+- **Do not quietly work around a publisher's quirk.** Report what the
+  source actually returned. Smoothing it over makes the data look
+  cleaner than it is, and the next person cannot tell the difference.
 
-Each entry: what, where, why it matters, what the code does about it.
+Each entry says what the quirk is, where it lives, why it matters, and
+what the code does about it.
 
 ---
 
@@ -47,7 +48,7 @@ identifier and none was picked as the real one. Nothing dedupes.
 - **Evidence:** `docs/audits/centroid-property-2026-08-28.json`
 - **Test:** `tests/servers/geo/test_geo_boundaries.py::test_centroid_is_labelled_as_a_label_point`
 
-design/jurisdiction-resolution.md § 6 proposed the property test *"every
+jurisdiction-resolution.md § 6 proposed the property test *"every
 jurisdiction's geometry centroid resolves to itself."* Run against the real
 geometries, **it fails for 4 of 134 localities**:
 
@@ -75,7 +76,7 @@ the codebase uses a centroid to decide which jurisdiction contains a place;
 containment goes through a real point-in-polygon query.
 
 **Design correction:** the property test in
-design/jurisdiction-resolution.md § 6 is amended rather than implemented as
+jurisdiction-resolution.md § 6 is amended rather than implemented as
 written. See that section.
 
 ---

@@ -1,100 +1,185 @@
 # Commonwealth-MCP
 
-An MCP suite for Virginia state, county, and municipal public data: servers, tools, and skills that let agents answer real civic questions (zoning, legislation, procurement, permits) against authoritative government sources, with provenance on every answer. Built for indie developers, university researchers, and industry teams who should not each have to rediscover how 133 localities publish their data.
+Virginia government data, available to AI agents through the Model Context
+Protocol.
 
-## What works today
+Ask which local government covers a spot on the map, what a parcel record
+says, how a parcel is zoned, or what a section of the Code of Virginia
+says. Every answer names the government system it came from and the date
+it was fetched.
 
-Point an MCP client at it, or use the CLI, and ask:
+> Independent project. Not affiliated with or maintained by the
+> Commonwealth of Virginia.
 
-- **Which government covers this?** By name, FIPS code, or coordinates. "Fairfax" returns two candidates and refuses to choose, because Fairfax City is not in Fairfax County — none of Virginia's 38 independent cities sit inside the county they share a name with. A coordinate in a town returns the town *and* its county, since both govern that ground.
-- **What is this parcel?** By PIN or point, against four registered assessor systems.
-- **How is it zoned?** Fairfax County and Richmond City only. Screening evidence, never a legal determination.
-- **Where does this jurisdiction end?** Boundaries statewide, with area, FIPS, and GNIS.
-- **What does § 18.2-57 say?** Section text straight from the Code of Virginia.
+## Why this exists
 
-Every answer carries where it came from, when it was fetched, and what was not searched. An empty result says which kind of empty it is: the records were checked and hold nothing, or no source is registered there at all. Most systems collapse those two into one blank screen, and they are not the same fact.
+Virginia has 133 counties and independent cities. Each one publishes its
+data its own way: different platforms, different field names, different
+rules about what you may do with it. Anyone building something on top of
+Virginia public data has to work that out first, and everyone works it out
+separately.
 
-### Coverage
+This project does it once and writes down what it learned.
 
-| Capability | Sources behind it |
-|---|---|
-| Parcel lookup | Fairfax County, Richmond City, Charles City County, VGIN statewide |
-| Zoning lookup | Fairfax County, Richmond City |
-| Boundary lookup | VGIN statewide — 133 localities, 191 towns |
-| Code of Virginia | law.lis.virginia.gov |
-
-Where a locality publishes its own parcel layer, that layer and VGIN's statewide one are both queried and both shown. Neither is ranked over the other, and a disagreement between two official sources is reported as a disagreement rather than resolved into a single tidier answer.
-
-### What does not work yet
-
-Addresses. There is no geocoder registered, so jurisdictions resolve from names, FIPS codes, and coordinates only. Twelve of Virginia's 133 localities have entries in the jurisdiction table (fourteen rows, counting the state itself and one town), so a coordinate anywhere in the state will place itself, but most places will report that the boundary source knows the government and this project cannot yet route queries to it. Zoning stops at two localities. Everything the design sketches for finance, infrastructure, environment, and people is unbuilt on purpose.
-
-[backlog.md](backlog.md) is the ordered list of what comes next, and [KNOWN_SOURCE_QUIRKS.md](KNOWN_SOURCE_QUIRKS.md) records the things real government data does that its schemas do not predict.
+## Try it
 
 ```bash
-# from the repo root (--group resolves against ./pyproject.toml)
-uv venv --python 3.12 .venv && uv pip install --python .venv/bin/python -e . --group dev
-.venv/bin/commonwealth doctor --live
-.venv/bin/commonwealth tools call geo.find_zoning --args '{"jurisdiction": "Fairfax County", "pin": "0102 14  0231"}'
-.venv/bin/commonwealth serve            # MCP over stdio, default profile
-.venv/bin/pytest                        # offline; replays recorded fixtures
+uv venv --python 3.12 .venv
+uv pip install --python .venv/bin/python -e . --group dev
 ```
 
-## The site
-
-[docs/index.html](docs/index.html) is a static page — no build step, no server needed — showing what is registered and a call-by-call audit trail of fourteen real calls: name and coordinate resolutions, an ambiguous one, live parcel and zoning data, a boundary that is two official polygons, a Code of Virginia section, a clean empty result, a registry gap, discovery, and a typed error.
-
-Three parts of it are interactive, and all three run on the recorded data rather than a mock-up of it. The resolver playground answers from the actual `JurisdictionTable.resolve()`, called at build time. The HTTP-exchange view shows the real outbound requests the live calls made to Fairfax County's ArcGIS service, with URLs, parameters, and response shapes. The coverage decoder links each warning and coverage value to whichever recorded call demonstrates it.
+Check that the registered government services are reachable:
 
 ```bash
-python tools/build_site.py --fixtures   # deterministic, from recordings
-python tools/build_site.py --live       # re-queries the real services
+.venv/bin/commonwealth doctor --live
+```
+
+Ask a real question:
+
+```bash
+.venv/bin/commonwealth tools call geo.find_zoning \
+  --args '{"jurisdiction": "Fairfax County", "pin": "0102 14  0231"}'
+```
+
+Point an AI client at it. This writes the client's config file, shows you
+the change first, and leaves any other servers you have configured alone:
+
+```bash
+.venv/bin/commonwealth configure claude-code --dry-run
+```
+
+Drop `--dry-run` to write it. `claude`, `codex`, `cursor` and `vscode` work
+too. Or run the server directly, over stdio:
+
+```bash
+.venv/bin/commonwealth serve
+```
+
+The tests replay recorded government responses, so they run offline:
+
+```bash
+.venv/bin/pytest
+```
+
+## What it can answer today
+
+| Question | Coverage |
+|---|---|
+| Which government covers this? | By name, FIPS code, or coordinates, statewide |
+| What is this parcel? | Fairfax County, Richmond City, Charles City County, VGIN statewide |
+| How is it zoned? | Fairfax County and Richmond City |
+| Where does this jurisdiction end? | Statewide: 133 localities, 191 towns |
+| What does § 18.2-57 say? | The full Code of Virginia |
+
+Some examples of what that looks like in practice:
+
+**Ambiguous names come back ambiguous.** Ask about "Fairfax" and you get
+both candidates back. Fairfax City is not inside Fairfax County —
+it is a separate government. None of Virginia's 38 independent cities sit
+inside the county they share a name with, and this trips up almost every
+system that handles Virginia data.
+
+**A point in a town returns the town and the county.** Both govern that
+ground, so both are in the answer.
+
+**Two official sources that disagree are both shown.** Where a locality
+publishes its own parcel layer and VGIN publishes a statewide one, both
+are queried. Neither is ranked above the other, and a disagreement is
+reported as a disagreement.
+
+**An empty answer says which kind of empty it is.** Either the records
+were searched and nothing matched, or no source is registered for that
+place at all. Most systems show the same blank screen for both. They are
+different facts, and only one of them means "there is nothing there".
+
+**Zoning answers are screening evidence.** They report what the county's
+GIS layer says. The adopted ordinance is what governs, and the answer says
+so every time.
+
+## What it cannot do yet
+
+**Addresses.** No geocoder is registered, so a jurisdiction resolves from
+a name, a FIPS code, or coordinates. Street addresses do not work yet.
+
+**Most localities.** 12 of the 133 have an entry in the jurisdiction
+table. A coordinate anywhere in Virginia will find the right government —
+that part works statewide — but for the other 121, the answer is "the
+boundary source knows which government this is, and this project cannot
+route a query to it yet".
+
+**Zoning outside two localities.** Fairfax County and Richmond City are
+registered. Everywhere else returns a registry gap.
+
+**Everything else in the design.** Finance, infrastructure, environment,
+and people are sketched in the architecture and not built.
+
+[Open issues](https://github.com/pranava0x0/Commonwealth-MCP/issues) is
+the list of what comes next, ordered by priority label.
+
+## The demo site
+
+[docs/index.html](docs/index.html) is a static page with no build step. It
+shows what is registered, and walks through fourteen real recorded calls
+one at a time: successful lookups, an ambiguous jurisdiction, an empty
+result, a registry gap, and a typed error.
+
+Three parts of it are interactive, and all three run on recorded data
+rather than a mock-up. The jurisdiction resolver calls the real
+`JurisdictionTable.resolve()` at build time. The HTTP view shows the
+actual requests that went to Fairfax County's ArcGIS service. The coverage
+decoder links each warning code to a call that produced it.
+
+```bash
+python tools/build_site.py --fixtures   # rebuild from recordings
+python tools/build_site.py --live       # re-query the real services
 python3 -m http.server -d docs          # or just open the file
 ```
 
-[RESEARCH.md](RESEARCH.md#6-how-the-projects-own-site-compares) sets it against nepa-mcp, Power-Agent, civic-ai-tools, and others.
-
-## Where to start
+## Where things are
 
 | You want | Read |
 |---|---|
-| What the system is and how it fits together | [ARCHITECTURE.md](ARCHITECTURE.md) |
-| Why it is shaped that way, with the rejected alternatives intact | [DECISIONS.md](DECISIONS.md) |
-| The evidence behind those decisions | [RESEARCH.md](RESEARCH.md) |
-| The per-feature contracts the code is written against | [design/](design/README.md) |
-| How to propose a decision, or argue a settled one should reopen | [CONTRIBUTING.md](CONTRIBUTING.md) |
-
-Four documents, in dependency order: research produced decisions, decisions produced the architecture, the architecture is implemented by the specs in `design/`. Each links back to the one behind it.
-
-Day-to-day: [backlog.md](backlog.md) is what's next, [issues.md](issues.md) is what's broken, [KNOWN_SOURCE_QUIRKS.md](KNOWN_SOURCE_QUIRKS.md) is what government data does that its schemas don't predict, and [docs/RUNLOG.md](docs/RUNLOG.md) is what happened when.
-
-## Repo layout
+| How the system works and why | [design/architecture.md](design/architecture.md) |
+| The contract for one feature | [design/](design/README.md) |
+| Odd things real government data does | [design/source-quirks.md](design/source-quirks.md) |
+| The research the design came from | [research/](research/README.md) |
+| What happened when | [docs/RUNLOG.md](docs/RUNLOG.md) |
+| How to contribute | [CONTRIBUTING.md](CONTRIBUTING.md) |
 
 ```text
-├── ARCHITECTURE.md   what the system is: servers, provenance contract,
-│                     source registry, adapters, the phased plan
-├── DECISIONS.md      why: one record per architectural choice, every
-│                     credible option kept on the page after the choice
-├── RESEARCH.md       the evidence those choices were made from
-├── design/           per-feature specs, one contract each; the code cites
-│                     them by name, and each names the decisions it needs
-├── src/commonwealth/ the implementation
-├── sources/          the source registry: manifests and the jurisdiction
-│                     table, versioned and reviewed like code
-├── tests/            offline, replaying recorded government responses
-├── docs/             the static site and the run log
-├── research/raw/     script output, not committed; regenerate with the
-│                     scripts below
-└── tools/            research and site-build scripts (stdlib Python)
+design/       how it works, why, and the per-feature contracts
+src/          the implementation
+sources/      the source registry: one manifest per government service,
+              plus the jurisdiction table, reviewed like code
+tests/        offline, replaying recorded government responses
+research/     the evidence behind the design
+docs/         the demo site and the run log
+tools/        research and site-build scripts, stdlib Python only
 ```
+
+## License
+
+Code is Apache-2.0. The source registry is CC0. Documentation prose is
+CC-BY-4.0. Recorded government responses belong to their publishers and
+keep those publishers' terms.
+
+[NOTICE](NOTICE) says which applies to what, and
+[THIRD_PARTY_DATA.yml](THIRD_PARTY_DATA.yml) lists every government source
+this repo redistributes anything from.
 
 ## Reproducing the research
 
-The searches behind `research/` are scripts, not lore — see [RESEARCH.md](RESEARCH.md):
+The searches behind `research/` are scripts, so you can re-run them:
 
 ```bash
 python3 tools/search_hn.py
 python3 tools/search_github.py
 python3 tools/fetch_mcp_registry.py
-python3 tools/check_writing.py     # the register lint every doc here passes
+```
+
+There is also a writing checker. It reads the docs and the site and flags
+the habits this project keeps falling into:
+
+```bash
+python3 tools/check_writing.py
 ```

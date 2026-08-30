@@ -32,7 +32,7 @@ FIXTURE = FIXTURES_DIR / "va-fairfax-parcels-zoning" / "recorded.json"
 def _all_recorded_exchanges() -> list[dict]:
     """Every committed source's own fixture, merged. The demo queries the
     real (multi-source) registry, so a call can legitimately reach more
-    than one source (DECISIONS.md 0005-C) — the replay pool has to cover
+    than one source (../design/architecture.md decision 0005-C) — the replay pool has to cover
     whichever ones actually get queried, not just Fairfax's."""
     exchanges: list[dict] = []
     for path in sorted(FIXTURES_DIR.glob("*/recorded.json")):
@@ -48,7 +48,8 @@ PLANNED_SKILLS = [
     {"name": "legislative-impact-analysis", "status": "milestone 1b (civic)",
      "capabilities": []},
     {"name": "development-site-due-diligence",
-     "status": "deferred until coverage earns the name", "capabilities": []},
+     "status": "deferred until there is coverage to justify it",
+     "capabilities": []},
 ]
 
 # design/provenance-envelope.md § 3 table, transcribed with the spec's own
@@ -60,8 +61,8 @@ COVERAGE_DEFINITIONS = {
         "values": {
             "covered": "A registered source should answer this.",
             "partial": "Some but not all of what was asked is covered.",
-            "none": "Commonwealth has no source for this — the gap is "
-                    "named, never reported as “no results.”",
+            "none": "No source is registered for this place. The answer "
+                    "says so, and says which place it means.",
             "unknown": "Coverage could not be determined.",
         },
     },
@@ -80,8 +81,8 @@ COVERAGE_DEFINITIONS = {
         "values": {
             "complete": "Every page was retrieved.",
             "truncated": "The source's own transfer limit cut the result "
-                          "short (ArcGIS exceededTransferLimit); honestly "
-                          "labeled, not silently dropped.",
+                          "short (ArcGIS exceededTransferLimit). The "
+                          "answer is labelled as partial.",
             "unknown": "Paging completeness could not be determined.",
         },
     },
@@ -89,8 +90,9 @@ COVERAGE_DEFINITIONS = {
         "question": "Did anything match?",
         "values": {
             "hit": "At least one record matched.",
-            "empty": "Nothing matched — a successful state, not an "
-                      "error.",
+            "empty": "The search ran and matched nothing. That is a "
+                      "result, and it is reported separately from a "
+                      "failure.",
         },
     },
 }
@@ -103,9 +105,9 @@ WARNING_DEFINITIONS = {
         "ordinance and official zoning map govern; confirm before any "
         "legal reliance.",
     "stale_source": "The source's own update cadence was missed.",
-    "freshness_unavailable": "The publisher exposes no machine-readable "
-        "update date for this layer; retrieval time is known, data "
-        "vintage isn't.",
+    "freshness_unavailable": "The publisher gives no machine-readable "
+        "update date for this layer. The fetch time is known; how old the "
+        "data itself is cannot be established.",
     "boundary_precision": "Parcel or boundary geometry is generalized, "
         "not surveyed.",
     "alias_match": "The entity matched via a registered alias, not its "
@@ -271,7 +273,7 @@ def build_catalog() -> dict:
         "registry_revision": ctx.sources.revision,
         "counts": {
             # Declared, not derived from a collection: build_server() always
-            # returns exactly one MCPServer (DECISIONS.md 0001, "one process").
+            # returns exactly one MCPServer (../design/architecture.md decision 0001, "one process").
             "servers": 1,
             "tools": len(tools),
             "packages": len(regs),

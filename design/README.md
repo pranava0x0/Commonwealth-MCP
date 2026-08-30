@@ -1,37 +1,54 @@
 # Design
 
-Per-feature specs: what each feature contracts to do, in its current adopted shape. One file per feature, because the code cites them by name and each is written to be pulled into context on its own.
+Everything about how Commonwealth-MCP works and why.
 
-The decisions these depend on moved to [DECISIONS.md](../DECISIONS.md) in 2026-08-28's consolidation — fifteen files of 25-47 lines each that were only ever read as a set, and whose status was correct only in the index table they were separated from. A spec's header still names the decisions it depends on; those now resolve to sections of that file.
+Start with **[architecture.md](architecture.md)**. It has two parts: how
+the system is put together (§ 1–39), and one record per architectural
+choice with the options that lost still written out (decisions 0001–0015).
 
-## Specs
+The other files here are per-feature contracts. Each one is written to be
+read on its own, and the source code cites them by filename, so a comment
+in `core/envelope.py` pointing at `provenance-envelope.md § 2` resolves to
+something specific.
 
-Each spec is self-contained, written to be pulled into context alone: it names the [ARCHITECTURE.md](../ARCHITECTURE.md) sections it expands (`Plugs into:`), carries its own evidence pointers, and ends with testing hooks. ARCHITECTURE.md stays the map; these are the territories.
+## The specs
 
-Reading order for a first pass mirrors the dependency order:
+Roughly in dependency order, which is also a reasonable reading order:
 
-| Spec | What it fixes | Depends on decisions |
+| Spec | What it settles | Decisions it rests on |
 |---|---|---|
-| [provenance-envelope.md](provenance-envelope.md) | The result contract every tool returns: data/provenance/coverage/warnings, token budgets, error integration | 0012 (field freeze at Gate A) |
-| [jurisdiction-resolution.md](jurisdiction-resolution.md) | The jurisdiction model, resolution tool, ambiguity behavior, the Fairfax traps | 0004 |
-| [source-registry.md](source-registry.md) | Manifest schema, terms/activation gates, contribution workflow, inventory-first sequencing | 0005 |
-| [adapters.md](adapters.md) | The adapter contract, initial three adapters, spatial rules, politeness | 0003 |
-| [domain-servers.md](domain-servers.md) | Tool conventions and V1 contracts for registry/geo/civic | 0001, 0002, 0005 |
-| [skills.md](skills.md) | Skill packaging (agentskills.io), shape, anti-patterns, eval requirement | 0007 |
-| [bench.md](bench.md) | Three eval tiers, task format, traps, public/hidden split, reporting | 0002 |
-| [security-and-data-handling.md](security-and-data-handling.md) | Threat model, egress policy, data classification, log minimization, governance prerequisites | 0014 |
-| [explorer.md](explorer.md) | Long-tail querying boundaries and the manifest-promotion pipeline (deferred design — no V1 build per 0008 as revised) | 0008 |
-| [hub-catalog.md](hub-catalog.md) | Catalog schema, capability routing and profiles (pre-Hub), external integration modes, tenancy | 0009, 0013 |
-| [cli.md](cli.md) | The `commonwealth` command tree and its non-negotiables | 0015 |
-| [testing-and-demos.md](testing-and-demos.md) | Test tree, quirks register, reconciliation audits, demo layout | — |
-| [docs-practices.md](docs-practices.md) | Doc structure, register gates, agent-facing strings as docs | — |
+| [provenance-envelope.md](provenance-envelope.md) | What every tool result contains: data, provenance, coverage, warnings, token budgets, errors | 0012 |
+| [jurisdiction-resolution.md](jurisdiction-resolution.md) | The jurisdiction model, how a place is resolved, what happens when a name is ambiguous, and the Virginia traps | 0004 |
+| [source-registry.md](source-registry.md) | The manifest format, the terms and activation gates, and how a new source gets added | 0005 |
+| [adapters.md](adapters.md) | The adapter contract, the first three adapters, spatial rules, and request politeness | 0003 |
+| [domain-servers.md](domain-servers.md) | Tool naming and behaviour for the registry, geo, and civic packages | 0001, 0002, 0005 |
+| [skills.md](skills.md) | How a skill is packaged, what shape it takes, and what it must not do | 0007 |
+| [bench.md](bench.md) | Three evaluation tiers, the task format, the traps, and how results are reported | 0002 |
+| [security-and-data-handling.md](security-and-data-handling.md) | Threat model, egress policy, data classification, and what logs may keep | 0014 |
+| [cli.md](cli.md) | The `commonwealth` command tree | 0015 |
+| [testing-and-demos.md](testing-and-demos.md) | Test layout, the quirks register, drift audits, and demos | — |
+| [hub-catalog.md](hub-catalog.md) | Catalog schema, capability routing, profiles, and tenancy. Mostly ahead of what is built | 0009, 0013 |
+| [explorer.md](explorer.md) | Querying the long tail, and how an ad-hoc query becomes a registered source. Deferred, not built | 0008 |
+| [docs-practices.md](docs-practices.md) | How the docs are structured and what the writing checker enforces | — |
 
-Conventions all specs follow: `Status: Draft for review` until the architect accepts; a spec whose decision dependency is unchosen cannot graduate; edits that change a contract bump the spec's own status line and note the date.
+Two more files sit alongside them:
+
+- **[source-quirks.md](source-quirks.md)** — things real government data
+  does that its schema does not predict. Every entry names how it was
+  found, when, and what the code does about it.
+- **[architecture.md](architecture.md)** — the map the specs expand.
+
+## Conventions
+
+A spec carries `Status: Draft for review` until the architect accepts it.
+A spec cannot graduate while a decision it depends on is still open. Any
+edit that changes a contract updates the spec's status line with the date.
 
 ## Changelog
 
 | Date | What changed |
 |---|---|
 | 2026-08-26 | Specs and decision records written together in this folder. |
-| 2026-08-28 | The fifteen decision records moved to [DECISIONS.md](../DECISIONS.md). The specs stayed as files: source code cites them by filename in 34 places, and each is meant to be read alone. |
-| 2026-08-28 | Plan-vs-built review pass: dated built/unbuilt annotations added where specs asserted unshipped things in the present tense (cli, hub-catalog, domain-servers, provenance-envelope, source-registry, jurisdiction-resolution, testing-and-demos); three citations of the merge-dropped "design spec § 17.6" repointed; provenance-envelope's `conflict` example renamed to the shipped `comparison`; four implementation-added warning codes recorded. Contract-level divergences went to issues.md, not silent edits. |
+| 2026-08-28 | The fifteen decision records merged into one file. They were only ever read as a set, and each one's status was correct only in the index table it had been separated from. |
+| 2026-08-28 | Plan-vs-built review. Specs that described unbuilt things in the present tense got dated annotations saying so. Contract-level disagreements between spec and code were filed as issues rather than edited away. |
+| 2026-08-29 | The architecture and the decisions merged into `architecture.md` and moved into this folder, next to the specs that expand them. `KNOWN_SOURCE_QUIRKS.md` became `source-quirks.md`. The backlog and the issues log moved to GitHub issues. |

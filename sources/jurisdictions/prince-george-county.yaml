@@ -3,7 +3,7 @@
 # body and a 0.0076 sq mi sliver). Registering it makes that real source
 # quirk reachable through geo.find_boundaries and testable over the
 # recorded fixture, rather than a note nothing exercises.
-# See KNOWN_SOURCE_QUIRKS.md.
+# See ../../design/source-quirks.md.
 id: va:prince-george-county
 name: Prince George County
 kind: county

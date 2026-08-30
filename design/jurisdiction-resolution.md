@@ -1,6 +1,6 @@
 # Spec: Jurisdiction Resolution
 
-**Plugs into:** Design Spec § 9.3 (Jurisdiction Resolution), § 7.1 (`commonwealth-registry` tools), § 28 (Source Selection)
+**Plugs into:** architecture.md § 9.3 (Jurisdiction Resolution), § 7.1 (`commonwealth-registry` tools), § 28 (Source Selection)
 **Status:** Draft for review. The jurisdiction ID scheme freezes at Gate A.
 Point-in-polygon resolution (§ 2 `point` row, § 2.1 `point_in_polygon`
 basis, § 3 cases 2 and 7, and the point half of case 4) shipped 2026-08-28
@@ -12,7 +12,7 @@ a registered geocoder.
 Fixture accounting for § 3's eight traps, added 2026-08-28 and corrected
 the same day after review: 2, 3, and 6 are built as tests; 1, 4, and 5
 wait on the geocoder; 7 ships as a warning rather than candidates
-(annotated below; policy call in backlog.md); 8 waits on Bedford's
+(annotated below; policy call in the GitHub issues); 8 waits on Bedford's
 jurisdiction-table rows, which the 14-row seed does not carry.
 
 Case 4 was briefly counted as "built by point rather than address."
@@ -89,9 +89,9 @@ Standard envelope (design/provenance-envelope.md); `data`:
 
 ### 2.2 Ambiguity is a first-class result, not an error
 
-When inputs match multiple jurisdictions (`name: "Fairfax"`, a multi-jurisdiction ZIP), `resolved` is null and `candidates` carries each option with its evidence and a `distinguisher` string ("independent city, not the county"). The tool never picks. This is a deliberate response to observed agent behavior: models substitute world-knowledge guesses for literal inputs (the Mapbox "cal academy" case, RESEARCH.md part 4 § 8), and Fairfax City/County is exactly the trap they will hit. Bench tasks (design/bench.md) score whether the agent surfaces the ambiguity to the user instead of silently choosing.
+When inputs match multiple jurisdictions (`name: "Fairfax"`, a multi-jurisdiction ZIP), `resolved` is null and `candidates` carries each option with its evidence and a `distinguisher` string ("independent city, not the county"). The tool never picks. This is a deliberate response to observed agent behavior: models substitute world-knowledge guesses for literal inputs (the Mapbox "cal academy" case, ../research/README.md part 4 § 8), and Fairfax City/County is exactly the trap they will hit. Bench tasks (design/bench.md) score whether the agent surfaces the ambiguity to the user instead of silently choosing.
 
-Client-interaction note: candidates-in-`data` is the portable mechanism and the V1 default. The 2026-07-28 MRTR pattern (`resultType: "input_required"`) can layer on later for clients that support it; DECISIONS.md 0004 records the choice and trigger.
+Client-interaction note: candidates-in-`data` is the portable mechanism and the V1 default. The 2026-07-28 MRTR pattern (`resultType: "input_required"`) can layer on later for clients that support it; architecture.md decision 0004 records the choice and trigger.
 
 ## 3. Postal-city and boundary traps (the test fixtures)
 
@@ -103,14 +103,14 @@ These are the required regression set; each is a named fixture:
 4. A Vienna address → town resolved, county in `layered_authorities`. *(Unbuilt — geocoder-blocked, § 4. The point and name paths into Vienna are tested; the address path this case names is not, and it is the address that carries the trap.)*
 5. ZIP 24450 (Lexington + Rockbridge County mix) → candidates, not a guess.
 6. Charles City County by name → county, with a `not_to_be_confused_with` note absent (no such city exists; the trap is assuming it does). *(Both halves asserted: `test_jurisdiction.py::test_charles_city_county_is_a_county_not_a_city`. The absence assertion was added 2026-08-28 after review found the test checking only the `kind`.)*
-7. A point on the Fairfax City/County boundary line → both as candidates with `boundary_precision` warning. *(Shipped 2026-08-28 as the containing polygon plus a warning naming the neighbour, not candidates; the upgrade needs the when-does-a-warning-become-a-refusal policy call tracked in backlog.md. The test pinning today's behaviour: `test_resolve_by_point.py::test_point_near_a_boundary_warns_instead_of_asserting`.)*
-8. Bedford: the dissolved-city history (reverted to town, 2013) must not surface a stale `va:bedford-city`. *(No Bedford rows exist in the 14-row seed yet; lands with the full-table generator, backlog.md.)*
+7. A point on the Fairfax City/County boundary line → both as candidates with `boundary_precision` warning. *(Shipped 2026-08-28 as the containing polygon plus a warning naming the neighbour, not candidates; the upgrade needs the when-does-a-warning-become-a-refusal policy call tracked in the GitHub issues. The test pinning today's behaviour: `test_resolve_by_point.py::test_point_near_a_boundary_warns_instead_of_asserting`.)*
+8. Bedford: the dissolved-city history (reverted to town, 2013) must not surface a stale `va:bedford-city`. *(No Bedford rows exist in the 14-row seed yet; lands with the full-table generator, the GitHub issues.)*
 
 ## 4. Geocoding dependency
 
 Address resolution needs a geocoder, which is a source like any other, registered in the Government Source Registry with provenance:
 
-- Primary: Virginia's state geocoding service (VGIN composite geocoder) where its terms permit automated use. Verified 2026-08-28: the official service overview states no credentials are needed, offers batch geocoding, and publishes no automated-use restriction (RESEARCH.md part 3 § 9); the manifest records that finding rather than an invented permission.
+- Primary: Virginia's state geocoding service (VGIN composite geocoder) where its terms permit automated use. Verified 2026-08-28: the official service overview states no credentials are needed, offers batch geocoding, and publishes no automated-use restriction (../research/README.md part 3 § 9); the manifest records that finding rather than an invented permission.
 - Fallback: Census Bureau geocoder (public API, no key).
 - The geocoder used appears in `provenance`; a geocode that falls back is a `warnings` entry, because positional quality differs.
 - Never a commercial geocoder by default: terms generally forbid storing/deriving, and provenance would leave the public-data story.
@@ -123,7 +123,7 @@ Address resolution needs a geocoder, which is a source like any other, registere
 
 ## 6. Testing hooks
 
-- Fixture set of § 3, run against the boundary geometries actually shipped, not mocks (the geometries are the product).
+- Fixture set of § 3, run against the boundary geometries that ship rather than against mocks. A mock cannot reproduce a donut-shaped county.
 - ~~A property test: every jurisdiction's geometry centroid resolves to
   itself.~~ **Falsified 2026-08-28 and amended.** Run against the real VGIN
   locality polygons, this fails for 4 of 134: Henrico County's centroid
@@ -137,7 +137,7 @@ Address resolution needs a geocoder, which is a source like any other, registere
   containment.** The shipped test asserts that framing
   (`test_centroid_is_labelled_as_a_label_point`) rather than the false
   property. Evidence: `docs/audits/centroid-property-2026-08-28.json`;
-  discussion: KNOWN_SOURCE_QUIRKS.md 2.
+  discussion: source-quirks.md 2.
 - A derivation test: the alias table and `not_to_be_confused_with` graph iterate from the jurisdiction YAML registry, never from a hand-typed list in test code.
 - Boundary-precision cases assert the warning fires within N meters of a
   shared border. **N = 50 m, and it is a project-chosen screening

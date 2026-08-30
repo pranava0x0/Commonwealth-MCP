@@ -4,11 +4,14 @@ Contracts: design/domain-servers.md § 2, design/jurisdiction-resolution.md.
 """
 from __future__ import annotations
 
+import re
+
 from ..core.assemble import (EnvelopeBuilder, failure, result_dim,
                              selection_coverage)
 from ..core.envelope import (AccessPath, AuthorityLevel, Coverage, Envelope,
                              ExecutionCoverage, PaginationCoverage,
                              RegistryCoverage, ResultCoverage, WarningCode)
+from ..core.registry import SourceManifest
 from ..core.errors import CommonwealthError, InvalidQuery
 from ..core.toolreg import ToolRegistry, ToolSpec
 from ..runtime import PROJECT_SOURCE, RuntimeContext
@@ -289,6 +292,40 @@ async def resolve_jurisdiction(ctx: RuntimeContext, query: str = "",
         result=ResultCoverage.empty))
 
 
+def _search_terms(text: str) -> list[str]:
+    """Split a query into lowercase word stems.
+
+    Matching used to be a raw substring test over `name + id`, which broke
+    both ways once the registry held more than a handful of manifests: a
+    search for "road" matched "crossroads", and "Fairfax County parcels"
+    matched nothing because no single field contains that whole string.
+    """
+    return [w for w in re.split(r"[^a-z0-9]+", text.lower()) if w]
+
+
+def _matches_terms(terms: list[str], m: SourceManifest) -> bool:
+    """True when every query term matches a word in the manifest's name,
+    id, jurisdiction, publisher, or capabilities.
+
+    Every term has to match (AND), so extra words narrow rather than widen.
+    A term matches a word by prefix, so "parcel" finds "parcels" without
+    "road" finding "crossroads".
+
+    An empty term list means the query had nothing matchable in it — all
+    punctuation, or characters outside a-z0-9. That matches nothing, which
+    is not the same as matching everything; the caller checks whether a
+    query was given at all before consulting this.
+    """
+    if not terms:
+        return False
+    haystack = " ".join([
+        m.name, m.id, m.jurisdiction or "", m.publisher.agency or "",
+        " ".join(sorted(m.capability_ids())),
+    ]).lower()
+    words = [w for w in re.split(r"[^a-z0-9]+", haystack) if w]
+    return all(any(w.startswith(term) for w in words) for term in terms)
+
+
 async def search_sources(ctx: RuntimeContext, text: str = "",
                          jurisdiction: str = "",
                          capability: str = "") -> Envelope:
@@ -298,9 +335,10 @@ async def search_sources(ctx: RuntimeContext, text: str = "",
                            f"vocabulary; known: "
                            f"{sorted(ctx.sources.capability_vocab)}")
     hits = []
-    needle = text.lower()
+    searching = bool(text.strip())
+    terms = _search_terms(text)
     for m in ctx.sources.manifests.values():
-        if needle and needle not in (m.name + " " + m.id).lower():
+        if searching and not _matches_terms(terms, m):
             continue
         if jurisdiction and m.jurisdiction != jurisdiction:
             continue

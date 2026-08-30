@@ -5,7 +5,7 @@ design/domain-servers.md sketches `civic.search_law` as full-text search;
 what's actually built here is direct-citation lookup only (the site's own
 search feature was not reverse-engineered) — named `get_code_section`
 rather than `search_law` so the tool's name doesn't overclaim what it
-does. Selection discipline matches geo (DECISIONS.md 0005 Chosen): the top two
+does. Selection discipline matches geo (../../../design/architecture.md decision 0005 Chosen): the top two
 selectable sources for the capability are queried and every per-source
 result is surfaced, never merged into one answer.
 """

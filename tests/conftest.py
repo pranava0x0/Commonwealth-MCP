@@ -108,7 +108,7 @@ def sample_pin(recording) -> str:
 def load_all_recordings() -> list[dict]:
     """Every committed source's own fixture, merged. `build_ctx` loads the
     real (multi-source) registry, so a query against one jurisdiction can
-    legitimately reach more than one source (DECISIONS.md 0005-C) — the replay
+    legitimately reach more than one source (../design/architecture.md decision 0005-C) — the replay
     pool has to cover whichever ones actually get queried, not just
     Fairfax's."""
     exchanges: list[dict] = []
