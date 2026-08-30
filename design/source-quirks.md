@@ -124,3 +124,109 @@ companion query at a **project-chosen** 50 m tolerance to flag points near
 another jurisdiction's line. The tolerance is not a publisher accuracy
 figure — VGIN publishes none for this layer — and the code and the warning
 both say so.
+
+---
+
+## 5. ArcGIS rejects a quoted literal against a numeric column, with a message that names nothing
+
+- **Source:** `va-vgin-address-points` (`ZIP_5`), `va-vgin-landmarks`
+  (`FIPScode`)
+- **Observed:** 2026-08-29, live
+- **Test:** `tests/adapters/test_arcgis_unit.py::test_numeric_fields_are_sent_unquoted`
+
+`ZIP_5 = '24450'` fails. `ZIP_5 = 24450` succeeds. The failure arrives as
+HTTP 200 carrying `{"error": {"code": 400, "message": "Unable to complete
+operation.", "details": ["Unable to perform query operation."]}}` — no
+field name, no type, nothing pointing at the quoting.
+
+It is not consistent across the registry either, which is what makes it a
+trap rather than a rule to memorise: VGIN's parcels layer stores `FIPS` as
+text and its landmarks layer stores `FIPScode` as an integer, so the same
+canonical `fips` filter needs different SQL depending on which layer it
+lands on.
+
+**What the code does:** `LayerDecl.numeric_fields` names the canonical
+fields whose source column is numeric, so the layer's schema stays in the
+manifest and a caller passing `"51059"` never has to know. The adapter
+also takes a real Python `int` or `float` at its word; a string that
+merely looks numeric is still escaped and quoted.
+
+---
+
+## 6. `returnDistinctValues` and `resultRecordCount` are mutually exclusive on VGIN's address points
+
+- **Source:** `va-vgin-address-points`
+- **Observed:** 2026-08-29, live
+- **Test:** `tests/adapters/test_arcgis_unit.py::test_distinct_queries_drop_the_row_cap`
+
+The same DISTINCT query succeeds without `resultRecordCount` and fails
+with it, again as HTTP 200 with error 400 and no detail. Since the row cap
+is how every other query here stays bounded, dropping it is not free.
+
+**What the code does:** the adapter removes `resultRecordCount` when
+`distinct_fields` is set, and the discipline that replaces it is that a
+distinct query must be over a low-cardinality field. `geo.resolve_location`
+uses it for one thing only — which localities carry a ZIP — where the
+answer is at most a handful of rows out of millions. The egress byte cap
+is the backstop if that discipline is ever broken.
+
+---
+
+## 7. Building footprint area is published in Web Mercator, where it is not ground area
+
+- **Source:** `va-vgin-building-footprints`
+- **Observed:** 2026-08-29, live
+- **Test:** `tests/servers/geo/test_find_buildings.py::test_area_is_never_returned_as_a_bare_number`
+
+`Shape__Area` is real and the service even labels its units
+(`geometryProperties.units: esriMeters`), which is exactly what makes it
+misleading: the layer's spatial reference is EPSG:3857, where area is
+inflated by sec squared of the latitude. At 38 degrees north that is about
+1.61x. A caller who reads the number as square metres of roof overstates
+every building by more than half.
+
+**What the code does:** the publisher's value is returned unconverted
+under `footprint_area_web_mercator_sq_m`, whose name says which projection
+it is in, alongside `footprint_area_sq_m_approx` derived from the query's
+own latitude and declared in the envelope's `transformations`. Neither is
+presented as the other.
+
+---
+
+## 8. VGIN's landmark service has no layer 0
+
+- **Source:** `va-vgin-landmarks`
+- **Observed:** 2026-08-29, live
+- **Test:** `tests/servers/geo/test_find_landmarks.py::test_the_registered_layer_id_is_one_not_zero`
+
+Layer 1 is `Virginia Landmark Locations`. Layer 0 returns
+`{"error": {"code": 500, "message": "json", "details": []}}` — a 500 with a
+one-word message, not a 404. Every other layer registered here is 0 or a
+small numbered set starting at 0, so a manifest copied from the parcels
+one and left at `layer_id: 0` would look right and fail at the first
+query with an error that reads like an outage.
+
+---
+
+## 9. Landmark records are other agencies' records, and many have never been re-checked
+
+- **Source:** `va-vgin-landmarks`
+- **Observed:** 2026-08-29, live
+- **Test:** `tests/servers/geo/test_find_landmarks.py::test_each_record_names_the_organisation_it_came_from`
+
+Each landmark carries `Src` and `SrcTyp` naming where it came from — DCJS
+for a police station, DOE for a public school, USPS for a post office,
+"Agency" for others. The registered publisher is an aggregator here, and
+for any one record the authority is whoever `Src` names.
+
+`LastCheck` is null on a substantial share of records; one of the four
+around Vienna has none. The layer publishes no layer-level edit date
+either, so there is no date to fall back to — and falling back would claim
+a verification that never happened.
+
+**What the code does:** `geo.find_landmarks` returns `source_organization`
+and `source_type` on every record with an `authority_note` saying the
+record is that organisation's, and a null `LastCheck` produces an explicit
+"the publisher has no verification date" note rather than any date at all.
+Record `URL` values are returned as data and never fetched; a test asserts
+no record URL appears in the fetcher's call log.

@@ -985,3 +985,287 @@ GEO_TOOLS.register(ToolSpec(
         "candidates with requires_user_choice and must go to the user "
         "unchosen. Pass exactly one of `address` or `zip_code`."),
     toolset="default", contract_version="1", fn=resolve_location))
+
+
+# --- buildings (GitHub issue #6) -------------------------------------------
+
+# A building query's default reach. Small enough that a residential point
+# returns the house and its neighbours rather than a city block, large
+# enough that a coordinate taken off a map click still finds something.
+BUILDING_RADIUS_M = 50.0
+
+
+def _web_mercator_area_to_ground(area: float | None,
+                                 latitude: float) -> float | None:
+    """Web Mercator inflates area by sec squared of the latitude.
+
+    The publisher's Shape__Area is computed in the layer's own projection
+    (EPSG:3857, `geometryProperties.units: esriMeters`), where a square
+    metre at 38 degrees north is about 1.6 real square metres. Dividing by
+    the scale factor recovers an approximate ground area; it is an
+    approximation because the factor varies across a footprint, which at
+    building scale is far below the layer's own accuracy.
+    """
+    import math
+    if area is None:
+        return None
+    scale = 1.0 / math.cos(math.radians(latitude))
+    return round(area / (scale * scale), 1)
+
+
+async def find_buildings(ctx: RuntimeContext, jurisdiction: str,
+                         lon: float | None = None, lat: float | None = None,
+                         pin: str = "",
+                         radius_meters: float = BUILDING_RADIUS_M
+                         ) -> Envelope:
+    b = _builder(ctx, "geo.find_buildings")
+    if (lon is None) != (lat is None):
+        raise InvalidQuery("a point needs both lon and lat")
+    if bool(pin) == (lon is not None and lat is not None):
+        raise InvalidQuery("pass exactly one of `pin` or a lon/lat point")
+
+    frame = _resolve_frame(ctx, b, jurisdiction)
+    if frame.early is not None:
+        return frame.early
+    stack = frame.stack or []
+
+    selected = ctx.sources.select("building.lookup", stack)
+    registry_dim, gaps = selection_coverage(ctx.sources, "building.lookup",
+                                            stack, selected)
+    parcel_geometry: dict | None = None
+    parcel_note: str | None = None
+    failures = []
+    if pin:
+        # Composing with the parcel sources rather than duplicating them:
+        # "what is built on this parcel" is a question about a polygon
+        # somebody else publishes.
+        parcels = ctx.sources.select("parcel.lookup", stack)
+        for pm in parcels:
+            try:
+                pq = await ctx.arcgis.query(
+                    pm, "parcels",
+                    where_equals=_scoped_where(ctx, pm, "parcels", stack,
+                                               {"pin": pin}),
+                    return_geometry=True)
+            except CommonwealthError as err:
+                failures.append(failure(pm.id, err.code, str(err)))
+                continue
+            if pq.records:
+                parcel_geometry = dict(pq.records[0].geometry or {})
+                parcel_geometry.setdefault("spatialReference", {"wkid": 4326})
+                if len(pq.records) > 1:
+                    parcel_note = (
+                        f"PIN {pin!r} matched {len(pq.records)} parcel "
+                        "polygons in " + pm.id + "; buildings are reported "
+                        "for the first. The others are not searched.")
+                break
+        if parcel_geometry is None:
+            return b.build(
+                {"results": [],
+                 "note": f"No parcel with PIN {pin!r} was found, so there "
+                         "is no polygon to look for buildings on. That is "
+                         "a parcel-lookup miss, not a statement that the "
+                         "ground is unbuilt."},
+                Coverage(registry=registry_dim,
+                         execution=(ExecutionCoverage.partial if failures
+                                    else ExecutionCoverage.complete),
+                         pagination=PaginationCoverage.complete,
+                         result=ResultCoverage.empty,
+                         jurisdictions_searched=stack,
+                         jurisdictions_unavailable=gaps,
+                         source_failures=failures))
+
+    blocks: list[dict] = []
+    queries: list[ArcGISQueryResult] = []
+    for m in selected:
+        try:
+            if parcel_geometry is not None:
+                q = await ctx.arcgis.query(m, "buildings",
+                                           intersect_geometry=parcel_geometry)
+                q.transformations.append("parcel_geometry_intersection")
+            else:
+                q = await ctx.arcgis.query(m, "buildings",
+                                           geometry_point=(lon, lat),
+                                           distance_meters=radius_meters)
+        except CommonwealthError as err:
+            failures.append(failure(m.id, err.code, str(err)))
+            continue
+        queries.append(q)
+        # The latitude the area conversion is computed at. A point query
+        # has one; a parcel query uses the parcel's own first vertex,
+        # which is within metres of every building on it. Declared on the
+        # query BEFORE the block is built, because evidence entries copy
+        # the transformation list as it stands when they are created.
+        ref_lat = lat if lat is not None else _first_vertex_lat(
+            parcel_geometry)
+        if ref_lat is not None:
+            q.transformations.append(
+                f"area:web_mercator_to_ground(lat={round(ref_lat, 4)})")
+        block = _records_block(b, _source_entry(b, m, q), q, m)
+        for row in block["records"]:
+            row["record_updated_at"] = _epoch_ms_to_iso(
+                row.pop("last_update", None))
+            raw_area = row.get("footprint_area_web_mercator_sq_m")
+            if ref_lat is not None:
+                row["footprint_area_sq_m_approx"] = \
+                    _web_mercator_area_to_ground(raw_area, ref_lat)
+            row["area_note"] = (
+                "footprint_area_web_mercator_sq_m is the publisher's own "
+                "value in EPSG:3857, where area is inflated by about 1.6x "
+                "at Virginia's latitudes. The _approx field divides that "
+                "out using this query's latitude." if ref_lat is not None
+                else "footprint_area_web_mercator_sq_m is the publisher's "
+                     "own value in EPSG:3857 and is NOT ground area; no "
+                     "latitude was available to convert it.")
+        blocks.append(block)
+
+    if any(blk["record_count"] for blk in blocks):
+        b.warn(WarningCode.screening_only,
+               "Building footprints are a derived screening layer. A "
+               "missing footprint is not evidence of vacant land, and "
+               "height, storey, and class fields are sparse — null means "
+               "the publisher has no value, not that the building has "
+               "none.")
+
+    execution = (ExecutionCoverage.complete if not failures
+                 else ExecutionCoverage.failed if not blocks
+                 else ExecutionCoverage.partial)
+    total = sum(blk["record_count"] for blk in blocks)
+    data: dict = {"results": blocks}
+    if parcel_note:
+        data["parcel_note"] = parcel_note
+    return b.build(data, Coverage(
+        registry=registry_dim, execution=execution,
+        pagination=_pagination_dim(queries), result=result_dim(total),
+        jurisdictions_searched=stack if selected else [],
+        jurisdictions_unavailable=gaps, source_failures=failures,
+        known_limitations=sorted({lim for m in selected
+                                  for lim in m.coverage.known_limitations})))
+
+
+def _first_vertex_lat(geometry: dict | None) -> float | None:
+    rings = (geometry or {}).get("rings") or []
+    for ring in rings:
+        for point in ring:
+            if len(point) >= 2:
+                return float(point[1])
+    return None
+
+
+GEO_TOOLS.register(ToolSpec(
+    name="geo.find_buildings",
+    description=(
+        "Find building footprints at a lon/lat point (with a radius) or on "
+        "a parcel PIN in a Virginia jurisdiction. Answers 'is this ground "
+        "built on, and how much of it'. An empty result is NOT evidence "
+        "of vacant land — this is a derived layer whose coverage varies by "
+        "locality. Height, storey, and class fields are frequently null, "
+        "which means the publisher has no value. Footprint area is "
+        "published in Web Mercator, where area is inflated about 1.6x at "
+        "Virginia's latitudes; both the publisher's number and a converted "
+        "approximation are returned, each labelled. A dense urban query "
+        "truncates — narrow the radius rather than reading a short list "
+        "as the whole answer."),
+    toolset="spatial", contract_version="1", fn=find_buildings))
+
+
+# --- landmarks (GitHub issue #7) -------------------------------------------
+
+LANDMARK_RADIUS_M = 1000.0
+
+
+async def find_landmarks(ctx: RuntimeContext, jurisdiction: str,
+                         name: str = "", place_type: str = "",
+                         lon: float | None = None, lat: float | None = None,
+                         radius_meters: float = LANDMARK_RADIUS_M
+                         ) -> Envelope:
+    b = _builder(ctx, "geo.find_landmarks")
+    if (lon is None) != (lat is None):
+        raise InvalidQuery("a point needs both lon and lat")
+    if not (name or place_type or lon is not None):
+        raise InvalidQuery(
+            "pass at least one of `name`, `place_type`, or a lon/lat point "
+            "— an unbounded query would return every landmark in the "
+            "jurisdiction")
+
+    frame = _resolve_frame(ctx, b, jurisdiction)
+    if frame.early is not None:
+        return frame.early
+    stack = frame.stack or []
+
+    selected = ctx.sources.select("landmark.lookup", stack)
+    registry_dim, gaps = selection_coverage(ctx.sources, "landmark.lookup",
+                                            stack, selected)
+    blocks: list[dict] = []
+    failures = []
+    queries: list[ArcGISQueryResult] = []
+    for m in selected:
+        equals = _scoped_where(ctx, m, "landmarks", stack, {})
+        if place_type:
+            equals = {**equals, "place_type": place_type}
+        try:
+            q = await ctx.arcgis.query(
+                m, "landmarks",
+                where_equals=equals or None,
+                where_prefix={"name": name} if name else None,
+                geometry_point=(lon, lat) if lon is not None else None,
+                distance_meters=(radius_meters if lon is not None else None))
+        except CommonwealthError as err:
+            failures.append(failure(m.id, err.code, str(err)))
+            continue
+        queries.append(q)
+        block = _records_block(b, _source_entry(b, m, q), q, m)
+        for row in block["records"]:
+            checked = _epoch_ms_to_iso(row.pop("last_checked", None))
+            row["record_checked_at"] = checked
+            if checked is None:
+                # Inheriting the layer's date here would say the record was
+                # verified when nobody has verified it.
+                row["record_checked_note"] = (
+                    "The publisher has no verification date for this "
+                    "record. That is not the same as verified recently.")
+            row["authority_note"] = (
+                f"This record came from {row.get('source_organization') or 'an unnamed source'}"
+                f" ({row.get('source_type') or 'type not stated'}), not from "
+                "the layer's publisher. That organisation is the authority "
+                "for it. `postal_city` is a postal city, not the "
+                "government; read `locality` / `fips` for that.")
+            if row.get("url"):
+                row["url_note"] = ("Returned as data. Nothing in "
+                                   "Commonwealth fetches a link found "
+                                   "inside a record.")
+        blocks.append(block)
+
+    if any(blk["record_count"] for blk in blocks):
+        b.warn(WarningCode.screening_only,
+               "This is a curated convenience layer, not an inventory. A "
+               "place missing from it may simply never have been added, "
+               "and each record's authority is the organisation named in "
+               "`source_organization`, not the layer's publisher.")
+
+    execution = (ExecutionCoverage.complete if not failures
+                 else ExecutionCoverage.failed if not blocks
+                 else ExecutionCoverage.partial)
+    total = sum(blk["record_count"] for blk in blocks)
+    return b.build({"results": blocks}, Coverage(
+        registry=registry_dim, execution=execution,
+        pagination=_pagination_dim(queries), result=result_dim(total),
+        jurisdictions_searched=stack if selected else [],
+        jurisdictions_unavailable=gaps, source_failures=failures,
+        known_limitations=sorted({lim for m in selected
+                                  for lim in m.coverage.known_limitations})))
+
+
+GEO_TOOLS.register(ToolSpec(
+    name="geo.find_landmarks",
+    description=(
+        "Find named public places in a Virginia jurisdiction — schools, "
+        "libraries, fire stations, DMV offices, state parks — by name "
+        "prefix, by the publisher's own place_type vocabulary, or near a "
+        "lon/lat point. NOT an inventory: a place missing from this layer "
+        "may simply never have been added, so an empty result never means "
+        "there is no school there. Each record names the organisation it "
+        "came from, and that organisation is its authority, not the map "
+        "publisher. Record URLs are returned as data and are never "
+        "fetched. Pass at least one filter."),
+    toolset="spatial", contract_version="1", fn=find_landmarks))

@@ -1,10 +1,10 @@
 {
  "source_id": "va-richmond-city-parcels-zoning",
- "recorded_at": "2026-08-28T14:04:31Z",
+ "recorded_at": "2026-08-30T03:14:59Z",
  "rights": {
   "publisher": "City of Richmond (Information Technology / Assessor of Real Estate)",
   "terms_url": "https://www.arcgis.com/home/termsofuse.html",
-  "note": "Recorded government-published responses; third-party content excluded from the repo's CC0 grant (DECISIONS.md 0011)."
+  "note": "Recorded government-published responses; third-party content excluded from the repo's CC0 grant (../../../design/architecture.md decision 0011)."
  },
  "summary": {
   "health:parcels": {
@@ -24,6 +24,10 @@
   "no_match_count": 0,
   "zoning_districts": [
    "R-2"
+  ],
+  "sample_point": [
+   -77.5501706303165,
+   37.5578957842074
   ]
  },
  "exchanges": [
@@ -232,9 +236,9 @@
     "copyrightText": "City of Richmond Departments of Information Technology and Assessor of Real Estate",
     "defaultVisibility": true,
     "editingInfo": {
-     "lastEditDate": 1787402794852,
-     "schemaLastEditDate": 1787402794852,
-     "dataLastEditDate": 1787402794852
+     "lastEditDate": 1788010474606,
+     "schemaLastEditDate": 1788010474606,
+     "dataLastEditDate": 1788010474606
     },
     "relationships": [],
     "isDataVersioned": false,
@@ -761,7 +765,7 @@
     ],
     "indexes": [
      {
-      "name": "PK__PARCELS___F4B70D8591EE997D",
+      "name": "PK__PARCELS___F4B70D851DCDB022",
       "fields": "OBJECTID",
       "isAscending": true,
       "isUnique": true,
@@ -769,7 +773,7 @@
       "indexType": "Attribute"
      },
      {
-      "name": "user_9663.PARCELS_PARCELS2_Shape_sidx",
+      "name": "user_9663.PARCELS_PARCELS_Shape_sidx",
       "fields": "Shape",
       "isAscending": true,
       "isUnique": false,
@@ -945,6 +949,31 @@
      "isSystemMaintained": true
     },
     "globalIdFieldName": "",
+    "features": []
+   }
+  },
+  {
+   "url": "https://services1.arcgis.com/k3vhq11XkBNeeOfM/arcgis/rest/services/Parcels/FeatureServer/0/query",
+   "params": {
+    "f": "json",
+    "outFields": "OBJECTID,PIN,PropertyClass",
+    "resultRecordCount": "50",
+    "returnGeometry": "true",
+    "where": "PIN = 'NO SUCH PIN'",
+    "outSR": "4326"
+   },
+   "response": {
+    "objectIdFieldName": "OBJECTID",
+    "uniqueIdField": {
+     "name": "OBJECTID",
+     "isSystemMaintained": true
+    },
+    "globalIdFieldName": "",
+    "geometryProperties": {
+     "shapeAreaFieldName": "Shape__Area",
+     "shapeLengthFieldName": "Shape__Length",
+     "units": "esriFeet"
+    },
     "features": []
    }
   },

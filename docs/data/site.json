@@ -3,12 +3,12 @@
  "registry_revision": "2026-08-29",
  "counts": {
   "servers": 1,
-  "tools": 10,
+  "tools": 12,
   "packages": 3,
-  "sources": 12,
-  "sources_active": 8,
+  "sources": 14,
+  "sources_active": 10,
   "sources_proposed": 4,
-  "capabilities": 6,
+  "capabilities": 8,
   "jurisdictions": 325,
   "trap_pairs": 5
  },
@@ -54,6 +54,20 @@
    "toolset": "default",
    "contract_version": "1",
    "description": "Turn a Virginia street address or a 5-digit ZIP into the government that covers it. Use this FIRST when the user gives an address \u2014 the other tools take a jurisdiction name or a coordinate, not an address. An address is geocoded and the resulting point is placed by point-in-polygon; the geocoder's own city field is a POSTAL city and is never the answer (a Fairfax County address reads 'Alexandria'). A ZIP returns every locality it touches: ZIPs are delivery routes and cross government boundaries constantly, so a multi-locality ZIP comes back as candidates with requires_user_choice and must go to the user unchosen. Pass exactly one of `address` or `zip_code`."
+  },
+  {
+   "name": "geo.find_buildings",
+   "package": "geo",
+   "toolset": "spatial",
+   "contract_version": "1",
+   "description": "Find building footprints at a lon/lat point (with a radius) or on a parcel PIN in a Virginia jurisdiction. Answers 'is this ground built on, and how much of it'. An empty result is NOT evidence of vacant land \u2014 this is a derived layer whose coverage varies by locality. Height, storey, and class fields are frequently null, which means the publisher has no value. Footprint area is published in Web Mercator, where area is inflated about 1.6x at Virginia's latitudes; both the publisher's number and a converted approximation are returned, each labelled. A dense urban query truncates \u2014 narrow the radius rather than reading a short list as the whole answer."
+  },
+  {
+   "name": "geo.find_landmarks",
+   "package": "geo",
+   "toolset": "spatial",
+   "contract_version": "1",
+   "description": "Find named public places in a Virginia jurisdiction \u2014 schools, libraries, fire stations, DMV offices, state parks \u2014 by name prefix, by the publisher's own place_type vocabulary, or near a lon/lat point. NOT an inventory: a place missing from this layer may simply never have been added, so an empty result never means there is no school there. Each record names the organisation it came from, and that organisation is its authority, not the map publisher. Record URLs are returned as data and are never fetched. Pass at least one filter."
   },
   {
    "name": "registry.resolve_jurisdiction",
@@ -261,6 +275,27 @@
    ]
   },
   {
+   "id": "va-vgin-building-footprints",
+   "name": "Virginia Building Footprints (VGIN)",
+   "jurisdiction": "va",
+   "publisher": "Virginia Geographic Information Network (VGIN), part of the Virginia Department of Emergency Management",
+   "authority_level": "official_secondary",
+   "capabilities": [
+    "building.lookup"
+   ],
+   "data_classification": "open",
+   "declared_state": "active",
+   "terms_url": "https://vgin.vdem.virginia.gov/datasets/virginia-building-footprints/about",
+   "known_limitations": [
+    "Cartographic/analysis use only per the publisher's own disclaimer; a footprint is not a survey and not a legal description.",
+    "Derived and aggregated from local submissions and other sources (DATASOURCENAME says which per record), so both coverage and vintage vary by locality.\n",
+    "A missing footprint is not evidence of vacant land. A locality that has not submitted, a structure built since the last update, and genuinely empty ground all look identical here.\n",
+    "Shape__Area is in the layer's own Web Mercator projection, where area is inflated by roughly sec squared of the latitude \u2014 about 1.6x at Virginia's latitudes. It is returned unconverted under a field name that says which projection it is in, alongside an approximate ground area derived from the query's own latitude and declared in the envelope's transformations.\n",
+    "BLDGHEIGHT, NUMSTORIES, BUILDINGCLASS, and FEATURECODE are sparse. Observed live 2026-08-29 in downtown Richmond: all four null on every footprint sampled, with only geometry, FIPS, MUNICIPALITY, DATASOURCENAME, and LASTUPDATE populated. Null means the publisher has no value, not that the building has no storeys.\n",
+    "A dense urban query returns hundreds of polygons and the service caps the response. The 25-record inline cap and truncated pagination apply; narrow the radius rather than reading a truncated list as the whole answer.\n"
+   ]
+  },
+  {
    "id": "va-vgin-composite-locator",
    "name": "Virginia Composite Locator (VGIN Geocoding Service)",
    "jurisdiction": "va",
@@ -278,6 +313,27 @@
     "The locator's own City attribute is a POSTAL city, not a government. Observed 2026-08-29, a Fairfax County address in ZIP 22310 returns City \"ALEXANDRIA\", which is an independent city it is not in. Never read it as the jurisdiction.\n",
     "Subregion is inconsistent between the locator's elements. Observed 2026-08-29 for the same query: the road-centerline element returned the FIPS code \"51059\" and the address-point element returned the name \"Fairfax County\". It is returned as data and never parsed.\n",
     "A ZIP code geocodes to one centroid, which for a ZIP spanning several localities is an answer to a question nobody asked. geo.resolve_location does not use this path for ZIPs; it queries the address-point layer for every locality the ZIP touches.\n"
+   ]
+  },
+  {
+   "id": "va-vgin-landmarks",
+   "name": "Virginia Landmark Locations (VGIN)",
+   "jurisdiction": "va",
+   "publisher": "Virginia Geographic Information Network (VGIN), part of the Virginia Department of Emergency Management",
+   "authority_level": "official_derived",
+   "capabilities": [
+    "landmark.lookup"
+   ],
+   "data_classification": "open",
+   "declared_state": "active",
+   "terms_url": "https://vgin.vdem.virginia.gov/datasets/virginia-landmarks/about",
+   "known_limitations": [
+    "A curated convenience layer, not an inventory. Absence proves nothing: a school, library, or fire station missing from it may simply never have been added.\n",
+    "Records cite third parties. Src names the organisation the record came from (DCJS, DOE, USPS, \"Agency\" among them) and it is that organisation, not VGIN, whose record a landmark actually is.\n",
+    "LastCheck is null on many records. Where it is null the record says so rather than inheriting the layer's date, because \"nobody has re-checked this\" and \"checked today\" are different facts.\n",
+    "URL values are returned as data and never fetched. The egress allowlist is per manifest and following a link found inside a record would drive straight through it.\n",
+    "City is a postal city, not a government. FIPScode and FIPSname are what name the jurisdiction.\n",
+    "PlaceType is the publisher's own vocabulary, 33 values observed live 2026-08-29 (\"Law Enforcement Points\", \"Schools Public K12 Points\", \"ABC Store Points\" and so on). It is returned verbatim; there is no mapping onto a general category scheme.\n"
    ]
   },
   {
@@ -304,8 +360,10 @@
  "capabilities": [
   "address.lookup",
   "boundary.lookup",
+  "building.lookup",
   "code_section.lookup",
   "geocode.address",
+  "landmark.lookup",
   "parcel.lookup",
   "zoning.lookup"
  ],
@@ -340,7 +398,7 @@
  "profiles": {
   "default": 6,
   "discovery": 9,
-  "all": 10
+  "all": 12
  },
  "skills": [
   {
@@ -8198,6 +8256,1961 @@
    ],
    "gaps": []
   },
+  "building.lookup": {
+   "covered": [
+    {
+     "jurisdiction": "va",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:abingdon-town",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:accomac-town",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:accomack-county",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:albemarle-county",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:alberta-town",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:alexandria-city",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:alleghany-county",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:altavista-town",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:amelia-county",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:amherst-county",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:amherst-town",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:appalachia-town",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:appomattox-county",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:appomattox-town",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:arlington-county",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:ashland-town",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:augusta-county",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:bath-county",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:bedford-county",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:bedford-town",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:belle-haven-town",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:berryville-town",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:big-stone-gap-town",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:blacksburg-town",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:blackstone-town",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:bland-county",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:bloxom-town",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:bluefield-town",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:boones-mill-town",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:botetourt-county",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:bowling-green-town",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:boyce-town",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:boydton-town",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:boykins-town",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:branchville-town",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:bridgewater-town",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:bristol-city",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:broadway-town",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:brodnax-town",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:brookneal-town",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:brunswick-county",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:buchanan-county",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:buchanan-town",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:buckingham-county",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:buena-vista-city",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:burkeville-town",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:campbell-county",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:cape-charles-town",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:capron-town",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:caroline-county",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:carroll-county",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:cedar-bluff-town",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:charles-city-county",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:charlotte-county",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:charlotte-court-house-town",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:charlottesville-city",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:chase-city-town",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:chatham-town",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:cheriton-town",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:chesapeake-city",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:chesterfield-county",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:chilhowie-town",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:chincoteague-town",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:christiansburg-town",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:claremont-town",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:clarke-county",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:clarksville-town",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:cleveland-town",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:clifton-forge-town",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:clifton-town",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:clinchco-town",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:clinchport-town",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:clintwood-town",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:coeburn-town",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:colonial-beach-town",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:colonial-heights-city",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:columbia-town",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:courtland-town",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:covington-city",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:craig-county",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:craigsville-town",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:crewe-town",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:culpeper-county",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:culpeper-town",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:cumberland-county",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:damascus-town",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:danville-city",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:dayton-town",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:dendron-town",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:dickenson-county",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:dillwyn-town",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:dinwiddie-county",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:drakes-branch-town",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:dublin-town",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:duffield-town",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:dumfries-town",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:dungannon-town",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:eastville-town",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:edinburg-town",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:elkton-town",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:emporia-city",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:essex-county",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:exmore-town",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:fairfax-city",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:fairfax-county",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:falls-church-city",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:farmville-town",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:fauquier-county",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:fincastle-town",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:floyd-county",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:floyd-town",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:fluvanna-county",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:franklin-city",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:franklin-county",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:frederick-county",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:fredericksburg-city",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:fries-town",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:front-royal-town",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:galax-city",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:gate-city-town",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:giles-county",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:glade-spring-town",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:glasgow-town",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:glen-lyn-town",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:gloucester-county",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:goochland-county",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:gordonsville-town",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:goshen-town",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:grayson-county",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:greene-county",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:greensville-county",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:gretna-town",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:grottoes-town",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:grundy-town",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:halifax-county",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:halifax-town",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:hallwood-town",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:hamilton-town",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:hampton-city",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:hanover-county",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:harrisonburg-city",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:haymarket-town",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:haysi-town",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:henrico-county",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:henry-county",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:herndon-town",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:highland-county",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:hillsboro-town",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:hillsville-town",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:honaker-town",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:hopewell-city",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:hurt-town",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:independence-town",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:iron-gate-town",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:irvington-town",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:isle-of-wight-county",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:ivor-town",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:james-city-county",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:jarratt-town",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:jonesville-town",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:keller-town",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:kenbridge-town",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:keysville-town",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:kilmarnock-town",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:king-and-queen-county",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:king-george-county",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:king-william-county",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:la-crosse-town",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:lancaster-county",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:lawrenceville-town",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:lebanon-town",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:lee-county",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:leesburg-town",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:lexington-city",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:loudoun-county",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:louisa-county",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:louisa-town",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:lovettsville-town",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:lunenburg-county",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:luray-town",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:lynchburg-city",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:madison-county",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:madison-town",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:manassas-city",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:manassas-park-city",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:marion-town",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:martinsville-city",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:mathews-county",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:mckenney-town",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:mecklenburg-county",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:melfa-town",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:middleburg-town",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:middlesex-county",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:middletown-town",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:mineral-town",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:monterey-town",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:montgomery-county",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:montross-town",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:mount-crawford-town",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:mount-jackson-town",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:narrows-town",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:nassawadox-town",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:nelson-county",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:new-castle-town",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:new-kent-county",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:new-market-town",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:newport-news-city",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:newsoms-town",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:nickelsville-town",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:norfolk-city",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:northampton-county",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:northumberland-county",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:norton-city",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:nottoway-county",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:occoquan-town",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:onancock-town",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:onley-town",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:orange-county",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:orange-town",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:page-county",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:painter-town",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:pamplin-city-town",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:parksley-town",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:patrick-county",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:pearisburg-town",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:pembroke-town",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:pennington-gap-town",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:petersburg-city",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:phenix-town",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:pittsylvania-county",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:pocahontas-town",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:poquoson-city",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:port-royal-town",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:portsmouth-city",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:pound-town",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:powhatan-county",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:prince-edward-county",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:prince-george-county",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:prince-william-county",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:pulaski-county",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:pulaski-town",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:purcellville-town",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:quantico-town",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:radford-city",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:rappahannock-county",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:remington-town",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:rich-creek-town",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:richlands-town",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:richmond-city",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:richmond-county",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:ridgeway-town",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:roanoke-city",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:roanoke-county",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:rockbridge-county",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:rockingham-county",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:rocky-mount-town",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:round-hill-town",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:rural-retreat-town",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:russell-county",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:salem-city",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:saltville-town",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:saxis-town",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:scott-county",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:scottsburg-town",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:scottsville-town",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:shenandoah-county",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:shenandoah-town",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:smithfield-town",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:smyth-county",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:south-boston-town",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:south-hill-town",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:southampton-county",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:spotsylvania-county",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:st-charles-town",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:st-paul-town",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:stafford-county",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:stanardsville-town",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:stanley-town",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:staunton-city",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:stephens-city-town",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:stony-creek-town",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:strasburg-town",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:stuart-town",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:suffolk-city",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:surry-county",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:surry-town",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:sussex-county",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:tangier-town",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:tappahannock-town",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:tazewell-county",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:tazewell-town",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:the-plains-town",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:timberville-town",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:toms-brook-town",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:troutdale-town",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:troutville-town",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:urbanna-town",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:victoria-town",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:vienna-town",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:vinton-town",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:virgilina-town",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:virginia-beach-city",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:wachapreague-town",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:wakefield-town",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:warren-county",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:warrenton-town",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:warsaw-town",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:washington-county",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:washington-town",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:waverly-town",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:waynesboro-city",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:weber-city-town",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:west-point-town",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:westmoreland-county",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:white-stone-town",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:williamsburg-city",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:winchester-city",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:windsor-town",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:wise-county",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:wise-town",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:woodstock-town",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:wythe-county",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:wytheville-town",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    },
+    {
+     "jurisdiction": "va:york-county",
+     "sources": [
+      "va-vgin-building-footprints"
+     ]
+    }
+   ],
+   "gaps": []
+  },
   "code_section.lookup": {
    "covered": [
     {
@@ -12103,6 +14116,1961 @@
      "jurisdiction": "va:york-county",
      "sources": [
       "va-vgin-composite-locator"
+     ]
+    }
+   ],
+   "gaps": []
+  },
+  "landmark.lookup": {
+   "covered": [
+    {
+     "jurisdiction": "va",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:abingdon-town",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:accomac-town",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:accomack-county",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:albemarle-county",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:alberta-town",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:alexandria-city",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:alleghany-county",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:altavista-town",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:amelia-county",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:amherst-county",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:amherst-town",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:appalachia-town",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:appomattox-county",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:appomattox-town",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:arlington-county",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:ashland-town",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:augusta-county",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:bath-county",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:bedford-county",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:bedford-town",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:belle-haven-town",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:berryville-town",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:big-stone-gap-town",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:blacksburg-town",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:blackstone-town",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:bland-county",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:bloxom-town",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:bluefield-town",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:boones-mill-town",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:botetourt-county",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:bowling-green-town",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:boyce-town",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:boydton-town",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:boykins-town",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:branchville-town",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:bridgewater-town",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:bristol-city",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:broadway-town",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:brodnax-town",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:brookneal-town",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:brunswick-county",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:buchanan-county",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:buchanan-town",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:buckingham-county",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:buena-vista-city",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:burkeville-town",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:campbell-county",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:cape-charles-town",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:capron-town",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:caroline-county",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:carroll-county",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:cedar-bluff-town",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:charles-city-county",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:charlotte-county",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:charlotte-court-house-town",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:charlottesville-city",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:chase-city-town",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:chatham-town",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:cheriton-town",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:chesapeake-city",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:chesterfield-county",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:chilhowie-town",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:chincoteague-town",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:christiansburg-town",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:claremont-town",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:clarke-county",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:clarksville-town",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:cleveland-town",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:clifton-forge-town",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:clifton-town",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:clinchco-town",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:clinchport-town",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:clintwood-town",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:coeburn-town",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:colonial-beach-town",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:colonial-heights-city",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:columbia-town",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:courtland-town",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:covington-city",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:craig-county",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:craigsville-town",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:crewe-town",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:culpeper-county",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:culpeper-town",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:cumberland-county",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:damascus-town",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:danville-city",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:dayton-town",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:dendron-town",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:dickenson-county",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:dillwyn-town",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:dinwiddie-county",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:drakes-branch-town",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:dublin-town",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:duffield-town",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:dumfries-town",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:dungannon-town",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:eastville-town",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:edinburg-town",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:elkton-town",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:emporia-city",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:essex-county",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:exmore-town",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:fairfax-city",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:fairfax-county",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:falls-church-city",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:farmville-town",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:fauquier-county",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:fincastle-town",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:floyd-county",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:floyd-town",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:fluvanna-county",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:franklin-city",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:franklin-county",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:frederick-county",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:fredericksburg-city",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:fries-town",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:front-royal-town",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:galax-city",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:gate-city-town",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:giles-county",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:glade-spring-town",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:glasgow-town",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:glen-lyn-town",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:gloucester-county",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:goochland-county",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:gordonsville-town",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:goshen-town",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:grayson-county",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:greene-county",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:greensville-county",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:gretna-town",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:grottoes-town",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:grundy-town",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:halifax-county",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:halifax-town",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:hallwood-town",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:hamilton-town",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:hampton-city",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:hanover-county",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:harrisonburg-city",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:haymarket-town",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:haysi-town",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:henrico-county",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:henry-county",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:herndon-town",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:highland-county",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:hillsboro-town",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:hillsville-town",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:honaker-town",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:hopewell-city",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:hurt-town",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:independence-town",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:iron-gate-town",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:irvington-town",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:isle-of-wight-county",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:ivor-town",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:james-city-county",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:jarratt-town",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:jonesville-town",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:keller-town",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:kenbridge-town",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:keysville-town",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:kilmarnock-town",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:king-and-queen-county",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:king-george-county",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:king-william-county",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:la-crosse-town",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:lancaster-county",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:lawrenceville-town",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:lebanon-town",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:lee-county",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:leesburg-town",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:lexington-city",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:loudoun-county",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:louisa-county",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:louisa-town",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:lovettsville-town",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:lunenburg-county",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:luray-town",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:lynchburg-city",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:madison-county",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:madison-town",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:manassas-city",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:manassas-park-city",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:marion-town",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:martinsville-city",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:mathews-county",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:mckenney-town",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:mecklenburg-county",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:melfa-town",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:middleburg-town",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:middlesex-county",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:middletown-town",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:mineral-town",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:monterey-town",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:montgomery-county",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:montross-town",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:mount-crawford-town",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:mount-jackson-town",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:narrows-town",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:nassawadox-town",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:nelson-county",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:new-castle-town",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:new-kent-county",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:new-market-town",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:newport-news-city",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:newsoms-town",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:nickelsville-town",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:norfolk-city",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:northampton-county",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:northumberland-county",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:norton-city",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:nottoway-county",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:occoquan-town",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:onancock-town",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:onley-town",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:orange-county",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:orange-town",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:page-county",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:painter-town",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:pamplin-city-town",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:parksley-town",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:patrick-county",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:pearisburg-town",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:pembroke-town",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:pennington-gap-town",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:petersburg-city",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:phenix-town",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:pittsylvania-county",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:pocahontas-town",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:poquoson-city",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:port-royal-town",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:portsmouth-city",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:pound-town",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:powhatan-county",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:prince-edward-county",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:prince-george-county",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:prince-william-county",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:pulaski-county",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:pulaski-town",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:purcellville-town",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:quantico-town",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:radford-city",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:rappahannock-county",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:remington-town",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:rich-creek-town",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:richlands-town",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:richmond-city",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:richmond-county",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:ridgeway-town",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:roanoke-city",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:roanoke-county",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:rockbridge-county",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:rockingham-county",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:rocky-mount-town",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:round-hill-town",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:rural-retreat-town",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:russell-county",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:salem-city",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:saltville-town",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:saxis-town",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:scott-county",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:scottsburg-town",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:scottsville-town",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:shenandoah-county",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:shenandoah-town",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:smithfield-town",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:smyth-county",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:south-boston-town",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:south-hill-town",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:southampton-county",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:spotsylvania-county",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:st-charles-town",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:st-paul-town",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:stafford-county",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:stanardsville-town",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:stanley-town",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:staunton-city",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:stephens-city-town",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:stony-creek-town",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:strasburg-town",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:stuart-town",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:suffolk-city",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:surry-county",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:surry-town",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:sussex-county",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:tangier-town",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:tappahannock-town",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:tazewell-county",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:tazewell-town",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:the-plains-town",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:timberville-town",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:toms-brook-town",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:troutdale-town",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:troutville-town",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:urbanna-town",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:victoria-town",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:vienna-town",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:vinton-town",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:virgilina-town",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:virginia-beach-city",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:wachapreague-town",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:wakefield-town",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:warren-county",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:warrenton-town",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:warsaw-town",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:washington-county",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:washington-town",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:waverly-town",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:waynesboro-city",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:weber-city-town",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:west-point-town",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:westmoreland-county",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:white-stone-town",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:williamsburg-city",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:winchester-city",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:windsor-town",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:wise-county",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:wise-town",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:woodstock-town",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:wythe-county",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:wytheville-town",
+     "sources": [
+      "va-vgin-landmarks"
+     ]
+    },
+    {
+     "jurisdiction": "va:york-county",
+     "sources": [
+      "va-vgin-landmarks"
      ]
     }
    ],

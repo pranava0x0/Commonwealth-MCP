@@ -30,6 +30,19 @@ class LayerDecl(BaseModel):
     field_mapping: dict[str, str]  # canonical -> source field
     geometry: str                  # polygon | point | line | none
     id_field: str                  # the source's stable record-id field
+    # Canonical names whose source column is numeric. ArcGIS rejects
+    # `NUMERIC_COL = '51059'` with a bare "Unable to complete operation",
+    # and a caller passing a FIPS or ZIP as the string it is spelled as
+    # has no way to know which layers store it as a number — VGIN's
+    # address points store ZIP_5 as an integer, its landmarks store
+    # FIPScode as one, and its parcels store FIPS as text. Declaring it
+    # here keeps that in the manifest, where the layer's schema belongs.
+    numeric_fields: list[str] = Field(default_factory=list)
+    # The publisher's OWN coded-value domains, copied from the layer
+    # metadata, canonical field -> {code: label}. Decoding is only ever
+    # done from a list a publisher published; there is no inferring what
+    # a code might mean.
+    value_labels: dict[str, dict[str, str]] = Field(default_factory=dict)
     # Real publishers sometimes split layers across separate FeatureServers
     # (e.g. Richmond City: Parcels and ZoningDistricts are two services on
     # the same host, not two layers of one service like Fairfax). Most
@@ -260,6 +273,9 @@ class ArcGISAdapter:
             "returnGeometry": "true" if return_geometry else "false",
         }
         transformations = [f"field_mapping:v{p.field_mapping_version}"]
+        if layer.value_labels:
+            transformations.append(
+                "value_labels:" + ",".join(sorted(layer.value_labels)))
         clauses = 0
 
         def src_field_of(canon: str) -> str:
@@ -271,24 +287,35 @@ class ArcGISAdapter:
                     f"{sorted(layer.field_mapping)}")
             return field
 
-        def literal(value: object) -> str:
+        def literal(canon: str, value: object) -> str:
             """A quoted string, or a bare number for a numeric column.
 
             ArcGIS rejects `NUMERIC_COL = '24450'` with a bare "Unable to
             complete operation" (HTTP 200, error 400) — VGIN's address
-            points store ZIP_5 as an integer, and the quoted form fails
-            there while working on every string column tried before it.
-            Only a real Python int or float goes unquoted, so a string
-            that merely looks numeric cannot skip escaping."""
-            if isinstance(value, bool) or not isinstance(value, (int, float)):
+            points store ZIP_5 as an integer and its landmarks store
+            FIPScode as one, while its parcels store FIPS as text. Which
+            is which comes from the manifest's `numeric_fields`, so a
+            caller passing "51059" does not have to know; a real Python
+            int or float is also taken at its word."""
+            numeric = canon in layer.numeric_fields
+            if not numeric and (isinstance(value, bool)
+                                or not isinstance(value, (int, float))):
                 return "'" + str(value).replace("'", "''") + "'"
+            if numeric and not isinstance(value, (int, float)):
+                try:
+                    value = float(value) if "." in str(value) else int(value)
+                except ValueError:
+                    raise InvalidQuery(
+                        f"{canon!r} is declared numeric on layer "
+                        f"{layer_key!r} of {manifest.id} and {value!r} is "
+                        "not a number") from None
             return repr(value)
 
         where_parts: list[str] = []
         if where_equals is not None:
             for canon, value in sorted(where_equals.items()):
                 where_parts.append(
-                    f"{src_field_of(canon)} = {literal(value)}")
+                    f"{src_field_of(canon)} = {literal(canon, value)}")
         if where_prefix is not None:
             for canon, value in sorted(where_prefix.items()):
                 # LIKE 'x%' is a prefix match, not a fuzzy one, and the
@@ -308,7 +335,7 @@ class ArcGISAdapter:
             # equalities cannot express it.
             groups = []
             for group in where_any_of:
-                terms = [f"{src_field_of(c)} = {literal(v)}"
+                terms = [f"{src_field_of(c)} = {literal(c, v)}"
                          for c, v in sorted(group.items())]
                 if terms:
                     groups.append("(" + " AND ".join(terms) + ")")
@@ -481,6 +508,17 @@ class ArcGISAdapter:
                 continue
             canonical = {canon: attrs.get(src)
                          for canon, src in layer.field_mapping.items()}
+            for canon, labels in layer.value_labels.items():
+                raw_code = canonical.get(canon)
+                # The raw code stays. A label is the publisher's word for
+                # a code, and a caller checking against the publisher's
+                # own documentation needs the code it documents. The key
+                # is always present so the record shape does not change
+                # with the data: null means the publisher has no code, or
+                # has one this manifest's copy of its list does not
+                # cover. Neither is a reason to guess a label.
+                canonical[f"{canon}_label"] = (
+                    None if raw_code is None else labels.get(str(raw_code)))
             rid = attrs.get(layer.id_field)
             records.append(ArcGISRecord(
                 canonical=canonical,

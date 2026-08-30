@@ -363,3 +363,141 @@ async def test_provenance_reports_the_weakest_page_not_the_first():
         "page one's provenance calls the whole answer fresh")
 
 
+
+
+# --- quirks forced by the 2026-08-29 sources (design/source-quirks.md) -----
+
+def _layer_manifest(**layer_extra):
+    """A minimal arcgis manifest whose single layer can be given the
+    declarations under test."""
+    import yaml
+    from commonwealth.core.registry import SourceManifest
+    from commonwealth.runtime import SOURCES_DIR
+    doc = yaml.safe_load(
+        (SOURCES_DIR / "state" / "vgin-parcels.yaml").read_text())
+    doc["adapter"]["layers"]["parcels"].update(layer_extra)
+    return SourceManifest.model_validate(doc)
+
+
+class _CaptureFetcher:
+    """Records the params it was asked for, then returns an empty page."""
+
+    def __init__(self) -> None:
+        self.params: list[dict] = []
+
+    async def fetch_json(self, url: str, params: dict) -> dict:
+        self.params.append(dict(params))
+        if not url.endswith("/query"):
+            return {"advancedQueryCapabilities": {"supportsPagination": True}}
+        return {"features": []}
+
+
+def test_numeric_fields_are_sent_unquoted():
+    """design/source-quirks.md 5. ArcGIS rejects `NUMERIC_COL = '51059'`
+    with a message that names nothing, and which columns are numeric
+    differs between two layers of the same publisher."""
+    import asyncio
+
+    from commonwealth.adapters.arcgis import ArcGISAdapter, TTLCache
+
+    fetcher = _CaptureFetcher()
+    adapter = ArcGISAdapter(fetcher=fetcher, cache=TTLCache())
+    asyncio.run(adapter.query(_layer_manifest(numeric_fields=["fips"]),
+                              "parcels", where_equals={"fips": "51059"}))
+    where = next(p["where"] for p in fetcher.params if "where" in p)
+    assert where == "FIPS = 51059", where
+
+    fetcher2 = _CaptureFetcher()
+    adapter2 = ArcGISAdapter(fetcher=fetcher2, cache=TTLCache())
+    asyncio.run(adapter2.query(_layer_manifest(), "parcels",
+                               where_equals={"fips": "51059"}))
+    where2 = next(p["where"] for p in fetcher2.params if "where" in p)
+    assert where2 == "FIPS = '51059'", where2
+
+
+def test_a_non_numeric_value_for_a_numeric_field_is_refused_by_name():
+    import asyncio
+
+    import pytest
+
+    from commonwealth.adapters.arcgis import ArcGISAdapter, TTLCache
+    from commonwealth.core.errors import InvalidQuery
+
+    adapter = ArcGISAdapter(fetcher=_CaptureFetcher(), cache=TTLCache())
+    with pytest.raises(InvalidQuery) as err:
+        asyncio.run(adapter.query(_layer_manifest(numeric_fields=["fips"]),
+                                  "parcels", where_equals={"fips": "abc"}))
+    assert "declared numeric" in str(err.value)
+
+
+def test_distinct_queries_drop_the_row_cap():
+    """design/source-quirks.md 6: the same DISTINCT query succeeds without
+    `resultRecordCount` and fails with it."""
+    import asyncio
+
+    from commonwealth.adapters.arcgis import ArcGISAdapter, TTLCache
+
+    fetcher = _CaptureFetcher()
+    adapter = ArcGISAdapter(fetcher=fetcher, cache=TTLCache())
+    asyncio.run(adapter.query(_layer_manifest(), "parcels",
+                              where_equals={"fips": "51059"},
+                              distinct_fields=["locality"]))
+    query = next(p for p in fetcher.params if "where" in p)
+    assert query["returnDistinctValues"] == "true"
+    assert "resultRecordCount" not in query
+    assert query["outFields"] == "LOCALITY"
+
+
+def test_a_like_prefix_escapes_the_callers_own_wildcards():
+    """`%` and `_` are LIKE's wildcards, so a literal one in a caller's
+    string would widen the match instead of narrowing it."""
+    import asyncio
+
+    from commonwealth.adapters.arcgis import ArcGISAdapter, TTLCache
+
+    fetcher = _CaptureFetcher()
+    adapter = ArcGISAdapter(fetcher=fetcher, cache=TTLCache())
+    asyncio.run(adapter.query(_layer_manifest(), "parcels",
+                              where_prefix={"pin": "50% GRADE_RD"}))
+    where = next(p["where"] for p in fetcher.params if "where" in p)
+    assert where == r"PTM_ID LIKE '50\% GRADE\_RD%' ESCAPE '\'", where
+
+
+def test_where_any_of_is_a_disjunction_anded_with_the_rest():
+    import asyncio
+
+    from commonwealth.adapters.arcgis import ArcGISAdapter, TTLCache
+
+    fetcher = _CaptureFetcher()
+    adapter = ArcGISAdapter(fetcher=fetcher, cache=TTLCache())
+    asyncio.run(adapter.query(
+        _layer_manifest(), "parcels", where_equals={"pin": "X"},
+        where_any_of=[{"fips": "51059"}, {"fips": "51600"}]))
+    where = next(p["where"] for p in fetcher.params if "where" in p)
+    assert where == ("PTM_ID = 'X' AND "
+                     "((FIPS = '51059') OR (FIPS = '51600'))")
+
+
+def test_an_unknown_code_gets_a_null_label_not_a_guess():
+    """A label is the publisher's word for a code. A code the manifest's
+    copy of the publisher's list does not cover gets no label at all."""
+    import asyncio
+
+    from commonwealth.adapters.arcgis import ArcGISAdapter, TTLCache
+
+    class _OneRow:
+        async def fetch_json(self, url: str, params: dict) -> dict:
+            if not url.endswith("/query"):
+                return {}
+            return {"features": [{"attributes": {
+                "OBJECTID": 1, "PTM_ID": "X", "LOCALITY": "Y",
+                "FIPS": "99999"}}]}
+
+    manifest = _layer_manifest(
+        value_labels={"fips": {"51059": "Fairfax County"}})
+    adapter = ArcGISAdapter(fetcher=_OneRow(), cache=TTLCache())
+    q = asyncio.run(adapter.query(manifest, "parcels",
+                                  where_equals={"pin": "X"}))
+    row = q.records[0].canonical
+    assert row["fips"] == "99999"
+    assert row["fips_label"] is None

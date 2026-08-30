@@ -444,6 +444,157 @@ async def _sample_addresses(adapter, m, params, ctx) -> dict:
     return out
 
 
+async def _statewide_crosschecks(adapter, m, ctx) -> dict:
+    """A statewide source is queried ALONGSIDE every locality's own layer
+    (../../design/architecture.md decision 0005-C), so its recording has
+    to carry the queries those calls actually issue — the locality's PIN
+    scoped by the locality's FIPS, and the locality's sample point.
+
+    Derived from the other sources' committed fixtures rather than a
+    hand-typed list, so registering a fourth locality and re-recording
+    picks it up. Before this existed the exchanges accumulated in the
+    fixture by accident and a clean re-record silently dropped them.
+    """
+    out: dict[str, Any] = {"localities": [], "regressions": {}}
+    for other in sorted(ctx.sources.manifests.values(), key=lambda x: x.id):
+        if other.id == m.id or "parcel.lookup" not in other.capability_ids():
+            continue
+        fixture = FIXTURES_DIR / other.id / "recorded.json"
+        if not fixture.exists():
+            continue
+        summary = json.loads(fixture.read_text()).get("summary") or {}
+        pin = summary.get("sample_pin")
+        j = ctx.jurisdictions.get(other.jurisdiction)
+        fips = j.fips if j else None
+        if not (pin and fips):
+            continue
+        q = await adapter.query(m, "parcels",
+                                where_equals={"pin": str(pin), "fips": fips})
+        row = {"source": other.id, "pin": pin, "fips": fips,
+               "record_count": len(q.records)}
+        # The geometry variants too: find_zoning and find_buildings ask
+        # this layer for a parcel POLYGON by PIN, and both the hit and the
+        # miss have to replay.
+        for target, label in ((str(pin), "with_geometry"),
+                              ("NO SUCH PIN", "miss_with_geometry")):
+            gq = await adapter.query(
+                m, "parcels", where_equals={"pin": target, "fips": fips},
+                return_geometry=True)
+            row[label] = len(gq.records)
+        point = summary.get("sample_point")
+        if point:
+            pq = await adapter.query(
+                m, "parcels", geometry_point=(point[0], point[1]))
+            row["point_record_count"] = len(pq.records)
+        out["localities"].append(row)
+
+    fairfax = ctx.jurisdictions.get("va:fairfax-county")
+    roanoke = ctx.jurisdictions.get("va:roanoke-county")
+    fairfax_fixture = FIXTURES_DIR / "va-fairfax-parcels-zoning" / "recorded.json"
+    if fairfax and roanoke and fairfax_fixture.exists():
+        pin = json.loads(fairfax_fixture.read_text())["summary"]["sample_pin"]
+        # The PR #1 regression: a locality-scoped PIN queried against the
+        # statewide layer WITHOUT a FIPS filter returned another
+        # jurisdiction's parcel as a false hit. Both halves are recorded —
+        # the correct scoped miss for a jurisdiction that does not have
+        # that PIN, and a scoped miss for a PIN nobody has.
+        wrong = await adapter.query(
+            m, "parcels",
+            where_equals={"pin": str(pin), "fips": roanoke.fips})
+        out["regressions"]["pin_scoped_to_the_wrong_locality"] = {
+            "pin": pin, "fips": roanoke.fips, "jurisdiction": roanoke.id,
+            "record_count": len(wrong.records)}
+        miss = await adapter.query(
+            m, "parcels",
+            where_equals={"pin": "NO SUCH PIN", "fips": fairfax.fips})
+        out["regressions"]["scoped_no_match"] = {
+            "record_count": len(miss.records)}
+    return out
+
+
+async def _sample_buildings(adapter, m, params, ctx) -> dict:
+    """Recording plan for building footprints. Records a residential point
+    (a handful of neighbours), a dense downtown point that the service
+    truncates, and a parcel-geometry intersection — the composition with
+    geo.find_parcel that makes the tool worth having."""
+    from ..domains.geo import BUILDING_RADIUS_M
+    out: dict[str, Any] = {}
+    for layer in sorted(params.layers):
+        out[f"health:{layer}"] = await adapter.health(m, layer)
+
+    quiet = await adapter.query(m, "buildings",
+                                geometry_point=(-77.26436153964,
+                                                38.90067620715),
+                                distance_meters=BUILDING_RADIUS_M)
+    out["residential_point"] = {"record_count": len(quiet.records),
+                                "truncated": quiet.exceeded_transfer_limit}
+
+    # Downtown Richmond at 800 m: 998 footprints live, which is past
+    # both the 25-record inline cap and the 5-page walk budget, so the
+    # truncation path is proven against real density rather than a
+    # synthesized flag.
+    dense = await adapter.query(m, "buildings",
+                                geometry_point=(-77.4360, 37.5407),
+                                distance_meters=800.0)
+    out["dense_urban_point"] = {"record_count": len(dense.records),
+                                "truncated": dense.exceeded_transfer_limit}
+
+    # A Richmond parcel, then the buildings on it.
+    parcel_m = ctx.sources.get("va-richmond-city-parcels-zoning")
+    parcel_adapter = arcgis_mod.ArcGISAdapter(
+        fetcher=_RecordingFetcher(HttpFetcher(policy=egress_policy_for(
+            parcel_m, arcgis_mod.ArcGISParams.model_validate(
+                parcel_m.adapter.model_dump(exclude={"type"})).service_url))),
+        cache=arcgis_mod.TTLCache())
+    sample = await parcel_adapter.query(parcel_m, "parcels", sample_rows=1,
+                                        return_geometry=True)
+    if sample.records:
+        pin = sample.records[0].canonical.get("pin")
+        geometry = dict(sample.records[0].geometry or {})
+        geometry.setdefault("spatialReference", {"wkid": 4326})
+        on_parcel = await adapter.query(m, "buildings",
+                                        intersect_geometry=geometry)
+        out["on_parcel"] = {"pin": pin,
+                            "record_count": len(on_parcel.records)}
+    return out
+
+
+async def _sample_landmarks(adapter, m, params, ctx) -> dict:
+    """Recording plan for landmarks. Records the three query shapes plus a
+    record whose LastCheck is null, because "nobody has re-checked this"
+    has to replay as faithfully as a date."""
+    del ctx
+    from ..domains.geo import LANDMARK_RADIUS_M
+    out: dict[str, Any] = {}
+    for layer in sorted(params.layers):
+        out[f"health:{layer}"] = await adapter.health(m, layer)
+
+    near = await adapter.query(m, "landmarks",
+                               where_equals={"fips": "51059"},
+                               geometry_point=(-77.2653, 38.9012),
+                               distance_meters=LANDMARK_RADIUS_M)
+    out["near_vienna"] = {
+        "record_count": len(near.records),
+        "names": [r.canonical.get("name") for r in near.records[:5]],
+        "sources": sorted({str(r.canonical.get("source_organization"))
+                           for r in near.records}),
+        "null_last_checked": sum(1 for r in near.records
+                                 if not r.canonical.get("last_checked"))}
+
+    by_name = await adapter.query(m, "landmarks",
+                                  where_equals={"fips": "51059"},
+                                  where_prefix={"name": "Vienna"})
+    out["by_name_prefix"] = {"prefix": "Vienna",
+                             "record_count": len(by_name.records)}
+
+    by_type = await adapter.query(
+        m, "landmarks",
+        where_equals={"fips": "51059", "place_type": "Public Library Points"})
+    out["by_place_type"] = {"place_type": "Public Library Points",
+                            "record_count": len(by_type.records)}
+    return out
+
+
 def _sample_geocoder(m, ctx) -> int:
     """A locator records differently: no layers, no field mappings, one
     operation. The recorded set is § 3's postal-city traps, plus a
@@ -480,7 +631,7 @@ def _sample_geocoder(m, ctx) -> int:
         return out
 
     try:
-        summary = asyncio.run(run())
+        summary = asyncio.run(run_with_crosschecks())
     except CommonwealthError as err:
         return _fail(f"{err.code}: {err}")
     return _write_fixture(m, recorder, summary)
@@ -502,6 +653,20 @@ def cmd_sources_sample(args: argparse.Namespace) -> int:
         HttpFetcher(policy=egress_policy_for(m, params.service_url)))
     adapter = arcgis_mod.ArcGISAdapter(fetcher=recorder,
                                        cache=arcgis_mod.TTLCache())
+
+    if "building.lookup" in m.capability_ids():
+        try:
+            summary = asyncio.run(_sample_buildings(adapter, m, params, ctx))
+        except CommonwealthError as err:
+            return _fail(f"{err.code}: {err}")
+        return _write_fixture(m, recorder, summary)
+
+    if "landmark.lookup" in m.capability_ids():
+        try:
+            summary = asyncio.run(_sample_landmarks(adapter, m, params, ctx))
+        except CommonwealthError as err:
+            return _fail(f"{err.code}: {err}")
+        return _write_fixture(m, recorder, summary)
 
     if "address.lookup" in m.capability_ids():
         try:
@@ -535,6 +700,12 @@ def cmd_sources_sample(args: argparse.Namespace) -> int:
                                        where_equals={"pin": "NO SUCH PIN"})
         out["no_match_pin"] = "NO SUCH PIN"
         out["no_match_count"] = len(no_match.records)
+        # The same miss with geometry requested. Every tool that needs a
+        # parcel POLYGON by PIN (find_zoning, find_buildings) issues this
+        # shape, and its empty response has to replay too.
+        await adapter.query(m, "parcels",
+                            where_equals={"pin": "NO SUCH PIN"},
+                            return_geometry=True)
         pq = await adapter.query(m, "parcels", where_equals={"pin": str(pin)},
                                  return_geometry=True)
         if "zoning" not in params.layers:
@@ -547,14 +718,24 @@ def cmd_sources_sample(args: argparse.Namespace) -> int:
         ring = (pq.records[0].geometry or {}).get("rings", [[[None, None]]])
         vx = ring[0][0]
         if vx[0] is not None:
+            # Written into the summary so the statewide source's own
+            # recording can issue the same point query a real dual-source
+            # call would.
+            out["sample_point"] = [float(vx[0]), float(vx[1])]
             await adapter.query(m, "zoning",
                                 geometry_point=(float(vx[0]), float(vx[1])))
             await adapter.query(m, "parcels",
                                 geometry_point=(float(vx[0]), float(vx[1])))
         return out
 
+    async def run_with_crosschecks() -> dict:
+        out = await run()
+        if m.jurisdiction == "va":
+            out["cross_source"] = await _statewide_crosschecks(adapter, m, ctx)
+        return out
+
     try:
-        summary = asyncio.run(run())
+        summary = asyncio.run(run_with_crosschecks())
     except CommonwealthError as err:
         return _fail(f"{err.code}: {err}")
     return _write_fixture(m, recorder, summary)

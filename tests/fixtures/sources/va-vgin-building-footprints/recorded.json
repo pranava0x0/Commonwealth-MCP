@@ -1,0 +1,4524 @@
+{
+ "source_id": "va-vgin-building-footprints",
+ "recorded_at": "2026-08-30T03:11:49Z",
+ "rights": {
+  "publisher": "Virginia Geographic Information Network (VGIN), part of the Virginia Department of Emergency Management",
+  "terms_url": "https://vgin.vdem.virginia.gov/datasets/virginia-building-footprints/about",
+  "note": "Recorded government-published responses; third-party content excluded from the repo's CC0 grant (../../../design/architecture.md decision 0011)."
+ },
+ "summary": {
+  "health:buildings": {
+   "layer": "buildings",
+   "feature_count": 4471131,
+   "min_expected": 3500000,
+   "healthy": true
+  },
+  "residential_point": {
+   "record_count": 2,
+   "truncated": false
+  },
+  "dense_urban_point": {
+   "record_count": 205,
+   "truncated": true
+  },
+  "on_parcel": {
+   "pin": "C0010126019",
+   "record_count": 2
+  }
+ },
+ "exchanges": [
+  {
+   "url": "https://vginmaps.vdem.virginia.gov/arcgis/rest/services/VA_Base_Layers/VA_Building_Footprints/FeatureServer/0/query",
+   "params": {
+    "f": "json",
+    "where": "1=1",
+    "returnCountOnly": "true"
+   },
+   "response": {
+    "count": 4471131
+   }
+  },
+  {
+   "url": "https://vginmaps.vdem.virginia.gov/arcgis/rest/services/VA_Base_Layers/VA_Building_Footprints/FeatureServer/0/query",
+   "params": {
+    "f": "json",
+    "outFields": "BLDGHEIGHT,BUILDINGCLASS,DATASOURCENAME,FEATURECODE,FIPS,LASTEDITOR,LASTUPDATE,MUNICIPALITY,NUMSTORIES,OBJECTID,SOURCEFEATUREID,Shape__Area",
+    "resultRecordCount": "50",
+    "returnGeometry": "false",
+    "geometry": "{\"x\": -77.26436153964, \"y\": 38.90067620715, \"spatialReference\": {\"wkid\": 4326}}",
+    "geometryType": "esriGeometryPoint",
+    "inSR": "4326",
+    "spatialRel": "esriSpatialRelIntersects",
+    "distance": "50.0",
+    "units": "esriSRUnit_Meter"
+   },
+   "response": {
+    "objectIdFieldName": "OBJECTID",
+    "globalIdFieldName": "",
+    "geometryType": "esriGeometryPolygon",
+    "spatialReference": {
+     "wkid": 102100,
+     "latestWkid": 3857
+    },
+    "fields": [
+     {
+      "name": "BLDGHEIGHT",
+      "alias": "Building Height",
+      "type": "esriFieldTypeInteger"
+     },
+     {
+      "name": "BUILDINGCLASS",
+      "alias": "Building Class",
+      "type": "esriFieldTypeSmallInteger"
+     },
+     {
+      "name": "DATASOURCENAME",
+      "alias": "Data Source",
+      "type": "esriFieldTypeString",
+      "length": 100
+     },
+     {
+      "name": "FEATURECODE",
+      "alias": "Facility Site Code",
+      "type": "esriFieldTypeString",
+      "length": 100
+     },
+     {
+      "name": "FIPS",
+      "alias": "Jurisdiction FIPS Code",
+      "type": "esriFieldTypeString",
+      "length": 7
+     },
+     {
+      "name": "LASTEDITOR",
+      "alias": "Last Editor",
+      "type": "esriFieldTypeString",
+      "length": 50
+     },
+     {
+      "name": "LASTUPDATE",
+      "alias": "Last Update From Locality",
+      "type": "esriFieldTypeDate",
+      "length": 8
+     },
+     {
+      "name": "MUNICIPALITY",
+      "alias": "Jurisdiction Name",
+      "type": "esriFieldTypeString",
+      "length": 100
+     },
+     {
+      "name": "NUMSTORIES",
+      "alias": "Number of Stories",
+      "type": "esriFieldTypeSmallInteger"
+     },
+     {
+      "name": "OBJECTID",
+      "alias": "OBJECTID",
+      "type": "esriFieldTypeOID"
+     },
+     {
+      "name": "SOURCEFEATUREID",
+      "alias": "GEO ID",
+      "type": "esriFieldTypeString",
+      "length": 20
+     },
+     {
+      "name": "Shape__Area",
+      "alias": "SHAPE.STArea()",
+      "type": "esriFieldTypeDouble"
+     }
+    ],
+    "features": [
+     {
+      "attributes": {
+       "BLDGHEIGHT": null,
+       "BUILDINGCLASS": null,
+       "DATASOURCENAME": "Jurisdiction",
+       "FEATURECODE": null,
+       "FIPS": "51059",
+       "LASTEDITOR": "VGIN",
+       "LASTUPDATE": 1770249600000,
+       "MUNICIPALITY": "Fairfax County",
+       "NUMSTORIES": null,
+       "OBJECTID": 4373480,
+       "SOURCEFEATUREID": "193929324220",
+       "Shape__Area": 813.47075499
+      }
+     },
+     {
+      "attributes": {
+       "BLDGHEIGHT": null,
+       "BUILDINGCLASS": null,
+       "DATASOURCENAME": "Jurisdiction",
+       "FEATURECODE": null,
+       "FIPS": "51059",
+       "LASTEDITOR": "VGIN",
+       "LASTUPDATE": 1770249600000,
+       "MUNICIPALITY": "Fairfax County",
+       "NUMSTORIES": null,
+       "OBJECTID": 4373490,
+       "SOURCEFEATUREID": "193879324264",
+       "Shape__Area": 690.984327045
+      }
+     }
+    ]
+   }
+  },
+  {
+   "url": "https://vginmaps.vdem.virginia.gov/arcgis/rest/services/VA_Base_Layers/VA_Building_Footprints/FeatureServer/0",
+   "params": {
+    "f": "json"
+   },
+   "response": {
+    "currentVersion": 11.3,
+    "cimVersion": "3.3.0",
+    "id": 0,
+    "name": "Virginia Building Footprints",
+    "type": "Feature Layer",
+    "parentLayer": null,
+    "defaultVisibility": true,
+    "minScale": 0,
+    "maxScale": 0,
+    "canScaleSymbols": true,
+    "referenceScale": 1200,
+    "geometryType": "esriGeometryPolygon",
+    "description": "The Virginia Geographic Information Network (VGIN) is coordinating the development and maintenance of a statewide Building Footprint data layer in conjunction with local governments across the Commonwealth in order to create a seamless feature class with building footprints to complement the Virginia Base Mapping Program (VBMP). The Building Footprints data leverages the Commonwealth's investment in VBMP digital orthophotography. Building Footprints are data developed and produced by Virginia's Local Governments and sent to VGIN. A series of checks are run on the locality data and the schema is pared where necessary.",
+    "copyrightText": "Virginia Geographic Information Network (VGIN)",
+    "editFieldsInfo": null,
+    "ownershipBasedAccessControlForFeatures": null,
+    "syncCanReturnChanges": false,
+    "relationships": [],
+    "isDataVersioned": false,
+    "isDataArchived": false,
+    "infoInEstimates": [
+     "extent",
+     "count"
+    ],
+    "isDataBranchVersioned": false,
+    "isDataReplicaTracked": false,
+    "isCoGoEnabled": false,
+    "supportsRollbackOnFailureParameter": true,
+    "archivingInfo": {
+     "supportsQueryWithHistoricMoment": false,
+     "startArchivingMoment": -1
+    },
+    "supportsStatistics": true,
+    "supportsExceedsLimitStatistics": true,
+    "supportsAdvancedQueries": true,
+    "supportsValidateSQL": true,
+    "supportsCoordinatesQuantization": true,
+    "supportsQuantizationEditMode": true,
+    "supportsCalculate": true,
+    "supportsASyncCalculate": true,
+    "supportsDatumTransformation": true,
+    "advancedQueryCapabilities": {
+     "supportsPagination": true,
+     "supportsTrueCurve": true,
+     "supportsQueryWithDistance": true,
+     "supportsReturningQueryExtent": true,
+     "supportsStatistics": true,
+     "supportsPercentileStatistics": true,
+     "supportsHavingClause": true,
+     "supportsOrderBy": true,
+     "supportsDistinct": true,
+     "supportsCountDistinct": true,
+     "supportsAdvancedQueryRelated": true,
+     "supportsQueryRelatedPagination": true,
+     "supportsCurrentUserQueries": true,
+     "supportsQueryWithResultType": true,
+     "supportsReturningGeometryCentroid": true,
+     "supportsSqlExpression": true,
+     "supportsQueryWithDatumTransformation": true,
+     "supportsLod": false,
+     "supportsQueryWithLodSR": false,
+     "supportsQueryAnalytic": true
+    },
+    "advancedQueryAnalyticCapabilities": {
+     "supportsLinearRegression": true,
+     "supportsAsync": true,
+     "supportsPercentileAnalytic": true
+    },
+    "advancedEditingCapabilities": {
+     "supportedSqlFormatsInCalculate": [
+      "standard"
+     ],
+     "supportsAsyncApplyEdits": true,
+     "supportsApplyEditsbyUploadID": true,
+     "supportedApplyEditsUploadIDFormats": "JSON"
+    },
+    "hasGeometryProperties": true,
+    "geometryProperties": {
+     "shapeAreaFieldName": "Shape__Area",
+     "shapeLengthFieldName": "Shape__Length",
+     "units": "esriMeters"
+    },
+    "hasMetadata": true,
+    "extent": {
+     "xmin": -9327816.693841426,
+     "ymin": 4364874.597569159,
+     "xmax": -8368686.625938375,
+     "ymax": 4788806.325104042,
+     "spatialReference": {
+      "wkid": 102100,
+      "latestWkid": 3857,
+      "xyTolerance": 0.001,
+      "zTolerance": 0.001,
+      "mTolerance": 0.001,
+      "falseX": -20037700,
+      "falseY": -30241100,
+      "xyUnits": 10000,
+      "falseZ": -100000,
+      "zUnits": 10000,
+      "falseM": -100000,
+      "mUnits": 10000
+     }
+    },
+    "sourceSpatialReference": {
+     "wkt2": "PROJCRS[\"Lambert_Conformal_Conic_Virginia\",BASEGEOGCRS[\"GCS_North_American_1983\",DATUM[\"D_North_American_1983\",ELLIPSOID[\"GRS_1980\",6378137.0,298.257222101,LENGTHUNIT[\"Meter\",1.0]]],PRIMEM[\"Greenwich\",0.0,ANGLEUNIT[\"Degree\",0.0174532925199433]],CS[ellipsoidal,2],ANGLEUNIT[\"Degree\",0.0174532925199433]],CONVERSION[\"Lambert_Conformal_Conic\",METHOD[\"Lambert_Conformal_Conic\"],PARAMETER[\"False_Easting\",0.0,LENGTHUNIT[\"Meter\",1.0]],PARAMETER[\"False_Northing\",0.0,LENGTHUNIT[\"Meter\",1.0]],PARAMETER[\"Central_Meridian\",-79.5,ANGLEUNIT[\"Degree\",0.0174532925199433]],PARAMETER[\"Standard_Parallel_1\",37.0,ANGLEUNIT[\"Degree\",0.0174532925199433]],PARAMETER[\"Standard_Parallel_2\",39.5,ANGLEUNIT[\"Degree\",0.0174532925199433]],PARAMETER[\"Latitude_Of_Origin\",36.0,ANGLEUNIT[\"Degree\",0.0174532925199433]]],CS[Cartesian,2],AXIS[\"Easting (X)\",east,ORDER[1]],AXIS[\"Northing (Y)\",north,ORDER[2]],LENGTHUNIT[\"Meter\",1.0]]",
+     "wkt": "PROJCS[\"Lambert_Conformal_Conic_Virginia\",GEOGCS[\"GCS_North_American_1983\",DATUM[\"D_North_American_1983\",SPHEROID[\"GRS_1980\",6378137.0,298.257222101]],PRIMEM[\"Greenwich\",0.0],UNIT[\"Degree\",0.0174532925199433]],PROJECTION[\"Lambert_Conformal_Conic\"],PARAMETER[\"False_Easting\",0.0],PARAMETER[\"False_Northing\",0.0],PARAMETER[\"Central_Meridian\",-79.5],PARAMETER[\"Standard_Parallel_1\",37.0],PARAMETER[\"Standard_Parallel_2\",39.5],PARAMETER[\"Latitude_Of_Origin\",36.0],UNIT[\"Meter\",1.0]]",
+     "xyTolerance": 0.0011111111111111107,
+     "zTolerance": 0.001,
+     "mTolerance": 0.001,
+     "falseX": -20037700,
+     "falseY": -30241100,
+     "xyUnits": 10000,
+     "falseZ": 0,
+     "zUnits": 1,
+     "falseM": 0,
+     "mUnits": 1
+    },
+    "drawingInfo": {
+     "renderer": {
+      "type": "simple",
+      "symbol": {
+       "type": "esriSFS",
+       "style": "esriSFSSolid",
+       "color": [
+        204,
+        204,
+        204,
+        255
+       ],
+       "outline": {
+        "type": "esriSLS",
+        "style": "esriSLSSolid",
+        "color": [
+         178,
+         178,
+         178,
+         255
+        ],
+        "width": 0.4
+       }
+      }
+     },
+     "scaleSymbols": true,
+     "transparency": 0,
+     "labelingInfo": null
+    },
+    "hasM": false,
+    "hasZ": false,
+    "allowGeometryUpdates": true,
+    "allowTrueCurvesUpdates": true,
+    "onlyAllowTrueCurveUpdatesByTrueCurveClients": true,
+    "hasAttachments": false,
+    "supportsApplyEditsWithGlobalIds": false,
+    "htmlPopupType": "esriServerHTMLPopupTypeAsHTMLText",
+    "objectIdField": "OBJECTID",
+    "globalIdField": "",
+    "displayField": "DATASOURCENAME",
+    "typeIdField": "",
+    "subtypeField": "",
+    "fields": [
+     {
+      "name": "Shape__Area",
+      "type": "esriFieldTypeDouble",
+      "alias": "SHAPE.STArea()",
+      "domain": null,
+      "editable": false,
+      "nullable": true,
+      "defaultValue": null,
+      "modelName": "SHAPE.STArea()",
+      "required": true
+     },
+     {
+      "name": "Shape__Length",
+      "type": "esriFieldTypeDouble",
+      "alias": "SHAPE.STLength()",
+      "domain": null,
+      "editable": false,
+      "nullable": true,
+      "defaultValue": null,
+      "modelName": "SHAPE.STLength()",
+      "required": true
+     },
+     {
+      "name": "OBJECTID",
+      "type": "esriFieldTypeOID",
+      "alias": "OBJECTID",
+      "domain": null,
+      "editable": false,
+      "nullable": false,
+      "defaultValue": null,
+      "modelName": "OBJECTID"
+     },
+     {
+      "name": "BLDGHEIGHT",
+      "type": "esriFieldTypeInteger",
+      "alias": "Building Height",
+      "domain": null,
+      "editable": true,
+      "nullable": true,
+      "defaultValue": null,
+      "modelName": "BLDGHEIGHT"
+     },
+     {
+      "name": "NUMSTORIES",
+      "type": "esriFieldTypeSmallInteger",
+      "alias": "Number of Stories",
+      "domain": null,
+      "editable": true,
+      "nullable": true,
+      "defaultValue": null,
+      "modelName": "NUMSTORIES"
+     },
+     {
+      "name": "FEATURECODE",
+      "type": "esriFieldTypeString",
+      "alias": "Facility Site Code",
+      "domain": null,
+      "editable": true,
+      "nullable": true,
+      "length": 100,
+      "defaultValue": null,
+      "modelName": "FEATURECODE"
+     },
+     {
+      "name": "LASTUPDATE",
+      "type": "esriFieldTypeDate",
+      "alias": "Last Update From Locality",
+      "domain": null,
+      "editable": true,
+      "nullable": true,
+      "length": 8,
+      "defaultValue": null,
+      "modelName": "LASTUPDATE"
+     },
+     {
+      "name": "LASTEDITOR",
+      "type": "esriFieldTypeString",
+      "alias": "Last Editor",
+      "domain": null,
+      "editable": true,
+      "nullable": true,
+      "length": 50,
+      "defaultValue": null,
+      "modelName": "LASTEDITOR"
+     },
+     {
+      "name": "BUILDINGCLASS",
+      "type": "esriFieldTypeSmallInteger",
+      "alias": "Building Class",
+      "domain": {
+       "type": "codedValue",
+       "name": "BuildingClass FCode",
+       "description": "Building classification",
+       "codedValues": [
+        {
+         "name": "General/Residential",
+         "code": 1
+        },
+        {
+         "name": "Government",
+         "code": 2
+        },
+        {
+         "name": "Medical",
+         "code": 3
+        },
+        {
+         "name": "Education",
+         "code": 4
+        },
+        {
+         "name": "Transportation",
+         "code": 5
+        },
+        {
+         "name": "Commercial",
+         "code": 6
+        },
+        {
+         "name": "Religious",
+         "code": 7
+        },
+        {
+         "name": "Recreation",
+         "code": 8
+        },
+        {
+         "name": "Cultural/Heritage",
+         "code": 9
+        },
+        {
+         "name": "Hotel",
+         "code": 10
+        },
+        {
+         "name": "Airport",
+         "code": 11
+        },
+        {
+         "name": "Industrial",
+         "code": 12
+        },
+        {
+         "name": "CommunityCenter",
+         "code": 13
+        }
+       ],
+       "mergePolicy": "esriMPTDefaultValue",
+       "splitPolicy": "esriSPTDefaultValue"
+      },
+      "editable": true,
+      "nullable": true,
+      "defaultValue": null,
+      "modelName": "BUILDINGCLASS"
+     },
+     {
+      "name": "DATASOURCENAME",
+      "type": "esriFieldTypeString",
+      "alias": "Data Source",
+      "domain": null,
+      "editable": true,
+      "nullable": true,
+      "length": 100,
+      "defaultValue": null,
+      "modelName": "DATASOURCENAME"
+     },
+     {
+      "name": "EDITCOMMENTS",
+      "type": "esriFieldTypeString",
+      "alias": "Edit Comments",
+      "domain": null,
+      "editable": true,
+      "nullable": true,
+      "length": 250,
+      "defaultValue": null,
+      "modelName": "EDITCOMMENTS"
+     },
+     {
+      "name": "SOURCEFEATUREID",
+      "type": "esriFieldTypeString",
+      "alias": "GEO ID",
+      "domain": null,
+      "editable": true,
+      "nullable": true,
+      "length": 20,
+      "defaultValue": null,
+      "modelName": "SOURCEFEATUREID"
+     },
+     {
+      "name": "SFIDdupes",
+      "type": "esriFieldTypeSmallInteger",
+      "alias": "SFIDdupes",
+      "domain": null,
+      "editable": true,
+      "nullable": true,
+      "defaultValue": null,
+      "modelName": "SFIDdupes"
+     },
+     {
+      "name": "FIPS",
+      "type": "esriFieldTypeString",
+      "alias": "Jurisdiction FIPS Code",
+      "domain": null,
+      "editable": true,
+      "nullable": true,
+      "length": 7,
+      "defaultValue": null,
+      "modelName": "FIPS"
+     },
+     {
+      "name": "MUNICIPALITY",
+      "type": "esriFieldTypeString",
+      "alias": "Jurisdiction Name",
+      "domain": null,
+      "editable": true,
+      "nullable": true,
+      "length": 100,
+      "defaultValue": null,
+      "modelName": "MUNICIPALITY"
+     }
+    ],
+    "geometryField": {
+     "name": "SHAPE",
+     "type": "esriFieldTypeGeometry",
+     "alias": "SHAPE",
+     "domain": null,
+     "editable": true,
+     "nullable": true,
+     "defaultValue": null,
+     "modelName": "SHAPE"
+    },
+    "indexes": [
+     {
+      "name": "R1756_pk",
+      "fields": "OBJECTID",
+      "isAscending": true,
+      "isUnique": true,
+      "description": ""
+     },
+     {
+      "name": "S1638_idx",
+      "fields": "SHAPE",
+      "isAscending": true,
+      "isUnique": true,
+      "description": ""
+     }
+    ],
+    "datesInUnknownTimezone": false,
+    "dateFieldsTimeReference": {
+     "timeZone": "UTC",
+     "respectsDaylightSaving": false
+    },
+    "preferredTimeReference": null,
+    "types": [],
+    "templates": [
+     {
+      "name": "Virginia Building Footprints",
+      "description": "",
+      "prototype": {
+       "attributes": {
+        "FIPS": null,
+        "SFIDdupes": null,
+        "SOURCEFEATUREID": null,
+        "MUNICIPALITY": null,
+        "BLDGHEIGHT": null,
+        "NUMSTORIES": null,
+        "FEATURECODE": null,
+        "LASTUPDATE": null,
+        "LASTEDITOR": null,
+        "BUILDINGCLASS": null,
+        "DATASOURCENAME": null,
+        "EDITCOMMENTS": null
+       }
+      },
+      "drawingTool": "esriFeatureEditToolPolygon"
+     }
+    ],
+    "maxRecordCount": 2000,
+    "supportedQueryFormats": "JSON, geoJSON, PBF",
+    "supportedExportFormats": "sqlite,filegdb,shapefile,csv,geojson",
+    "capabilities": "Query",
+    "useStandardizedQueries": true,
+    "bigIntegerRestrictedTo53Bits": true,
+    "supportedSpatialRelationships": [
+     "esriSpatialRelIntersects",
+     "esriSpatialRelContains",
+     "esriSpatialRelCrosses",
+     "esriSpatialRelEnvelopeIntersects",
+     "esriSpatialRelIndexIntersects",
+     "esriSpatialRelOverlaps",
+     "esriSpatialRelTouches",
+     "esriSpatialRelWithin",
+     "esriSpatialRelRelation"
+    ],
+    "standardMaxRecordCount": 4000,
+    "tileMaxRecordCount": 4000,
+    "standardMaxRecordCountNoGeometry": 32000,
+    "maxRecordCountFactor": 1
+   }
+  },
+  {
+   "url": "https://vginmaps.vdem.virginia.gov/arcgis/rest/services/VA_Base_Layers/VA_Building_Footprints/FeatureServer/0/query",
+   "params": {
+    "f": "json",
+    "outFields": "BLDGHEIGHT,BUILDINGCLASS,DATASOURCENAME,FEATURECODE,FIPS,LASTEDITOR,LASTUPDATE,MUNICIPALITY,NUMSTORIES,OBJECTID,SOURCEFEATUREID,Shape__Area",
+    "resultRecordCount": "50",
+    "returnGeometry": "false",
+    "geometry": "{\"x\": -77.436, \"y\": 37.5407, \"spatialReference\": {\"wkid\": 4326}}",
+    "geometryType": "esriGeometryPoint",
+    "inSR": "4326",
+    "spatialRel": "esriSpatialRelIntersects",
+    "distance": "800.0",
+    "units": "esriSRUnit_Meter"
+   },
+   "response": {
+    "objectIdFieldName": "OBJECTID",
+    "globalIdFieldName": "",
+    "geometryType": "esriGeometryPolygon",
+    "spatialReference": {
+     "wkid": 102100,
+     "latestWkid": 3857
+    },
+    "fields": [
+     {
+      "name": "BLDGHEIGHT",
+      "alias": "Building Height",
+      "type": "esriFieldTypeInteger"
+     },
+     {
+      "name": "BUILDINGCLASS",
+      "alias": "Building Class",
+      "type": "esriFieldTypeSmallInteger"
+     },
+     {
+      "name": "DATASOURCENAME",
+      "alias": "Data Source",
+      "type": "esriFieldTypeString",
+      "length": 100
+     },
+     {
+      "name": "FEATURECODE",
+      "alias": "Facility Site Code",
+      "type": "esriFieldTypeString",
+      "length": 100
+     },
+     {
+      "name": "FIPS",
+      "alias": "Jurisdiction FIPS Code",
+      "type": "esriFieldTypeString",
+      "length": 7
+     },
+     {
+      "name": "LASTEDITOR",
+      "alias": "Last Editor",
+      "type": "esriFieldTypeString",
+      "length": 50
+     },
+     {
+      "name": "LASTUPDATE",
+      "alias": "Last Update From Locality",
+      "type": "esriFieldTypeDate",
+      "length": 8
+     },
+     {
+      "name": "MUNICIPALITY",
+      "alias": "Jurisdiction Name",
+      "type": "esriFieldTypeString",
+      "length": 100
+     },
+     {
+      "name": "NUMSTORIES",
+      "alias": "Number of Stories",
+      "type": "esriFieldTypeSmallInteger"
+     },
+     {
+      "name": "OBJECTID",
+      "alias": "OBJECTID",
+      "type": "esriFieldTypeOID"
+     },
+     {
+      "name": "SOURCEFEATUREID",
+      "alias": "GEO ID",
+      "type": "esriFieldTypeString",
+      "length": 20
+     },
+     {
+      "name": "Shape__Area",
+      "alias": "SHAPE.STArea()",
+      "type": "esriFieldTypeDouble"
+     }
+    ],
+    "features": [
+     {
+      "attributes": {
+       "BLDGHEIGHT": null,
+       "BUILDINGCLASS": null,
+       "DATASOURCENAME": "Jurisdiction",
+       "FEATURECODE": null,
+       "FIPS": "51760",
+       "LASTEDITOR": "VGIN",
+       "LASTUPDATE": 1771891200000,
+       "MUNICIPALITY": "Richmond City",
+       "NUMSTORIES": null,
+       "OBJECTID": 1537674,
+       "SOURCEFEATUREID": "182291172243",
+       "Shape__Area": 16.846089475
+      }
+     },
+     {
+      "attributes": {
+       "BLDGHEIGHT": null,
+       "BUILDINGCLASS": null,
+       "DATASOURCENAME": "Jurisdiction",
+       "FEATURECODE": null,
+       "FIPS": "51760",
+       "LASTEDITOR": "VGIN",
+       "LASTUPDATE": 1771891200000,
+       "MUNICIPALITY": "Richmond City",
+       "NUMSTORIES": null,
+       "OBJECTID": 1537676,
+       "SOURCEFEATUREID": "182386172254",
+       "Shape__Area": 4.060146685
+      }
+     },
+     {
+      "attributes": {
+       "BLDGHEIGHT": null,
+       "BUILDINGCLASS": null,
+       "DATASOURCENAME": "Jurisdiction",
+       "FEATURECODE": null,
+       "FIPS": "51760",
+       "LASTEDITOR": "VGIN",
+       "LASTUPDATE": 1771891200000,
+       "MUNICIPALITY": "Richmond City",
+       "NUMSTORIES": null,
+       "OBJECTID": 1537677,
+       "SOURCEFEATUREID": "182331172237",
+       "Shape__Area": 2561.262402335
+      }
+     },
+     {
+      "attributes": {
+       "BLDGHEIGHT": null,
+       "BUILDINGCLASS": null,
+       "DATASOURCENAME": "Jurisdiction",
+       "FEATURECODE": null,
+       "FIPS": "51760",
+       "LASTEDITOR": "VGIN",
+       "LASTUPDATE": 1771891200000,
+       "MUNICIPALITY": "Richmond City",
+       "NUMSTORIES": null,
+       "OBJECTID": 1537679,
+       "SOURCEFEATUREID": "182288172284",
+       "Shape__Area": 13.79806704
+      }
+     },
+     {
+      "attributes": {
+       "BLDGHEIGHT": null,
+       "BUILDINGCLASS": null,
+       "DATASOURCENAME": "Jurisdiction",
+       "FEATURECODE": null,
+       "FIPS": "51760",
+       "LASTEDITOR": "VGIN",
+       "LASTUPDATE": 1771891200000,
+       "MUNICIPALITY": "Richmond City",
+       "NUMSTORIES": null,
+       "OBJECTID": 1537680,
+       "SOURCEFEATUREID": "182314172289",
+       "Shape__Area": 9.17906995
+      }
+     },
+     {
+      "attributes": {
+       "BLDGHEIGHT": null,
+       "BUILDINGCLASS": null,
+       "DATASOURCENAME": "Jurisdiction",
+       "FEATURECODE": null,
+       "FIPS": "51760",
+       "LASTEDITOR": "VGIN",
+       "LASTUPDATE": 1771891200000,
+       "MUNICIPALITY": "Richmond City",
+       "NUMSTORIES": null,
+       "OBJECTID": 1537681,
+       "SOURCEFEATUREID": "182289172293",
+       "Shape__Area": 759.506958105
+      }
+     },
+     {
+      "attributes": {
+       "BLDGHEIGHT": null,
+       "BUILDINGCLASS": null,
+       "DATASOURCENAME": "Jurisdiction",
+       "FEATURECODE": null,
+       "FIPS": "51760",
+       "LASTEDITOR": "VGIN",
+       "LASTUPDATE": 1771891200000,
+       "MUNICIPALITY": "Richmond City",
+       "NUMSTORIES": null,
+       "OBJECTID": 1537683,
+       "SOURCEFEATUREID": "182404172276",
+       "Shape__Area": 1392.150919685
+      }
+     },
+     {
+      "attributes": {
+       "BLDGHEIGHT": null,
+       "BUILDINGCLASS": null,
+       "DATASOURCENAME": "Jurisdiction",
+       "FEATURECODE": null,
+       "FIPS": "51760",
+       "LASTEDITOR": "VGIN",
+       "LASTUPDATE": 1771891200000,
+       "MUNICIPALITY": "Richmond City",
+       "NUMSTORIES": null,
+       "OBJECTID": 1537685,
+       "SOURCEFEATUREID": "182226172297",
+       "Shape__Area": 1070.07387885
+      }
+     },
+     {
+      "attributes": {
+       "BLDGHEIGHT": null,
+       "BUILDINGCLASS": null,
+       "DATASOURCENAME": "Jurisdiction",
+       "FEATURECODE": null,
+       "FIPS": "51760",
+       "LASTEDITOR": "VGIN",
+       "LASTUPDATE": 1771891200000,
+       "MUNICIPALITY": "Richmond City",
+       "NUMSTORIES": null,
+       "OBJECTID": 1537686,
+       "SOURCEFEATUREID": "182283172310",
+       "Shape__Area": 102.143890385
+      }
+     },
+     {
+      "attributes": {
+       "BLDGHEIGHT": null,
+       "BUILDINGCLASS": null,
+       "DATASOURCENAME": "Jurisdiction",
+       "FEATURECODE": null,
+       "FIPS": "51760",
+       "LASTEDITOR": "VGIN",
+       "LASTUPDATE": 1771891200000,
+       "MUNICIPALITY": "Richmond City",
+       "NUMSTORIES": null,
+       "OBJECTID": 1537687,
+       "SOURCEFEATUREID": "182278172316",
+       "Shape__Area": 110.69064305
+      }
+     },
+     {
+      "attributes": {
+       "BLDGHEIGHT": null,
+       "BUILDINGCLASS": null,
+       "DATASOURCENAME": "Jurisdiction",
+       "FEATURECODE": null,
+       "FIPS": "51760",
+       "LASTEDITOR": "VGIN",
+       "LASTUPDATE": 1771891200000,
+       "MUNICIPALITY": "Richmond City",
+       "NUMSTORIES": null,
+       "OBJECTID": 1537690,
+       "SOURCEFEATUREID": "182319172313",
+       "Shape__Area": 1353.77547977
+      }
+     },
+     {
+      "attributes": {
+       "BLDGHEIGHT": null,
+       "BUILDINGCLASS": null,
+       "DATASOURCENAME": "Jurisdiction",
+       "FEATURECODE": null,
+       "FIPS": "51760",
+       "LASTEDITOR": "VGIN",
+       "LASTUPDATE": 1771891200000,
+       "MUNICIPALITY": "Richmond City",
+       "NUMSTORIES": null,
+       "OBJECTID": 1537692,
+       "SOURCEFEATUREID": "182225172353",
+       "Shape__Area": 365.027410545
+      }
+     },
+     {
+      "attributes": {
+       "BLDGHEIGHT": null,
+       "BUILDINGCLASS": null,
+       "DATASOURCENAME": "Jurisdiction",
+       "FEATURECODE": null,
+       "FIPS": "51760",
+       "LASTEDITOR": "VGIN",
+       "LASTUPDATE": 1771891200000,
+       "MUNICIPALITY": "Richmond City",
+       "NUMSTORIES": null,
+       "OBJECTID": 1537693,
+       "SOURCEFEATUREID": "182128172334",
+       "Shape__Area": 2127.65227331
+      }
+     },
+     {
+      "attributes": {
+       "BLDGHEIGHT": null,
+       "BUILDINGCLASS": null,
+       "DATASOURCENAME": "Jurisdiction",
+       "FEATURECODE": null,
+       "FIPS": "51760",
+       "LASTEDITOR": "VGIN",
+       "LASTUPDATE": 1771891200000,
+       "MUNICIPALITY": "Richmond City",
+       "NUMSTORIES": null,
+       "OBJECTID": 1537694,
+       "SOURCEFEATUREID": "182252172338",
+       "Shape__Area": 1935.08494548
+      }
+     },
+     {
+      "attributes": {
+       "BLDGHEIGHT": null,
+       "BUILDINGCLASS": null,
+       "DATASOURCENAME": "Jurisdiction",
+       "FEATURECODE": null,
+       "FIPS": "51760",
+       "LASTEDITOR": "VGIN",
+       "LASTUPDATE": 1771891200000,
+       "MUNICIPALITY": "Richmond City",
+       "NUMSTORIES": null,
+       "OBJECTID": 1537695,
+       "SOURCEFEATUREID": "182128172303",
+       "Shape__Area": 476.594892735
+      }
+     },
+     {
+      "attributes": {
+       "BLDGHEIGHT": null,
+       "BUILDINGCLASS": null,
+       "DATASOURCENAME": "Jurisdiction",
+       "FEATURECODE": null,
+       "FIPS": "51760",
+       "LASTEDITOR": "VGIN",
+       "LASTUPDATE": 1771891200000,
+       "MUNICIPALITY": "Richmond City",
+       "NUMSTORIES": null,
+       "OBJECTID": 1537696,
+       "SOURCEFEATUREID": "182118172364",
+       "Shape__Area": 178.559210005
+      }
+     },
+     {
+      "attributes": {
+       "BLDGHEIGHT": null,
+       "BUILDINGCLASS": null,
+       "DATASOURCENAME": "Jurisdiction",
+       "FEATURECODE": null,
+       "FIPS": "51760",
+       "LASTEDITOR": "VGIN",
+       "LASTUPDATE": 1771891200000,
+       "MUNICIPALITY": "Richmond City",
+       "NUMSTORIES": null,
+       "OBJECTID": 1537698,
+       "SOURCEFEATUREID": "182196172328",
+       "Shape__Area": 4516.120343405
+      }
+     },
+     {
+      "attributes": {
+       "BLDGHEIGHT": null,
+       "BUILDINGCLASS": null,
+       "DATASOURCENAME": "Jurisdiction",
+       "FEATURECODE": null,
+       "FIPS": "51760",
+       "LASTEDITOR": "VGIN",
+       "LASTUPDATE": 1771891200000,
+       "MUNICIPALITY": "Richmond City",
+       "NUMSTORIES": null,
+       "OBJECTID": 1537702,
+       "SOURCEFEATUREID": "181968172411",
+       "Shape__Area": 2.09927423
+      }
+     },
+     {
+      "attributes": {
+       "BLDGHEIGHT": null,
+       "BUILDINGCLASS": null,
+       "DATASOURCENAME": "Jurisdiction",
+       "FEATURECODE": null,
+       "FIPS": "51760",
+       "LASTEDITOR": "VGIN",
+       "LASTUPDATE": 1771891200000,
+       "MUNICIPALITY": "Richmond City",
+       "NUMSTORIES": null,
+       "OBJECTID": 1537704,
+       "SOURCEFEATUREID": "181966172411",
+       "Shape__Area": 5.76078205
+      }
+     },
+     {
+      "attributes": {
+       "BLDGHEIGHT": null,
+       "BUILDINGCLASS": null,
+       "DATASOURCENAME": "Jurisdiction",
+       "FEATURECODE": null,
+       "FIPS": "51760",
+       "LASTEDITOR": "VGIN",
+       "LASTUPDATE": 1771891200000,
+       "MUNICIPALITY": "Richmond City",
+       "NUMSTORIES": null,
+       "OBJECTID": 1537706,
+       "SOURCEFEATUREID": "181956172416",
+       "Shape__Area": 15.94304145
+      }
+     },
+     {
+      "attributes": {
+       "BLDGHEIGHT": null,
+       "BUILDINGCLASS": null,
+       "DATASOURCENAME": "Jurisdiction",
+       "FEATURECODE": null,
+       "FIPS": "51760",
+       "LASTEDITOR": "VGIN",
+       "LASTUPDATE": 1771891200000,
+       "MUNICIPALITY": "Richmond City",
+       "NUMSTORIES": null,
+       "OBJECTID": 1537707,
+       "SOURCEFEATUREID": "181930172431",
+       "Shape__Area": 23.03551815
+      }
+     },
+     {
+      "attributes": {
+       "BLDGHEIGHT": null,
+       "BUILDINGCLASS": null,
+       "DATASOURCENAME": "Jurisdiction",
+       "FEATURECODE": null,
+       "FIPS": "51760",
+       "LASTEDITOR": "VGIN",
+       "LASTUPDATE": 1771891200000,
+       "MUNICIPALITY": "Richmond City",
+       "NUMSTORIES": null,
+       "OBJECTID": 1537708,
+       "SOURCEFEATUREID": "182119172408",
+       "Shape__Area": 2168.857141525
+      }
+     },
+     {
+      "attributes": {
+       "BLDGHEIGHT": null,
+       "BUILDINGCLASS": null,
+       "DATASOURCENAME": "Jurisdiction",
+       "FEATURECODE": null,
+       "FIPS": "51760",
+       "LASTEDITOR": "VGIN",
+       "LASTUPDATE": 1771891200000,
+       "MUNICIPALITY": "Richmond City",
+       "NUMSTORIES": null,
+       "OBJECTID": 1537712,
+       "SOURCEFEATUREID": "182007172441",
+       "Shape__Area": 109.94986198
+      }
+     },
+     {
+      "attributes": {
+       "BLDGHEIGHT": null,
+       "BUILDINGCLASS": null,
+       "DATASOURCENAME": "Jurisdiction",
+       "FEATURECODE": null,
+       "FIPS": "51760",
+       "LASTEDITOR": "VGIN",
+       "LASTUPDATE": 1771891200000,
+       "MUNICIPALITY": "Richmond City",
+       "NUMSTORIES": null,
+       "OBJECTID": 1537714,
+       "SOURCEFEATUREID": "181954172438",
+       "Shape__Area": 303.793887595
+      }
+     },
+     {
+      "attributes": {
+       "BLDGHEIGHT": null,
+       "BUILDINGCLASS": null,
+       "DATASOURCENAME": "Jurisdiction",
+       "FEATURECODE": null,
+       "FIPS": "51760",
+       "LASTEDITOR": "VGIN",
+       "LASTUPDATE": 1771891200000,
+       "MUNICIPALITY": "Richmond City",
+       "NUMSTORIES": null,
+       "OBJECTID": 1537746,
+       "SOURCEFEATUREID": "181813172466",
+       "Shape__Area": 233.615445795
+      }
+     },
+     {
+      "attributes": {
+       "BLDGHEIGHT": null,
+       "BUILDINGCLASS": null,
+       "DATASOURCENAME": "Jurisdiction",
+       "FEATURECODE": null,
+       "FIPS": "51760",
+       "LASTEDITOR": "VGIN",
+       "LASTUPDATE": 1771891200000,
+       "MUNICIPALITY": "Richmond City",
+       "NUMSTORIES": null,
+       "OBJECTID": 1537765,
+       "SOURCEFEATUREID": "181973172465",
+       "Shape__Area": 2099.188090895
+      }
+     },
+     {
+      "attributes": {
+       "BLDGHEIGHT": null,
+       "BUILDINGCLASS": null,
+       "DATASOURCENAME": "Jurisdiction",
+       "FEATURECODE": null,
+       "FIPS": "51760",
+       "LASTEDITOR": "VGIN",
+       "LASTUPDATE": 1771891200000,
+       "MUNICIPALITY": "Richmond City",
+       "NUMSTORIES": null,
+       "OBJECTID": 1537801,
+       "SOURCEFEATUREID": "182106172512",
+       "Shape__Area": 45.598318455
+      }
+     },
+     {
+      "attributes": {
+       "BLDGHEIGHT": null,
+       "BUILDINGCLASS": null,
+       "DATASOURCENAME": "Jurisdiction",
+       "FEATURECODE": null,
+       "FIPS": "51760",
+       "LASTEDITOR": "VGIN",
+       "LASTUPDATE": 1771891200000,
+       "MUNICIPALITY": "Richmond City",
+       "NUMSTORIES": null,
+       "OBJECTID": 1537813,
+       "SOURCEFEATUREID": "182241172505",
+       "Shape__Area": 1542.906429595
+      }
+     },
+     {
+      "attributes": {
+       "BLDGHEIGHT": null,
+       "BUILDINGCLASS": null,
+       "DATASOURCENAME": "Jurisdiction",
+       "FEATURECODE": null,
+       "FIPS": "51760",
+       "LASTEDITOR": "VGIN",
+       "LASTUPDATE": 1771891200000,
+       "MUNICIPALITY": "Richmond City",
+       "NUMSTORIES": null,
+       "OBJECTID": 1537840,
+       "SOURCEFEATUREID": "182342172504",
+       "Shape__Area": 2339.675615545
+      }
+     },
+     {
+      "attributes": {
+       "BLDGHEIGHT": null,
+       "BUILDINGCLASS": null,
+       "DATASOURCENAME": "Jurisdiction",
+       "FEATURECODE": null,
+       "FIPS": "51760",
+       "LASTEDITOR": "VGIN",
+       "LASTUPDATE": 1771891200000,
+       "MUNICIPALITY": "Richmond City",
+       "NUMSTORIES": null,
+       "OBJECTID": 1537841,
+       "SOURCEFEATUREID": "182207172495",
+       "Shape__Area": 4047.51213146
+      }
+     },
+     {
+      "attributes": {
+       "BLDGHEIGHT": null,
+       "BUILDINGCLASS": null,
+       "DATASOURCENAME": "Jurisdiction",
+       "FEATURECODE": null,
+       "FIPS": "51760",
+       "LASTEDITOR": "VGIN",
+       "LASTUPDATE": 1771891200000,
+       "MUNICIPALITY": "Richmond City",
+       "NUMSTORIES": null,
+       "OBJECTID": 1537842,
+       "SOURCEFEATUREID": "182129172545",
+       "Shape__Area": 14.95347247
+      }
+     },
+     {
+      "attributes": {
+       "BLDGHEIGHT": null,
+       "BUILDINGCLASS": null,
+       "DATASOURCENAME": "Jurisdiction",
+       "FEATURECODE": null,
+       "FIPS": "51760",
+       "LASTEDITOR": "VGIN",
+       "LASTUPDATE": 1771891200000,
+       "MUNICIPALITY": "Richmond City",
+       "NUMSTORIES": null,
+       "OBJECTID": 1537843,
+       "SOURCEFEATUREID": "182296172548",
+       "Shape__Area": 31.131787325
+      }
+     },
+     {
+      "attributes": {
+       "BLDGHEIGHT": null,
+       "BUILDINGCLASS": null,
+       "DATASOURCENAME": "Jurisdiction",
+       "FEATURECODE": null,
+       "FIPS": "51760",
+       "LASTEDITOR": "VGIN",
+       "LASTUPDATE": 1771891200000,
+       "MUNICIPALITY": "Richmond City",
+       "NUMSTORIES": null,
+       "OBJECTID": 1537844,
+       "SOURCEFEATUREID": "182305172550",
+       "Shape__Area": 14.582997355
+      }
+     },
+     {
+      "attributes": {
+       "BLDGHEIGHT": null,
+       "BUILDINGCLASS": null,
+       "DATASOURCENAME": "Jurisdiction",
+       "FEATURECODE": null,
+       "FIPS": "51760",
+       "LASTEDITOR": "VGIN",
+       "LASTUPDATE": 1771891200000,
+       "MUNICIPALITY": "Richmond City",
+       "NUMSTORIES": null,
+       "OBJECTID": 1537877,
+       "SOURCEFEATUREID": "181865172503",
+       "Shape__Area": 6281.64062524
+      }
+     },
+     {
+      "attributes": {
+       "BLDGHEIGHT": null,
+       "BUILDINGCLASS": null,
+       "DATASOURCENAME": "Jurisdiction",
+       "FEATURECODE": null,
+       "FIPS": "51760",
+       "LASTEDITOR": "VGIN",
+       "LASTUPDATE": 1771891200000,
+       "MUNICIPALITY": "Richmond City",
+       "NUMSTORIES": null,
+       "OBJECTID": 1537903,
+       "SOURCEFEATUREID": "182115172579",
+       "Shape__Area": 758.643101115
+      }
+     },
+     {
+      "attributes": {
+       "BLDGHEIGHT": null,
+       "BUILDINGCLASS": null,
+       "DATASOURCENAME": "Jurisdiction",
+       "FEATURECODE": null,
+       "FIPS": "51760",
+       "LASTEDITOR": "VGIN",
+       "LASTUPDATE": 1771891200000,
+       "MUNICIPALITY": "Richmond City",
+       "NUMSTORIES": null,
+       "OBJECTID": 1537923,
+       "SOURCEFEATUREID": "182269172576",
+       "Shape__Area": 2742.27610408
+      }
+     },
+     {
+      "attributes": {
+       "BLDGHEIGHT": null,
+       "BUILDINGCLASS": null,
+       "DATASOURCENAME": "Jurisdiction",
+       "FEATURECODE": null,
+       "FIPS": "51760",
+       "LASTEDITOR": "VGIN",
+       "LASTUPDATE": 1771891200000,
+       "MUNICIPALITY": "Richmond City",
+       "NUMSTORIES": null,
+       "OBJECTID": 1537948,
+       "SOURCEFEATUREID": "182399172610",
+       "Shape__Area": 1750.08386862
+      }
+     },
+     {
+      "attributes": {
+       "BLDGHEIGHT": null,
+       "BUILDINGCLASS": null,
+       "DATASOURCENAME": "Jurisdiction",
+       "FEATURECODE": null,
+       "FIPS": "51760",
+       "LASTEDITOR": "VGIN",
+       "LASTUPDATE": 1771891200000,
+       "MUNICIPALITY": "Richmond City",
+       "NUMSTORIES": null,
+       "OBJECTID": 1537963,
+       "SOURCEFEATUREID": "181821172636",
+       "Shape__Area": 154.01435726
+      }
+     },
+     {
+      "attributes": {
+       "BLDGHEIGHT": null,
+       "BUILDINGCLASS": null,
+       "DATASOURCENAME": "Jurisdiction",
+       "FEATURECODE": null,
+       "FIPS": "51760",
+       "LASTEDITOR": "VGIN",
+       "LASTUPDATE": 1771891200000,
+       "MUNICIPALITY": "Richmond City",
+       "NUMSTORIES": null,
+       "OBJECTID": 1537964,
+       "SOURCEFEATUREID": "181703172644",
+       "Shape__Area": 11.76437358
+      }
+     },
+     {
+      "attributes": {
+       "BLDGHEIGHT": null,
+       "BUILDINGCLASS": null,
+       "DATASOURCENAME": "Jurisdiction",
+       "FEATURECODE": null,
+       "FIPS": "51760",
+       "LASTEDITOR": "VGIN",
+       "LASTUPDATE": 1771891200000,
+       "MUNICIPALITY": "Richmond City",
+       "NUMSTORIES": null,
+       "OBJECTID": 1537969,
+       "SOURCEFEATUREID": "181730172647",
+       "Shape__Area": 114.871209255
+      }
+     }
+    ],
+    "exceededTransferLimit": true
+   }
+  },
+  {
+   "url": "https://vginmaps.vdem.virginia.gov/arcgis/rest/services/VA_Base_Layers/VA_Building_Footprints/FeatureServer/0/query",
+   "params": {
+    "f": "json",
+    "outFields": "BLDGHEIGHT,BUILDINGCLASS,DATASOURCENAME,FEATURECODE,FIPS,LASTEDITOR,LASTUPDATE,MUNICIPALITY,NUMSTORIES,OBJECTID,SOURCEFEATUREID,Shape__Area",
+    "resultRecordCount": "50",
+    "returnGeometry": "false",
+    "geometry": "{\"x\": -77.436, \"y\": 37.5407, \"spatialReference\": {\"wkid\": 4326}}",
+    "geometryType": "esriGeometryPoint",
+    "inSR": "4326",
+    "spatialRel": "esriSpatialRelIntersects",
+    "distance": "800.0",
+    "units": "esriSRUnit_Meter",
+    "resultOffset": "40"
+   },
+   "response": {
+    "objectIdFieldName": "OBJECTID",
+    "globalIdFieldName": "",
+    "geometryType": "esriGeometryPolygon",
+    "spatialReference": {
+     "wkid": 102100,
+     "latestWkid": 3857
+    },
+    "fields": [
+     {
+      "name": "BLDGHEIGHT",
+      "alias": "Building Height",
+      "type": "esriFieldTypeInteger"
+     },
+     {
+      "name": "BUILDINGCLASS",
+      "alias": "Building Class",
+      "type": "esriFieldTypeSmallInteger"
+     },
+     {
+      "name": "DATASOURCENAME",
+      "alias": "Data Source",
+      "type": "esriFieldTypeString",
+      "length": 100
+     },
+     {
+      "name": "FEATURECODE",
+      "alias": "Facility Site Code",
+      "type": "esriFieldTypeString",
+      "length": 100
+     },
+     {
+      "name": "FIPS",
+      "alias": "Jurisdiction FIPS Code",
+      "type": "esriFieldTypeString",
+      "length": 7
+     },
+     {
+      "name": "LASTEDITOR",
+      "alias": "Last Editor",
+      "type": "esriFieldTypeString",
+      "length": 50
+     },
+     {
+      "name": "LASTUPDATE",
+      "alias": "Last Update From Locality",
+      "type": "esriFieldTypeDate",
+      "length": 8
+     },
+     {
+      "name": "MUNICIPALITY",
+      "alias": "Jurisdiction Name",
+      "type": "esriFieldTypeString",
+      "length": 100
+     },
+     {
+      "name": "NUMSTORIES",
+      "alias": "Number of Stories",
+      "type": "esriFieldTypeSmallInteger"
+     },
+     {
+      "name": "OBJECTID",
+      "alias": "OBJECTID",
+      "type": "esriFieldTypeOID"
+     },
+     {
+      "name": "SOURCEFEATUREID",
+      "alias": "GEO ID",
+      "type": "esriFieldTypeString",
+      "length": 20
+     },
+     {
+      "name": "Shape__Area",
+      "alias": "SHAPE.STArea()",
+      "type": "esriFieldTypeDouble"
+     }
+    ],
+    "features": [
+     {
+      "attributes": {
+       "BLDGHEIGHT": null,
+       "BUILDINGCLASS": null,
+       "DATASOURCENAME": "Jurisdiction",
+       "FEATURECODE": null,
+       "FIPS": "51760",
+       "LASTEDITOR": "VGIN",
+       "LASTUPDATE": 1771891200000,
+       "MUNICIPALITY": "Richmond City",
+       "NUMSTORIES": null,
+       "OBJECTID": 1537841,
+       "SOURCEFEATUREID": "182207172495",
+       "Shape__Area": 4047.51213146
+      }
+     },
+     {
+      "attributes": {
+       "BLDGHEIGHT": null,
+       "BUILDINGCLASS": null,
+       "DATASOURCENAME": "Jurisdiction",
+       "FEATURECODE": null,
+       "FIPS": "51760",
+       "LASTEDITOR": "VGIN",
+       "LASTUPDATE": 1771891200000,
+       "MUNICIPALITY": "Richmond City",
+       "NUMSTORIES": null,
+       "OBJECTID": 1537842,
+       "SOURCEFEATUREID": "182129172545",
+       "Shape__Area": 14.95347247
+      }
+     },
+     {
+      "attributes": {
+       "BLDGHEIGHT": null,
+       "BUILDINGCLASS": null,
+       "DATASOURCENAME": "Jurisdiction",
+       "FEATURECODE": null,
+       "FIPS": "51760",
+       "LASTEDITOR": "VGIN",
+       "LASTUPDATE": 1771891200000,
+       "MUNICIPALITY": "Richmond City",
+       "NUMSTORIES": null,
+       "OBJECTID": 1537843,
+       "SOURCEFEATUREID": "182296172548",
+       "Shape__Area": 31.131787325
+      }
+     },
+     {
+      "attributes": {
+       "BLDGHEIGHT": null,
+       "BUILDINGCLASS": null,
+       "DATASOURCENAME": "Jurisdiction",
+       "FEATURECODE": null,
+       "FIPS": "51760",
+       "LASTEDITOR": "VGIN",
+       "LASTUPDATE": 1771891200000,
+       "MUNICIPALITY": "Richmond City",
+       "NUMSTORIES": null,
+       "OBJECTID": 1537844,
+       "SOURCEFEATUREID": "182305172550",
+       "Shape__Area": 14.582997355
+      }
+     },
+     {
+      "attributes": {
+       "BLDGHEIGHT": null,
+       "BUILDINGCLASS": null,
+       "DATASOURCENAME": "Jurisdiction",
+       "FEATURECODE": null,
+       "FIPS": "51760",
+       "LASTEDITOR": "VGIN",
+       "LASTUPDATE": 1771891200000,
+       "MUNICIPALITY": "Richmond City",
+       "NUMSTORIES": null,
+       "OBJECTID": 1537877,
+       "SOURCEFEATUREID": "181865172503",
+       "Shape__Area": 6281.64062524
+      }
+     },
+     {
+      "attributes": {
+       "BLDGHEIGHT": null,
+       "BUILDINGCLASS": null,
+       "DATASOURCENAME": "Jurisdiction",
+       "FEATURECODE": null,
+       "FIPS": "51760",
+       "LASTEDITOR": "VGIN",
+       "LASTUPDATE": 1771891200000,
+       "MUNICIPALITY": "Richmond City",
+       "NUMSTORIES": null,
+       "OBJECTID": 1537903,
+       "SOURCEFEATUREID": "182115172579",
+       "Shape__Area": 758.643101115
+      }
+     },
+     {
+      "attributes": {
+       "BLDGHEIGHT": null,
+       "BUILDINGCLASS": null,
+       "DATASOURCENAME": "Jurisdiction",
+       "FEATURECODE": null,
+       "FIPS": "51760",
+       "LASTEDITOR": "VGIN",
+       "LASTUPDATE": 1771891200000,
+       "MUNICIPALITY": "Richmond City",
+       "NUMSTORIES": null,
+       "OBJECTID": 1537923,
+       "SOURCEFEATUREID": "182269172576",
+       "Shape__Area": 2742.27610408
+      }
+     },
+     {
+      "attributes": {
+       "BLDGHEIGHT": null,
+       "BUILDINGCLASS": null,
+       "DATASOURCENAME": "Jurisdiction",
+       "FEATURECODE": null,
+       "FIPS": "51760",
+       "LASTEDITOR": "VGIN",
+       "LASTUPDATE": 1771891200000,
+       "MUNICIPALITY": "Richmond City",
+       "NUMSTORIES": null,
+       "OBJECTID": 1537948,
+       "SOURCEFEATUREID": "182399172610",
+       "Shape__Area": 1750.08386862
+      }
+     },
+     {
+      "attributes": {
+       "BLDGHEIGHT": null,
+       "BUILDINGCLASS": null,
+       "DATASOURCENAME": "Jurisdiction",
+       "FEATURECODE": null,
+       "FIPS": "51760",
+       "LASTEDITOR": "VGIN",
+       "LASTUPDATE": 1771891200000,
+       "MUNICIPALITY": "Richmond City",
+       "NUMSTORIES": null,
+       "OBJECTID": 1537963,
+       "SOURCEFEATUREID": "181821172636",
+       "Shape__Area": 154.01435726
+      }
+     },
+     {
+      "attributes": {
+       "BLDGHEIGHT": null,
+       "BUILDINGCLASS": null,
+       "DATASOURCENAME": "Jurisdiction",
+       "FEATURECODE": null,
+       "FIPS": "51760",
+       "LASTEDITOR": "VGIN",
+       "LASTUPDATE": 1771891200000,
+       "MUNICIPALITY": "Richmond City",
+       "NUMSTORIES": null,
+       "OBJECTID": 1537964,
+       "SOURCEFEATUREID": "181703172644",
+       "Shape__Area": 11.76437358
+      }
+     },
+     {
+      "attributes": {
+       "BLDGHEIGHT": null,
+       "BUILDINGCLASS": null,
+       "DATASOURCENAME": "Jurisdiction",
+       "FEATURECODE": null,
+       "FIPS": "51760",
+       "LASTEDITOR": "VGIN",
+       "LASTUPDATE": 1771891200000,
+       "MUNICIPALITY": "Richmond City",
+       "NUMSTORIES": null,
+       "OBJECTID": 1537969,
+       "SOURCEFEATUREID": "181730172647",
+       "Shape__Area": 114.871209255
+      }
+     },
+     {
+      "attributes": {
+       "BLDGHEIGHT": null,
+       "BUILDINGCLASS": null,
+       "DATASOURCENAME": "Jurisdiction",
+       "FEATURECODE": null,
+       "FIPS": "51760",
+       "LASTEDITOR": "VGIN",
+       "LASTUPDATE": 1771891200000,
+       "MUNICIPALITY": "Richmond City",
+       "NUMSTORIES": null,
+       "OBJECTID": 1537970,
+       "SOURCEFEATUREID": "181880172605",
+       "Shape__Area": 4645.01243753
+      }
+     },
+     {
+      "attributes": {
+       "BLDGHEIGHT": null,
+       "BUILDINGCLASS": null,
+       "DATASOURCENAME": "Jurisdiction",
+       "FEATURECODE": null,
+       "FIPS": "51760",
+       "LASTEDITOR": "VGIN",
+       "LASTUPDATE": 1771891200000,
+       "MUNICIPALITY": "Richmond City",
+       "NUMSTORIES": null,
+       "OBJECTID": 1537979,
+       "SOURCEFEATUREID": "182355172647",
+       "Shape__Area": 1764.242656365
+      }
+     },
+     {
+      "attributes": {
+       "BLDGHEIGHT": null,
+       "BUILDINGCLASS": null,
+       "DATASOURCENAME": "Jurisdiction",
+       "FEATURECODE": null,
+       "FIPS": "51760",
+       "LASTEDITOR": "VGIN",
+       "LASTUPDATE": 1771891200000,
+       "MUNICIPALITY": "Richmond City",
+       "NUMSTORIES": null,
+       "OBJECTID": 1537984,
+       "SOURCEFEATUREID": "182196172639",
+       "Shape__Area": 3795.28128526
+      }
+     },
+     {
+      "attributes": {
+       "BLDGHEIGHT": null,
+       "BUILDINGCLASS": null,
+       "DATASOURCENAME": "Jurisdiction",
+       "FEATURECODE": null,
+       "FIPS": "51760",
+       "LASTEDITOR": "VGIN",
+       "LASTUPDATE": 1771891200000,
+       "MUNICIPALITY": "Richmond City",
+       "NUMSTORIES": null,
+       "OBJECTID": 1537997,
+       "SOURCEFEATUREID": "182320172668",
+       "Shape__Area": 1938.02580331
+      }
+     },
+     {
+      "attributes": {
+       "BLDGHEIGHT": null,
+       "BUILDINGCLASS": null,
+       "DATASOURCENAME": "Jurisdiction",
+       "FEATURECODE": null,
+       "FIPS": "51760",
+       "LASTEDITOR": "VGIN",
+       "LASTUPDATE": 1771891200000,
+       "MUNICIPALITY": "Richmond City",
+       "NUMSTORIES": null,
+       "OBJECTID": 1537998,
+       "SOURCEFEATUREID": "181706172690",
+       "Shape__Area": 61.89462705
+      }
+     },
+     {
+      "attributes": {
+       "BLDGHEIGHT": null,
+       "BUILDINGCLASS": null,
+       "DATASOURCENAME": "Jurisdiction",
+       "FEATURECODE": null,
+       "FIPS": "51760",
+       "LASTEDITOR": "VGIN",
+       "LASTUPDATE": 1771891200000,
+       "MUNICIPALITY": "Richmond City",
+       "NUMSTORIES": null,
+       "OBJECTID": 1538001,
+       "SOURCEFEATUREID": "182353172684",
+       "Shape__Area": 361.34163249
+      }
+     },
+     {
+      "attributes": {
+       "BLDGHEIGHT": null,
+       "BUILDINGCLASS": null,
+       "DATASOURCENAME": "Jurisdiction",
+       "FEATURECODE": null,
+       "FIPS": "51760",
+       "LASTEDITOR": "VGIN",
+       "LASTUPDATE": 1771891200000,
+       "MUNICIPALITY": "Richmond City",
+       "NUMSTORIES": null,
+       "OBJECTID": 1538002,
+       "SOURCEFEATUREID": "181714172701",
+       "Shape__Area": 56.83160619
+      }
+     },
+     {
+      "attributes": {
+       "BLDGHEIGHT": null,
+       "BUILDINGCLASS": null,
+       "DATASOURCENAME": "Jurisdiction",
+       "FEATURECODE": null,
+       "FIPS": "51760",
+       "LASTEDITOR": "VGIN",
+       "LASTUPDATE": 1771891200000,
+       "MUNICIPALITY": "Richmond City",
+       "NUMSTORIES": null,
+       "OBJECTID": 1538010,
+       "SOURCEFEATUREID": "182373172688",
+       "Shape__Area": 830.854106625
+      }
+     },
+     {
+      "attributes": {
+       "BLDGHEIGHT": null,
+       "BUILDINGCLASS": null,
+       "DATASOURCENAME": "Jurisdiction",
+       "FEATURECODE": null,
+       "FIPS": "51760",
+       "LASTEDITOR": "VGIN",
+       "LASTUPDATE": 1771891200000,
+       "MUNICIPALITY": "Richmond City",
+       "NUMSTORIES": null,
+       "OBJECTID": 1538014,
+       "SOURCEFEATUREID": "182266172696",
+       "Shape__Area": 1209.545236635
+      }
+     },
+     {
+      "attributes": {
+       "BLDGHEIGHT": null,
+       "BUILDINGCLASS": null,
+       "DATASOURCENAME": "Jurisdiction",
+       "FEATURECODE": null,
+       "FIPS": "51760",
+       "LASTEDITOR": "VGIN",
+       "LASTUPDATE": 1771891200000,
+       "MUNICIPALITY": "Richmond City",
+       "NUMSTORIES": null,
+       "OBJECTID": 1538046,
+       "SOURCEFEATUREID": "181722172686",
+       "Shape__Area": 2005.209816695
+      }
+     },
+     {
+      "attributes": {
+       "BLDGHEIGHT": null,
+       "BUILDINGCLASS": null,
+       "DATASOURCENAME": "Jurisdiction",
+       "FEATURECODE": null,
+       "FIPS": "51760",
+       "LASTEDITOR": "VGIN",
+       "LASTUPDATE": 1771891200000,
+       "MUNICIPALITY": "Richmond City",
+       "NUMSTORIES": null,
+       "OBJECTID": 1538053,
+       "SOURCEFEATUREID": "182283172719",
+       "Shape__Area": 831.45837096
+      }
+     },
+     {
+      "attributes": {
+       "BLDGHEIGHT": null,
+       "BUILDINGCLASS": null,
+       "DATASOURCENAME": "Jurisdiction",
+       "FEATURECODE": null,
+       "FIPS": "51760",
+       "LASTEDITOR": "VGIN",
+       "LASTUPDATE": 1771891200000,
+       "MUNICIPALITY": "Richmond City",
+       "NUMSTORIES": null,
+       "OBJECTID": 1538061,
+       "SOURCEFEATUREID": "182333172705",
+       "Shape__Area": 1309.304719565
+      }
+     },
+     {
+      "attributes": {
+       "BLDGHEIGHT": null,
+       "BUILDINGCLASS": null,
+       "DATASOURCENAME": "Jurisdiction",
+       "FEATURECODE": null,
+       "FIPS": "51760",
+       "LASTEDITOR": "VGIN",
+       "LASTUPDATE": 1771891200000,
+       "MUNICIPALITY": "Richmond City",
+       "NUMSTORIES": null,
+       "OBJECTID": 1538062,
+       "SOURCEFEATUREID": "182297172730",
+       "Shape__Area": 339.622517345
+      }
+     },
+     {
+      "attributes": {
+       "BLDGHEIGHT": null,
+       "BUILDINGCLASS": null,
+       "DATASOURCENAME": "Jurisdiction",
+       "FEATURECODE": null,
+       "FIPS": "51760",
+       "LASTEDITOR": "VGIN",
+       "LASTUPDATE": 1771891200000,
+       "MUNICIPALITY": "Richmond City",
+       "NUMSTORIES": null,
+       "OBJECTID": 1538063,
+       "SOURCEFEATUREID": "181637172705",
+       "Shape__Area": 1415.3497058
+      }
+     },
+     {
+      "attributes": {
+       "BLDGHEIGHT": null,
+       "BUILDINGCLASS": null,
+       "DATASOURCENAME": "Jurisdiction",
+       "FEATURECODE": null,
+       "FIPS": "51760",
+       "LASTEDITOR": "VGIN",
+       "LASTUPDATE": 1771891200000,
+       "MUNICIPALITY": "Richmond City",
+       "NUMSTORIES": null,
+       "OBJECTID": 1538070,
+       "SOURCEFEATUREID": "182234172719",
+       "Shape__Area": 1190.84062148
+      }
+     },
+     {
+      "attributes": {
+       "BLDGHEIGHT": null,
+       "BUILDINGCLASS": null,
+       "DATASOURCENAME": "Jurisdiction",
+       "FEATURECODE": null,
+       "FIPS": "51760",
+       "LASTEDITOR": "VGIN",
+       "LASTUPDATE": 1771891200000,
+       "MUNICIPALITY": "Richmond City",
+       "NUMSTORIES": null,
+       "OBJECTID": 1538073,
+       "SOURCEFEATUREID": "181944172722",
+       "Shape__Area": 1271.844766985
+      }
+     },
+     {
+      "attributes": {
+       "BLDGHEIGHT": null,
+       "BUILDINGCLASS": null,
+       "DATASOURCENAME": "Jurisdiction",
+       "FEATURECODE": null,
+       "FIPS": "51760",
+       "LASTEDITOR": "VGIN",
+       "LASTUPDATE": 1771891200000,
+       "MUNICIPALITY": "Richmond City",
+       "NUMSTORIES": null,
+       "OBJECTID": 1538087,
+       "SOURCEFEATUREID": "182207172754",
+       "Shape__Area": 0.891749705
+      }
+     },
+     {
+      "attributes": {
+       "BLDGHEIGHT": null,
+       "BUILDINGCLASS": null,
+       "DATASOURCENAME": "Jurisdiction",
+       "FEATURECODE": null,
+       "FIPS": "51760",
+       "LASTEDITOR": "VGIN",
+       "LASTUPDATE": 1771891200000,
+       "MUNICIPALITY": "Richmond City",
+       "NUMSTORIES": null,
+       "OBJECTID": 1538092,
+       "SOURCEFEATUREID": "181627172750",
+       "Shape__Area": 32.90649454
+      }
+     },
+     {
+      "attributes": {
+       "BLDGHEIGHT": null,
+       "BUILDINGCLASS": null,
+       "DATASOURCENAME": "Jurisdiction",
+       "FEATURECODE": null,
+       "FIPS": "51760",
+       "LASTEDITOR": "VGIN",
+       "LASTUPDATE": 1771891200000,
+       "MUNICIPALITY": "Richmond City",
+       "NUMSTORIES": null,
+       "OBJECTID": 1538105,
+       "SOURCEFEATUREID": "182310172748",
+       "Shape__Area": 942.6614837
+      }
+     },
+     {
+      "attributes": {
+       "BLDGHEIGHT": null,
+       "BUILDINGCLASS": null,
+       "DATASOURCENAME": "Jurisdiction",
+       "FEATURECODE": null,
+       "FIPS": "51760",
+       "LASTEDITOR": "VGIN",
+       "LASTUPDATE": 1771891200000,
+       "MUNICIPALITY": "Richmond City",
+       "NUMSTORIES": null,
+       "OBJECTID": 1538106,
+       "SOURCEFEATUREID": "182293172760",
+       "Shape__Area": 376.47930779
+      }
+     },
+     {
+      "attributes": {
+       "BLDGHEIGHT": null,
+       "BUILDINGCLASS": null,
+       "DATASOURCENAME": "Jurisdiction",
+       "FEATURECODE": null,
+       "FIPS": "51760",
+       "LASTEDITOR": "VGIN",
+       "LASTUPDATE": 1771891200000,
+       "MUNICIPALITY": "Richmond City",
+       "NUMSTORIES": null,
+       "OBJECTID": 1538111,
+       "SOURCEFEATUREID": "182293172776",
+       "Shape__Area": 34.897872225
+      }
+     },
+     {
+      "attributes": {
+       "BLDGHEIGHT": null,
+       "BUILDINGCLASS": null,
+       "DATASOURCENAME": "Jurisdiction",
+       "FEATURECODE": null,
+       "FIPS": "51760",
+       "LASTEDITOR": "VGIN",
+       "LASTUPDATE": 1771891200000,
+       "MUNICIPALITY": "Richmond City",
+       "NUMSTORIES": null,
+       "OBJECTID": 1538115,
+       "SOURCEFEATUREID": "182383172762",
+       "Shape__Area": 943.61463015
+      }
+     },
+     {
+      "attributes": {
+       "BLDGHEIGHT": null,
+       "BUILDINGCLASS": null,
+       "DATASOURCENAME": "Jurisdiction",
+       "FEATURECODE": null,
+       "FIPS": "51760",
+       "LASTEDITOR": "VGIN",
+       "LASTUPDATE": 1771891200000,
+       "MUNICIPALITY": "Richmond City",
+       "NUMSTORIES": null,
+       "OBJECTID": 1538116,
+       "SOURCEFEATUREID": "181897172748",
+       "Shape__Area": 1960.87009453
+      }
+     },
+     {
+      "attributes": {
+       "BLDGHEIGHT": null,
+       "BUILDINGCLASS": null,
+       "DATASOURCENAME": "Jurisdiction",
+       "FEATURECODE": null,
+       "FIPS": "51760",
+       "LASTEDITOR": "VGIN",
+       "LASTUPDATE": 1771891200000,
+       "MUNICIPALITY": "Richmond City",
+       "NUMSTORIES": null,
+       "OBJECTID": 1538136,
+       "SOURCEFEATUREID": "182398172783",
+       "Shape__Area": 523.807274595
+      }
+     },
+     {
+      "attributes": {
+       "BLDGHEIGHT": null,
+       "BUILDINGCLASS": null,
+       "DATASOURCENAME": "Jurisdiction",
+       "FEATURECODE": null,
+       "FIPS": "51760",
+       "LASTEDITOR": "VGIN",
+       "LASTUPDATE": 1771891200000,
+       "MUNICIPALITY": "Richmond City",
+       "NUMSTORIES": null,
+       "OBJECTID": 1538139,
+       "SOURCEFEATUREID": "182269172770",
+       "Shape__Area": 1553.668924015
+      }
+     },
+     {
+      "attributes": {
+       "BLDGHEIGHT": null,
+       "BUILDINGCLASS": null,
+       "DATASOURCENAME": "Jurisdiction",
+       "FEATURECODE": null,
+       "FIPS": "51760",
+       "LASTEDITOR": "VGIN",
+       "LASTUPDATE": 1771891200000,
+       "MUNICIPALITY": "Richmond City",
+       "NUMSTORIES": null,
+       "OBJECTID": 1538152,
+       "SOURCEFEATUREID": "182244172801",
+       "Shape__Area": 2.90011017
+      }
+     },
+     {
+      "attributes": {
+       "BLDGHEIGHT": null,
+       "BUILDINGCLASS": null,
+       "DATASOURCENAME": "Jurisdiction",
+       "FEATURECODE": null,
+       "FIPS": "51760",
+       "LASTEDITOR": "VGIN",
+       "LASTUPDATE": 1771891200000,
+       "MUNICIPALITY": "Richmond City",
+       "NUMSTORIES": null,
+       "OBJECTID": 1538154,
+       "SOURCEFEATUREID": "181845172784",
+       "Shape__Area": 1193.10659755
+      }
+     },
+     {
+      "attributes": {
+       "BLDGHEIGHT": null,
+       "BUILDINGCLASS": null,
+       "DATASOURCENAME": "Jurisdiction",
+       "FEATURECODE": null,
+       "FIPS": "51760",
+       "LASTEDITOR": "VGIN",
+       "LASTUPDATE": 1771891200000,
+       "MUNICIPALITY": "Richmond City",
+       "NUMSTORIES": null,
+       "OBJECTID": 1538157,
+       "SOURCEFEATUREID": "182041172758",
+       "Shape__Area": 7126.31427473
+      }
+     },
+     {
+      "attributes": {
+       "BLDGHEIGHT": null,
+       "BUILDINGCLASS": null,
+       "DATASOURCENAME": "Jurisdiction",
+       "FEATURECODE": null,
+       "FIPS": "51760",
+       "LASTEDITOR": "VGIN",
+       "LASTUPDATE": 1771891200000,
+       "MUNICIPALITY": "Richmond City",
+       "NUMSTORIES": null,
+       "OBJECTID": 1538166,
+       "SOURCEFEATUREID": "182218172796",
+       "Shape__Area": 2331.350996265
+      }
+     },
+     {
+      "attributes": {
+       "BLDGHEIGHT": null,
+       "BUILDINGCLASS": null,
+       "DATASOURCENAME": "Jurisdiction",
+       "FEATURECODE": null,
+       "FIPS": "51760",
+       "LASTEDITOR": "VGIN",
+       "LASTUPDATE": 1771891200000,
+       "MUNICIPALITY": "Richmond City",
+       "NUMSTORIES": null,
+       "OBJECTID": 1538171,
+       "SOURCEFEATUREID": "182302172821",
+       "Shape__Area": 1107.164424035
+      }
+     },
+     {
+      "attributes": {
+       "BLDGHEIGHT": null,
+       "BUILDINGCLASS": null,
+       "DATASOURCENAME": "Jurisdiction",
+       "FEATURECODE": null,
+       "FIPS": "51760",
+       "LASTEDITOR": "VGIN",
+       "LASTUPDATE": 1771891200000,
+       "MUNICIPALITY": "Richmond City",
+       "NUMSTORIES": null,
+       "OBJECTID": 1538172,
+       "SOURCEFEATUREID": "182260172846",
+       "Shape__Area": 15.17556229
+      }
+     },
+     {
+      "attributes": {
+       "BLDGHEIGHT": null,
+       "BUILDINGCLASS": null,
+       "DATASOURCENAME": "Jurisdiction",
+       "FEATURECODE": null,
+       "FIPS": "51760",
+       "LASTEDITOR": "VGIN",
+       "LASTUPDATE": 1771891200000,
+       "MUNICIPALITY": "Richmond City",
+       "NUMSTORIES": null,
+       "OBJECTID": 1538173,
+       "SOURCEFEATUREID": "182109172818",
+       "Shape__Area": 1765.42570318
+      }
+     },
+     {
+      "attributes": {
+       "BLDGHEIGHT": null,
+       "BUILDINGCLASS": null,
+       "DATASOURCENAME": "Jurisdiction",
+       "FEATURECODE": null,
+       "FIPS": "51760",
+       "LASTEDITOR": "VGIN",
+       "LASTUPDATE": 1771891200000,
+       "MUNICIPALITY": "Richmond City",
+       "NUMSTORIES": null,
+       "OBJECTID": 1538174,
+       "SOURCEFEATUREID": "182265172841",
+       "Shape__Area": 296.457709455
+      }
+     },
+     {
+      "attributes": {
+       "BLDGHEIGHT": null,
+       "BUILDINGCLASS": null,
+       "DATASOURCENAME": "Jurisdiction",
+       "FEATURECODE": null,
+       "FIPS": "51760",
+       "LASTEDITOR": "VGIN",
+       "LASTUPDATE": 1771891200000,
+       "MUNICIPALITY": "Richmond City",
+       "NUMSTORIES": null,
+       "OBJECTID": 1538183,
+       "SOURCEFEATUREID": "182115172856",
+       "Shape__Area": 64.833642675
+      }
+     },
+     {
+      "attributes": {
+       "BLDGHEIGHT": null,
+       "BUILDINGCLASS": null,
+       "DATASOURCENAME": "Jurisdiction",
+       "FEATURECODE": null,
+       "FIPS": "51760",
+       "LASTEDITOR": "VGIN",
+       "LASTUPDATE": 1771891200000,
+       "MUNICIPALITY": "Richmond City",
+       "NUMSTORIES": null,
+       "OBJECTID": 1538191,
+       "SOURCEFEATUREID": "182339172820",
+       "Shape__Area": 4296.801967725
+      }
+     },
+     {
+      "attributes": {
+       "BLDGHEIGHT": null,
+       "BUILDINGCLASS": null,
+       "DATASOURCENAME": "Jurisdiction",
+       "FEATURECODE": null,
+       "FIPS": "51760",
+       "LASTEDITOR": "VGIN",
+       "LASTUPDATE": 1771891200000,
+       "MUNICIPALITY": "Richmond City",
+       "NUMSTORIES": null,
+       "OBJECTID": 1538195,
+       "SOURCEFEATUREID": "182077172841",
+       "Shape__Area": 1785.130732725
+      }
+     },
+     {
+      "attributes": {
+       "BLDGHEIGHT": null,
+       "BUILDINGCLASS": null,
+       "DATASOURCENAME": "Jurisdiction",
+       "FEATURECODE": null,
+       "FIPS": "51760",
+       "LASTEDITOR": "VGIN",
+       "LASTUPDATE": 1771891200000,
+       "MUNICIPALITY": "Richmond City",
+       "NUMSTORIES": null,
+       "OBJECTID": 1538204,
+       "SOURCEFEATUREID": "181952172838",
+       "Shape__Area": 2557.789055085
+      }
+     },
+     {
+      "attributes": {
+       "BLDGHEIGHT": null,
+       "BUILDINGCLASS": null,
+       "DATASOURCENAME": "Jurisdiction",
+       "FEATURECODE": null,
+       "FIPS": "51760",
+       "LASTEDITOR": "VGIN",
+       "LASTUPDATE": 1771891200000,
+       "MUNICIPALITY": "Richmond City",
+       "NUMSTORIES": null,
+       "OBJECTID": 1538208,
+       "SOURCEFEATUREID": "182148172855",
+       "Shape__Area": 925.83482052
+      }
+     },
+     {
+      "attributes": {
+       "BLDGHEIGHT": null,
+       "BUILDINGCLASS": null,
+       "DATASOURCENAME": "Jurisdiction",
+       "FEATURECODE": null,
+       "FIPS": "51760",
+       "LASTEDITOR": "VGIN",
+       "LASTUPDATE": 1771891200000,
+       "MUNICIPALITY": "Richmond City",
+       "NUMSTORIES": null,
+       "OBJECTID": 1538213,
+       "SOURCEFEATUREID": "181996172875",
+       "Shape__Area": 81.9089202
+      }
+     }
+    ],
+    "exceededTransferLimit": true
+   }
+  },
+  {
+   "url": "https://vginmaps.vdem.virginia.gov/arcgis/rest/services/VA_Base_Layers/VA_Building_Footprints/FeatureServer/0/query",
+   "params": {
+    "f": "json",
+    "outFields": "BLDGHEIGHT,BUILDINGCLASS,DATASOURCENAME,FEATURECODE,FIPS,LASTEDITOR,LASTUPDATE,MUNICIPALITY,NUMSTORIES,OBJECTID,SOURCEFEATUREID,Shape__Area",
+    "resultRecordCount": "50",
+    "returnGeometry": "false",
+    "geometry": "{\"x\": -77.436, \"y\": 37.5407, \"spatialReference\": {\"wkid\": 4326}}",
+    "geometryType": "esriGeometryPoint",
+    "inSR": "4326",
+    "spatialRel": "esriSpatialRelIntersects",
+    "distance": "800.0",
+    "units": "esriSRUnit_Meter",
+    "resultOffset": "90"
+   },
+   "response": {
+    "objectIdFieldName": "OBJECTID",
+    "globalIdFieldName": "",
+    "geometryType": "esriGeometryPolygon",
+    "spatialReference": {
+     "wkid": 102100,
+     "latestWkid": 3857
+    },
+    "fields": [
+     {
+      "name": "BLDGHEIGHT",
+      "alias": "Building Height",
+      "type": "esriFieldTypeInteger"
+     },
+     {
+      "name": "BUILDINGCLASS",
+      "alias": "Building Class",
+      "type": "esriFieldTypeSmallInteger"
+     },
+     {
+      "name": "DATASOURCENAME",
+      "alias": "Data Source",
+      "type": "esriFieldTypeString",
+      "length": 100
+     },
+     {
+      "name": "FEATURECODE",
+      "alias": "Facility Site Code",
+      "type": "esriFieldTypeString",
+      "length": 100
+     },
+     {
+      "name": "FIPS",
+      "alias": "Jurisdiction FIPS Code",
+      "type": "esriFieldTypeString",
+      "length": 7
+     },
+     {
+      "name": "LASTEDITOR",
+      "alias": "Last Editor",
+      "type": "esriFieldTypeString",
+      "length": 50
+     },
+     {
+      "name": "LASTUPDATE",
+      "alias": "Last Update From Locality",
+      "type": "esriFieldTypeDate",
+      "length": 8
+     },
+     {
+      "name": "MUNICIPALITY",
+      "alias": "Jurisdiction Name",
+      "type": "esriFieldTypeString",
+      "length": 100
+     },
+     {
+      "name": "NUMSTORIES",
+      "alias": "Number of Stories",
+      "type": "esriFieldTypeSmallInteger"
+     },
+     {
+      "name": "OBJECTID",
+      "alias": "OBJECTID",
+      "type": "esriFieldTypeOID"
+     },
+     {
+      "name": "SOURCEFEATUREID",
+      "alias": "GEO ID",
+      "type": "esriFieldTypeString",
+      "length": 20
+     },
+     {
+      "name": "Shape__Area",
+      "alias": "SHAPE.STArea()",
+      "type": "esriFieldTypeDouble"
+     }
+    ],
+    "features": [
+     {
+      "attributes": {
+       "BLDGHEIGHT": null,
+       "BUILDINGCLASS": null,
+       "DATASOURCENAME": "Jurisdiction",
+       "FEATURECODE": null,
+       "FIPS": "51760",
+       "LASTEDITOR": "VGIN",
+       "LASTUPDATE": 1771891200000,
+       "MUNICIPALITY": "Richmond City",
+       "NUMSTORIES": null,
+       "OBJECTID": 1538213,
+       "SOURCEFEATUREID": "181996172875",
+       "Shape__Area": 81.9089202
+      }
+     },
+     {
+      "attributes": {
+       "BLDGHEIGHT": null,
+       "BUILDINGCLASS": null,
+       "DATASOURCENAME": "Jurisdiction",
+       "FEATURECODE": null,
+       "FIPS": "51760",
+       "LASTEDITOR": "VGIN",
+       "LASTUPDATE": 1771891200000,
+       "MUNICIPALITY": "Richmond City",
+       "NUMSTORIES": null,
+       "OBJECTID": 1538214,
+       "SOURCEFEATUREID": "181732172869",
+       "Shape__Area": 671.158356735
+      }
+     },
+     {
+      "attributes": {
+       "BLDGHEIGHT": null,
+       "BUILDINGCLASS": null,
+       "DATASOURCENAME": "Jurisdiction",
+       "FEATURECODE": null,
+       "FIPS": "51760",
+       "LASTEDITOR": "VGIN",
+       "LASTUPDATE": 1771891200000,
+       "MUNICIPALITY": "Richmond City",
+       "NUMSTORIES": null,
+       "OBJECTID": 1538216,
+       "SOURCEFEATUREID": "182134172864",
+       "Shape__Area": 407.293453765
+      }
+     },
+     {
+      "attributes": {
+       "BLDGHEIGHT": null,
+       "BUILDINGCLASS": null,
+       "DATASOURCENAME": "Jurisdiction",
+       "FEATURECODE": null,
+       "FIPS": "51760",
+       "LASTEDITOR": "VGIN",
+       "LASTUPDATE": 1771891200000,
+       "MUNICIPALITY": "Richmond City",
+       "NUMSTORIES": null,
+       "OBJECTID": 1538217,
+       "SOURCEFEATUREID": "181983172882",
+       "Shape__Area": 18.103509035
+      }
+     },
+     {
+      "attributes": {
+       "BLDGHEIGHT": null,
+       "BUILDINGCLASS": null,
+       "DATASOURCENAME": "Jurisdiction",
+       "FEATURECODE": null,
+       "FIPS": "51760",
+       "LASTEDITOR": "VGIN",
+       "LASTUPDATE": 1771891200000,
+       "MUNICIPALITY": "Richmond City",
+       "NUMSTORIES": null,
+       "OBJECTID": 1538225,
+       "SOURCEFEATUREID": "182132172875",
+       "Shape__Area": 309.282159105
+      }
+     },
+     {
+      "attributes": {
+       "BLDGHEIGHT": null,
+       "BUILDINGCLASS": null,
+       "DATASOURCENAME": "Jurisdiction",
+       "FEATURECODE": null,
+       "FIPS": "51760",
+       "LASTEDITOR": "VGIN",
+       "LASTUPDATE": 1771891200000,
+       "MUNICIPALITY": "Richmond City",
+       "NUMSTORIES": null,
+       "OBJECTID": 1538227,
+       "SOURCEFEATUREID": "182360172860",
+       "Shape__Area": 2433.57697492
+      }
+     },
+     {
+      "attributes": {
+       "BLDGHEIGHT": null,
+       "BUILDINGCLASS": null,
+       "DATASOURCENAME": "Jurisdiction",
+       "FEATURECODE": null,
+       "FIPS": "51760",
+       "LASTEDITOR": "VGIN",
+       "LASTUPDATE": 1771891200000,
+       "MUNICIPALITY": "Richmond City",
+       "NUMSTORIES": null,
+       "OBJECTID": 1538237,
+       "SOURCEFEATUREID": "182261172899",
+       "Shape__Area": 73.373316255
+      }
+     },
+     {
+      "attributes": {
+       "BLDGHEIGHT": null,
+       "BUILDINGCLASS": null,
+       "DATASOURCENAME": "Jurisdiction",
+       "FEATURECODE": null,
+       "FIPS": "51760",
+       "LASTEDITOR": "VGIN",
+       "LASTUPDATE": 1771891200000,
+       "MUNICIPALITY": "Richmond City",
+       "NUMSTORIES": null,
+       "OBJECTID": 1538238,
+       "SOURCEFEATUREID": "181984172892",
+       "Shape__Area": 215.975029335
+      }
+     },
+     {
+      "attributes": {
+       "BLDGHEIGHT": null,
+       "BUILDINGCLASS": null,
+       "DATASOURCENAME": "Jurisdiction",
+       "FEATURECODE": null,
+       "FIPS": "51760",
+       "LASTEDITOR": "VGIN",
+       "LASTUPDATE": 1771891200000,
+       "MUNICIPALITY": "Richmond City",
+       "NUMSTORIES": null,
+       "OBJECTID": 1538240,
+       "SOURCEFEATUREID": "182033172878",
+       "Shape__Area": 1988.912757605
+      }
+     },
+     {
+      "attributes": {
+       "BLDGHEIGHT": null,
+       "BUILDINGCLASS": null,
+       "DATASOURCENAME": "Jurisdiction",
+       "FEATURECODE": null,
+       "FIPS": "51760",
+       "LASTEDITOR": "VGIN",
+       "LASTUPDATE": 1771891200000,
+       "MUNICIPALITY": "Richmond City",
+       "NUMSTORIES": null,
+       "OBJECTID": 1538245,
+       "SOURCEFEATUREID": "182228172881",
+       "Shape__Area": 1748.62305472
+      }
+     },
+     {
+      "attributes": {
+       "BLDGHEIGHT": null,
+       "BUILDINGCLASS": null,
+       "DATASOURCENAME": "Jurisdiction",
+       "FEATURECODE": null,
+       "FIPS": "51760",
+       "LASTEDITOR": "VGIN",
+       "LASTUPDATE": 1771891200000,
+       "MUNICIPALITY": "Richmond City",
+       "NUMSTORIES": null,
+       "OBJECTID": 1538249,
+       "SOURCEFEATUREID": "182160172912",
+       "Shape__Area": 55.402701025
+      }
+     },
+     {
+      "attributes": {
+       "BLDGHEIGHT": null,
+       "BUILDINGCLASS": null,
+       "DATASOURCENAME": "Jurisdiction",
+       "FEATURECODE": null,
+       "FIPS": "51760",
+       "LASTEDITOR": "VGIN",
+       "LASTUPDATE": 1771891200000,
+       "MUNICIPALITY": "Richmond City",
+       "NUMSTORIES": null,
+       "OBJECTID": 1538250,
+       "SOURCEFEATUREID": "182107172883",
+       "Shape__Area": 1872.205017915
+      }
+     },
+     {
+      "attributes": {
+       "BLDGHEIGHT": null,
+       "BUILDINGCLASS": null,
+       "DATASOURCENAME": "Jurisdiction",
+       "FEATURECODE": null,
+       "FIPS": "51760",
+       "LASTEDITOR": "VGIN",
+       "LASTUPDATE": 1771891200000,
+       "MUNICIPALITY": "Richmond City",
+       "NUMSTORIES": null,
+       "OBJECTID": 1538255,
+       "SOURCEFEATUREID": "182299172894",
+       "Shape__Area": 969.098807255
+      }
+     },
+     {
+      "attributes": {
+       "BLDGHEIGHT": null,
+       "BUILDINGCLASS": null,
+       "DATASOURCENAME": "Jurisdiction",
+       "FEATURECODE": null,
+       "FIPS": "51760",
+       "LASTEDITOR": "VGIN",
+       "LASTUPDATE": 1771891200000,
+       "MUNICIPALITY": "Richmond City",
+       "NUMSTORIES": null,
+       "OBJECTID": 1538256,
+       "SOURCEFEATUREID": "182258172909",
+       "Shape__Area": 134.09777296
+      }
+     },
+     {
+      "attributes": {
+       "BLDGHEIGHT": null,
+       "BUILDINGCLASS": null,
+       "DATASOURCENAME": "Jurisdiction",
+       "FEATURECODE": null,
+       "FIPS": "51760",
+       "LASTEDITOR": "VGIN",
+       "LASTUPDATE": 1771891200000,
+       "MUNICIPALITY": "Richmond City",
+       "NUMSTORIES": null,
+       "OBJECTID": 1538259,
+       "SOURCEFEATUREID": "182272172919",
+       "Shape__Area": 22.26254864
+      }
+     },
+     {
+      "attributes": {
+       "BLDGHEIGHT": null,
+       "BUILDINGCLASS": null,
+       "DATASOURCENAME": "Jurisdiction",
+       "FEATURECODE": null,
+       "FIPS": "51760",
+       "LASTEDITOR": "VGIN",
+       "LASTUPDATE": 1771891200000,
+       "MUNICIPALITY": "Richmond City",
+       "NUMSTORIES": null,
+       "OBJECTID": 1538261,
+       "SOURCEFEATUREID": "181681172901",
+       "Shape__Area": 582.73956294
+      }
+     },
+     {
+      "attributes": {
+       "BLDGHEIGHT": null,
+       "BUILDINGCLASS": null,
+       "DATASOURCENAME": "Jurisdiction",
+       "FEATURECODE": null,
+       "FIPS": "51760",
+       "LASTEDITOR": "VGIN",
+       "LASTUPDATE": 1771891200000,
+       "MUNICIPALITY": "Richmond City",
+       "NUMSTORIES": null,
+       "OBJECTID": 1538262,
+       "SOURCEFEATUREID": "182012172913",
+       "Shape__Area": 146.00185946
+      }
+     },
+     {
+      "attributes": {
+       "BLDGHEIGHT": null,
+       "BUILDINGCLASS": null,
+       "DATASOURCENAME": "Jurisdiction",
+       "FEATURECODE": null,
+       "FIPS": "51760",
+       "LASTEDITOR": "VGIN",
+       "LASTUPDATE": 1771891200000,
+       "MUNICIPALITY": "Richmond City",
+       "NUMSTORIES": null,
+       "OBJECTID": 1538264,
+       "SOURCEFEATUREID": "182413172898",
+       "Shape__Area": 1713.610496375
+      }
+     },
+     {
+      "attributes": {
+       "BLDGHEIGHT": null,
+       "BUILDINGCLASS": null,
+       "DATASOURCENAME": "Jurisdiction",
+       "FEATURECODE": null,
+       "FIPS": "51760",
+       "LASTEDITOR": "VGIN",
+       "LASTUPDATE": 1771891200000,
+       "MUNICIPALITY": "Richmond City",
+       "NUMSTORIES": null,
+       "OBJECTID": 1538270,
+       "SOURCEFEATUREID": "182210172930",
+       "Shape__Area": 4.67507684
+      }
+     },
+     {
+      "attributes": {
+       "BLDGHEIGHT": null,
+       "BUILDINGCLASS": null,
+       "DATASOURCENAME": "Jurisdiction",
+       "FEATURECODE": null,
+       "FIPS": "51760",
+       "LASTEDITOR": "VGIN",
+       "LASTUPDATE": 1771891200000,
+       "MUNICIPALITY": "Richmond City",
+       "NUMSTORIES": null,
+       "OBJECTID": 1538271,
+       "SOURCEFEATUREID": "182002172921",
+       "Shape__Area": 191.72800599
+      }
+     },
+     {
+      "attributes": {
+       "BLDGHEIGHT": null,
+       "BUILDINGCLASS": null,
+       "DATASOURCENAME": "Jurisdiction",
+       "FEATURECODE": null,
+       "FIPS": "51760",
+       "LASTEDITOR": "VGIN",
+       "LASTUPDATE": 1771891200000,
+       "MUNICIPALITY": "Richmond City",
+       "NUMSTORIES": null,
+       "OBJECTID": 1538274,
+       "SOURCEFEATUREID": "182276172926",
+       "Shape__Area": 146.027135945
+      }
+     },
+     {
+      "attributes": {
+       "BLDGHEIGHT": null,
+       "BUILDINGCLASS": null,
+       "DATASOURCENAME": "Jurisdiction",
+       "FEATURECODE": null,
+       "FIPS": "51760",
+       "LASTEDITOR": "VGIN",
+       "LASTUPDATE": 1771891200000,
+       "MUNICIPALITY": "Richmond City",
+       "NUMSTORIES": null,
+       "OBJECTID": 1538275,
+       "SOURCEFEATUREID": "181763172909",
+       "Shape__Area": 1164.74654487
+      }
+     },
+     {
+      "attributes": {
+       "BLDGHEIGHT": null,
+       "BUILDINGCLASS": null,
+       "DATASOURCENAME": "Jurisdiction",
+       "FEATURECODE": null,
+       "FIPS": "51760",
+       "LASTEDITOR": "VGIN",
+       "LASTUPDATE": 1771891200000,
+       "MUNICIPALITY": "Richmond City",
+       "NUMSTORIES": null,
+       "OBJECTID": 1538277,
+       "SOURCEFEATUREID": "182329172930",
+       "Shape__Area": 78.92143978
+      }
+     },
+     {
+      "attributes": {
+       "BLDGHEIGHT": null,
+       "BUILDINGCLASS": null,
+       "DATASOURCENAME": "Jurisdiction",
+       "FEATURECODE": null,
+       "FIPS": "51760",
+       "LASTEDITOR": "VGIN",
+       "LASTUPDATE": 1771891200000,
+       "MUNICIPALITY": "Richmond City",
+       "NUMSTORIES": null,
+       "OBJECTID": 1538282,
+       "SOURCEFEATUREID": "182268172917",
+       "Shape__Area": 189.34845487
+      }
+     },
+     {
+      "attributes": {
+       "BLDGHEIGHT": null,
+       "BUILDINGCLASS": null,
+       "DATASOURCENAME": "Jurisdiction",
+       "FEATURECODE": null,
+       "FIPS": "51760",
+       "LASTEDITOR": "VGIN",
+       "LASTUPDATE": 1771891200000,
+       "MUNICIPALITY": "Richmond City",
+       "NUMSTORIES": null,
+       "OBJECTID": 1538284,
+       "SOURCEFEATUREID": "182332172935",
+       "Shape__Area": 72.725311475
+      }
+     },
+     {
+      "attributes": {
+       "BLDGHEIGHT": null,
+       "BUILDINGCLASS": null,
+       "DATASOURCENAME": "Jurisdiction",
+       "FEATURECODE": null,
+       "FIPS": "51760",
+       "LASTEDITOR": "VGIN",
+       "LASTUPDATE": 1771891200000,
+       "MUNICIPALITY": "Richmond City",
+       "NUMSTORIES": null,
+       "OBJECTID": 1538285,
+       "SOURCEFEATUREID": "182131172933",
+       "Shape__Area": 63.92383366
+      }
+     },
+     {
+      "attributes": {
+       "BLDGHEIGHT": null,
+       "BUILDINGCLASS": null,
+       "DATASOURCENAME": "Jurisdiction",
+       "FEATURECODE": null,
+       "FIPS": "51760",
+       "LASTEDITOR": "VGIN",
+       "LASTUPDATE": 1771891200000,
+       "MUNICIPALITY": "Richmond City",
+       "NUMSTORIES": null,
+       "OBJECTID": 1538287,
+       "SOURCEFEATUREID": "182072172922",
+       "Shape__Area": 637.42876154
+      }
+     },
+     {
+      "attributes": {
+       "BLDGHEIGHT": null,
+       "BUILDINGCLASS": null,
+       "DATASOURCENAME": "Jurisdiction",
+       "FEATURECODE": null,
+       "FIPS": "51760",
+       "LASTEDITOR": "VGIN",
+       "LASTUPDATE": 1771891200000,
+       "MUNICIPALITY": "Richmond City",
+       "NUMSTORIES": null,
+       "OBJECTID": 1538291,
+       "SOURCEFEATUREID": "182335172939",
+       "Shape__Area": 73.288056995
+      }
+     },
+     {
+      "attributes": {
+       "BLDGHEIGHT": null,
+       "BUILDINGCLASS": null,
+       "DATASOURCENAME": "Jurisdiction",
+       "FEATURECODE": null,
+       "FIPS": "51760",
+       "LASTEDITOR": "VGIN",
+       "LASTUPDATE": 1771891200000,
+       "MUNICIPALITY": "Richmond City",
+       "NUMSTORIES": null,
+       "OBJECTID": 1538295,
+       "SOURCEFEATUREID": "182338172943",
+       "Shape__Area": 79.22488062
+      }
+     },
+     {
+      "attributes": {
+       "BLDGHEIGHT": null,
+       "BUILDINGCLASS": null,
+       "DATASOURCENAME": "Jurisdiction",
+       "FEATURECODE": null,
+       "FIPS": "51760",
+       "LASTEDITOR": "VGIN",
+       "LASTUPDATE": 1771891200000,
+       "MUNICIPALITY": "Richmond City",
+       "NUMSTORIES": null,
+       "OBJECTID": 1538302,
+       "SOURCEFEATUREID": "181945172926",
+       "Shape__Area": 1058.396175915
+      }
+     },
+     {
+      "attributes": {
+       "BLDGHEIGHT": null,
+       "BUILDINGCLASS": null,
+       "DATASOURCENAME": "Jurisdiction",
+       "FEATURECODE": null,
+       "FIPS": "51760",
+       "LASTEDITOR": "VGIN",
+       "LASTUPDATE": 1771891200000,
+       "MUNICIPALITY": "Richmond City",
+       "NUMSTORIES": null,
+       "OBJECTID": 1538303,
+       "SOURCEFEATUREID": "182381172921",
+       "Shape__Area": 2173.68532378
+      }
+     },
+     {
+      "attributes": {
+       "BLDGHEIGHT": null,
+       "BUILDINGCLASS": null,
+       "DATASOURCENAME": "Jurisdiction",
+       "FEATURECODE": null,
+       "FIPS": "51760",
+       "LASTEDITOR": "VGIN",
+       "LASTUPDATE": 1771891200000,
+       "MUNICIPALITY": "Richmond City",
+       "NUMSTORIES": null,
+       "OBJECTID": 1538305,
+       "SOURCEFEATUREID": "181958172942",
+       "Shape__Area": 129.293550405
+      }
+     },
+     {
+      "attributes": {
+       "BLDGHEIGHT": null,
+       "BUILDINGCLASS": null,
+       "DATASOURCENAME": "Jurisdiction",
+       "FEATURECODE": null,
+       "FIPS": "51760",
+       "LASTEDITOR": "VGIN",
+       "LASTUPDATE": 1771891200000,
+       "MUNICIPALITY": "Richmond City",
+       "NUMSTORIES": null,
+       "OBJECTID": 1538308,
+       "SOURCEFEATUREID": "182253172929",
+       "Shape__Area": 1174.46062592
+      }
+     },
+     {
+      "attributes": {
+       "BLDGHEIGHT": null,
+       "BUILDINGCLASS": null,
+       "DATASOURCENAME": "Jurisdiction",
+       "FEATURECODE": null,
+       "FIPS": "51760",
+       "LASTEDITOR": "VGIN",
+       "LASTUPDATE": 1771891200000,
+       "MUNICIPALITY": "Richmond City",
+       "NUMSTORIES": null,
+       "OBJECTID": 1538309,
+       "SOURCEFEATUREID": "182325172946",
+       "Shape__Area": 211.473992735
+      }
+     },
+     {
+      "attributes": {
+       "BLDGHEIGHT": null,
+       "BUILDINGCLASS": null,
+       "DATASOURCENAME": "Jurisdiction",
+       "FEATURECODE": null,
+       "FIPS": "51760",
+       "LASTEDITOR": "VGIN",
+       "LASTUPDATE": 1771891200000,
+       "MUNICIPALITY": "Richmond City",
+       "NUMSTORIES": null,
+       "OBJECTID": 1538311,
+       "SOURCEFEATUREID": "181968172943",
+       "Shape__Area": 290.538387425
+      }
+     },
+     {
+      "attributes": {
+       "BLDGHEIGHT": null,
+       "BUILDINGCLASS": null,
+       "DATASOURCENAME": "Jurisdiction",
+       "FEATURECODE": null,
+       "FIPS": "51760",
+       "LASTEDITOR": "VGIN",
+       "LASTUPDATE": 1771891200000,
+       "MUNICIPALITY": "Richmond City",
+       "NUMSTORIES": null,
+       "OBJECTID": 1538316,
+       "SOURCEFEATUREID": "181712172942",
+       "Shape__Area": 532.618424165
+      }
+     },
+     {
+      "attributes": {
+       "BLDGHEIGHT": null,
+       "BUILDINGCLASS": null,
+       "DATASOURCENAME": "Jurisdiction",
+       "FEATURECODE": null,
+       "FIPS": "51760",
+       "LASTEDITOR": "VGIN",
+       "LASTUPDATE": 1771891200000,
+       "MUNICIPALITY": "Richmond City",
+       "NUMSTORIES": null,
+       "OBJECTID": 1538317,
+       "SOURCEFEATUREID": "182048172944",
+       "Shape__Area": 736.60395231
+      }
+     },
+     {
+      "attributes": {
+       "BLDGHEIGHT": null,
+       "BUILDINGCLASS": null,
+       "DATASOURCENAME": "Jurisdiction",
+       "FEATURECODE": null,
+       "FIPS": "51760",
+       "LASTEDITOR": "VGIN",
+       "LASTUPDATE": 1771891200000,
+       "MUNICIPALITY": "Richmond City",
+       "NUMSTORIES": null,
+       "OBJECTID": 1538318,
+       "SOURCEFEATUREID": "182151172936",
+       "Shape__Area": 1941.019159885
+      }
+     },
+     {
+      "attributes": {
+       "BLDGHEIGHT": null,
+       "BUILDINGCLASS": null,
+       "DATASOURCENAME": "Jurisdiction",
+       "FEATURECODE": null,
+       "FIPS": "51760",
+       "LASTEDITOR": "VGIN",
+       "LASTUPDATE": 1771891200000,
+       "MUNICIPALITY": "Richmond City",
+       "NUMSTORIES": null,
+       "OBJECTID": 1538346,
+       "SOURCEFEATUREID": "181641172995",
+       "Shape__Area": 361.701290555
+      }
+     },
+     {
+      "attributes": {
+       "BLDGHEIGHT": null,
+       "BUILDINGCLASS": null,
+       "DATASOURCENAME": "Jurisdiction",
+       "FEATURECODE": null,
+       "FIPS": "51760",
+       "LASTEDITOR": "VGIN",
+       "LASTUPDATE": 1771891200000,
+       "MUNICIPALITY": "Richmond City",
+       "NUMSTORIES": null,
+       "OBJECTID": 1538371,
+       "SOURCEFEATUREID": "181646173015",
+       "Shape__Area": 438.86977451
+      }
+     },
+     {
+      "attributes": {
+       "BLDGHEIGHT": null,
+       "BUILDINGCLASS": null,
+       "DATASOURCENAME": "Jurisdiction",
+       "FEATURECODE": null,
+       "FIPS": "51760",
+       "LASTEDITOR": "VGIN",
+       "LASTUPDATE": 1771891200000,
+       "MUNICIPALITY": "Richmond City",
+       "NUMSTORIES": null,
+       "OBJECTID": 1538386,
+       "SOURCEFEATUREID": "181628173023",
+       "Shape__Area": 236.817821835
+      }
+     },
+     {
+      "attributes": {
+       "BLDGHEIGHT": null,
+       "BUILDINGCLASS": null,
+       "DATASOURCENAME": "Jurisdiction",
+       "FEATURECODE": null,
+       "FIPS": "51760",
+       "LASTEDITOR": "VGIN",
+       "LASTUPDATE": 1771891200000,
+       "MUNICIPALITY": "Richmond City",
+       "NUMSTORIES": null,
+       "OBJECTID": 1538391,
+       "SOURCEFEATUREID": "181678173040",
+       "Shape__Area": 55.222708325
+      }
+     },
+     {
+      "attributes": {
+       "BLDGHEIGHT": null,
+       "BUILDINGCLASS": null,
+       "DATASOURCENAME": "Jurisdiction",
+       "FEATURECODE": null,
+       "FIPS": "51760",
+       "LASTEDITOR": "VGIN",
+       "LASTUPDATE": 1771891200000,
+       "MUNICIPALITY": "Richmond City",
+       "NUMSTORIES": null,
+       "OBJECTID": 1538401,
+       "SOURCEFEATUREID": "181684173048",
+       "Shape__Area": 47.627340605
+      }
+     },
+     {
+      "attributes": {
+       "BLDGHEIGHT": null,
+       "BUILDINGCLASS": null,
+       "DATASOURCENAME": "Jurisdiction",
+       "FEATURECODE": null,
+       "FIPS": "51760",
+       "LASTEDITOR": "VGIN",
+       "LASTUPDATE": 1771891200000,
+       "MUNICIPALITY": "Richmond City",
+       "NUMSTORIES": null,
+       "OBJECTID": 1538414,
+       "SOURCEFEATUREID": "181688173057",
+       "Shape__Area": 113.91118168
+      }
+     },
+     {
+      "attributes": {
+       "BLDGHEIGHT": null,
+       "BUILDINGCLASS": null,
+       "DATASOURCENAME": "Jurisdiction",
+       "FEATURECODE": null,
+       "FIPS": "51760",
+       "LASTEDITOR": "VGIN",
+       "LASTUPDATE": 1771891200000,
+       "MUNICIPALITY": "Richmond City",
+       "NUMSTORIES": null,
+       "OBJECTID": 1538415,
+       "SOURCEFEATUREID": "181596173035",
+       "Shape__Area": 1074.44194566
+      }
+     },
+     {
+      "attributes": {
+       "BLDGHEIGHT": null,
+       "BUILDINGCLASS": null,
+       "DATASOURCENAME": "Jurisdiction",
+       "FEATURECODE": null,
+       "FIPS": "51760",
+       "LASTEDITOR": "VGIN",
+       "LASTUPDATE": 1771891200000,
+       "MUNICIPALITY": "Richmond City",
+       "NUMSTORIES": null,
+       "OBJECTID": 1538426,
+       "SOURCEFEATUREID": "181674173057",
+       "Shape__Area": 450.522076795
+      }
+     },
+     {
+      "attributes": {
+       "BLDGHEIGHT": null,
+       "BUILDINGCLASS": null,
+       "DATASOURCENAME": "Jurisdiction",
+       "FEATURECODE": null,
+       "FIPS": "51760",
+       "LASTEDITOR": "VGIN",
+       "LASTUPDATE": 1771891200000,
+       "MUNICIPALITY": "Richmond City",
+       "NUMSTORIES": null,
+       "OBJECTID": 1538428,
+       "SOURCEFEATUREID": "181644173066",
+       "Shape__Area": 105.89133377
+      }
+     },
+     {
+      "attributes": {
+       "BLDGHEIGHT": null,
+       "BUILDINGCLASS": null,
+       "DATASOURCENAME": "Jurisdiction",
+       "FEATURECODE": null,
+       "FIPS": "51760",
+       "LASTEDITOR": "VGIN",
+       "LASTUPDATE": 1771891200000,
+       "MUNICIPALITY": "Richmond City",
+       "NUMSTORIES": null,
+       "OBJECTID": 1538432,
+       "SOURCEFEATUREID": "181652173073",
+       "Shape__Area": 21.83836751
+      }
+     },
+     {
+      "attributes": {
+       "BLDGHEIGHT": null,
+       "BUILDINGCLASS": null,
+       "DATASOURCENAME": "Jurisdiction",
+       "FEATURECODE": null,
+       "FIPS": "51760",
+       "LASTEDITOR": "VGIN",
+       "LASTUPDATE": 1771891200000,
+       "MUNICIPALITY": "Richmond City",
+       "NUMSTORIES": null,
+       "OBJECTID": 1538433,
+       "SOURCEFEATUREID": "181663173061",
+       "Shape__Area": 305.54169148
+      }
+     },
+     {
+      "attributes": {
+       "BLDGHEIGHT": null,
+       "BUILDINGCLASS": null,
+       "DATASOURCENAME": "Jurisdiction",
+       "FEATURECODE": null,
+       "FIPS": "51760",
+       "LASTEDITOR": "VGIN",
+       "LASTUPDATE": 1771891200000,
+       "MUNICIPALITY": "Richmond City",
+       "NUMSTORIES": null,
+       "OBJECTID": 1538435,
+       "SOURCEFEATUREID": "181614173068",
+       "Shape__Area": 183.73143462
+      }
+     }
+    ],
+    "exceededTransferLimit": true
+   }
+  },
+  {
+   "url": "https://vginmaps.vdem.virginia.gov/arcgis/rest/services/VA_Base_Layers/VA_Building_Footprints/FeatureServer/0/query",
+   "params": {
+    "f": "json",
+    "outFields": "BLDGHEIGHT,BUILDINGCLASS,DATASOURCENAME,FEATURECODE,FIPS,LASTEDITOR,LASTUPDATE,MUNICIPALITY,NUMSTORIES,OBJECTID,SOURCEFEATUREID,Shape__Area",
+    "resultRecordCount": "50",
+    "returnGeometry": "false",
+    "geometry": "{\"x\": -77.436, \"y\": 37.5407, \"spatialReference\": {\"wkid\": 4326}}",
+    "geometryType": "esriGeometryPoint",
+    "inSR": "4326",
+    "spatialRel": "esriSpatialRelIntersects",
+    "distance": "800.0",
+    "units": "esriSRUnit_Meter",
+    "resultOffset": "140"
+   },
+   "response": {
+    "objectIdFieldName": "OBJECTID",
+    "globalIdFieldName": "",
+    "geometryType": "esriGeometryPolygon",
+    "spatialReference": {
+     "wkid": 102100,
+     "latestWkid": 3857
+    },
+    "fields": [
+     {
+      "name": "BLDGHEIGHT",
+      "alias": "Building Height",
+      "type": "esriFieldTypeInteger"
+     },
+     {
+      "name": "BUILDINGCLASS",
+      "alias": "Building Class",
+      "type": "esriFieldTypeSmallInteger"
+     },
+     {
+      "name": "DATASOURCENAME",
+      "alias": "Data Source",
+      "type": "esriFieldTypeString",
+      "length": 100
+     },
+     {
+      "name": "FEATURECODE",
+      "alias": "Facility Site Code",
+      "type": "esriFieldTypeString",
+      "length": 100
+     },
+     {
+      "name": "FIPS",
+      "alias": "Jurisdiction FIPS Code",
+      "type": "esriFieldTypeString",
+      "length": 7
+     },
+     {
+      "name": "LASTEDITOR",
+      "alias": "Last Editor",
+      "type": "esriFieldTypeString",
+      "length": 50
+     },
+     {
+      "name": "LASTUPDATE",
+      "alias": "Last Update From Locality",
+      "type": "esriFieldTypeDate",
+      "length": 8
+     },
+     {
+      "name": "MUNICIPALITY",
+      "alias": "Jurisdiction Name",
+      "type": "esriFieldTypeString",
+      "length": 100
+     },
+     {
+      "name": "NUMSTORIES",
+      "alias": "Number of Stories",
+      "type": "esriFieldTypeSmallInteger"
+     },
+     {
+      "name": "OBJECTID",
+      "alias": "OBJECTID",
+      "type": "esriFieldTypeOID"
+     },
+     {
+      "name": "SOURCEFEATUREID",
+      "alias": "GEO ID",
+      "type": "esriFieldTypeString",
+      "length": 20
+     },
+     {
+      "name": "Shape__Area",
+      "alias": "SHAPE.STArea()",
+      "type": "esriFieldTypeDouble"
+     }
+    ],
+    "features": [
+     {
+      "attributes": {
+       "BLDGHEIGHT": null,
+       "BUILDINGCLASS": null,
+       "DATASOURCENAME": "Jurisdiction",
+       "FEATURECODE": null,
+       "FIPS": "51760",
+       "LASTEDITOR": "VGIN",
+       "LASTUPDATE": 1771891200000,
+       "MUNICIPALITY": "Richmond City",
+       "NUMSTORIES": null,
+       "OBJECTID": 1538437,
+       "SOURCEFEATUREID": "181625173075",
+       "Shape__Area": 42.723699335
+      }
+     },
+     {
+      "attributes": {
+       "BLDGHEIGHT": null,
+       "BUILDINGCLASS": null,
+       "DATASOURCENAME": "Jurisdiction",
+       "FEATURECODE": null,
+       "FIPS": "51760",
+       "LASTEDITOR": "VGIN",
+       "LASTUPDATE": 1771891200000,
+       "MUNICIPALITY": "Richmond City",
+       "NUMSTORIES": null,
+       "OBJECTID": 1538445,
+       "SOURCEFEATUREID": "181659173069",
+       "Shape__Area": 222.202443005
+      }
+     },
+     {
+      "attributes": {
+       "BLDGHEIGHT": null,
+       "BUILDINGCLASS": null,
+       "DATASOURCENAME": "Jurisdiction",
+       "FEATURECODE": null,
+       "FIPS": "51760",
+       "LASTEDITOR": "VGIN",
+       "LASTUPDATE": 1771891200000,
+       "MUNICIPALITY": "Richmond City",
+       "NUMSTORIES": null,
+       "OBJECTID": 1538446,
+       "SOURCEFEATUREID": "181628173080",
+       "Shape__Area": 24.329263665
+      }
+     },
+     {
+      "attributes": {
+       "BLDGHEIGHT": null,
+       "BUILDINGCLASS": null,
+       "DATASOURCENAME": "Jurisdiction",
+       "FEATURECODE": null,
+       "FIPS": "51760",
+       "LASTEDITOR": "VGIN",
+       "LASTUPDATE": 1771891200000,
+       "MUNICIPALITY": "Richmond City",
+       "NUMSTORIES": null,
+       "OBJECTID": 1538448,
+       "SOURCEFEATUREID": "181631173083",
+       "Shape__Area": 19.76078693
+      }
+     },
+     {
+      "attributes": {
+       "BLDGHEIGHT": null,
+       "BUILDINGCLASS": null,
+       "DATASOURCENAME": "Jurisdiction",
+       "FEATURECODE": null,
+       "FIPS": "51760",
+       "LASTEDITOR": "VGIN",
+       "LASTUPDATE": 1771891200000,
+       "MUNICIPALITY": "Richmond City",
+       "NUMSTORIES": null,
+       "OBJECTID": 1538450,
+       "SOURCEFEATUREID": "181655173080",
+       "Shape__Area": 77.11318545
+      }
+     },
+     {
+      "attributes": {
+       "BLDGHEIGHT": null,
+       "BUILDINGCLASS": null,
+       "DATASOURCENAME": "Jurisdiction",
+       "FEATURECODE": null,
+       "FIPS": "51760",
+       "LASTEDITOR": "VGIN",
+       "LASTUPDATE": 1771891200000,
+       "MUNICIPALITY": "Richmond City",
+       "NUMSTORIES": null,
+       "OBJECTID": 1538453,
+       "SOURCEFEATUREID": "181620173081",
+       "Shape__Area": 123.737907875
+      }
+     },
+     {
+      "attributes": {
+       "BLDGHEIGHT": null,
+       "BUILDINGCLASS": null,
+       "DATASOURCENAME": "Jurisdiction",
+       "FEATURECODE": null,
+       "FIPS": "51760",
+       "LASTEDITOR": "VGIN",
+       "LASTUPDATE": 1771891200000,
+       "MUNICIPALITY": "Richmond City",
+       "NUMSTORIES": null,
+       "OBJECTID": 1538458,
+       "SOURCEFEATUREID": "181646173084",
+       "Shape__Area": 87.402026235
+      }
+     },
+     {
+      "attributes": {
+       "BLDGHEIGHT": null,
+       "BUILDINGCLASS": null,
+       "DATASOURCENAME": "Jurisdiction",
+       "FEATURECODE": null,
+       "FIPS": "51760",
+       "LASTEDITOR": "VGIN",
+       "LASTUPDATE": 1771891200000,
+       "MUNICIPALITY": "Richmond City",
+       "NUMSTORIES": null,
+       "OBJECTID": 1538461,
+       "SOURCEFEATUREID": "181638173089",
+       "Shape__Area": 97.610943135
+      }
+     },
+     {
+      "attributes": {
+       "BLDGHEIGHT": null,
+       "BUILDINGCLASS": null,
+       "DATASOURCENAME": "Jurisdiction",
+       "FEATURECODE": null,
+       "FIPS": "51760",
+       "LASTEDITOR": "VGIN",
+       "LASTUPDATE": 1771891200000,
+       "MUNICIPALITY": "Richmond City",
+       "NUMSTORIES": null,
+       "OBJECTID": 1538474,
+       "SOURCEFEATUREID": "181559173072",
+       "Shape__Area": 2398.655658565
+      }
+     },
+     {
+      "attributes": {
+       "BLDGHEIGHT": null,
+       "BUILDINGCLASS": null,
+       "DATASOURCENAME": "Jurisdiction",
+       "FEATURECODE": null,
+       "FIPS": "51760",
+       "LASTEDITOR": "VGIN",
+       "LASTUPDATE": 1771891200000,
+       "MUNICIPALITY": "Richmond City",
+       "NUMSTORIES": null,
+       "OBJECTID": 1538475,
+       "SOURCEFEATUREID": "181630173096",
+       "Shape__Area": 176.83280308
+      }
+     },
+     {
+      "attributes": {
+       "BLDGHEIGHT": null,
+       "BUILDINGCLASS": null,
+       "DATASOURCENAME": "Jurisdiction",
+       "FEATURECODE": null,
+       "FIPS": "51760",
+       "LASTEDITOR": "VGIN",
+       "LASTUPDATE": 1771891200000,
+       "MUNICIPALITY": "Richmond City",
+       "NUMSTORIES": null,
+       "OBJECTID": 1538477,
+       "SOURCEFEATUREID": "181575173100",
+       "Shape__Area": 66.272480265
+      }
+     },
+     {
+      "attributes": {
+       "BLDGHEIGHT": null,
+       "BUILDINGCLASS": null,
+       "DATASOURCENAME": "Jurisdiction",
+       "FEATURECODE": null,
+       "FIPS": "51760",
+       "LASTEDITOR": "VGIN",
+       "LASTUPDATE": 1771891200000,
+       "MUNICIPALITY": "Richmond City",
+       "NUMSTORIES": null,
+       "OBJECTID": 1538484,
+       "SOURCEFEATUREID": "181687173114",
+       "Shape__Area": 9.30077322
+      }
+     },
+     {
+      "attributes": {
+       "BLDGHEIGHT": null,
+       "BUILDINGCLASS": null,
+       "DATASOURCENAME": "Jurisdiction",
+       "FEATURECODE": null,
+       "FIPS": "51760",
+       "LASTEDITOR": "VGIN",
+       "LASTUPDATE": 1771891200000,
+       "MUNICIPALITY": "Richmond City",
+       "NUMSTORIES": null,
+       "OBJECTID": 1538488,
+       "SOURCEFEATUREID": "181678173111",
+       "Shape__Area": 102.4304302
+      }
+     },
+     {
+      "attributes": {
+       "BLDGHEIGHT": null,
+       "BUILDINGCLASS": null,
+       "DATASOURCENAME": "Jurisdiction",
+       "FEATURECODE": null,
+       "FIPS": "51760",
+       "LASTEDITOR": "VGIN",
+       "LASTUPDATE": 1771891200000,
+       "MUNICIPALITY": "Richmond City",
+       "NUMSTORIES": null,
+       "OBJECTID": 1538497,
+       "SOURCEFEATUREID": "181689173109",
+       "Shape__Area": 206.32159734
+      }
+     },
+     {
+      "attributes": {
+       "BLDGHEIGHT": null,
+       "BUILDINGCLASS": null,
+       "DATASOURCENAME": "Jurisdiction",
+       "FEATURECODE": null,
+       "FIPS": "51760",
+       "LASTEDITOR": "VGIN",
+       "LASTUPDATE": 1771891200000,
+       "MUNICIPALITY": "Richmond City",
+       "NUMSTORIES": null,
+       "OBJECTID": 1538501,
+       "SOURCEFEATUREID": "181681173120",
+       "Shape__Area": 38.853882285
+      }
+     },
+     {
+      "attributes": {
+       "BLDGHEIGHT": null,
+       "BUILDINGCLASS": null,
+       "DATASOURCENAME": "Jurisdiction",
+       "FEATURECODE": null,
+       "FIPS": "51760",
+       "LASTEDITOR": "VGIN",
+       "LASTUPDATE": 1771891200000,
+       "MUNICIPALITY": "Richmond City",
+       "NUMSTORIES": null,
+       "OBJECTID": 1538503,
+       "SOURCEFEATUREID": "181686173124",
+       "Shape__Area": 35.27812528
+      }
+     },
+     {
+      "attributes": {
+       "BLDGHEIGHT": null,
+       "BUILDINGCLASS": null,
+       "DATASOURCENAME": "Jurisdiction",
+       "FEATURECODE": null,
+       "FIPS": "51760",
+       "LASTEDITOR": "VGIN",
+       "LASTUPDATE": 1771891200000,
+       "MUNICIPALITY": "Richmond City",
+       "NUMSTORIES": null,
+       "OBJECTID": 1538504,
+       "SOURCEFEATUREID": "181673173121",
+       "Shape__Area": 142.730299805
+      }
+     },
+     {
+      "attributes": {
+       "BLDGHEIGHT": null,
+       "BUILDINGCLASS": null,
+       "DATASOURCENAME": "Jurisdiction",
+       "FEATURECODE": null,
+       "FIPS": "51760",
+       "LASTEDITOR": "VGIN",
+       "LASTUPDATE": 1771891200000,
+       "MUNICIPALITY": "Richmond City",
+       "NUMSTORIES": null,
+       "OBJECTID": 1538505,
+       "SOURCEFEATUREID": "181665173124",
+       "Shape__Area": 117.150299745
+      }
+     },
+     {
+      "attributes": {
+       "BLDGHEIGHT": null,
+       "BUILDINGCLASS": null,
+       "DATASOURCENAME": "Jurisdiction",
+       "FEATURECODE": null,
+       "FIPS": "51760",
+       "LASTEDITOR": "VGIN",
+       "LASTUPDATE": 1771891200000,
+       "MUNICIPALITY": "Richmond City",
+       "NUMSTORIES": null,
+       "OBJECTID": 1538506,
+       "SOURCEFEATUREID": "181569173126",
+       "Shape__Area": 61.77272672
+      }
+     },
+     {
+      "attributes": {
+       "BLDGHEIGHT": null,
+       "BUILDINGCLASS": null,
+       "DATASOURCENAME": "Jurisdiction",
+       "FEATURECODE": null,
+       "FIPS": "51760",
+       "LASTEDITOR": "VGIN",
+       "LASTUPDATE": 1771891200000,
+       "MUNICIPALITY": "Richmond City",
+       "NUMSTORIES": null,
+       "OBJECTID": 1538507,
+       "SOURCEFEATUREID": "181660173128",
+       "Shape__Area": 114.330950095
+      }
+     },
+     {
+      "attributes": {
+       "BLDGHEIGHT": null,
+       "BUILDINGCLASS": null,
+       "DATASOURCENAME": "Jurisdiction",
+       "FEATURECODE": null,
+       "FIPS": "51760",
+       "LASTEDITOR": "VGIN",
+       "LASTUPDATE": 1771891200000,
+       "MUNICIPALITY": "Richmond City",
+       "NUMSTORIES": null,
+       "OBJECTID": 1538508,
+       "SOURCEFEATUREID": "181690173131",
+       "Shape__Area": 83.272284275
+      }
+     },
+     {
+      "attributes": {
+       "BLDGHEIGHT": null,
+       "BUILDINGCLASS": null,
+       "DATASOURCENAME": "Jurisdiction",
+       "FEATURECODE": null,
+       "FIPS": "51760",
+       "LASTEDITOR": "VGIN",
+       "LASTUPDATE": 1771891200000,
+       "MUNICIPALITY": "Richmond City",
+       "NUMSTORIES": null,
+       "OBJECTID": 1538509,
+       "SOURCEFEATUREID": "181580173127",
+       "Shape__Area": 244.010778925
+      }
+     },
+     {
+      "attributes": {
+       "BLDGHEIGHT": null,
+       "BUILDINGCLASS": null,
+       "DATASOURCENAME": "Jurisdiction",
+       "FEATURECODE": null,
+       "FIPS": "51760",
+       "LASTEDITOR": "VGIN",
+       "LASTUPDATE": 1771891200000,
+       "MUNICIPALITY": "Richmond City",
+       "NUMSTORIES": null,
+       "OBJECTID": 1538511,
+       "SOURCEFEATUREID": "181655173132",
+       "Shape__Area": 111.818485525
+      }
+     },
+     {
+      "attributes": {
+       "BLDGHEIGHT": null,
+       "BUILDINGCLASS": null,
+       "DATASOURCENAME": "Jurisdiction",
+       "FEATURECODE": null,
+       "FIPS": "51760",
+       "LASTEDITOR": "VGIN",
+       "LASTUPDATE": 1771891200000,
+       "MUNICIPALITY": "Richmond City",
+       "NUMSTORIES": null,
+       "OBJECTID": 1538512,
+       "SOURCEFEATUREID": "181680173142",
+       "Shape__Area": 12.810066085
+      }
+     },
+     {
+      "attributes": {
+       "BLDGHEIGHT": null,
+       "BUILDINGCLASS": null,
+       "DATASOURCENAME": "Jurisdiction",
+       "FEATURECODE": null,
+       "FIPS": "51760",
+       "LASTEDITOR": "VGIN",
+       "LASTUPDATE": 1771891200000,
+       "MUNICIPALITY": "Richmond City",
+       "NUMSTORIES": null,
+       "OBJECTID": 1538513,
+       "SOURCEFEATUREID": "181574173137",
+       "Shape__Area": 100.52824366
+      }
+     },
+     {
+      "attributes": {
+       "BLDGHEIGHT": null,
+       "BUILDINGCLASS": null,
+       "DATASOURCENAME": "Jurisdiction",
+       "FEATURECODE": null,
+       "FIPS": "51760",
+       "LASTEDITOR": "VGIN",
+       "LASTUPDATE": 1771891200000,
+       "MUNICIPALITY": "Richmond City",
+       "NUMSTORIES": null,
+       "OBJECTID": 1538515,
+       "SOURCEFEATUREID": "181669173142",
+       "Shape__Area": 89.75907022
+      }
+     },
+     {
+      "attributes": {
+       "BLDGHEIGHT": null,
+       "BUILDINGCLASS": null,
+       "DATASOURCENAME": "Jurisdiction",
+       "FEATURECODE": null,
+       "FIPS": "51760",
+       "LASTEDITOR": "VGIN",
+       "LASTUPDATE": 1771891200000,
+       "MUNICIPALITY": "Richmond City",
+       "NUMSTORIES": null,
+       "OBJECTID": 1538517,
+       "SOURCEFEATUREID": "181672173147",
+       "Shape__Area": 84.909495645
+      }
+     },
+     {
+      "attributes": {
+       "BLDGHEIGHT": null,
+       "BUILDINGCLASS": null,
+       "DATASOURCENAME": "Jurisdiction",
+       "FEATURECODE": null,
+       "FIPS": "51760",
+       "LASTEDITOR": "VGIN",
+       "LASTUPDATE": 1771891200000,
+       "MUNICIPALITY": "Richmond City",
+       "NUMSTORIES": null,
+       "OBJECTID": 1538518,
+       "SOURCEFEATUREID": "181562173139",
+       "Shape__Area": 373.94445335
+      }
+     },
+     {
+      "attributes": {
+       "BLDGHEIGHT": null,
+       "BUILDINGCLASS": null,
+       "DATASOURCENAME": "Jurisdiction",
+       "FEATURECODE": null,
+       "FIPS": "51760",
+       "LASTEDITOR": "VGIN",
+       "LASTUPDATE": 1771891200000,
+       "MUNICIPALITY": "Richmond City",
+       "NUMSTORIES": null,
+       "OBJECTID": 1538521,
+       "SOURCEFEATUREID": "181675173152",
+       "Shape__Area": 70.91131041
+      }
+     },
+     {
+      "attributes": {
+       "BLDGHEIGHT": null,
+       "BUILDINGCLASS": null,
+       "DATASOURCENAME": "Jurisdiction",
+       "FEATURECODE": null,
+       "FIPS": "51760",
+       "LASTEDITOR": "VGIN",
+       "LASTUPDATE": 1771891200000,
+       "MUNICIPALITY": "Richmond City",
+       "NUMSTORIES": null,
+       "OBJECTID": 1538524,
+       "SOURCEFEATUREID": "181679173156",
+       "Shape__Area": 77.141859935
+      }
+     },
+     {
+      "attributes": {
+       "BLDGHEIGHT": null,
+       "BUILDINGCLASS": null,
+       "DATASOURCENAME": "Jurisdiction",
+       "FEATURECODE": null,
+       "FIPS": "51760",
+       "LASTEDITOR": "VGIN",
+       "LASTUPDATE": 1771891200000,
+       "MUNICIPALITY": "Richmond City",
+       "NUMSTORIES": null,
+       "OBJECTID": 1538539,
+       "SOURCEFEATUREID": "181684173163",
+       "Shape__Area": 92.379891735
+      }
+     },
+     {
+      "attributes": {
+       "BLDGHEIGHT": null,
+       "BUILDINGCLASS": null,
+       "DATASOURCENAME": "Jurisdiction",
+       "FEATURECODE": null,
+       "FIPS": "51760",
+       "LASTEDITOR": "VGIN",
+       "LASTUPDATE": 1771891200000,
+       "MUNICIPALITY": "Richmond City",
+       "NUMSTORIES": null,
+       "OBJECTID": 1538543,
+       "SOURCEFEATUREID": "181619173154",
+       "Shape__Area": 745.17225673
+      }
+     },
+     {
+      "attributes": {
+       "BLDGHEIGHT": null,
+       "BUILDINGCLASS": null,
+       "DATASOURCENAME": "Jurisdiction",
+       "FEATURECODE": null,
+       "FIPS": "51760",
+       "LASTEDITOR": "VGIN",
+       "LASTUPDATE": 1771891200000,
+       "MUNICIPALITY": "Richmond City",
+       "NUMSTORIES": null,
+       "OBJECTID": 1538544,
+       "SOURCEFEATUREID": "181687173169",
+       "Shape__Area": 76.10830946
+      }
+     },
+     {
+      "attributes": {
+       "BLDGHEIGHT": null,
+       "BUILDINGCLASS": null,
+       "DATASOURCENAME": "Jurisdiction",
+       "FEATURECODE": null,
+       "FIPS": "51760",
+       "LASTEDITOR": "VGIN",
+       "LASTUPDATE": 1771891200000,
+       "MUNICIPALITY": "Richmond City",
+       "NUMSTORIES": null,
+       "OBJECTID": 1538558,
+       "SOURCEFEATUREID": "181612173188",
+       "Shape__Area": 105.30361487
+      }
+     },
+     {
+      "attributes": {
+       "BLDGHEIGHT": null,
+       "BUILDINGCLASS": null,
+       "DATASOURCENAME": "Jurisdiction",
+       "FEATURECODE": null,
+       "FIPS": "51760",
+       "LASTEDITOR": "VGIN",
+       "LASTUPDATE": 1771891200000,
+       "MUNICIPALITY": "Richmond City",
+       "NUMSTORIES": null,
+       "OBJECTID": 1538559,
+       "SOURCEFEATUREID": "181606173192",
+       "Shape__Area": 105.647569975
+      }
+     },
+     {
+      "attributes": {
+       "BLDGHEIGHT": null,
+       "BUILDINGCLASS": null,
+       "DATASOURCENAME": "Jurisdiction",
+       "FEATURECODE": null,
+       "FIPS": "51760",
+       "LASTEDITOR": "VGIN",
+       "LASTUPDATE": 1771891200000,
+       "MUNICIPALITY": "Richmond City",
+       "NUMSTORIES": null,
+       "OBJECTID": 1538561,
+       "SOURCEFEATUREID": "181668173200",
+       "Shape__Area": 44.163357
+      }
+     },
+     {
+      "attributes": {
+       "BLDGHEIGHT": null,
+       "BUILDINGCLASS": null,
+       "DATASOURCENAME": "Jurisdiction",
+       "FEATURECODE": null,
+       "FIPS": "51760",
+       "LASTEDITOR": "VGIN",
+       "LASTUPDATE": 1771891200000,
+       "MUNICIPALITY": "Richmond City",
+       "NUMSTORIES": null,
+       "OBJECTID": 1538562,
+       "SOURCEFEATUREID": "181649173206",
+       "Shape__Area": 9.69561696
+      }
+     },
+     {
+      "attributes": {
+       "BLDGHEIGHT": null,
+       "BUILDINGCLASS": null,
+       "DATASOURCENAME": "Jurisdiction",
+       "FEATURECODE": null,
+       "FIPS": "51760",
+       "LASTEDITOR": "VGIN",
+       "LASTUPDATE": 1771891200000,
+       "MUNICIPALITY": "Richmond City",
+       "NUMSTORIES": null,
+       "OBJECTID": 1538565,
+       "SOURCEFEATUREID": "181661173207",
+       "Shape__Area": 12.08104901
+      }
+     },
+     {
+      "attributes": {
+       "BLDGHEIGHT": null,
+       "BUILDINGCLASS": null,
+       "DATASOURCENAME": "Jurisdiction",
+       "FEATURECODE": null,
+       "FIPS": "51760",
+       "LASTEDITOR": "VGIN",
+       "LASTUPDATE": 1771891200000,
+       "MUNICIPALITY": "Richmond City",
+       "NUMSTORIES": null,
+       "OBJECTID": 1538567,
+       "SOURCEFEATUREID": "181649173208",
+       "Shape__Area": 60.15181232
+      }
+     },
+     {
+      "attributes": {
+       "BLDGHEIGHT": null,
+       "BUILDINGCLASS": null,
+       "DATASOURCENAME": "Jurisdiction",
+       "FEATURECODE": null,
+       "FIPS": "51760",
+       "LASTEDITOR": "VGIN",
+       "LASTUPDATE": 1771891200000,
+       "MUNICIPALITY": "Richmond City",
+       "NUMSTORIES": null,
+       "OBJECTID": 1538568,
+       "SOURCEFEATUREID": "181591173208",
+       "Shape__Area": 96.63497095
+      }
+     },
+     {
+      "attributes": {
+       "BLDGHEIGHT": null,
+       "BUILDINGCLASS": null,
+       "DATASOURCENAME": "Jurisdiction",
+       "FEATURECODE": null,
+       "FIPS": "51760",
+       "LASTEDITOR": "VGIN",
+       "LASTUPDATE": 1771891200000,
+       "MUNICIPALITY": "Richmond City",
+       "NUMSTORIES": null,
+       "OBJECTID": 1538569,
+       "SOURCEFEATUREID": "181600173213",
+       "Shape__Area": 14.62447804
+      }
+     },
+     {
+      "attributes": {
+       "BLDGHEIGHT": null,
+       "BUILDINGCLASS": null,
+       "DATASOURCENAME": "Jurisdiction",
+       "FEATURECODE": null,
+       "FIPS": "51760",
+       "LASTEDITOR": "VGIN",
+       "LASTUPDATE": 1771891200000,
+       "MUNICIPALITY": "Richmond City",
+       "NUMSTORIES": null,
+       "OBJECTID": 1538572,
+       "SOURCEFEATUREID": "181646173215",
+       "Shape__Area": 22.0624321
+      }
+     },
+     {
+      "attributes": {
+       "BLDGHEIGHT": null,
+       "BUILDINGCLASS": null,
+       "DATASOURCENAME": "Jurisdiction",
+       "FEATURECODE": null,
+       "FIPS": "51760",
+       "LASTEDITOR": "VGIN",
+       "LASTUPDATE": 1771891200000,
+       "MUNICIPALITY": "Richmond City",
+       "NUMSTORIES": null,
+       "OBJECTID": 1538573,
+       "SOURCEFEATUREID": "181677173209",
+       "Shape__Area": 103.253487265
+      }
+     },
+     {
+      "attributes": {
+       "BLDGHEIGHT": null,
+       "BUILDINGCLASS": null,
+       "DATASOURCENAME": "Jurisdiction",
+       "FEATURECODE": null,
+       "FIPS": "51760",
+       "LASTEDITOR": "VGIN",
+       "LASTUPDATE": 1771891200000,
+       "MUNICIPALITY": "Richmond City",
+       "NUMSTORIES": null,
+       "OBJECTID": 1538575,
+       "SOURCEFEATUREID": "181594173214",
+       "Shape__Area": 76.25431967
+      }
+     },
+     {
+      "attributes": {
+       "BLDGHEIGHT": null,
+       "BUILDINGCLASS": null,
+       "DATASOURCENAME": "Jurisdiction",
+       "FEATURECODE": null,
+       "FIPS": "51760",
+       "LASTEDITOR": "VGIN",
+       "LASTUPDATE": 1771891200000,
+       "MUNICIPALITY": "Richmond City",
+       "NUMSTORIES": null,
+       "OBJECTID": 1538576,
+       "SOURCEFEATUREID": "181639173215",
+       "Shape__Area": 58.6972642
+      }
+     },
+     {
+      "attributes": {
+       "BLDGHEIGHT": null,
+       "BUILDINGCLASS": null,
+       "DATASOURCENAME": "Jurisdiction",
+       "FEATURECODE": null,
+       "FIPS": "51760",
+       "LASTEDITOR": "VGIN",
+       "LASTUPDATE": 1771891200000,
+       "MUNICIPALITY": "Richmond City",
+       "NUMSTORIES": null,
+       "OBJECTID": 1538578,
+       "SOURCEFEATUREID": "181673173212",
+       "Shape__Area": 112.349277735
+      }
+     },
+     {
+      "attributes": {
+       "BLDGHEIGHT": null,
+       "BUILDINGCLASS": null,
+       "DATASOURCENAME": "Jurisdiction",
+       "FEATURECODE": null,
+       "FIPS": "51760",
+       "LASTEDITOR": "VGIN",
+       "LASTUPDATE": 1771891200000,
+       "MUNICIPALITY": "Richmond City",
+       "NUMSTORIES": null,
+       "OBJECTID": 1538580,
+       "SOURCEFEATUREID": "181629173215",
+       "Shape__Area": 89.13971993
+      }
+     },
+     {
+      "attributes": {
+       "BLDGHEIGHT": null,
+       "BUILDINGCLASS": null,
+       "DATASOURCENAME": "Jurisdiction",
+       "FEATURECODE": null,
+       "FIPS": "51760",
+       "LASTEDITOR": "VGIN",
+       "LASTUPDATE": 1771891200000,
+       "MUNICIPALITY": "Richmond City",
+       "NUMSTORIES": null,
+       "OBJECTID": 1538582,
+       "SOURCEFEATUREID": "181624173219",
+       "Shape__Area": 89.230755485
+      }
+     },
+     {
+      "attributes": {
+       "BLDGHEIGHT": null,
+       "BUILDINGCLASS": null,
+       "DATASOURCENAME": "Jurisdiction",
+       "FEATURECODE": null,
+       "FIPS": "51760",
+       "LASTEDITOR": "VGIN",
+       "LASTUPDATE": 1771891200000,
+       "MUNICIPALITY": "Richmond City",
+       "NUMSTORIES": null,
+       "OBJECTID": 1538583,
+       "SOURCEFEATUREID": "181666173217",
+       "Shape__Area": 215.580700175
+      }
+     },
+     {
+      "attributes": {
+       "BLDGHEIGHT": null,
+       "BUILDINGCLASS": null,
+       "DATASOURCENAME": "Jurisdiction",
+       "FEATURECODE": null,
+       "FIPS": "51760",
+       "LASTEDITOR": "VGIN",
+       "LASTUPDATE": 1771891200000,
+       "MUNICIPALITY": "Richmond City",
+       "NUMSTORIES": null,
+       "OBJECTID": 1538585,
+       "SOURCEFEATUREID": "181659173221",
+       "Shape__Area": 100.001425045
+      }
+     }
+    ],
+    "exceededTransferLimit": true
+   }
+  },
+  {
+   "url": "https://vginmaps.vdem.virginia.gov/arcgis/rest/services/VA_Base_Layers/VA_Building_Footprints/FeatureServer/0/query",
+   "params": {
+    "f": "json",
+    "outFields": "BLDGHEIGHT,BUILDINGCLASS,DATASOURCENAME,FEATURECODE,FIPS,LASTEDITOR,LASTUPDATE,MUNICIPALITY,NUMSTORIES,OBJECTID,SOURCEFEATUREID,Shape__Area",
+    "resultRecordCount": "50",
+    "returnGeometry": "false",
+    "geometry": "{\"x\": -77.436, \"y\": 37.5407, \"spatialReference\": {\"wkid\": 4326}}",
+    "geometryType": "esriGeometryPoint",
+    "inSR": "4326",
+    "spatialRel": "esriSpatialRelIntersects",
+    "distance": "800.0",
+    "units": "esriSRUnit_Meter",
+    "resultOffset": "190"
+   },
+   "response": {
+    "objectIdFieldName": "OBJECTID",
+    "globalIdFieldName": "",
+    "geometryType": "esriGeometryPolygon",
+    "spatialReference": {
+     "wkid": 102100,
+     "latestWkid": 3857
+    },
+    "fields": [
+     {
+      "name": "BLDGHEIGHT",
+      "alias": "Building Height",
+      "type": "esriFieldTypeInteger"
+     },
+     {
+      "name": "BUILDINGCLASS",
+      "alias": "Building Class",
+      "type": "esriFieldTypeSmallInteger"
+     },
+     {
+      "name": "DATASOURCENAME",
+      "alias": "Data Source",
+      "type": "esriFieldTypeString",
+      "length": 100
+     },
+     {
+      "name": "FEATURECODE",
+      "alias": "Facility Site Code",
+      "type": "esriFieldTypeString",
+      "length": 100
+     },
+     {
+      "name": "FIPS",
+      "alias": "Jurisdiction FIPS Code",
+      "type": "esriFieldTypeString",
+      "length": 7
+     },
+     {
+      "name": "LASTEDITOR",
+      "alias": "Last Editor",
+      "type": "esriFieldTypeString",
+      "length": 50
+     },
+     {
+      "name": "LASTUPDATE",
+      "alias": "Last Update From Locality",
+      "type": "esriFieldTypeDate",
+      "length": 8
+     },
+     {
+      "name": "MUNICIPALITY",
+      "alias": "Jurisdiction Name",
+      "type": "esriFieldTypeString",
+      "length": 100
+     },
+     {
+      "name": "NUMSTORIES",
+      "alias": "Number of Stories",
+      "type": "esriFieldTypeSmallInteger"
+     },
+     {
+      "name": "OBJECTID",
+      "alias": "OBJECTID",
+      "type": "esriFieldTypeOID"
+     },
+     {
+      "name": "SOURCEFEATUREID",
+      "alias": "GEO ID",
+      "type": "esriFieldTypeString",
+      "length": 20
+     },
+     {
+      "name": "Shape__Area",
+      "alias": "SHAPE.STArea()",
+      "type": "esriFieldTypeDouble"
+     }
+    ],
+    "features": [
+     {
+      "attributes": {
+       "BLDGHEIGHT": null,
+       "BUILDINGCLASS": null,
+       "DATASOURCENAME": "Jurisdiction",
+       "FEATURECODE": null,
+       "FIPS": "51760",
+       "LASTEDITOR": "VGIN",
+       "LASTUPDATE": 1771891200000,
+       "MUNICIPALITY": "Richmond City",
+       "NUMSTORIES": null,
+       "OBJECTID": 1538589,
+       "SOURCEFEATUREID": "181652173226",
+       "Shape__Area": 268.659994875
+      }
+     },
+     {
+      "attributes": {
+       "BLDGHEIGHT": null,
+       "BUILDINGCLASS": null,
+       "DATASOURCENAME": "Jurisdiction",
+       "FEATURECODE": null,
+       "FIPS": "51760",
+       "LASTEDITOR": "VGIN",
+       "LASTUPDATE": 1771891200000,
+       "MUNICIPALITY": "Richmond City",
+       "NUMSTORIES": null,
+       "OBJECTID": 1538590,
+       "SOURCEFEATUREID": "181644173235",
+       "Shape__Area": 88.269867935
+      }
+     },
+     {
+      "attributes": {
+       "BLDGHEIGHT": null,
+       "BUILDINGCLASS": null,
+       "DATASOURCENAME": "Jurisdiction",
+       "FEATURECODE": null,
+       "FIPS": "51760",
+       "LASTEDITOR": "VGIN",
+       "LASTUPDATE": 1771891200000,
+       "MUNICIPALITY": "Richmond City",
+       "NUMSTORIES": null,
+       "OBJECTID": 1538593,
+       "SOURCEFEATUREID": "181639173238",
+       "Shape__Area": 88.54355473
+      }
+     },
+     {
+      "attributes": {
+       "BLDGHEIGHT": null,
+       "BUILDINGCLASS": null,
+       "DATASOURCENAME": "Jurisdiction",
+       "FEATURECODE": null,
+       "FIPS": "51760",
+       "LASTEDITOR": "VGIN",
+       "LASTUPDATE": 1771891200000,
+       "MUNICIPALITY": "Richmond City",
+       "NUMSTORIES": null,
+       "OBJECTID": 1538594,
+       "SOURCEFEATUREID": "181634173242",
+       "Shape__Area": 85.56719738
+      }
+     },
+     {
+      "attributes": {
+       "BLDGHEIGHT": null,
+       "BUILDINGCLASS": null,
+       "DATASOURCENAME": "Jurisdiction",
+       "FEATURECODE": null,
+       "FIPS": "51760",
+       "LASTEDITOR": "VGIN",
+       "LASTUPDATE": 1771891200000,
+       "MUNICIPALITY": "Richmond City",
+       "NUMSTORIES": null,
+       "OBJECTID": 1538596,
+       "SOURCEFEATUREID": "181629173245",
+       "Shape__Area": 87.07803175
+      }
+     },
+     {
+      "attributes": {
+       "BLDGHEIGHT": null,
+       "BUILDINGCLASS": null,
+       "DATASOURCENAME": "Jurisdiction",
+       "FEATURECODE": null,
+       "FIPS": "51760",
+       "LASTEDITOR": "VGIN",
+       "LASTUPDATE": 1771891200000,
+       "MUNICIPALITY": "Richmond City",
+       "NUMSTORIES": null,
+       "OBJECTID": 1538599,
+       "SOURCEFEATUREID": "181624173249",
+       "Shape__Area": 87.078000255
+      }
+     },
+     {
+      "attributes": {
+       "BLDGHEIGHT": null,
+       "BUILDINGCLASS": null,
+       "DATASOURCENAME": "Jurisdiction",
+       "FEATURECODE": null,
+       "FIPS": "51760",
+       "LASTEDITOR": "VGIN",
+       "LASTUPDATE": 1771891200000,
+       "MUNICIPALITY": "Richmond City",
+       "NUMSTORIES": null,
+       "OBJECTID": 1538600,
+       "SOURCEFEATUREID": "181620173252",
+       "Shape__Area": 78.186030615
+      }
+     },
+     {
+      "attributes": {
+       "BLDGHEIGHT": null,
+       "BUILDINGCLASS": null,
+       "DATASOURCENAME": "Jurisdiction",
+       "FEATURECODE": null,
+       "FIPS": "51760",
+       "LASTEDITOR": "VGIN",
+       "LASTUPDATE": 1771891200000,
+       "MUNICIPALITY": "Richmond City",
+       "NUMSTORIES": null,
+       "OBJECTID": 1538603,
+       "SOURCEFEATUREID": "181687173260",
+       "Shape__Area": 213.480815915
+      }
+     },
+     {
+      "attributes": {
+       "BLDGHEIGHT": null,
+       "BUILDINGCLASS": null,
+       "DATASOURCENAME": "Jurisdiction",
+       "FEATURECODE": null,
+       "FIPS": "51760",
+       "LASTEDITOR": "VGIN",
+       "LASTUPDATE": 1771891200000,
+       "MUNICIPALITY": "Richmond City",
+       "NUMSTORIES": null,
+       "OBJECTID": 1538605,
+       "SOURCEFEATUREID": "181682173268",
+       "Shape__Area": 274.518239915
+      }
+     },
+     {
+      "attributes": {
+       "BLDGHEIGHT": null,
+       "BUILDINGCLASS": null,
+       "DATASOURCENAME": "Jurisdiction",
+       "FEATURECODE": null,
+       "FIPS": "51760",
+       "LASTEDITOR": "VGIN",
+       "LASTUPDATE": 1771891200000,
+       "MUNICIPALITY": "Richmond City",
+       "NUMSTORIES": null,
+       "OBJECTID": 1538606,
+       "SOURCEFEATUREID": "181671173271",
+       "Shape__Area": 295.78426698
+      }
+     },
+     {
+      "attributes": {
+       "BLDGHEIGHT": null,
+       "BUILDINGCLASS": null,
+       "DATASOURCENAME": "Jurisdiction",
+       "FEATURECODE": null,
+       "FIPS": "51760",
+       "LASTEDITOR": "VGIN",
+       "LASTUPDATE": 1771891200000,
+       "MUNICIPALITY": "Richmond City",
+       "NUMSTORIES": null,
+       "OBJECTID": 1538607,
+       "SOURCEFEATUREID": "181656173276",
+       "Shape__Area": 212.81478339
+      }
+     },
+     {
+      "attributes": {
+       "BLDGHEIGHT": null,
+       "BUILDINGCLASS": null,
+       "DATASOURCENAME": "Jurisdiction",
+       "FEATURECODE": null,
+       "FIPS": "51760",
+       "LASTEDITOR": "VGIN",
+       "LASTUPDATE": 1771891200000,
+       "MUNICIPALITY": "Richmond City",
+       "NUMSTORIES": null,
+       "OBJECTID": 1538613,
+       "SOURCEFEATUREID": "181650173291",
+       "Shape__Area": 250.48778312
+      }
+     },
+     {
+      "attributes": {
+       "BLDGHEIGHT": null,
+       "BUILDINGCLASS": null,
+       "DATASOURCENAME": "Jurisdiction",
+       "FEATURECODE": null,
+       "FIPS": "51760",
+       "LASTEDITOR": "VGIN",
+       "LASTUPDATE": 1771891200000,
+       "MUNICIPALITY": "Richmond City",
+       "NUMSTORIES": null,
+       "OBJECTID": 1538686,
+       "SOURCEFEATUREID": "181678173425",
+       "Shape__Area": 3078.02002182
+      }
+     },
+     {
+      "attributes": {
+       "BLDGHEIGHT": null,
+       "BUILDINGCLASS": null,
+       "DATASOURCENAME": "Jurisdiction",
+       "FEATURECODE": null,
+       "FIPS": "51760",
+       "LASTEDITOR": "VGIN",
+       "LASTUPDATE": 1771891200000,
+       "MUNICIPALITY": "Richmond City",
+       "NUMSTORIES": null,
+       "OBJECTID": 1539246,
+       "SOURCEFEATUREID": "182341172947",
+       "Shape__Area": 73.52502532
+      }
+     },
+     {
+      "attributes": {
+       "BLDGHEIGHT": null,
+       "BUILDINGCLASS": null,
+       "DATASOURCENAME": "Jurisdiction",
+       "FEATURECODE": null,
+       "FIPS": "51760",
+       "LASTEDITOR": "VGIN",
+       "LASTUPDATE": 1771891200000,
+       "MUNICIPALITY": "Richmond City",
+       "NUMSTORIES": null,
+       "OBJECTID": 1539247,
+       "SOURCEFEATUREID": "182344172951",
+       "Shape__Area": 73.003502925
+      }
+     }
+    ],
+    "exceededTransferLimit": true
+   }
+  },
+  {
+   "url": "https://vginmaps.vdem.virginia.gov/arcgis/rest/services/VA_Base_Layers/VA_Building_Footprints/FeatureServer/0/query",
+   "params": {
+    "f": "json",
+    "outFields": "BLDGHEIGHT,BUILDINGCLASS,DATASOURCENAME,FEATURECODE,FIPS,LASTEDITOR,LASTUPDATE,MUNICIPALITY,NUMSTORIES,OBJECTID,SOURCEFEATUREID,Shape__Area",
+    "resultRecordCount": "50",
+    "returnGeometry": "false",
+    "geometry": "{\"rings\": [[[-77.5501706303165, 37.5578957842074], [-77.5500957492371, 37.5578817392567], [-77.5508649846163, 37.5571443756955], [-77.5509301020127, 37.5571916372004], [-77.5504260613473, 37.5576519493607], [-77.5505410252275, 37.5578147394507], [-77.5508779279231, 37.5582917895684], [-77.5506247936061, 37.558406538684], [-77.5506089159853, 37.5584140212447], [-77.5505882308931, 37.5584237693922], [-77.550505365469, 37.5583019015663], [-77.5502377876569, 37.557908379573], [-77.5501706303165, 37.5578957842074]]], \"spatialReference\": {\"wkid\": 4326}}",
+    "geometryType": "esriGeometryPolygon",
+    "inSR": "4326",
+    "spatialRel": "esriSpatialRelIntersects"
+   },
+   "response": {
+    "objectIdFieldName": "OBJECTID",
+    "globalIdFieldName": "",
+    "geometryType": "esriGeometryPolygon",
+    "spatialReference": {
+     "wkid": 102100,
+     "latestWkid": 3857
+    },
+    "fields": [
+     {
+      "name": "BLDGHEIGHT",
+      "alias": "Building Height",
+      "type": "esriFieldTypeInteger"
+     },
+     {
+      "name": "BUILDINGCLASS",
+      "alias": "Building Class",
+      "type": "esriFieldTypeSmallInteger"
+     },
+     {
+      "name": "DATASOURCENAME",
+      "alias": "Data Source",
+      "type": "esriFieldTypeString",
+      "length": 100
+     },
+     {
+      "name": "FEATURECODE",
+      "alias": "Facility Site Code",
+      "type": "esriFieldTypeString",
+      "length": 100
+     },
+     {
+      "name": "FIPS",
+      "alias": "Jurisdiction FIPS Code",
+      "type": "esriFieldTypeString",
+      "length": 7
+     },
+     {
+      "name": "LASTEDITOR",
+      "alias": "Last Editor",
+      "type": "esriFieldTypeString",
+      "length": 50
+     },
+     {
+      "name": "LASTUPDATE",
+      "alias": "Last Update From Locality",
+      "type": "esriFieldTypeDate",
+      "length": 8
+     },
+     {
+      "name": "MUNICIPALITY",
+      "alias": "Jurisdiction Name",
+      "type": "esriFieldTypeString",
+      "length": 100
+     },
+     {
+      "name": "NUMSTORIES",
+      "alias": "Number of Stories",
+      "type": "esriFieldTypeSmallInteger"
+     },
+     {
+      "name": "OBJECTID",
+      "alias": "OBJECTID",
+      "type": "esriFieldTypeOID"
+     },
+     {
+      "name": "SOURCEFEATUREID",
+      "alias": "GEO ID",
+      "type": "esriFieldTypeString",
+      "length": 20
+     },
+     {
+      "name": "Shape__Area",
+      "alias": "SHAPE.STArea()",
+      "type": "esriFieldTypeDouble"
+     }
+    ],
+    "features": [
+     {
+      "attributes": {
+       "BLDGHEIGHT": null,
+       "BUILDINGCLASS": null,
+       "DATASOURCENAME": "Jurisdiction",
+       "FEATURECODE": null,
+       "FIPS": "51760",
+       "LASTEDITOR": "VGIN",
+       "LASTUPDATE": 1771891200000,
+       "MUNICIPALITY": "Richmond City",
+       "NUMSTORIES": null,
+       "OBJECTID": 1358632,
+       "SOURCEFEATUREID": "172199174753",
+       "Shape__Area": 23.405824475
+      }
+     },
+     {
+      "attributes": {
+       "BLDGHEIGHT": null,
+       "BUILDINGCLASS": null,
+       "DATASOURCENAME": "Jurisdiction",
+       "FEATURECODE": null,
+       "FIPS": "51760",
+       "LASTEDITOR": "VGIN",
+       "LASTUPDATE": 1771891200000,
+       "MUNICIPALITY": "Richmond City",
+       "NUMSTORIES": null,
+       "OBJECTID": 1358633,
+       "SOURCEFEATUREID": "172204174742",
+       "Shape__Area": 399.526252255
+      }
+     }
+    ]
+   }
+  }
+ ]
+}

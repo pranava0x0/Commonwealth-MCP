@@ -1,0 +1,136 @@
+# Statewide layer, jurisdiction `va`. Endpoint, fields, coded-value
+# domains, area units, count, and terms verified live 2026-08-29.
+#
+# This is the first registered source that can honestly answer "when was
+# this record last touched" at the record level: LASTUPDATE is per feature
+# and is surfaced as each record's own vintage, rather than every record
+# inheriting the layer's retrieval time.
+id: va-vgin-building-footprints
+name: Virginia Building Footprints (VGIN)
+jurisdiction: va
+
+publisher:
+  agency: Virginia Geographic Information Network (VGIN), part of the
+    Virginia Department of Emergency Management
+  authority_level: official_secondary
+
+domains: [geo]
+
+capabilities:
+  - id: building.lookup
+    tool_hint: geo.find_buildings
+
+adapter:
+  type: arcgis
+  service_url: https://vginmaps.vdem.virginia.gov/arcgis/rest/services/VA_Base_Layers/VA_Building_Footprints/FeatureServer
+  field_mapping_version: "1"
+  layers:
+    buildings:
+      layer_id: 0
+      id_field: OBJECTID
+      geometry: polygon
+      field_mapping:
+        height_m: BLDGHEIGHT
+        storeys: NUMSTORIES
+        building_class: BUILDINGCLASS
+        feature_code: FEATURECODE
+        source_feature_id: SOURCEFEATUREID
+        data_source_name: DATASOURCENAME
+        last_editor: LASTEDITOR
+        fips: FIPS
+        locality: MUNICIPALITY
+        last_update: LASTUPDATE
+        footprint_area_web_mercator_sq_m: Shape__Area
+      value_labels:
+        # The publisher's own coded-value domain, read off the layer
+        # metadata on 2026-08-29 (domain name "BuildingClass FCode").
+        # Copied, not invented; the raw code is returned alongside.
+        building_class:
+          "1": General/Residential
+          "2": Government
+          "3": Medical
+          "4": Education
+          "5": Transportation
+          "6": Commercial
+          "7": Religious
+          "8": Recreation
+          "9": Cultural/Heritage
+          "10": Hotel
+          "11": Airport
+          "12": Industrial
+          "13": CommunityCenter
+      # FEATURECODE publishes no domain on this layer, so it is returned
+      # as the raw code with its field name intact. Guessing a label for
+      # it would be inventing one.
+
+access:
+  mode: anonymous
+  automation_status: public_api
+  terms_url: https://vgin.vdem.virginia.gov/datasets/virginia-building-footprints/about
+  terms_notes: >
+    Same VGIN Base Data terms as the parcels, boundary, and address-point
+    layers, reviewed together: cartographic and spatial-analysis use only,
+    not a legal description, all accuracy warranties expressly disclaimed.
+    No redistribution restriction found; anonymous query access confirmed
+    live 2026-08-29. Re-review with the standard 12-month cadence.
+  terms_reviewed_at: "2026-08-29"
+  data_classification: open
+
+freshness:
+  expected_cadence: unknown
+  cadence_source: >
+    No stated SLA. Per-record LASTUPDATE and DATASOURCENAME are published
+    instead, so currency is answerable per building rather than per layer.
+  ttl_hint_seconds: 86400
+
+coverage:
+  geography: va
+  temporal: current
+  known_limitations:
+    - Cartographic/analysis use only per the publisher's own disclaimer;
+      a footprint is not a survey and not a legal description.
+    - >
+      Derived and aggregated from local submissions and other sources
+      (DATASOURCENAME says which per record), so both coverage and
+      vintage vary by locality.
+    - >
+      A missing footprint is not evidence of vacant land. A locality that
+      has not submitted, a structure built since the last update, and
+      genuinely empty ground all look identical here.
+    - >
+      Shape__Area is in the layer's own Web Mercator projection, where
+      area is inflated by roughly sec squared of the latitude — about
+      1.6x at Virginia's latitudes. It is returned unconverted under a
+      field name that says which projection it is in, alongside an
+      approximate ground area derived from the query's own latitude and
+      declared in the envelope's transformations.
+    - >
+      BLDGHEIGHT, NUMSTORIES, BUILDINGCLASS, and FEATURECODE are sparse.
+      Observed live 2026-08-29 in downtown Richmond: all four null on
+      every footprint sampled, with only geometry, FIPS, MUNICIPALITY,
+      DATASOURCENAME, and LASTUPDATE populated. Null means the publisher
+      has no value, not that the building has no storeys.
+    - >
+      A dense urban query returns hundreds of polygons and the service
+      caps the response. The 25-record inline cap and truncated
+      pagination apply; narrow the radius rather than reading a
+      truncated list as the whole answer.
+
+authority_notes: >
+  VGIN aggregates footprints from local governments and other producers
+  rather than surveying buildings itself, hence official_secondary. Each
+  record names its own producer in DATASOURCENAME, which is closer to the
+  authority for that footprint than the aggregator is.
+
+health:
+  probe: arcgis_layer_count
+  expect:
+    # Observed live 2026-08-29: 4,471,131 footprints statewide.
+    min_features:
+      buildings: 3500000
+
+lifecycle:
+  declared_state: active
+  added: "2026-08-29"
+  last_verified: "2026-08-29"
+  verified_by: pranava0x0

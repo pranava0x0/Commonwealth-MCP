@@ -93,6 +93,17 @@ sources:
   data_classification: open
   recorded_fixtures:
   - tests/fixtures/sources/va-vgin-admin-boundaries/recorded.json
+- id: va-vgin-building-footprints
+  name: Virginia Building Footprints (VGIN)
+  publisher: Virginia Geographic Information Network (VGIN), part of the Virginia
+    Department of Emergency Management
+  manifest: sources/state/vgin-building-footprints.yaml
+  terms_url: https://vgin.vdem.virginia.gov/datasets/virginia-building-footprints/about
+  terms_reviewed_at: '2026-08-29'
+  automation_status: public_api
+  data_classification: open
+  recorded_fixtures:
+  - tests/fixtures/sources/va-vgin-building-footprints/recorded.json
 - id: va-vgin-composite-locator
   name: Virginia Composite Locator (VGIN Geocoding Service)
   publisher: Virginia Geographic Information Network (VGIN), part of the Virginia
@@ -104,6 +115,17 @@ sources:
   data_classification: open
   recorded_fixtures:
   - tests/fixtures/sources/va-vgin-composite-locator/recorded.json
+- id: va-vgin-landmarks
+  name: Virginia Landmark Locations (VGIN)
+  publisher: Virginia Geographic Information Network (VGIN), part of the Virginia
+    Department of Emergency Management
+  manifest: sources/state/vgin-landmarks.yaml
+  terms_url: https://vgin.vdem.virginia.gov/datasets/virginia-landmarks/about
+  terms_reviewed_at: '2026-08-29'
+  automation_status: public_api
+  data_classification: open
+  recorded_fixtures:
+  - tests/fixtures/sources/va-vgin-landmarks/recorded.json
 - id: va-vgin-statewide-parcels
   name: Virginia Statewide Parcels (VGIN)
   publisher: Virginia Geographic Information Network (VGIN), part of the Virginia

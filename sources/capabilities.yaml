@@ -23,3 +23,12 @@ capabilities:
       Turn a typed address or place string into candidate coordinates with
       a match score. A coordinate, never a jurisdiction: the jurisdiction
       comes from running that coordinate through boundary.lookup.
+  - id: building.lookup
+    description: >
+      Find building footprints at or near a coordinate, or on a parcel.
+      A missing footprint is not evidence that the ground is vacant.
+  - id: landmark.lookup
+    description: >
+      Find named public places — schools, libraries, fire stations, parks
+      — from the publisher's curated list. Not an inventory: absence
+      proves nothing.

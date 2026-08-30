@@ -1,0 +1,125 @@
+# Statewide layer, jurisdiction `va`. Layer id is 1, NOT 0 — layer 0 does
+# not exist on this service and returns HTTP 500 with `{"error":{"code":
+# 500,"message":"json"}}` (checked live 2026-08-29). A layer_id copied
+# from the parcels manifest would fail at the first query.
+#
+# This is the first registered source whose records cite OTHER publishers:
+# each row carries Src and SrcTyp naming where the landmark came from
+# (DCJS, DOE, USPS, and so on). See authority_notes.
+id: va-vgin-landmarks
+name: Virginia Landmark Locations (VGIN)
+jurisdiction: va
+
+publisher:
+  agency: Virginia Geographic Information Network (VGIN), part of the
+    Virginia Department of Emergency Management
+  authority_level: official_derived
+
+domains: [geo]
+
+capabilities:
+  - id: landmark.lookup
+    tool_hint: geo.find_landmarks
+
+adapter:
+  type: arcgis
+  service_url: https://vginmaps.vdem.virginia.gov/arcgis/rest/services/VA_Base_Layers/VA_Landmarks/FeatureServer
+  field_mapping_version: "1"
+  layers:
+    landmarks:
+      layer_id: 1
+      id_field: OBJECTID
+      geometry: point
+      field_mapping:
+        landmark_id: VAPID
+        name: LandmkName
+        address: Address
+        # City is a POSTAL city, never the government. fips/locality are
+        # what feed the jurisdiction table — same rule as address points.
+        postal_city: City
+        state: State
+        zip_code: Zip
+        phone: Phone
+        url: URL
+        place_type: PlaceType
+        source_type: SrcTyp
+        source_organization: Src
+        last_checked: LastCheck
+        fips: FIPScode
+        locality: FIPSname
+      # FIPScode is stored as an Integer on this layer while every other
+      # registered layer stores FIPS as text, so a jurisdiction-scoping
+      # filter has to be sent unquoted.
+      numeric_fields: [fips]
+
+access:
+  mode: anonymous
+  automation_status: public_api
+  terms_url: https://vgin.vdem.virginia.gov/datasets/virginia-landmarks/about
+  terms_notes: >
+    Same VGIN Base Data terms as the other base layers, reviewed
+    together: cartographic and spatial-analysis use only, all accuracy
+    warranties expressly disclaimed. No redistribution restriction found;
+    anonymous query access confirmed live 2026-08-29. Re-review with the
+    standard 12-month cadence.
+  terms_reviewed_at: "2026-08-29"
+  data_classification: open
+
+freshness:
+  expected_cadence: unknown
+  cadence_source: >
+    No stated SLA. Records carry their own LastCheck date where the
+    publisher has verified one; many are null.
+  ttl_hint_seconds: 86400
+
+coverage:
+  geography: va
+  temporal: current
+  known_limitations:
+    - >
+      A curated convenience layer, not an inventory. Absence proves
+      nothing: a school, library, or fire station missing from it may
+      simply never have been added.
+    - >
+      Records cite third parties. Src names the organisation the record
+      came from (DCJS, DOE, USPS, "Agency" among them) and it is that
+      organisation, not VGIN, whose record a landmark actually is.
+    - >
+      LastCheck is null on many records. Where it is null the record says
+      so rather than inheriting the layer's date, because "nobody has
+      re-checked this" and "checked today" are different facts.
+    - >
+      URL values are returned as data and never fetched. The egress
+      allowlist is per manifest and following a link found inside a
+      record would drive straight through it.
+    - >
+      City is a postal city, not a government. FIPScode and FIPSname are
+      what name the jurisdiction.
+    - >
+      PlaceType is the publisher's own vocabulary, 33 values observed
+      live 2026-08-29 ("Law Enforcement Points", "Schools Public K12
+      Points", "ABC Store Points" and so on). It is returned verbatim;
+      there is no mapping onto a general category scheme.
+
+authority_notes: >
+  VGIN aggregates this layer from other agencies' lists rather than
+  maintaining the underlying records, which is why it is
+  official_derived rather than official_secondary like the parcels and
+  boundary layers. For any one landmark the authority is whoever Src
+  names — the Department of Education for a public school, USPS for a
+  post office — and the envelope surfaces Src and SrcTyp per record so
+  the caller can see that rather than reading VGIN as the source of
+  truth for a school's address.
+
+health:
+  probe: arcgis_layer_count
+  expect:
+    # Observed live 2026-08-29: 9,437 landmarks statewide.
+    min_features:
+      landmarks: 7000
+
+lifecycle:
+  declared_state: active
+  added: "2026-08-29"
+  last_verified: "2026-08-29"
+  verified_by: pranava0x0

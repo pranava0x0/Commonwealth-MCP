@@ -70,6 +70,8 @@ The tests replay recorded government responses, so they run offline:
 | What is this parcel? | Fairfax County, Richmond City, Charles City County, VGIN statewide |
 | How is it zoned? | Fairfax County and Richmond City |
 | Where does this jurisdiction end? | Statewide: 133 localities, 191 towns |
+| Is this ground built on? | Statewide building footprints |
+| Where is the nearest school or library? | Statewide landmarks |
 | What does § 18.2-57 say? | The full Code of Virginia |
 
 Some examples of what that looks like in practice:
