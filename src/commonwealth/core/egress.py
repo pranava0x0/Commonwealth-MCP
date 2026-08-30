@@ -20,6 +20,21 @@ from .errors import EgressRefused
 
 MAX_RESPONSE_BYTES = 20_000_000
 MAX_REDIRECTS = 3
+
+# Rule 6 has two halves and the byte cap is only one of them. A gzipped
+# response is small on the wire and large once decoded, so a body well
+# under MAX_RESPONSE_BYTES of transfer can still expand past any memory
+# budget. The cap and the ratio are checked separately.
+#
+# 50x is far above what real government JSON and HTML achieve. Measured
+# over this project's own recorded fixtures: 4.6x to 18.1x. A payload
+# compressing better than 50x is not the shape of data these sources
+# publish.
+MAX_DECOMPRESSION_RATIO = 50
+
+# Below this the ratio is meaningless: a 200-byte response from a 4-byte
+# compressed frame is 50x and entirely ordinary.
+DECOMPRESSION_RATIO_FLOOR_BYTES = 64_000
 _SHARED_CGNAT = ipaddress.ip_network("100.64.0.0/10")
 
 

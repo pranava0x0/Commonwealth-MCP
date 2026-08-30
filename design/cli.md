@@ -6,10 +6,15 @@
 Built-vs-planned, marked 2026-08-28. Shipped: `doctor [--live]`, `serve
 [--profile] [--transport]`, `tools list|call`, `sources
 validate|probe|sample` — and the § 1 conventions (nonzero exit, printed
-denominators, envelope-first `tools call`) hold in all of them. Not yet
-built: `configure` (backlog High), `--json`, `--servers`/`--port` on
-serve, `sources search|inspect|scaffold|candidates|stats`, `catalog`,
-`eval`, `version`.
+denominators, envelope-first `tools call`) hold in all of them.
+
+`configure` shipped 2026-08-29. It writes JSON client configs for
+claude-code, cursor, vscode and Claude Desktop, converges when re-run, and
+shows the diff under `--dry-run`. TOML clients get a block to paste, since
+the standard library reads TOML and does not write it.
+
+Not yet built: `--json`, `--servers`/`--port` on serve, `sources
+search|inspect|scaffold|candidates|stats`, `catalog`, `eval`, `version`.
 **Why this exists:** Three audiences: developers who script (and who the CLI-vs-MCP research says will prefer a CLI for anything mechanical; ../research/README.md part 4 § 3), contributors onboarding sources (the workflow in source-registry.md § 4 is CLI-shaped), and the project itself (CLI-first, so agents can validate their own work: every gate the docs mention must be runnable locally). The CLI is also the demo surface: `commonwealth ask`-style flows show value before anyone configures a client.
 
 ---

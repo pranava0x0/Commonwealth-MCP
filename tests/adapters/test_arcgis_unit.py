@@ -183,3 +183,100 @@ async def test_where_value_quotes_are_escaped(adapter, sample_pin):
     with pytest.raises(AssertionError, match=r"O''Brien"):
         await adapter.query(_real_manifest(), "parcels",
                             where_equals={"pin": "O'Brien"})
+
+
+# --------------------------------------------------------------------------
+# Pagination (GitHub issue #34). A query used to return the service's first
+# page and report `pagination: truncated` when more remained. Accurate, and
+# still a partial answer.
+#
+# ReplayFetcher needs an exact recorded exchange per request, so these use a
+# purpose-built fake that behaves like a paging FeatureServer.
+# --------------------------------------------------------------------------
+from commonwealth.adapters.arcgis import MAX_QUERY_PAGES
+
+
+class _PagingService:
+    """An ArcGIS layer holding `total` rows and serving `page_size` at a
+    time, exactly as the platform does: honour resultOffset, and set
+    exceededTransferLimit whenever rows remain."""
+
+    def __init__(self, total: int, page_size: int = 50,
+                 supports_pagination: bool = True):
+        self.total, self.page_size = total, page_size
+        self.supports_pagination = supports_pagination
+        self.offsets: list[int] = []
+
+    async def fetch_json(self, url: str, params: dict) -> dict:
+        if not url.endswith("/query"):
+            return {                     # layer_info
+                "editingInfo": {"lastEditDate": 1_700_000_000_000},
+                "advancedQueryCapabilities": {
+                    "supportsPagination": self.supports_pagination},
+            }
+        offset = int(params.get("resultOffset", 0))
+        self.offsets.append(offset)
+        if not self.supports_pagination:
+            offset = 0                   # a service that ignores the param
+        rows = range(offset, min(offset + self.page_size, self.total))
+        return {
+            "features": [
+                {"attributes": {"OBJECTID": i, "PIN": f"pin-{i}"}}
+                for i in rows
+            ],
+            "exceededTransferLimit": offset + self.page_size < self.total,
+        }
+
+
+def _paging_adapter(service: _PagingService) -> ArcGISAdapter:
+    return ArcGISAdapter(fetcher=service, cache=TTLCache())
+
+
+async def test_a_single_page_result_is_not_called_truncated():
+    svc = _PagingService(total=30)
+    result = await _paging_adapter(svc).query(
+        _real_manifest(), "parcels", where_equals={"pin": "x"})
+    assert len(result.records) == 30
+    assert result.exceeded_transfer_limit is False
+    assert svc.offsets == [0], "asked for a second page it did not need"
+
+
+async def test_pages_are_followed_until_the_rows_run_out():
+    svc = _PagingService(total=120)      # three pages at 50
+    result = await _paging_adapter(svc).query(
+        _real_manifest(), "parcels", where_equals={"pin": "x"})
+    assert len(result.records) == 120
+    assert result.exceeded_transfer_limit is False, (
+        "paged to completion, so nothing remains to report as truncated")
+    assert svc.offsets == [0, 50, 100]
+
+
+async def test_the_page_budget_bounds_the_walk_and_still_reports_truncation():
+    """Each page is another request to a government service, so the walk is
+    bounded. Hitting the bound is the case that must still say truncated."""
+    svc = _PagingService(total=10_000)
+    result = await _paging_adapter(svc).query(
+        _real_manifest(), "parcels", where_equals={"pin": "x"})
+    assert len(svc.offsets) == MAX_QUERY_PAGES
+    assert result.exceeded_transfer_limit is True
+    assert len(result.records) == MAX_QUERY_PAGES * 50
+
+
+async def test_a_service_without_paging_support_is_not_paged():
+    """resultOffset on a layer that does not advertise pagination returns
+    the first page again. Walking that would duplicate every row."""
+    svc = _PagingService(total=10_000, supports_pagination=False)
+    result = await _paging_adapter(svc).query(
+        _real_manifest(), "parcels", where_equals={"pin": "x"})
+    assert svc.offsets == [0]
+    assert result.exceeded_transfer_limit is True
+    assert len(result.records) == 50
+
+
+async def test_paging_is_recorded_in_transformations():
+    """A caller reading the envelope can see the answer was assembled from
+    several responses rather than returned by one."""
+    svc = _PagingService(total=120)
+    result = await _paging_adapter(svc).query(
+        _real_manifest(), "parcels", where_equals={"pin": "x"})
+    assert "pagination:pages=3" in result.transformations

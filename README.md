@@ -41,7 +41,15 @@ Ask a real question:
   --args '{"jurisdiction": "Fairfax County", "pin": "0102 14  0231"}'
 ```
 
-Run it as an MCP server, over stdio:
+Point an AI client at it. This writes the client's config file, shows you
+the change first, and leaves any other servers you have configured alone:
+
+```bash
+.venv/bin/commonwealth configure claude-code --dry-run
+```
+
+Drop `--dry-run` to write it. `claude`, `codex`, `cursor` and `vscode` work
+too. Or run the server directly, over stdio:
 
 ```bash
 .venv/bin/commonwealth serve
@@ -66,7 +74,7 @@ The tests replay recorded government responses, so they run offline:
 Some examples of what that looks like in practice:
 
 **Ambiguous names come back ambiguous.** Ask about "Fairfax" and you get
-two candidates, not a guess. Fairfax City is not inside Fairfax County —
+both candidates back. Fairfax City is not inside Fairfax County —
 it is a separate government. None of Virginia's 38 independent cities sit
 inside the county they share a name with, and this trips up almost every
 system that handles Virginia data.

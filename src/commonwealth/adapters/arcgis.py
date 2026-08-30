@@ -166,6 +166,12 @@ def _epoch_ms_to_iso(ms: int | None) -> str | None:
         "%Y-%m-%dT%H:%M:%SZ")
 
 
+# Each extra page is another request to a government service, so the
+# walk is bounded rather than open-ended. Five pages at the default
+# record count covers every query this project issues today; past that
+# the answer is reported as truncated, which is what the caller got
+# before pagination existed at all.
+MAX_QUERY_PAGES = 5
 class ArcGISAdapter:
     version = "0.1.0"
 
@@ -308,6 +314,11 @@ class ArcGISAdapter:
                 "simplify_tolerance only applies when return_geometry is "
                 "set; refusing to silently ignore it")
 
+        info = await self.layer_info(manifest, layer_key)
+        paging_supported = bool(
+            (info.get("advancedQueryCapabilities") or {})
+            .get("supportsPagination"))
+
         result = await self._get(manifest, url, params, layer=layer)
         payload = result.payload
 
@@ -316,6 +327,30 @@ class ArcGISAdapter:
             raise SourceUnavailable(
                 f"ArcGIS response from {manifest.id} has no `features` key — "
                 "the service schema changed or the endpoint moved")
+
+        # The service caps how many rows one response may carry and sets
+        # exceededTransferLimit when it did. Reporting that is honest but
+        # still leaves the caller with a partial answer, so follow the
+        # pages — bounded, because each one is another request to a
+        # government service and the politeness budget is real.
+        pages_read = 1
+        more_remains = bool(payload.get("exceededTransferLimit"))
+        while (more_remains and paging_supported
+               and pages_read < MAX_QUERY_PAGES):
+            page_params = dict(params)
+            page_params["resultOffset"] = len(features)
+            page = await self._get(manifest, url, page_params, layer=layer)
+            batch = page.payload.get("features")
+            if not batch:
+                # A service that ignores resultOffset would otherwise
+                # return the first page forever.
+                more_remains = False
+                break
+            features.extend(batch)
+            pages_read += 1
+            more_remains = bool(page.payload.get("exceededTransferLimit"))
+        if pages_read > 1:
+            transformations.append(f"pagination:pages={pages_read}")
 
         records = []
         for feat in features:
@@ -330,7 +365,6 @@ class ArcGISAdapter:
                 geometry=feat.get("geometry"),
                 centroid=feat.get("centroid")))
 
-        info = await self.layer_info(manifest, layer_key)
         updated = _epoch_ms_to_iso(
             (info.get("editingInfo") or {}).get("lastEditDate"))
 
@@ -342,7 +376,9 @@ class ArcGISAdapter:
             cache_age_seconds=result.cache_age_seconds,
             from_cache=result.from_cache,
             source_updated_at=updated,
-            exceeded_transfer_limit=bool(payload.get("exceededTransferLimit")),
+            # True only when rows remain AFTER the page budget ran out,
+            # so a result that paged to completion is not called partial.
+            exceeded_transfer_limit=more_remains,
             transformations=transformations,
             request_url=result.request_url)
 

@@ -2813,10 +2813,10 @@ Every outbound request from adapters, probes, or Explorer-class tools:
 3. Resolved addresses in private, loopback, link-local, and cloud-metadata ranges are refused, and resolution is re-checked at connect time (DNS-rebinding defense).
 4. Redirects followed only within the registered host set, max 3; credentials and auth headers stripped on any cross-host redirect.
 5. Ports 443/80 only unless the manifest declares otherwise with a reason.
-6. Response size and decompression-expansion limits enforced (defaults set in the spec; per-manifest overrides carry reasons).
+6. Response size and decompression-expansion limits enforced. Both are checked during a streamed read, so an oversized or over-expanding body stops the transfer instead of being downloaded and rejected afterwards. Defaults: `MAX_RESPONSE_BYTES` 20 MB, `MAX_DECOMPRESSION_RATIO` 50x above a 64 KB floor (recorded government payloads measure 4.6x to 18.1x). Per-manifest overrides carry reasons.
 7. Per-host concurrency caps and retry budgets from the manifest's politeness settings; probes never exceed their reviewed cadence.
 
-These are testable: the security spec requires a fixture suite where each rule has a known-bad request that must be refused.
+These are testable: the security spec requires a fixture suite where each rule has a known-bad request that must be refused. All seven have one as of 2026-08-29 (`tests/core/test_egress.py`); rules 6 and 7 were prose until then, which GitHub issue #15 recorded.
 
 ### 2. Choice: data classification granularity
 

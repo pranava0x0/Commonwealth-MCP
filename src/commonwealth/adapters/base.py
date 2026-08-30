@@ -18,7 +18,9 @@ from urllib.parse import urlparse
 
 import httpx
 
-from ..core.egress import MAX_RESPONSE_BYTES, EgressPolicy
+from ..core.egress import (DECOMPRESSION_RATIO_FLOOR_BYTES,
+                          MAX_DECOMPRESSION_RATIO, MAX_RESPONSE_BYTES,
+                          EgressPolicy)
 from ..core.envelope import utc_now_iso
 from ..core.errors import RateLimited, SourceUnavailable
 from ..core.registry import DataClassification, SourceManifest
@@ -36,6 +38,37 @@ def _semaphore_for(host: str) -> asyncio.Semaphore:
     if host not in _host_semaphores:
         _host_semaphores[host] = asyncio.Semaphore(PER_HOST_CONCURRENCY)
     return _host_semaphores[host]
+
+
+def _raw_bytes(response: httpx.Response) -> int:
+    """Bytes that crossed the wire, before any content decoding.
+
+    `num_bytes_downloaded` is the real measure, but it is only tracked by
+    network transports — under a mock it stays 0 — so Content-Length is the
+    fallback. A server could lie about that header, but only by inflating
+    it, which makes the expansion ratio look smaller. The byte cap still
+    applies to the decoded size, so the pair holds either way.
+    """
+    if response.num_bytes_downloaded:
+        return response.num_bytes_downloaded
+    declared = response.headers.get("content-length")
+    return int(declared) if declared and declared.isdigit() else 0
+
+
+@dataclass
+class _Body:
+    """What survives a capped read.
+
+    The httpx Response is closed as soon as the body is read, so nothing
+    downstream may hold one: a streamed response that has been closed
+    raises on `.content`. This carries the four things callers actually
+    use.
+    """
+    status_code: int
+    headers: httpx.Headers
+    content: bytes
+    url: str
+    encoding: str | None
 
 
 class Fetcher(Protocol):
@@ -65,7 +98,7 @@ class HttpFetcher:
         redirecting to a different page shape rather than a 404, and the
         caller needs to know which page it actually landed on."""
         response, host = await self._fetch(url, {})
-        return self._decode_html(response, host), str(response.url)
+        return self._decode_html(response, host), response.url
 
     async def _fetch(self, url: str,
                      params: dict[str, Any]) -> tuple[httpx.Response, str]:
@@ -88,14 +121,14 @@ class HttpFetcher:
         raise SourceUnavailable("redirect chain did not settle")
 
     async def _request_with_retry(self, url: str,
-                                  params: dict[str, Any]) -> httpx.Response:
+                                  params: dict[str, Any]) -> _Body:
         last: Exception | None = None
         for attempt in range(RETRY_BUDGET + 1):
             try:
                 async with httpx.AsyncClient(
                         follow_redirects=False,
                         timeout=REQUEST_TIMEOUT_SECONDS) as client:
-                    response = await client.get(url, params=params)
+                    body = await self._read_capped(client, url, params)
             except httpx.HTTPError as err:
                 last = err
                 if attempt < RETRY_BUDGET:
@@ -106,12 +139,12 @@ class HttpFetcher:
                     f"{RETRY_BUDGET + 1} attempts "
                     f"({err.__class__.__name__}). This is an outage or "
                     "network problem, not an empty result.") from err
-            if response.status_code == 429 or response.status_code >= 500:
+            if body.status_code == 429 or body.status_code >= 500:
                 if attempt < RETRY_BUDGET:
                     await asyncio.sleep(1.5 * (attempt + 1))
                     continue
-                if response.status_code == 429:
-                    retry_after = response.headers.get("retry-after")
+                if body.status_code == 429:
+                    retry_after = body.headers.get("retry-after")
                     raise RateLimited(
                         f"{urlparse(url).hostname} is rate-limiting "
                         "(HTTP 429); respect the politeness budget",
@@ -119,15 +152,63 @@ class HttpFetcher:
                         and retry_after.isdigit() else None)
                 raise SourceUnavailable(
                     f"{urlparse(url).hostname} returned HTTP "
-                    f"{response.status_code} after retry. Outage, not an "
+                    f"{body.status_code} after retry. Outage, not an "
                     "empty result.")
-            return response
+            return body
         raise SourceUnavailable("unreachable") from last
 
-    def _decode_json(self, response: httpx.Response, host: str) -> dict:
-        body = self._checked_body(response, host)
+    @staticmethod
+    async def _read_capped(client: httpx.AsyncClient, url: str,
+                           params: dict[str, Any]) -> _Body:
+        """Stream the response, stopping as soon as it breaks a limit.
+
+        Egress rule 6 has two halves. The byte cap used to be checked on
+        `response.content`, which means the whole body was already
+        downloaded and held in memory before being rejected — the check
+        reported the problem after paying for it. Streaming stops the
+        transfer at the limit instead.
+
+        The second half is expansion. httpx decodes gzip transparently, so
+        `num_bytes_downloaded` is the compressed size and the accumulated
+        chunks are the decoded size. A response that decodes to far more
+        than it transferred is refused whatever its final size, because the
+        point of the attack is to be small on the wire.
+        """
+        host = urlparse(url).hostname or ""
+        request = client.build_request("GET", url, params=params)
+        response = await client.send(request, stream=True)
+        chunks: list[bytes] = []
+        decoded = 0
         try:
-            payload = json.loads(body)
+            if response.status_code == 200:
+                async for chunk in response.aiter_bytes():
+                    decoded += len(chunk)
+                    if decoded > MAX_RESPONSE_BYTES:
+                        raise SourceUnavailable(
+                            f"{host} response exceeded the "
+                            f"{MAX_RESPONSE_BYTES}-byte egress cap; "
+                            "transfer stopped")
+                    raw = _raw_bytes(response)
+                    if (decoded > DECOMPRESSION_RATIO_FLOOR_BYTES and raw > 0
+                            and decoded / raw > MAX_DECOMPRESSION_RATIO):
+                        raise SourceUnavailable(
+                            f"{host} response expanded {decoded // raw}x on "
+                            f"decompression, over the "
+                            f"{MAX_DECOMPRESSION_RATIO}x egress limit; "
+                            "transfer stopped")
+                    chunks.append(chunk)
+            return _Body(status_code=response.status_code,
+                         headers=response.headers,
+                         content=b"".join(chunks),
+                         url=str(response.url),
+                         encoding=response.encoding)
+        finally:
+            await response.aclose()
+
+    def _decode_json(self, body: _Body, host: str) -> dict:
+        raw = self._checked_body(body, host)
+        try:
+            payload = json.loads(raw)
         except json.JSONDecodeError as err:
             raise SourceUnavailable(
                 f"{host} returned non-JSON where JSON was expected "
@@ -136,21 +217,18 @@ class HttpFetcher:
             raise SourceUnavailable(f"{host} returned a non-object JSON body")
         return payload
 
-    def _decode_html(self, response: httpx.Response, host: str) -> str:
-        body = self._checked_body(response, host)
-        return body.decode(response.encoding or "utf-8", errors="replace")
+    def _decode_html(self, body: _Body, host: str) -> str:
+        raw = self._checked_body(body, host)
+        return raw.decode(body.encoding or "utf-8", errors="replace")
 
     @staticmethod
-    def _checked_body(response: httpx.Response, host: str) -> bytes:
-        if response.status_code != 200:
+    def _checked_body(body: _Body, host: str) -> bytes:
+        """The size limits are enforced during the read, so all that is
+        left here is the status check."""
+        if body.status_code != 200:
             raise SourceUnavailable(
-                f"{host} returned HTTP {response.status_code}")
-        body = response.content
-        if len(body) > MAX_RESPONSE_BYTES:
-            raise SourceUnavailable(
-                f"{host} response exceeded the {MAX_RESPONSE_BYTES}-byte "
-                "egress cap; refusing to process")
-        return body
+                f"{host} returned HTTP {body.status_code}")
+        return body.content
 
 
 @dataclass
