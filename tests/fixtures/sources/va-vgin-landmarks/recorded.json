@@ -1,0 +1,1427 @@
+{
+ "source_id": "va-vgin-landmarks",
+ "recorded_at": "2026-08-30T03:11:10Z",
+ "rights": {
+  "publisher": "Virginia Geographic Information Network (VGIN), part of the Virginia Department of Emergency Management",
+  "terms_url": "https://vgin.vdem.virginia.gov/datasets/virginia-landmarks/about",
+  "note": "Recorded government-published responses; third-party content excluded from the repo's CC0 grant (../../../design/architecture.md decision 0011)."
+ },
+ "summary": {
+  "health:landmarks": {
+   "layer": "landmarks",
+   "feature_count": 9437,
+   "min_expected": 7000,
+   "healthy": true
+  },
+  "near_vienna": {
+   "record_count": 4,
+   "names": [
+    "Vienna Police Department",
+    "Vienna, Station 2",
+    "Vienna Elementary School",
+    "Vienna Post Office"
+   ],
+   "sources": [
+    "Agency",
+    "DCJS",
+    "DOE",
+    "USPS"
+   ],
+   "null_last_checked": 1
+  },
+  "by_name_prefix": {
+   "prefix": "Vienna",
+   "record_count": 5
+  },
+  "by_place_type": {
+   "place_type": "Public Library Points",
+   "record_count": 23
+  }
+ },
+ "exchanges": [
+  {
+   "url": "https://vginmaps.vdem.virginia.gov/arcgis/rest/services/VA_Base_Layers/VA_Landmarks/FeatureServer/1/query",
+   "params": {
+    "f": "json",
+    "where": "1=1",
+    "returnCountOnly": "true"
+   },
+   "response": {
+    "count": 9437
+   }
+  },
+  {
+   "url": "https://vginmaps.vdem.virginia.gov/arcgis/rest/services/VA_Base_Layers/VA_Landmarks/FeatureServer/1/query",
+   "params": {
+    "f": "json",
+    "outFields": "Address,City,FIPScode,FIPSname,LandmkName,LastCheck,OBJECTID,Phone,PlaceType,Src,SrcTyp,State,URL,VAPID,Zip",
+    "resultRecordCount": "50",
+    "returnGeometry": "false",
+    "where": "FIPScode = 51059",
+    "geometry": "{\"x\": -77.2653, \"y\": 38.9012, \"spatialReference\": {\"wkid\": 4326}}",
+    "geometryType": "esriGeometryPoint",
+    "inSR": "4326",
+    "spatialRel": "esriSpatialRelIntersects",
+    "distance": "1000.0",
+    "units": "esriSRUnit_Meter"
+   },
+   "response": {
+    "objectIdFieldName": "OBJECTID",
+    "globalIdFieldName": "",
+    "geometryType": "esriGeometryPoint",
+    "spatialReference": {
+     "wkt": "PROJCS[\"Lambert_Conformal_Conic_Virginia\",GEOGCS[\"GCS_North_American_1983\",DATUM[\"D_North_American_1983\",SPHEROID[\"GRS_1980\",6378137.0,298.257222101]],PRIMEM[\"Greenwich\",0.0],UNIT[\"Degree\",0.0174532925199433]],PROJECTION[\"Lambert_Conformal_Conic\"],PARAMETER[\"False_Easting\",0.0],PARAMETER[\"False_Northing\",0.0],PARAMETER[\"Central_Meridian\",-79.5],PARAMETER[\"Standard_Parallel_1\",37.0],PARAMETER[\"Standard_Parallel_2\",39.5],PARAMETER[\"Latitude_Of_Origin\",36.0],UNIT[\"Meter\",1.0]]"
+    },
+    "fields": [
+     {
+      "name": "Address",
+      "alias": "Address",
+      "type": "esriFieldTypeString",
+      "length": 1073741822
+     },
+     {
+      "name": "City",
+      "alias": "City",
+      "type": "esriFieldTypeString",
+      "length": 50
+     },
+     {
+      "name": "FIPScode",
+      "alias": "FIPScode",
+      "type": "esriFieldTypeInteger"
+     },
+     {
+      "name": "FIPSname",
+      "alias": "FIPSname",
+      "type": "esriFieldTypeString",
+      "length": 50
+     },
+     {
+      "name": "LandmkName",
+      "alias": "LandmkName",
+      "type": "esriFieldTypeString",
+      "length": 150
+     },
+     {
+      "name": "LastCheck",
+      "alias": "LastCheck",
+      "type": "esriFieldTypeDate",
+      "length": 8
+     },
+     {
+      "name": "OBJECTID",
+      "alias": "OBJECTID",
+      "type": "esriFieldTypeOID"
+     },
+     {
+      "name": "Phone",
+      "alias": "Phone",
+      "type": "esriFieldTypeString",
+      "length": 1073741822
+     },
+     {
+      "name": "PlaceType",
+      "alias": "PlaceType",
+      "type": "esriFieldTypeString",
+      "length": 50
+     },
+     {
+      "name": "Src",
+      "alias": "Src",
+      "type": "esriFieldTypeString",
+      "length": 10
+     },
+     {
+      "name": "SrcTyp",
+      "alias": "SrcTyp",
+      "type": "esriFieldTypeString",
+      "length": 50
+     },
+     {
+      "name": "State",
+      "alias": "State",
+      "type": "esriFieldTypeString",
+      "length": 50
+     },
+     {
+      "name": "URL",
+      "alias": "URL",
+      "type": "esriFieldTypeString",
+      "length": 1073741822
+     },
+     {
+      "name": "VAPID",
+      "alias": "VAPID",
+      "type": "esriFieldTypeDouble"
+     },
+     {
+      "name": "Zip",
+      "alias": "Zip",
+      "type": "esriFieldTypeString",
+      "length": 50
+     }
+    ],
+    "features": [
+     {
+      "attributes": {
+       "Address": "215 CENTER ST S",
+       "City": "VIENNA",
+       "FIPScode": 51059,
+       "FIPSname": "Fairfax County",
+       "LandmkName": "Vienna Police Department",
+       "LastCheck": null,
+       "OBJECTID": 805,
+       "Phone": "-",
+       "PlaceType": "Law Enforcement Points",
+       "Src": "DCJS",
+       "SrcTyp": "Police - Town",
+       "State": "VA",
+       "URL": "https://www.viennava.gov/residents/town-services/police",
+       "VAPID": 51059000049768.0,
+       "Zip": "22180"
+      }
+     },
+     {
+      "attributes": {
+       "Address": "400 Center Street SW",
+       "City": "Vienna",
+       "FIPScode": 51059,
+       "FIPSname": "Fairfax County",
+       "LandmkName": "Vienna, Station 2",
+       "LastCheck": 1701388800000,
+       "OBJECTID": 1625,
+       "Phone": "703-938-2242",
+       "PlaceType": "Emergency Services Points",
+       "Src": "Agency",
+       "SrcTyp": "Fire & EMS",
+       "State": "VA",
+       "URL": "https://www.fairfaxcounty.gov/fire-ems/fire-stations",
+       "VAPID": 51059000242351.0,
+       "Zip": "22180"
+      }
+     },
+     {
+      "attributes": {
+       "Address": "128 Center St S",
+       "City": "Vienna",
+       "FIPScode": 51059,
+       "FIPSname": "Fairfax County",
+       "LandmkName": "Vienna Elementary School",
+       "LastCheck": 1761696000000,
+       "OBJECTID": 3188,
+       "Phone": "-",
+       "PlaceType": "Schools Public K12 Points",
+       "Src": "DOE",
+       "SrcTyp": "K12 Education - Public Elementary",
+       "State": "VA",
+       "URL": "https://www.doe.virginia.gov/about-vdoe/virginia-school-directories",
+       "VAPID": 51059000049764.0,
+       "Zip": "22180"
+      }
+     },
+     {
+      "attributes": {
+       "Address": "200 LAWYERS RD NW",
+       "City": "VIENNA",
+       "FIPScode": 51059,
+       "FIPSname": "Fairfax County",
+       "LandmkName": "Vienna Post Office",
+       "LastCheck": 1760659200000,
+       "OBJECTID": 5754,
+       "Phone": "-",
+       "PlaceType": "Post Office Points",
+       "Src": "USPS",
+       "SrcTyp": "Post Office",
+       "State": "VA",
+       "URL": "https://tools.usps.com/locations/details/1385957",
+       "VAPID": 51059000049733.0,
+       "Zip": "22180-9998"
+      }
+     }
+    ]
+   }
+  },
+  {
+   "url": "https://vginmaps.vdem.virginia.gov/arcgis/rest/services/VA_Base_Layers/VA_Landmarks/FeatureServer/1",
+   "params": {
+    "f": "json"
+   },
+   "response": {
+    "currentVersion": 11.3,
+    "cimVersion": "3.3.0",
+    "id": 1,
+    "name": "Virginia Landmark Locations",
+    "type": "Feature Layer",
+    "parentLayer": null,
+    "defaultVisibility": true,
+    "minScale": 0,
+    "maxScale": 0,
+    "canScaleSymbols": false,
+    "geometryType": "esriGeometryPoint",
+    "description": "This layer began as part of the Virginia.gov data development project in 2008-2009. VGIN was tasked to generate cartography and data for a specific application for location of Virginia state agency locations in relation to the project. In 2010, The State Broadband Data Development Program (SBDD) Community Anchor Institutions (CAI) dataset leveraged much of that data and catalogued broadband service to a specific feature. The points have since been checked and updated annually as part of the Virginia Landmark dataset. The data is matched to the Virginia Address Point dataset. There are numerous data sources associated to the point. The general development methodology is as follows: The facility data was extracted and geocoded to the VGIN Geocoding service. If results were positioned on the Road Centerline by the RCL locator, those features were subsequently updated and moved to match the address point in the data layer. Unmatched results were added to the map. Non-spatial address location data is harvested into a spreadsheet by the source agency and checked against the GIS data annually. Fields for Landmark Name, Place Type, Source, and Source Type can be used to differentiate specific data as stored in the dataset.",
+    "copyrightText": "VA Agencies, Virginia Geographic Information Network (VGIN)",
+    "editFieldsInfo": null,
+    "ownershipBasedAccessControlForFeatures": null,
+    "syncCanReturnChanges": false,
+    "relationships": [],
+    "isDataVersioned": false,
+    "isDataArchived": false,
+    "infoInEstimates": [
+     "extent",
+     "count"
+    ],
+    "isDataBranchVersioned": false,
+    "isDataReplicaTracked": false,
+    "isCoGoEnabled": false,
+    "supportsRollbackOnFailureParameter": true,
+    "archivingInfo": {
+     "supportsQueryWithHistoricMoment": false,
+     "startArchivingMoment": -1
+    },
+    "supportsStatistics": true,
+    "supportsExceedsLimitStatistics": true,
+    "supportsAdvancedQueries": true,
+    "supportsValidateSQL": true,
+    "supportsCoordinatesQuantization": true,
+    "supportsQuantizationEditMode": true,
+    "supportsCalculate": true,
+    "supportsASyncCalculate": true,
+    "supportsDatumTransformation": true,
+    "advancedQueryCapabilities": {
+     "supportsPagination": true,
+     "supportsTrueCurve": true,
+     "supportsQueryWithDistance": true,
+     "supportsReturningQueryExtent": true,
+     "supportsStatistics": true,
+     "supportsPercentileStatistics": true,
+     "supportsHavingClause": true,
+     "supportsOrderBy": true,
+     "supportsDistinct": true,
+     "supportsCountDistinct": true,
+     "supportsAdvancedQueryRelated": true,
+     "supportsQueryRelatedPagination": true,
+     "supportsCurrentUserQueries": true,
+     "supportsQueryWithResultType": true,
+     "supportsReturningGeometryCentroid": false,
+     "supportsSqlExpression": true,
+     "supportsQueryWithDatumTransformation": true,
+     "supportsLod": false,
+     "supportsQueryWithLodSR": false,
+     "supportsQueryAnalytic": true
+    },
+    "advancedQueryAnalyticCapabilities": {
+     "supportsLinearRegression": true,
+     "supportsAsync": true,
+     "supportsPercentileAnalytic": true
+    },
+    "advancedEditingCapabilities": {
+     "supportedSqlFormatsInCalculate": [
+      "standard"
+     ],
+     "supportsAsyncApplyEdits": true,
+     "supportsApplyEditsbyUploadID": true,
+     "supportedApplyEditsUploadIDFormats": "JSON"
+    },
+    "hasMetadata": true,
+    "extent": {
+     "xmin": -364787.6182999988,
+     "ymin": 60596.93142897356,
+     "xmax": 363945.8164000141,
+     "ymax": 376512.7718000049,
+     "spatialReference": {
+      "wkt2": "PROJCRS[\"Lambert_Conformal_Conic_Virginia\",BASEGEOGCRS[\"GCS_North_American_1983\",DATUM[\"D_North_American_1983\",ELLIPSOID[\"GRS_1980\",6378137.0,298.257222101,LENGTHUNIT[\"Meter\",1.0]]],PRIMEM[\"Greenwich\",0.0,ANGLEUNIT[\"Degree\",0.0174532925199433]],CS[ellipsoidal,2],ANGLEUNIT[\"Degree\",0.0174532925199433]],CONVERSION[\"Lambert_Conformal_Conic\",METHOD[\"Lambert_Conformal_Conic\"],PARAMETER[\"False_Easting\",0.0,LENGTHUNIT[\"Meter\",1.0]],PARAMETER[\"False_Northing\",0.0,LENGTHUNIT[\"Meter\",1.0]],PARAMETER[\"Central_Meridian\",-79.5,ANGLEUNIT[\"Degree\",0.0174532925199433]],PARAMETER[\"Standard_Parallel_1\",37.0,ANGLEUNIT[\"Degree\",0.0174532925199433]],PARAMETER[\"Standard_Parallel_2\",39.5,ANGLEUNIT[\"Degree\",0.0174532925199433]],PARAMETER[\"Latitude_Of_Origin\",36.0,ANGLEUNIT[\"Degree\",0.0174532925199433]]],CS[Cartesian,2],AXIS[\"Easting (X)\",east,ORDER[1]],AXIS[\"Northing (Y)\",north,ORDER[2]],LENGTHUNIT[\"Meter\",1.0]]",
+      "wkt": "PROJCS[\"Lambert_Conformal_Conic_Virginia\",GEOGCS[\"GCS_North_American_1983\",DATUM[\"D_North_American_1983\",SPHEROID[\"GRS_1980\",6378137.0,298.257222101]],PRIMEM[\"Greenwich\",0.0],UNIT[\"Degree\",0.0174532925199433]],PROJECTION[\"Lambert_Conformal_Conic\"],PARAMETER[\"False_Easting\",0.0],PARAMETER[\"False_Northing\",0.0],PARAMETER[\"Central_Meridian\",-79.5],PARAMETER[\"Standard_Parallel_1\",37.0],PARAMETER[\"Standard_Parallel_2\",39.5],PARAMETER[\"Latitude_Of_Origin\",36.0],UNIT[\"Meter\",1.0]]",
+      "xyTolerance": 0.0011111192296835916,
+      "zTolerance": 0.001,
+      "mTolerance": 0.001,
+      "falseX": -37232800,
+      "falseY": -28884600,
+      "xyUnits": 1799.9868480086793,
+      "falseZ": -100000,
+      "zUnits": 10000,
+      "falseM": -100000,
+      "mUnits": 10000
+     }
+    },
+    "sourceSpatialReference": {
+     "wkt2": "PROJCRS[\"VA_Lambert_Conformal_Conic\",BASEGEOGCRS[\"GCS_North_American_1983\",DATUM[\"D_North_American_1983\",ELLIPSOID[\"GRS_1980\",6378137.0,298.257222101,LENGTHUNIT[\"Meter\",1.0]]],PRIMEM[\"Greenwich\",0.0,ANGLEUNIT[\"Degree\",0.0174532925199433]],CS[ellipsoidal,2],ANGLEUNIT[\"Degree\",0.0174532925199433]],CONVERSION[\"Lambert_Conformal_Conic\",METHOD[\"Lambert_Conformal_Conic\"],PARAMETER[\"False_Easting\",0.0,LENGTHUNIT[\"Meter\",1.0]],PARAMETER[\"False_Northing\",0.0,LENGTHUNIT[\"Meter\",1.0]],PARAMETER[\"Central_Meridian\",-79.5,ANGLEUNIT[\"Degree\",0.0174532925199433]],PARAMETER[\"Standard_Parallel_1\",37.0,ANGLEUNIT[\"Degree\",0.0174532925199433]],PARAMETER[\"Standard_Parallel_2\",39.5,ANGLEUNIT[\"Degree\",0.0174532925199433]],PARAMETER[\"Latitude_Of_Origin\",36.0,ANGLEUNIT[\"Degree\",0.0174532925199433]]],CS[Cartesian,2],AXIS[\"Easting (X)\",east,ORDER[1]],AXIS[\"Northing (Y)\",north,ORDER[2]],LENGTHUNIT[\"Meter\",1.0]]",
+     "wkt": "PROJCS[\"VA_Lambert_Conformal_Conic\",GEOGCS[\"GCS_North_American_1983\",DATUM[\"D_North_American_1983\",SPHEROID[\"GRS_1980\",6378137.0,298.257222101]],PRIMEM[\"Greenwich\",0.0],UNIT[\"Degree\",0.0174532925199433]],PROJECTION[\"Lambert_Conformal_Conic\"],PARAMETER[\"False_Easting\",0.0],PARAMETER[\"False_Northing\",0.0],PARAMETER[\"Central_Meridian\",-79.5],PARAMETER[\"Standard_Parallel_1\",37.0],PARAMETER[\"Standard_Parallel_2\",39.5],PARAMETER[\"Latitude_Of_Origin\",36.0],UNIT[\"Meter\",1.0]]",
+     "xyTolerance": 0.001,
+     "zTolerance": 0.001,
+     "mTolerance": 0.001,
+     "falseX": -37232800,
+     "falseY": -28884600,
+     "xyUnits": 120957855.10008635,
+     "falseZ": 0,
+     "zUnits": 1,
+     "falseM": 0,
+     "mUnits": 1
+    },
+    "drawingInfo": {
+     "renderer": {
+      "type": "simple",
+      "symbol": {
+       "type": "esriSMS",
+       "style": "esriSMSCircle",
+       "color": [
+        38,
+        168,
+        90,
+        255
+       ],
+       "size": 4,
+       "angle": 0,
+       "xoffset": 0,
+       "yoffset": 0,
+       "outline": {
+        "color": [
+         0,
+         0,
+         0,
+         255
+        ],
+        "width": 0.7
+       }
+      }
+     },
+     "scaleSymbols": true,
+     "transparency": 0,
+     "labelingInfo": null
+    },
+    "hasM": false,
+    "hasZ": false,
+    "allowGeometryUpdates": true,
+    "allowTrueCurvesUpdates": true,
+    "onlyAllowTrueCurveUpdatesByTrueCurveClients": true,
+    "hasAttachments": false,
+    "supportsApplyEditsWithGlobalIds": false,
+    "htmlPopupType": "esriServerHTMLPopupTypeAsHTMLText",
+    "objectIdField": "OBJECTID",
+    "globalIdField": "",
+    "displayField": "LandmkName",
+    "typeIdField": "",
+    "subtypeField": "",
+    "fields": [
+     {
+      "name": "OBJECTID",
+      "type": "esriFieldTypeOID",
+      "alias": "OBJECTID",
+      "domain": null,
+      "editable": false,
+      "nullable": false,
+      "defaultValue": null,
+      "modelName": "OBJECTID"
+     },
+     {
+      "name": "VAPID",
+      "type": "esriFieldTypeDouble",
+      "alias": "VAPID",
+      "domain": null,
+      "editable": true,
+      "nullable": true,
+      "defaultValue": null,
+      "modelName": "VAPID"
+     },
+     {
+      "name": "LandmkName",
+      "type": "esriFieldTypeString",
+      "alias": "LandmkName",
+      "domain": null,
+      "editable": true,
+      "nullable": true,
+      "length": 150,
+      "defaultValue": null,
+      "modelName": "Name"
+     },
+     {
+      "name": "Address",
+      "type": "esriFieldTypeString",
+      "alias": "Address",
+      "domain": null,
+      "editable": true,
+      "nullable": true,
+      "length": 1073741822,
+      "defaultValue": null,
+      "modelName": "Address"
+     },
+     {
+      "name": "City",
+      "type": "esriFieldTypeString",
+      "alias": "City",
+      "domain": null,
+      "editable": true,
+      "nullable": true,
+      "length": 50,
+      "defaultValue": null,
+      "modelName": "City"
+     },
+     {
+      "name": "State",
+      "type": "esriFieldTypeString",
+      "alias": "State",
+      "domain": null,
+      "editable": true,
+      "nullable": true,
+      "length": 50,
+      "defaultValue": null,
+      "modelName": "State"
+     },
+     {
+      "name": "Zip",
+      "type": "esriFieldTypeString",
+      "alias": "Zip",
+      "domain": null,
+      "editable": true,
+      "nullable": true,
+      "length": 50,
+      "defaultValue": null,
+      "modelName": "Zip"
+     },
+     {
+      "name": "Phone",
+      "type": "esriFieldTypeString",
+      "alias": "Phone",
+      "domain": null,
+      "editable": true,
+      "nullable": true,
+      "length": 1073741822,
+      "defaultValue": null,
+      "modelName": "Phone"
+     },
+     {
+      "name": "URL",
+      "type": "esriFieldTypeString",
+      "alias": "URL",
+      "domain": null,
+      "editable": true,
+      "nullable": true,
+      "length": 1073741822,
+      "defaultValue": null,
+      "modelName": "URL"
+     },
+     {
+      "name": "X",
+      "type": "esriFieldTypeDouble",
+      "alias": "X",
+      "domain": null,
+      "editable": true,
+      "nullable": true,
+      "defaultValue": null,
+      "modelName": "X"
+     },
+     {
+      "name": "Y",
+      "type": "esriFieldTypeDouble",
+      "alias": "Y",
+      "domain": null,
+      "editable": true,
+      "nullable": true,
+      "defaultValue": null,
+      "modelName": "Y"
+     },
+     {
+      "name": "LOC",
+      "type": "esriFieldTypeString",
+      "alias": "LOC",
+      "domain": null,
+      "editable": true,
+      "nullable": true,
+      "length": 50,
+      "defaultValue": null,
+      "modelName": "LOC"
+     },
+     {
+      "name": "LastCheck",
+      "type": "esriFieldTypeDate",
+      "alias": "LastCheck",
+      "domain": null,
+      "editable": true,
+      "nullable": true,
+      "length": 8,
+      "defaultValue": null,
+      "modelName": "LastCheck"
+     },
+     {
+      "name": "PlaceType",
+      "type": "esriFieldTypeString",
+      "alias": "PlaceType",
+      "domain": null,
+      "editable": true,
+      "nullable": true,
+      "length": 50,
+      "defaultValue": null,
+      "modelName": "PlaceType"
+     },
+     {
+      "name": "SrcTyp",
+      "type": "esriFieldTypeString",
+      "alias": "SrcTyp",
+      "domain": null,
+      "editable": true,
+      "nullable": true,
+      "length": 50,
+      "defaultValue": null,
+      "modelName": "SrcTyp"
+     },
+     {
+      "name": "Src",
+      "type": "esriFieldTypeString",
+      "alias": "Src",
+      "domain": null,
+      "editable": true,
+      "nullable": true,
+      "length": 10,
+      "defaultValue": null,
+      "modelName": "Src"
+     },
+     {
+      "name": "FIPScode",
+      "type": "esriFieldTypeInteger",
+      "alias": "FIPScode",
+      "domain": null,
+      "editable": true,
+      "nullable": true,
+      "defaultValue": null,
+      "modelName": "JOINID"
+     },
+     {
+      "name": "FIPSname",
+      "type": "esriFieldTypeString",
+      "alias": "FIPSname",
+      "domain": null,
+      "editable": true,
+      "nullable": true,
+      "length": 50,
+      "defaultValue": null,
+      "modelName": "GProviderName"
+     }
+    ],
+    "geometryField": {
+     "name": "Shape",
+     "type": "esriFieldTypeGeometry",
+     "alias": "Shape",
+     "domain": null,
+     "editable": true,
+     "nullable": true,
+     "defaultValue": null,
+     "modelName": "Shape"
+    },
+    "indexes": [
+     {
+      "name": "R1538_pk",
+      "fields": "OBJECTID",
+      "isAscending": true,
+      "isUnique": true,
+      "description": ""
+     }
+    ],
+    "datesInUnknownTimezone": false,
+    "dateFieldsTimeReference": {
+     "timeZone": "UTC",
+     "respectsDaylightSaving": false
+    },
+    "preferredTimeReference": null,
+    "types": [],
+    "templates": [
+     {
+      "name": "Virginia Landmark Locations",
+      "description": "",
+      "prototype": {
+       "attributes": {
+        "FIPScode": null,
+        "FIPSname": null,
+        "VAPID": null,
+        "LandmkName": null,
+        "Address": null,
+        "City": null,
+        "State": null,
+        "Zip": null,
+        "Phone": null,
+        "URL": null,
+        "X": null,
+        "Y": null,
+        "LOC": null,
+        "LastCheck": null,
+        "PlaceType": null,
+        "SrcTyp": null,
+        "Src": null
+       }
+      },
+      "drawingTool": "esriFeatureEditToolPoint"
+     }
+    ],
+    "maxRecordCount": 2000,
+    "supportedQueryFormats": "JSON, geoJSON, PBF",
+    "supportedExportFormats": "sqlite,filegdb,shapefile,csv,geojson",
+    "capabilities": "Query",
+    "useStandardizedQueries": true,
+    "bigIntegerRestrictedTo53Bits": true,
+    "supportedSpatialRelationships": [
+     "esriSpatialRelIntersects",
+     "esriSpatialRelContains",
+     "esriSpatialRelCrosses",
+     "esriSpatialRelEnvelopeIntersects",
+     "esriSpatialRelIndexIntersects",
+     "esriSpatialRelOverlaps",
+     "esriSpatialRelTouches",
+     "esriSpatialRelWithin",
+     "esriSpatialRelRelation"
+    ],
+    "standardMaxRecordCount": 32000,
+    "tileMaxRecordCount": 8000,
+    "standardMaxRecordCountNoGeometry": 32000,
+    "maxRecordCountFactor": 1
+   }
+  },
+  {
+   "url": "https://vginmaps.vdem.virginia.gov/arcgis/rest/services/VA_Base_Layers/VA_Landmarks/FeatureServer/1/query",
+   "params": {
+    "f": "json",
+    "outFields": "Address,City,FIPScode,FIPSname,LandmkName,LastCheck,OBJECTID,Phone,PlaceType,Src,SrcTyp,State,URL,VAPID,Zip",
+    "resultRecordCount": "50",
+    "returnGeometry": "false",
+    "where": "FIPScode = 51059 AND LandmkName LIKE 'Vienna%' ESCAPE '\\'"
+   },
+   "response": {
+    "objectIdFieldName": "OBJECTID",
+    "globalIdFieldName": "",
+    "geometryType": "esriGeometryPoint",
+    "spatialReference": {
+     "wkt": "PROJCS[\"Lambert_Conformal_Conic_Virginia\",GEOGCS[\"GCS_North_American_1983\",DATUM[\"D_North_American_1983\",SPHEROID[\"GRS_1980\",6378137.0,298.257222101]],PRIMEM[\"Greenwich\",0.0],UNIT[\"Degree\",0.0174532925199433]],PROJECTION[\"Lambert_Conformal_Conic\"],PARAMETER[\"False_Easting\",0.0],PARAMETER[\"False_Northing\",0.0],PARAMETER[\"Central_Meridian\",-79.5],PARAMETER[\"Standard_Parallel_1\",37.0],PARAMETER[\"Standard_Parallel_2\",39.5],PARAMETER[\"Latitude_Of_Origin\",36.0],UNIT[\"Meter\",1.0]]"
+    },
+    "fields": [
+     {
+      "name": "Address",
+      "alias": "Address",
+      "type": "esriFieldTypeString",
+      "length": 1073741822
+     },
+     {
+      "name": "City",
+      "alias": "City",
+      "type": "esriFieldTypeString",
+      "length": 50
+     },
+     {
+      "name": "FIPScode",
+      "alias": "FIPScode",
+      "type": "esriFieldTypeInteger"
+     },
+     {
+      "name": "FIPSname",
+      "alias": "FIPSname",
+      "type": "esriFieldTypeString",
+      "length": 50
+     },
+     {
+      "name": "LandmkName",
+      "alias": "LandmkName",
+      "type": "esriFieldTypeString",
+      "length": 150
+     },
+     {
+      "name": "LastCheck",
+      "alias": "LastCheck",
+      "type": "esriFieldTypeDate",
+      "length": 8
+     },
+     {
+      "name": "OBJECTID",
+      "alias": "OBJECTID",
+      "type": "esriFieldTypeOID"
+     },
+     {
+      "name": "Phone",
+      "alias": "Phone",
+      "type": "esriFieldTypeString",
+      "length": 1073741822
+     },
+     {
+      "name": "PlaceType",
+      "alias": "PlaceType",
+      "type": "esriFieldTypeString",
+      "length": 50
+     },
+     {
+      "name": "Src",
+      "alias": "Src",
+      "type": "esriFieldTypeString",
+      "length": 10
+     },
+     {
+      "name": "SrcTyp",
+      "alias": "SrcTyp",
+      "type": "esriFieldTypeString",
+      "length": 50
+     },
+     {
+      "name": "State",
+      "alias": "State",
+      "type": "esriFieldTypeString",
+      "length": 50
+     },
+     {
+      "name": "URL",
+      "alias": "URL",
+      "type": "esriFieldTypeString",
+      "length": 1073741822
+     },
+     {
+      "name": "VAPID",
+      "alias": "VAPID",
+      "type": "esriFieldTypeDouble"
+     },
+     {
+      "name": "Zip",
+      "alias": "Zip",
+      "type": "esriFieldTypeString",
+      "length": 50
+     }
+    ],
+    "features": [
+     {
+      "attributes": {
+       "Address": "215 CENTER ST S",
+       "City": "VIENNA",
+       "FIPScode": 51059,
+       "FIPSname": "Fairfax County",
+       "LandmkName": "Vienna Police Department",
+       "LastCheck": null,
+       "OBJECTID": 805,
+       "Phone": "-",
+       "PlaceType": "Law Enforcement Points",
+       "Src": "DCJS",
+       "SrcTyp": "Police - Town",
+       "State": "VA",
+       "URL": "https://www.viennava.gov/residents/town-services/police",
+       "VAPID": 51059000049768.0,
+       "Zip": "22180"
+      }
+     },
+     {
+      "attributes": {
+       "Address": "400 Center Street SW",
+       "City": "Vienna",
+       "FIPScode": 51059,
+       "FIPSname": "Fairfax County",
+       "LandmkName": "Vienna, Station 2",
+       "LastCheck": 1701388800000,
+       "OBJECTID": 1625,
+       "Phone": "703-938-2242",
+       "PlaceType": "Emergency Services Points",
+       "Src": "Agency",
+       "SrcTyp": "Fire & EMS",
+       "State": "VA",
+       "URL": "https://www.fairfaxcounty.gov/fire-ems/fire-stations",
+       "VAPID": 51059000242351.0,
+       "Zip": "22180"
+      }
+     },
+     {
+      "attributes": {
+       "Address": "128 Center St S",
+       "City": "Vienna",
+       "FIPScode": 51059,
+       "FIPSname": "Fairfax County",
+       "LandmkName": "Vienna Elementary School",
+       "LastCheck": 1761696000000,
+       "OBJECTID": 3188,
+       "Phone": "-",
+       "PlaceType": "Schools Public K12 Points",
+       "Src": "DOE",
+       "SrcTyp": "K12 Education - Public Elementary",
+       "State": "VA",
+       "URL": "https://www.doe.virginia.gov/about-vdoe/virginia-school-directories",
+       "VAPID": 51059000049764.0,
+       "Zip": "22180"
+      }
+     },
+     {
+      "attributes": {
+       "Address": "200 LAWYERS RD NW",
+       "City": "VIENNA",
+       "FIPScode": 51059,
+       "FIPSname": "Fairfax County",
+       "LandmkName": "Vienna Post Office",
+       "LastCheck": 1760659200000,
+       "OBJECTID": 5754,
+       "Phone": "-",
+       "PlaceType": "Post Office Points",
+       "Src": "USPS",
+       "SrcTyp": "Post Office",
+       "State": "VA",
+       "URL": "https://tools.usps.com/locations/details/1385957",
+       "VAPID": 51059000049733.0,
+       "Zip": "22180-9998"
+      }
+     },
+     {
+      "attributes": {
+       "Address": "8150 LEESBURG PIKE STE 180B",
+       "City": "VIENNA",
+       "FIPScode": 51059,
+       "FIPSname": "Fairfax County",
+       "LandmkName": "Vienna Tysons Self Serv Po Post Office",
+       "LastCheck": 1760659200000,
+       "OBJECTID": 6256,
+       "Phone": "-",
+       "PlaceType": "Post Office Points",
+       "Src": "USPS",
+       "SrcTyp": "Post Office",
+       "State": "VA",
+       "URL": "https://tools.usps.com/locations/details/1505075",
+       "VAPID": 51059000354414.0,
+       "Zip": "22182-7714"
+      }
+     }
+    ]
+   }
+  },
+  {
+   "url": "https://vginmaps.vdem.virginia.gov/arcgis/rest/services/VA_Base_Layers/VA_Landmarks/FeatureServer/1/query",
+   "params": {
+    "f": "json",
+    "outFields": "Address,City,FIPScode,FIPSname,LandmkName,LastCheck,OBJECTID,Phone,PlaceType,Src,SrcTyp,State,URL,VAPID,Zip",
+    "resultRecordCount": "50",
+    "returnGeometry": "false",
+    "where": "FIPScode = 51059 AND PlaceType = 'Public Library Points'"
+   },
+   "response": {
+    "objectIdFieldName": "OBJECTID",
+    "globalIdFieldName": "",
+    "geometryType": "esriGeometryPoint",
+    "spatialReference": {
+     "wkt": "PROJCS[\"Lambert_Conformal_Conic_Virginia\",GEOGCS[\"GCS_North_American_1983\",DATUM[\"D_North_American_1983\",SPHEROID[\"GRS_1980\",6378137.0,298.257222101]],PRIMEM[\"Greenwich\",0.0],UNIT[\"Degree\",0.0174532925199433]],PROJECTION[\"Lambert_Conformal_Conic\"],PARAMETER[\"False_Easting\",0.0],PARAMETER[\"False_Northing\",0.0],PARAMETER[\"Central_Meridian\",-79.5],PARAMETER[\"Standard_Parallel_1\",37.0],PARAMETER[\"Standard_Parallel_2\",39.5],PARAMETER[\"Latitude_Of_Origin\",36.0],UNIT[\"Meter\",1.0]]"
+    },
+    "fields": [
+     {
+      "name": "Address",
+      "alias": "Address",
+      "type": "esriFieldTypeString",
+      "length": 1073741822
+     },
+     {
+      "name": "City",
+      "alias": "City",
+      "type": "esriFieldTypeString",
+      "length": 50
+     },
+     {
+      "name": "FIPScode",
+      "alias": "FIPScode",
+      "type": "esriFieldTypeInteger"
+     },
+     {
+      "name": "FIPSname",
+      "alias": "FIPSname",
+      "type": "esriFieldTypeString",
+      "length": 50
+     },
+     {
+      "name": "LandmkName",
+      "alias": "LandmkName",
+      "type": "esriFieldTypeString",
+      "length": 150
+     },
+     {
+      "name": "LastCheck",
+      "alias": "LastCheck",
+      "type": "esriFieldTypeDate",
+      "length": 8
+     },
+     {
+      "name": "OBJECTID",
+      "alias": "OBJECTID",
+      "type": "esriFieldTypeOID"
+     },
+     {
+      "name": "Phone",
+      "alias": "Phone",
+      "type": "esriFieldTypeString",
+      "length": 1073741822
+     },
+     {
+      "name": "PlaceType",
+      "alias": "PlaceType",
+      "type": "esriFieldTypeString",
+      "length": 50
+     },
+     {
+      "name": "Src",
+      "alias": "Src",
+      "type": "esriFieldTypeString",
+      "length": 10
+     },
+     {
+      "name": "SrcTyp",
+      "alias": "SrcTyp",
+      "type": "esriFieldTypeString",
+      "length": 50
+     },
+     {
+      "name": "State",
+      "alias": "State",
+      "type": "esriFieldTypeString",
+      "length": 50
+     },
+     {
+      "name": "URL",
+      "alias": "URL",
+      "type": "esriFieldTypeString",
+      "length": 1073741822
+     },
+     {
+      "name": "VAPID",
+      "alias": "VAPID",
+      "type": "esriFieldTypeDouble"
+     },
+     {
+      "name": "Zip",
+      "alias": "Zip",
+      "type": "esriFieldTypeString",
+      "length": 50
+     }
+    ],
+    "features": [
+     {
+      "attributes": {
+       "Address": "14200 St. Germain Drive",
+       "City": "Centreville",
+       "FIPScode": 51059,
+       "FIPSname": "Fairfax County",
+       "LandmkName": "Centreville Regional Library",
+       "LastCheck": 1760918400000,
+       "OBJECTID": 8,
+       "Phone": "-",
+       "PlaceType": "Public Library Points",
+       "Src": "LVA",
+       "SrcTyp": "Public Library",
+       "State": "VA",
+       "URL": "https://www.fairfaxcounty.gov/library/branches/branch-locations-and-hours",
+       "VAPID": 51059000254125.0,
+       "Zip": "20121"
+      }
+     },
+     {
+      "attributes": {
+       "Address": "768 Center Street",
+       "City": "Herndon",
+       "FIPScode": 51059,
+       "FIPSname": "Fairfax County",
+       "LandmkName": "Herndon Fortnightly Library",
+       "LastCheck": 1760918400000,
+       "OBJECTID": 11,
+       "Phone": "-",
+       "PlaceType": "Public Library Points",
+       "Src": "LVA",
+       "SrcTyp": "Public Library",
+       "State": "VA",
+       "URL": "https://www.fairfaxcounty.gov/library/branches/branch-locations-and-hours",
+       "VAPID": 51059000330697.0,
+       "Zip": "20170"
+      }
+     },
+     {
+      "attributes": {
+       "Address": "9000 Burke Lake Road",
+       "City": "Burke",
+       "FIPScode": 51059,
+       "FIPSname": "Fairfax County",
+       "LandmkName": "Kings Park Library",
+       "LastCheck": 1760918400000,
+       "OBJECTID": 17,
+       "Phone": "-",
+       "PlaceType": "Public Library Points",
+       "Src": "LVA",
+       "SrcTyp": "Public Library",
+       "State": "VA",
+       "URL": "https://www.fairfaxcounty.gov/library/branches/branch-locations-and-hours",
+       "VAPID": 51059000326492.0,
+       "Zip": "22015"
+      }
+     },
+     {
+      "attributes": {
+       "Address": "5935 Freds Oak Road",
+       "City": "Burke",
+       "FIPScode": 51059,
+       "FIPSname": "Fairfax County",
+       "LandmkName": "Burke Centre Library",
+       "LastCheck": 1760918400000,
+       "OBJECTID": 18,
+       "Phone": "-",
+       "PlaceType": "Public Library Points",
+       "Src": "LVA",
+       "SrcTyp": "Public Library",
+       "State": "VA",
+       "URL": "https://www.fairfaxcounty.gov/library/branches/branch-locations-and-hours",
+       "VAPID": 51059000159629.0,
+       "Zip": "22015"
+      }
+     },
+     {
+      "attributes": {
+       "Address": "6450 Sydenstricker Road",
+       "City": "Burke",
+       "FIPScode": 51059,
+       "FIPSname": "Fairfax County",
+       "LandmkName": "Pohick Regional Library",
+       "LastCheck": 1760918400000,
+       "OBJECTID": 19,
+       "Phone": "-",
+       "PlaceType": "Public Library Points",
+       "Src": "LVA",
+       "SrcTyp": "Public Library",
+       "State": "VA",
+       "URL": "https://www.fairfaxcounty.gov/library/branches/branch-locations-and-hours",
+       "VAPID": 51059000175185.0,
+       "Zip": "22015"
+      }
+     },
+     {
+      "attributes": {
+       "Address": "11925 Bowman Towne Drive",
+       "City": "Reston",
+       "FIPScode": 51059,
+       "FIPSname": "Fairfax County",
+       "LandmkName": "Reston Regional Library",
+       "LastCheck": 1760918400000,
+       "OBJECTID": 20,
+       "Phone": "-",
+       "PlaceType": "Public Library Points",
+       "Src": "LVA",
+       "SrcTyp": "Public Library",
+       "State": "VA",
+       "URL": "https://www.fairfaxcounty.gov/library/branches/branch-locations-and-hours",
+       "VAPID": 51059000005810.0,
+       "Zip": "20190"
+      }
+     },
+     {
+      "attributes": {
+       "Address": "7415 Arlington Boulevard",
+       "City": "Falls Church",
+       "FIPScode": 51059,
+       "FIPSname": "Fairfax County",
+       "LandmkName": "Thomas Jefferson Library",
+       "LastCheck": 1760918400000,
+       "OBJECTID": 25,
+       "Phone": "-",
+       "PlaceType": "Public Library Points",
+       "Src": "LVA",
+       "SrcTyp": "Public Library",
+       "State": "VA",
+       "URL": "https://www.fairfaxcounty.gov/library/branches/branch-locations-and-hours",
+       "VAPID": 51059000205332.0,
+       "Zip": "22042"
+      }
+     },
+     {
+      "attributes": {
+       "Address": "6101 Knollwood Drive",
+       "City": "Falls Church",
+       "FIPScode": 51059,
+       "FIPSname": "Fairfax County",
+       "LandmkName": "Culmore Community Library",
+       "LastCheck": 1760918400000,
+       "OBJECTID": 26,
+       "Phone": "-",
+       "PlaceType": "Public Library Points",
+       "Src": "LVA",
+       "SrcTyp": "Public Library",
+       "State": "VA",
+       "URL": "https://www.fairfaxcounty.gov/library/branches/branch-locations-and-hours",
+       "VAPID": 51059000162079.0,
+       "Zip": "22041"
+      }
+     },
+     {
+      "attributes": {
+       "Address": "9830 Georgetown Pike",
+       "City": "Great Falls",
+       "FIPScode": 51059,
+       "FIPSname": "Fairfax County",
+       "LandmkName": "Great Falls Library",
+       "LastCheck": 1760918400000,
+       "OBJECTID": 27,
+       "Phone": "-",
+       "PlaceType": "Public Library Points",
+       "Src": "LVA",
+       "SrcTyp": "Public Library",
+       "State": "VA",
+       "URL": "https://www.fairfaxcounty.gov/library/branches/branch-locations-and-hours",
+       "VAPID": 51059000267238.0,
+       "Zip": "22066"
+      }
+     },
+     {
+      "attributes": {
+       "Address": "7584 Leesburg Pike",
+       "City": "Falls Church",
+       "FIPScode": 51059,
+       "FIPSname": "Fairfax County",
+       "LandmkName": "Tysons-Pimmit Regional Library",
+       "LastCheck": 1760918400000,
+       "OBJECTID": 28,
+       "Phone": "-",
+       "PlaceType": "Public Library Points",
+       "Src": "LVA",
+       "SrcTyp": "Public Library",
+       "State": "VA",
+       "URL": "https://www.fairfaxcounty.gov/library/branches/branch-locations-and-hours",
+       "VAPID": 51059000248156.0,
+       "Zip": "22043"
+      }
+     },
+     {
+      "attributes": {
+       "Address": "10304 Lynnhaven Place",
+       "City": "Oakton",
+       "FIPScode": 51059,
+       "FIPSname": "Fairfax County",
+       "LandmkName": "Oakton Library",
+       "LastCheck": 1760918400000,
+       "OBJECTID": 30,
+       "Phone": "-",
+       "PlaceType": "Public Library Points",
+       "Src": "LVA",
+       "SrcTyp": "Public Library",
+       "State": "VA",
+       "URL": "https://www.fairfaxcounty.gov/library/branches/branch-locations-and-hours",
+       "VAPID": 51059000298477.0,
+       "Zip": "22124"
+      }
+     },
+     {
+      "attributes": {
+       "Address": "9520 Richmond Highway",
+       "City": "Lorton",
+       "FIPScode": 51059,
+       "FIPSname": "Fairfax County",
+       "LandmkName": "Lorton Library",
+       "LastCheck": 1760918400000,
+       "OBJECTID": 31,
+       "Phone": "-",
+       "PlaceType": "Public Library Points",
+       "Src": "LVA",
+       "SrcTyp": "Public Library",
+       "State": "VA",
+       "URL": "https://www.fairfaxcounty.gov/library/branches/branch-locations-and-hours",
+       "VAPID": 51059000265490.0,
+       "Zip": "22079"
+      }
+     },
+     {
+      "attributes": {
+       "Address": "7250 Commerce Street",
+       "City": "Springfield",
+       "FIPScode": 51059,
+       "FIPSname": "Fairfax County",
+       "LandmkName": "Richard Byrd Library",
+       "LastCheck": 1760918400000,
+       "OBJECTID": 32,
+       "Phone": "-",
+       "PlaceType": "Public Library Points",
+       "Src": "LVA",
+       "SrcTyp": "Public Library",
+       "State": "VA",
+       "URL": "https://www.fairfaxcounty.gov/library/branches/branch-locations-and-hours",
+       "VAPID": 51059000197526.0,
+       "Zip": "22150"
+      }
+     },
+     {
+      "attributes": {
+       "Address": "1244 Oak Ridge Avenue",
+       "City": "McLean",
+       "FIPScode": 51059,
+       "FIPSname": "Fairfax County",
+       "LandmkName": "Dolley Madison Library",
+       "LastCheck": 1760918400000,
+       "OBJECTID": 33,
+       "Phone": "-",
+       "PlaceType": "Public Library Points",
+       "Src": "LVA",
+       "SrcTyp": "Public Library",
+       "State": "VA",
+       "URL": "https://www.fairfaxcounty.gov/library/branches/branch-locations-and-hours",
+       "VAPID": 51059000020243.0,
+       "Zip": "22101"
+      }
+     },
+     {
+      "attributes": {
+       "Address": "262 Cedar Lane Unit C",
+       "City": "Vienna",
+       "FIPScode": 51059,
+       "FIPSname": "Fairfax County",
+       "LandmkName": "Patrick Henry Library",
+       "LastCheck": 1760918400000,
+       "OBJECTID": 34,
+       "Phone": "-",
+       "PlaceType": "Public Library Points",
+       "Src": "LVA",
+       "SrcTyp": "Public Library",
+       "State": "VA",
+       "URL": "https://www.fairfaxcounty.gov/library/branches/branch-locations-and-hours",
+       "VAPID": 51059000330581.0,
+       "Zip": "22180"
+      }
+     },
+     {
+      "attributes": {
+       "Address": "2501 Sherwood Hall Lane",
+       "City": "Alexandria",
+       "FIPScode": 51059,
+       "FIPSname": "Fairfax County",
+       "LandmkName": "Sherwood Regional Library",
+       "LastCheck": 1760918400000,
+       "OBJECTID": 46,
+       "Phone": "-",
+       "PlaceType": "Public Library Points",
+       "Src": "LVA",
+       "SrcTyp": "Public Library",
+       "State": "VA",
+       "URL": "https://www.fairfaxcounty.gov/library/branches/branch-locations-and-hours",
+       "VAPID": 51059000059794.0,
+       "Zip": "22306"
+      }
+     },
+     {
+      "attributes": {
+       "Address": "6209 Rose Hill Drive",
+       "City": "Alexandria",
+       "FIPScode": 51059,
+       "FIPSname": "Fairfax County",
+       "LandmkName": "John Marshall Library",
+       "LastCheck": 1760918400000,
+       "OBJECTID": 48,
+       "Phone": "-",
+       "PlaceType": "Public Library Points",
+       "Src": "LVA",
+       "SrcTyp": "Public Library",
+       "State": "VA",
+       "URL": "https://www.fairfaxcounty.gov/library/branches/branch-locations-and-hours",
+       "VAPID": 51059000170730.0,
+       "Zip": "22310"
+      }
+     },
+     {
+      "attributes": {
+       "Address": "6500 Landsdowne Centre",
+       "City": "Alexandria",
+       "FIPScode": 51059,
+       "FIPSname": "Fairfax County",
+       "LandmkName": "Kingstowne Library",
+       "LastCheck": 1760918400000,
+       "OBJECTID": 54,
+       "Phone": "-",
+       "PlaceType": "Public Library Points",
+       "Src": "LVA",
+       "SrcTyp": "Public Library",
+       "State": "VA",
+       "URL": "https://www.fairfaxcounty.gov/library/branches/branch-locations-and-hours",
+       "VAPID": 51059000291389.0,
+       "Zip": "22315"
+      }
+     },
+     {
+      "attributes": {
+       "Address": "6614 Fort Hunt Road",
+       "City": "Alexandria",
+       "FIPScode": 51059,
+       "FIPSname": "Fairfax County",
+       "LandmkName": "Martha Washington Library",
+       "LastCheck": 1760918400000,
+       "OBJECTID": 58,
+       "Phone": "-",
+       "PlaceType": "Public Library Points",
+       "Src": "LVA",
+       "SrcTyp": "Public Library",
+       "State": "VA",
+       "URL": "https://www.fairfaxcounty.gov/library/branches/branch-locations-and-hours",
+       "VAPID": 51059000181677.0,
+       "Zip": "22307"
+      }
+     },
+     {
+      "attributes": {
+       "Address": "4000 Stringfellow Road",
+       "City": "Chantilly",
+       "FIPScode": 51059,
+       "FIPSname": "Fairfax County",
+       "LandmkName": "Chantilly Regional Library",
+       "LastCheck": 1760918400000,
+       "OBJECTID": 298,
+       "Phone": "-",
+       "PlaceType": "Public Library Points",
+       "Src": "LVA",
+       "SrcTyp": "Public Library",
+       "State": "VA",
+       "URL": "https://www.fairfaxcounty.gov/library/branches/branch-locations-and-hours",
+       "VAPID": 51059000124978.0,
+       "Zip": "20151"
+      }
+     },
+     {
+      "attributes": {
+       "Address": "12000 Government Center Parkway, Suite 324",
+       "City": "Fairfax",
+       "FIPScode": 51059,
+       "FIPSname": "Fairfax County",
+       "LandmkName": "Fairfax County Library Administration",
+       "LastCheck": 1760918400000,
+       "OBJECTID": 300,
+       "Phone": "-",
+       "PlaceType": "Public Library Points",
+       "Src": "LVA",
+       "SrcTyp": "Public Library",
+       "State": "VA",
+       "URL": "https://www.fairfaxcounty.gov/library/branches/branch-locations-and-hours",
+       "VAPID": 51059000039523.0,
+       "Zip": "22035"
+      }
+     },
+     {
+      "attributes": {
+       "Address": "12000 Government Center Parkway, Suite 123",
+       "City": "Fairfax",
+       "FIPScode": 51059,
+       "FIPSname": "Fairfax County",
+       "LandmkName": "Fairfax County Library Access Services Location",
+       "LastCheck": 1760918400000,
+       "OBJECTID": 301,
+       "Phone": "-",
+       "PlaceType": "Public Library Points",
+       "Src": "LVA",
+       "SrcTyp": "Public Library",
+       "State": "VA",
+       "URL": "https://www.fairfaxcounty.gov/library/branches/branch-locations-and-hours",
+       "VAPID": 51059000039523.0,
+       "Zip": "22035"
+      }
+     },
+     {
+      "attributes": {
+       "Address": "7001 Little River Turnpike",
+       "City": "Annandale",
+       "FIPScode": 51059,
+       "FIPSname": "Fairfax County",
+       "LandmkName": "George Mason Regional Library",
+       "LastCheck": 1760918400000,
+       "OBJECTID": 302,
+       "Phone": "-",
+       "PlaceType": "Public Library Points",
+       "Src": "LVA",
+       "SrcTyp": "Public Library",
+       "State": "VA",
+       "URL": "https://www.fairfaxcounty.gov/library/branches/branch-locations-and-hours",
+       "VAPID": 51059000192396.0,
+       "Zip": "22003"
+      }
+     }
+    ]
+   }
+  }
+ ]
+}

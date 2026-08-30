@@ -1,0 +1,6 @@
+id: va:pulaski-town
+name: Pulaski (town)
+kind: town
+place_fips: "64880"
+parent: va:pulaski-county
+aliases: ["Town of Pulaski"]

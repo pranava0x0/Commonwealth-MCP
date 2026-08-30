@@ -1,0 +1,6 @@
+id: va:burkeville-town
+name: Burkeville (town)
+kind: town
+place_fips: "11560"
+parent: va:nottoway-county
+aliases: ["Town of Burkeville"]

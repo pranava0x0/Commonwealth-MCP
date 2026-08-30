@@ -1,0 +1,6 @@
+id: va:isle-of-wight-county
+name: Isle of Wight County
+kind: county
+fips: "51093"
+parent: va
+aliases: ["County of Isle of Wight"]

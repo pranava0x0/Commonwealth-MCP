@@ -1,0 +1,6 @@
+id: va:waverly-town
+name: Waverly (town)
+kind: town
+place_fips: "83600"
+parent: va:sussex-county
+aliases: ["Town of Waverly"]

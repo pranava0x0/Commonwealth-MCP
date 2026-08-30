@@ -1,0 +1,6 @@
+id: va:wakefield-town
+name: Wakefield (town)
+kind: town
+place_fips: "82384"
+parent: va:sussex-county
+aliases: ["Town of Wakefield"]

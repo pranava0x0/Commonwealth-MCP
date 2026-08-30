@@ -1,0 +1,6 @@
+id: va:spotsylvania-county
+name: Spotsylvania County
+kind: county
+fips: "51177"
+parent: va
+aliases: ["County of Spotsylvania"]

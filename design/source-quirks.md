@@ -124,3 +124,266 @@ companion query at a **project-chosen** 50 m tolerance to flag points near
 another jurisdiction's line. The tolerance is not a publisher accuracy
 figure — VGIN publishes none for this layer — and the code and the warning
 both say so.
+
+---
+
+## 5. ArcGIS rejects a quoted literal against a numeric column, with a message that names nothing
+
+- **Source:** `va-vgin-address-points` (`ZIP_5`), `va-vgin-landmarks`
+  (`FIPScode`)
+- **Observed:** 2026-08-29, live
+- **Test:** `tests/adapters/test_arcgis_unit.py::test_numeric_fields_are_sent_unquoted`
+
+`ZIP_5 = '24450'` fails. `ZIP_5 = 24450` succeeds. The failure arrives as
+HTTP 200 carrying `{"error": {"code": 400, "message": "Unable to complete
+operation.", "details": ["Unable to perform query operation."]}}` — no
+field name, no type, nothing pointing at the quoting.
+
+It is not consistent across the registry either, which is what makes it a
+trap rather than a rule to memorise: VGIN's parcels layer stores `FIPS` as
+text and its landmarks layer stores `FIPScode` as an integer, so the same
+canonical `fips` filter needs different SQL depending on which layer it
+lands on.
+
+**What the code does:** `LayerDecl.numeric_fields` names the canonical
+fields whose source column is numeric, so the layer's schema stays in the
+manifest and a caller passing `"51059"` never has to know. The adapter
+also takes a real Python `int` or `float` at its word; a string that
+merely looks numeric is still escaped and quoted.
+
+---
+
+## 6. `returnDistinctValues` and `resultRecordCount` are mutually exclusive on VGIN's address points
+
+- **Source:** `va-vgin-address-points`
+- **Observed:** 2026-08-29, live
+- **Test:** `tests/adapters/test_arcgis_unit.py::test_distinct_queries_drop_the_row_cap`
+
+The same DISTINCT query succeeds without `resultRecordCount` and fails
+with it, again as HTTP 200 with error 400 and no detail. Since the row cap
+is how every other query here stays bounded, dropping it is not free.
+
+**What the code does:** the adapter removes `resultRecordCount` when
+`distinct_fields` is set, and the discipline that replaces it is that a
+distinct query must be over a low-cardinality field. `geo.resolve_location`
+uses it for one thing only — which localities carry a ZIP — where the
+answer is at most a handful of rows out of millions. The egress byte cap
+is the backstop if that discipline is ever broken.
+
+---
+
+## 7. Building footprint area is published in Web Mercator, where it is not ground area
+
+- **Source:** `va-vgin-building-footprints`
+- **Observed:** 2026-08-29, live
+- **Test:** `tests/servers/geo/test_find_buildings.py::test_area_is_never_returned_as_a_bare_number`
+
+`Shape__Area` is real and the service even labels its units
+(`geometryProperties.units: esriMeters`), which is exactly what makes it
+misleading: the layer's spatial reference is EPSG:3857, where area is
+inflated by sec squared of the latitude. At 38 degrees north that is about
+1.61x. A caller who reads the number as square metres of roof overstates
+every building by more than half.
+
+**What the code does:** the publisher's value is returned unconverted
+under `footprint_area_web_mercator_sq_m`, whose name says which projection
+it is in, alongside `footprint_area_sq_m_approx` derived from the query's
+own latitude and declared in the envelope's `transformations`. Neither is
+presented as the other.
+
+---
+
+## 8. VGIN's landmark service has no layer 0
+
+- **Source:** `va-vgin-landmarks`
+- **Observed:** 2026-08-29, live
+- **Test:** `tests/servers/geo/test_find_landmarks.py::test_the_registered_layer_id_is_one_not_zero`
+
+Layer 1 is `Virginia Landmark Locations`. Layer 0 returns
+`{"error": {"code": 500, "message": "json", "details": []}}` — a 500 with a
+one-word message, not a 404. Every other layer registered here is 0 or a
+small numbered set starting at 0, so a manifest copied from the parcels
+one and left at `layer_id: 0` would look right and fail at the first
+query with an error that reads like an outage.
+
+---
+
+## 9. Landmark records are other agencies' records, and many have never been re-checked
+
+- **Source:** `va-vgin-landmarks`
+- **Observed:** 2026-08-29, live
+- **Test:** `tests/servers/geo/test_find_landmarks.py::test_each_record_names_the_organisation_it_came_from`
+
+Each landmark carries `Src` and `SrcTyp` naming where it came from — DCJS
+for a police station, DOE for a public school, USPS for a post office,
+"Agency" for others. The registered publisher is an aggregator here, and
+for any one record the authority is whoever `Src` names.
+
+`LastCheck` is null on a substantial share of records; one of the four
+around Vienna has none. The layer publishes no layer-level edit date
+either, so there is no date to fall back to — and falling back would claim
+a verification that never happened.
+
+**What the code does:** `geo.find_landmarks` returns `source_organization`
+and `source_type` on every record with an `authority_note` saying the
+record is that organisation's, and a null `LastCheck` produces an explicit
+"the publisher has no verification date" note rather than any date at all.
+Record `URL` values are returned as data and never fetched; a test asserts
+no record URL appears in the fetcher's call log.
+
+---
+
+## 10. A publisher's website can refuse a request its GIS service answers
+
+- **Source:** `va-deq-water-quality-stations`
+- **Observed:** 2026-08-29, live
+- **Note only** — recorded because it changes how a terms review ends,
+  not what any code does.
+
+`apps.deq.virginia.gov`'s ArcGIS REST directory answers anonymously and
+the service declares `copyrightText: "Virginia DEQ"` and capabilities
+`Query,Map,Data`. `www.deq.virginia.gov/terms-of-use` returns an Akamai
+"Access Denied" 403 to a plain HTTP GET, and so does
+`/our-programs/data`. The agency's data is reachable and its terms are
+not.
+
+DEQ's 97 datasets on the Virginia Open Data Portal do not close the gap
+either: none carries a license field.
+
+**What the code does:** `Access.terms_gap` holds what a review could not
+establish, and every envelope citing that source carries a `terms_note`
+warning quoting it. A gap recorded only in YAML is a caveat a contributor
+reads once; this makes it a disclosure at the point of use. Richmond's
+recorded terms gap uses the same field.
+
+---
+
+## 11. A town borrows its county's FIPS, so a FIPS-keyed layer cannot be narrowed to a town
+
+- **Sources:** every registered layer keyed on FIPS
+  (`va-vgin-road-centerlines`, `va-vgin-address-points`,
+  `va-vgin-landmarks`, `va-vgin-statewide-parcels`)
+- **Observed:** 2026-08-30, in review
+- **Test:** `tests/test_codex_round_2.py::test_a_town_query_says_when_it_was_widened_to_the_county`
+
+Virginia's incorporated towns have a place FIPS and no county FIPS of
+their own: Vienna is `place_fips: 81072`, and the only county code
+available to it is Fairfax County's `51059`. So a jurisdiction filter
+built from the stack walks past the town and lands on the county.
+
+The filter is still right to apply. It is a correct superset — everything
+in Vienna is in Fairfax County — and it is what stops a locality-scoped
+identifier matching another locality's record on a statewide layer, which
+was a real false hit before the filter existed. What is wrong is
+reporting the result under the town's name: a `find_roads(jurisdiction=
+"Vienna")` answer scoped to Fairfax County returned 39 county-wide
+segments where the town has a handful.
+
+The two registered road sources make the difference visible in one call.
+VDOT's route master keys on the jurisdiction NAME, so "Town of Vienna" is
+the town and it returns 2 routes; VGIN's centerlines key on FIPS and
+return 39.
+
+**What the code does:** `_jurisdiction_scope()` returns the filter *and*
+the jurisdiction it actually reaches. When those differ, the answer
+carries a `widened_scope` note naming both — "this source has no key for
+Vienna (town), so the query was narrowed to Fairfax County instead". A
+source whose scope is exact says nothing, so the note stays meaningful.
+
+---
+
+## 12. VGIN's towns layer carries places whose charters are gone
+
+- **Source:** `va-vgin-admin-boundaries` (towns layer)
+- **Observed:** 2026-08-30, live, in review
+- **Test:** `tests/test_codex_round_3.py::test_a_dissolved_town_has_no_row`
+
+The layer publishes 191 town polygons. Two of them are not towns.
+Columbia and St. Charles both appear in Census TIGERweb as **Census
+Designated Places** — `FUNCSTAT: 'S'`, a statistical area with no
+government — in the current layer and in the 2020 one, and in neither
+case as an Incorporated Place.
+
+VGIN's own metadata agrees for one of them without saying so outright:
+Columbia carries `GSOURCE: 'T'` (TIGER-derived rather than
+locality-submitted) and `LADOPT: 'N'` (no locality has adopted the
+boundary).
+
+Both were registered as live governments on 2026-08-29 and removed on
+2026-08-30. The generator had seen the evidence and misread it: the run
+log recorded "absent from TIGERweb's current Incorporated Places" as a
+quirk of Census coverage and worked around it by deriving the parent from
+polygon intersection instead. The absence WAS the finding.
+
+**What the code does:** `tools/build_jurisdictions.py` skips any town
+Census does not list as an Incorporated Place and prints why, so the
+towns half of the table is cross-checked against two sources like the
+localities half always was. The two names resolve through their county's
+`former_names` — Columbia to Fluvanna County, St. Charles to Lee County —
+because the territory reverted to county governance, which is the Bedford
+rule one level down.
+
+---
+
+## 13. The locator returns one address as several candidates, and several addresses as several candidates
+
+- **Source:** `va-vgin-composite-locator`
+- **Observed:** 2026-08-30, live
+- **Test:** `tests/test_codex_round_3.py::test_confident_geocodes_in_one_place_still_resolve`
+
+Two shapes that look identical in the response and mean opposite things.
+
+"127 Center St S, Vienna, VA 22180" returns the same address twice at
+score 100, from the address-point element and the road-centerline element,
+about 40 m apart. That is one place described twice.
+
+"Cntr Steet Viena VA" returns four matches between 96.45 and 97.12 that
+are four different places, two in Vienna town and two in Fairfax County.
+Taking the locator's first result there picks one of two governments.
+
+Distance does not separate them: any rounding fine enough to tell Vienna
+from Fairfax County also splits the 40 m pair. **What the code does:**
+`geo.resolve_location` places every distinct confident coordinate (up to
+four) and compares the GOVERNMENTS, resolving when they agree and
+returning candidates with `requires_user_choice` when they do not.
+
+The first of those four candidates is addressed FALLS CHURCH and places
+into Fairfax County — the postal-city trap turning up inside the
+ambiguity check, and one more reason the comparison is on placed
+governments rather than on the strings the locator returned.
+
+---
+
+## 14. Twenty incorporated towns cross a county line
+
+- **Source:** `va-vgin-admin-boundaries` (towns layer)
+- **Observed:** 2026-08-30, in review
+- **Test:** `tests/test_codex_round_3.py::test_towns_that_cross_a_county_line_name_every_county`
+
+Deriving a town's county from a single interior point finds one county
+and cannot see that the town extends into another. Twenty of Virginia's
+191 towns do: Herndon reaches Fairfax and Loudoun, Farmville reaches
+Prince Edward and Cumberland, West Point reaches King and Queen and New
+Kent, and Vinton reaches Roanoke County and Roanoke City.
+
+Two governments genuinely apply across that ground, which is the thing
+this project's jurisdiction model exists to represent, and the table said
+one did.
+
+**What the code does:** the generator samples each town's own polygon
+rather than one point, and records the extra counties as `also_within`.
+They reach `layered_authorities` and **not** the source-selection stack,
+deliberately: a name alone cannot say which part of a straddling town is
+meant, so querying the second county's sources for "Herndon" would return
+records from ground the caller may not have asked about. A coordinate can
+say, and point resolution already returns the county that contains it.
+`also_within` refreshes on every generator run without `--force`, since
+it answers a geometric question the publishers settle rather than an
+editorial one.
+
+It cuts the other way at a coordinate. A point in the Loudoun part of
+Herndon is not in Fairfax, so listing Herndon's static `parent` there
+would name a county that does not contain the point as an authority over
+it. Point resolution takes the containing locality from the polygon that
+actually holds the coordinate and drops a county parent that contradicts
+it; the state above still applies wherever the point is.

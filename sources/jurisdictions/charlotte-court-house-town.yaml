@@ -1,0 +1,6 @@
+id: va:charlotte-court-house-town
+name: Charlotte Court House (town)
+kind: town
+place_fips: "14952"
+parent: va:charlotte-county
+aliases: ["Town of Charlotte Court House"]

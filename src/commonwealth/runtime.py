@@ -9,6 +9,7 @@ from pathlib import Path
 from . import __version__
 from .adapters import ADAPTER_VERSIONS
 from .adapters.arcgis import ArcGISAdapter
+from .adapters.arcgis_geocode import ArcGISGeocodeAdapter
 from .adapters.virginia_law import VirginiaLawAdapter
 from .core.audit import AuditLog
 from .core.jurisdiction import JurisdictionTable
@@ -34,6 +35,8 @@ class RuntimeContext:
     sources: SourceRegistry
     jurisdictions: JurisdictionTable
     arcgis: ArcGISAdapter
+    geocoder: ArcGISGeocodeAdapter = field(
+        default_factory=ArcGISGeocodeAdapter)
     virginia_law: VirginiaLawAdapter = field(default_factory=VirginiaLawAdapter)
     server_name: str = "commonwealth"
     server_version: str = __version__
@@ -57,11 +60,13 @@ class RuntimeContext:
 
 def load_context(sources_dir: Path | None = None,
                  arcgis: ArcGISAdapter | None = None,
-                 virginia_law: VirginiaLawAdapter | None = None
+                 virginia_law: VirginiaLawAdapter | None = None,
+                 geocoder: ArcGISGeocodeAdapter | None = None
                  ) -> RuntimeContext:
     root = sources_dir or SOURCES_DIR
     return RuntimeContext(
         sources=SourceRegistry.load(root),
         jurisdictions=JurisdictionTable.load(root / "jurisdictions"),
         arcgis=arcgis or ArcGISAdapter(),
+        geocoder=geocoder or ArcGISGeocodeAdapter(),
         virginia_law=virginia_law or VirginiaLawAdapter())

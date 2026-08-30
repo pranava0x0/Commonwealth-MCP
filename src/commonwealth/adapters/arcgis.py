@@ -24,12 +24,54 @@ from .base import (FetchResult, Fetcher, HttpFetcher, TTLCache, log,
                    egress_policy_for, log_source_call, shared_cache)
 
 
+class JurisdictionScope(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    mode: str
+    fields: list[str] = Field(default_factory=list)
+
+    @model_validator(mode="after")
+    def _known_mode(self) -> "JurisdictionScope":
+        known = {"fips", "fips_any_of", "jurisdiction_names", "none"}
+        if self.mode not in known:
+            raise ValueError(f"jurisdiction_scope.mode must be one of "
+                             f"{sorted(known)}, got {self.mode!r}")
+        if self.mode != "none" and not self.fields:
+            raise ValueError(f"jurisdiction_scope mode {self.mode!r} needs "
+                             "at least one field")
+        return self
+
+
 class LayerDecl(BaseModel):
     model_config = ConfigDict(extra="forbid")
     layer_id: int
     field_mapping: dict[str, str]  # canonical -> source field
     geometry: str                  # polygon | point | line | none
     id_field: str                  # the source's stable record-id field
+    # Canonical names whose source column is numeric. ArcGIS rejects
+    # `NUMERIC_COL = '51059'` with a bare "Unable to complete operation",
+    # and a caller passing a FIPS or ZIP as the string it is spelled as
+    # has no way to know which layers store it as a number — VGIN's
+    # address points store ZIP_5 as an integer, its landmarks store
+    # FIPScode as one, and its parcels store FIPS as text. Declaring it
+    # here keeps that in the manifest, where the layer's schema belongs.
+    numeric_fields: list[str] = Field(default_factory=list)
+    # The publisher's OWN coded-value domains, copied from the layer
+    # metadata, canonical field -> {code: label}. Decoding is only ever
+    # done from a list a publisher published; there is no inferring what
+    # a code might mean.
+    value_labels: dict[str, dict[str, str]] = Field(default_factory=dict)
+    # How a query against this layer is narrowed to one jurisdiction.
+    # Left unset, the tools fall back to a single mapped `fips` field,
+    # which is what every layer registered before roads needed. Roads
+    # broke that twice over: VGIN's centerlines carry FIPS_L and FIPS_R
+    # for the two sides of a segment, so "in this locality" is genuinely
+    # a disjunction; and VDOT's route master keys on its own jurisdiction
+    # NAMES ("Fairfax County", "Town of Vienna") under a code column that
+    # is VDOT's numbering rather than FIPS. Both live here so the
+    # knowledge stays in the manifest.
+    #   mode: fips | fips_any_of | jurisdiction_names | none
+    #   fields: canonical field names the mode applies to
+    jurisdiction_scope: JurisdictionScope | None = None
     # Real publishers sometimes split layers across separate FeatureServers
     # (e.g. Richmond City: Parcels and ZoningDistricts are two services on
     # the same host, not two layers of one service like Fairfax). Most
@@ -224,7 +266,9 @@ class ArcGISAdapter:
         return result.payload
 
     async def query(self, manifest: SourceManifest, layer_key: str, *,
-                    where_equals: dict[str, str] | None = None,
+                    where_equals: dict[str, str | int | float] | None = None,
+                    where_prefix: dict[str, str] | None = None,
+                    where_any_of: list[dict[str, str | int | float]] | None = None,
                     object_ids: list[int] | None = None,
                     geometry_point: tuple[float, float] | None = None,
                     intersect_geometry: dict | None = None,
@@ -232,6 +276,7 @@ class ArcGISAdapter:
                     return_geometry: bool = False,
                     return_centroid: bool = False,
                     simplify_tolerance: float | None = None,
+                    distinct_fields: list[str] | None = None,
                     record_count: int = 50,
                     sample_rows: int | None = None) -> ArcGISQueryResult:
         """`where_equals` takes CANONICAL field names (the manifest's
@@ -257,19 +302,76 @@ class ArcGISAdapter:
             "returnGeometry": "true" if return_geometry else "false",
         }
         transformations = [f"field_mapping:v{p.field_mapping_version}"]
+        if layer.value_labels:
+            transformations.append(
+                "value_labels:" + ",".join(sorted(layer.value_labels)))
         clauses = 0
-        if where_equals is not None:
-            parts = []
-            for canon, value in sorted(where_equals.items()):
-                src_field = layer.field_mapping.get(canon)
-                if src_field is None:
+
+        def src_field_of(canon: str) -> str:
+            field = layer.field_mapping.get(canon)
+            if field is None:
+                raise InvalidQuery(
+                    f"field {canon!r} is not mapped on layer "
+                    f"{layer_key!r} of {manifest.id}; mapped: "
+                    f"{sorted(layer.field_mapping)}")
+            return field
+
+        def literal(canon: str, value: object) -> str:
+            """A quoted string, or a bare number for a numeric column.
+
+            ArcGIS rejects `NUMERIC_COL = '24450'` with a bare "Unable to
+            complete operation" (HTTP 200, error 400) — VGIN's address
+            points store ZIP_5 as an integer and its landmarks store
+            FIPScode as one, while its parcels store FIPS as text. Which
+            is which comes from the manifest's `numeric_fields`, so a
+            caller passing "51059" does not have to know; a real Python
+            int or float is also taken at its word."""
+            numeric = canon in layer.numeric_fields
+            if not numeric and (isinstance(value, bool)
+                                or not isinstance(value, (int, float))):
+                return "'" + str(value).replace("'", "''") + "'"
+            if numeric and not isinstance(value, (int, float)):
+                try:
+                    value = float(value) if "." in str(value) else int(value)
+                except ValueError:
                     raise InvalidQuery(
-                        f"field {canon!r} is not mapped on layer "
-                        f"{layer_key!r} of {manifest.id}; mapped: "
-                        f"{sorted(layer.field_mapping)}")
-                escaped = str(value).replace("'", "''")
-                parts.append(f"{src_field} = '{escaped}'")
-            params["where"] = " AND ".join(parts)
+                        f"{canon!r} is declared numeric on layer "
+                        f"{layer_key!r} of {manifest.id} and {value!r} is "
+                        "not a number") from None
+            return repr(value)
+
+        where_parts: list[str] = []
+        if where_equals is not None:
+            for canon, value in sorted(where_equals.items()):
+                where_parts.append(
+                    f"{src_field_of(canon)} = {literal(canon, value)}")
+        if where_prefix is not None:
+            for canon, value in sorted(where_prefix.items()):
+                # LIKE 'x%' is a prefix match, not a fuzzy one, and the
+                # tool descriptions say so. `%` and `_` are LIKE's own
+                # wildcards, so a caller's literal ones are escaped to
+                # stop "50% Grade Rd" matching everything.
+                escaped = (str(value).replace("'", "''")
+                           .replace("\\", "\\\\")
+                           .replace("%", "\\%").replace("_", "\\_"))
+                where_parts.append(
+                    f"{src_field_of(canon)} LIKE '{escaped}%' ESCAPE '\\'")
+        if where_any_of:
+            # A disjunction ANDed with the rest. Real layers split one
+            # concept across several fields — VGIN's road centerlines
+            # carry FIPS_L and FIPS_R for the two sides of a segment, so
+            # "in this locality" is genuinely an OR and an AND of
+            # equalities cannot express it.
+            groups = []
+            for group in where_any_of:
+                terms = [f"{src_field_of(c)} = {literal(c, v)}"
+                         for c, v in sorted(group.items())]
+                if terms:
+                    groups.append("(" + " AND ".join(terms) + ")")
+            if groups:
+                where_parts.append("(" + " OR ".join(groups) + ")")
+        if where_parts:
+            params["where"] = " AND ".join(where_parts)
             clauses += 1
         if object_ids is not None:
             params["objectIds"] = ",".join(str(i) for i in object_ids)
@@ -312,6 +414,29 @@ class ArcGISAdapter:
         if clauses == 0:
             raise InvalidQuery("refusing an unbounded ArcGIS query: pass "
                                "field filters, object ids, or geometry")
+        if distinct_fields is not None:
+            # The platform's own DISTINCT. It answers "which localities
+            # does this ZIP touch" in one request instead of paging every
+            # address point in the ZIP and de-duplicating here — which for
+            # a dense ZIP would be tens of thousands of rows to learn
+            # three values.
+            if return_geometry or return_centroid:
+                raise InvalidQuery(
+                    "distinct_fields returns attribute tuples, not "
+                    "features; it cannot be combined with geometry")
+            params["outFields"] = ",".join(
+                src_field_of(c) for c in distinct_fields)
+            params["returnDistinctValues"] = "true"
+            # Observed on VGIN's address points, 2026-08-29: the same
+            # distinct query succeeds without `resultRecordCount` and
+            # fails with it, HTTP 200 carrying error 400 "Unable to
+            # complete operation". So the row cap comes off, and the only
+            # thing keeping the answer bounded is that a distinct query
+            # must be over a low-cardinality field — locality codes, not
+            # address ids. The egress byte cap is the backstop.
+            params.pop("resultRecordCount", None)
+            transformations.append(
+                "distinct:" + ",".join(sorted(distinct_fields)))
         if return_centroid:
             params["returnCentroid"] = "true"
         if return_geometry or return_centroid:
@@ -396,8 +521,33 @@ class ArcGISAdapter:
         records = []
         for feat in features:
             attrs = feat.get("attributes", {})
+            if distinct_fields is not None:
+                # A distinct row is a tuple of values, not a feature: the
+                # id_field is not in the response and there is no single
+                # record it came from. Naming it OBJECTID:None would
+                # invent a record that does not exist, so the identity is
+                # the tuple itself.
+                canonical = {canon: attrs.get(src_field_of(canon))
+                             for canon in distinct_fields}
+                rid = "|".join(f"{c}={canonical[c]}"
+                               for c in sorted(distinct_fields))
+                records.append(ArcGISRecord(
+                    canonical=canonical, record_id=f"distinct:{rid}",
+                    raw=attrs, geometry=None))
+                continue
             canonical = {canon: attrs.get(src)
                          for canon, src in layer.field_mapping.items()}
+            for canon, labels in layer.value_labels.items():
+                raw_code = canonical.get(canon)
+                # The raw code stays. A label is the publisher's word for
+                # a code, and a caller checking against the publisher's
+                # own documentation needs the code it documents. The key
+                # is always present so the record shape does not change
+                # with the data: null means the publisher has no code, or
+                # has one this manifest's copy of its list does not
+                # cover. Neither is a reason to guess a label.
+                canonical[f"{canon}_label"] = (
+                    None if raw_code is None else labels.get(str(raw_code)))
             rid = attrs.get(layer.id_field)
             records.append(ArcGISRecord(
                 canonical=canonical,
@@ -450,6 +600,19 @@ class ArcGISAdapter:
                 f"manifest {manifest.id} declares no layer {layer_key!r}; "
                 f"declared: {sorted(p.layers)}")
         return layer
+
+    def layer_keys(self, manifest: SourceManifest) -> frozenset[str]:
+        """The layer keys a manifest declares, so a tool can choose among
+        them without reaching into ArcGIS-specific structure."""
+        return frozenset(_params_of(manifest).layers)
+
+    def jurisdiction_scope(self, manifest: SourceManifest,
+                           layer_key: str) -> "JurisdictionScope | None":
+        """A layer's own declaration of how it is narrowed to one
+        jurisdiction. Callers read this rather than reaching into
+        ArcGIS-specific structure themselves."""
+        p = _params_of(manifest)
+        return self._layer(p, layer_key, manifest).jurisdiction_scope
 
     def mapped_canonical_fields(self, manifest: SourceManifest,
                                 layer_key: str) -> frozenset[str]:

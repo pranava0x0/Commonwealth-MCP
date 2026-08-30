@@ -1,0 +1,6 @@
+id: va:glen-lyn-town
+name: Glen Lyn (town)
+kind: town
+place_fips: "31376"
+parent: va:giles-county
+aliases: ["Town of Glen Lyn"]

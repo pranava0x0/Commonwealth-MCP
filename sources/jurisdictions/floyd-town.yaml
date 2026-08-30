@@ -1,0 +1,6 @@
+id: va:floyd-town
+name: Floyd (town)
+kind: town
+place_fips: "28544"
+parent: va:floyd-county
+aliases: ["Town of Floyd"]

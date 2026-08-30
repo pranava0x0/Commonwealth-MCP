@@ -1,0 +1,6 @@
+id: va:painter-town
+name: Painter (town)
+kind: town
+place_fips: "60296"
+parent: va:accomack-county
+aliases: ["Town of Painter"]

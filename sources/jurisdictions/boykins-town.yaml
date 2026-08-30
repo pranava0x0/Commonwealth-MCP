@@ -1,0 +1,6 @@
+id: va:boykins-town
+name: Boykins (town)
+kind: town
+place_fips: "09032"
+parent: va:southampton-county
+aliases: ["Town of Boykins"]

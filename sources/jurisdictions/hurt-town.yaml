@@ -1,0 +1,7 @@
+id: va:hurt-town
+name: Hurt (town)
+kind: town
+place_fips: "39224"
+parent: va:pittsylvania-county
+aliases: ["Town of Hurt"]
+also_within: ["va:campbell-county"]

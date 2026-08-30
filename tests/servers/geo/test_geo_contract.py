@@ -23,7 +23,11 @@ async def test_every_tool_has_output_schema_and_stable_order(server):
     assert first == ["registry.resolve_jurisdiction", "registry.search_sources",
                      "registry.describe_source", "registry.source_status",
                      "geo.find_parcel", "geo.find_zoning",
-                     "geo.find_boundaries", "civic.get_code_section"], (
+                     "geo.find_boundaries", "geo.find_address",
+                     "geo.resolve_location", "geo.find_buildings",
+                     "geo.find_landmarks", "geo.find_roads",
+                     "geo.find_environmental_sites",
+                     "civic.get_code_section"], (
         "registration order changed — that is a contract change, make it "
         "deliberately")
     async with Client(server) as client:
@@ -72,7 +76,9 @@ async def test_every_material_record_resolves_evidence(server, sample_pin):
     records = [r for blk in wire["data"]["results"] for r in blk["records"]]
     assert records, "the recorded PIN must return its parcel"
     for r in records:
-        assert r["evidence_ref"] in evidence_ids, r
+        assert r["evidence_refs"], r
+        for ref in r["evidence_refs"]:
+            assert ref in evidence_ids, r
     for e in wire["evidence"]:
         assert e["source_ref"] in source_ids, e
 

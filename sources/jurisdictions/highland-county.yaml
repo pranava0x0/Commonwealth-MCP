@@ -1,0 +1,6 @@
+id: va:highland-county
+name: Highland County
+kind: county
+fips: "51091"
+parent: va
+aliases: ["County of Highland"]

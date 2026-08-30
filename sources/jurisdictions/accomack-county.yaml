@@ -1,0 +1,6 @@
+id: va:accomack-county
+name: Accomack County
+kind: county
+fips: "51001"
+parent: va
+aliases: ["County of Accomack"]

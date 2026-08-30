@@ -1,0 +1,6 @@
+id: va:virginia-beach-city
+name: Virginia Beach City
+kind: independent-city
+fips: "51810"
+parent: va
+aliases: ["City of Virginia Beach"]

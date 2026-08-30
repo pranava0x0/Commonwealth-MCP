@@ -1,0 +1,6 @@
+id: va:newsoms-town
+name: Newsoms (town)
+kind: town
+place_fips: "56096"
+parent: va:southampton-county
+aliases: ["Town of Newsoms"]

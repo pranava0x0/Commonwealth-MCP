@@ -1,0 +1,6 @@
+id: va:bland-county
+name: Bland County
+kind: county
+fips: "51021"
+parent: va
+aliases: ["County of Bland"]

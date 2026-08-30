@@ -1,0 +1,6 @@
+id: va:bridgewater-town
+name: Bridgewater (town)
+kind: town
+place_fips: "09656"
+parent: va:rockingham-county
+aliases: ["Town of Bridgewater"]

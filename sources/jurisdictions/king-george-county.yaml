@@ -1,0 +1,6 @@
+id: va:king-george-county
+name: King George County
+kind: county
+fips: "51099"
+parent: va
+aliases: ["County of King George"]

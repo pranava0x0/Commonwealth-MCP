@@ -1,0 +1,6 @@
+id: va:appomattox-county
+name: Appomattox County
+kind: county
+fips: "51011"
+parent: va
+aliases: ["County of Appomattox"]

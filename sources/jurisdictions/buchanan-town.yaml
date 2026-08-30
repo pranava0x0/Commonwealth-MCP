@@ -1,0 +1,6 @@
+id: va:buchanan-town
+name: Buchanan (town)
+kind: town
+place_fips: "10744"
+parent: va:botetourt-county
+aliases: ["Town of Buchanan"]

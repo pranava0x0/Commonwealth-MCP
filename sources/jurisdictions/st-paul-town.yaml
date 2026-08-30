@@ -1,0 +1,7 @@
+id: va:st-paul-town
+name: St. Paul (town)
+kind: town
+place_fips: "69936"
+parent: va:russell-county
+aliases: ["Town of St. Paul"]
+also_within: ["va:wise-county"]

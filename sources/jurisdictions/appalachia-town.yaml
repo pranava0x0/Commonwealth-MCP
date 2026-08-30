@@ -1,0 +1,6 @@
+id: va:appalachia-town
+name: Appalachia (town)
+kind: town
+place_fips: "02040"
+parent: va:wise-county
+aliases: ["Town of Appalachia"]

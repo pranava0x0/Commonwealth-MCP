@@ -1,0 +1,6 @@
+id: va:ashland-town
+name: Ashland (town)
+kind: town
+place_fips: "03368"
+parent: va:hanover-county
+aliases: ["Town of Ashland"]

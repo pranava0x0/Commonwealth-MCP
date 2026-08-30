@@ -1,0 +1,6 @@
+id: va:claremont-town
+name: Claremont (town)
+kind: town
+place_fips: "16880"
+parent: va:surry-county
+aliases: ["Town of Claremont"]

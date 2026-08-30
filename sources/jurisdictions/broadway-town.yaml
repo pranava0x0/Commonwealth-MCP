@@ -1,0 +1,6 @@
+id: va:broadway-town
+name: Broadway (town)
+kind: town
+place_fips: "10040"
+parent: va:rockingham-county
+aliases: ["Town of Broadway"]

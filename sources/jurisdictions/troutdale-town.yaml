@@ -1,0 +1,7 @@
+id: va:troutdale-town
+name: Troutdale (town)
+kind: town
+place_fips: "79456"
+parent: va:grayson-county
+aliases: ["Town of Troutdale"]
+also_within: ["va:smyth-county"]

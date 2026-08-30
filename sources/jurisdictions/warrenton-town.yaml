@@ -1,0 +1,6 @@
+id: va:warrenton-town
+name: Warrenton (town)
+kind: town
+place_fips: "83136"
+parent: va:fauquier-county
+aliases: ["Town of Warrenton"]

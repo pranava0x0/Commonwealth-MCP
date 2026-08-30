@@ -1,0 +1,14 @@
+# Columbia's town charter is gone and the place is a Census
+# Designated Place now (FUNCSTAT 'S', a statistical area with no
+# government), verified against TIGERweb's current and 2020
+# Incorporated Places layers on 2026-08-30. Its territory reverted
+# to this county, so records naming the town resolve here — the
+# same successor rule Bedford uses, one level down.
+# See design/jurisdiction-resolution.md § 3 trap 8.
+id: va:fluvanna-county
+name: Fluvanna County
+kind: county
+fips: "51065"
+parent: va
+aliases: ["County of Fluvanna"]
+former_names: ["Town of Columbia", "Columbia town"]

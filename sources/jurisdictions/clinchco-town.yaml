@@ -1,0 +1,6 @@
+id: va:clinchco-town
+name: Clinchco (town)
+kind: town
+place_fips: "17504"
+parent: va:dickenson-county
+aliases: ["Town of Clinchco"]

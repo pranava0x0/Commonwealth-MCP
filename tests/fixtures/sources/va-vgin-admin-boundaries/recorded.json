@@ -1,10 +1,10 @@
 {
  "source_id": "va-vgin-admin-boundaries",
- "recorded_at": "2026-08-28T16:27:32Z",
+ "recorded_at": "2026-08-30T15:08:58Z",
  "rights": {
   "publisher": "Virginia Geographic Information Network (VGIN), part of the Virginia Department of Emergency Management",
   "terms_url": "https://vgin.vdem.virginia.gov/datasets/VGIN::virginia-administrative-boundaries/about",
-  "note": "Recorded government-published responses; third-party content excluded from the repo's CC0 grant (DECISIONS.md 0011)."
+  "note": "Recorded government-published responses; third-party content excluded from the repo's CC0 grant (../../../design/architecture.md decision 0011)."
  },
  "summary": {
   "health:localities": {
@@ -171,6 +171,126 @@
      "Virginia Beach City"
     ],
     "towns": []
+   }
+  },
+  "point_geocoded_alexandria_mailing_address": {
+   "point": [
+    -77.15375027322,
+    38.770195471615
+   ],
+   "hits": {
+    "localities": [
+     "Fairfax County"
+    ],
+    "towns": []
+   },
+   "within_buffer": {
+    "localities": [
+     "Fairfax County"
+    ],
+    "towns": []
+   }
+  },
+  "point_geocoded_vienna_address": {
+   "point": [
+    -77.26436153964,
+    38.90067620715
+   ],
+   "hits": {
+    "localities": [
+     "Fairfax County"
+    ],
+    "towns": [
+     "Vienna town"
+    ]
+   },
+   "within_buffer": {
+    "localities": [
+     "Fairfax County"
+    ],
+    "towns": [
+     "Vienna town"
+    ]
+   }
+  },
+  "point_geocoded_vienna_address_second_candidate": {
+   "point": [
+    -77.264736107181,
+    38.901130384578
+   ],
+   "hits": {
+    "localities": [
+     "Fairfax County"
+    ],
+    "towns": [
+     "Vienna town"
+    ]
+   },
+   "within_buffer": {
+    "localities": [
+     "Fairfax County"
+    ],
+    "towns": [
+     "Vienna town"
+    ]
+   }
+  },
+  "point_ambiguous_falls_church_22043": {
+   "point": [
+    -77.210242068451,
+    38.893300414287
+   ],
+   "hits": {
+    "localities": [
+     "Fairfax County"
+    ],
+    "towns": []
+   },
+   "within_buffer": {
+    "localities": [
+     "Fairfax County"
+    ],
+    "towns": []
+   }
+  },
+  "point_ambiguous_vienna_22181": {
+   "point": [
+    -77.2764070531,
+    38.911192903897
+   ],
+   "hits": {
+    "localities": [
+     "Fairfax County"
+    ],
+    "towns": []
+   },
+   "within_buffer": {
+    "localities": [
+     "Fairfax County"
+    ],
+    "towns": []
+   }
+  },
+  "point_ambiguous_vienna_22180": {
+   "point": [
+    -77.270304330621,
+    38.905490629705
+   ],
+   "hits": {
+    "localities": [
+     "Fairfax County"
+    ],
+    "towns": [
+     "Vienna town"
+    ]
+   },
+   "within_buffer": {
+    "localities": [
+     "Fairfax County"
+    ],
+    "towns": [
+     "Vienna town"
+    ]
    }
   }
  },
@@ -7838,6 +7958,2272 @@
      "latestWkid": 3857
     },
     "features": []
+   }
+  },
+  {
+   "url": "https://vginmaps.vdem.virginia.gov/arcgis/rest/services/VA_Base_Layers/VA_Admin_Boundaries/FeatureServer/1/query",
+   "params": {
+    "f": "json",
+    "outFields": "AREASQMI,GNIS,GSOURCE,JURISTYPE,LADOPT,LASTUPDATE,NAME,NAMELSAD,OBJECTID,STCOFIPS",
+    "resultRecordCount": "50",
+    "returnGeometry": "false",
+    "geometry": "{\"x\": -77.15375027322, \"y\": 38.770195471615, \"spatialReference\": {\"wkid\": 4326}}",
+    "geometryType": "esriGeometryPoint",
+    "inSR": "4326",
+    "spatialRel": "esriSpatialRelIntersects"
+   },
+   "response": {
+    "objectIdFieldName": "OBJECTID",
+    "globalIdFieldName": "",
+    "geometryType": "esriGeometryPolygon",
+    "spatialReference": {
+     "wkid": 102100,
+     "latestWkid": 3857
+    },
+    "fields": [
+     {
+      "name": "AREASQMI",
+      "alias": "Calculated Square Miles",
+      "type": "esriFieldTypeDouble"
+     },
+     {
+      "name": "GNIS",
+      "alias": "GNIS Feature ID",
+      "type": "esriFieldTypeString",
+      "length": 20
+     },
+     {
+      "name": "GSOURCE",
+      "alias": "Geometry Source",
+      "type": "esriFieldTypeString",
+      "length": 4
+     },
+     {
+      "name": "JURISTYPE",
+      "alias": "Jurisdiction Type",
+      "type": "esriFieldTypeString",
+      "length": 2
+     },
+     {
+      "name": "LADOPT",
+      "alias": "Local Data Adoption",
+      "type": "esriFieldTypeString",
+      "length": 1
+     },
+     {
+      "name": "LASTUPDATE",
+      "alias": "Last Update",
+      "type": "esriFieldTypeDate",
+      "length": 8
+     },
+     {
+      "name": "NAME",
+      "alias": "Jurisdiction Name",
+      "type": "esriFieldTypeString",
+      "length": 100
+     },
+     {
+      "name": "NAMELSAD",
+      "alias": "Jurisdiction Full Name",
+      "type": "esriFieldTypeString",
+      "length": 100
+     },
+     {
+      "name": "OBJECTID",
+      "alias": "OBJECTID",
+      "type": "esriFieldTypeOID"
+     },
+     {
+      "name": "STCOFIPS",
+      "alias": "State-County FIPS Code",
+      "type": "esriFieldTypeString",
+      "length": 5
+     }
+    ],
+    "features": [
+     {
+      "attributes": {
+       "AREASQMI": 406.6227962,
+       "GNIS": "1480119",
+       "GSOURCE": "L",
+       "JURISTYPE": "CO",
+       "LADOPT": "Y",
+       "LASTUPDATE": 1722988800000,
+       "NAME": "Fairfax",
+       "NAMELSAD": "Fairfax County",
+       "OBJECTID": 29,
+       "STCOFIPS": "51059"
+      }
+     }
+    ]
+   }
+  },
+  {
+   "url": "https://vginmaps.vdem.virginia.gov/arcgis/rest/services/VA_Base_Layers/VA_Admin_Boundaries/FeatureServer/1/query",
+   "params": {
+    "f": "json",
+    "outFields": "AREASQMI,GNIS,GSOURCE,JURISTYPE,LADOPT,LASTUPDATE,NAME,NAMELSAD,OBJECTID,STCOFIPS",
+    "resultRecordCount": "50",
+    "returnGeometry": "false",
+    "geometry": "{\"x\": -77.15375027322, \"y\": 38.770195471615, \"spatialReference\": {\"wkid\": 4326}}",
+    "geometryType": "esriGeometryPoint",
+    "inSR": "4326",
+    "spatialRel": "esriSpatialRelIntersects",
+    "distance": "50",
+    "units": "esriSRUnit_Meter"
+   },
+   "response": {
+    "objectIdFieldName": "OBJECTID",
+    "globalIdFieldName": "",
+    "geometryType": "esriGeometryPolygon",
+    "spatialReference": {
+     "wkid": 102100,
+     "latestWkid": 3857
+    },
+    "fields": [
+     {
+      "name": "AREASQMI",
+      "alias": "Calculated Square Miles",
+      "type": "esriFieldTypeDouble"
+     },
+     {
+      "name": "GNIS",
+      "alias": "GNIS Feature ID",
+      "type": "esriFieldTypeString",
+      "length": 20
+     },
+     {
+      "name": "GSOURCE",
+      "alias": "Geometry Source",
+      "type": "esriFieldTypeString",
+      "length": 4
+     },
+     {
+      "name": "JURISTYPE",
+      "alias": "Jurisdiction Type",
+      "type": "esriFieldTypeString",
+      "length": 2
+     },
+     {
+      "name": "LADOPT",
+      "alias": "Local Data Adoption",
+      "type": "esriFieldTypeString",
+      "length": 1
+     },
+     {
+      "name": "LASTUPDATE",
+      "alias": "Last Update",
+      "type": "esriFieldTypeDate",
+      "length": 8
+     },
+     {
+      "name": "NAME",
+      "alias": "Jurisdiction Name",
+      "type": "esriFieldTypeString",
+      "length": 100
+     },
+     {
+      "name": "NAMELSAD",
+      "alias": "Jurisdiction Full Name",
+      "type": "esriFieldTypeString",
+      "length": 100
+     },
+     {
+      "name": "OBJECTID",
+      "alias": "OBJECTID",
+      "type": "esriFieldTypeOID"
+     },
+     {
+      "name": "STCOFIPS",
+      "alias": "State-County FIPS Code",
+      "type": "esriFieldTypeString",
+      "length": 5
+     }
+    ],
+    "features": [
+     {
+      "attributes": {
+       "AREASQMI": 406.6227962,
+       "GNIS": "1480119",
+       "GSOURCE": "L",
+       "JURISTYPE": "CO",
+       "LADOPT": "Y",
+       "LASTUPDATE": 1722988800000,
+       "NAME": "Fairfax",
+       "NAMELSAD": "Fairfax County",
+       "OBJECTID": 29,
+       "STCOFIPS": "51059"
+      }
+     }
+    ]
+   }
+  },
+  {
+   "url": "https://vginmaps.vdem.virginia.gov/arcgis/rest/services/VA_Base_Layers/VA_Admin_Boundaries/FeatureServer/0/query",
+   "params": {
+    "f": "json",
+    "outFields": "AREASQMI,GNIS,GSOURCE,LADOPT,LASTUPDATE,NAME,NAMELSAD,OBJECTID,STPLFIPS",
+    "resultRecordCount": "50",
+    "returnGeometry": "false",
+    "geometry": "{\"x\": -77.15375027322, \"y\": 38.770195471615, \"spatialReference\": {\"wkid\": 4326}}",
+    "geometryType": "esriGeometryPoint",
+    "inSR": "4326",
+    "spatialRel": "esriSpatialRelIntersects"
+   },
+   "response": {
+    "objectIdFieldName": "OBJECTID",
+    "globalIdFieldName": "",
+    "geometryType": "esriGeometryPolygon",
+    "spatialReference": {
+     "wkid": 102100,
+     "latestWkid": 3857
+    },
+    "features": []
+   }
+  },
+  {
+   "url": "https://vginmaps.vdem.virginia.gov/arcgis/rest/services/VA_Base_Layers/VA_Admin_Boundaries/FeatureServer/0/query",
+   "params": {
+    "f": "json",
+    "outFields": "AREASQMI,GNIS,GSOURCE,LADOPT,LASTUPDATE,NAME,NAMELSAD,OBJECTID,STPLFIPS",
+    "resultRecordCount": "50",
+    "returnGeometry": "false",
+    "geometry": "{\"x\": -77.15375027322, \"y\": 38.770195471615, \"spatialReference\": {\"wkid\": 4326}}",
+    "geometryType": "esriGeometryPoint",
+    "inSR": "4326",
+    "spatialRel": "esriSpatialRelIntersects",
+    "distance": "50",
+    "units": "esriSRUnit_Meter"
+   },
+   "response": {
+    "objectIdFieldName": "OBJECTID",
+    "globalIdFieldName": "",
+    "geometryType": "esriGeometryPolygon",
+    "spatialReference": {
+     "wkid": 102100,
+     "latestWkid": 3857
+    },
+    "features": []
+   }
+  },
+  {
+   "url": "https://vginmaps.vdem.virginia.gov/arcgis/rest/services/VA_Base_Layers/VA_Admin_Boundaries/FeatureServer/1/query",
+   "params": {
+    "f": "json",
+    "outFields": "AREASQMI,GNIS,GSOURCE,JURISTYPE,LADOPT,LASTUPDATE,NAME,NAMELSAD,OBJECTID,STCOFIPS",
+    "resultRecordCount": "50",
+    "returnGeometry": "false",
+    "geometry": "{\"x\": -77.26436153964, \"y\": 38.90067620715, \"spatialReference\": {\"wkid\": 4326}}",
+    "geometryType": "esriGeometryPoint",
+    "inSR": "4326",
+    "spatialRel": "esriSpatialRelIntersects"
+   },
+   "response": {
+    "objectIdFieldName": "OBJECTID",
+    "globalIdFieldName": "",
+    "geometryType": "esriGeometryPolygon",
+    "spatialReference": {
+     "wkid": 102100,
+     "latestWkid": 3857
+    },
+    "fields": [
+     {
+      "name": "AREASQMI",
+      "alias": "Calculated Square Miles",
+      "type": "esriFieldTypeDouble"
+     },
+     {
+      "name": "GNIS",
+      "alias": "GNIS Feature ID",
+      "type": "esriFieldTypeString",
+      "length": 20
+     },
+     {
+      "name": "GSOURCE",
+      "alias": "Geometry Source",
+      "type": "esriFieldTypeString",
+      "length": 4
+     },
+     {
+      "name": "JURISTYPE",
+      "alias": "Jurisdiction Type",
+      "type": "esriFieldTypeString",
+      "length": 2
+     },
+     {
+      "name": "LADOPT",
+      "alias": "Local Data Adoption",
+      "type": "esriFieldTypeString",
+      "length": 1
+     },
+     {
+      "name": "LASTUPDATE",
+      "alias": "Last Update",
+      "type": "esriFieldTypeDate",
+      "length": 8
+     },
+     {
+      "name": "NAME",
+      "alias": "Jurisdiction Name",
+      "type": "esriFieldTypeString",
+      "length": 100
+     },
+     {
+      "name": "NAMELSAD",
+      "alias": "Jurisdiction Full Name",
+      "type": "esriFieldTypeString",
+      "length": 100
+     },
+     {
+      "name": "OBJECTID",
+      "alias": "OBJECTID",
+      "type": "esriFieldTypeOID"
+     },
+     {
+      "name": "STCOFIPS",
+      "alias": "State-County FIPS Code",
+      "type": "esriFieldTypeString",
+      "length": 5
+     }
+    ],
+    "features": [
+     {
+      "attributes": {
+       "AREASQMI": 406.6227962,
+       "GNIS": "1480119",
+       "GSOURCE": "L",
+       "JURISTYPE": "CO",
+       "LADOPT": "Y",
+       "LASTUPDATE": 1722988800000,
+       "NAME": "Fairfax",
+       "NAMELSAD": "Fairfax County",
+       "OBJECTID": 29,
+       "STCOFIPS": "51059"
+      }
+     }
+    ]
+   }
+  },
+  {
+   "url": "https://vginmaps.vdem.virginia.gov/arcgis/rest/services/VA_Base_Layers/VA_Admin_Boundaries/FeatureServer/1/query",
+   "params": {
+    "f": "json",
+    "outFields": "AREASQMI,GNIS,GSOURCE,JURISTYPE,LADOPT,LASTUPDATE,NAME,NAMELSAD,OBJECTID,STCOFIPS",
+    "resultRecordCount": "50",
+    "returnGeometry": "false",
+    "geometry": "{\"x\": -77.26436153964, \"y\": 38.90067620715, \"spatialReference\": {\"wkid\": 4326}}",
+    "geometryType": "esriGeometryPoint",
+    "inSR": "4326",
+    "spatialRel": "esriSpatialRelIntersects",
+    "distance": "50",
+    "units": "esriSRUnit_Meter"
+   },
+   "response": {
+    "objectIdFieldName": "OBJECTID",
+    "globalIdFieldName": "",
+    "geometryType": "esriGeometryPolygon",
+    "spatialReference": {
+     "wkid": 102100,
+     "latestWkid": 3857
+    },
+    "fields": [
+     {
+      "name": "AREASQMI",
+      "alias": "Calculated Square Miles",
+      "type": "esriFieldTypeDouble"
+     },
+     {
+      "name": "GNIS",
+      "alias": "GNIS Feature ID",
+      "type": "esriFieldTypeString",
+      "length": 20
+     },
+     {
+      "name": "GSOURCE",
+      "alias": "Geometry Source",
+      "type": "esriFieldTypeString",
+      "length": 4
+     },
+     {
+      "name": "JURISTYPE",
+      "alias": "Jurisdiction Type",
+      "type": "esriFieldTypeString",
+      "length": 2
+     },
+     {
+      "name": "LADOPT",
+      "alias": "Local Data Adoption",
+      "type": "esriFieldTypeString",
+      "length": 1
+     },
+     {
+      "name": "LASTUPDATE",
+      "alias": "Last Update",
+      "type": "esriFieldTypeDate",
+      "length": 8
+     },
+     {
+      "name": "NAME",
+      "alias": "Jurisdiction Name",
+      "type": "esriFieldTypeString",
+      "length": 100
+     },
+     {
+      "name": "NAMELSAD",
+      "alias": "Jurisdiction Full Name",
+      "type": "esriFieldTypeString",
+      "length": 100
+     },
+     {
+      "name": "OBJECTID",
+      "alias": "OBJECTID",
+      "type": "esriFieldTypeOID"
+     },
+     {
+      "name": "STCOFIPS",
+      "alias": "State-County FIPS Code",
+      "type": "esriFieldTypeString",
+      "length": 5
+     }
+    ],
+    "features": [
+     {
+      "attributes": {
+       "AREASQMI": 406.6227962,
+       "GNIS": "1480119",
+       "GSOURCE": "L",
+       "JURISTYPE": "CO",
+       "LADOPT": "Y",
+       "LASTUPDATE": 1722988800000,
+       "NAME": "Fairfax",
+       "NAMELSAD": "Fairfax County",
+       "OBJECTID": 29,
+       "STCOFIPS": "51059"
+      }
+     }
+    ]
+   }
+  },
+  {
+   "url": "https://vginmaps.vdem.virginia.gov/arcgis/rest/services/VA_Base_Layers/VA_Admin_Boundaries/FeatureServer/0/query",
+   "params": {
+    "f": "json",
+    "outFields": "AREASQMI,GNIS,GSOURCE,LADOPT,LASTUPDATE,NAME,NAMELSAD,OBJECTID,STPLFIPS",
+    "resultRecordCount": "50",
+    "returnGeometry": "false",
+    "geometry": "{\"x\": -77.26436153964, \"y\": 38.90067620715, \"spatialReference\": {\"wkid\": 4326}}",
+    "geometryType": "esriGeometryPoint",
+    "inSR": "4326",
+    "spatialRel": "esriSpatialRelIntersects"
+   },
+   "response": {
+    "objectIdFieldName": "OBJECTID",
+    "globalIdFieldName": "",
+    "geometryType": "esriGeometryPolygon",
+    "spatialReference": {
+     "wkid": 102100,
+     "latestWkid": 3857
+    },
+    "fields": [
+     {
+      "name": "AREASQMI",
+      "alias": "Calculated Square Miles",
+      "type": "esriFieldTypeDouble"
+     },
+     {
+      "name": "GNIS",
+      "alias": "GNIS Feature ID",
+      "type": "esriFieldTypeString",
+      "length": 20
+     },
+     {
+      "name": "GSOURCE",
+      "alias": "Geometry Source",
+      "type": "esriFieldTypeString",
+      "length": 4
+     },
+     {
+      "name": "LADOPT",
+      "alias": "Local Data Adoption",
+      "type": "esriFieldTypeString",
+      "length": 1
+     },
+     {
+      "name": "LASTUPDATE",
+      "alias": "Last Update",
+      "type": "esriFieldTypeDate",
+      "length": 8
+     },
+     {
+      "name": "NAME",
+      "alias": "Town Name",
+      "type": "esriFieldTypeString",
+      "length": 100
+     },
+     {
+      "name": "NAMELSAD",
+      "alias": "Town Name Full",
+      "type": "esriFieldTypeString",
+      "length": 100
+     },
+     {
+      "name": "OBJECTID",
+      "alias": "OBJECTID",
+      "type": "esriFieldTypeOID"
+     },
+     {
+      "name": "STPLFIPS",
+      "alias": "State-Town FIPS Code",
+      "type": "esriFieldTypeString",
+      "length": 10
+     }
+    ],
+    "features": [
+     {
+      "attributes": {
+       "AREASQMI": 4.39943993,
+       "GNIS": "2391461",
+       "GSOURCE": "L",
+       "LADOPT": "Y",
+       "LASTUPDATE": 1679529600000,
+       "NAME": "Vienna",
+       "NAMELSAD": "Vienna town",
+       "OBJECTID": 106,
+       "STPLFIPS": "5181072"
+      }
+     }
+    ]
+   }
+  },
+  {
+   "url": "https://vginmaps.vdem.virginia.gov/arcgis/rest/services/VA_Base_Layers/VA_Admin_Boundaries/FeatureServer/0/query",
+   "params": {
+    "f": "json",
+    "outFields": "AREASQMI,GNIS,GSOURCE,LADOPT,LASTUPDATE,NAME,NAMELSAD,OBJECTID,STPLFIPS",
+    "resultRecordCount": "50",
+    "returnGeometry": "false",
+    "geometry": "{\"x\": -77.26436153964, \"y\": 38.90067620715, \"spatialReference\": {\"wkid\": 4326}}",
+    "geometryType": "esriGeometryPoint",
+    "inSR": "4326",
+    "spatialRel": "esriSpatialRelIntersects",
+    "distance": "50",
+    "units": "esriSRUnit_Meter"
+   },
+   "response": {
+    "objectIdFieldName": "OBJECTID",
+    "globalIdFieldName": "",
+    "geometryType": "esriGeometryPolygon",
+    "spatialReference": {
+     "wkid": 102100,
+     "latestWkid": 3857
+    },
+    "fields": [
+     {
+      "name": "AREASQMI",
+      "alias": "Calculated Square Miles",
+      "type": "esriFieldTypeDouble"
+     },
+     {
+      "name": "GNIS",
+      "alias": "GNIS Feature ID",
+      "type": "esriFieldTypeString",
+      "length": 20
+     },
+     {
+      "name": "GSOURCE",
+      "alias": "Geometry Source",
+      "type": "esriFieldTypeString",
+      "length": 4
+     },
+     {
+      "name": "LADOPT",
+      "alias": "Local Data Adoption",
+      "type": "esriFieldTypeString",
+      "length": 1
+     },
+     {
+      "name": "LASTUPDATE",
+      "alias": "Last Update",
+      "type": "esriFieldTypeDate",
+      "length": 8
+     },
+     {
+      "name": "NAME",
+      "alias": "Town Name",
+      "type": "esriFieldTypeString",
+      "length": 100
+     },
+     {
+      "name": "NAMELSAD",
+      "alias": "Town Name Full",
+      "type": "esriFieldTypeString",
+      "length": 100
+     },
+     {
+      "name": "OBJECTID",
+      "alias": "OBJECTID",
+      "type": "esriFieldTypeOID"
+     },
+     {
+      "name": "STPLFIPS",
+      "alias": "State-Town FIPS Code",
+      "type": "esriFieldTypeString",
+      "length": 10
+     }
+    ],
+    "features": [
+     {
+      "attributes": {
+       "AREASQMI": 4.39943993,
+       "GNIS": "2391461",
+       "GSOURCE": "L",
+       "LADOPT": "Y",
+       "LASTUPDATE": 1679529600000,
+       "NAME": "Vienna",
+       "NAMELSAD": "Vienna town",
+       "OBJECTID": 106,
+       "STPLFIPS": "5181072"
+      }
+     }
+    ]
+   }
+  },
+  {
+   "url": "https://vginmaps.vdem.virginia.gov/arcgis/rest/services/VA_Base_Layers/VA_Admin_Boundaries/FeatureServer/1/query",
+   "params": {
+    "f": "json",
+    "outFields": "AREASQMI,GNIS,GSOURCE,JURISTYPE,LADOPT,LASTUPDATE,NAME,NAMELSAD,OBJECTID,STCOFIPS",
+    "resultRecordCount": "50",
+    "returnGeometry": "false",
+    "geometry": "{\"x\": -77.264736107181, \"y\": 38.901130384578, \"spatialReference\": {\"wkid\": 4326}}",
+    "geometryType": "esriGeometryPoint",
+    "inSR": "4326",
+    "spatialRel": "esriSpatialRelIntersects"
+   },
+   "response": {
+    "objectIdFieldName": "OBJECTID",
+    "globalIdFieldName": "",
+    "geometryType": "esriGeometryPolygon",
+    "spatialReference": {
+     "wkid": 102100,
+     "latestWkid": 3857
+    },
+    "fields": [
+     {
+      "name": "AREASQMI",
+      "alias": "Calculated Square Miles",
+      "type": "esriFieldTypeDouble"
+     },
+     {
+      "name": "GNIS",
+      "alias": "GNIS Feature ID",
+      "type": "esriFieldTypeString",
+      "length": 20
+     },
+     {
+      "name": "GSOURCE",
+      "alias": "Geometry Source",
+      "type": "esriFieldTypeString",
+      "length": 4
+     },
+     {
+      "name": "JURISTYPE",
+      "alias": "Jurisdiction Type",
+      "type": "esriFieldTypeString",
+      "length": 2
+     },
+     {
+      "name": "LADOPT",
+      "alias": "Local Data Adoption",
+      "type": "esriFieldTypeString",
+      "length": 1
+     },
+     {
+      "name": "LASTUPDATE",
+      "alias": "Last Update",
+      "type": "esriFieldTypeDate",
+      "length": 8
+     },
+     {
+      "name": "NAME",
+      "alias": "Jurisdiction Name",
+      "type": "esriFieldTypeString",
+      "length": 100
+     },
+     {
+      "name": "NAMELSAD",
+      "alias": "Jurisdiction Full Name",
+      "type": "esriFieldTypeString",
+      "length": 100
+     },
+     {
+      "name": "OBJECTID",
+      "alias": "OBJECTID",
+      "type": "esriFieldTypeOID"
+     },
+     {
+      "name": "STCOFIPS",
+      "alias": "State-County FIPS Code",
+      "type": "esriFieldTypeString",
+      "length": 5
+     }
+    ],
+    "features": [
+     {
+      "attributes": {
+       "AREASQMI": 406.6227962,
+       "GNIS": "1480119",
+       "GSOURCE": "L",
+       "JURISTYPE": "CO",
+       "LADOPT": "Y",
+       "LASTUPDATE": 1722988800000,
+       "NAME": "Fairfax",
+       "NAMELSAD": "Fairfax County",
+       "OBJECTID": 29,
+       "STCOFIPS": "51059"
+      }
+     }
+    ]
+   }
+  },
+  {
+   "url": "https://vginmaps.vdem.virginia.gov/arcgis/rest/services/VA_Base_Layers/VA_Admin_Boundaries/FeatureServer/1/query",
+   "params": {
+    "f": "json",
+    "outFields": "AREASQMI,GNIS,GSOURCE,JURISTYPE,LADOPT,LASTUPDATE,NAME,NAMELSAD,OBJECTID,STCOFIPS",
+    "resultRecordCount": "50",
+    "returnGeometry": "false",
+    "geometry": "{\"x\": -77.264736107181, \"y\": 38.901130384578, \"spatialReference\": {\"wkid\": 4326}}",
+    "geometryType": "esriGeometryPoint",
+    "inSR": "4326",
+    "spatialRel": "esriSpatialRelIntersects",
+    "distance": "50",
+    "units": "esriSRUnit_Meter"
+   },
+   "response": {
+    "objectIdFieldName": "OBJECTID",
+    "globalIdFieldName": "",
+    "geometryType": "esriGeometryPolygon",
+    "spatialReference": {
+     "wkid": 102100,
+     "latestWkid": 3857
+    },
+    "fields": [
+     {
+      "name": "AREASQMI",
+      "alias": "Calculated Square Miles",
+      "type": "esriFieldTypeDouble"
+     },
+     {
+      "name": "GNIS",
+      "alias": "GNIS Feature ID",
+      "type": "esriFieldTypeString",
+      "length": 20
+     },
+     {
+      "name": "GSOURCE",
+      "alias": "Geometry Source",
+      "type": "esriFieldTypeString",
+      "length": 4
+     },
+     {
+      "name": "JURISTYPE",
+      "alias": "Jurisdiction Type",
+      "type": "esriFieldTypeString",
+      "length": 2
+     },
+     {
+      "name": "LADOPT",
+      "alias": "Local Data Adoption",
+      "type": "esriFieldTypeString",
+      "length": 1
+     },
+     {
+      "name": "LASTUPDATE",
+      "alias": "Last Update",
+      "type": "esriFieldTypeDate",
+      "length": 8
+     },
+     {
+      "name": "NAME",
+      "alias": "Jurisdiction Name",
+      "type": "esriFieldTypeString",
+      "length": 100
+     },
+     {
+      "name": "NAMELSAD",
+      "alias": "Jurisdiction Full Name",
+      "type": "esriFieldTypeString",
+      "length": 100
+     },
+     {
+      "name": "OBJECTID",
+      "alias": "OBJECTID",
+      "type": "esriFieldTypeOID"
+     },
+     {
+      "name": "STCOFIPS",
+      "alias": "State-County FIPS Code",
+      "type": "esriFieldTypeString",
+      "length": 5
+     }
+    ],
+    "features": [
+     {
+      "attributes": {
+       "AREASQMI": 406.6227962,
+       "GNIS": "1480119",
+       "GSOURCE": "L",
+       "JURISTYPE": "CO",
+       "LADOPT": "Y",
+       "LASTUPDATE": 1722988800000,
+       "NAME": "Fairfax",
+       "NAMELSAD": "Fairfax County",
+       "OBJECTID": 29,
+       "STCOFIPS": "51059"
+      }
+     }
+    ]
+   }
+  },
+  {
+   "url": "https://vginmaps.vdem.virginia.gov/arcgis/rest/services/VA_Base_Layers/VA_Admin_Boundaries/FeatureServer/0/query",
+   "params": {
+    "f": "json",
+    "outFields": "AREASQMI,GNIS,GSOURCE,LADOPT,LASTUPDATE,NAME,NAMELSAD,OBJECTID,STPLFIPS",
+    "resultRecordCount": "50",
+    "returnGeometry": "false",
+    "geometry": "{\"x\": -77.264736107181, \"y\": 38.901130384578, \"spatialReference\": {\"wkid\": 4326}}",
+    "geometryType": "esriGeometryPoint",
+    "inSR": "4326",
+    "spatialRel": "esriSpatialRelIntersects"
+   },
+   "response": {
+    "objectIdFieldName": "OBJECTID",
+    "globalIdFieldName": "",
+    "geometryType": "esriGeometryPolygon",
+    "spatialReference": {
+     "wkid": 102100,
+     "latestWkid": 3857
+    },
+    "fields": [
+     {
+      "name": "AREASQMI",
+      "alias": "Calculated Square Miles",
+      "type": "esriFieldTypeDouble"
+     },
+     {
+      "name": "GNIS",
+      "alias": "GNIS Feature ID",
+      "type": "esriFieldTypeString",
+      "length": 20
+     },
+     {
+      "name": "GSOURCE",
+      "alias": "Geometry Source",
+      "type": "esriFieldTypeString",
+      "length": 4
+     },
+     {
+      "name": "LADOPT",
+      "alias": "Local Data Adoption",
+      "type": "esriFieldTypeString",
+      "length": 1
+     },
+     {
+      "name": "LASTUPDATE",
+      "alias": "Last Update",
+      "type": "esriFieldTypeDate",
+      "length": 8
+     },
+     {
+      "name": "NAME",
+      "alias": "Town Name",
+      "type": "esriFieldTypeString",
+      "length": 100
+     },
+     {
+      "name": "NAMELSAD",
+      "alias": "Town Name Full",
+      "type": "esriFieldTypeString",
+      "length": 100
+     },
+     {
+      "name": "OBJECTID",
+      "alias": "OBJECTID",
+      "type": "esriFieldTypeOID"
+     },
+     {
+      "name": "STPLFIPS",
+      "alias": "State-Town FIPS Code",
+      "type": "esriFieldTypeString",
+      "length": 10
+     }
+    ],
+    "features": [
+     {
+      "attributes": {
+       "AREASQMI": 4.39943993,
+       "GNIS": "2391461",
+       "GSOURCE": "L",
+       "LADOPT": "Y",
+       "LASTUPDATE": 1679529600000,
+       "NAME": "Vienna",
+       "NAMELSAD": "Vienna town",
+       "OBJECTID": 106,
+       "STPLFIPS": "5181072"
+      }
+     }
+    ]
+   }
+  },
+  {
+   "url": "https://vginmaps.vdem.virginia.gov/arcgis/rest/services/VA_Base_Layers/VA_Admin_Boundaries/FeatureServer/0/query",
+   "params": {
+    "f": "json",
+    "outFields": "AREASQMI,GNIS,GSOURCE,LADOPT,LASTUPDATE,NAME,NAMELSAD,OBJECTID,STPLFIPS",
+    "resultRecordCount": "50",
+    "returnGeometry": "false",
+    "geometry": "{\"x\": -77.264736107181, \"y\": 38.901130384578, \"spatialReference\": {\"wkid\": 4326}}",
+    "geometryType": "esriGeometryPoint",
+    "inSR": "4326",
+    "spatialRel": "esriSpatialRelIntersects",
+    "distance": "50",
+    "units": "esriSRUnit_Meter"
+   },
+   "response": {
+    "objectIdFieldName": "OBJECTID",
+    "globalIdFieldName": "",
+    "geometryType": "esriGeometryPolygon",
+    "spatialReference": {
+     "wkid": 102100,
+     "latestWkid": 3857
+    },
+    "fields": [
+     {
+      "name": "AREASQMI",
+      "alias": "Calculated Square Miles",
+      "type": "esriFieldTypeDouble"
+     },
+     {
+      "name": "GNIS",
+      "alias": "GNIS Feature ID",
+      "type": "esriFieldTypeString",
+      "length": 20
+     },
+     {
+      "name": "GSOURCE",
+      "alias": "Geometry Source",
+      "type": "esriFieldTypeString",
+      "length": 4
+     },
+     {
+      "name": "LADOPT",
+      "alias": "Local Data Adoption",
+      "type": "esriFieldTypeString",
+      "length": 1
+     },
+     {
+      "name": "LASTUPDATE",
+      "alias": "Last Update",
+      "type": "esriFieldTypeDate",
+      "length": 8
+     },
+     {
+      "name": "NAME",
+      "alias": "Town Name",
+      "type": "esriFieldTypeString",
+      "length": 100
+     },
+     {
+      "name": "NAMELSAD",
+      "alias": "Town Name Full",
+      "type": "esriFieldTypeString",
+      "length": 100
+     },
+     {
+      "name": "OBJECTID",
+      "alias": "OBJECTID",
+      "type": "esriFieldTypeOID"
+     },
+     {
+      "name": "STPLFIPS",
+      "alias": "State-Town FIPS Code",
+      "type": "esriFieldTypeString",
+      "length": 10
+     }
+    ],
+    "features": [
+     {
+      "attributes": {
+       "AREASQMI": 4.39943993,
+       "GNIS": "2391461",
+       "GSOURCE": "L",
+       "LADOPT": "Y",
+       "LASTUPDATE": 1679529600000,
+       "NAME": "Vienna",
+       "NAMELSAD": "Vienna town",
+       "OBJECTID": 106,
+       "STPLFIPS": "5181072"
+      }
+     }
+    ]
+   }
+  },
+  {
+   "url": "https://vginmaps.vdem.virginia.gov/arcgis/rest/services/VA_Base_Layers/VA_Admin_Boundaries/FeatureServer/1/query",
+   "params": {
+    "f": "json",
+    "outFields": "AREASQMI,GNIS,GSOURCE,JURISTYPE,LADOPT,LASTUPDATE,NAME,NAMELSAD,OBJECTID,STCOFIPS",
+    "resultRecordCount": "50",
+    "returnGeometry": "false",
+    "geometry": "{\"x\": -77.210242068451, \"y\": 38.893300414287, \"spatialReference\": {\"wkid\": 4326}}",
+    "geometryType": "esriGeometryPoint",
+    "inSR": "4326",
+    "spatialRel": "esriSpatialRelIntersects"
+   },
+   "response": {
+    "objectIdFieldName": "OBJECTID",
+    "globalIdFieldName": "",
+    "geometryType": "esriGeometryPolygon",
+    "spatialReference": {
+     "wkid": 102100,
+     "latestWkid": 3857
+    },
+    "fields": [
+     {
+      "name": "AREASQMI",
+      "alias": "Calculated Square Miles",
+      "type": "esriFieldTypeDouble"
+     },
+     {
+      "name": "GNIS",
+      "alias": "GNIS Feature ID",
+      "type": "esriFieldTypeString",
+      "length": 20
+     },
+     {
+      "name": "GSOURCE",
+      "alias": "Geometry Source",
+      "type": "esriFieldTypeString",
+      "length": 4
+     },
+     {
+      "name": "JURISTYPE",
+      "alias": "Jurisdiction Type",
+      "type": "esriFieldTypeString",
+      "length": 2
+     },
+     {
+      "name": "LADOPT",
+      "alias": "Local Data Adoption",
+      "type": "esriFieldTypeString",
+      "length": 1
+     },
+     {
+      "name": "LASTUPDATE",
+      "alias": "Last Update",
+      "type": "esriFieldTypeDate",
+      "length": 8
+     },
+     {
+      "name": "NAME",
+      "alias": "Jurisdiction Name",
+      "type": "esriFieldTypeString",
+      "length": 100
+     },
+     {
+      "name": "NAMELSAD",
+      "alias": "Jurisdiction Full Name",
+      "type": "esriFieldTypeString",
+      "length": 100
+     },
+     {
+      "name": "OBJECTID",
+      "alias": "OBJECTID",
+      "type": "esriFieldTypeOID"
+     },
+     {
+      "name": "STCOFIPS",
+      "alias": "State-County FIPS Code",
+      "type": "esriFieldTypeString",
+      "length": 5
+     }
+    ],
+    "features": [
+     {
+      "attributes": {
+       "AREASQMI": 406.6227962,
+       "GNIS": "1480119",
+       "GSOURCE": "L",
+       "JURISTYPE": "CO",
+       "LADOPT": "Y",
+       "LASTUPDATE": 1722988800000,
+       "NAME": "Fairfax",
+       "NAMELSAD": "Fairfax County",
+       "OBJECTID": 29,
+       "STCOFIPS": "51059"
+      }
+     }
+    ]
+   }
+  },
+  {
+   "url": "https://vginmaps.vdem.virginia.gov/arcgis/rest/services/VA_Base_Layers/VA_Admin_Boundaries/FeatureServer/1/query",
+   "params": {
+    "f": "json",
+    "outFields": "AREASQMI,GNIS,GSOURCE,JURISTYPE,LADOPT,LASTUPDATE,NAME,NAMELSAD,OBJECTID,STCOFIPS",
+    "resultRecordCount": "50",
+    "returnGeometry": "false",
+    "geometry": "{\"x\": -77.210242068451, \"y\": 38.893300414287, \"spatialReference\": {\"wkid\": 4326}}",
+    "geometryType": "esriGeometryPoint",
+    "inSR": "4326",
+    "spatialRel": "esriSpatialRelIntersects",
+    "distance": "50",
+    "units": "esriSRUnit_Meter"
+   },
+   "response": {
+    "objectIdFieldName": "OBJECTID",
+    "globalIdFieldName": "",
+    "geometryType": "esriGeometryPolygon",
+    "spatialReference": {
+     "wkid": 102100,
+     "latestWkid": 3857
+    },
+    "fields": [
+     {
+      "name": "AREASQMI",
+      "alias": "Calculated Square Miles",
+      "type": "esriFieldTypeDouble"
+     },
+     {
+      "name": "GNIS",
+      "alias": "GNIS Feature ID",
+      "type": "esriFieldTypeString",
+      "length": 20
+     },
+     {
+      "name": "GSOURCE",
+      "alias": "Geometry Source",
+      "type": "esriFieldTypeString",
+      "length": 4
+     },
+     {
+      "name": "JURISTYPE",
+      "alias": "Jurisdiction Type",
+      "type": "esriFieldTypeString",
+      "length": 2
+     },
+     {
+      "name": "LADOPT",
+      "alias": "Local Data Adoption",
+      "type": "esriFieldTypeString",
+      "length": 1
+     },
+     {
+      "name": "LASTUPDATE",
+      "alias": "Last Update",
+      "type": "esriFieldTypeDate",
+      "length": 8
+     },
+     {
+      "name": "NAME",
+      "alias": "Jurisdiction Name",
+      "type": "esriFieldTypeString",
+      "length": 100
+     },
+     {
+      "name": "NAMELSAD",
+      "alias": "Jurisdiction Full Name",
+      "type": "esriFieldTypeString",
+      "length": 100
+     },
+     {
+      "name": "OBJECTID",
+      "alias": "OBJECTID",
+      "type": "esriFieldTypeOID"
+     },
+     {
+      "name": "STCOFIPS",
+      "alias": "State-County FIPS Code",
+      "type": "esriFieldTypeString",
+      "length": 5
+     }
+    ],
+    "features": [
+     {
+      "attributes": {
+       "AREASQMI": 406.6227962,
+       "GNIS": "1480119",
+       "GSOURCE": "L",
+       "JURISTYPE": "CO",
+       "LADOPT": "Y",
+       "LASTUPDATE": 1722988800000,
+       "NAME": "Fairfax",
+       "NAMELSAD": "Fairfax County",
+       "OBJECTID": 29,
+       "STCOFIPS": "51059"
+      }
+     }
+    ]
+   }
+  },
+  {
+   "url": "https://vginmaps.vdem.virginia.gov/arcgis/rest/services/VA_Base_Layers/VA_Admin_Boundaries/FeatureServer/0/query",
+   "params": {
+    "f": "json",
+    "outFields": "AREASQMI,GNIS,GSOURCE,LADOPT,LASTUPDATE,NAME,NAMELSAD,OBJECTID,STPLFIPS",
+    "resultRecordCount": "50",
+    "returnGeometry": "false",
+    "geometry": "{\"x\": -77.210242068451, \"y\": 38.893300414287, \"spatialReference\": {\"wkid\": 4326}}",
+    "geometryType": "esriGeometryPoint",
+    "inSR": "4326",
+    "spatialRel": "esriSpatialRelIntersects"
+   },
+   "response": {
+    "objectIdFieldName": "OBJECTID",
+    "globalIdFieldName": "",
+    "geometryType": "esriGeometryPolygon",
+    "spatialReference": {
+     "wkid": 102100,
+     "latestWkid": 3857
+    },
+    "features": []
+   }
+  },
+  {
+   "url": "https://vginmaps.vdem.virginia.gov/arcgis/rest/services/VA_Base_Layers/VA_Admin_Boundaries/FeatureServer/0/query",
+   "params": {
+    "f": "json",
+    "outFields": "AREASQMI,GNIS,GSOURCE,LADOPT,LASTUPDATE,NAME,NAMELSAD,OBJECTID,STPLFIPS",
+    "resultRecordCount": "50",
+    "returnGeometry": "false",
+    "geometry": "{\"x\": -77.210242068451, \"y\": 38.893300414287, \"spatialReference\": {\"wkid\": 4326}}",
+    "geometryType": "esriGeometryPoint",
+    "inSR": "4326",
+    "spatialRel": "esriSpatialRelIntersects",
+    "distance": "50",
+    "units": "esriSRUnit_Meter"
+   },
+   "response": {
+    "objectIdFieldName": "OBJECTID",
+    "globalIdFieldName": "",
+    "geometryType": "esriGeometryPolygon",
+    "spatialReference": {
+     "wkid": 102100,
+     "latestWkid": 3857
+    },
+    "features": []
+   }
+  },
+  {
+   "url": "https://vginmaps.vdem.virginia.gov/arcgis/rest/services/VA_Base_Layers/VA_Admin_Boundaries/FeatureServer/1/query",
+   "params": {
+    "f": "json",
+    "outFields": "AREASQMI,GNIS,GSOURCE,JURISTYPE,LADOPT,LASTUPDATE,NAME,NAMELSAD,OBJECTID,STCOFIPS",
+    "resultRecordCount": "50",
+    "returnGeometry": "false",
+    "geometry": "{\"x\": -77.2764070531, \"y\": 38.911192903897, \"spatialReference\": {\"wkid\": 4326}}",
+    "geometryType": "esriGeometryPoint",
+    "inSR": "4326",
+    "spatialRel": "esriSpatialRelIntersects"
+   },
+   "response": {
+    "objectIdFieldName": "OBJECTID",
+    "globalIdFieldName": "",
+    "geometryType": "esriGeometryPolygon",
+    "spatialReference": {
+     "wkid": 102100,
+     "latestWkid": 3857
+    },
+    "fields": [
+     {
+      "name": "AREASQMI",
+      "alias": "Calculated Square Miles",
+      "type": "esriFieldTypeDouble"
+     },
+     {
+      "name": "GNIS",
+      "alias": "GNIS Feature ID",
+      "type": "esriFieldTypeString",
+      "length": 20
+     },
+     {
+      "name": "GSOURCE",
+      "alias": "Geometry Source",
+      "type": "esriFieldTypeString",
+      "length": 4
+     },
+     {
+      "name": "JURISTYPE",
+      "alias": "Jurisdiction Type",
+      "type": "esriFieldTypeString",
+      "length": 2
+     },
+     {
+      "name": "LADOPT",
+      "alias": "Local Data Adoption",
+      "type": "esriFieldTypeString",
+      "length": 1
+     },
+     {
+      "name": "LASTUPDATE",
+      "alias": "Last Update",
+      "type": "esriFieldTypeDate",
+      "length": 8
+     },
+     {
+      "name": "NAME",
+      "alias": "Jurisdiction Name",
+      "type": "esriFieldTypeString",
+      "length": 100
+     },
+     {
+      "name": "NAMELSAD",
+      "alias": "Jurisdiction Full Name",
+      "type": "esriFieldTypeString",
+      "length": 100
+     },
+     {
+      "name": "OBJECTID",
+      "alias": "OBJECTID",
+      "type": "esriFieldTypeOID"
+     },
+     {
+      "name": "STCOFIPS",
+      "alias": "State-County FIPS Code",
+      "type": "esriFieldTypeString",
+      "length": 5
+     }
+    ],
+    "features": [
+     {
+      "attributes": {
+       "AREASQMI": 406.6227962,
+       "GNIS": "1480119",
+       "GSOURCE": "L",
+       "JURISTYPE": "CO",
+       "LADOPT": "Y",
+       "LASTUPDATE": 1722988800000,
+       "NAME": "Fairfax",
+       "NAMELSAD": "Fairfax County",
+       "OBJECTID": 29,
+       "STCOFIPS": "51059"
+      }
+     }
+    ]
+   }
+  },
+  {
+   "url": "https://vginmaps.vdem.virginia.gov/arcgis/rest/services/VA_Base_Layers/VA_Admin_Boundaries/FeatureServer/1/query",
+   "params": {
+    "f": "json",
+    "outFields": "AREASQMI,GNIS,GSOURCE,JURISTYPE,LADOPT,LASTUPDATE,NAME,NAMELSAD,OBJECTID,STCOFIPS",
+    "resultRecordCount": "50",
+    "returnGeometry": "false",
+    "geometry": "{\"x\": -77.2764070531, \"y\": 38.911192903897, \"spatialReference\": {\"wkid\": 4326}}",
+    "geometryType": "esriGeometryPoint",
+    "inSR": "4326",
+    "spatialRel": "esriSpatialRelIntersects",
+    "distance": "50",
+    "units": "esriSRUnit_Meter"
+   },
+   "response": {
+    "objectIdFieldName": "OBJECTID",
+    "globalIdFieldName": "",
+    "geometryType": "esriGeometryPolygon",
+    "spatialReference": {
+     "wkid": 102100,
+     "latestWkid": 3857
+    },
+    "fields": [
+     {
+      "name": "AREASQMI",
+      "alias": "Calculated Square Miles",
+      "type": "esriFieldTypeDouble"
+     },
+     {
+      "name": "GNIS",
+      "alias": "GNIS Feature ID",
+      "type": "esriFieldTypeString",
+      "length": 20
+     },
+     {
+      "name": "GSOURCE",
+      "alias": "Geometry Source",
+      "type": "esriFieldTypeString",
+      "length": 4
+     },
+     {
+      "name": "JURISTYPE",
+      "alias": "Jurisdiction Type",
+      "type": "esriFieldTypeString",
+      "length": 2
+     },
+     {
+      "name": "LADOPT",
+      "alias": "Local Data Adoption",
+      "type": "esriFieldTypeString",
+      "length": 1
+     },
+     {
+      "name": "LASTUPDATE",
+      "alias": "Last Update",
+      "type": "esriFieldTypeDate",
+      "length": 8
+     },
+     {
+      "name": "NAME",
+      "alias": "Jurisdiction Name",
+      "type": "esriFieldTypeString",
+      "length": 100
+     },
+     {
+      "name": "NAMELSAD",
+      "alias": "Jurisdiction Full Name",
+      "type": "esriFieldTypeString",
+      "length": 100
+     },
+     {
+      "name": "OBJECTID",
+      "alias": "OBJECTID",
+      "type": "esriFieldTypeOID"
+     },
+     {
+      "name": "STCOFIPS",
+      "alias": "State-County FIPS Code",
+      "type": "esriFieldTypeString",
+      "length": 5
+     }
+    ],
+    "features": [
+     {
+      "attributes": {
+       "AREASQMI": 406.6227962,
+       "GNIS": "1480119",
+       "GSOURCE": "L",
+       "JURISTYPE": "CO",
+       "LADOPT": "Y",
+       "LASTUPDATE": 1722988800000,
+       "NAME": "Fairfax",
+       "NAMELSAD": "Fairfax County",
+       "OBJECTID": 29,
+       "STCOFIPS": "51059"
+      }
+     }
+    ]
+   }
+  },
+  {
+   "url": "https://vginmaps.vdem.virginia.gov/arcgis/rest/services/VA_Base_Layers/VA_Admin_Boundaries/FeatureServer/0/query",
+   "params": {
+    "f": "json",
+    "outFields": "AREASQMI,GNIS,GSOURCE,LADOPT,LASTUPDATE,NAME,NAMELSAD,OBJECTID,STPLFIPS",
+    "resultRecordCount": "50",
+    "returnGeometry": "false",
+    "geometry": "{\"x\": -77.2764070531, \"y\": 38.911192903897, \"spatialReference\": {\"wkid\": 4326}}",
+    "geometryType": "esriGeometryPoint",
+    "inSR": "4326",
+    "spatialRel": "esriSpatialRelIntersects"
+   },
+   "response": {
+    "objectIdFieldName": "OBJECTID",
+    "globalIdFieldName": "",
+    "geometryType": "esriGeometryPolygon",
+    "spatialReference": {
+     "wkid": 102100,
+     "latestWkid": 3857
+    },
+    "features": []
+   }
+  },
+  {
+   "url": "https://vginmaps.vdem.virginia.gov/arcgis/rest/services/VA_Base_Layers/VA_Admin_Boundaries/FeatureServer/0/query",
+   "params": {
+    "f": "json",
+    "outFields": "AREASQMI,GNIS,GSOURCE,LADOPT,LASTUPDATE,NAME,NAMELSAD,OBJECTID,STPLFIPS",
+    "resultRecordCount": "50",
+    "returnGeometry": "false",
+    "geometry": "{\"x\": -77.2764070531, \"y\": 38.911192903897, \"spatialReference\": {\"wkid\": 4326}}",
+    "geometryType": "esriGeometryPoint",
+    "inSR": "4326",
+    "spatialRel": "esriSpatialRelIntersects",
+    "distance": "50",
+    "units": "esriSRUnit_Meter"
+   },
+   "response": {
+    "objectIdFieldName": "OBJECTID",
+    "globalIdFieldName": "",
+    "geometryType": "esriGeometryPolygon",
+    "spatialReference": {
+     "wkid": 102100,
+     "latestWkid": 3857
+    },
+    "features": []
+   }
+  },
+  {
+   "url": "https://vginmaps.vdem.virginia.gov/arcgis/rest/services/VA_Base_Layers/VA_Admin_Boundaries/FeatureServer/1/query",
+   "params": {
+    "f": "json",
+    "outFields": "AREASQMI,GNIS,GSOURCE,JURISTYPE,LADOPT,LASTUPDATE,NAME,NAMELSAD,OBJECTID,STCOFIPS",
+    "resultRecordCount": "50",
+    "returnGeometry": "false",
+    "geometry": "{\"x\": -77.261239794994, \"y\": 38.898531734273, \"spatialReference\": {\"wkid\": 4326}}",
+    "geometryType": "esriGeometryPoint",
+    "inSR": "4326",
+    "spatialRel": "esriSpatialRelIntersects"
+   },
+   "response": {
+    "objectIdFieldName": "OBJECTID",
+    "globalIdFieldName": "",
+    "geometryType": "esriGeometryPolygon",
+    "spatialReference": {
+     "wkid": 102100,
+     "latestWkid": 3857
+    },
+    "fields": [
+     {
+      "name": "AREASQMI",
+      "alias": "Calculated Square Miles",
+      "type": "esriFieldTypeDouble"
+     },
+     {
+      "name": "GNIS",
+      "alias": "GNIS Feature ID",
+      "type": "esriFieldTypeString",
+      "length": 20
+     },
+     {
+      "name": "GSOURCE",
+      "alias": "Geometry Source",
+      "type": "esriFieldTypeString",
+      "length": 4
+     },
+     {
+      "name": "JURISTYPE",
+      "alias": "Jurisdiction Type",
+      "type": "esriFieldTypeString",
+      "length": 2
+     },
+     {
+      "name": "LADOPT",
+      "alias": "Local Data Adoption",
+      "type": "esriFieldTypeString",
+      "length": 1
+     },
+     {
+      "name": "LASTUPDATE",
+      "alias": "Last Update",
+      "type": "esriFieldTypeDate",
+      "length": 8
+     },
+     {
+      "name": "NAME",
+      "alias": "Jurisdiction Name",
+      "type": "esriFieldTypeString",
+      "length": 100
+     },
+     {
+      "name": "NAMELSAD",
+      "alias": "Jurisdiction Full Name",
+      "type": "esriFieldTypeString",
+      "length": 100
+     },
+     {
+      "name": "OBJECTID",
+      "alias": "OBJECTID",
+      "type": "esriFieldTypeOID"
+     },
+     {
+      "name": "STCOFIPS",
+      "alias": "State-County FIPS Code",
+      "type": "esriFieldTypeString",
+      "length": 5
+     }
+    ],
+    "features": [
+     {
+      "attributes": {
+       "AREASQMI": 406.6227962,
+       "GNIS": "1480119",
+       "GSOURCE": "L",
+       "JURISTYPE": "CO",
+       "LADOPT": "Y",
+       "LASTUPDATE": 1722988800000,
+       "NAME": "Fairfax",
+       "NAMELSAD": "Fairfax County",
+       "OBJECTID": 29,
+       "STCOFIPS": "51059"
+      }
+     }
+    ]
+   }
+  },
+  {
+   "url": "https://vginmaps.vdem.virginia.gov/arcgis/rest/services/VA_Base_Layers/VA_Admin_Boundaries/FeatureServer/1/query",
+   "params": {
+    "f": "json",
+    "outFields": "AREASQMI,GNIS,GSOURCE,JURISTYPE,LADOPT,LASTUPDATE,NAME,NAMELSAD,OBJECTID,STCOFIPS",
+    "resultRecordCount": "50",
+    "returnGeometry": "false",
+    "geometry": "{\"x\": -77.261239794994, \"y\": 38.898531734273, \"spatialReference\": {\"wkid\": 4326}}",
+    "geometryType": "esriGeometryPoint",
+    "inSR": "4326",
+    "spatialRel": "esriSpatialRelIntersects",
+    "distance": "50",
+    "units": "esriSRUnit_Meter"
+   },
+   "response": {
+    "objectIdFieldName": "OBJECTID",
+    "globalIdFieldName": "",
+    "geometryType": "esriGeometryPolygon",
+    "spatialReference": {
+     "wkid": 102100,
+     "latestWkid": 3857
+    },
+    "fields": [
+     {
+      "name": "AREASQMI",
+      "alias": "Calculated Square Miles",
+      "type": "esriFieldTypeDouble"
+     },
+     {
+      "name": "GNIS",
+      "alias": "GNIS Feature ID",
+      "type": "esriFieldTypeString",
+      "length": 20
+     },
+     {
+      "name": "GSOURCE",
+      "alias": "Geometry Source",
+      "type": "esriFieldTypeString",
+      "length": 4
+     },
+     {
+      "name": "JURISTYPE",
+      "alias": "Jurisdiction Type",
+      "type": "esriFieldTypeString",
+      "length": 2
+     },
+     {
+      "name": "LADOPT",
+      "alias": "Local Data Adoption",
+      "type": "esriFieldTypeString",
+      "length": 1
+     },
+     {
+      "name": "LASTUPDATE",
+      "alias": "Last Update",
+      "type": "esriFieldTypeDate",
+      "length": 8
+     },
+     {
+      "name": "NAME",
+      "alias": "Jurisdiction Name",
+      "type": "esriFieldTypeString",
+      "length": 100
+     },
+     {
+      "name": "NAMELSAD",
+      "alias": "Jurisdiction Full Name",
+      "type": "esriFieldTypeString",
+      "length": 100
+     },
+     {
+      "name": "OBJECTID",
+      "alias": "OBJECTID",
+      "type": "esriFieldTypeOID"
+     },
+     {
+      "name": "STCOFIPS",
+      "alias": "State-County FIPS Code",
+      "type": "esriFieldTypeString",
+      "length": 5
+     }
+    ],
+    "features": [
+     {
+      "attributes": {
+       "AREASQMI": 406.6227962,
+       "GNIS": "1480119",
+       "GSOURCE": "L",
+       "JURISTYPE": "CO",
+       "LADOPT": "Y",
+       "LASTUPDATE": 1722988800000,
+       "NAME": "Fairfax",
+       "NAMELSAD": "Fairfax County",
+       "OBJECTID": 29,
+       "STCOFIPS": "51059"
+      }
+     }
+    ]
+   }
+  },
+  {
+   "url": "https://vginmaps.vdem.virginia.gov/arcgis/rest/services/VA_Base_Layers/VA_Admin_Boundaries/FeatureServer/0/query",
+   "params": {
+    "f": "json",
+    "outFields": "AREASQMI,GNIS,GSOURCE,LADOPT,LASTUPDATE,NAME,NAMELSAD,OBJECTID,STPLFIPS",
+    "resultRecordCount": "50",
+    "returnGeometry": "false",
+    "geometry": "{\"x\": -77.261239794994, \"y\": 38.898531734273, \"spatialReference\": {\"wkid\": 4326}}",
+    "geometryType": "esriGeometryPoint",
+    "inSR": "4326",
+    "spatialRel": "esriSpatialRelIntersects"
+   },
+   "response": {
+    "objectIdFieldName": "OBJECTID",
+    "globalIdFieldName": "",
+    "geometryType": "esriGeometryPolygon",
+    "spatialReference": {
+     "wkid": 102100,
+     "latestWkid": 3857
+    },
+    "fields": [
+     {
+      "name": "AREASQMI",
+      "alias": "Calculated Square Miles",
+      "type": "esriFieldTypeDouble"
+     },
+     {
+      "name": "GNIS",
+      "alias": "GNIS Feature ID",
+      "type": "esriFieldTypeString",
+      "length": 20
+     },
+     {
+      "name": "GSOURCE",
+      "alias": "Geometry Source",
+      "type": "esriFieldTypeString",
+      "length": 4
+     },
+     {
+      "name": "LADOPT",
+      "alias": "Local Data Adoption",
+      "type": "esriFieldTypeString",
+      "length": 1
+     },
+     {
+      "name": "LASTUPDATE",
+      "alias": "Last Update",
+      "type": "esriFieldTypeDate",
+      "length": 8
+     },
+     {
+      "name": "NAME",
+      "alias": "Town Name",
+      "type": "esriFieldTypeString",
+      "length": 100
+     },
+     {
+      "name": "NAMELSAD",
+      "alias": "Town Name Full",
+      "type": "esriFieldTypeString",
+      "length": 100
+     },
+     {
+      "name": "OBJECTID",
+      "alias": "OBJECTID",
+      "type": "esriFieldTypeOID"
+     },
+     {
+      "name": "STPLFIPS",
+      "alias": "State-Town FIPS Code",
+      "type": "esriFieldTypeString",
+      "length": 10
+     }
+    ],
+    "features": [
+     {
+      "attributes": {
+       "AREASQMI": 4.39943993,
+       "GNIS": "2391461",
+       "GSOURCE": "L",
+       "LADOPT": "Y",
+       "LASTUPDATE": 1679529600000,
+       "NAME": "Vienna",
+       "NAMELSAD": "Vienna town",
+       "OBJECTID": 106,
+       "STPLFIPS": "5181072"
+      }
+     }
+    ]
+   }
+  },
+  {
+   "url": "https://vginmaps.vdem.virginia.gov/arcgis/rest/services/VA_Base_Layers/VA_Admin_Boundaries/FeatureServer/0/query",
+   "params": {
+    "f": "json",
+    "outFields": "AREASQMI,GNIS,GSOURCE,LADOPT,LASTUPDATE,NAME,NAMELSAD,OBJECTID,STPLFIPS",
+    "resultRecordCount": "50",
+    "returnGeometry": "false",
+    "geometry": "{\"x\": -77.261239794994, \"y\": 38.898531734273, \"spatialReference\": {\"wkid\": 4326}}",
+    "geometryType": "esriGeometryPoint",
+    "inSR": "4326",
+    "spatialRel": "esriSpatialRelIntersects",
+    "distance": "50",
+    "units": "esriSRUnit_Meter"
+   },
+   "response": {
+    "objectIdFieldName": "OBJECTID",
+    "globalIdFieldName": "",
+    "geometryType": "esriGeometryPolygon",
+    "spatialReference": {
+     "wkid": 102100,
+     "latestWkid": 3857
+    },
+    "fields": [
+     {
+      "name": "AREASQMI",
+      "alias": "Calculated Square Miles",
+      "type": "esriFieldTypeDouble"
+     },
+     {
+      "name": "GNIS",
+      "alias": "GNIS Feature ID",
+      "type": "esriFieldTypeString",
+      "length": 20
+     },
+     {
+      "name": "GSOURCE",
+      "alias": "Geometry Source",
+      "type": "esriFieldTypeString",
+      "length": 4
+     },
+     {
+      "name": "LADOPT",
+      "alias": "Local Data Adoption",
+      "type": "esriFieldTypeString",
+      "length": 1
+     },
+     {
+      "name": "LASTUPDATE",
+      "alias": "Last Update",
+      "type": "esriFieldTypeDate",
+      "length": 8
+     },
+     {
+      "name": "NAME",
+      "alias": "Town Name",
+      "type": "esriFieldTypeString",
+      "length": 100
+     },
+     {
+      "name": "NAMELSAD",
+      "alias": "Town Name Full",
+      "type": "esriFieldTypeString",
+      "length": 100
+     },
+     {
+      "name": "OBJECTID",
+      "alias": "OBJECTID",
+      "type": "esriFieldTypeOID"
+     },
+     {
+      "name": "STPLFIPS",
+      "alias": "State-Town FIPS Code",
+      "type": "esriFieldTypeString",
+      "length": 10
+     }
+    ],
+    "features": [
+     {
+      "attributes": {
+       "AREASQMI": 4.39943993,
+       "GNIS": "2391461",
+       "GSOURCE": "L",
+       "LADOPT": "Y",
+       "LASTUPDATE": 1679529600000,
+       "NAME": "Vienna",
+       "NAMELSAD": "Vienna town",
+       "OBJECTID": 106,
+       "STPLFIPS": "5181072"
+      }
+     }
+    ]
+   }
+  },
+  {
+   "url": "https://vginmaps.vdem.virginia.gov/arcgis/rest/services/VA_Base_Layers/VA_Admin_Boundaries/FeatureServer/1/query",
+   "params": {
+    "f": "json",
+    "outFields": "AREASQMI,GNIS,GSOURCE,JURISTYPE,LADOPT,LASTUPDATE,NAME,NAMELSAD,OBJECTID,STCOFIPS",
+    "resultRecordCount": "50",
+    "returnGeometry": "false",
+    "geometry": "{\"x\": -77.270304330621, \"y\": 38.905490629705, \"spatialReference\": {\"wkid\": 4326}}",
+    "geometryType": "esriGeometryPoint",
+    "inSR": "4326",
+    "spatialRel": "esriSpatialRelIntersects"
+   },
+   "response": {
+    "objectIdFieldName": "OBJECTID",
+    "globalIdFieldName": "",
+    "geometryType": "esriGeometryPolygon",
+    "spatialReference": {
+     "wkid": 102100,
+     "latestWkid": 3857
+    },
+    "fields": [
+     {
+      "name": "AREASQMI",
+      "alias": "Calculated Square Miles",
+      "type": "esriFieldTypeDouble"
+     },
+     {
+      "name": "GNIS",
+      "alias": "GNIS Feature ID",
+      "type": "esriFieldTypeString",
+      "length": 20
+     },
+     {
+      "name": "GSOURCE",
+      "alias": "Geometry Source",
+      "type": "esriFieldTypeString",
+      "length": 4
+     },
+     {
+      "name": "JURISTYPE",
+      "alias": "Jurisdiction Type",
+      "type": "esriFieldTypeString",
+      "length": 2
+     },
+     {
+      "name": "LADOPT",
+      "alias": "Local Data Adoption",
+      "type": "esriFieldTypeString",
+      "length": 1
+     },
+     {
+      "name": "LASTUPDATE",
+      "alias": "Last Update",
+      "type": "esriFieldTypeDate",
+      "length": 8
+     },
+     {
+      "name": "NAME",
+      "alias": "Jurisdiction Name",
+      "type": "esriFieldTypeString",
+      "length": 100
+     },
+     {
+      "name": "NAMELSAD",
+      "alias": "Jurisdiction Full Name",
+      "type": "esriFieldTypeString",
+      "length": 100
+     },
+     {
+      "name": "OBJECTID",
+      "alias": "OBJECTID",
+      "type": "esriFieldTypeOID"
+     },
+     {
+      "name": "STCOFIPS",
+      "alias": "State-County FIPS Code",
+      "type": "esriFieldTypeString",
+      "length": 5
+     }
+    ],
+    "features": [
+     {
+      "attributes": {
+       "AREASQMI": 406.6227962,
+       "GNIS": "1480119",
+       "GSOURCE": "L",
+       "JURISTYPE": "CO",
+       "LADOPT": "Y",
+       "LASTUPDATE": 1722988800000,
+       "NAME": "Fairfax",
+       "NAMELSAD": "Fairfax County",
+       "OBJECTID": 29,
+       "STCOFIPS": "51059"
+      }
+     }
+    ]
+   }
+  },
+  {
+   "url": "https://vginmaps.vdem.virginia.gov/arcgis/rest/services/VA_Base_Layers/VA_Admin_Boundaries/FeatureServer/1/query",
+   "params": {
+    "f": "json",
+    "outFields": "AREASQMI,GNIS,GSOURCE,JURISTYPE,LADOPT,LASTUPDATE,NAME,NAMELSAD,OBJECTID,STCOFIPS",
+    "resultRecordCount": "50",
+    "returnGeometry": "false",
+    "geometry": "{\"x\": -77.270304330621, \"y\": 38.905490629705, \"spatialReference\": {\"wkid\": 4326}}",
+    "geometryType": "esriGeometryPoint",
+    "inSR": "4326",
+    "spatialRel": "esriSpatialRelIntersects",
+    "distance": "50",
+    "units": "esriSRUnit_Meter"
+   },
+   "response": {
+    "objectIdFieldName": "OBJECTID",
+    "globalIdFieldName": "",
+    "geometryType": "esriGeometryPolygon",
+    "spatialReference": {
+     "wkid": 102100,
+     "latestWkid": 3857
+    },
+    "fields": [
+     {
+      "name": "AREASQMI",
+      "alias": "Calculated Square Miles",
+      "type": "esriFieldTypeDouble"
+     },
+     {
+      "name": "GNIS",
+      "alias": "GNIS Feature ID",
+      "type": "esriFieldTypeString",
+      "length": 20
+     },
+     {
+      "name": "GSOURCE",
+      "alias": "Geometry Source",
+      "type": "esriFieldTypeString",
+      "length": 4
+     },
+     {
+      "name": "JURISTYPE",
+      "alias": "Jurisdiction Type",
+      "type": "esriFieldTypeString",
+      "length": 2
+     },
+     {
+      "name": "LADOPT",
+      "alias": "Local Data Adoption",
+      "type": "esriFieldTypeString",
+      "length": 1
+     },
+     {
+      "name": "LASTUPDATE",
+      "alias": "Last Update",
+      "type": "esriFieldTypeDate",
+      "length": 8
+     },
+     {
+      "name": "NAME",
+      "alias": "Jurisdiction Name",
+      "type": "esriFieldTypeString",
+      "length": 100
+     },
+     {
+      "name": "NAMELSAD",
+      "alias": "Jurisdiction Full Name",
+      "type": "esriFieldTypeString",
+      "length": 100
+     },
+     {
+      "name": "OBJECTID",
+      "alias": "OBJECTID",
+      "type": "esriFieldTypeOID"
+     },
+     {
+      "name": "STCOFIPS",
+      "alias": "State-County FIPS Code",
+      "type": "esriFieldTypeString",
+      "length": 5
+     }
+    ],
+    "features": [
+     {
+      "attributes": {
+       "AREASQMI": 406.6227962,
+       "GNIS": "1480119",
+       "GSOURCE": "L",
+       "JURISTYPE": "CO",
+       "LADOPT": "Y",
+       "LASTUPDATE": 1722988800000,
+       "NAME": "Fairfax",
+       "NAMELSAD": "Fairfax County",
+       "OBJECTID": 29,
+       "STCOFIPS": "51059"
+      }
+     }
+    ]
+   }
+  },
+  {
+   "url": "https://vginmaps.vdem.virginia.gov/arcgis/rest/services/VA_Base_Layers/VA_Admin_Boundaries/FeatureServer/0/query",
+   "params": {
+    "f": "json",
+    "outFields": "AREASQMI,GNIS,GSOURCE,LADOPT,LASTUPDATE,NAME,NAMELSAD,OBJECTID,STPLFIPS",
+    "resultRecordCount": "50",
+    "returnGeometry": "false",
+    "geometry": "{\"x\": -77.270304330621, \"y\": 38.905490629705, \"spatialReference\": {\"wkid\": 4326}}",
+    "geometryType": "esriGeometryPoint",
+    "inSR": "4326",
+    "spatialRel": "esriSpatialRelIntersects"
+   },
+   "response": {
+    "objectIdFieldName": "OBJECTID",
+    "globalIdFieldName": "",
+    "geometryType": "esriGeometryPolygon",
+    "spatialReference": {
+     "wkid": 102100,
+     "latestWkid": 3857
+    },
+    "fields": [
+     {
+      "name": "AREASQMI",
+      "alias": "Calculated Square Miles",
+      "type": "esriFieldTypeDouble"
+     },
+     {
+      "name": "GNIS",
+      "alias": "GNIS Feature ID",
+      "type": "esriFieldTypeString",
+      "length": 20
+     },
+     {
+      "name": "GSOURCE",
+      "alias": "Geometry Source",
+      "type": "esriFieldTypeString",
+      "length": 4
+     },
+     {
+      "name": "LADOPT",
+      "alias": "Local Data Adoption",
+      "type": "esriFieldTypeString",
+      "length": 1
+     },
+     {
+      "name": "LASTUPDATE",
+      "alias": "Last Update",
+      "type": "esriFieldTypeDate",
+      "length": 8
+     },
+     {
+      "name": "NAME",
+      "alias": "Town Name",
+      "type": "esriFieldTypeString",
+      "length": 100
+     },
+     {
+      "name": "NAMELSAD",
+      "alias": "Town Name Full",
+      "type": "esriFieldTypeString",
+      "length": 100
+     },
+     {
+      "name": "OBJECTID",
+      "alias": "OBJECTID",
+      "type": "esriFieldTypeOID"
+     },
+     {
+      "name": "STPLFIPS",
+      "alias": "State-Town FIPS Code",
+      "type": "esriFieldTypeString",
+      "length": 10
+     }
+    ],
+    "features": [
+     {
+      "attributes": {
+       "AREASQMI": 4.39943993,
+       "GNIS": "2391461",
+       "GSOURCE": "L",
+       "LADOPT": "Y",
+       "LASTUPDATE": 1679529600000,
+       "NAME": "Vienna",
+       "NAMELSAD": "Vienna town",
+       "OBJECTID": 106,
+       "STPLFIPS": "5181072"
+      }
+     }
+    ]
+   }
+  },
+  {
+   "url": "https://vginmaps.vdem.virginia.gov/arcgis/rest/services/VA_Base_Layers/VA_Admin_Boundaries/FeatureServer/0/query",
+   "params": {
+    "f": "json",
+    "outFields": "AREASQMI,GNIS,GSOURCE,LADOPT,LASTUPDATE,NAME,NAMELSAD,OBJECTID,STPLFIPS",
+    "resultRecordCount": "50",
+    "returnGeometry": "false",
+    "geometry": "{\"x\": -77.270304330621, \"y\": 38.905490629705, \"spatialReference\": {\"wkid\": 4326}}",
+    "geometryType": "esriGeometryPoint",
+    "inSR": "4326",
+    "spatialRel": "esriSpatialRelIntersects",
+    "distance": "50",
+    "units": "esriSRUnit_Meter"
+   },
+   "response": {
+    "objectIdFieldName": "OBJECTID",
+    "globalIdFieldName": "",
+    "geometryType": "esriGeometryPolygon",
+    "spatialReference": {
+     "wkid": 102100,
+     "latestWkid": 3857
+    },
+    "fields": [
+     {
+      "name": "AREASQMI",
+      "alias": "Calculated Square Miles",
+      "type": "esriFieldTypeDouble"
+     },
+     {
+      "name": "GNIS",
+      "alias": "GNIS Feature ID",
+      "type": "esriFieldTypeString",
+      "length": 20
+     },
+     {
+      "name": "GSOURCE",
+      "alias": "Geometry Source",
+      "type": "esriFieldTypeString",
+      "length": 4
+     },
+     {
+      "name": "LADOPT",
+      "alias": "Local Data Adoption",
+      "type": "esriFieldTypeString",
+      "length": 1
+     },
+     {
+      "name": "LASTUPDATE",
+      "alias": "Last Update",
+      "type": "esriFieldTypeDate",
+      "length": 8
+     },
+     {
+      "name": "NAME",
+      "alias": "Town Name",
+      "type": "esriFieldTypeString",
+      "length": 100
+     },
+     {
+      "name": "NAMELSAD",
+      "alias": "Town Name Full",
+      "type": "esriFieldTypeString",
+      "length": 100
+     },
+     {
+      "name": "OBJECTID",
+      "alias": "OBJECTID",
+      "type": "esriFieldTypeOID"
+     },
+     {
+      "name": "STPLFIPS",
+      "alias": "State-Town FIPS Code",
+      "type": "esriFieldTypeString",
+      "length": 10
+     }
+    ],
+    "features": [
+     {
+      "attributes": {
+       "AREASQMI": 4.39943993,
+       "GNIS": "2391461",
+       "GSOURCE": "L",
+       "LADOPT": "Y",
+       "LASTUPDATE": 1679529600000,
+       "NAME": "Vienna",
+       "NAMELSAD": "Vienna town",
+       "OBJECTID": 106,
+       "STPLFIPS": "5181072"
+      }
+     }
+    ]
    }
   }
  ]

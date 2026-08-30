@@ -1,0 +1,6 @@
+id: va:mecklenburg-county
+name: Mecklenburg County
+kind: county
+fips: "51117"
+parent: va
+aliases: ["County of Mecklenburg"]

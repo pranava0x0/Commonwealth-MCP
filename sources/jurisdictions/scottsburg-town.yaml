@@ -1,0 +1,6 @@
+id: va:scottsburg-town
+name: Scottsburg (town)
+kind: town
+place_fips: "70752"
+parent: va:halifax-county
+aliases: ["Town of Scottsburg"]

@@ -1,0 +1,6 @@
+id: va:wise-county
+name: Wise County
+kind: county
+fips: "51195"
+parent: va
+aliases: ["County of Wise"]

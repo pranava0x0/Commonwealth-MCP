@@ -1,0 +1,6 @@
+id: va:la-crosse-town
+name: La Crosse (town)
+kind: town
+place_fips: "43176"
+parent: va:mecklenburg-county
+aliases: ["Town of La Crosse"]

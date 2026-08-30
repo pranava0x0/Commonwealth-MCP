@@ -1,0 +1,6 @@
+id: va:front-royal-town
+name: Front Royal (town)
+kind: town
+place_fips: "29968"
+parent: va:warren-county
+aliases: ["Town of Front Royal"]

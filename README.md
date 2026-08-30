@@ -65,13 +65,22 @@ The tests replay recorded government responses, so they run offline:
 
 | Question | Coverage |
 |---|---|
-| Which government covers this? | By name, FIPS code, or coordinates, statewide |
+| Which government covers this? | By name, FIPS code, street address, ZIP, or coordinates: all 133 localities and 191 towns |
+| What is at this address? | Statewide address points |
 | What is this parcel? | Fairfax County, Richmond City, Charles City County, VGIN statewide |
 | How is it zoned? | Fairfax County and Richmond City |
 | Where does this jurisdiction end? | Statewide: 133 localities, 191 towns |
+| Is this ground built on? | Statewide building footprints |
+| Where is the nearest school or library? | Statewide landmarks |
 | What does § 18.2-57 say? | The full Code of Virginia |
 
 Some examples of what that looks like in practice:
+
+**A mailing address is not a government.** "Alexandria, VA 22310" is a
+Fairfax County address. Ask about it and the answer is Fairfax County,
+with a note saying the mailing city and the government differ. A ZIP that
+spans several localities comes back as all of them, because a ZIP is a
+delivery route and picking one would be a guess.
 
 **Ambiguous names come back ambiguous.** Ask about "Fairfax" and you get
 both candidates back. Fairfax City is not inside Fairfax County —
@@ -98,14 +107,12 @@ so every time.
 
 ## What it cannot do yet
 
-**Addresses.** No geocoder is registered, so a jurisdiction resolves from
-a name, a FIPS code, or coordinates. Street addresses do not work yet.
-
-**Most localities.** 12 of the 133 have an entry in the jurisdiction
-table. A coordinate anywhere in Virginia will find the right government —
-that part works statewide — but for the other 121, the answer is "the
-boundary source knows which government this is, and this project cannot
-route a query to it yet".
+**Data for most localities.** Every one of the 133 counties and
+independent cities is in the jurisdiction table, along with all 191
+incorporated towns, so a name or a coordinate anywhere in Virginia finds
+the right government. What most of them do not have is a source of their
+own: three localities publish a parcel layer this project reads, and the
+rest are answered by VGIN's statewide layers or not at all.
 
 **Zoning outside two localities.** Fairfax County and Richmond City are
 registered. Everywhere else returns a registry gap.
@@ -116,12 +123,30 @@ and people are sketched in the architecture and not built.
 [Open issues](https://github.com/pranava0x0/Commonwealth-MCP/issues) is
 the list of what comes next, ordered by priority label.
 
+## Try it in a terminal
+
+Four short scripts in [examples/](examples/), each a real question with a
+printed answer. They run offline against recorded government responses by
+default, so a first run cannot fail on a network or a service being down:
+
+```bash
+python examples/whose_government.py          # recorded responses
+python examples/whose_government.py --live   # the real services
+```
+
+`whose_government.py` asks about a mailing address whose city is not its
+government, `screen_a_parcel.py` walks a property question from PIN to
+zoning to buildings to monitored sites,
+`what_is_covered.py` shows what an empty answer means here, and
+`two_sources_disagree.py` shows two official sources describing one road
+differently. [examples/README.md](examples/README.md) has the table.
+
 ## The demo site
 
 [docs/index.html](docs/index.html) is a static page with no build step. It
-shows what is registered, and walks through fourteen real recorded calls
-one at a time: successful lookups, an ambiguous jurisdiction, an empty
-result, a registry gap, and a typed error.
+shows what is registered, and walks through a recorded call for every
+tool the server exposes, one at a time: successful lookups, an ambiguous
+jurisdiction, an empty result, a registry gap, and a typed error.
 
 Three parts of it are interactive, and all three run on recorded data
 rather than a mock-up. The jurisdiction resolver calls the real

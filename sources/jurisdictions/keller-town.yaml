@@ -1,0 +1,6 @@
+id: va:keller-town
+name: Keller (town)
+kind: town
+place_fips: "41656"
+parent: va:accomack-county
+aliases: ["Town of Keller"]

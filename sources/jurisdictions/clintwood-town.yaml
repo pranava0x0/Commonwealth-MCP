@@ -1,0 +1,6 @@
+id: va:clintwood-town
+name: Clintwood (town)
+kind: town
+place_fips: "17552"
+parent: va:dickenson-county
+aliases: ["Town of Clintwood"]

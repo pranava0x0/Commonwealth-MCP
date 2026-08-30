@@ -1,0 +1,6 @@
+id: va:prince-edward-county
+name: Prince Edward County
+kind: county
+fips: "51147"
+parent: va
+aliases: ["County of Prince Edward"]

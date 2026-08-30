@@ -1,0 +1,7 @@
+id: va:brodnax-town
+name: Brodnax (town)
+kind: town
+place_fips: "10072"
+parent: va:brunswick-county
+aliases: ["Town of Brodnax"]
+also_within: ["va:mecklenburg-county"]

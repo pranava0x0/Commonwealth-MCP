@@ -1,0 +1,6 @@
+id: va:madison-town
+name: Madison (town)
+kind: town
+place_fips: "48488"
+parent: va:madison-county
+aliases: ["Town of Madison"]

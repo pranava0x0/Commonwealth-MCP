@@ -1,0 +1,6 @@
+id: va:drakes-branch-town
+name: Drakes Branch (town)
+kind: town
+place_fips: "23376"
+parent: va:charlotte-county
+aliases: ["Town of Drakes Branch"]

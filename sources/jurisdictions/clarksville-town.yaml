@@ -1,0 +1,6 @@
+id: va:clarksville-town
+name: Clarksville (town)
+kind: town
+place_fips: "16992"
+parent: va:mecklenburg-county
+aliases: ["Town of Clarksville"]

@@ -1,0 +1,6 @@
+id: va:arlington-county
+name: Arlington County
+kind: county
+fips: "51013"
+parent: va
+aliases: ["County of Arlington"]

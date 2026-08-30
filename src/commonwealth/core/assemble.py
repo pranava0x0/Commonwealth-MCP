@@ -35,7 +35,8 @@ class EnvelopeBuilder:
                   authority_level: AuthorityLevel, access_path: AccessPath,
                   source_updated_at: str | None, retrieved_at: str,
                   cache_age_seconds: int,
-                  warn_on_missing_freshness: bool = True) -> str:
+                  warn_on_missing_freshness: bool = True,
+                  terms_gap: str | None = None) -> str:
         ref = f"source_{len(self._sources) + 1:02d}"
         self._sources.append(SourceEntry(
             id=ref, source_id=source_id, publisher=publisher, system=system,
@@ -48,6 +49,10 @@ class EnvelopeBuilder:
                       "The publisher exposes no machine-readable update date "
                       "for this layer; retrieval time is known, data vintage "
                       "is not.", source_id)
+        if terms_gap and not any(
+                w.code == WarningCode.terms_note and w.source_id == source_id
+                for w in self._warnings):
+            self.warn(WarningCode.terms_note, terms_gap, source_id)
         return ref
 
     def add_evidence(self, *, source_ref: str, record_id: str,

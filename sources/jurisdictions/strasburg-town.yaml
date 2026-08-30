@@ -1,0 +1,6 @@
+id: va:strasburg-town
+name: Strasburg (town)
+kind: town
+place_fips: "76000"
+parent: va:shenandoah-county
+aliases: ["Town of Strasburg"]

@@ -1,0 +1,6 @@
+id: va:augusta-county
+name: Augusta County
+kind: county
+fips: "51015"
+parent: va
+aliases: ["County of Augusta"]

@@ -1,0 +1,6 @@
+id: va:accomac-town
+name: Accomac (town)
+kind: town
+place_fips: "00180"
+parent: va:accomack-county
+aliases: ["Town of Accomac"]

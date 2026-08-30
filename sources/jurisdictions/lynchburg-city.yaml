@@ -1,0 +1,6 @@
+id: va:lynchburg-city
+name: Lynchburg City
+kind: independent-city
+fips: "51680"
+parent: va
+aliases: ["City of Lynchburg"]

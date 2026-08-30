@@ -1,0 +1,6 @@
+id: va:haymarket-town
+name: Haymarket (town)
+kind: town
+place_fips: "35976"
+parent: va:prince-william-county
+aliases: ["Town of Haymarket"]

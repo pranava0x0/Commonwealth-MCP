@@ -1,0 +1,6 @@
+id: va:dinwiddie-county
+name: Dinwiddie County
+kind: county
+fips: "51053"
+parent: va
+aliases: ["County of Dinwiddie"]

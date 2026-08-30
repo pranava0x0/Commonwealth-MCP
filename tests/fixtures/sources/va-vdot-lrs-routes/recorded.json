@@ -1,0 +1,1963 @@
+{
+ "source_id": "va-vdot-lrs-routes",
+ "recorded_at": "2026-08-30T15:01:48Z",
+ "rights": {
+  "publisher": "Virginia Department of Transportation (VDOT)",
+  "terms_url": "https://www.virginiaroads.org/",
+  "note": "Recorded government-published responses; third-party content excluded from the repo's CC0 grant (../../../design/architecture.md decision 0011)."
+ },
+ "summary": {
+  "health:routes": {
+   "layer": "routes",
+   "feature_count": 196896,
+   "min_expected": 150000,
+   "healthy": true
+  },
+  "query_layer": "routes",
+  "by_name_in_town": {
+   "scoped": true,
+   "record_count": 2,
+   "names": [
+    "Center ST N (PR - Town of Vienna)",
+    "Center ST S (PR - Town of Vienna)"
+   ]
+  },
+  "by_name_in_county": {
+   "scoped": true,
+   "record_count": 0,
+   "names": []
+  },
+  "near_point": {
+   "record_count": 3,
+   "names": [
+    "Center ST N (PR - Town of Vienna)",
+    "Center ST S (PR - Town of Vienna)",
+    "VA-123N"
+   ]
+  },
+  "no_match": {
+   "record_count": 0
+  }
+ },
+ "exchanges": [
+  {
+   "url": "https://services.arcgis.com/p5v98VHDX9Atv3l7/arcgis/rest/services/LRS_Route_Master/FeatureServer/0/query",
+   "params": {
+    "f": "json",
+    "where": "1=1",
+    "returnCountOnly": "true"
+   },
+   "response": {
+    "count": 196896
+   }
+  },
+  {
+   "url": "https://services.arcgis.com/p5v98VHDX9Atv3l7/arcgis/rest/services/LRS_Route_Master/FeatureServer/0/query",
+   "params": {
+    "f": "json",
+    "outFields": "LEN,LRM_CURRENCY_DT,OBJECTID,RTE_CATEGORY_NM,RTE_COMMON_NM,RTE_JURIS_CD,RTE_JURIS_PROPER_NM,RTE_NBR,RTE_NM,RTE_STATUS_NM,RTE_STREET_NM,RTE_TYPE_NM",
+    "resultRecordCount": "50",
+    "returnGeometry": "false",
+    "where": "RTE_COMMON_NM LIKE 'Center St%' ESCAPE '\\' AND ((RTE_JURIS_PROPER_NM = 'Town of Vienna') OR (RTE_JURIS_PROPER_NM = 'Vienna'))"
+   },
+   "response": {
+    "objectIdFieldName": "OBJECTID",
+    "uniqueIdField": {
+     "name": "OBJECTID",
+     "isSystemMaintained": true
+    },
+    "globalIdFieldName": "",
+    "geometryType": "esriGeometryPolyline",
+    "spatialReference": {
+     "wkid": 102100,
+     "latestWkid": 3857
+    },
+    "fields": [
+     {
+      "name": "LEN",
+      "type": "esriFieldTypeDouble",
+      "alias": "LEN",
+      "sqlType": "sqlTypeOther",
+      "domain": null,
+      "defaultValue": null
+     },
+     {
+      "name": "LRM_CURRENCY_DT",
+      "type": "esriFieldTypeDate",
+      "alias": "LRM_CURRENCY_DT",
+      "sqlType": "sqlTypeOther",
+      "length": 8,
+      "domain": null,
+      "defaultValue": null
+     },
+     {
+      "name": "OBJECTID",
+      "type": "esriFieldTypeOID",
+      "alias": "OBJECTID",
+      "sqlType": "sqlTypeOther",
+      "domain": null,
+      "defaultValue": null
+     },
+     {
+      "name": "RTE_CATEGORY_NM",
+      "type": "esriFieldTypeString",
+      "alias": "RTE_CATEGORY_NM",
+      "sqlType": "sqlTypeOther",
+      "length": 60,
+      "domain": null,
+      "defaultValue": null
+     },
+     {
+      "name": "RTE_COMMON_NM",
+      "type": "esriFieldTypeString",
+      "alias": "RTE_COMMON_NM",
+      "sqlType": "sqlTypeOther",
+      "length": 60,
+      "domain": null,
+      "defaultValue": null
+     },
+     {
+      "name": "RTE_JURIS_CD",
+      "type": "esriFieldTypeString",
+      "alias": "RTE_JURIS_CD",
+      "sqlType": "sqlTypeOther",
+      "length": 3,
+      "domain": null,
+      "defaultValue": null
+     },
+     {
+      "name": "RTE_JURIS_PROPER_NM",
+      "type": "esriFieldTypeString",
+      "alias": "RTE_JURIS_PROPER_NM",
+      "sqlType": "sqlTypeOther",
+      "length": 60,
+      "domain": null,
+      "defaultValue": null
+     },
+     {
+      "name": "RTE_NBR",
+      "type": "esriFieldTypeInteger",
+      "alias": "RTE_NBR",
+      "sqlType": "sqlTypeOther",
+      "domain": null,
+      "defaultValue": null
+     },
+     {
+      "name": "RTE_NM",
+      "type": "esriFieldTypeString",
+      "alias": "RTE_NM",
+      "sqlType": "sqlTypeOther",
+      "length": 60,
+      "domain": null,
+      "defaultValue": null
+     },
+     {
+      "name": "RTE_STATUS_NM",
+      "type": "esriFieldTypeString",
+      "alias": "RTE_STATUS_NM",
+      "sqlType": "sqlTypeOther",
+      "length": 60,
+      "domain": null,
+      "defaultValue": null
+     },
+     {
+      "name": "RTE_STREET_NM",
+      "type": "esriFieldTypeString",
+      "alias": "RTE_STREET_NM",
+      "sqlType": "sqlTypeOther",
+      "length": 30,
+      "domain": null,
+      "defaultValue": null
+     },
+     {
+      "name": "RTE_TYPE_NM",
+      "type": "esriFieldTypeString",
+      "alias": "RTE_TYPE_NM",
+      "sqlType": "sqlTypeOther",
+      "length": 60,
+      "domain": null,
+      "defaultValue": null
+     }
+    ],
+    "features": [
+     {
+      "attributes": {
+       "LEN": null,
+       "LRM_CURRENCY_DT": 1668815143000,
+       "OBJECTID": 192395,
+       "RTE_CATEGORY_NM": "Urban Streets",
+       "RTE_COMMON_NM": "Center ST N (PR - Town of Vienna)",
+       "RTE_JURIS_CD": "153",
+       "RTE_JURIS_PROPER_NM": "Town of Vienna",
+       "RTE_NBR": null,
+       "RTE_NM": "S-VA153PR CENTER ST N",
+       "RTE_STATUS_NM": null,
+       "RTE_STREET_NM": "Center",
+       "RTE_TYPE_NM": "Street Route"
+      }
+     },
+     {
+      "attributes": {
+       "LEN": null,
+       "LRM_CURRENCY_DT": 1668813643000,
+       "OBJECTID": 192558,
+       "RTE_CATEGORY_NM": "Urban Streets",
+       "RTE_COMMON_NM": "Center ST S (PR - Town of Vienna)",
+       "RTE_JURIS_CD": "153",
+       "RTE_JURIS_PROPER_NM": "Town of Vienna",
+       "RTE_NBR": null,
+       "RTE_NM": "S-VA153PR CENTER ST S",
+       "RTE_STATUS_NM": null,
+       "RTE_STREET_NM": "Center",
+       "RTE_TYPE_NM": "Street Route"
+      }
+     }
+    ]
+   }
+  },
+  {
+   "url": "https://services.arcgis.com/p5v98VHDX9Atv3l7/arcgis/rest/services/LRS_Route_Master/FeatureServer/0",
+   "params": {
+    "f": "json"
+   },
+   "response": {
+    "currentVersion": 12,
+    "id": 0,
+    "name": "SDE_VDOT_RTE_MASTER_LRS",
+    "type": "Feature Layer",
+    "serviceItemId": "f0fab44361e342298880d1d848a4e720",
+    "cacheMaxAge": 30,
+    "displayField": "RTE_NAME_DEFINITION_CD",
+    "description": "",
+    "copyrightText": "",
+    "defaultVisibility": true,
+    "editingInfo": {
+     "lastEditDate": 1787243314205,
+     "schemaLastEditDate": 1787243314205,
+     "dataLastEditDate": 1773845118566
+    },
+    "relationships": [],
+    "isDataVersioned": false,
+    "hasContingentValuesDefinition": false,
+    "supportsAppend": true,
+    "supportsCalculate": true,
+    "supportsASyncCalculate": true,
+    "supportsTruncate": true,
+    "supportsAttachmentsByUploadId": true,
+    "supportsAttachmentsResizing": true,
+    "supportsRollbackOnFailureParameter": true,
+    "supportsStatistics": true,
+    "supportsExceedsLimitStatistics": true,
+    "supportsAdvancedQueries": true,
+    "supportsValidateSql": true,
+    "supportsCoordinatesQuantization": true,
+    "supportsLayerOverrides": true,
+    "supportsTilesAndBasicQueriesMode": true,
+    "supportsFieldDescriptionProperty": true,
+    "supportsQuantizationEditMode": true,
+    "supportsColumnStoreIndex": true,
+    "supportsApplyEditsWithGlobalIds": false,
+    "supportsMultiScaleGeometry": true,
+    "supportsReturningQueryGeometry": true,
+    "enableNullGeometry": false,
+    "hasGeometryProperties": true,
+    "geometryProperties": {
+     "shapeLengthFieldName": "Shape__Length",
+     "units": "esriMeters"
+    },
+    "advancedQueryCapabilities": {
+     "supportsPagination": true,
+     "supportsPaginationOnAggregatedQueries": true,
+     "supportsQueryRelatedPagination": true,
+     "supportsQueryWithDistance": true,
+     "supportsOutDistance": true,
+     "supportsReturningQueryExtent": true,
+     "supportsStatistics": true,
+     "supportsOrderBy": true,
+     "supportsDistinct": true,
+     "supportsQueryWithResultType": true,
+     "supportsSqlExpression": true,
+     "supportsTimeRelation": true,
+     "supportsAdvancedQueryRelated": true,
+     "supportsCountDistinct": true,
+     "supportsPercentileStatistics": true,
+     "supportsApproxPercentileStatistics": true,
+     "supportsSpatialAggregationStatistics": true,
+     "supportsTrueCurve": true,
+     "supportedSpatialAggregationStatistics": [
+      "EnvelopeAggregate",
+      "CentroidAggregate",
+      "ConvexHullAggregate"
+     ],
+     "supportsLod": true,
+     "supportsQueryWithLodSR": false,
+     "supportedLodTypes": [
+      "geohash"
+     ],
+     "supportsReturningGeometryCentroid": false,
+     "supportsReturningGeometryEnvelope": true,
+     "supportsReturningGeometryProperties": true,
+     "supportsQueryWithDatumTransformation": true,
+     "supportsCurrentUserQueries": true,
+     "supportsHavingClause": true,
+     "supportsOutFieldSQLExpression": true,
+     "supportsMaxRecordCountFactor": true,
+     "supportsTopFeaturesQuery": true,
+     "supportsDisjointSpatialRel": true,
+     "supportsQueryWithCacheHint": true,
+     "supportedOperationsWithCacheHint": [
+      "query",
+      "queryTopFilter",
+      "queryAnalytics",
+      "queryAttachments",
+      "queryRelated",
+      "queryBins",
+      "queryPivot"
+     ],
+     "supportsQueryAnalytic": true,
+     "supportsQueryPivot": true,
+     "supportsQueryBins": true,
+     "supportsDefaultSR": true,
+     "supportsTranslations": false,
+     "supportsAggIds": true,
+     "supportsQueryWithCollation": true,
+     "supportsISODOW": true,
+     "supportsISOWeek": true,
+     "supportsFullTextSearch": true,
+     "fullTextSearchCapabilities": {
+      "supportsAccentSensitivity": true,
+      "supportsStopWords": true,
+      "supportsSearchOperator": true,
+      "supportsOperator": true
+     },
+     "fullTextSearchableFields": [
+      "RTE_NM",
+      "RTE_COMMON_NM"
+     ]
+    },
+    "advancedQueryAnalyticCapabilities": {
+     "supportsLinearRegression": true,
+     "supportsTrendlineRegression": true,
+     "supportsAsync": true,
+     "supportsPercentileAnalytic": true
+    },
+    "queryBinsCapabilities": {
+     "supportsAsync": true,
+     "supportsAutoIntervalBin": true,
+     "supportsFixedIntervalBin": true,
+     "supportsFixedBoundariesBin": true,
+     "supportsDateBin": true,
+     "supportsClassificationBin": true,
+     "supportsStackBy": true,
+     "supportsSplitBy": true,
+     "supportsFirstDayOfWeek": true,
+     "supportsSnapToData": true,
+     "supportsReturnFullIntervalBin": true,
+     "supportsReturnStackValueRange": true,
+     "supportsNormalization": true,
+     "supportedStatisticTypes": [
+      "COUNT",
+      "SUM",
+      "AVG",
+      "VAR",
+      "STDDEV",
+      "MIN",
+      "MAX",
+      "PERCENTILE_CONT",
+      "PERCENTILE_DISC",
+      "APPROX_PERCENTILE_CONT",
+      "APPROX_PERCENTILE_DISC",
+      "CentroidAggregate",
+      "EnvelopeAggregate",
+      "ConvexHullAggregate"
+     ],
+     "supportedNormalizationTypes": [
+      "boxCox",
+      "field",
+      "inverse",
+      "log",
+      "naturalLog",
+      "percentOfTotal",
+      "squareRoot"
+     ]
+    },
+    "supportedOperationsWithCollation": "query,addField,updateField",
+    "advancedEditingCapabilities": {
+     "supportedSqlFormatsInCalculate": [
+      "standard"
+     ],
+     "supportsAsyncApplyEdits": true,
+     "supportsReturnEditResults": true,
+     "supportsApplyEditsbyUploadID": true,
+     "supportedApplyEditsUploadIDFormats": "JSON,PBF",
+     "supportsTranslation": false,
+     "supportsMaxTranslations": 10
+    },
+    "infoInEstimates": [
+     "extent",
+     "count"
+    ],
+    "useStandardizedQueries": true,
+    "geometryType": "esriGeometryPolyline",
+    "minScale": 0,
+    "maxScale": 0,
+    "extent": {
+     "xmin": -9313226.538551249,
+     "ymin": 4374106.040505514,
+     "xmax": -8385441.985628186,
+     "ymax": 4785025.210590937,
+     "spatialReference": {
+      "wkid": 102100,
+      "latestWkid": 3857
+     }
+    },
+    "spatialReference": {
+     "wkid": 102100,
+     "latestWkid": 3857
+    },
+    "drawingInfo": {
+     "renderer": {
+      "type": "uniqueValue",
+      "field1": "RTE_TYPE_NM",
+      "defaultSymbol": {
+       "type": "esriSLS",
+       "style": "esriSLSSolid",
+       "color": [
+        178,
+        178,
+        178,
+        255
+       ],
+       "width": 1
+      },
+      "defaultLabel": "Street Route",
+      "uniqueValueGroups": [
+       {
+        "heading": "RTE_TYPE_NM",
+        "classes": [
+         {
+          "label": "Interstate",
+          "description": "Interstate",
+          "symbol": {
+           "type": "esriSLS",
+           "style": "esriSLSSolid",
+           "color": [
+            0,
+            0,
+            255,
+            255
+           ],
+           "width": 2.5
+          },
+          "values": [
+           [
+            "Interstate"
+           ]
+          ]
+         },
+         {
+          "label": "U.S. Route",
+          "description": "U.S. Route",
+          "symbol": {
+           "type": "esriSLS",
+           "style": "esriSLSSolid",
+           "color": [
+            250,
+            52,
+            17,
+            255
+           ],
+           "width": 2
+          },
+          "values": [
+           [
+            "U.S. Route"
+           ]
+          ]
+         },
+         {
+          "label": "State Route",
+          "description": "State Route",
+          "symbol": {
+           "type": "esriSLS",
+           "style": "esriSLSSolid",
+           "color": [
+            0,
+            0,
+            0,
+            255
+           ],
+           "width": 1.5
+          },
+          "values": [
+           [
+            "State Route"
+           ]
+          ]
+         },
+         {
+          "label": "Frontage Road",
+          "description": "Frontage Road",
+          "symbol": {
+           "type": "esriSLS",
+           "style": "esriSLSSolid",
+           "color": [
+            0,
+            0,
+            255,
+            255
+           ],
+           "width": 1
+          },
+          "values": [
+           [
+            "Frontage Road"
+           ]
+          ]
+         },
+         {
+          "label": "Secondary Route",
+          "description": "Secondary Route",
+          "symbol": {
+           "type": "esriSLS",
+           "style": "esriSLSSolid",
+           "color": [
+            204,
+            204,
+            204,
+            255
+           ],
+           "width": 1
+          },
+          "values": [
+           [
+            "Secondary Route"
+           ]
+          ]
+         },
+         {
+          "label": "Urban Road",
+          "description": "Urban Road",
+          "symbol": {
+           "type": "esriSLS",
+           "style": "esriSLSSolid",
+           "color": [
+            104,
+            104,
+            104,
+            255
+           ],
+           "width": 1
+          },
+          "values": [
+           [
+            "Urban Road"
+           ]
+          ]
+         }
+        ]
+       }
+      ],
+      "uniqueValueInfos": [
+       {
+        "symbol": {
+         "type": "esriSLS",
+         "style": "esriSLSSolid",
+         "color": [
+          0,
+          0,
+          255,
+          255
+         ],
+         "width": 2.5
+        },
+        "value": "Interstate",
+        "label": "Interstate"
+       },
+       {
+        "symbol": {
+         "type": "esriSLS",
+         "style": "esriSLSSolid",
+         "color": [
+          250,
+          52,
+          17,
+          255
+         ],
+         "width": 2
+        },
+        "value": "U.S. Route",
+        "label": "U.S. Route"
+       },
+       {
+        "symbol": {
+         "type": "esriSLS",
+         "style": "esriSLSSolid",
+         "color": [
+          0,
+          0,
+          0,
+          255
+         ],
+         "width": 1.5
+        },
+        "value": "State Route",
+        "label": "State Route"
+       },
+       {
+        "symbol": {
+         "type": "esriSLS",
+         "style": "esriSLSSolid",
+         "color": [
+          0,
+          0,
+          255,
+          255
+         ],
+         "width": 1
+        },
+        "value": "Frontage Road",
+        "label": "Frontage Road"
+       },
+       {
+        "symbol": {
+         "type": "esriSLS",
+         "style": "esriSLSSolid",
+         "color": [
+          204,
+          204,
+          204,
+          255
+         ],
+         "width": 1
+        },
+        "value": "Secondary Route",
+        "label": "Secondary Route"
+       },
+       {
+        "symbol": {
+         "type": "esriSLS",
+         "style": "esriSLSSolid",
+         "color": [
+          104,
+          104,
+          104,
+          255
+         ],
+         "width": 1
+        },
+        "value": "Urban Road",
+        "label": "Urban Road"
+       }
+      ],
+      "fieldDelimiter": ",",
+      "authoringInfo": {
+       "colorRamp": {
+        "type": "multipart",
+        "colorRamps": [
+         {
+          "type": "algorithmic",
+          "algorithm": "esriHSVAlgorithm",
+          "fromColor": [
+           56,
+           168,
+           0,
+           255
+          ],
+          "toColor": [
+           255,
+           255,
+           0,
+           255
+          ]
+         },
+         {
+          "type": "algorithmic",
+          "algorithm": "esriHSVAlgorithm",
+          "fromColor": [
+           255,
+           255,
+           0,
+           255
+          ],
+          "toColor": [
+           255,
+           0,
+           0,
+           255
+          ]
+         }
+        ]
+       }
+      }
+     },
+     "scaleSymbols": true,
+     "transparency": 0,
+     "labelingInfo": null
+    },
+    "allowGeometryUpdates": true,
+    "trueCurveSupportMode": "OGC",
+    "supportedCurveTypes": [
+     "esriGeometryCircularArc"
+    ],
+    "supportedTrueCurvePbfFeatureEncodings": [
+     "esriCompressedShapeBuffer",
+     "esriDefault"
+    ],
+    "allowTrueCurvesUpdates": true,
+    "onlyAllowTrueCurveUpdatesByTrueCurveClients": false,
+    "hasAttachments": false,
+    "htmlPopupType": "esriServerHTMLPopupTypeAsHTMLText",
+    "hasMetadata": true,
+    "hasM": true,
+    "allowUpdateWithoutMValues": false,
+    "hasZ": false,
+    "objectIdField": "OBJECTID",
+    "uniqueIdField": {
+     "name": "OBJECTID",
+     "isSystemMaintained": true
+    },
+    "globalIdField": "",
+    "typeIdField": "RTE_TYPE_NM",
+    "collation": {
+     "locale": "neutral",
+     "caseSensitive": false,
+     "accentSensitive": true
+    },
+    "fields": [
+     {
+      "name": "OBJECTID",
+      "type": "esriFieldTypeOID",
+      "alias": "OBJECTID",
+      "sqlType": "sqlTypeOther",
+      "nullable": false,
+      "editable": false,
+      "domain": null,
+      "defaultValue": null
+     },
+     {
+      "name": "LRM_CURRENCY_DT",
+      "type": "esriFieldTypeDate",
+      "alias": "LRM_CURRENCY_DT",
+      "sqlType": "sqlTypeOther",
+      "length": 8,
+      "nullable": true,
+      "editable": true,
+      "domain": null,
+      "defaultValue": null,
+      "precision": 1
+     },
+     {
+      "name": "RTE_NM",
+      "type": "esriFieldTypeString",
+      "alias": "RTE_NM",
+      "sqlType": "sqlTypeOther",
+      "length": 60,
+      "nullable": true,
+      "editable": true,
+      "domain": null,
+      "defaultValue": null
+     },
+     {
+      "name": "RTE_COMMON_NM",
+      "type": "esriFieldTypeString",
+      "alias": "RTE_COMMON_NM",
+      "sqlType": "sqlTypeOther",
+      "length": 60,
+      "nullable": true,
+      "editable": true,
+      "domain": null,
+      "defaultValue": null
+     },
+     {
+      "name": "RTE_CATEGORY_NM",
+      "type": "esriFieldTypeString",
+      "alias": "RTE_CATEGORY_NM",
+      "sqlType": "sqlTypeOther",
+      "length": 60,
+      "nullable": true,
+      "editable": true,
+      "domain": null,
+      "defaultValue": null
+     },
+     {
+      "name": "RTE_JURIS_PROPER_NM",
+      "type": "esriFieldTypeString",
+      "alias": "RTE_JURIS_PROPER_NM",
+      "sqlType": "sqlTypeOther",
+      "length": 60,
+      "nullable": true,
+      "editable": true,
+      "domain": null,
+      "defaultValue": null
+     },
+     {
+      "name": "RTE_NBR",
+      "type": "esriFieldTypeInteger",
+      "alias": "RTE_NBR",
+      "sqlType": "sqlTypeOther",
+      "nullable": true,
+      "editable": true,
+      "domain": null,
+      "defaultValue": null
+     },
+     {
+      "name": "RTE_TYPE_NM",
+      "type": "esriFieldTypeString",
+      "alias": "RTE_TYPE_NM",
+      "sqlType": "sqlTypeOther",
+      "length": 60,
+      "nullable": true,
+      "editable": true,
+      "domain": null,
+      "defaultValue": null
+     },
+     {
+      "name": "RTE_TYPE_MODIFIER_NM",
+      "type": "esriFieldTypeString",
+      "alias": "RTE_TYPE_MODIFIER_NM",
+      "sqlType": "sqlTypeOther",
+      "length": 60,
+      "nullable": true,
+      "editable": true,
+      "domain": null,
+      "defaultValue": null
+     },
+     {
+      "name": "RTE_TYPE_MODIFIER_SEQ",
+      "type": "esriFieldTypeSmallInteger",
+      "alias": "RTE_TYPE_MODIFIER_SEQ",
+      "sqlType": "sqlTypeOther",
+      "nullable": true,
+      "editable": true,
+      "domain": null,
+      "defaultValue": null
+     },
+     {
+      "name": "RTE_SPCL_FEATURE_TYPE_CD",
+      "type": "esriFieldTypeString",
+      "alias": "RTE_SPCL_FEATURE_TYPE_CD",
+      "sqlType": "sqlTypeOther",
+      "length": 3,
+      "nullable": true,
+      "editable": true,
+      "domain": null,
+      "defaultValue": null
+     },
+     {
+      "name": "RTE_SPCL_FEATURE_NBR",
+      "type": "esriFieldTypeSingle",
+      "alias": "RTE_SPCL_FEATURE_NBR",
+      "sqlType": "sqlTypeOther",
+      "nullable": true,
+      "editable": true,
+      "domain": null,
+      "defaultValue": null
+     },
+     {
+      "name": "RTE_RAMP_CD",
+      "type": "esriFieldTypeString",
+      "alias": "RTE_RAMP_CD",
+      "sqlType": "sqlTypeOther",
+      "length": 3,
+      "nullable": true,
+      "editable": true,
+      "domain": null,
+      "defaultValue": null
+     },
+     {
+      "name": "RTE_SOURCE_CD",
+      "type": "esriFieldTypeString",
+      "alias": "RTE_SOURCE_CD",
+      "sqlType": "sqlTypeOther",
+      "length": 6,
+      "nullable": true,
+      "editable": true,
+      "domain": null,
+      "defaultValue": null
+     },
+     {
+      "name": "RTE_CATEGORY_SET_CD",
+      "type": "esriFieldTypeString",
+      "alias": "RTE_CATEGORY_SET_CD",
+      "sqlType": "sqlTypeOther",
+      "length": 6,
+      "nullable": true,
+      "editable": true,
+      "domain": null,
+      "defaultValue": null
+     },
+     {
+      "name": "RTE_OPPOSITE_DIRECTION_RTE_NM",
+      "type": "esriFieldTypeString",
+      "alias": "RTE_OPPOSITE_DIRECTION_RTE_NM",
+      "sqlType": "sqlTypeOther",
+      "length": 60,
+      "nullable": true,
+      "editable": true,
+      "domain": null,
+      "defaultValue": null
+     },
+     {
+      "name": "RTE_SOURCE_ID",
+      "type": "esriFieldTypeString",
+      "alias": "RTE_SOURCE_ID",
+      "sqlType": "sqlTypeOther",
+      "length": 60,
+      "nullable": true,
+      "editable": true,
+      "domain": null,
+      "defaultValue": null
+     },
+     {
+      "name": "CHANGE_STATUS_CD",
+      "type": "esriFieldTypeString",
+      "alias": "CHANGE_STATUS_CD",
+      "sqlType": "sqlTypeOther",
+      "length": 255,
+      "nullable": true,
+      "editable": true,
+      "domain": null,
+      "defaultValue": null
+     },
+     {
+      "name": "CHANGE_STATUS_DT",
+      "type": "esriFieldTypeDate",
+      "alias": "CHANGE_STATUS_DT",
+      "sqlType": "sqlTypeOther",
+      "length": 8,
+      "nullable": true,
+      "editable": true,
+      "domain": null,
+      "defaultValue": null,
+      "precision": 1
+     },
+     {
+      "name": "RTE_JURIS_CD",
+      "type": "esriFieldTypeString",
+      "alias": "RTE_JURIS_CD",
+      "sqlType": "sqlTypeOther",
+      "length": 3,
+      "nullable": true,
+      "editable": true,
+      "domain": null,
+      "defaultValue": null
+     },
+     {
+      "name": "RTE_TYPE_CD",
+      "type": "esriFieldTypeString",
+      "alias": "RTE_TYPE_CD",
+      "sqlType": "sqlTypeOther",
+      "length": 3,
+      "nullable": true,
+      "editable": true,
+      "domain": null,
+      "defaultValue": null
+     },
+     {
+      "name": "RTE_TYPE_MODIFIER_CD",
+      "type": "esriFieldTypeString",
+      "alias": "RTE_TYPE_MODIFIER_CD",
+      "sqlType": "sqlTypeOther",
+      "length": 3,
+      "nullable": true,
+      "editable": true,
+      "domain": null,
+      "defaultValue": null
+     },
+     {
+      "name": "RTE_SPCL_FEATURE_TYPE_NM",
+      "type": "esriFieldTypeString",
+      "alias": "RTE_SPCL_FEATURE_TYPE_NM",
+      "sqlType": "sqlTypeOther",
+      "length": 60,
+      "nullable": true,
+      "editable": true,
+      "domain": null,
+      "defaultValue": null
+     },
+     {
+      "name": "RTE_STATUS_CD",
+      "type": "esriFieldTypeString",
+      "alias": "RTE_STATUS_CD",
+      "sqlType": "sqlTypeOther",
+      "length": 3,
+      "nullable": true,
+      "editable": true,
+      "domain": null,
+      "defaultValue": null
+     },
+     {
+      "name": "RTE_STATUS_NM",
+      "type": "esriFieldTypeString",
+      "alias": "RTE_STATUS_NM",
+      "sqlType": "sqlTypeOther",
+      "length": 60,
+      "nullable": true,
+      "editable": true,
+      "domain": null,
+      "defaultValue": null
+     },
+     {
+      "name": "RTE_STREET_PREFIX_DIR_CD",
+      "type": "esriFieldTypeString",
+      "alias": "RTE_STREET_PREFIX_DIR_CD",
+      "sqlType": "sqlTypeOther",
+      "length": 3,
+      "nullable": true,
+      "editable": true,
+      "domain": null,
+      "defaultValue": null
+     },
+     {
+      "name": "RTE_STREET_PREFIX",
+      "type": "esriFieldTypeString",
+      "alias": "RTE_STREET_PREFIX",
+      "sqlType": "sqlTypeOther",
+      "length": 10,
+      "nullable": true,
+      "editable": true,
+      "domain": null,
+      "defaultValue": null
+     },
+     {
+      "name": "RTE_STREET_NM",
+      "type": "esriFieldTypeString",
+      "alias": "RTE_STREET_NM",
+      "sqlType": "sqlTypeOther",
+      "length": 30,
+      "nullable": true,
+      "editable": true,
+      "domain": null,
+      "defaultValue": null
+     },
+     {
+      "name": "RTE_STREET_TYPE",
+      "type": "esriFieldTypeString",
+      "alias": "RTE_STREET_TYPE",
+      "sqlType": "sqlTypeOther",
+      "length": 15,
+      "nullable": true,
+      "editable": true,
+      "domain": null,
+      "defaultValue": null
+     },
+     {
+      "name": "RTE_STREET_SUFFIX_DIR_CD",
+      "type": "esriFieldTypeString",
+      "alias": "RTE_STREET_SUFFIX_DIR_CD",
+      "sqlType": "sqlTypeOther",
+      "length": 3,
+      "nullable": true,
+      "editable": true,
+      "domain": null,
+      "defaultValue": null
+     },
+     {
+      "name": "RTE_DIRECTION_CD",
+      "type": "esriFieldTypeString",
+      "alias": "RTE_DIRECTION_CD",
+      "sqlType": "sqlTypeOther",
+      "length": 2,
+      "nullable": true,
+      "editable": true,
+      "domain": null,
+      "defaultValue": null
+     },
+     {
+      "name": "RTE_PRIME_DIRECTION_CD",
+      "type": "esriFieldTypeString",
+      "alias": "RTE_PRIME_DIRECTION_CD",
+      "sqlType": "sqlTypeOther",
+      "length": 2,
+      "nullable": true,
+      "editable": true,
+      "domain": null,
+      "defaultValue": null
+     },
+     {
+      "name": "RTE_EXPRESS_IND",
+      "type": "esriFieldTypeString",
+      "alias": "RTE_EXPRESS_IND",
+      "sqlType": "sqlTypeOther",
+      "length": 1,
+      "nullable": true,
+      "editable": true,
+      "domain": null,
+      "defaultValue": null
+     },
+     {
+      "name": "RTE_PARENT_RTE_NM",
+      "type": "esriFieldTypeString",
+      "alias": "RTE_PARENT_RTE_NM",
+      "sqlType": "sqlTypeOther",
+      "length": 60,
+      "nullable": true,
+      "editable": true,
+      "domain": null,
+      "defaultValue": null
+     },
+     {
+      "name": "RTE_PARENT_COMMON_NM",
+      "type": "esriFieldTypeString",
+      "alias": "RTE_PARENT_COMMON_NM",
+      "sqlType": "sqlTypeOther",
+      "length": 60,
+      "nullable": true,
+      "editable": true,
+      "domain": null,
+      "defaultValue": null
+     },
+     {
+      "name": "RTE_CATEGORY_LEVEL_NBR",
+      "type": "esriFieldTypeSmallInteger",
+      "alias": "RTE_CATEGORY_LEVEL_NBR",
+      "sqlType": "sqlTypeOther",
+      "nullable": true,
+      "editable": true,
+      "domain": null,
+      "defaultValue": null
+     },
+     {
+      "name": "RTE_LEVEL_MODIFIER_NBR",
+      "type": "esriFieldTypeSmallInteger",
+      "alias": "RTE_LEVEL_MODIFIER_NBR",
+      "sqlType": "sqlTypeOther",
+      "nullable": true,
+      "editable": true,
+      "domain": null,
+      "defaultValue": null
+     },
+     {
+      "name": "RTE_LEVEL_EFFECTIVE_NBR",
+      "type": "esriFieldTypeDouble",
+      "alias": "RTE_LEVEL_EFFECTIVE_NBR",
+      "sqlType": "sqlTypeOther",
+      "nullable": true,
+      "editable": true,
+      "domain": null,
+      "defaultValue": null
+     },
+     {
+      "name": "RTE_STATE_CD",
+      "type": "esriFieldTypeString",
+      "alias": "RTE_STATE_CD",
+      "sqlType": "sqlTypeOther",
+      "length": 2,
+      "nullable": true,
+      "editable": true,
+      "domain": null,
+      "defaultValue": null
+     },
+     {
+      "name": "RTE_NAME_DEFINITION_CD",
+      "type": "esriFieldTypeString",
+      "alias": "RTE_NAME_DEFINITION_CD",
+      "sqlType": "sqlTypeOther",
+      "length": 3,
+      "nullable": true,
+      "editable": true,
+      "domain": null,
+      "defaultValue": null
+     },
+     {
+      "name": "RTE_ABSOLUTE_DIRECTION_CD",
+      "type": "esriFieldTypeString",
+      "alias": "RTE_ABSOLUTE_DIRECTION_CD",
+      "sqlType": "sqlTypeOther",
+      "length": 2,
+      "nullable": true,
+      "editable": true,
+      "domain": null,
+      "defaultValue": null
+     },
+     {
+      "name": "RTE_OPPOSITE_DIRECTION_CMN_NM",
+      "type": "esriFieldTypeString",
+      "alias": "RTE_OPPOSITE_DIRECTION_CMN_NM",
+      "sqlType": "sqlTypeOther",
+      "length": 60,
+      "nullable": true,
+      "editable": true,
+      "domain": null,
+      "defaultValue": null
+     },
+     {
+      "name": "RTE_SIGNED_DIRECTION_CD",
+      "type": "esriFieldTypeString",
+      "alias": "RTE_SIGNED_DIRECTION_CD",
+      "sqlType": "sqlTypeOther",
+      "length": 2,
+      "nullable": true,
+      "editable": true,
+      "domain": null,
+      "defaultValue": null
+     },
+     {
+      "name": "RTE_RAMP_DSC",
+      "type": "esriFieldTypeString",
+      "alias": "RTE_RAMP_DSC",
+      "sqlType": "sqlTypeOther",
+      "length": 60,
+      "nullable": true,
+      "editable": true,
+      "domain": null,
+      "defaultValue": null
+     },
+     {
+      "name": "RTE_DSC",
+      "type": "esriFieldTypeString",
+      "alias": "RTE_DSC",
+      "sqlType": "sqlTypeOther",
+      "length": 60,
+      "nullable": true,
+      "editable": true,
+      "domain": null,
+      "defaultValue": null
+     },
+     {
+      "name": "RTE_MEASURE_SYSTEM_CD",
+      "type": "esriFieldTypeString",
+      "alias": "RTE_MEASURE_SYSTEM_CD",
+      "sqlType": "sqlTypeOther",
+      "length": 5,
+      "nullable": true,
+      "editable": true,
+      "domain": null,
+      "defaultValue": null
+     },
+     {
+      "name": "ROUTESYSIDSHORT",
+      "type": "esriFieldTypeString",
+      "alias": "ROUTESYSIDSHORT",
+      "sqlType": "sqlTypeOther",
+      "length": 60,
+      "nullable": true,
+      "editable": true,
+      "domain": null,
+      "defaultValue": null
+     },
+     {
+      "name": "LEN",
+      "type": "esriFieldTypeDouble",
+      "alias": "LEN",
+      "sqlType": "sqlTypeOther",
+      "nullable": true,
+      "editable": true,
+      "domain": null,
+      "defaultValue": null
+     },
+     {
+      "name": "Shape__Length",
+      "type": "esriFieldTypeDouble",
+      "alias": "Shape__Length",
+      "sqlType": "sqlTypeDouble",
+      "nullable": true,
+      "editable": false,
+      "domain": null,
+      "defaultValue": null
+     }
+    ],
+    "indexes": [
+     {
+      "name": "PK__LRS_ROUT__F4B70D850E2CE770",
+      "fields": "OBJECTID",
+      "isAscending": true,
+      "isUnique": true,
+      "description": "",
+      "indexType": "Attribute"
+     },
+     {
+      "name": "user_634.LRS_ROUTE_MASTER_SDE_VDOT_RTE_MASTER_LRS2_Shape_sidx",
+      "fields": "Shape",
+      "isAscending": true,
+      "isUnique": false,
+      "description": "",
+      "indexType": "Spatial"
+     },
+     {
+      "name": "Shape__Length_Index",
+      "fields": "Shape__Length",
+      "isAscending": true,
+      "isUnique": false,
+      "description": "",
+      "indexType": "Attribute"
+     },
+     {
+      "name": "RTE_TYPE_NM_Index",
+      "fields": "RTE_TYPE_NM",
+      "isAscending": true,
+      "isUnique": false,
+      "description": "RTE_TYPE_NM_Index",
+      "indexType": "Attribute"
+     },
+     {
+      "name": "exb_RTE_NM",
+      "fields": "RTE_NM",
+      "isAscending": true,
+      "isUnique": false,
+      "description": "",
+      "indexType": "Attribute"
+     },
+     {
+      "name": "exb_RTE_COMMON_NM",
+      "fields": "RTE_COMMON_NM",
+      "isAscending": true,
+      "isUnique": false,
+      "description": "",
+      "indexType": "Attribute"
+     },
+     {
+      "name": "exb_RTE_NM_total",
+      "fields": "RTE_NM, RTE_COMMON_NM",
+      "description": "",
+      "locale": "neutral",
+      "indexType": "FullText"
+     }
+    ],
+    "dateFieldsTimeReference": {
+     "timeZone": "UTC",
+     "timeZoneIANA": "Etc/UTC",
+     "respectsDaylightSaving": false
+    },
+    "preferredTimeReference": null,
+    "types": [
+     {
+      "id": "Interstate",
+      "name": "Interstate",
+      "domains": {},
+      "templates": [
+       {
+        "name": "Interstate",
+        "description": "",
+        "drawingTool": "esriFeatureEditToolLine",
+        "prototype": {
+         "attributes": {
+          "RTE_NBR": null,
+          "ROUTESYSIDSHORT": null,
+          "LRM_CURRENCY_DT": null,
+          "RTE_NM": null,
+          "RTE_COMMON_NM": null,
+          "RTE_CATEGORY_NM": null,
+          "RTE_JURIS_PROPER_NM": null,
+          "RTE_TYPE_NM": "Interstate",
+          "RTE_TYPE_MODIFIER_NM": null,
+          "RTE_TYPE_MODIFIER_SEQ": null,
+          "RTE_SPCL_FEATURE_TYPE_CD": null,
+          "RTE_SPCL_FEATURE_NBR": null,
+          "RTE_RAMP_CD": null,
+          "RTE_SOURCE_CD": null,
+          "RTE_CATEGORY_SET_CD": null,
+          "RTE_OPPOSITE_DIRECTION_RTE_NM": null,
+          "RTE_SOURCE_ID": null,
+          "CHANGE_STATUS_CD": null,
+          "CHANGE_STATUS_DT": null,
+          "LEN": null,
+          "RTE_JURIS_CD": null,
+          "RTE_TYPE_CD": null,
+          "RTE_TYPE_MODIFIER_CD": null,
+          "RTE_SPCL_FEATURE_TYPE_NM": null,
+          "RTE_STATUS_CD": null,
+          "RTE_STATUS_NM": null,
+          "RTE_STREET_PREFIX_DIR_CD": null,
+          "RTE_STREET_PREFIX": null,
+          "RTE_STREET_NM": null,
+          "RTE_STREET_TYPE": null,
+          "RTE_STREET_SUFFIX_DIR_CD": null,
+          "RTE_DIRECTION_CD": null,
+          "RTE_PRIME_DIRECTION_CD": null,
+          "RTE_EXPRESS_IND": null,
+          "RTE_PARENT_RTE_NM": null,
+          "RTE_PARENT_COMMON_NM": null,
+          "RTE_CATEGORY_LEVEL_NBR": null,
+          "RTE_LEVEL_MODIFIER_NBR": null,
+          "RTE_LEVEL_EFFECTIVE_NBR": null,
+          "RTE_STATE_CD": null,
+          "RTE_NAME_DEFINITION_CD": null,
+          "RTE_ABSOLUTE_DIRECTION_CD": null,
+          "RTE_OPPOSITE_DIRECTION_CMN_NM": null,
+          "RTE_SIGNED_DIRECTION_CD": null,
+          "RTE_RAMP_DSC": null,
+          "RTE_DSC": null,
+          "RTE_MEASURE_SYSTEM_CD": null
+         }
+        }
+       }
+      ]
+     },
+     {
+      "id": "U.S. Route",
+      "name": "U.S. Route",
+      "domains": {},
+      "templates": [
+       {
+        "name": "U.S. Route",
+        "description": "",
+        "drawingTool": "esriFeatureEditToolLine",
+        "prototype": {
+         "attributes": {
+          "RTE_NBR": null,
+          "ROUTESYSIDSHORT": null,
+          "LRM_CURRENCY_DT": null,
+          "RTE_NM": null,
+          "RTE_COMMON_NM": null,
+          "RTE_CATEGORY_NM": null,
+          "RTE_JURIS_PROPER_NM": null,
+          "RTE_TYPE_NM": "U.S. Route",
+          "RTE_TYPE_MODIFIER_NM": null,
+          "RTE_TYPE_MODIFIER_SEQ": null,
+          "RTE_SPCL_FEATURE_TYPE_CD": null,
+          "RTE_SPCL_FEATURE_NBR": null,
+          "RTE_RAMP_CD": null,
+          "RTE_SOURCE_CD": null,
+          "RTE_CATEGORY_SET_CD": null,
+          "RTE_OPPOSITE_DIRECTION_RTE_NM": null,
+          "RTE_SOURCE_ID": null,
+          "CHANGE_STATUS_CD": null,
+          "CHANGE_STATUS_DT": null,
+          "LEN": null,
+          "RTE_JURIS_CD": null,
+          "RTE_TYPE_CD": null,
+          "RTE_TYPE_MODIFIER_CD": null,
+          "RTE_SPCL_FEATURE_TYPE_NM": null,
+          "RTE_STATUS_CD": null,
+          "RTE_STATUS_NM": null,
+          "RTE_STREET_PREFIX_DIR_CD": null,
+          "RTE_STREET_PREFIX": null,
+          "RTE_STREET_NM": null,
+          "RTE_STREET_TYPE": null,
+          "RTE_STREET_SUFFIX_DIR_CD": null,
+          "RTE_DIRECTION_CD": null,
+          "RTE_PRIME_DIRECTION_CD": null,
+          "RTE_EXPRESS_IND": null,
+          "RTE_PARENT_RTE_NM": null,
+          "RTE_PARENT_COMMON_NM": null,
+          "RTE_CATEGORY_LEVEL_NBR": null,
+          "RTE_LEVEL_MODIFIER_NBR": null,
+          "RTE_LEVEL_EFFECTIVE_NBR": null,
+          "RTE_STATE_CD": null,
+          "RTE_NAME_DEFINITION_CD": null,
+          "RTE_ABSOLUTE_DIRECTION_CD": null,
+          "RTE_OPPOSITE_DIRECTION_CMN_NM": null,
+          "RTE_SIGNED_DIRECTION_CD": null,
+          "RTE_RAMP_DSC": null,
+          "RTE_DSC": null,
+          "RTE_MEASURE_SYSTEM_CD": null
+         }
+        }
+       }
+      ]
+     },
+     {
+      "id": "State Route",
+      "name": "State Route",
+      "domains": {},
+      "templates": [
+       {
+        "name": "State Route",
+        "description": "",
+        "drawingTool": "esriFeatureEditToolLine",
+        "prototype": {
+         "attributes": {
+          "RTE_NBR": null,
+          "ROUTESYSIDSHORT": null,
+          "LRM_CURRENCY_DT": null,
+          "RTE_NM": null,
+          "RTE_COMMON_NM": null,
+          "RTE_CATEGORY_NM": null,
+          "RTE_JURIS_PROPER_NM": null,
+          "RTE_TYPE_NM": "State Route",
+          "RTE_TYPE_MODIFIER_NM": null,
+          "RTE_TYPE_MODIFIER_SEQ": null,
+          "RTE_SPCL_FEATURE_TYPE_CD": null,
+          "RTE_SPCL_FEATURE_NBR": null,
+          "RTE_RAMP_CD": null,
+          "RTE_SOURCE_CD": null,
+          "RTE_CATEGORY_SET_CD": null,
+          "RTE_OPPOSITE_DIRECTION_RTE_NM": null,
+          "RTE_SOURCE_ID": null,
+          "CHANGE_STATUS_CD": null,
+          "CHANGE_STATUS_DT": null,
+          "LEN": null,
+          "RTE_JURIS_CD": null,
+          "RTE_TYPE_CD": null,
+          "RTE_TYPE_MODIFIER_CD": null,
+          "RTE_SPCL_FEATURE_TYPE_NM": null,
+          "RTE_STATUS_CD": null,
+          "RTE_STATUS_NM": null,
+          "RTE_STREET_PREFIX_DIR_CD": null,
+          "RTE_STREET_PREFIX": null,
+          "RTE_STREET_NM": null,
+          "RTE_STREET_TYPE": null,
+          "RTE_STREET_SUFFIX_DIR_CD": null,
+          "RTE_DIRECTION_CD": null,
+          "RTE_PRIME_DIRECTION_CD": null,
+          "RTE_EXPRESS_IND": null,
+          "RTE_PARENT_RTE_NM": null,
+          "RTE_PARENT_COMMON_NM": null,
+          "RTE_CATEGORY_LEVEL_NBR": null,
+          "RTE_LEVEL_MODIFIER_NBR": null,
+          "RTE_LEVEL_EFFECTIVE_NBR": null,
+          "RTE_STATE_CD": null,
+          "RTE_NAME_DEFINITION_CD": null,
+          "RTE_ABSOLUTE_DIRECTION_CD": null,
+          "RTE_OPPOSITE_DIRECTION_CMN_NM": null,
+          "RTE_SIGNED_DIRECTION_CD": null,
+          "RTE_RAMP_DSC": null,
+          "RTE_DSC": null,
+          "RTE_MEASURE_SYSTEM_CD": null
+         }
+        }
+       }
+      ]
+     },
+     {
+      "id": "Frontage Road",
+      "name": "Frontage Road",
+      "domains": {},
+      "templates": [
+       {
+        "name": "Frontage Road",
+        "description": "",
+        "drawingTool": "esriFeatureEditToolLine",
+        "prototype": {
+         "attributes": {
+          "RTE_NBR": null,
+          "ROUTESYSIDSHORT": null,
+          "LRM_CURRENCY_DT": null,
+          "RTE_NM": null,
+          "RTE_COMMON_NM": null,
+          "RTE_CATEGORY_NM": null,
+          "RTE_JURIS_PROPER_NM": null,
+          "RTE_TYPE_NM": "Frontage Road",
+          "RTE_TYPE_MODIFIER_NM": null,
+          "RTE_TYPE_MODIFIER_SEQ": null,
+          "RTE_SPCL_FEATURE_TYPE_CD": null,
+          "RTE_SPCL_FEATURE_NBR": null,
+          "RTE_RAMP_CD": null,
+          "RTE_SOURCE_CD": null,
+          "RTE_CATEGORY_SET_CD": null,
+          "RTE_OPPOSITE_DIRECTION_RTE_NM": null,
+          "RTE_SOURCE_ID": null,
+          "CHANGE_STATUS_CD": null,
+          "CHANGE_STATUS_DT": null,
+          "LEN": null,
+          "RTE_JURIS_CD": null,
+          "RTE_TYPE_CD": null,
+          "RTE_TYPE_MODIFIER_CD": null,
+          "RTE_SPCL_FEATURE_TYPE_NM": null,
+          "RTE_STATUS_CD": null,
+          "RTE_STATUS_NM": null,
+          "RTE_STREET_PREFIX_DIR_CD": null,
+          "RTE_STREET_PREFIX": null,
+          "RTE_STREET_NM": null,
+          "RTE_STREET_TYPE": null,
+          "RTE_STREET_SUFFIX_DIR_CD": null,
+          "RTE_DIRECTION_CD": null,
+          "RTE_PRIME_DIRECTION_CD": null,
+          "RTE_EXPRESS_IND": null,
+          "RTE_PARENT_RTE_NM": null,
+          "RTE_PARENT_COMMON_NM": null,
+          "RTE_CATEGORY_LEVEL_NBR": null,
+          "RTE_LEVEL_MODIFIER_NBR": null,
+          "RTE_LEVEL_EFFECTIVE_NBR": null,
+          "RTE_STATE_CD": null,
+          "RTE_NAME_DEFINITION_CD": null,
+          "RTE_ABSOLUTE_DIRECTION_CD": null,
+          "RTE_OPPOSITE_DIRECTION_CMN_NM": null,
+          "RTE_SIGNED_DIRECTION_CD": null,
+          "RTE_RAMP_DSC": null,
+          "RTE_DSC": null,
+          "RTE_MEASURE_SYSTEM_CD": null
+         }
+        }
+       }
+      ]
+     },
+     {
+      "id": "Secondary Route",
+      "name": "Secondary Route",
+      "domains": {},
+      "templates": [
+       {
+        "name": "Secondary Route",
+        "description": "",
+        "drawingTool": "esriFeatureEditToolLine",
+        "prototype": {
+         "attributes": {
+          "RTE_NBR": null,
+          "ROUTESYSIDSHORT": null,
+          "LRM_CURRENCY_DT": null,
+          "RTE_NM": null,
+          "RTE_COMMON_NM": null,
+          "RTE_CATEGORY_NM": null,
+          "RTE_JURIS_PROPER_NM": null,
+          "RTE_TYPE_NM": "Secondary Route",
+          "RTE_TYPE_MODIFIER_NM": null,
+          "RTE_TYPE_MODIFIER_SEQ": null,
+          "RTE_SPCL_FEATURE_TYPE_CD": null,
+          "RTE_SPCL_FEATURE_NBR": null,
+          "RTE_RAMP_CD": null,
+          "RTE_SOURCE_CD": null,
+          "RTE_CATEGORY_SET_CD": null,
+          "RTE_OPPOSITE_DIRECTION_RTE_NM": null,
+          "RTE_SOURCE_ID": null,
+          "CHANGE_STATUS_CD": null,
+          "CHANGE_STATUS_DT": null,
+          "LEN": null,
+          "RTE_JURIS_CD": null,
+          "RTE_TYPE_CD": null,
+          "RTE_TYPE_MODIFIER_CD": null,
+          "RTE_SPCL_FEATURE_TYPE_NM": null,
+          "RTE_STATUS_CD": null,
+          "RTE_STATUS_NM": null,
+          "RTE_STREET_PREFIX_DIR_CD": null,
+          "RTE_STREET_PREFIX": null,
+          "RTE_STREET_NM": null,
+          "RTE_STREET_TYPE": null,
+          "RTE_STREET_SUFFIX_DIR_CD": null,
+          "RTE_DIRECTION_CD": null,
+          "RTE_PRIME_DIRECTION_CD": null,
+          "RTE_EXPRESS_IND": null,
+          "RTE_PARENT_RTE_NM": null,
+          "RTE_PARENT_COMMON_NM": null,
+          "RTE_CATEGORY_LEVEL_NBR": null,
+          "RTE_LEVEL_MODIFIER_NBR": null,
+          "RTE_LEVEL_EFFECTIVE_NBR": null,
+          "RTE_STATE_CD": null,
+          "RTE_NAME_DEFINITION_CD": null,
+          "RTE_ABSOLUTE_DIRECTION_CD": null,
+          "RTE_OPPOSITE_DIRECTION_CMN_NM": null,
+          "RTE_SIGNED_DIRECTION_CD": null,
+          "RTE_RAMP_DSC": null,
+          "RTE_DSC": null,
+          "RTE_MEASURE_SYSTEM_CD": null
+         }
+        }
+       }
+      ]
+     },
+     {
+      "id": "Urban Road",
+      "name": "Urban Road",
+      "domains": {},
+      "templates": [
+       {
+        "name": "Urban Road",
+        "description": "",
+        "drawingTool": "esriFeatureEditToolLine",
+        "prototype": {
+         "attributes": {
+          "RTE_NBR": null,
+          "ROUTESYSIDSHORT": null,
+          "LRM_CURRENCY_DT": null,
+          "RTE_NM": null,
+          "RTE_COMMON_NM": null,
+          "RTE_CATEGORY_NM": null,
+          "RTE_JURIS_PROPER_NM": null,
+          "RTE_TYPE_NM": "Urban Road",
+          "RTE_TYPE_MODIFIER_NM": null,
+          "RTE_TYPE_MODIFIER_SEQ": null,
+          "RTE_SPCL_FEATURE_TYPE_CD": null,
+          "RTE_SPCL_FEATURE_NBR": null,
+          "RTE_RAMP_CD": null,
+          "RTE_SOURCE_CD": null,
+          "RTE_CATEGORY_SET_CD": null,
+          "RTE_OPPOSITE_DIRECTION_RTE_NM": null,
+          "RTE_SOURCE_ID": null,
+          "CHANGE_STATUS_CD": null,
+          "CHANGE_STATUS_DT": null,
+          "LEN": null,
+          "RTE_JURIS_CD": null,
+          "RTE_TYPE_CD": null,
+          "RTE_TYPE_MODIFIER_CD": null,
+          "RTE_SPCL_FEATURE_TYPE_NM": null,
+          "RTE_STATUS_CD": null,
+          "RTE_STATUS_NM": null,
+          "RTE_STREET_PREFIX_DIR_CD": null,
+          "RTE_STREET_PREFIX": null,
+          "RTE_STREET_NM": null,
+          "RTE_STREET_TYPE": null,
+          "RTE_STREET_SUFFIX_DIR_CD": null,
+          "RTE_DIRECTION_CD": null,
+          "RTE_PRIME_DIRECTION_CD": null,
+          "RTE_EXPRESS_IND": null,
+          "RTE_PARENT_RTE_NM": null,
+          "RTE_PARENT_COMMON_NM": null,
+          "RTE_CATEGORY_LEVEL_NBR": null,
+          "RTE_LEVEL_MODIFIER_NBR": null,
+          "RTE_LEVEL_EFFECTIVE_NBR": null,
+          "RTE_STATE_CD": null,
+          "RTE_NAME_DEFINITION_CD": null,
+          "RTE_ABSOLUTE_DIRECTION_CD": null,
+          "RTE_OPPOSITE_DIRECTION_CMN_NM": null,
+          "RTE_SIGNED_DIRECTION_CD": null,
+          "RTE_RAMP_DSC": null,
+          "RTE_DSC": null,
+          "RTE_MEASURE_SYSTEM_CD": null
+         }
+        }
+       }
+      ]
+     }
+    ],
+    "templates": [],
+    "supportedQueryFormats": "JSON, geoJSON, PBF",
+    "supportedAppendFormats": "sqlite,geoPackage,shapefile,filegdb,featureCollection,geojson,csv,excel,jsonl,featureService,pbf",
+    "supportedAppendSourceFilterFormats": "sqlite,geoPackage,shapefile,filegdb,featureService",
+    "supportedExportFormats": "csv,shapefile,sqlite,geoPackage,filegdb,featureCollection,geojson,kml,excel,parquet",
+    "supportedConvertFileFormats": "JSON,PBF,Parquet",
+    "supportedConvertContentFormats": "LayerEditCollection,FeatureCollection",
+    "supportedSpatialRelationships": [
+     "esriSpatialRelIntersects",
+     "esriSpatialRelContains",
+     "esriSpatialRelCrosses",
+     "esriSpatialRelEnvelopeIntersects",
+     "esriSpatialRelIndexIntersects",
+     "esriSpatialRelOverlaps",
+     "esriSpatialRelTouches",
+     "esriSpatialRelWithin",
+     "esriSpatialRelDisjoint",
+     "esriSpatialRelRelation"
+    ],
+    "guidFormat": "",
+    "supportsContingentValues": true,
+    "supportsEditingContingentValues": true,
+    "supportedContingentValuesFormats": "JSON, PBF",
+    "supportsFieldGroups": true,
+    "supportedSyncDataOptions": 260,
+    "hasStaticData": false,
+    "maxRecordCount": 2000,
+    "standardMaxRecordCount": 2000,
+    "maxIdsCount": 1000000,
+    "standardMaxRecordCountNoGeometry": 32000,
+    "tileMaxRecordCount": 4000,
+    "maxRecordCountFactor": 1,
+    "capabilities": "Query,Extract"
+   }
+  },
+  {
+   "url": "https://services.arcgis.com/p5v98VHDX9Atv3l7/arcgis/rest/services/LRS_Route_Master/FeatureServer/0/query",
+   "params": {
+    "f": "json",
+    "outFields": "LEN,LRM_CURRENCY_DT,OBJECTID,RTE_CATEGORY_NM,RTE_COMMON_NM,RTE_JURIS_CD,RTE_JURIS_PROPER_NM,RTE_NBR,RTE_NM,RTE_STATUS_NM,RTE_STREET_NM,RTE_TYPE_NM",
+    "resultRecordCount": "50",
+    "returnGeometry": "false",
+    "where": "RTE_COMMON_NM LIKE 'Center St%' ESCAPE '\\' AND ((RTE_JURIS_PROPER_NM = 'Fairfax County') OR (RTE_JURIS_PROPER_NM = 'County of Fairfax') OR (RTE_JURIS_PROPER_NM = 'Fairfax Co.'))"
+   },
+   "response": {
+    "objectIdFieldName": "OBJECTID",
+    "uniqueIdField": {
+     "name": "OBJECTID",
+     "isSystemMaintained": true
+    },
+    "globalIdFieldName": "",
+    "features": []
+   }
+  },
+  {
+   "url": "https://services.arcgis.com/p5v98VHDX9Atv3l7/arcgis/rest/services/LRS_Route_Master/FeatureServer/0/query",
+   "params": {
+    "f": "json",
+    "outFields": "LEN,LRM_CURRENCY_DT,OBJECTID,RTE_CATEGORY_NM,RTE_COMMON_NM,RTE_JURIS_CD,RTE_JURIS_PROPER_NM,RTE_NBR,RTE_NM,RTE_STATUS_NM,RTE_STREET_NM,RTE_TYPE_NM",
+    "resultRecordCount": "50",
+    "returnGeometry": "false",
+    "geometry": "{\"x\": -77.2653, \"y\": 38.9012, \"spatialReference\": {\"wkid\": 4326}}",
+    "geometryType": "esriGeometryPoint",
+    "inSR": "4326",
+    "spatialRel": "esriSpatialRelIntersects",
+    "distance": "100.0",
+    "units": "esriSRUnit_Meter"
+   },
+   "response": {
+    "objectIdFieldName": "OBJECTID",
+    "uniqueIdField": {
+     "name": "OBJECTID",
+     "isSystemMaintained": true
+    },
+    "globalIdFieldName": "",
+    "geometryType": "esriGeometryPolyline",
+    "spatialReference": {
+     "wkid": 102100,
+     "latestWkid": 3857
+    },
+    "fields": [
+     {
+      "name": "LEN",
+      "type": "esriFieldTypeDouble",
+      "alias": "LEN",
+      "sqlType": "sqlTypeOther",
+      "domain": null,
+      "defaultValue": null
+     },
+     {
+      "name": "LRM_CURRENCY_DT",
+      "type": "esriFieldTypeDate",
+      "alias": "LRM_CURRENCY_DT",
+      "sqlType": "sqlTypeOther",
+      "length": 8,
+      "domain": null,
+      "defaultValue": null
+     },
+     {
+      "name": "OBJECTID",
+      "type": "esriFieldTypeOID",
+      "alias": "OBJECTID",
+      "sqlType": "sqlTypeOther",
+      "domain": null,
+      "defaultValue": null
+     },
+     {
+      "name": "RTE_CATEGORY_NM",
+      "type": "esriFieldTypeString",
+      "alias": "RTE_CATEGORY_NM",
+      "sqlType": "sqlTypeOther",
+      "length": 60,
+      "domain": null,
+      "defaultValue": null
+     },
+     {
+      "name": "RTE_COMMON_NM",
+      "type": "esriFieldTypeString",
+      "alias": "RTE_COMMON_NM",
+      "sqlType": "sqlTypeOther",
+      "length": 60,
+      "domain": null,
+      "defaultValue": null
+     },
+     {
+      "name": "RTE_JURIS_CD",
+      "type": "esriFieldTypeString",
+      "alias": "RTE_JURIS_CD",
+      "sqlType": "sqlTypeOther",
+      "length": 3,
+      "domain": null,
+      "defaultValue": null
+     },
+     {
+      "name": "RTE_JURIS_PROPER_NM",
+      "type": "esriFieldTypeString",
+      "alias": "RTE_JURIS_PROPER_NM",
+      "sqlType": "sqlTypeOther",
+      "length": 60,
+      "domain": null,
+      "defaultValue": null
+     },
+     {
+      "name": "RTE_NBR",
+      "type": "esriFieldTypeInteger",
+      "alias": "RTE_NBR",
+      "sqlType": "sqlTypeOther",
+      "domain": null,
+      "defaultValue": null
+     },
+     {
+      "name": "RTE_NM",
+      "type": "esriFieldTypeString",
+      "alias": "RTE_NM",
+      "sqlType": "sqlTypeOther",
+      "length": 60,
+      "domain": null,
+      "defaultValue": null
+     },
+     {
+      "name": "RTE_STATUS_NM",
+      "type": "esriFieldTypeString",
+      "alias": "RTE_STATUS_NM",
+      "sqlType": "sqlTypeOther",
+      "length": 60,
+      "domain": null,
+      "defaultValue": null
+     },
+     {
+      "name": "RTE_STREET_NM",
+      "type": "esriFieldTypeString",
+      "alias": "RTE_STREET_NM",
+      "sqlType": "sqlTypeOther",
+      "length": 30,
+      "domain": null,
+      "defaultValue": null
+     },
+     {
+      "name": "RTE_TYPE_NM",
+      "type": "esriFieldTypeString",
+      "alias": "RTE_TYPE_NM",
+      "sqlType": "sqlTypeOther",
+      "length": 60,
+      "domain": null,
+      "defaultValue": null
+     }
+    ],
+    "features": [
+     {
+      "attributes": {
+       "LEN": null,
+       "LRM_CURRENCY_DT": 1767049000000,
+       "OBJECTID": 97724,
+       "RTE_CATEGORY_NM": "State Highway Primary",
+       "RTE_COMMON_NM": "VA-123N",
+       "RTE_JURIS_CD": null,
+       "RTE_JURIS_PROPER_NM": null,
+       "RTE_NBR": 123,
+       "RTE_NM": "R-VA   SR00123NB",
+       "RTE_STATUS_NM": null,
+       "RTE_STREET_NM": null,
+       "RTE_TYPE_NM": "State Route"
+      }
+     },
+     {
+      "attributes": {
+       "LEN": null,
+       "LRM_CURRENCY_DT": 1668815143000,
+       "OBJECTID": 192395,
+       "RTE_CATEGORY_NM": "Urban Streets",
+       "RTE_COMMON_NM": "Center ST N (PR - Town of Vienna)",
+       "RTE_JURIS_CD": "153",
+       "RTE_JURIS_PROPER_NM": "Town of Vienna",
+       "RTE_NBR": null,
+       "RTE_NM": "S-VA153PR CENTER ST N",
+       "RTE_STATUS_NM": null,
+       "RTE_STREET_NM": "Center",
+       "RTE_TYPE_NM": "Street Route"
+      }
+     },
+     {
+      "attributes": {
+       "LEN": null,
+       "LRM_CURRENCY_DT": 1668813643000,
+       "OBJECTID": 192558,
+       "RTE_CATEGORY_NM": "Urban Streets",
+       "RTE_COMMON_NM": "Center ST S (PR - Town of Vienna)",
+       "RTE_JURIS_CD": "153",
+       "RTE_JURIS_PROPER_NM": "Town of Vienna",
+       "RTE_NBR": null,
+       "RTE_NM": "S-VA153PR CENTER ST S",
+       "RTE_STATUS_NM": null,
+       "RTE_STREET_NM": "Center",
+       "RTE_TYPE_NM": "Street Route"
+      }
+     }
+    ]
+   }
+  },
+  {
+   "url": "https://services.arcgis.com/p5v98VHDX9Atv3l7/arcgis/rest/services/LRS_Route_Master/FeatureServer/0/query",
+   "params": {
+    "f": "json",
+    "outFields": "LEN,LRM_CURRENCY_DT,OBJECTID,RTE_CATEGORY_NM,RTE_COMMON_NM,RTE_JURIS_CD,RTE_JURIS_PROPER_NM,RTE_NBR,RTE_NM,RTE_STATUS_NM,RTE_STREET_NM,RTE_TYPE_NM",
+    "resultRecordCount": "50",
+    "returnGeometry": "false",
+    "where": "RTE_COMMON_NM LIKE 'ZZZZ NO SUCH ROAD%' ESCAPE '\\' AND ((RTE_JURIS_PROPER_NM = 'Fairfax County') OR (RTE_JURIS_PROPER_NM = 'County of Fairfax') OR (RTE_JURIS_PROPER_NM = 'Fairfax Co.'))"
+   },
+   "response": {
+    "objectIdFieldName": "OBJECTID",
+    "uniqueIdField": {
+     "name": "OBJECTID",
+     "isSystemMaintained": true
+    },
+    "globalIdFieldName": "",
+    "features": []
+   }
+  }
+ ]
+}

@@ -1,0 +1,6 @@
+id: va:iron-gate-town
+name: Iron Gate (town)
+kind: town
+place_fips: "40024"
+parent: va:alleghany-county
+aliases: ["Town of Iron Gate"]

@@ -1,0 +1,6 @@
+id: va:monterey-town
+name: Monterey (town)
+kind: town
+place_fips: "52680"
+parent: va:highland-county
+aliases: ["Town of Monterey"]

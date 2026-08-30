@@ -1,0 +1,118 @@
+# VGIN's composite locator, on the same host the parcels, boundaries, and
+# address-point manifests already reach. Endpoint, response shape, scores,
+# and terms verified live 2026-08-29.
+#
+# A geocode is never a jurisdiction on its own. geo.resolve_location feeds
+# the returned point into the same point-in-polygon path
+# registry.resolve_jurisdiction uses, and the geocode step rides in the
+# envelope with its own evidence entry — see authority_notes.
+id: va-vgin-composite-locator
+name: Virginia Composite Locator (VGIN Geocoding Service)
+jurisdiction: va
+
+publisher:
+  agency: Virginia Geographic Information Network (VGIN), part of the
+    Virginia Department of Emergency Management
+  authority_level: official_secondary
+
+domains: [geo]
+
+capabilities:
+  - id: geocode.address
+    tool_hint: geo.resolve_location
+
+adapter:
+  type: arcgis_geocode
+  service_url: https://vginmaps.vdem.virginia.gov/arcgis/rest/services/Geocoding/VGIN_Composite_Locator/GeocodeServer
+  # Commonwealth's threshold, not the publisher's: Esri documents `score`
+  # as 0-100 match quality and states no cut-off, so this number is a
+  # project choice and is written down where a reader can find it.
+  # Calibrated against the observed spread on 2026-08-29 — a rooftop match
+  # scores 100, a street-centreline interpolation 100, and a fallback to
+  # the ZIP centroid 84, which is the shape this is meant to keep out of a
+  # confident answer.
+  min_score: 90.0
+  max_locations: 10
+
+access:
+  mode: anonymous
+  automation_status: public_api
+  terms_url: https://vginmaps.vdem.virginia.gov/download/clearinghouse/documentation/VGIN_Geocoding_Service_Overview_and_Access_Instructions.pdf
+  terms_notes: >
+    The publisher's own service-overview document is the terms of record
+    and it states no automated-use restriction: no credentials are
+    required, batch geocoding is offered, and the service description
+    states the data "is limited to the Commonwealth of Virginia and cannot
+    guarantee results in other states". Anonymous access confirmed live
+    2026-08-29. As with the Richmond manifest, this records what the
+    publisher's material actually says rather than inventing a terms page
+    that does not exist; confirmation should go to VGIN (vgin@vdem.
+    virginia.gov) and the finding re-reviewed on the standard 12-month
+    cadence.
+  terms_reviewed_at: "2026-08-29"
+  data_classification: open
+
+freshness:
+  expected_cadence: quarterly
+  cadence_source: >
+    Stated by the publisher: "Underlying locator files within the service
+    for Address Points and RCL are updated quarterly", and the source data
+    arrives from local governments on "quarterly, biannual, or annual
+    submission scheduling".
+  ttl_hint_seconds: 86400
+
+coverage:
+  geography: va
+  temporal: current
+  known_limitations:
+    - >
+      Virginia only. The publisher states the service "cannot guarantee
+      results in other states"; an out-of-state address is not a failure
+      of the address, it is outside what this locator covers.
+    - >
+      A composite locator falls back down a hierarchy: address points
+      first, then road centerlines, then city/state, CAI, GNIS, ZIP codes,
+      and finally jurisdictions. A ZIP-code match is a centroid, not the
+      address — matched_by and address_type say which element answered,
+      and a caller that ignores them will treat a ZIP centroid as a
+      rooftop.
+    - >
+      The locator's own City attribute is a POSTAL city, not a
+      government. Observed 2026-08-29, a Fairfax County address in ZIP
+      22310 returns City "ALEXANDRIA", which is an independent city it is
+      not in. Never read it as the jurisdiction.
+    - >
+      Subregion is inconsistent between the locator's elements. Observed
+      2026-08-29 for the same query: the road-centerline element returned
+      the FIPS code "51059" and the address-point element returned the
+      name "Fairfax County". It is returned as data and never parsed.
+    - >
+      A ZIP code geocodes to one centroid, which for a ZIP spanning
+      several localities is an answer to a question nobody asked.
+      geo.resolve_location does not use this path for ZIPs; it queries
+      the address-point layer for every locality the ZIP touches.
+
+authority_notes: >
+  VGIN builds the locator from the same local-government submissions that
+  feed its address-point and road-centerline layers, hence
+  official_secondary rather than primary. Its output is a coordinate and a
+  confidence, never an authority determination: geo.resolve_location runs
+  the coordinate through the registered boundary source's point-in-polygon
+  path and reports the government that owns the polygon, with the geocode
+  step recorded as its own evidence entry so a caller can see both halves.
+
+health:
+  probe: geocode_known_address
+  expect:
+    # A locator answering HTTP 200 with zero candidates for everything is
+    # broken in a way a reachability check cannot see, so the probe is a
+    # known address it must still find. Observed live 2026-08-29: score
+    # 100, matched by AddressPoint.
+    known_address: "127 Center St S, Vienna, VA 22180"
+    min_score: 90
+
+lifecycle:
+  declared_state: active
+  added: "2026-08-29"
+  last_verified: "2026-08-29"
+  verified_by: pranava0x0

@@ -1,0 +1,14 @@
+# design/jurisdiction-resolution.md § 3 trap 8. Bedford was an independent
+# city until 2013, when it reverted to a town inside Bedford County. Records
+# written before then name "Bedford City", a government that is in no
+# current list — so `former_names` resolves it here, to the successor, with
+# a warning that says the name is historical. There is deliberately no
+# va:bedford-city row; a stale one is the failure this case exists to catch.
+id: va:bedford-town
+name: Bedford (town)
+kind: town
+place_fips: "05544"
+parent: va:bedford-county
+aliases: ["Town of Bedford"]
+not_to_be_confused_with: ["va:bedford-county"]
+former_names: ["Bedford City", "City of Bedford"]

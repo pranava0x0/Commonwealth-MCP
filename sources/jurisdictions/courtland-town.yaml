@@ -1,0 +1,6 @@
+id: va:courtland-town
+name: Courtland (town)
+kind: town
+place_fips: "19600"
+parent: va:southampton-county
+aliases: ["Town of Courtland"]

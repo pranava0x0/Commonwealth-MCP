@@ -1,0 +1,71 @@
+# Inventory only (design/source-registry.md § 6.3). Unlike the VDH row, this
+# one records a working API found and deliberately not wired up: the portal
+# is a catalog of other agencies' datasets, and registering a catalog as a
+# source would put a second, weaker copy of the registry inside the
+# registry.
+id: va-open-data-portal
+name: Virginia Open Data Portal (CKAN)
+jurisdiction: va
+
+publisher:
+  agency: Virginia Office of Data Governance and Analytics
+  authority_level: official_secondary
+
+domains: [catalog]
+
+capabilities: []
+
+adapter:
+  type: none
+  discovery_url: https://data.virginia.gov/api/3/action/package_search
+
+access:
+  mode: anonymous
+  automation_status: unknown
+  terms_url: https://data.virginia.gov/pages/terms-of-use
+  terms_notes: >
+    Not reviewed. The API answers anonymously today, which is a fact about
+    reachability and not a licence.
+  data_classification: open
+
+freshness:
+  expected_cadence: unknown
+  cadence_source: unknown
+  ttl_hint_seconds: 86400
+
+coverage:
+  geography: va
+  temporal: current
+  known_limitations:
+    - >
+      Verified 2026-08-29: CKAN 2.9.11 with the Action API reachable
+      anonymously (`/api/3/action/status_show` returns 200), 64 publishing
+      organizations.
+    - >
+      This is a catalog, not a data source. Its records describe other
+      agencies' datasets; a query against it answers "who published
+      something about X", never "what is at this address". The capability
+      it would answer is dataset discovery, which overlaps
+      `registry.search_sources` and needs a design decision before a tool,
+      not just a manifest.
+    - >
+      Most resources are file downloads (CSV, shapefile) rather than
+      queryable services, so onboarding one of them means the download
+      question decision 0006 defers, not another ArcGIS registration.
+
+authority_notes: >
+  The portal republishes datasets its publishers submit, so it is
+  official_secondary to whichever agency actually holds the record — the
+  same relationship VGIN's statewide aggregations have to the localities
+  that feed them. Where a dataset here duplicates a source registered
+  directly, the direct registration is the one to query.
+
+health:
+  probe: none
+  expect: {}
+
+lifecycle:
+  declared_state: proposed
+  added: "2026-08-29"
+  last_verified: "2026-08-29"
+  verified_by: pranava0x0

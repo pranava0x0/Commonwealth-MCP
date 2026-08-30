@@ -1,0 +1,6 @@
+id: va:chase-city-town
+name: Chase City (town)
+kind: town
+place_fips: "14984"
+parent: va:mecklenburg-county
+aliases: ["Town of Chase City"]

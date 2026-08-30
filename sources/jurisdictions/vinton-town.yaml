@@ -1,0 +1,7 @@
+id: va:vinton-town
+name: Vinton (town)
+kind: town
+place_fips: "81280"
+parent: va:roanoke-county
+aliases: ["Town of Vinton"]
+also_within: ["va:roanoke-city"]

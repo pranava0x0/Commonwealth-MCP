@@ -1,0 +1,6 @@
+id: va:goochland-county
+name: Goochland County
+kind: county
+fips: "51075"
+parent: va
+aliases: ["County of Goochland"]

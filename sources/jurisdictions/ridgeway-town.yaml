@@ -1,0 +1,6 @@
+id: va:ridgeway-town
+name: Ridgeway (town)
+kind: town
+place_fips: "67208"
+parent: va:henry-county
+aliases: ["Town of Ridgeway"]

@@ -1,0 +1,6 @@
+id: va:bowling-green-town
+name: Bowling Green (town)
+kind: town
+place_fips: "08888"
+parent: va:caroline-county
+aliases: ["Town of Bowling Green"]

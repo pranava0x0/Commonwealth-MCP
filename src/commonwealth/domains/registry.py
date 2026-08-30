@@ -6,31 +6,18 @@ from __future__ import annotations
 
 import re
 
-from ..core.assemble import (EnvelopeBuilder, failure, result_dim,
-                             selection_coverage)
+from ..core.assemble import EnvelopeBuilder, result_dim
 from ..core.envelope import (AccessPath, AuthorityLevel, Coverage, Envelope,
                              ExecutionCoverage, PaginationCoverage,
                              RegistryCoverage, ResultCoverage, WarningCode)
+from ..core.errors import InvalidQuery
 from ..core.registry import SourceManifest
-from ..core.errors import CommonwealthError, InvalidQuery
 from ..core.toolreg import ToolRegistry, ToolSpec
+from .containment import (STATEWIDE_STACK, resolve_point,
+                         warn_if_near_a_border)
 from ..runtime import PROJECT_SOURCE, RuntimeContext
 
 REGISTRY_TOOLS = ToolRegistry(package="registry")
-
-# Point-in-polygon runs against the statewide boundary source, so the
-# selection stack is the state itself — the whole point is that the
-# jurisdiction is not yet known.
-_STATEWIDE_STACK = ["va"]
-
-# How close to another jurisdiction's boundary a point may sit before the
-# answer is flagged as boundary-sensitive. This is a COMMONWEALTH-CHOSEN
-# screening tolerance, not a publisher-stated accuracy figure: VGIN states
-# none for the administrative-boundary layer, and inventing one would be a
-# guess dressed as a measurement. The buffered query runs against the
-# layer's true geometry, so the number means what it says; what it cannot
-# tell you is how far the published line sits from the legal line.
-BOUNDARY_PROXIMITY_METERS = 50
 
 
 def _builder(ctx: RuntimeContext, tool: str,
@@ -57,92 +44,59 @@ def _project_source(b: EnvelopeBuilder, ctx: RuntimeContext) -> str:
 async def _resolve_by_point(ctx: RuntimeContext, b: EnvelopeBuilder,
                             lon: float, lat: float) -> Envelope:
     """Point-in-polygon against the registered boundary source
-    (design/jurisdiction-resolution.md § 2). Two layers are consulted
-    because Virginia stacks governments: an incorporated town and its
-    parent county both contain the same ground, and 'whose zoning' and
-    'whose schools' have different answers there."""
-    from ..core.envelope import utc_now_iso
+    (design/jurisdiction-resolution.md § 2). The querying lives in
+    domains/containment.py because geo.resolve_location asks the same
+    question about a coordinate it geocoded."""
+    c = await resolve_point(ctx, b, lon, lat)
 
-    selected = ctx.sources.select("boundary.lookup", _STATEWIDE_STACK)
-    registry_dim, gaps = selection_coverage(
-        ctx.sources, "boundary.lookup", _STATEWIDE_STACK, selected)
-    if not selected:
+    if c.manifest is None:
         return b.build(
             {"resolved": None, "candidates": [],
              "note": "No boundary source is registered and active, so a "
                      "coordinate cannot be placed in a jurisdiction. This "
                      "is a Commonwealth coverage gap, not a statement "
                      "about the point."},
-            Coverage(registry=registry_dim,
+            Coverage(registry=c.registry_dim,
                      execution=ExecutionCoverage.complete,
                      pagination=PaginationCoverage.complete,
                      result=ResultCoverage.empty,
-                     jurisdictions_unavailable=gaps))
+                     jurisdictions_unavailable=c.gaps))
 
-    m = selected[0]
-    failures = []
-    hits: dict[str, list] = {"localities": [], "towns": []}
-    near: dict[str, list] = {"localities": [], "towns": []}
-    src_ref: str | None = None
-    for layer in ("localities", "towns"):
-        try:
-            q = await ctx.arcgis.query(m, layer, geometry_point=(lon, lat))
-            buffered = await ctx.arcgis.query(
-                m, layer, geometry_point=(lon, lat),
-                distance_meters=BOUNDARY_PROXIMITY_METERS)
-        except CommonwealthError as err:
-            failures.append(failure(m.id, err.code, str(err)))
-            continue
-        if src_ref is None:
-            src_ref = b.add_source(
-                source_id=m.id, publisher=m.publisher.agency,
-                system=m.adapter.type, dataset=m.name,
-                jurisdiction=m.jurisdiction,
-                authority_level=m.publisher.authority_level,
-                access_path=AccessPath.cache if q.from_cache
-                else AccessPath.live,
-                source_updated_at=q.source_updated_at,
-                retrieved_at=q.retrieved_at,
-                cache_age_seconds=q.cache_age_seconds)
-        for r in q.records:
-            b.add_evidence(source_ref=src_ref, record_id=r.record_id,
-                           retrieved_at=q.retrieved_at,
-                           transformations=q.transformations,
-                           payload_hash=q.payload_hash())
-        hits[layer] = q.records
-        near[layer] = buffered.records
-
-    if failures and src_ref is None:
+    if c.unreachable:
         return b.build(
             {"resolved": None, "candidates": [],
              "note": "The boundary source could not be reached, so this "
                      "point was not placed. That is an outage, not an "
                      "answer — do not read it as 'outside Virginia'."},
-            Coverage(registry=registry_dim,
+            Coverage(registry=c.registry_dim,
                      execution=ExecutionCoverage.failed,
                      pagination=PaginationCoverage.complete,
                      result=ResultCoverage.empty,
-                     source_failures=failures))
+                     source_failures=c.failures))
 
-    def identify(layer: str, rec) -> dict:
-        """Map one boundary polygon back to the project's own table."""
-        canon = rec.canonical
-        if layer == "towns":
-            raw = str(canon.get("place_fips") or "")
-            state = ctx.jurisdictions.get("va")
-            prefix = (state.fips if state else "51") or "51"
-            bare = raw[len(prefix):] if raw.startswith(prefix) else raw
-            j = ctx.jurisdictions.by_place_fips(bare)
-        else:
-            j = ctx.jurisdictions.by_fips(str(canon.get("fips") or ""))
-        return {"source_name": canon.get("full_name"),
-                "source_fips": canon.get("fips") or canon.get("place_fips"),
-                "layer": layer, "jurisdiction": j}
+    if c.narrowest_unknown:
+        # The county was retrieved and is not the answer: the point may
+        # sit in a town whose polygon was never fetched, so naming the
+        # county would be a plausible wrong government rather than a
+        # partial one.
+        return b.build(
+            {"resolved": None, "candidates": [],
+             "point": {"lon": lon, "lat": lat},
+             "note": "The town boundary layer could not be reached, so the "
+                     "narrowest government at this point is unknown. A "
+                     "county polygon was found, but this point may sit in "
+                     "an incorporated town inside it. Retry, or name the "
+                     "jurisdiction directly."},
+            Coverage(registry=c.registry_dim,
+                     execution=ExecutionCoverage.partial,
+                     pagination=PaginationCoverage.complete,
+                     result=ResultCoverage.empty,
+                     jurisdictions_searched=STATEWIDE_STACK,
+                     source_failures=c.failures,
+                     known_limitations=sorted(
+                         c.manifest.coverage.known_limitations)))
 
-    town = [identify("towns", r) for r in hits["towns"]]
-    locality = [identify("localities", r) for r in hits["localities"]]
-
-    if not town and not locality:
+    if c.empty:
         return b.build(
             {"resolved": None, "candidates": [],
              "point": {"lon": lon, "lat": lat},
@@ -150,36 +104,28 @@ async def _resolve_by_point(ctx: RuntimeContext, b: EnvelopeBuilder,
                      "is outside the Commonwealth (or in water beyond the "
                      "mapped boundary). The source answered; it simply has "
                      "no polygon here."},
-            Coverage(registry=registry_dim,
+            Coverage(registry=c.registry_dim,
                      execution=ExecutionCoverage.complete,
                      pagination=PaginationCoverage.complete,
                      result=ResultCoverage.empty,
-                     jurisdictions_searched=_STATEWIDE_STACK,
-                     source_failures=failures,
-                     known_limitations=sorted(m.coverage.known_limitations)))
+                     jurisdictions_searched=STATEWIDE_STACK,
+                     source_failures=c.failures,
+                     known_limitations=sorted(
+                         c.manifest.coverage.known_limitations)))
 
-    # The town is the narrowest government containing the point; the
-    # locality is always reported alongside it, never replaced by it.
-    leaf = (town or locality)[0]
+    leaf = c.leaf
+    assert leaf is not None  # c.empty ruled this out
     data: dict = {"point": {"lon": lon, "lat": lat}}
-    layered: list[dict[str, str]] = []
-    for entry in locality if town else []:
-        j = entry["jurisdiction"]
-        layered.append({"id": j.id if j else f"unmapped:{entry['source_fips']}",
-                        "relationship": "containing-locality",
-                        "name": entry["source_name"] or ""})
-
     resolved_j = leaf["jurisdiction"]
     if resolved_j is not None:
-        for p in ctx.jurisdictions.parents_of(resolved_j):
-            if not any(row.get("id") == p.id for row in layered):
-                layered.append({"id": p.id,
-                                "relationship": "parent-" + p.kind.value,
-                                "name": p.name})
         data["resolved"] = {"id": resolved_j.id, "name": resolved_j.name,
                             "kind": resolved_j.kind.value,
                             "fips": resolved_j.fips,
-                            "basis": "point_in_polygon"}
+                            "basis": "point_in_polygon",
+                            # Which boundary polygons support this
+                            # government — for a town, both the town's
+                            # and its locality's.
+                            "evidence_refs": c.evidence_refs}
         data["candidates"] = []
     else:
         # The boundary source knows this government; Commonwealth's own
@@ -196,34 +142,21 @@ async def _resolve_by_point(ctx: RuntimeContext, b: EnvelopeBuilder,
                     "in Commonwealth's jurisdiction table yet, so it has no "
                     "va: id and no source routing. The place is real; the "
                     "gap is ours."}
-    data["layered_authorities"] = layered
+    data["layered_authorities"] = c.layered(ctx)
 
-    # Straddle check: anything the buffered query reached that the exact
-    # query did not is a different government within the tolerance.
-    exact_ids = {r.record_id for layer in hits for r in hits[layer]}
-    neighbours = sorted({
-        str(r.canonical.get("full_name"))
-        for layer in near for r in near[layer]
-        if r.record_id not in exact_ids})
-    if neighbours:
-        b.warn(WarningCode.boundary_precision,
-               f"This point is within {BOUNDARY_PROXIMITY_METERS} m of "
-               f"{', '.join(neighbours)}. The published boundary is "
-               "cartographic and the publisher disclaims survey use, so "
-               "which side of the line this point falls on is not settled "
-               "by this answer. Confirm with the locality before relying "
-               "on it.", m.id)
-        data["nearby_jurisdictions"] = neighbours
+    warn_if_near_a_border(b, c)
+    if c.nearby:
+        data["nearby_jurisdictions"] = c.nearby
 
     return b.build(data, Coverage(
-        registry=registry_dim,
-        execution=(ExecutionCoverage.partial if failures
+        registry=c.registry_dim,
+        execution=(ExecutionCoverage.partial if c.failures
                    else ExecutionCoverage.complete),
         pagination=PaginationCoverage.complete,
         result=ResultCoverage.hit,
-        jurisdictions_searched=_STATEWIDE_STACK,
-        source_failures=failures,
-        known_limitations=sorted(m.coverage.known_limitations)))
+        jurisdictions_searched=STATEWIDE_STACK,
+        source_failures=c.failures,
+        known_limitations=sorted(c.manifest.coverage.known_limitations)))
 
 
 async def resolve_jurisdiction(ctx: RuntimeContext, query: str = "",
@@ -261,6 +194,22 @@ async def resolve_jurisdiction(ctx: RuntimeContext, query: str = "",
                          "fips": j.fips, "basis": resolution.basis},
             "layered_authorities": resolution.layered_authorities,
         }
+        if resolution.matched_former_name:
+            # The caller named a government that no longer exists. Saying
+            # so is the whole point: silently answering as the successor
+            # would let a record's own vintage disappear.
+            data["former_name_match"] = {
+                "queried": resolution.matched_former_name,
+                "resolved_to": j.id,
+                "note": f"{resolution.matched_former_name!r} names a "
+                        "Virginia government that no longer exists under "
+                        f"that name. {j.name} governs that territory now. "
+                        "A record using the old name predates the change; "
+                        "check its date before treating it as current."}
+            b.warn(WarningCode.alias_match,
+                   f"Resolved {resolution.matched_former_name!r} to "
+                   f"{j.id} by former name, not by a current name. Tell "
+                   "the user the name they used is historical.")
         return b.build(data, Coverage(
             registry=RegistryCoverage.covered,
             execution=ExecutionCoverage.complete,
@@ -388,6 +337,11 @@ async def describe_source(ctx: RuntimeContext, source_id: str) -> Envelope:
         "capabilities": sorted(m.capability_ids()),
         "terms_url": m.access.terms_url,
         "terms_notes": m.access.terms_notes,
+        # DEQ's terms_notes says "see terms_gap" and this tool omitted
+        # the field, so the one caveat a caller most needs before using a
+        # source pointed at nothing. Absent when the review came back
+        # clean, so its presence means something.
+        **({"terms_gap": m.access.terms_gap} if m.access.terms_gap else {}),
         "data_classification": m.access.data_classification.value,
         "known_limitations": m.coverage.known_limitations,
         "authority_notes": m.authority_notes,
@@ -440,8 +394,8 @@ REGISTRY_TOOLS.register(ToolSpec(
         "apply — read layered_authorities, do not assume the resolved leaf "
         "answers everything. Pass `query` OR lon/lat, never both. If the "
         "result carries candidates with requires_user_choice, present them "
-        "to the user and never pick one yourself. Not for street addresses "
-        "yet (no geocoding in this release)."),
+        "to the user and never pick one yourself. For a street address or "
+        "a ZIP, use geo.resolve_location instead."),
     toolset="discovery-min", contract_version="2", fn=resolve_jurisdiction))
 REGISTRY_TOOLS.register(ToolSpec(
     name="registry.search_sources",

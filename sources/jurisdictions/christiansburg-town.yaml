@@ -1,0 +1,6 @@
+id: va:christiansburg-town
+name: Christiansburg (town)
+kind: town
+place_fips: "16608"
+parent: va:montgomery-county
+aliases: ["Town of Christiansburg"]

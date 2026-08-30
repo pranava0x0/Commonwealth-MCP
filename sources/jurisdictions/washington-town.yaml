@@ -1,0 +1,6 @@
+id: va:washington-town
+name: Washington (town)
+kind: town
+place_fips: "83248"
+parent: va:rappahannock-county
+aliases: ["Town of Washington"]

@@ -1,0 +1,6 @@
+id: va:culpeper-town
+name: Culpeper (town)
+kind: town
+place_fips: "20752"
+parent: va:culpeper-county
+aliases: ["Town of Culpeper"]

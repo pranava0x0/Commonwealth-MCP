@@ -1,0 +1,6 @@
+id: va:marion-town
+name: Marion (town)
+kind: town
+place_fips: "49464"
+parent: va:smyth-county
+aliases: ["Town of Marion"]

@@ -1,0 +1,6 @@
+id: va:greensville-county
+name: Greensville County
+kind: county
+fips: "51081"
+parent: va
+aliases: ["County of Greensville"]

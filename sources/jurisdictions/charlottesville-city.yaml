@@ -1,0 +1,6 @@
+id: va:charlottesville-city
+name: Charlottesville City
+kind: independent-city
+fips: "51540"
+parent: va
+aliases: ["City of Charlottesville"]

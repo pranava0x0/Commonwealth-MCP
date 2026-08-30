@@ -1,0 +1,6 @@
+id: va:luray-town
+name: Luray (town)
+kind: town
+place_fips: "47528"
+parent: va:page-county
+aliases: ["Town of Luray"]

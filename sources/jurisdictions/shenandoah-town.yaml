@@ -1,0 +1,6 @@
+id: va:shenandoah-town
+name: Shenandoah (town)
+kind: town
+place_fips: "71776"
+parent: va:page-county
+aliases: ["Town of Shenandoah"]

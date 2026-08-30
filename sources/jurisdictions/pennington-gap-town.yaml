@@ -1,0 +1,6 @@
+id: va:pennington-gap-town
+name: Pennington Gap (town)
+kind: town
+place_fips: "61560"
+parent: va:lee-county
+aliases: ["Town of Pennington Gap"]

@@ -1,0 +1,6 @@
+id: va:parksley-town
+name: Parksley (town)
+kind: town
+place_fips: "60680"
+parent: va:accomack-county
+aliases: ["Town of Parksley"]

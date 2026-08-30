@@ -1,0 +1,6 @@
+id: va:nottoway-county
+name: Nottoway County
+kind: county
+fips: "51135"
+parent: va
+aliases: ["County of Nottoway"]

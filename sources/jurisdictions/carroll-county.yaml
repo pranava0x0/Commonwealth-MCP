@@ -1,0 +1,6 @@
+id: va:carroll-county
+name: Carroll County
+kind: county
+fips: "51035"
+parent: va
+aliases: ["County of Carroll"]

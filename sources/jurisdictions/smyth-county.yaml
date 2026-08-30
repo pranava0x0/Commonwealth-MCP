@@ -1,0 +1,6 @@
+id: va:smyth-county
+name: Smyth County
+kind: county
+fips: "51173"
+parent: va
+aliases: ["County of Smyth"]

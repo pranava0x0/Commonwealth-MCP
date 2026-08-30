@@ -1,0 +1,6 @@
+id: va:stony-creek-town
+name: Stony Creek (town)
+kind: town
+place_fips: "75840"
+parent: va:sussex-county
+aliases: ["Town of Stony Creek"]

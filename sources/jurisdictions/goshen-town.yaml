@@ -1,0 +1,6 @@
+id: va:goshen-town
+name: Goshen (town)
+kind: town
+place_fips: "31968"
+parent: va:rockbridge-county
+aliases: ["Town of Goshen"]

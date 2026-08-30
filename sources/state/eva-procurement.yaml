@@ -1,0 +1,61 @@
+# Inventory only (design/source-registry.md § 6.3). No endpoint discovery
+# has been done here; this row exists so procurement is visible as coverage
+# debt rather than a line someone remembers.
+id: va-eva-procurement
+name: eVA (Virginia procurement)
+jurisdiction: va
+
+publisher:
+  agency: Virginia Department of General Services, Division of Purchases and
+    Supply
+  authority_level: primary
+
+domains: [procurement]
+
+capabilities: []
+
+adapter:
+  type: none
+  discovery_url: https://eva.virginia.gov/
+
+access:
+  mode: unknown
+  automation_status: unknown
+  terms_url: https://eva.virginia.gov/
+  terms_notes: >
+    Not reviewed, and not researched. The site answered 200 on 2026-08-29;
+    nothing else about it has been checked.
+  data_classification: open
+
+freshness:
+  expected_cadence: unknown
+  cadence_source: unknown
+  ttl_hint_seconds: 86400
+
+coverage:
+  geography: va
+  temporal: current
+  known_limitations:
+    - >
+      No endpoint discovery has run. Whether eVA exposes solicitations or
+      awards through anything other than its own web UI is an open
+      question, not a recorded finding.
+    - >
+      Procurement records name private parties, so the data-classification
+      review here is a real one rather than a formality — an award record
+      is public, a losing bidder's contact details may not be.
+
+authority_notes: >
+  eVA is the Commonwealth's system of record for state procurement, so it
+  is primary for solicitations and awards it carries. Local procurement
+  runs on locality systems and is not covered by it.
+
+health:
+  probe: none
+  expect: {}
+
+lifecycle:
+  declared_state: proposed
+  added: "2026-08-29"
+  last_verified: "2026-08-29"
+  verified_by: pranava0x0

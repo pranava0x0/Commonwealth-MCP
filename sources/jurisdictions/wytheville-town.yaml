@@ -1,0 +1,6 @@
+id: va:wytheville-town
+name: Wytheville (town)
+kind: town
+place_fips: "88000"
+parent: va:wythe-county
+aliases: ["Town of Wytheville"]

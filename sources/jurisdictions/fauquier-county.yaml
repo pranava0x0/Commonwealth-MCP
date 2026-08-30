@@ -1,0 +1,6 @@
+id: va:fauquier-county
+name: Fauquier County
+kind: county
+fips: "51061"
+parent: va
+aliases: ["County of Fauquier"]

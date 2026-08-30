@@ -1,0 +1,6 @@
+id: va:russell-county
+name: Russell County
+kind: county
+fips: "51167"
+parent: va
+aliases: ["County of Russell"]

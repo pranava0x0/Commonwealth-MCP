@@ -1,0 +1,6 @@
+id: va:lebanon-town
+name: Lebanon (town)
+kind: town
+place_fips: "44696"
+parent: va:russell-county
+aliases: ["Town of Lebanon"]

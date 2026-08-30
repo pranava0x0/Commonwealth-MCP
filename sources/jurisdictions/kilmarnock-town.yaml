@@ -1,0 +1,7 @@
+id: va:kilmarnock-town
+name: Kilmarnock (town)
+kind: town
+place_fips: "42424"
+parent: va:lancaster-county
+aliases: ["Town of Kilmarnock"]
+also_within: ["va:northumberland-county"]

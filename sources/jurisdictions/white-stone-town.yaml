@@ -1,0 +1,6 @@
+id: va:white-stone-town
+name: White Stone (town)
+kind: town
+place_fips: "85600"
+parent: va:lancaster-county
+aliases: ["Town of White Stone"]

@@ -1,0 +1,6 @@
+id: va:stanley-town
+name: Stanley (town)
+kind: town
+place_fips: "75024"
+parent: va:page-county
+aliases: ["Town of Stanley"]

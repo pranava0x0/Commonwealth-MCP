@@ -1,0 +1,6 @@
+id: va:clifton-town
+name: Clifton (town)
+kind: town
+place_fips: "17376"
+parent: va:fairfax-county
+aliases: ["Town of Clifton"]

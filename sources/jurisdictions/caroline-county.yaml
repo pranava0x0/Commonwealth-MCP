@@ -1,0 +1,6 @@
+id: va:caroline-county
+name: Caroline County
+kind: county
+fips: "51033"
+parent: va
+aliases: ["County of Caroline"]

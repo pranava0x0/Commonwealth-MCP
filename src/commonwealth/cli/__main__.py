@@ -20,7 +20,8 @@ from ..adapters.base import HttpFetcher, egress_policy_for
 from ..core import toolreg
 from ..core.envelope import utc_now_iso
 from ..core.errors import CommonwealthError
-from ..core.registry import SourceManifest, validate_manifest
+from ..core.registry import (INVENTORY_ADAPTER, SourceManifest,
+                             validate_manifest)
 from ..runtime import PROJECT_ROOT, SOURCES_DIR, RuntimeContext, load_context
 
 FIXTURES_DIR = PROJECT_ROOT / "tests" / "fixtures" / "sources"
@@ -73,6 +74,7 @@ def cmd_doctor(args: argparse.Namespace) -> int:
     print(f"default profile: {len(tools)} tools: {', '.join(tools)}")
 
     if args.live:
+        inventory = 0
         for m in ctx.sources.manifests.values():
             if m.adapter.type == "arcgis":
                 layers = m.adapter.model_dump().get("layers", {})
@@ -102,10 +104,34 @@ def cmd_doctor(args: argparse.Namespace) -> int:
                 except CommonwealthError as err:
                     print(f"✗ live {m.id}: {err.code}: {err}")
                     problems += 1
+            elif m.adapter.type == "arcgis_geocode":
+                # A locator that answers HTTP 200 with zero candidates for
+                # everything is broken in a way a reachability check
+                # cannot see, so the probe geocodes a known address.
+                try:
+                    h = asyncio.run(ctx.geocoder.health(m))
+                    mark = "✓" if h["healthy"] else "✗"
+                    print(f"{mark} live {m.id}: {h['address']!r} -> "
+                          f"{h['candidates']} candidate(s), best score "
+                          f"{h['best_score']} (min {h['min_score']})")
+                    if not h["healthy"]:
+                        problems += 1
+                except CommonwealthError as err:
+                    print(f"✗ live {m.id}: {err.code}: {err}")
+                    problems += 1
+            elif m.adapter.type == INVENTORY_ADAPTER:
+                # Not a gap: an inventory row names a publisher with no
+                # endpoint behind it, so there is nothing to probe and
+                # counting it as a problem would make `doctor` red for
+                # doing exactly what design/source-registry.md § 6.3 asks.
+                inventory += 1
             else:
                 print(f"? live {m.id}: no live probe wired for adapter "
                       f"type {m.adapter.type!r}")
                 problems += 1
+        if inventory:
+            print(f"- {inventory} inventory source(s) not probed: "
+                  "declared_state=proposed, no endpoint to reach")
     else:
         print("(live source probes skipped; pass --live)")
 
@@ -199,15 +225,118 @@ def cmd_sources_validate(args: argparse.Namespace) -> int:
     return _validate_all(_load_ctx())
 
 
+def registry_stats(ctx: RuntimeContext) -> dict[str, Any]:
+    """Coverage debt, counted rather than remembered.
+
+    design/source-registry.md § 6.3: every "we should cover X someday" idea
+    becomes a `proposed` manifest, so the proposed/active split is the
+    measurement. Derived from the loaded registry — a hand-maintained
+    mirror of these numbers anywhere is a test failure by design (§ 7)."""
+    from ..core.registry import DeclaredState
+
+    manifests = list(ctx.sources.manifests.values())
+    by_state = {s.value: 0 for s in DeclaredState}
+    for m in manifests:
+        by_state[m.lifecycle.declared_state.value] += 1
+    active = [m for m in manifests
+              if m.lifecycle.declared_state == DeclaredState.active]
+    answered = {cap for m in active for cap in m.capability_ids()}
+    unanswered = sorted(ctx.sources.capability_vocab - answered)
+    by_adapter: dict[str, int] = {}
+    for m in manifests:
+        by_adapter[m.adapter.type] = by_adapter.get(m.adapter.type, 0) + 1
+    return {
+        "total": len(manifests),
+        "by_declared_state": by_state,
+        "by_adapter_type": dict(sorted(by_adapter.items())),
+        "capabilities_in_vocabulary": len(ctx.sources.capability_vocab),
+        "capabilities_with_an_active_source": len(answered),
+        "capabilities_with_no_active_source": unanswered,
+        "jurisdictions_in_table": len(ctx.jurisdictions),
+        "jurisdictions_with_a_local_source": len(
+            {m.jurisdiction for m in active if m.jurisdiction != "va"}),
+    }
+
+
+def cmd_sources_stats(args: argparse.Namespace) -> int:
+    ctx = _load_ctx()
+    stats = registry_stats(ctx)
+    if args.json:
+        print(json.dumps(stats, indent=2))
+        return 0
+    states = stats["by_declared_state"]
+    print(f"source manifests: {stats['total']}")
+    for state in ("active", "proposed", "retired"):
+        print(f"  {state:9} {states[state]}")
+    print("adapter types: " + ", ".join(
+        f"{k}={v}" for k, v in stats["by_adapter_type"].items()))
+    print(f"capabilities: {stats['capabilities_with_an_active_source']}"
+          f"/{stats['capabilities_in_vocabulary']} have an active source")
+    for cap in stats["capabilities_with_no_active_source"]:
+        print(f"  no active source: {cap}")
+    print(f"jurisdictions: {stats['jurisdictions_with_a_local_source']}"
+          f"/{stats['jurisdictions_in_table']} have a source of their own "
+          "(statewide sources cover the rest)")
+    return 0
+
+
 def cmd_sources_probe(args: argparse.Namespace) -> int:
     ctx = _load_ctx()
     ids = [args.source_id] if args.source_id else sorted(ctx.sources.manifests)
     problems = 0
     checked = 0
+    inventory = 0
     for sid in ids:
         m = ctx.sources.get(sid)
         if m is None:
             return _fail(f"unknown source {sid!r}")
+        if m.adapter.type == "arcgis_geocode":
+            # A real declared probe with a real implementation, and this
+            # command skipped it — `sources probe <locator>` reported
+            # "no probe", examined zero layers, and exited nonzero.
+            checked += 1
+            try:
+                h = asyncio.run(ctx.geocoder.health(m))
+            except CommonwealthError as err:
+                print(f"✗ {sid}: {err.code}: {err}")
+                problems += 1
+                continue
+            mark = "✓" if h["healthy"] else "✗"
+            print(f"{mark} {sid}: {h['address']!r} -> {h['candidates']} "
+                  f"candidate(s), best score {h['best_score']} "
+                  f"(min {h['min_score']})")
+            if not h["healthy"]:
+                problems += 1
+            continue
+        if m.adapter.type == "virginia_law":
+            # Also had a declared probe and no branch here. `doctor
+            # --live` ran it and `sources probe` did not, which is the
+            # same split the geocoder was in — one dispatch table grew
+            # and the other did not.
+            checked += 1
+            known = m.health.expect.get("known_section")
+            try:
+                section = asyncio.run(ctx.virginia_law.get_section(m, known))
+            except CommonwealthError as err:
+                print(f"✗ {sid}: {err.code}: {err}")
+                problems += 1
+                continue
+            mark = "✓" if section is not None else "✗"
+            print(f"{mark} {sid}: known section {known!r} "
+                  f"{'found' if section is not None else 'NOT FOUND'}")
+            if section is None:
+                problems += 1
+            continue
+        if m.adapter.type == INVENTORY_ADAPTER:
+            # Inventory has no endpoint by construction, so "not probed"
+            # is the correct outcome rather than a gap. Counted as
+            # handled: without this, `sources probe va-vdh` printed the
+            # right thing and then exited 1 on the zero-probes guard,
+            # which made a documented valid state look like a failure to
+            # anything reading the exit code.
+            inventory += 1
+            print(f"- {sid}: inventory only, nothing to probe")
+            continue
         if m.adapter.type != "arcgis":
             print(f"- {sid}: no probe for adapter {m.adapter.type!r}")
             continue
@@ -226,8 +355,14 @@ def cmd_sources_probe(args: argparse.Namespace) -> int:
                   f"(min {h['min_expected']})")
             if not h["healthy"]:
                 problems += 1
-    print(f"probed {checked} layer(s), {problems} problem(s)")
-    return 1 if problems or checked == 0 else 0
+    summary = f"probed {checked} layer(s), {problems} problem(s)"
+    if inventory:
+        summary += f", {inventory} inventory source(s) with nothing to probe"
+    print(summary)
+    # Zero probes is still a failure when nothing was examined at all —
+    # a glob that matched nothing must not read as a pass — but an
+    # inventory-only selection examined exactly what there was.
+    return 1 if problems or (checked == 0 and inventory == 0) else 0
 
 
 class _RecordingFetcher:
@@ -276,7 +411,7 @@ async def _sample_boundaries(adapter, m, params, ctx) -> dict:
     await boundary("towns", {"place_fips": f"{state_fips}81072"}, "vienna_town")
     await boundary("localities", {"fips": "51999"}, "no_such_fips")
 
-    from ..domains.registry import BOUNDARY_PROXIMITY_METERS
+    from ..domains.containment import BOUNDARY_PROXIMITY_METERS
 
     async def at_point(lon: float, lat: float, label: str) -> None:
         hits, nearby = {}, {}
@@ -303,10 +438,393 @@ async def _sample_boundaries(adapter, m, params, ctx) -> dict:
     # the boundary-straddle case design/jurisdiction-resolution.md § 3.7
     # names. Chosen from a real vertex of the city's own polygon.
     await at_point(-77.26917, 38.85378, "point_on_city_county_line")
-    # Virginia Beach is a real locality the pilot jurisdiction table does
-    # not carry, so this records the 'source knows it, we do not' path.
+    # Virginia Beach: recorded when the table was a 14-row seed and this
+    # was the "source knows it, we do not" path. The table now carries it,
+    # so the recording backs the opposite assertion plus a reduced-table
+    # test of the unmapped branch.
     await at_point(-75.9780, 36.8529, "point_untabled_locality")
+    # The two coordinates geo.resolve_location lands on after geocoding
+    # design/jurisdiction-resolution.md § 3's address traps. Copied from
+    # the composite locator's own recorded responses (the fixture at
+    # tests/fixtures/sources/va-vgin-composite-locator), because the
+    # containment step replays these exact floats.
+    await at_point(-77.15375027322, 38.770195471615,
+                   "point_geocoded_alexandria_mailing_address")
+    await at_point(-77.26436153964, 38.90067620715,
+                   "point_geocoded_vienna_address")
+    # The SECOND confident candidate for the same Vienna address. The
+    # locator's address-point and road-centerline elements both match it
+    # at score 100, ~40 m apart, and geo.resolve_location places every
+    # distinct confident coordinate to check they agree on a government
+    # before answering — so both need recording.
+    await at_point(-77.264736107181, 38.901130384578,
+                   "point_geocoded_vienna_address_second_candidate")
+    # The four distinct confident matches for one misspelled address
+    # ("Cntr Steet Viena VA"), which land in DIFFERENT governments —
+    # Falls Church City and three points around Vienna. geo.resolve_
+    # location places every one before answering, so it can tell a
+    # locator returning the same address twice from a locator returning
+    # two different places.
+    await at_point(-77.210242068451, 38.893300414287,
+                   "point_ambiguous_falls_church_22043")
+    await at_point(-77.2764070531, 38.911192903897,
+                   "point_ambiguous_vienna_22181")
+    await at_point(-77.261239794994, 38.898531734273,
+                   "point_ambiguous_vienna_22180")
+    await at_point(-77.270304330621, 38.905490629705,
+                   "point_ambiguous_vienna_22180")
     return out
+
+
+async def _sample_addresses(adapter, m, params, ctx) -> dict:
+    """Recording plan for the address-point layer. Records the postal-city
+    trap (a Fairfax County address whose mailing city is an independent
+    city it is not in) and the ZIP distinct queries that back
+    geo.resolve_location's ZIP path — one ZIP inside a single locality,
+    one spanning three, and one that matches nothing."""
+    del ctx
+    out: dict[str, Any] = {}
+    for layer in sorted(params.layers):
+        out[f"health:{layer}"] = await adapter.health(m, layer)
+
+    # Chosen live: a Fairfax County address whose postal city is
+    # Alexandria, an independent city it is not in.
+    trap = await adapter.query(
+        m, "addresses", where_equals={"fips": "51059"},
+        where_prefix={"full_address": "4501 CARLBY LN"})
+    out["postal_city_trap"] = {
+        "prefix": "4501 CARLBY LN", "fips": "51059",
+        "record_count": len(trap.records),
+        "po_name_vs_locality": [(r.canonical.get("po_name"),
+                                 r.canonical.get("locality"))
+                                for r in trap.records[:3]]}
+
+    # FIPS-scoped, like the tool's own point query: the 100 m buffer
+    # reaches across a locality line and an unscoped recording would not
+    # replay what geo.find_address actually sends.
+    point = await adapter.query(m, "addresses",
+                                where_equals={"fips": "51059"},
+                                geometry_point=(-77.26436153964, 38.90067620715),
+                                distance_meters=100.0)
+    out["by_point"] = {"record_count": len(point.records),
+                       "first": [r.canonical.get("full_address")
+                                 for r in point.records[:3]]}
+
+    for zip_code, label in ((24450, "zip_multi_locality"),
+                            (22180, "zip_single_locality"),
+                            (0, "zip_no_match")):
+        q = await adapter.query(m, "addresses",
+                                where_equals={"zip_code": zip_code},
+                                distinct_fields=["fips", "locality"])
+        out[label] = {"zip": zip_code,
+                      "localities": [(r.canonical.get("fips"),
+                                      r.canonical.get("locality"))
+                                     for r in q.records]}
+    return out
+
+
+async def _statewide_crosschecks(adapter, m, ctx) -> dict:
+    """A statewide source is queried ALONGSIDE every locality's own layer
+    (../../design/architecture.md decision 0005-C), so its recording has
+    to carry the queries those calls actually issue — the locality's PIN
+    scoped by the locality's FIPS, and the locality's sample point.
+
+    Derived from the other sources' committed fixtures rather than a
+    hand-typed list, so registering a fourth locality and re-recording
+    picks it up. Before this existed the exchanges accumulated in the
+    fixture by accident and a clean re-record silently dropped them.
+    """
+    out: dict[str, Any] = {"localities": [], "regressions": {}}
+    for other in sorted(ctx.sources.manifests.values(), key=lambda x: x.id):
+        if other.id == m.id or "parcel.lookup" not in other.capability_ids():
+            continue
+        fixture = FIXTURES_DIR / other.id / "recorded.json"
+        if not fixture.exists():
+            continue
+        summary = json.loads(fixture.read_text()).get("summary") or {}
+        pin = summary.get("sample_pin")
+        j = ctx.jurisdictions.get(other.jurisdiction)
+        fips = j.fips if j else None
+        if not (pin and fips):
+            continue
+        q = await adapter.query(m, "parcels",
+                                where_equals={"pin": str(pin), "fips": fips})
+        row = {"source": other.id, "pin": pin, "fips": fips,
+               "record_count": len(q.records)}
+        # The geometry variants too: find_zoning and find_buildings ask
+        # this layer for a parcel POLYGON by PIN, and both the hit and the
+        # miss have to replay.
+        for target, label in ((str(pin), "with_geometry"),
+                              ("NO SUCH PIN", "miss_with_geometry")):
+            gq = await adapter.query(
+                m, "parcels", where_equals={"pin": target, "fips": fips},
+                return_geometry=True)
+            row[label] = len(gq.records)
+        point = summary.get("sample_point")
+        if point:
+            pq = await adapter.query(
+                m, "parcels", geometry_point=(point[0], point[1]))
+            row["point_record_count"] = len(pq.records)
+        out["localities"].append(row)
+
+    fairfax = ctx.jurisdictions.get("va:fairfax-county")
+    roanoke = ctx.jurisdictions.get("va:roanoke-county")
+    fairfax_fixture = FIXTURES_DIR / "va-fairfax-parcels-zoning" / "recorded.json"
+    if fairfax and roanoke and fairfax_fixture.exists():
+        pin = json.loads(fairfax_fixture.read_text())["summary"]["sample_pin"]
+        # The PR #1 regression: a locality-scoped PIN queried against the
+        # statewide layer WITHOUT a FIPS filter returned another
+        # jurisdiction's parcel as a false hit. Both halves are recorded —
+        # the correct scoped miss for a jurisdiction that does not have
+        # that PIN, and a scoped miss for a PIN nobody has.
+        wrong = await adapter.query(
+            m, "parcels",
+            where_equals={"pin": str(pin), "fips": roanoke.fips})
+        out["regressions"]["pin_scoped_to_the_wrong_locality"] = {
+            "pin": pin, "fips": roanoke.fips, "jurisdiction": roanoke.id,
+            "record_count": len(wrong.records)}
+        miss = await adapter.query(
+            m, "parcels",
+            where_equals={"pin": "NO SUCH PIN", "fips": fairfax.fips})
+        out["regressions"]["scoped_no_match"] = {
+            "record_count": len(miss.records)}
+    return out
+
+
+async def _find_multi_polygon_pin(adapter, m) -> str | None:
+    """A PIN this layer publishes as more than one polygon, or None.
+
+    Asked of the layer with a grouped count rather than guessed, so the
+    recorded fixture is a real case in this publisher's data rather than
+    a shape somebody invented. The result is only used to choose what to
+    record; it is not itself part of the fixture the tests replay."""
+    import urllib.parse
+    import urllib.request
+
+    params = arcgis_mod.ArcGISParams.model_validate(
+        m.adapter.model_dump(exclude={"type"}))
+    layer = params.layers["parcels"]
+    base = layer.service_url or params.service_url
+    pin_field = layer.field_mapping["pin"]
+    query = urllib.parse.urlencode({
+        "where": "1=1", "outFields": pin_field, "returnGeometry": "false",
+        "groupByFieldsForStatistics": pin_field,
+        "outStatistics": json.dumps([{
+            "statisticType": "count", "onStatisticField": layer.id_field,
+            "outStatisticFieldName": "n"}]),
+        "having": f"COUNT({layer.id_field}) > 1",
+        "resultRecordCount": "1", "f": "json"})
+    url = f"{base}/{layer.layer_id}/query?{query}"
+    try:
+        with urllib.request.urlopen(url, timeout=120) as resp:
+            payload = json.loads(resp.read())
+    except Exception:  # noqa: BLE001 — a discovery aid, not a contract
+        return None
+    features = payload.get("features") or []
+    return str(features[0]["attributes"][pin_field]) if features else None
+
+
+async def _sample_environmental(adapter, m, params) -> dict:
+    """Recording plan for the environmental source. Records a point on the
+    James in Richmond (stations nearby) and a point well away from any
+    monitored water, because an empty environmental answer is the one
+    most likely to be misread and has to replay exactly."""
+    from ..domains.geo import ENVIRONMENTAL_RADIUS_M
+    out: dict[str, Any] = {}
+    for layer in sorted(params.layers):
+        out[f"health:{layer}"] = await adapter.health(m, layer)
+    for label, point in (("near_the_james_in_richmond", (-77.4360, 37.5407)),
+                         ("open_water_offshore", (-74.5000, 36.5000))):
+        q = await adapter.query(m, "stations", geometry_point=point,
+                                distance_meters=ENVIRONMENTAL_RADIUS_M)
+        out[label] = {
+            "point": list(point), "record_count": len(q.records),
+            "stations": [r.canonical.get("station_id")
+                         for r in q.records[:5]]}
+    return out
+
+
+async def _sample_roads(adapter, m, params, ctx) -> dict:
+    """Recording plan for a road source. Records the same street in the
+    same town from whichever of the two publishers this is, so the
+    disagreement between them replays as a comparison rather than as a
+    hand-written conflict."""
+    from ..domains.geo import (ROAD_RADIUS_M, _jurisdiction_filter,
+                               _jurisdiction_scope, _road_layer)
+    out: dict[str, Any] = {}
+    for layer in sorted(params.layers):
+        out[f"health:{layer}"] = await adapter.health(m, layer)
+
+    layer_key = _road_layer(ctx, m)
+    out["query_layer"] = layer_key
+    # Vienna: a town inside Fairfax County, and a street both publishers
+    # carry under names that do not match.
+    for label, stack in (("in_town", ["va:vienna-town", "va:fairfax-county",
+                                      "va"]),
+                         ("in_county", ["va:fairfax-county", "va"])):
+        scope = _jurisdiction_filter(ctx, m, layer_key, stack)
+        q = await adapter.query(m, layer_key,
+                                where_prefix={"street_name": "Center St"},
+                                where_any_of=scope)
+        out[f"by_name_{label}"] = {
+            "scoped": scope is not None,
+            "record_count": len(q.records),
+            "names": sorted({str(r.canonical.get("street_name"))
+                             for r in q.records})[:6]}
+
+    # A point query drops a NAME-keyed scope (the routes that span
+    # localities leave the name blank and are meant to be found this
+    # way), so the recording has to match that shape rather than the
+    # scoped one.
+    scope = _jurisdiction_scope(ctx, m, layer_key,
+                                ["va:vienna-town", "va:fairfax-county", "va"])
+    point_scope = None if scope.mode == "jurisdiction_names" else scope.groups
+    pq = await adapter.query(m, layer_key,
+                             geometry_point=(-77.2653, 38.9012),
+                             distance_meters=ROAD_RADIUS_M,
+                             where_any_of=point_scope)
+    out["near_point"] = {"record_count": len(pq.records),
+                         "names": sorted({str(r.canonical.get("street_name"))
+                                          for r in pq.records})[:6]}
+    miss = await adapter.query(
+        m, layer_key,
+        where_prefix={"street_name": "ZZZZ NO SUCH ROAD"},
+        where_any_of=_jurisdiction_filter(ctx, m, layer_key,
+                                          ["va:fairfax-county", "va"]))
+    out["no_match"] = {"record_count": len(miss.records)}
+    return out
+
+
+async def _sample_buildings(adapter, m, params, ctx) -> dict:
+    """Recording plan for building footprints. Records a residential point
+    (a handful of neighbours), a dense downtown point that the service
+    truncates, and a parcel-geometry intersection — the composition with
+    geo.find_parcel that makes the tool worth having."""
+    from ..domains.geo import BUILDING_RADIUS_M
+    out: dict[str, Any] = {}
+    for layer in sorted(params.layers):
+        out[f"health:{layer}"] = await adapter.health(m, layer)
+
+    quiet = await adapter.query(m, "buildings",
+                                where_equals={"fips": "51059"},
+                                geometry_point=(-77.26436153964,
+                                                38.90067620715),
+                                distance_meters=BUILDING_RADIUS_M)
+    out["residential_point"] = {"record_count": len(quiet.records),
+                                "truncated": quiet.exceeded_transfer_limit}
+
+    # Downtown Richmond at 800 m: 998 footprints live, which is past
+    # both the 25-record inline cap and the 5-page walk budget, so the
+    # truncation path is proven against real density rather than a
+    # synthesized flag.
+    dense = await adapter.query(m, "buildings",
+                                where_equals={"fips": "51760"},
+                                geometry_point=(-77.4360, 37.5407),
+                                distance_meters=800.0)
+    out["dense_urban_point"] = {"record_count": len(dense.records),
+                                "truncated": dense.exceeded_transfer_limit}
+
+    # A Richmond parcel, then the buildings on it.
+    parcel_m = ctx.sources.get("va-richmond-city-parcels-zoning")
+    parcel_adapter = arcgis_mod.ArcGISAdapter(
+        fetcher=_RecordingFetcher(HttpFetcher(policy=egress_policy_for(
+            parcel_m, arcgis_mod.ArcGISParams.model_validate(
+                parcel_m.adapter.model_dump(exclude={"type"})).service_url))),
+        cache=arcgis_mod.TTLCache())
+    sample = await parcel_adapter.query(parcel_m, "parcels", sample_rows=1,
+                                        return_geometry=True)
+    if sample.records:
+        pin = sample.records[0].canonical.get("pin")
+        geometry = dict(sample.records[0].geometry or {})
+        geometry.setdefault("spatialReference", {"wkid": 4326})
+        on_parcel = await adapter.query(m, "buildings",
+                                        intersect_geometry=geometry)
+        out["on_parcel"] = {"pin": pin,
+                            "record_count": len(on_parcel.records)}
+    return out
+
+
+async def _sample_landmarks(adapter, m, params, ctx) -> dict:
+    """Recording plan for landmarks. Records the three query shapes plus a
+    record whose LastCheck is null, because "nobody has re-checked this"
+    has to replay as faithfully as a date."""
+    del ctx
+    from ..domains.geo import LANDMARK_RADIUS_M
+    out: dict[str, Any] = {}
+    for layer in sorted(params.layers):
+        out[f"health:{layer}"] = await adapter.health(m, layer)
+
+    near = await adapter.query(m, "landmarks",
+                               where_equals={"fips": "51059"},
+                               geometry_point=(-77.2653, 38.9012),
+                               distance_meters=LANDMARK_RADIUS_M)
+    out["near_vienna"] = {
+        "record_count": len(near.records),
+        "names": [r.canonical.get("name") for r in near.records[:5]],
+        "sources": sorted({str(r.canonical.get("source_organization"))
+                           for r in near.records}),
+        "null_last_checked": sum(1 for r in near.records
+                                 if not r.canonical.get("last_checked"))}
+
+    by_name = await adapter.query(m, "landmarks",
+                                  where_equals={"fips": "51059"},
+                                  where_prefix={"name": "Vienna"})
+    out["by_name_prefix"] = {"prefix": "Vienna",
+                             "record_count": len(by_name.records)}
+
+    by_type = await adapter.query(
+        m, "landmarks",
+        where_equals={"fips": "51059", "place_type": "Public Library Points"})
+    out["by_place_type"] = {"place_type": "Public Library Points",
+                            "record_count": len(by_type.records)}
+    return out
+
+
+def _sample_geocoder(m, ctx) -> int:
+    """A locator records differently: no layers, no field mappings, one
+    operation. The recorded set is § 3's postal-city traps, plus a
+    deliberate no-match, because 'the locator found nothing' has to replay
+    as faithfully as a hit."""
+    del ctx
+    from ..adapters import arcgis_geocode as geo_mod
+    p = geo_mod.ArcGISGeocodeParams.model_validate(
+        m.adapter.model_dump(exclude={"type"}))
+    recorder = _RecordingFetcher(
+        HttpFetcher(policy=egress_policy_for(m, p.service_url)))
+    adapter = geo_mod.ArcGISGeocodeAdapter(fetcher=recorder,
+                                           cache=arcgis_mod.TTLCache())
+
+    async def run() -> dict:
+        out: dict[str, Any] = {"health": await adapter.health(m)}
+        for label, text in (
+                # § 3 case 1: a mailing address whose postal city is an
+                # independent city the address is not in.
+                ("postal_city_trap", "6800 Beulah St, Alexandria, VA 22310"),
+                # § 3 case 4: a town address, so the town AND its county
+                # both have to come back.
+                ("town_address", "127 Center St S, Vienna, VA 22180"),
+                # A bare ZIP, recorded to prove the locator answers it with
+                # ONE centroid — which is why the ZIP path does not use it.
+                ("bare_zip", "24450"),
+                # Four matches, all at or above the threshold, in
+                # DIFFERENT governments — Falls Church City and two
+                # places in Vienna. The case where taking the locator's
+                # first result picks a government the caller never chose.
+                ("ambiguous_across_governments", "Cntr Steet Viena VA"),
+                ("no_match", "zzzz nowhere at all qqq")):
+            result = await adapter.geocode(m, text)
+            out[label] = {
+                "query": text,
+                "candidates": [(c.address, round(c.score, 2), c.matched_by)
+                               for c in result.candidates],
+                "confident": len(result.confident())}
+        return out
+
+    try:
+        summary = asyncio.run(run())
+    except CommonwealthError as err:
+        return _fail(f"{err.code}: {err}")
+    return _write_fixture(m, recorder, summary)
 
 
 def cmd_sources_sample(args: argparse.Namespace) -> int:
@@ -314,15 +832,52 @@ def cmd_sources_sample(args: argparse.Namespace) -> int:
     m = ctx.sources.get(args.source_id)
     if m is None:
         return _fail(f"unknown source {args.source_id!r}")
+    if m.adapter.type == "arcgis_geocode":
+        return _sample_geocoder(m, ctx)
     if m.adapter.type != "arcgis":
-        return _fail(f"sample supports arcgis only for now, not "
-                     f"{m.adapter.type!r}")
+        return _fail(f"sample supports arcgis and arcgis_geocode for now, "
+                     f"not {m.adapter.type!r}")
     params = arcgis_mod.ArcGISParams.model_validate(
         m.adapter.model_dump(exclude={"type"}))
     recorder = _RecordingFetcher(
         HttpFetcher(policy=egress_policy_for(m, params.service_url)))
     adapter = arcgis_mod.ArcGISAdapter(fetcher=recorder,
                                        cache=arcgis_mod.TTLCache())
+
+    if "environmental_site.lookup" in m.capability_ids():
+        try:
+            summary = asyncio.run(_sample_environmental(adapter, m, params))
+        except CommonwealthError as err:
+            return _fail(f"{err.code}: {err}")
+        return _write_fixture(m, recorder, summary)
+
+    if "road.lookup" in m.capability_ids():
+        try:
+            summary = asyncio.run(_sample_roads(adapter, m, params, ctx))
+        except CommonwealthError as err:
+            return _fail(f"{err.code}: {err}")
+        return _write_fixture(m, recorder, summary)
+
+    if "building.lookup" in m.capability_ids():
+        try:
+            summary = asyncio.run(_sample_buildings(adapter, m, params, ctx))
+        except CommonwealthError as err:
+            return _fail(f"{err.code}: {err}")
+        return _write_fixture(m, recorder, summary)
+
+    if "landmark.lookup" in m.capability_ids():
+        try:
+            summary = asyncio.run(_sample_landmarks(adapter, m, params, ctx))
+        except CommonwealthError as err:
+            return _fail(f"{err.code}: {err}")
+        return _write_fixture(m, recorder, summary)
+
+    if "address.lookup" in m.capability_ids():
+        try:
+            summary = asyncio.run(_sample_addresses(adapter, m, params, ctx))
+        except CommonwealthError as err:
+            return _fail(f"{err.code}: {err}")
+        return _write_fixture(m, recorder, summary)
 
     if "boundary.lookup" in m.capability_ids():
         try:
@@ -349,6 +904,12 @@ def cmd_sources_sample(args: argparse.Namespace) -> int:
                                        where_equals={"pin": "NO SUCH PIN"})
         out["no_match_pin"] = "NO SUCH PIN"
         out["no_match_count"] = len(no_match.records)
+        # The same miss with geometry requested. Every tool that needs a
+        # parcel POLYGON by PIN (find_zoning, find_buildings) issues this
+        # shape, and its empty response has to replay too.
+        await adapter.query(m, "parcels",
+                            where_equals={"pin": "NO SUCH PIN"},
+                            return_geometry=True)
         pq = await adapter.query(m, "parcels", where_equals={"pin": str(pin)},
                                  return_geometry=True)
         if "zoning" not in params.layers:
@@ -358,17 +919,48 @@ def cmd_sources_sample(args: argparse.Namespace) -> int:
         zq = await adapter.query(m, "zoning", intersect_geometry=geometry)
         out["zoning_districts"] = sorted(
             {r.canonical.get("district") for r in zq.records})
+        # A PIN matching SEVERAL polygons, where one exists. This is the
+        # case find_zoning used to answer from the first polygon alone
+        # (GitHub issue #17) and the case the plural evidence_refs array
+        # exists for. Discovered with a grouped count rather than guessed:
+        # the query below asks the layer which PINs have more than one row.
+        multi = await _find_multi_polygon_pin(adapter, m)
+        if multi:
+            mq = await adapter.query(m, "parcels",
+                                     where_equals={"pin": multi},
+                                     return_geometry=True)
+            districts = set()
+            for parcel in mq.records[:5]:
+                pg = dict(parcel.geometry or {})
+                pg.setdefault("spatialReference", {"wkid": 4326})
+                zq2 = await adapter.query(m, "zoning",
+                                          intersect_geometry=pg)
+                districts |= {r.canonical.get("district")
+                              for r in zq2.records}
+            out["multi_polygon_pin"] = {
+                "pin": multi, "polygon_count": len(mq.records),
+                "districts": sorted(d for d in districts if d)}
         ring = (pq.records[0].geometry or {}).get("rings", [[[None, None]]])
         vx = ring[0][0]
         if vx[0] is not None:
+            # Written into the summary so the statewide source's own
+            # recording can issue the same point query a real dual-source
+            # call would.
+            out["sample_point"] = [float(vx[0]), float(vx[1])]
             await adapter.query(m, "zoning",
                                 geometry_point=(float(vx[0]), float(vx[1])))
             await adapter.query(m, "parcels",
                                 geometry_point=(float(vx[0]), float(vx[1])))
         return out
 
+    async def run_with_crosschecks() -> dict:
+        out = await run()
+        if m.jurisdiction == "va":
+            out["cross_source"] = await _statewide_crosschecks(adapter, m, ctx)
+        return out
+
     try:
-        summary = asyncio.run(run())
+        summary = asyncio.run(run_with_crosschecks())
     except CommonwealthError as err:
         return _fail(f"{err.code}: {err}")
     return _write_fixture(m, recorder, summary)
@@ -499,6 +1091,11 @@ def main() -> int:
     sp = ssub.add_parser("probe")
     sp.add_argument("source_id", nargs="?")
     sp.set_defaults(fn=cmd_sources_probe)
+    sst = ssub.add_parser("stats", help="registry coverage debt: the "
+                                        "proposed/active split and what "
+                                        "no active source answers")
+    sst.add_argument("--json", action="store_true")
+    sst.set_defaults(fn=cmd_sources_stats)
     ss = ssub.add_parser("sample")
     ss.add_argument("source_id")
     ss.set_defaults(fn=cmd_sources_sample)

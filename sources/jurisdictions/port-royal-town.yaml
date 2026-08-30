@@ -1,0 +1,6 @@
+id: va:port-royal-town
+name: Port Royal (town)
+kind: town
+place_fips: "63928"
+parent: va:caroline-county
+aliases: ["Town of Port Royal"]

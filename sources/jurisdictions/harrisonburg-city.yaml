@@ -1,0 +1,6 @@
+id: va:harrisonburg-city
+name: Harrisonburg City
+kind: independent-city
+fips: "51660"
+parent: va
+aliases: ["City of Harrisonburg"]

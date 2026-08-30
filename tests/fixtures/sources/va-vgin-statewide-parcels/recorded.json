@@ -1,1186 +1,1765 @@
 {
-  "source_id": "va-vgin-statewide-parcels",
-  "recorded_at": "2026-08-28T14:48:45Z",
-  "rights": {
-    "publisher": "Virginia Geographic Information Network (VGIN), part of the Virginia Department of Emergency Management",
-    "terms_url": "https://vgin.vdem.virginia.gov/datasets/virginia-parcels/about",
-    "note": "Recorded government-published responses; third-party content excluded from the repo's CC0 grant (DECISIONS.md 0011)."
+ "source_id": "va-vgin-statewide-parcels",
+ "recorded_at": "2026-08-30T03:39:11Z",
+ "rights": {
+  "publisher": "Virginia Geographic Information Network (VGIN), part of the Virginia Department of Emergency Management",
+  "terms_url": "https://vgin.vdem.virginia.gov/datasets/virginia-parcels/about",
+  "note": "Recorded government-published responses; third-party content excluded from the repo's CC0 grant (../../../design/architecture.md decision 0011)."
+ },
+ "summary": {
+  "health:parcels": {
+   "layer": "parcels",
+   "feature_count": 4170691,
+   "min_expected": 3000000,
+   "healthy": true
   },
-  "summary": {
-    "health:parcels": {
-      "layer": "parcels",
-      "feature_count": 4170691,
-      "min_expected": 3000000,
-      "healthy": true
-    },
-    "sample_pin": "740-783-1825",
-    "no_match_pin": "NO SUCH PIN",
-    "no_match_count": 0
-  },
-  "exchanges": [
+  "sample_pin": "740-783-1825",
+  "no_match_pin": "NO SUCH PIN",
+  "no_match_count": 0,
+  "cross_source": {
+   "localities": [
     {
-      "url": "https://vginmaps.vdem.virginia.gov/arcgis/rest/services/VA_Base_Layers/VA_Parcels/FeatureServer/0/query",
-      "params": {
-        "f": "json",
-        "where": "1=1",
-        "returnCountOnly": "true"
-      },
-      "response": {
-        "count": 4170691
-      }
+     "source": "va-charles-city-county-parcels",
+     "pin": "7-4-B-2",
+     "fips": "51036",
+     "record_count": 1,
+     "with_geometry": 1,
+     "miss_with_geometry": 0
     },
     {
-      "url": "https://vginmaps.vdem.virginia.gov/arcgis/rest/services/VA_Base_Layers/VA_Parcels/FeatureServer/0/query",
-      "params": {
-        "f": "json",
-        "outFields": "FIPS,LOCALITY,OBJECTID,PTM_ID",
-        "resultRecordCount": "2",
-        "returnGeometry": "true",
-        "where": "1=1",
-        "outSR": "4326"
-      },
-      "response": {
-        "objectIdFieldName": "OBJECTID",
-        "globalIdFieldName": "",
-        "geometryType": "esriGeometryPolygon",
-        "spatialReference": {
-          "wkid": 4326,
-          "latestWkid": 4326
-        },
-        "fields": [
-          {
-            "name": "FIPS",
-            "alias": "FIPS",
-            "type": "esriFieldTypeString",
-            "length": 8
-          },
-          {
-            "name": "LOCALITY",
-            "alias": "LOCALITY",
-            "type": "esriFieldTypeString",
-            "length": 64
-          },
-          {
-            "name": "OBJECTID",
-            "alias": "OBJECTID",
-            "type": "esriFieldTypeOID"
-          },
-          {
-            "name": "PTM_ID",
-            "alias": "Parcel Tax Map ID",
-            "type": "esriFieldTypeString",
-            "length": 64
-          }
-        ],
-        "features": [
-          {
-            "attributes": {
-              "FIPS": "51087",
-              "LOCALITY": "Henrico County",
-              "OBJECTID": 1,
-              "PTM_ID": "740-783-1825"
-            },
-            "geometry": {
-              "rings": [
-                [
-                  [
-                    -77.61032029551865,
-                    37.70993182863219
-                  ],
-                  [
-                    -77.61033414664199,
-                    37.709929872149495
-                  ],
-                  [
-                    -77.61034799776536,
-                    37.70992791637742
-                  ],
-                  [
-                    -77.61036186505841,
-                    37.709924587585085
-                  ],
-                  [
-                    -77.61037574043628,
-                    37.70992057157166
-                  ],
-                  [
-                    -77.61038616808011,
-                    37.70991584275294
-                  ],
-                  [
-                    -77.61040005962766,
-                    37.70991045513993
-                  ],
-                  [
-                    -77.61041050254283,
-                    37.709904354010554
-                  ],
-                  [
-                    -77.610420962526,
-                    37.709896879149255
-                  ],
-                  [
-                    -77.61043142071254,
-                    37.70988940357652
-                  ],
-                  [
-                    -77.61044188967887,
-                    37.70988124362452
-                  ],
-                  [
-                    -77.6104489091145,
-                    37.709872370155345
-                  ],
-                  [
-                    -77.61045592675349,
-                    37.70986349668516
-                  ],
-                  [
-                    -77.6104629623588,
-                    37.709853250192324
-                  ],
-                  [
-                    -77.6104665412469,
-                    37.7098429781138
-                  ],
-                  [
-                    -77.61047357685221,
-                    37.709832732328756
-                  ],
-                  [
-                    -77.61047369902307,
-                    37.70982243395248
-                  ],
-                  [
-                    -77.61047731833537,
-                    37.709808729313664
-                  ],
-                  [
-                    -77.61102997537287,
-                    37.70984719454139
-                  ],
-                  [
-                    -77.61090478525657,
-                    37.71020123004709
-                  ],
-                  [
-                    -77.61080171884907,
-                    37.71014690425182
-                  ],
-                  [
-                    -77.61072260691694,
-                    37.71011335560328
-                  ],
-                  [
-                    -77.61061593018032,
-                    37.710072047827325
-                  ],
-                  [
-                    -77.61054361041008,
-                    37.710048848659596
-                  ],
-                  [
-                    -77.61045058177756,
-                    37.71002274852118
-                  ],
-                  [
-                    -77.61037472174677,
-                    37.710006388847965
-                  ],
-                  [
-                    -77.61031950589951,
-                    37.70999842221171
-                  ],
-                  [
-                    -77.61032029551865,
-                    37.70993182863219
-                  ]
-                ]
-              ]
-            }
-          },
-          {
-            "attributes": {
-              "FIPS": "51087",
-              "LOCALITY": "Henrico County",
-              "OBJECTID": 2,
-              "PTM_ID": "740-783-3921"
-            },
-            "geometry": {
-              "rings": [
-                [
-                  [
-                    -77.60961101990627,
-                    37.70969101102398
-                  ],
-                  [
-                    -77.60961874092615,
-                    37.70962309673236
-                  ],
-                  [
-                    -77.61016118861046,
-                    37.709647757893286
-                  ],
-                  [
-                    -77.61014186045881,
-                    37.709819949436095
-                  ],
-                  [
-                    -77.61014176254244,
-                    37.70982818756898
-                  ],
-                  [
-                    -77.61014511325845,
-                    37.7098371377962
-                  ],
-                  [
-                    -77.61014501534208,
-                    37.70984537663786
-                  ],
-                  [
-                    -77.61014838222776,
-                    37.70985295455203
-                  ],
-                  [
-                    -77.61015520583068,
-                    37.70986055804974
-                  ],
-                  [
-                    -77.61016200517906,
-                    37.70987022178925
-                  ],
-                  [
-                    -77.6101688135106,
-                    37.70987919830628
-                  ],
-                  [
-                    -77.61017567753768,
-                    37.70988336995942
-                  ],
-                  [
-                    -77.61018249305575,
-                    37.70989165996438
-                  ],
-                  [
-                    -77.61019277337586,
-                    37.70989928975301
-                  ],
-                  [
-                    -77.61020307076396,
-                    37.70990554652021
-                  ],
-                  [
-                    -77.61021682307263,
-                    37.7099118288711
-                  ],
-                  [
-                    -77.61022712764725,
-                    37.709917399127065
-                  ],
-                  [
-                    -77.61024090600708,
-                    37.70992162194648
-                  ],
-                  [
-                    -77.61025468526523,
-                    37.70992584476565
-                  ],
-                  [
-                    -77.61026502128088,
-                    37.70992866826947
-                  ],
-                  [
-                    -77.61027882479355,
-                    37.709930830847355
-                  ],
-                  [
-                    -77.61029264178094,
-                    37.70993162111567
-                  ],
-                  [
-                    -77.61030646056493,
-                    37.70993241138398
-                  ],
-                  [
-                    -77.61032029551865,
-                    37.70993182863219
-                  ],
-                  [
-                    -77.61031950589951,
-                    37.70999842221171
-                  ],
-                  [
-                    -77.61029879074906,
-                    37.70999620775674
-                  ],
-                  [
-                    -77.61025046228508,
-                    37.709990353237735
-                  ],
-                  [
-                    -77.61019527698055,
-                    37.70997964127196
-                  ],
-                  [
-                    -77.61015734382106,
-                    37.70997180397525
-                  ],
-                  [
-                    -77.61010909710376,
-                    37.70995908364573
-                  ],
-                  [
-                    -77.61007119628361,
-                    37.7099485010179
-                  ],
-                  [
-                    -77.61001955842613,
-                    37.70993026301962
-                  ],
-                  [
-                    -77.60995760701088,
-                    37.70990714127087
-                  ],
-                  [
-                    -77.6098957544103,
-                    37.709875779966865
-                  ],
-                  [
-                    -77.60983395121708,
-                    37.70984030100552
-                  ],
-                  [
-                    -77.60975841727472,
-                    37.70979647942252
-                  ],
-                  [
-                    -77.60968300729988,
-                    37.7097423601369
-                  ],
-                  [
-                    -77.60961101990627,
-                    37.70969101102398
-                  ]
-                ]
-              ]
-            }
-          }
-        ],
-        "exceededTransferLimit": true
-      }
+     "source": "va-fairfax-parcels-zoning",
+     "pin": "0102 14  0231",
+     "fips": "51059",
+     "record_count": 1,
+     "with_geometry": 1,
+     "miss_with_geometry": 0,
+     "point_record_count": 4
     },
     {
-      "url": "https://vginmaps.vdem.virginia.gov/arcgis/rest/services/VA_Base_Layers/VA_Parcels/FeatureServer/0",
-      "params": {
-        "f": "json"
-      },
-      "response": {
-        "currentVersion": 11.3,
-        "cimVersion": "3.3.0",
-        "id": 0,
-        "name": "Virginia Parcels",
-        "type": "Feature Layer",
-        "parentLayer": null,
-        "defaultVisibility": true,
-        "minScale": 0,
-        "maxScale": 0,
-        "canScaleSymbols": true,
-        "referenceScale": 1200,
-        "geometryType": "esriGeometryPolygon",
-        "description": "These parcel boundaries represent legal descriptions of property ownership, as recorded in various public documents in the local jurisdiction. The boundaries are \nintended for cartographic use and spatial analysis only, and not for use as legal descriptions or property surveys. Tax parcel boundaries have not been edge-matched across municipal boundaries.",
-        "copyrightText": "Virginia Geographic Information Network (VGIN)",
-        "editFieldsInfo": null,
-        "ownershipBasedAccessControlForFeatures": null,
-        "syncCanReturnChanges": false,
-        "relationships": [],
-        "isDataVersioned": false,
-        "isDataArchived": false,
-        "infoInEstimates": [
-          "extent",
-          "count"
-        ],
-        "isDataBranchVersioned": false,
-        "isDataReplicaTracked": false,
-        "isCoGoEnabled": false,
-        "supportsRollbackOnFailureParameter": true,
-        "archivingInfo": {
-          "supportsQueryWithHistoricMoment": false,
-          "startArchivingMoment": -1
-        },
-        "supportsStatistics": true,
-        "supportsExceedsLimitStatistics": true,
-        "supportsAdvancedQueries": true,
-        "supportsValidateSQL": true,
-        "supportsCoordinatesQuantization": true,
-        "supportsQuantizationEditMode": true,
-        "supportsCalculate": true,
-        "supportsASyncCalculate": true,
-        "supportsDatumTransformation": true,
-        "advancedQueryCapabilities": {
-          "supportsPagination": true,
-          "supportsTrueCurve": true,
-          "supportsQueryWithDistance": true,
-          "supportsReturningQueryExtent": true,
-          "supportsStatistics": true,
-          "supportsPercentileStatistics": true,
-          "supportsHavingClause": true,
-          "supportsOrderBy": true,
-          "supportsDistinct": true,
-          "supportsCountDistinct": true,
-          "supportsAdvancedQueryRelated": true,
-          "supportsQueryRelatedPagination": true,
-          "supportsCurrentUserQueries": true,
-          "supportsQueryWithResultType": true,
-          "supportsReturningGeometryCentroid": true,
-          "supportsSqlExpression": true,
-          "supportsQueryWithDatumTransformation": true,
-          "supportsLod": false,
-          "supportsQueryWithLodSR": false,
-          "supportsQueryAnalytic": true
-        },
-        "advancedQueryAnalyticCapabilities": {
-          "supportsLinearRegression": true,
-          "supportsAsync": true,
-          "supportsPercentileAnalytic": true
-        },
-        "advancedEditingCapabilities": {
-          "supportedSqlFormatsInCalculate": [
-            "standard"
-          ],
-          "supportsAsyncApplyEdits": true,
-          "supportsApplyEditsbyUploadID": true,
-          "supportedApplyEditsUploadIDFormats": "JSON"
-        },
-        "hasGeometryProperties": true,
-        "geometryProperties": {
-          "shapeAreaFieldName": "Shape__Area",
-          "shapeLengthFieldName": "Shape__Length",
-          "units": "esriMeters"
-        },
-        "hasMetadata": true,
-        "extent": {
-          "xmin": -9314704.8308,
-          "ymin": 4374818.263899997,
-          "xmax": -8375617.762700001,
-          "ymax": 4788360.128600001,
-          "spatialReference": {
-            "wkid": 102100,
-            "latestWkid": 3857,
-            "xyTolerance": 0.001,
-            "zTolerance": 0.001,
-            "mTolerance": 0.001,
-            "falseX": -20037700,
-            "falseY": -30241100,
-            "xyUnits": 10000,
-            "falseZ": -100000,
-            "zUnits": 10000,
-            "falseM": -100000,
-            "mUnits": 10000
-          }
-        },
-        "sourceSpatialReference": {
-          "wkid": 102100,
-          "latestWkid": 3857,
-          "xyTolerance": 0.001,
-          "zTolerance": 0.001,
-          "mTolerance": 0.001,
-          "falseX": -20037700,
-          "falseY": -30241100,
-          "xyUnits": 10000,
-          "falseZ": 0,
-          "zUnits": 1,
-          "falseM": 0,
-          "mUnits": 1
-        },
-        "drawingInfo": {
-          "renderer": {
-            "type": "simple",
-            "symbol": {
-              "type": "esriSFS",
-              "style": "esriSFSSolid",
-              "color": [
-                0,
-                0,
-                0,
-                0
-              ],
-              "outline": {
-                "type": "esriSLS",
-                "style": "esriSLSSolid",
-                "color": [
-                  204,
-                  204,
-                  204,
-                  255
-                ],
-                "width": 0.4
-              }
-            }
-          },
-          "scaleSymbols": true,
-          "transparency": 0,
-          "labelingInfo": null
-        },
-        "hasM": false,
-        "hasZ": false,
-        "allowGeometryUpdates": true,
-        "allowTrueCurvesUpdates": true,
-        "onlyAllowTrueCurveUpdatesByTrueCurveClients": true,
-        "hasAttachments": false,
-        "supportsApplyEditsWithGlobalIds": false,
-        "htmlPopupType": "esriServerHTMLPopupTypeAsHTMLText",
-        "objectIdField": "OBJECTID",
-        "globalIdField": "",
-        "displayField": "PARCELID",
-        "typeIdField": "",
-        "subtypeField": "",
-        "fields": [
-          {
-            "name": "Shape__Area",
-            "type": "esriFieldTypeDouble",
-            "alias": "SHAPE.STArea()",
-            "domain": null,
-            "editable": false,
-            "nullable": true,
-            "defaultValue": null,
-            "modelName": "SHAPE.STArea()",
-            "required": true
-          },
-          {
-            "name": "Shape__Length",
-            "type": "esriFieldTypeDouble",
-            "alias": "SHAPE.STLength()",
-            "domain": null,
-            "editable": false,
-            "nullable": true,
-            "defaultValue": null,
-            "modelName": "SHAPE.STLength()",
-            "required": true
-          },
-          {
-            "name": "OBJECTID",
-            "type": "esriFieldTypeOID",
-            "alias": "OBJECTID",
-            "domain": null,
-            "editable": false,
-            "nullable": false,
-            "defaultValue": null,
-            "modelName": "OBJECTID"
-          },
-          {
-            "name": "VGIN_QPID",
-            "type": "esriFieldTypeDouble",
-            "alias": "VGIN_QPID",
-            "domain": null,
-            "editable": true,
-            "nullable": true,
-            "defaultValue": null,
-            "modelName": "VGIN_QPID"
-          },
-          {
-            "name": "FIPS",
-            "type": "esriFieldTypeString",
-            "alias": "FIPS",
-            "domain": null,
-            "editable": true,
-            "nullable": true,
-            "length": 8,
-            "defaultValue": null,
-            "modelName": "FIPS"
-          },
-          {
-            "name": "LOCALITY",
-            "type": "esriFieldTypeString",
-            "alias": "LOCALITY",
-            "domain": null,
-            "editable": true,
-            "nullable": true,
-            "length": 64,
-            "defaultValue": null,
-            "modelName": "LOCALITY"
-          },
-          {
-            "name": "PARCELID",
-            "type": "esriFieldTypeString",
-            "alias": "Parcel ID",
-            "domain": null,
-            "editable": true,
-            "nullable": true,
-            "length": 64,
-            "defaultValue": null,
-            "modelName": "PARCELID"
-          },
-          {
-            "name": "PTM_ID",
-            "type": "esriFieldTypeString",
-            "alias": "Parcel Tax Map ID",
-            "domain": null,
-            "editable": true,
-            "nullable": true,
-            "length": 64,
-            "defaultValue": null,
-            "modelName": "PTM_ID"
-          },
-          {
-            "name": "LASTUPDATE",
-            "type": "esriFieldTypeDate",
-            "alias": "LASTUPDATE",
-            "domain": null,
-            "editable": true,
-            "nullable": true,
-            "length": 8,
-            "defaultValue": null,
-            "modelName": "LASTUPDATE"
-          }
-        ],
-        "geometryField": {
-          "name": "SHAPE",
-          "type": "esriFieldTypeGeometry",
-          "alias": "SHAPE",
-          "domain": null,
-          "editable": true,
-          "nullable": true,
-          "defaultValue": null,
-          "modelName": "SHAPE"
-        },
-        "indexes": [
-          {
-            "name": "R1757_pk",
-            "fields": "OBJECTID",
-            "isAscending": true,
-            "isUnique": true,
-            "description": ""
-          },
-          {
-            "name": "S1639_idx",
-            "fields": "SHAPE",
-            "isAscending": true,
-            "isUnique": true,
-            "description": ""
-          }
-        ],
-        "datesInUnknownTimezone": false,
-        "dateFieldsTimeReference": {
-          "timeZone": "UTC",
-          "respectsDaylightSaving": false
-        },
-        "preferredTimeReference": null,
-        "types": [],
-        "templates": [
-          {
-            "name": "Virginia Parcels",
-            "description": "",
-            "prototype": {
-              "attributes": {
-                "PTM_ID": null,
-                "PARCELID": null,
-                "LOCALITY": null,
-                "LASTUPDATE": null,
-                "VGIN_QPID": null,
-                "FIPS": null
-              }
-            },
-            "drawingTool": "esriFeatureEditToolPolygon"
-          }
-        ],
-        "maxRecordCount": 2000,
-        "supportedQueryFormats": "JSON, geoJSON, PBF",
-        "supportedExportFormats": "sqlite,filegdb,shapefile,csv,geojson",
-        "capabilities": "Query",
-        "useStandardizedQueries": true,
-        "bigIntegerRestrictedTo53Bits": true,
-        "supportedSpatialRelationships": [
-          "esriSpatialRelIntersects",
-          "esriSpatialRelContains",
-          "esriSpatialRelCrosses",
-          "esriSpatialRelEnvelopeIntersects",
-          "esriSpatialRelIndexIntersects",
-          "esriSpatialRelOverlaps",
-          "esriSpatialRelTouches",
-          "esriSpatialRelWithin",
-          "esriSpatialRelRelation"
-        ],
-        "standardMaxRecordCount": 4000,
-        "tileMaxRecordCount": 4000,
-        "standardMaxRecordCountNoGeometry": 32000,
-        "maxRecordCountFactor": 1
-      }
-    },
-    {
-      "url": "https://vginmaps.vdem.virginia.gov/arcgis/rest/services/VA_Base_Layers/VA_Parcels/FeatureServer/0/query",
-      "params": {
-        "f": "json",
-        "outFields": "FIPS,LOCALITY,OBJECTID,PTM_ID",
-        "resultRecordCount": "50",
-        "returnGeometry": "false",
-        "where": "PTM_ID = '740-783-1825'"
-      },
-      "response": {
-        "objectIdFieldName": "OBJECTID",
-        "globalIdFieldName": "",
-        "geometryType": "esriGeometryPolygon",
-        "spatialReference": {
-          "wkid": 102100,
-          "latestWkid": 3857
-        },
-        "fields": [
-          {
-            "name": "FIPS",
-            "alias": "FIPS",
-            "type": "esriFieldTypeString",
-            "length": 8
-          },
-          {
-            "name": "LOCALITY",
-            "alias": "LOCALITY",
-            "type": "esriFieldTypeString",
-            "length": 64
-          },
-          {
-            "name": "OBJECTID",
-            "alias": "OBJECTID",
-            "type": "esriFieldTypeOID"
-          },
-          {
-            "name": "PTM_ID",
-            "alias": "Parcel Tax Map ID",
-            "type": "esriFieldTypeString",
-            "length": 64
-          }
-        ],
-        "features": [
-          {
-            "attributes": {
-              "FIPS": "51087",
-              "LOCALITY": "Henrico County",
-              "OBJECTID": 1,
-              "PTM_ID": "740-783-1825"
-            }
-          }
-        ]
-      }
-    },
-    {
-      "url": "https://vginmaps.vdem.virginia.gov/arcgis/rest/services/VA_Base_Layers/VA_Parcels/FeatureServer/0/query",
-      "params": {
-        "f": "json",
-        "outFields": "FIPS,LOCALITY,OBJECTID,PTM_ID",
-        "resultRecordCount": "50",
-        "returnGeometry": "false",
-        "where": "PTM_ID = 'NO SUCH PIN'"
-      },
-      "response": {
-        "objectIdFieldName": "OBJECTID",
-        "globalIdFieldName": "",
-        "geometryType": "esriGeometryPolygon",
-        "spatialReference": {
-          "wkid": 102100,
-          "latestWkid": 3857
-        },
-        "features": []
-      }
-    },
-    {
-      "url": "https://vginmaps.vdem.virginia.gov/arcgis/rest/services/VA_Base_Layers/VA_Parcels/FeatureServer/0/query",
-      "params": {
-        "f": "json",
-        "outFields": "FIPS,LOCALITY,OBJECTID,PTM_ID",
-        "resultRecordCount": "50",
-        "returnGeometry": "true",
-        "where": "PTM_ID = '740-783-1825'",
-        "outSR": "4326"
-      },
-      "response": {
-        "objectIdFieldName": "OBJECTID",
-        "globalIdFieldName": "",
-        "geometryType": "esriGeometryPolygon",
-        "spatialReference": {
-          "wkid": 4326,
-          "latestWkid": 4326
-        },
-        "fields": [
-          {
-            "name": "FIPS",
-            "alias": "FIPS",
-            "type": "esriFieldTypeString",
-            "length": 8
-          },
-          {
-            "name": "LOCALITY",
-            "alias": "LOCALITY",
-            "type": "esriFieldTypeString",
-            "length": 64
-          },
-          {
-            "name": "OBJECTID",
-            "alias": "OBJECTID",
-            "type": "esriFieldTypeOID"
-          },
-          {
-            "name": "PTM_ID",
-            "alias": "Parcel Tax Map ID",
-            "type": "esriFieldTypeString",
-            "length": 64
-          }
-        ],
-        "features": [
-          {
-            "attributes": {
-              "FIPS": "51087",
-              "LOCALITY": "Henrico County",
-              "OBJECTID": 1,
-              "PTM_ID": "740-783-1825"
-            },
-            "geometry": {
-              "rings": [
-                [
-                  [
-                    -77.61032029551865,
-                    37.70993182863219
-                  ],
-                  [
-                    -77.61033414664199,
-                    37.709929872149495
-                  ],
-                  [
-                    -77.61034799776536,
-                    37.70992791637742
-                  ],
-                  [
-                    -77.61036186505841,
-                    37.709924587585085
-                  ],
-                  [
-                    -77.61037574043628,
-                    37.70992057157166
-                  ],
-                  [
-                    -77.61038616808011,
-                    37.70991584275294
-                  ],
-                  [
-                    -77.61040005962766,
-                    37.70991045513993
-                  ],
-                  [
-                    -77.61041050254283,
-                    37.709904354010554
-                  ],
-                  [
-                    -77.610420962526,
-                    37.709896879149255
-                  ],
-                  [
-                    -77.61043142071254,
-                    37.70988940357652
-                  ],
-                  [
-                    -77.61044188967887,
-                    37.70988124362452
-                  ],
-                  [
-                    -77.6104489091145,
-                    37.709872370155345
-                  ],
-                  [
-                    -77.61045592675349,
-                    37.70986349668516
-                  ],
-                  [
-                    -77.6104629623588,
-                    37.709853250192324
-                  ],
-                  [
-                    -77.6104665412469,
-                    37.7098429781138
-                  ],
-                  [
-                    -77.61047357685221,
-                    37.709832732328756
-                  ],
-                  [
-                    -77.61047369902307,
-                    37.70982243395248
-                  ],
-                  [
-                    -77.61047731833537,
-                    37.709808729313664
-                  ],
-                  [
-                    -77.61102997537287,
-                    37.70984719454139
-                  ],
-                  [
-                    -77.61090478525657,
-                    37.71020123004709
-                  ],
-                  [
-                    -77.61080171884907,
-                    37.71014690425182
-                  ],
-                  [
-                    -77.61072260691694,
-                    37.71011335560328
-                  ],
-                  [
-                    -77.61061593018032,
-                    37.710072047827325
-                  ],
-                  [
-                    -77.61054361041008,
-                    37.710048848659596
-                  ],
-                  [
-                    -77.61045058177756,
-                    37.71002274852118
-                  ],
-                  [
-                    -77.61037472174677,
-                    37.710006388847965
-                  ],
-                  [
-                    -77.61031950589951,
-                    37.70999842221171
-                  ],
-                  [
-                    -77.61032029551865,
-                    37.70993182863219
-                  ]
-                ]
-              ]
-            }
-          }
-        ]
-      }
-    },
-    {
-      "url": "https://vginmaps.vdem.virginia.gov/arcgis/rest/services/VA_Base_Layers/VA_Parcels/FeatureServer/0/query",
-      "params": {
-        "f": "json",
-        "outFields": "FIPS,LOCALITY,OBJECTID,PTM_ID",
-        "resultRecordCount": 50,
-        "returnGeometry": "false",
-        "where": "FIPS = '51059' AND PTM_ID = '0102 14  0231'"
-      },
-      "response": {
-        "objectIdFieldName": "OBJECTID",
-        "globalIdFieldName": "",
-        "geometryType": "esriGeometryPolygon",
-        "spatialReference": {
-          "wkid": 102100,
-          "latestWkid": 3857
-        },
-        "fields": [
-          {
-            "name": "FIPS",
-            "alias": "FIPS",
-            "type": "esriFieldTypeString",
-            "length": 8
-          },
-          {
-            "name": "LOCALITY",
-            "alias": "LOCALITY",
-            "type": "esriFieldTypeString",
-            "length": 64
-          },
-          {
-            "name": "OBJECTID",
-            "alias": "OBJECTID",
-            "type": "esriFieldTypeOID"
-          },
-          {
-            "name": "PTM_ID",
-            "alias": "Parcel Tax Map ID",
-            "type": "esriFieldTypeString",
-            "length": 64
-          }
-        ],
-        "features": [
-          {
-            "attributes": {
-              "FIPS": "51059",
-              "LOCALITY": "Fairfax County",
-              "OBJECTID": 1511920,
-              "PTM_ID": "0102 14  0231"
-            }
-          }
-        ]
-      }
-    },
-    {
-      "url": "https://vginmaps.vdem.virginia.gov/arcgis/rest/services/VA_Base_Layers/VA_Parcels/FeatureServer/0/query",
-      "params": {
-        "f": "json",
-        "outFields": "FIPS,LOCALITY,OBJECTID,PTM_ID",
-        "resultRecordCount": 50,
-        "returnGeometry": "false",
-        "where": "FIPS = '51059' AND PTM_ID = 'NO SUCH PIN'"
-      },
-      "response": {
-        "objectIdFieldName": "OBJECTID",
-        "globalIdFieldName": "",
-        "geometryType": "esriGeometryPolygon",
-        "spatialReference": {
-          "wkid": 102100,
-          "latestWkid": 3857
-        },
-        "features": []
-      }
-    },
-    {
-      "url": "https://vginmaps.vdem.virginia.gov/arcgis/rest/services/VA_Base_Layers/VA_Parcels/FeatureServer/0/query",
-      "params": {
-        "f": "json",
-        "geometry": "{\"x\": -77.38312164379414, \"y\": 38.99932094254951, \"spatialReference\": {\"wkid\": 4326}}",
-        "geometryType": "esriGeometryPoint",
-        "inSR": "4326",
-        "outFields": "FIPS,LOCALITY,OBJECTID,PTM_ID",
-        "resultRecordCount": 50,
-        "returnGeometry": "false",
-        "spatialRel": "esriSpatialRelIntersects"
-      },
-      "response": {
-        "objectIdFieldName": "OBJECTID",
-        "globalIdFieldName": "",
-        "geometryType": "esriGeometryPolygon",
-        "spatialReference": {
-          "wkid": 102100,
-          "latestWkid": 3857
-        },
-        "fields": [
-          {
-            "name": "FIPS",
-            "alias": "FIPS",
-            "type": "esriFieldTypeString",
-            "length": 8
-          },
-          {
-            "name": "LOCALITY",
-            "alias": "LOCALITY",
-            "type": "esriFieldTypeString",
-            "length": 64
-          },
-          {
-            "name": "OBJECTID",
-            "alias": "OBJECTID",
-            "type": "esriFieldTypeOID"
-          },
-          {
-            "name": "PTM_ID",
-            "alias": "Parcel Tax Map ID",
-            "type": "esriFieldTypeString",
-            "length": 64
-          }
-        ],
-        "features": [
-          {
-            "attributes": {
-              "FIPS": "51059",
-              "LOCALITY": "Fairfax County",
-              "OBJECTID": 1511920,
-              "PTM_ID": "0102 14  0231"
-            }
-          },
-          {
-            "attributes": {
-              "FIPS": "51059",
-              "LOCALITY": "Fairfax County",
-              "OBJECTID": 1576726,
-              "PTM_ID": "0102 15  0027"
-            }
-          },
-          {
-            "attributes": {
-              "FIPS": "51059",
-              "LOCALITY": "Fairfax County",
-              "OBJECTID": 1671622,
-              "PTM_ID": "0102 15  0026"
-            }
-          },
-          {
-            "attributes": {
-              "FIPS": "51059",
-              "LOCALITY": "Fairfax County",
-              "OBJECTID": 1765022,
-              "PTM_ID": "0102 14  0225"
-            }
-          }
-        ]
-      }
-    },
-    {
-      "url": "https://vginmaps.vdem.virginia.gov/arcgis/rest/services/VA_Base_Layers/VA_Parcels/FeatureServer/0/query",
-      "params": {
-        "f": "json",
-        "outFields": "FIPS,LOCALITY,OBJECTID,PTM_ID",
-        "resultRecordCount": 50,
-        "returnGeometry": "false",
-        "where": "FIPS = '51161' AND PTM_ID = '0102 14  0231'"
-      },
-      "response": {
-        "objectIdFieldName": "OBJECTID",
-        "globalIdFieldName": "",
-        "geometryType": "esriGeometryPolygon",
-        "spatialReference": {
-          "wkid": 102100,
-          "latestWkid": 3857
-        },
-        "features": []
-      }
-    },
-    {
-      "url": "https://vginmaps.vdem.virginia.gov/arcgis/rest/services/VA_Base_Layers/VA_Parcels/FeatureServer/0/query",
-      "params": {
-        "f": "json",
-        "outFields": "FIPS,LOCALITY,OBJECTID,PTM_ID",
-        "resultRecordCount": 50,
-        "returnGeometry": "false",
-        "where": "FIPS = '51036' AND PTM_ID = '7-4-B-2'"
-      },
-      "response": {
-        "objectIdFieldName": "OBJECTID",
-        "globalIdFieldName": "",
-        "geometryType": "esriGeometryPolygon",
-        "spatialReference": {
-          "wkid": 102100,
-          "latestWkid": 3857
-        },
-        "fields": [
-          {
-            "name": "FIPS",
-            "alias": "FIPS",
-            "type": "esriFieldTypeString",
-            "length": 8
-          },
-          {
-            "name": "LOCALITY",
-            "alias": "LOCALITY",
-            "type": "esriFieldTypeString",
-            "length": 64
-          },
-          {
-            "name": "OBJECTID",
-            "alias": "OBJECTID",
-            "type": "esriFieldTypeOID"
-          },
-          {
-            "name": "PTM_ID",
-            "alias": "Parcel Tax Map ID",
-            "type": "esriFieldTypeString",
-            "length": 64
-          }
-        ],
-        "features": [
-          {
-            "attributes": {
-              "FIPS": "51036",
-              "LOCALITY": "Charles City County",
-              "OBJECTID": 656375,
-              "PTM_ID": "7-4-B-2"
-            }
-          }
-        ]
-      }
+     "source": "va-richmond-city-parcels-zoning",
+     "pin": "C0010126019",
+     "fips": "51760",
+     "record_count": 1,
+     "with_geometry": 1,
+     "miss_with_geometry": 0,
+     "point_record_count": 3
     }
-  ]
+   ],
+   "regressions": {
+    "pin_scoped_to_the_wrong_locality": {
+     "pin": "0102 14  0231",
+     "fips": "51161",
+     "jurisdiction": "va:roanoke-county",
+     "record_count": 0
+    },
+    "scoped_no_match": {
+     "record_count": 0
+    }
+   }
+  }
+ },
+ "exchanges": [
+  {
+   "url": "https://vginmaps.vdem.virginia.gov/arcgis/rest/services/VA_Base_Layers/VA_Parcels/FeatureServer/0/query",
+   "params": {
+    "f": "json",
+    "where": "1=1",
+    "returnCountOnly": "true"
+   },
+   "response": {
+    "count": 4170691
+   }
+  },
+  {
+   "url": "https://vginmaps.vdem.virginia.gov/arcgis/rest/services/VA_Base_Layers/VA_Parcels/FeatureServer/0/query",
+   "params": {
+    "f": "json",
+    "outFields": "FIPS,LOCALITY,OBJECTID,PTM_ID",
+    "resultRecordCount": "2",
+    "returnGeometry": "true",
+    "where": "1=1",
+    "outSR": "4326"
+   },
+   "response": {
+    "objectIdFieldName": "OBJECTID",
+    "globalIdFieldName": "",
+    "geometryType": "esriGeometryPolygon",
+    "spatialReference": {
+     "wkid": 4326,
+     "latestWkid": 4326
+    },
+    "fields": [
+     {
+      "name": "FIPS",
+      "alias": "FIPS",
+      "type": "esriFieldTypeString",
+      "length": 8
+     },
+     {
+      "name": "LOCALITY",
+      "alias": "LOCALITY",
+      "type": "esriFieldTypeString",
+      "length": 64
+     },
+     {
+      "name": "OBJECTID",
+      "alias": "OBJECTID",
+      "type": "esriFieldTypeOID"
+     },
+     {
+      "name": "PTM_ID",
+      "alias": "Parcel Tax Map ID",
+      "type": "esriFieldTypeString",
+      "length": 64
+     }
+    ],
+    "features": [
+     {
+      "attributes": {
+       "FIPS": "51087",
+       "LOCALITY": "Henrico County",
+       "OBJECTID": 1,
+       "PTM_ID": "740-783-1825"
+      },
+      "geometry": {
+       "rings": [
+        [
+         [
+          -77.61032029551865,
+          37.70993182863219
+         ],
+         [
+          -77.61033414664199,
+          37.709929872149495
+         ],
+         [
+          -77.61034799776536,
+          37.70992791637742
+         ],
+         [
+          -77.61036186505841,
+          37.709924587585085
+         ],
+         [
+          -77.61037574043628,
+          37.70992057157166
+         ],
+         [
+          -77.61038616808011,
+          37.70991584275294
+         ],
+         [
+          -77.61040005962766,
+          37.70991045513993
+         ],
+         [
+          -77.61041050254283,
+          37.709904354010554
+         ],
+         [
+          -77.610420962526,
+          37.709896879149255
+         ],
+         [
+          -77.61043142071254,
+          37.70988940357652
+         ],
+         [
+          -77.61044188967887,
+          37.70988124362452
+         ],
+         [
+          -77.6104489091145,
+          37.709872370155345
+         ],
+         [
+          -77.61045592675349,
+          37.70986349668516
+         ],
+         [
+          -77.6104629623588,
+          37.709853250192324
+         ],
+         [
+          -77.6104665412469,
+          37.7098429781138
+         ],
+         [
+          -77.61047357685221,
+          37.709832732328756
+         ],
+         [
+          -77.61047369902307,
+          37.70982243395248
+         ],
+         [
+          -77.61047731833537,
+          37.709808729313664
+         ],
+         [
+          -77.61102997537287,
+          37.70984719454139
+         ],
+         [
+          -77.61090478525657,
+          37.71020123004709
+         ],
+         [
+          -77.61080171884907,
+          37.71014690425182
+         ],
+         [
+          -77.61072260691694,
+          37.71011335560328
+         ],
+         [
+          -77.61061593018032,
+          37.710072047827325
+         ],
+         [
+          -77.61054361041008,
+          37.710048848659596
+         ],
+         [
+          -77.61045058177756,
+          37.71002274852118
+         ],
+         [
+          -77.61037472174677,
+          37.710006388847965
+         ],
+         [
+          -77.61031950589951,
+          37.70999842221171
+         ],
+         [
+          -77.61032029551865,
+          37.70993182863219
+         ]
+        ]
+       ]
+      }
+     },
+     {
+      "attributes": {
+       "FIPS": "51087",
+       "LOCALITY": "Henrico County",
+       "OBJECTID": 2,
+       "PTM_ID": "740-783-3921"
+      },
+      "geometry": {
+       "rings": [
+        [
+         [
+          -77.60961101990627,
+          37.70969101102398
+         ],
+         [
+          -77.60961874092615,
+          37.70962309673236
+         ],
+         [
+          -77.61016118861046,
+          37.709647757893286
+         ],
+         [
+          -77.61014186045881,
+          37.709819949436095
+         ],
+         [
+          -77.61014176254244,
+          37.70982818756898
+         ],
+         [
+          -77.61014511325845,
+          37.7098371377962
+         ],
+         [
+          -77.61014501534208,
+          37.70984537663786
+         ],
+         [
+          -77.61014838222776,
+          37.70985295455203
+         ],
+         [
+          -77.61015520583068,
+          37.70986055804974
+         ],
+         [
+          -77.61016200517906,
+          37.70987022178925
+         ],
+         [
+          -77.6101688135106,
+          37.70987919830628
+         ],
+         [
+          -77.61017567753768,
+          37.70988336995942
+         ],
+         [
+          -77.61018249305575,
+          37.70989165996438
+         ],
+         [
+          -77.61019277337586,
+          37.70989928975301
+         ],
+         [
+          -77.61020307076396,
+          37.70990554652021
+         ],
+         [
+          -77.61021682307263,
+          37.7099118288711
+         ],
+         [
+          -77.61022712764725,
+          37.709917399127065
+         ],
+         [
+          -77.61024090600708,
+          37.70992162194648
+         ],
+         [
+          -77.61025468526523,
+          37.70992584476565
+         ],
+         [
+          -77.61026502128088,
+          37.70992866826947
+         ],
+         [
+          -77.61027882479355,
+          37.709930830847355
+         ],
+         [
+          -77.61029264178094,
+          37.70993162111567
+         ],
+         [
+          -77.61030646056493,
+          37.70993241138398
+         ],
+         [
+          -77.61032029551865,
+          37.70993182863219
+         ],
+         [
+          -77.61031950589951,
+          37.70999842221171
+         ],
+         [
+          -77.61029879074906,
+          37.70999620775674
+         ],
+         [
+          -77.61025046228508,
+          37.709990353237735
+         ],
+         [
+          -77.61019527698055,
+          37.70997964127196
+         ],
+         [
+          -77.61015734382106,
+          37.70997180397525
+         ],
+         [
+          -77.61010909710376,
+          37.70995908364573
+         ],
+         [
+          -77.61007119628361,
+          37.7099485010179
+         ],
+         [
+          -77.61001955842613,
+          37.70993026301962
+         ],
+         [
+          -77.60995760701088,
+          37.70990714127087
+         ],
+         [
+          -77.6098957544103,
+          37.709875779966865
+         ],
+         [
+          -77.60983395121708,
+          37.70984030100552
+         ],
+         [
+          -77.60975841727472,
+          37.70979647942252
+         ],
+         [
+          -77.60968300729988,
+          37.7097423601369
+         ],
+         [
+          -77.60961101990627,
+          37.70969101102398
+         ]
+        ]
+       ]
+      }
+     }
+    ],
+    "exceededTransferLimit": true
+   }
+  },
+  {
+   "url": "https://vginmaps.vdem.virginia.gov/arcgis/rest/services/VA_Base_Layers/VA_Parcels/FeatureServer/0",
+   "params": {
+    "f": "json"
+   },
+   "response": {
+    "currentVersion": 11.3,
+    "cimVersion": "3.3.0",
+    "id": 0,
+    "name": "Virginia Parcels",
+    "type": "Feature Layer",
+    "parentLayer": null,
+    "defaultVisibility": true,
+    "minScale": 0,
+    "maxScale": 0,
+    "canScaleSymbols": true,
+    "referenceScale": 1200,
+    "geometryType": "esriGeometryPolygon",
+    "description": "These parcel boundaries represent legal descriptions of property ownership, as recorded in various public documents in the local jurisdiction. The boundaries are \nintended for cartographic use and spatial analysis only, and not for use as legal descriptions or property surveys. Tax parcel boundaries have not been edge-matched across municipal boundaries.",
+    "copyrightText": "Virginia Geographic Information Network (VGIN)",
+    "editFieldsInfo": null,
+    "ownershipBasedAccessControlForFeatures": null,
+    "syncCanReturnChanges": false,
+    "relationships": [],
+    "isDataVersioned": false,
+    "isDataArchived": false,
+    "infoInEstimates": [
+     "extent",
+     "count"
+    ],
+    "isDataBranchVersioned": false,
+    "isDataReplicaTracked": false,
+    "isCoGoEnabled": false,
+    "supportsRollbackOnFailureParameter": true,
+    "archivingInfo": {
+     "supportsQueryWithHistoricMoment": false,
+     "startArchivingMoment": -1
+    },
+    "supportsStatistics": true,
+    "supportsExceedsLimitStatistics": true,
+    "supportsAdvancedQueries": true,
+    "supportsValidateSQL": true,
+    "supportsCoordinatesQuantization": true,
+    "supportsQuantizationEditMode": true,
+    "supportsCalculate": true,
+    "supportsASyncCalculate": true,
+    "supportsDatumTransformation": true,
+    "advancedQueryCapabilities": {
+     "supportsPagination": true,
+     "supportsTrueCurve": true,
+     "supportsQueryWithDistance": true,
+     "supportsReturningQueryExtent": true,
+     "supportsStatistics": true,
+     "supportsPercentileStatistics": true,
+     "supportsHavingClause": true,
+     "supportsOrderBy": true,
+     "supportsDistinct": true,
+     "supportsCountDistinct": true,
+     "supportsAdvancedQueryRelated": true,
+     "supportsQueryRelatedPagination": true,
+     "supportsCurrentUserQueries": true,
+     "supportsQueryWithResultType": true,
+     "supportsReturningGeometryCentroid": true,
+     "supportsSqlExpression": true,
+     "supportsQueryWithDatumTransformation": true,
+     "supportsLod": false,
+     "supportsQueryWithLodSR": false,
+     "supportsQueryAnalytic": true
+    },
+    "advancedQueryAnalyticCapabilities": {
+     "supportsLinearRegression": true,
+     "supportsAsync": true,
+     "supportsPercentileAnalytic": true
+    },
+    "advancedEditingCapabilities": {
+     "supportedSqlFormatsInCalculate": [
+      "standard"
+     ],
+     "supportsAsyncApplyEdits": true,
+     "supportsApplyEditsbyUploadID": true,
+     "supportedApplyEditsUploadIDFormats": "JSON"
+    },
+    "hasGeometryProperties": true,
+    "geometryProperties": {
+     "shapeAreaFieldName": "Shape__Area",
+     "shapeLengthFieldName": "Shape__Length",
+     "units": "esriMeters"
+    },
+    "hasMetadata": true,
+    "extent": {
+     "xmin": -9314704.8308,
+     "ymin": 4374818.263899997,
+     "xmax": -8375617.762700001,
+     "ymax": 4788360.128600001,
+     "spatialReference": {
+      "wkid": 102100,
+      "latestWkid": 3857,
+      "xyTolerance": 0.001,
+      "zTolerance": 0.001,
+      "mTolerance": 0.001,
+      "falseX": -20037700,
+      "falseY": -30241100,
+      "xyUnits": 10000,
+      "falseZ": -100000,
+      "zUnits": 10000,
+      "falseM": -100000,
+      "mUnits": 10000
+     }
+    },
+    "sourceSpatialReference": {
+     "wkid": 102100,
+     "latestWkid": 3857,
+     "xyTolerance": 0.001,
+     "zTolerance": 0.001,
+     "mTolerance": 0.001,
+     "falseX": -20037700,
+     "falseY": -30241100,
+     "xyUnits": 10000,
+     "falseZ": 0,
+     "zUnits": 1,
+     "falseM": 0,
+     "mUnits": 1
+    },
+    "drawingInfo": {
+     "renderer": {
+      "type": "simple",
+      "symbol": {
+       "type": "esriSFS",
+       "style": "esriSFSSolid",
+       "color": [
+        0,
+        0,
+        0,
+        0
+       ],
+       "outline": {
+        "type": "esriSLS",
+        "style": "esriSLSSolid",
+        "color": [
+         204,
+         204,
+         204,
+         255
+        ],
+        "width": 0.4
+       }
+      }
+     },
+     "scaleSymbols": true,
+     "transparency": 0,
+     "labelingInfo": null
+    },
+    "hasM": false,
+    "hasZ": false,
+    "allowGeometryUpdates": true,
+    "allowTrueCurvesUpdates": true,
+    "onlyAllowTrueCurveUpdatesByTrueCurveClients": true,
+    "hasAttachments": false,
+    "supportsApplyEditsWithGlobalIds": false,
+    "htmlPopupType": "esriServerHTMLPopupTypeAsHTMLText",
+    "objectIdField": "OBJECTID",
+    "globalIdField": "",
+    "displayField": "PARCELID",
+    "typeIdField": "",
+    "subtypeField": "",
+    "fields": [
+     {
+      "name": "Shape__Area",
+      "type": "esriFieldTypeDouble",
+      "alias": "SHAPE.STArea()",
+      "domain": null,
+      "editable": false,
+      "nullable": true,
+      "defaultValue": null,
+      "modelName": "SHAPE.STArea()",
+      "required": true
+     },
+     {
+      "name": "Shape__Length",
+      "type": "esriFieldTypeDouble",
+      "alias": "SHAPE.STLength()",
+      "domain": null,
+      "editable": false,
+      "nullable": true,
+      "defaultValue": null,
+      "modelName": "SHAPE.STLength()",
+      "required": true
+     },
+     {
+      "name": "OBJECTID",
+      "type": "esriFieldTypeOID",
+      "alias": "OBJECTID",
+      "domain": null,
+      "editable": false,
+      "nullable": false,
+      "defaultValue": null,
+      "modelName": "OBJECTID"
+     },
+     {
+      "name": "VGIN_QPID",
+      "type": "esriFieldTypeDouble",
+      "alias": "VGIN_QPID",
+      "domain": null,
+      "editable": true,
+      "nullable": true,
+      "defaultValue": null,
+      "modelName": "VGIN_QPID"
+     },
+     {
+      "name": "FIPS",
+      "type": "esriFieldTypeString",
+      "alias": "FIPS",
+      "domain": null,
+      "editable": true,
+      "nullable": true,
+      "length": 8,
+      "defaultValue": null,
+      "modelName": "FIPS"
+     },
+     {
+      "name": "LOCALITY",
+      "type": "esriFieldTypeString",
+      "alias": "LOCALITY",
+      "domain": null,
+      "editable": true,
+      "nullable": true,
+      "length": 64,
+      "defaultValue": null,
+      "modelName": "LOCALITY"
+     },
+     {
+      "name": "PARCELID",
+      "type": "esriFieldTypeString",
+      "alias": "Parcel ID",
+      "domain": null,
+      "editable": true,
+      "nullable": true,
+      "length": 64,
+      "defaultValue": null,
+      "modelName": "PARCELID"
+     },
+     {
+      "name": "PTM_ID",
+      "type": "esriFieldTypeString",
+      "alias": "Parcel Tax Map ID",
+      "domain": null,
+      "editable": true,
+      "nullable": true,
+      "length": 64,
+      "defaultValue": null,
+      "modelName": "PTM_ID"
+     },
+     {
+      "name": "LASTUPDATE",
+      "type": "esriFieldTypeDate",
+      "alias": "LASTUPDATE",
+      "domain": null,
+      "editable": true,
+      "nullable": true,
+      "length": 8,
+      "defaultValue": null,
+      "modelName": "LASTUPDATE"
+     }
+    ],
+    "geometryField": {
+     "name": "SHAPE",
+     "type": "esriFieldTypeGeometry",
+     "alias": "SHAPE",
+     "domain": null,
+     "editable": true,
+     "nullable": true,
+     "defaultValue": null,
+     "modelName": "SHAPE"
+    },
+    "indexes": [
+     {
+      "name": "R1757_pk",
+      "fields": "OBJECTID",
+      "isAscending": true,
+      "isUnique": true,
+      "description": ""
+     },
+     {
+      "name": "S1639_idx",
+      "fields": "SHAPE",
+      "isAscending": true,
+      "isUnique": true,
+      "description": ""
+     }
+    ],
+    "datesInUnknownTimezone": false,
+    "dateFieldsTimeReference": {
+     "timeZone": "UTC",
+     "respectsDaylightSaving": false
+    },
+    "preferredTimeReference": null,
+    "types": [],
+    "templates": [
+     {
+      "name": "Virginia Parcels",
+      "description": "",
+      "prototype": {
+       "attributes": {
+        "PTM_ID": null,
+        "PARCELID": null,
+        "LOCALITY": null,
+        "LASTUPDATE": null,
+        "VGIN_QPID": null,
+        "FIPS": null
+       }
+      },
+      "drawingTool": "esriFeatureEditToolPolygon"
+     }
+    ],
+    "maxRecordCount": 2000,
+    "supportedQueryFormats": "JSON, geoJSON, PBF",
+    "supportedExportFormats": "sqlite,filegdb,shapefile,csv,geojson",
+    "capabilities": "Query",
+    "useStandardizedQueries": true,
+    "bigIntegerRestrictedTo53Bits": true,
+    "supportedSpatialRelationships": [
+     "esriSpatialRelIntersects",
+     "esriSpatialRelContains",
+     "esriSpatialRelCrosses",
+     "esriSpatialRelEnvelopeIntersects",
+     "esriSpatialRelIndexIntersects",
+     "esriSpatialRelOverlaps",
+     "esriSpatialRelTouches",
+     "esriSpatialRelWithin",
+     "esriSpatialRelRelation"
+    ],
+    "standardMaxRecordCount": 4000,
+    "tileMaxRecordCount": 4000,
+    "standardMaxRecordCountNoGeometry": 32000,
+    "maxRecordCountFactor": 1
+   }
+  },
+  {
+   "url": "https://vginmaps.vdem.virginia.gov/arcgis/rest/services/VA_Base_Layers/VA_Parcels/FeatureServer/0/query",
+   "params": {
+    "f": "json",
+    "outFields": "FIPS,LOCALITY,OBJECTID,PTM_ID",
+    "resultRecordCount": "50",
+    "returnGeometry": "false",
+    "where": "PTM_ID = '740-783-1825'"
+   },
+   "response": {
+    "objectIdFieldName": "OBJECTID",
+    "globalIdFieldName": "",
+    "geometryType": "esriGeometryPolygon",
+    "spatialReference": {
+     "wkid": 102100,
+     "latestWkid": 3857
+    },
+    "fields": [
+     {
+      "name": "FIPS",
+      "alias": "FIPS",
+      "type": "esriFieldTypeString",
+      "length": 8
+     },
+     {
+      "name": "LOCALITY",
+      "alias": "LOCALITY",
+      "type": "esriFieldTypeString",
+      "length": 64
+     },
+     {
+      "name": "OBJECTID",
+      "alias": "OBJECTID",
+      "type": "esriFieldTypeOID"
+     },
+     {
+      "name": "PTM_ID",
+      "alias": "Parcel Tax Map ID",
+      "type": "esriFieldTypeString",
+      "length": 64
+     }
+    ],
+    "features": [
+     {
+      "attributes": {
+       "FIPS": "51087",
+       "LOCALITY": "Henrico County",
+       "OBJECTID": 1,
+       "PTM_ID": "740-783-1825"
+      }
+     }
+    ]
+   }
+  },
+  {
+   "url": "https://vginmaps.vdem.virginia.gov/arcgis/rest/services/VA_Base_Layers/VA_Parcels/FeatureServer/0/query",
+   "params": {
+    "f": "json",
+    "outFields": "FIPS,LOCALITY,OBJECTID,PTM_ID",
+    "resultRecordCount": "50",
+    "returnGeometry": "false",
+    "where": "PTM_ID = 'NO SUCH PIN'"
+   },
+   "response": {
+    "objectIdFieldName": "OBJECTID",
+    "globalIdFieldName": "",
+    "geometryType": "esriGeometryPolygon",
+    "spatialReference": {
+     "wkid": 102100,
+     "latestWkid": 3857
+    },
+    "features": []
+   }
+  },
+  {
+   "url": "https://vginmaps.vdem.virginia.gov/arcgis/rest/services/VA_Base_Layers/VA_Parcels/FeatureServer/0/query",
+   "params": {
+    "f": "json",
+    "outFields": "FIPS,LOCALITY,OBJECTID,PTM_ID",
+    "resultRecordCount": "50",
+    "returnGeometry": "true",
+    "where": "PTM_ID = 'NO SUCH PIN'",
+    "outSR": "4326"
+   },
+   "response": {
+    "objectIdFieldName": "OBJECTID",
+    "globalIdFieldName": "",
+    "geometryType": "esriGeometryPolygon",
+    "spatialReference": {
+     "wkid": 4326,
+     "latestWkid": 4326
+    },
+    "features": []
+   }
+  },
+  {
+   "url": "https://vginmaps.vdem.virginia.gov/arcgis/rest/services/VA_Base_Layers/VA_Parcels/FeatureServer/0/query",
+   "params": {
+    "f": "json",
+    "outFields": "FIPS,LOCALITY,OBJECTID,PTM_ID",
+    "resultRecordCount": "50",
+    "returnGeometry": "true",
+    "where": "PTM_ID = '740-783-1825'",
+    "outSR": "4326"
+   },
+   "response": {
+    "objectIdFieldName": "OBJECTID",
+    "globalIdFieldName": "",
+    "geometryType": "esriGeometryPolygon",
+    "spatialReference": {
+     "wkid": 4326,
+     "latestWkid": 4326
+    },
+    "fields": [
+     {
+      "name": "FIPS",
+      "alias": "FIPS",
+      "type": "esriFieldTypeString",
+      "length": 8
+     },
+     {
+      "name": "LOCALITY",
+      "alias": "LOCALITY",
+      "type": "esriFieldTypeString",
+      "length": 64
+     },
+     {
+      "name": "OBJECTID",
+      "alias": "OBJECTID",
+      "type": "esriFieldTypeOID"
+     },
+     {
+      "name": "PTM_ID",
+      "alias": "Parcel Tax Map ID",
+      "type": "esriFieldTypeString",
+      "length": 64
+     }
+    ],
+    "features": [
+     {
+      "attributes": {
+       "FIPS": "51087",
+       "LOCALITY": "Henrico County",
+       "OBJECTID": 1,
+       "PTM_ID": "740-783-1825"
+      },
+      "geometry": {
+       "rings": [
+        [
+         [
+          -77.61032029551865,
+          37.70993182863219
+         ],
+         [
+          -77.61033414664199,
+          37.709929872149495
+         ],
+         [
+          -77.61034799776536,
+          37.70992791637742
+         ],
+         [
+          -77.61036186505841,
+          37.709924587585085
+         ],
+         [
+          -77.61037574043628,
+          37.70992057157166
+         ],
+         [
+          -77.61038616808011,
+          37.70991584275294
+         ],
+         [
+          -77.61040005962766,
+          37.70991045513993
+         ],
+         [
+          -77.61041050254283,
+          37.709904354010554
+         ],
+         [
+          -77.610420962526,
+          37.709896879149255
+         ],
+         [
+          -77.61043142071254,
+          37.70988940357652
+         ],
+         [
+          -77.61044188967887,
+          37.70988124362452
+         ],
+         [
+          -77.6104489091145,
+          37.709872370155345
+         ],
+         [
+          -77.61045592675349,
+          37.70986349668516
+         ],
+         [
+          -77.6104629623588,
+          37.709853250192324
+         ],
+         [
+          -77.6104665412469,
+          37.7098429781138
+         ],
+         [
+          -77.61047357685221,
+          37.709832732328756
+         ],
+         [
+          -77.61047369902307,
+          37.70982243395248
+         ],
+         [
+          -77.61047731833537,
+          37.709808729313664
+         ],
+         [
+          -77.61102997537287,
+          37.70984719454139
+         ],
+         [
+          -77.61090478525657,
+          37.71020123004709
+         ],
+         [
+          -77.61080171884907,
+          37.71014690425182
+         ],
+         [
+          -77.61072260691694,
+          37.71011335560328
+         ],
+         [
+          -77.61061593018032,
+          37.710072047827325
+         ],
+         [
+          -77.61054361041008,
+          37.710048848659596
+         ],
+         [
+          -77.61045058177756,
+          37.71002274852118
+         ],
+         [
+          -77.61037472174677,
+          37.710006388847965
+         ],
+         [
+          -77.61031950589951,
+          37.70999842221171
+         ],
+         [
+          -77.61032029551865,
+          37.70993182863219
+         ]
+        ]
+       ]
+      }
+     }
+    ]
+   }
+  },
+  {
+   "url": "https://vginmaps.vdem.virginia.gov/arcgis/rest/services/VA_Base_Layers/VA_Parcels/FeatureServer/0/query",
+   "params": {
+    "f": "json",
+    "outFields": "FIPS,LOCALITY,OBJECTID,PTM_ID",
+    "resultRecordCount": "50",
+    "returnGeometry": "false",
+    "where": "FIPS = '51036' AND PTM_ID = '7-4-B-2'"
+   },
+   "response": {
+    "objectIdFieldName": "OBJECTID",
+    "globalIdFieldName": "",
+    "geometryType": "esriGeometryPolygon",
+    "spatialReference": {
+     "wkid": 102100,
+     "latestWkid": 3857
+    },
+    "fields": [
+     {
+      "name": "FIPS",
+      "alias": "FIPS",
+      "type": "esriFieldTypeString",
+      "length": 8
+     },
+     {
+      "name": "LOCALITY",
+      "alias": "LOCALITY",
+      "type": "esriFieldTypeString",
+      "length": 64
+     },
+     {
+      "name": "OBJECTID",
+      "alias": "OBJECTID",
+      "type": "esriFieldTypeOID"
+     },
+     {
+      "name": "PTM_ID",
+      "alias": "Parcel Tax Map ID",
+      "type": "esriFieldTypeString",
+      "length": 64
+     }
+    ],
+    "features": [
+     {
+      "attributes": {
+       "FIPS": "51036",
+       "LOCALITY": "Charles City County",
+       "OBJECTID": 656375,
+       "PTM_ID": "7-4-B-2"
+      }
+     }
+    ]
+   }
+  },
+  {
+   "url": "https://vginmaps.vdem.virginia.gov/arcgis/rest/services/VA_Base_Layers/VA_Parcels/FeatureServer/0/query",
+   "params": {
+    "f": "json",
+    "outFields": "FIPS,LOCALITY,OBJECTID,PTM_ID",
+    "resultRecordCount": "50",
+    "returnGeometry": "true",
+    "where": "FIPS = '51036' AND PTM_ID = '7-4-B-2'",
+    "outSR": "4326"
+   },
+   "response": {
+    "objectIdFieldName": "OBJECTID",
+    "globalIdFieldName": "",
+    "geometryType": "esriGeometryPolygon",
+    "spatialReference": {
+     "wkid": 4326,
+     "latestWkid": 4326
+    },
+    "fields": [
+     {
+      "name": "FIPS",
+      "alias": "FIPS",
+      "type": "esriFieldTypeString",
+      "length": 8
+     },
+     {
+      "name": "LOCALITY",
+      "alias": "LOCALITY",
+      "type": "esriFieldTypeString",
+      "length": 64
+     },
+     {
+      "name": "OBJECTID",
+      "alias": "OBJECTID",
+      "type": "esriFieldTypeOID"
+     },
+     {
+      "name": "PTM_ID",
+      "alias": "Parcel Tax Map ID",
+      "type": "esriFieldTypeString",
+      "length": 64
+     }
+    ],
+    "features": [
+     {
+      "attributes": {
+       "FIPS": "51036",
+       "LOCALITY": "Charles City County",
+       "OBJECTID": 656375,
+       "PTM_ID": "7-4-B-2"
+      },
+      "geometry": {
+       "rings": [
+        [
+         [
+          -77.17575454198105,
+          37.43632165901189
+         ],
+         [
+          -77.17648557209463,
+          37.43474609239043
+         ],
+         [
+          -77.17686899192253,
+          37.4348571437211
+         ],
+         [
+          -77.17687797777032,
+          37.43485974727598
+         ],
+         [
+          -77.17693532711635,
+          37.43487635652757
+         ],
+         [
+          -77.1762682813055,
+          37.43626629066398
+         ],
+         [
+          -77.1761813881664,
+          37.436447347520335
+         ],
+         [
+          -77.1761383480845,
+          37.43643451404927
+         ],
+         [
+          -77.17585661125857,
+          37.436350510110444
+         ],
+         [
+          -77.17575454198105,
+          37.43632165901189
+         ]
+        ]
+       ]
+      }
+     }
+    ]
+   }
+  },
+  {
+   "url": "https://vginmaps.vdem.virginia.gov/arcgis/rest/services/VA_Base_Layers/VA_Parcels/FeatureServer/0/query",
+   "params": {
+    "f": "json",
+    "outFields": "FIPS,LOCALITY,OBJECTID,PTM_ID",
+    "resultRecordCount": "50",
+    "returnGeometry": "true",
+    "where": "FIPS = '51036' AND PTM_ID = 'NO SUCH PIN'",
+    "outSR": "4326"
+   },
+   "response": {
+    "objectIdFieldName": "OBJECTID",
+    "globalIdFieldName": "",
+    "geometryType": "esriGeometryPolygon",
+    "spatialReference": {
+     "wkid": 4326,
+     "latestWkid": 4326
+    },
+    "features": []
+   }
+  },
+  {
+   "url": "https://vginmaps.vdem.virginia.gov/arcgis/rest/services/VA_Base_Layers/VA_Parcels/FeatureServer/0/query",
+   "params": {
+    "f": "json",
+    "outFields": "FIPS,LOCALITY,OBJECTID,PTM_ID",
+    "resultRecordCount": "50",
+    "returnGeometry": "false",
+    "where": "FIPS = '51059' AND PTM_ID = '0102 14  0231'"
+   },
+   "response": {
+    "objectIdFieldName": "OBJECTID",
+    "globalIdFieldName": "",
+    "geometryType": "esriGeometryPolygon",
+    "spatialReference": {
+     "wkid": 102100,
+     "latestWkid": 3857
+    },
+    "fields": [
+     {
+      "name": "FIPS",
+      "alias": "FIPS",
+      "type": "esriFieldTypeString",
+      "length": 8
+     },
+     {
+      "name": "LOCALITY",
+      "alias": "LOCALITY",
+      "type": "esriFieldTypeString",
+      "length": 64
+     },
+     {
+      "name": "OBJECTID",
+      "alias": "OBJECTID",
+      "type": "esriFieldTypeOID"
+     },
+     {
+      "name": "PTM_ID",
+      "alias": "Parcel Tax Map ID",
+      "type": "esriFieldTypeString",
+      "length": 64
+     }
+    ],
+    "features": [
+     {
+      "attributes": {
+       "FIPS": "51059",
+       "LOCALITY": "Fairfax County",
+       "OBJECTID": 1511920,
+       "PTM_ID": "0102 14  0231"
+      }
+     }
+    ]
+   }
+  },
+  {
+   "url": "https://vginmaps.vdem.virginia.gov/arcgis/rest/services/VA_Base_Layers/VA_Parcels/FeatureServer/0/query",
+   "params": {
+    "f": "json",
+    "outFields": "FIPS,LOCALITY,OBJECTID,PTM_ID",
+    "resultRecordCount": "50",
+    "returnGeometry": "true",
+    "where": "FIPS = '51059' AND PTM_ID = '0102 14  0231'",
+    "outSR": "4326"
+   },
+   "response": {
+    "objectIdFieldName": "OBJECTID",
+    "globalIdFieldName": "",
+    "geometryType": "esriGeometryPolygon",
+    "spatialReference": {
+     "wkid": 4326,
+     "latestWkid": 4326
+    },
+    "fields": [
+     {
+      "name": "FIPS",
+      "alias": "FIPS",
+      "type": "esriFieldTypeString",
+      "length": 8
+     },
+     {
+      "name": "LOCALITY",
+      "alias": "LOCALITY",
+      "type": "esriFieldTypeString",
+      "length": 64
+     },
+     {
+      "name": "OBJECTID",
+      "alias": "OBJECTID",
+      "type": "esriFieldTypeOID"
+     },
+     {
+      "name": "PTM_ID",
+      "alias": "Parcel Tax Map ID",
+      "type": "esriFieldTypeString",
+      "length": 64
+     }
+    ],
+    "features": [
+     {
+      "attributes": {
+       "FIPS": "51059",
+       "LOCALITY": "Fairfax County",
+       "OBJECTID": 1511920,
+       "PTM_ID": "0102 14  0231"
+      },
+      "geometry": {
+       "rings": [
+        [
+         [
+          -77.38312164396382,
+          38.999320942593954
+         ],
+         [
+          -77.3833183372818,
+          38.999321082917824
+         ],
+         [
+          -77.38344708293002,
+          38.99963962370871
+         ],
+         [
+          -77.38341494570072,
+          38.99964588100867
+         ],
+         [
+          -77.38338317228911,
+          38.99965317991134
+         ],
+         [
+          -77.38335181928906,
+          38.99966151273702
+         ],
+         [
+          -77.38332094239613,
+          38.99967086342848
+         ],
+         [
+          -77.38329059281425,
+          38.99968121243781
+         ],
+         [
+          -77.38326082174743,
+          38.999692542311394
+         ],
+         [
+          -77.38323168848444,
+          38.999704836991974
+         ],
+         [
+          -77.3830354793584,
+          38.99938996795051
+         ],
+         [
+          -77.38305285726759,
+          38.99937779538764
+         ],
+         [
+          -77.38312164396382,
+          38.999320942593954
+         ]
+        ]
+       ]
+      }
+     }
+    ]
+   }
+  },
+  {
+   "url": "https://vginmaps.vdem.virginia.gov/arcgis/rest/services/VA_Base_Layers/VA_Parcels/FeatureServer/0/query",
+   "params": {
+    "f": "json",
+    "outFields": "FIPS,LOCALITY,OBJECTID,PTM_ID",
+    "resultRecordCount": "50",
+    "returnGeometry": "true",
+    "where": "FIPS = '51059' AND PTM_ID = 'NO SUCH PIN'",
+    "outSR": "4326"
+   },
+   "response": {
+    "objectIdFieldName": "OBJECTID",
+    "globalIdFieldName": "",
+    "geometryType": "esriGeometryPolygon",
+    "spatialReference": {
+     "wkid": 4326,
+     "latestWkid": 4326
+    },
+    "features": []
+   }
+  },
+  {
+   "url": "https://vginmaps.vdem.virginia.gov/arcgis/rest/services/VA_Base_Layers/VA_Parcels/FeatureServer/0/query",
+   "params": {
+    "f": "json",
+    "outFields": "FIPS,LOCALITY,OBJECTID,PTM_ID",
+    "resultRecordCount": "50",
+    "returnGeometry": "false",
+    "geometry": "{\"x\": -77.38312164379414, \"y\": 38.99932094254951, \"spatialReference\": {\"wkid\": 4326}}",
+    "geometryType": "esriGeometryPoint",
+    "inSR": "4326",
+    "spatialRel": "esriSpatialRelIntersects"
+   },
+   "response": {
+    "objectIdFieldName": "OBJECTID",
+    "globalIdFieldName": "",
+    "geometryType": "esriGeometryPolygon",
+    "spatialReference": {
+     "wkid": 102100,
+     "latestWkid": 3857
+    },
+    "fields": [
+     {
+      "name": "FIPS",
+      "alias": "FIPS",
+      "type": "esriFieldTypeString",
+      "length": 8
+     },
+     {
+      "name": "LOCALITY",
+      "alias": "LOCALITY",
+      "type": "esriFieldTypeString",
+      "length": 64
+     },
+     {
+      "name": "OBJECTID",
+      "alias": "OBJECTID",
+      "type": "esriFieldTypeOID"
+     },
+     {
+      "name": "PTM_ID",
+      "alias": "Parcel Tax Map ID",
+      "type": "esriFieldTypeString",
+      "length": 64
+     }
+    ],
+    "features": [
+     {
+      "attributes": {
+       "FIPS": "51059",
+       "LOCALITY": "Fairfax County",
+       "OBJECTID": 1511920,
+       "PTM_ID": "0102 14  0231"
+      }
+     },
+     {
+      "attributes": {
+       "FIPS": "51059",
+       "LOCALITY": "Fairfax County",
+       "OBJECTID": 1576726,
+       "PTM_ID": "0102 15  0027"
+      }
+     },
+     {
+      "attributes": {
+       "FIPS": "51059",
+       "LOCALITY": "Fairfax County",
+       "OBJECTID": 1671622,
+       "PTM_ID": "0102 15  0026"
+      }
+     },
+     {
+      "attributes": {
+       "FIPS": "51059",
+       "LOCALITY": "Fairfax County",
+       "OBJECTID": 1765022,
+       "PTM_ID": "0102 14  0225"
+      }
+     }
+    ]
+   }
+  },
+  {
+   "url": "https://vginmaps.vdem.virginia.gov/arcgis/rest/services/VA_Base_Layers/VA_Parcels/FeatureServer/0/query",
+   "params": {
+    "f": "json",
+    "outFields": "FIPS,LOCALITY,OBJECTID,PTM_ID",
+    "resultRecordCount": "50",
+    "returnGeometry": "false",
+    "where": "FIPS = '51760' AND PTM_ID = 'C0010126019'"
+   },
+   "response": {
+    "objectIdFieldName": "OBJECTID",
+    "globalIdFieldName": "",
+    "geometryType": "esriGeometryPolygon",
+    "spatialReference": {
+     "wkid": 102100,
+     "latestWkid": 3857
+    },
+    "fields": [
+     {
+      "name": "FIPS",
+      "alias": "FIPS",
+      "type": "esriFieldTypeString",
+      "length": 8
+     },
+     {
+      "name": "LOCALITY",
+      "alias": "LOCALITY",
+      "type": "esriFieldTypeString",
+      "length": 64
+     },
+     {
+      "name": "OBJECTID",
+      "alias": "OBJECTID",
+      "type": "esriFieldTypeOID"
+     },
+     {
+      "name": "PTM_ID",
+      "alias": "Parcel Tax Map ID",
+      "type": "esriFieldTypeString",
+      "length": 64
+     }
+    ],
+    "features": [
+     {
+      "attributes": {
+       "FIPS": "51760",
+       "LOCALITY": "Richmond City",
+       "OBJECTID": 797681,
+       "PTM_ID": "C0010126019"
+      }
+     }
+    ]
+   }
+  },
+  {
+   "url": "https://vginmaps.vdem.virginia.gov/arcgis/rest/services/VA_Base_Layers/VA_Parcels/FeatureServer/0/query",
+   "params": {
+    "f": "json",
+    "outFields": "FIPS,LOCALITY,OBJECTID,PTM_ID",
+    "resultRecordCount": "50",
+    "returnGeometry": "true",
+    "where": "FIPS = '51760' AND PTM_ID = 'C0010126019'",
+    "outSR": "4326"
+   },
+   "response": {
+    "objectIdFieldName": "OBJECTID",
+    "globalIdFieldName": "",
+    "geometryType": "esriGeometryPolygon",
+    "spatialReference": {
+     "wkid": 4326,
+     "latestWkid": 4326
+    },
+    "fields": [
+     {
+      "name": "FIPS",
+      "alias": "FIPS",
+      "type": "esriFieldTypeString",
+      "length": 8
+     },
+     {
+      "name": "LOCALITY",
+      "alias": "LOCALITY",
+      "type": "esriFieldTypeString",
+      "length": 64
+     },
+     {
+      "name": "OBJECTID",
+      "alias": "OBJECTID",
+      "type": "esriFieldTypeOID"
+     },
+     {
+      "name": "PTM_ID",
+      "alias": "Parcel Tax Map ID",
+      "type": "esriFieldTypeString",
+      "length": 64
+     }
+    ],
+    "features": [
+     {
+      "attributes": {
+       "FIPS": "51760",
+       "LOCALITY": "Richmond City",
+       "OBJECTID": 797681,
+       "PTM_ID": "C0010126019"
+      },
+      "geometry": {
+       "rings": [
+        [
+         [
+          -77.55017063033166,
+          37.557895783733834
+         ],
+         [
+          -77.55009574856622,
+          37.5578817398467
+         ],
+         [
+          -77.55086498402883,
+          37.55714437544193
+         ],
+         [
+          -77.55093010200547,
+          37.557191637022335
+         ],
+         [
+          -77.5504260608928,
+          37.55765194911865
+         ],
+         [
+          -77.55054102458793,
+          37.55781473990794
+         ],
+         [
+          -77.55087792875207,
+          37.55829178949642
+         ],
+         [
+          -77.55062479338649,
+          37.55840653833315
+         ],
+         [
+          -77.55060891566384,
+          37.55841402132759
+         ],
+         [
+          -77.55058823105611,
+          37.5584237688738
+         ],
+         [
+          -77.55050536506441,
+          37.55830190166644
+         ],
+         [
+          -77.5502377883823,
+          37.55790837914918
+         ],
+         [
+          -77.55017063033166,
+          37.557895783733834
+         ]
+        ]
+       ]
+      }
+     }
+    ]
+   }
+  },
+  {
+   "url": "https://vginmaps.vdem.virginia.gov/arcgis/rest/services/VA_Base_Layers/VA_Parcels/FeatureServer/0/query",
+   "params": {
+    "f": "json",
+    "outFields": "FIPS,LOCALITY,OBJECTID,PTM_ID",
+    "resultRecordCount": "50",
+    "returnGeometry": "true",
+    "where": "FIPS = '51760' AND PTM_ID = 'NO SUCH PIN'",
+    "outSR": "4326"
+   },
+   "response": {
+    "objectIdFieldName": "OBJECTID",
+    "globalIdFieldName": "",
+    "geometryType": "esriGeometryPolygon",
+    "spatialReference": {
+     "wkid": 4326,
+     "latestWkid": 4326
+    },
+    "features": []
+   }
+  },
+  {
+   "url": "https://vginmaps.vdem.virginia.gov/arcgis/rest/services/VA_Base_Layers/VA_Parcels/FeatureServer/0/query",
+   "params": {
+    "f": "json",
+    "outFields": "FIPS,LOCALITY,OBJECTID,PTM_ID",
+    "resultRecordCount": "50",
+    "returnGeometry": "false",
+    "geometry": "{\"x\": -77.5501706303165, \"y\": 37.5578957842074, \"spatialReference\": {\"wkid\": 4326}}",
+    "geometryType": "esriGeometryPoint",
+    "inSR": "4326",
+    "spatialRel": "esriSpatialRelIntersects"
+   },
+   "response": {
+    "objectIdFieldName": "OBJECTID",
+    "globalIdFieldName": "",
+    "geometryType": "esriGeometryPolygon",
+    "spatialReference": {
+     "wkid": 102100,
+     "latestWkid": 3857
+    },
+    "fields": [
+     {
+      "name": "FIPS",
+      "alias": "FIPS",
+      "type": "esriFieldTypeString",
+      "length": 8
+     },
+     {
+      "name": "LOCALITY",
+      "alias": "LOCALITY",
+      "type": "esriFieldTypeString",
+      "length": 64
+     },
+     {
+      "name": "OBJECTID",
+      "alias": "OBJECTID",
+      "type": "esriFieldTypeOID"
+     },
+     {
+      "name": "PTM_ID",
+      "alias": "Parcel Tax Map ID",
+      "type": "esriFieldTypeString",
+      "length": 64
+     }
+    ],
+    "features": [
+     {
+      "attributes": {
+       "FIPS": "51760",
+       "LOCALITY": "Richmond City",
+       "OBJECTID": 797681,
+       "PTM_ID": "C0010126019"
+      }
+     },
+     {
+      "attributes": {
+       "FIPS": "51760",
+       "LOCALITY": "Richmond City",
+       "OBJECTID": 798097,
+       "PTM_ID": "C0010126021"
+      }
+     },
+     {
+      "attributes": {
+       "FIPS": "51760",
+       "LOCALITY": "Richmond City",
+       "OBJECTID": 798796,
+       "PTM_ID": "C0010126018"
+      }
+     }
+    ]
+   }
+  },
+  {
+   "url": "https://vginmaps.vdem.virginia.gov/arcgis/rest/services/VA_Base_Layers/VA_Parcels/FeatureServer/0/query",
+   "params": {
+    "f": "json",
+    "outFields": "FIPS,LOCALITY,OBJECTID,PTM_ID",
+    "resultRecordCount": "50",
+    "returnGeometry": "false",
+    "where": "FIPS = '51161' AND PTM_ID = '0102 14  0231'"
+   },
+   "response": {
+    "objectIdFieldName": "OBJECTID",
+    "globalIdFieldName": "",
+    "geometryType": "esriGeometryPolygon",
+    "spatialReference": {
+     "wkid": 102100,
+     "latestWkid": 3857
+    },
+    "features": []
+   }
+  },
+  {
+   "url": "https://vginmaps.vdem.virginia.gov/arcgis/rest/services/VA_Base_Layers/VA_Parcels/FeatureServer/0/query",
+   "params": {
+    "f": "json",
+    "outFields": "FIPS,LOCALITY,OBJECTID,PTM_ID",
+    "resultRecordCount": "50",
+    "returnGeometry": "false",
+    "where": "FIPS = '51059' AND PTM_ID = 'NO SUCH PIN'"
+   },
+   "response": {
+    "objectIdFieldName": "OBJECTID",
+    "globalIdFieldName": "",
+    "geometryType": "esriGeometryPolygon",
+    "spatialReference": {
+     "wkid": 102100,
+     "latestWkid": 3857
+    },
+    "features": []
+   }
+  }
+ ]
 }

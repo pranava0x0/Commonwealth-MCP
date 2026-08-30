@@ -1,0 +1,6 @@
+id: va:onancock-town
+name: Onancock (town)
+kind: town
+place_fips: "59336"
+parent: va:accomack-county
+aliases: ["Town of Onancock"]

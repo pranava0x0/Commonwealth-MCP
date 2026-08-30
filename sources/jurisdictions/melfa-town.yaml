@@ -1,0 +1,6 @@
+id: va:melfa-town
+name: Melfa (town)
+kind: town
+place_fips: "50984"
+parent: va:accomack-county
+aliases: ["Town of Melfa"]

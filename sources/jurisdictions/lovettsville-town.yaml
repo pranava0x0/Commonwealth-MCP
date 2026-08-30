@@ -1,0 +1,6 @@
+id: va:lovettsville-town
+name: Lovettsville (town)
+kind: town
+place_fips: "47208"
+parent: va:loudoun-county
+aliases: ["Town of Lovettsville"]

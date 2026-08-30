@@ -1,0 +1,6 @@
+id: va:new-castle-town
+name: New Castle (town)
+kind: town
+place_fips: "55592"
+parent: va:craig-county
+aliases: ["Town of New Castle"]

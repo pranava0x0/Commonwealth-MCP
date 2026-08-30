@@ -1,0 +1,6 @@
+id: va:quantico-town
+name: Quantico (town)
+kind: town
+place_fips: "65120"
+parent: va:prince-william-county
+aliases: ["Town of Quantico"]

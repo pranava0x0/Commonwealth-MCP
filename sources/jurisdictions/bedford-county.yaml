@@ -1,0 +1,10 @@
+# The county half of the Bedford pair. The town of Bedford sits inside it
+# and was an independent city until 2013, so "Bedford" alone is ambiguous
+# between the two and resolves to candidates rather than a pick.
+id: va:bedford-county
+name: Bedford County
+kind: county
+fips: "51019"
+parent: va
+aliases: ["County of Bedford"]
+not_to_be_confused_with: ["va:bedford-town"]

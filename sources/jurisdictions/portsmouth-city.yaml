@@ -1,0 +1,6 @@
+id: va:portsmouth-city
+name: Portsmouth City
+kind: independent-city
+fips: "51740"
+parent: va
+aliases: ["City of Portsmouth"]

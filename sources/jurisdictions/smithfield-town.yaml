@@ -1,0 +1,6 @@
+id: va:smithfield-town
+name: Smithfield (town)
+kind: town
+place_fips: "73200"
+parent: va:isle-of-wight-county
+aliases: ["Town of Smithfield"]

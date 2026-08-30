@@ -1,0 +1,6 @@
+id: va:independence-town
+name: Independence (town)
+kind: town
+place_fips: "39528"
+parent: va:grayson-county
+aliases: ["Town of Independence"]

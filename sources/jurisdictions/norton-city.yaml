@@ -1,0 +1,6 @@
+id: va:norton-city
+name: Norton City
+kind: independent-city
+fips: "51720"
+parent: va
+aliases: ["City of Norton"]

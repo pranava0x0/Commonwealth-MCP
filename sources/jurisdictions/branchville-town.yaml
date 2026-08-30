@@ -1,0 +1,6 @@
+id: va:branchville-town
+name: Branchville (town)
+kind: town
+place_fips: "09208"
+parent: va:southampton-county
+aliases: ["Town of Branchville"]

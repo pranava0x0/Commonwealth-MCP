@@ -1,0 +1,6 @@
+id: va:rich-creek-town
+name: Rich Creek (town)
+kind: town
+place_fips: "66896"
+parent: va:giles-county
+aliases: ["Town of Rich Creek"]

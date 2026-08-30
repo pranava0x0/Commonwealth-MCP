@@ -1,0 +1,6 @@
+id: va:exmore-town
+name: Exmore (town)
+kind: town
+place_fips: "26416"
+parent: va:northampton-county
+aliases: ["Town of Exmore"]

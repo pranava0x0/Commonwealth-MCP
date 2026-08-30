@@ -64,9 +64,60 @@ examples/
 ```
 
 - Every script runs keyless against live sources (`python examples/zoning_lookup.py`), takes a `--fixtures` flag to run offline from the recorded fixtures, and prints the provenance block prominently — the demo's job is to sell the envelope, not just the answer.
+
+**Shipped 2026-08-29 (GitHub issue #30), with two changes to the sketch above.** `examples/` holds four scripts — `whose_government.py`, `screen_a_parcel.py`, `what_is_covered.py`, `two_sources_disagree.py` — chosen around what the registry can now answer rather than the names guessed here; `bill_to_code.py` still waits on the legislative API. Each prints the five coverage dimensions, sources, and warnings alongside the answer.
+
+The first change: **`--fixtures` is the default, not the flag.** A newcomer's first run should not be able to fail on a network, a firewall, or a government service being down at the wrong moment, so the recorded mode runs unless `--live` is passed. The scripts say which mode they ran in on their first line.
+
+The second: **the offline seam moved into the package** (`commonwealth/fixtures.py`). It lived in `tests/conftest.py`, and a script someone runs should not have to import a test module to work. `conftest` now calls it, so there is one implementation rather than two that can drift.
+
+`tests/test_examples.py` runs each script as a subprocess exactly as a reader would — imports, argument parsing, and all — because an example nobody runs rots into a wrong tutorial. It also asserts the README's table lists every script, and that no example imports from the test suite.
 - The walkthrough transcript is a maintained artifact with a date, refreshed by the release process, because a stale demo transcript is anti-marketing.
 - MCP Inspector configs (`examples/inspector/`) ship for each server: the survey's universal baseline, and the first thing an evaluating developer reaches for.
 
 ## 4. The structural rule underneath all of it
 
 Every enumerating check derives its list from the registry it checks (servers from the server registry, manifests from the sources directory, tools from tool registration, fixtures from the fixtures tree) and prints the count it examined. The surveyed repos' best patterns all reduce to this; the base files' hard-won rule ("a gate that says 0 failures over 12% of the corpus is indistinguishable from one that says it over all of it") is the same lesson from the other direction.
+
+---
+
+## 5. Two tests that pass on a wrong answer (learned 2026-08-29)
+
+These are not hypotheticals. Both happened in this repo, both left the
+suite green, and both are cheap to avoid once named. They mirror entries
+in the universal `TESTING.md`; they are repeated here because they fire on
+this repo's own shapes.
+
+**A contract test written from the implementation cannot catch the
+implementation being wrong.** `design/provenance-envelope.md` § 2 has
+always said a material record carries `evidence_refs: [...]`. The code
+emitted `evidence_ref`, a string, and the contract tests were green
+because they had been written by reading the code and asserting what it
+did. The one artifact whose job was to catch that drift was derived from
+the thing it was checking.
+
+The tell is a test whose expected value you could produce by running the
+code. The fix is to make the test read the contract:
+`test_evidence_and_split_parcels.py::test_the_wire_schema_and_the_spec_agree_on_the_field_name`
+asserts the field name appears in the spec file, so the spec is the
+authority and a future rename has to move both.
+
+**Re-recording a fixture cleanly can delete exchanges that accumulated in
+it.** `tests/fixtures/sources/va-vgin-statewide-parcels/recorded.json` had
+grown five cross-source exchanges across three sessions, recorded by
+recording plans that no longer existed. Re-running `commonwealth sources
+sample` to add one new case rewrote the file from the current plan and
+dropped all five, breaking four tests in a different directory with "no
+recorded exchange for" errors that pointed at the reader rather than the
+writer.
+
+Two rules, both now in the CLI:
+
+- **A recording plan derives its cases from the registry it records.**
+  `_statewide_crosschecks()` reads every other parcel source's committed
+  fixture for its sample PIN and point, so registering a fourth locality
+  and re-recording picks up that locality's cross-source exchanges without
+  anyone remembering to add them.
+- **Before trusting a re-record, diff the request keys.** `set(old) -
+  set(new)` over the exchange list names exactly what a clean run forgot
+  how to produce.

@@ -1,0 +1,6 @@
+id: va:southampton-county
+name: Southampton County
+kind: county
+fips: "51175"
+parent: va
+aliases: ["County of Southampton"]

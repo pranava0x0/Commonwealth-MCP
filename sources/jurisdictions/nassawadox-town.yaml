@@ -1,0 +1,6 @@
+id: va:nassawadox-town
+name: Nassawadox (town)
+kind: town
+place_fips: "54984"
+parent: va:northampton-county
+aliases: ["Town of Nassawadox"]

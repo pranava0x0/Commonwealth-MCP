@@ -1,0 +1,6 @@
+id: va:hillsville-town
+name: Hillsville (town)
+kind: town
+place_fips: "37336"
+parent: va:carroll-county
+aliases: ["Town of Hillsville"]

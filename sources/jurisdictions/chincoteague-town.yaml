@@ -1,0 +1,6 @@
+id: va:chincoteague-town
+name: Chincoteague (town)
+kind: town
+place_fips: "16512"
+parent: va:accomack-county
+aliases: ["Town of Chincoteague"]

@@ -1,0 +1,137 @@
+# The first registered publisher that is neither VGIN nor a locality, and
+# the first MapServer rather than a FeatureServer. Endpoint, layer,
+# fields, count, and what could and could not be established about terms
+# all verified live 2026-08-29.
+#
+# MapServer worked through the existing arcgis adapter with no change:
+# layer info, `query`, `returnCountOnly`, `resultRecordCount`, and
+# distance buffering all behave as they do on a FeatureServer, and
+# advancedQueryCapabilities.supportsPagination is true. That is asserted
+# by a test rather than left as "it happened to work in one probe".
+id: va-deq-water-quality-stations
+name: DEQ Water Quality Monitoring Stations
+jurisdiction: va
+
+publisher:
+  agency: Virginia Department of Environmental Quality (DEQ)
+  authority_level: primary
+
+domains: [geo, environment]
+
+capabilities:
+  - id: environmental_site.lookup
+    tool_hint: geo.find_environmental_sites
+
+adapter:
+  type: arcgis
+  service_url: https://apps.deq.virginia.gov/arcgis/rest/services/public/WQM_STATIONS_ALL/MapServer
+  field_mapping_version: "1"
+  layers:
+    stations:
+      layer_id: 0
+      id_field: OBJECTID
+      geometry: point
+      field_mapping:
+        station_id: STATION
+        stream_name: STREAM_NAME
+        description: STATION_DESCRIPTION
+        deq_admin_region: VADEQ_ADMIN_REGION
+        monitoring_region: MONITORING_REGION
+        survey_program_code: SURVEY_PROGRAM_CODE
+        basin: BASIN
+        subbasin: SUBBASIN
+        major_basin_name: MAJOR_BASIN_NAME
+        huc_12: HUC6_HUC_12
+        huc_12_name: HUC6_HUC_12_NAME
+        first_sample_date: FIRST_SAMPLE_DATE
+        last_sample_date: LAST_SAMPLE_DATE
+        sample_count: SAMPLE_COUNT
+        last_benthic_date: LAST_BENTHIC_DATE
+        benthic_count: BENTHIC_COUNT
+      # The layer carries no locality field at all — it is organised by
+      # watershed and DEQ administrative region, not by government. A
+      # query is scoped by geography instead, and the tool says so rather
+      # than pretending a jurisdiction filter was applied.
+      jurisdiction_scope:
+        mode: none
+
+access:
+  mode: anonymous
+  automation_status: public_api
+  terms_url: https://apps.deq.virginia.gov/arcgis/rest/services/public
+  terms_notes: >
+    Reviewed 2026-08-29 and the review is incomplete; see terms_gap.
+    What was established: the REST directory and this service answer
+    anonymously, the service declares copyrightText "Virginia DEQ" and
+    capabilities "Query,Map,Data", and DEQ publishes 97 datasets on the
+    Virginia Open Data Portal. What was not: any statement of permitted
+    use. The publisher's own terms pages could not be read — a plain HTTP
+    request to deq.virginia.gov returns an Akamai "Access Denied" 403 for
+    /terms-of-use and /our-programs/data alike — and none of DEQ's 97
+    portal datasets carries a license field.
+  terms_gap: >
+    DEQ states no terms of use that could be read for this service. Its
+    reachability is not a licence. The service answers anonymously and
+    declares itself public, and no permitted-use statement has been
+    located; confirmation is outstanding with DEQ's GIS group. Checked
+    2026-08-29.
+  terms_reviewed_at: "2026-08-29"
+  data_classification: open
+
+freshness:
+  expected_cadence: unknown
+  cadence_source: >
+    Stated by the publisher in the layer description: "The dataset is
+    revised as needed and continually enhanced via QAQC methods." No
+    interval. Each station carries its own FIRST_SAMPLE_DATE and
+    LAST_SAMPLE_DATE, which say more about currency than the layer does.
+  ttl_hint_seconds: 86400
+
+coverage:
+  geography: va
+  temporal: range
+  known_limitations:
+    - >
+      NOT a complete inventory of environmental sites. These are DEQ's
+      water-quality monitoring stations, active and historic. A location
+      with no station near it has no DEQ monitoring station near it, and
+      that is the whole of what the absence means.
+    - >
+      A station is not a finding. Its presence says DEQ monitors or has
+      monitored that spot; it says nothing about whether anything was
+      found, whether a site is contaminated, or whether ground is safe or
+      suitable for any use.
+    - >
+      Historic stations are included. LAST_SAMPLE_DATE can be decades
+      old, so a station in a result is not evidence of current
+      monitoring. Read the per-station dates.
+    - >
+      The layer carries no locality or FIPS field. It is organised by
+      watershed (HUC) and DEQ administrative region, so a query is scoped
+      by geography and never by jurisdiction, and results near a boundary
+      can belong to a neighbouring locality.
+    - >
+      Water quality only. DEQ also regulates air, waste, and land, and
+      none of those programmes is in this layer or this registration.
+
+authority_notes: >
+  DEQ is the Commonwealth's environmental regulator and this is its own
+  monitoring network, so it is primary for what it covers — and what it
+  covers is narrow. This is the highest-disclosure source in the
+  registry: an environmental answer read as broader than it is can send
+  someone to the wrong conclusion about a property, so the tool's own
+  agent-facing description carries the limits rather than leaving them to
+  this file.
+
+health:
+  probe: arcgis_layer_count
+  expect:
+    # Observed live 2026-08-29: 16,298 stations (active and historic).
+    min_features:
+      stations: 12000
+
+lifecycle:
+  declared_state: active
+  added: "2026-08-29"
+  last_verified: "2026-08-29"
+  verified_by: pranava0x0

@@ -1,0 +1,6 @@
+id: va:dayton-town
+name: Dayton (town)
+kind: town
+place_fips: "21648"
+parent: va:rockingham-county
+aliases: ["Town of Dayton"]

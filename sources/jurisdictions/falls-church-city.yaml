@@ -1,0 +1,6 @@
+id: va:falls-church-city
+name: Falls Church City
+kind: independent-city
+fips: "51610"
+parent: va
+aliases: ["City of Falls Church"]

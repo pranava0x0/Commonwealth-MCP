@@ -1,0 +1,6 @@
+id: va:haysi-town
+name: Haysi (town)
+kind: town
+place_fips: "36008"
+parent: va:dickenson-county
+aliases: ["Town of Haysi"]

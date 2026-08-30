@@ -1,0 +1,6 @@
+id: va:edinburg-town
+name: Edinburg (town)
+kind: town
+place_fips: "25008"
+parent: va:shenandoah-county
+aliases: ["Town of Edinburg"]

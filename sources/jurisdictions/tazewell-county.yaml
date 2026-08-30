@@ -1,0 +1,6 @@
+id: va:tazewell-county
+name: Tazewell County
+kind: county
+fips: "51185"
+parent: va
+aliases: ["County of Tazewell"]

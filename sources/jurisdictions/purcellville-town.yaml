@@ -1,0 +1,6 @@
+id: va:purcellville-town
+name: Purcellville (town)
+kind: town
+place_fips: "65008"
+parent: va:loudoun-county
+aliases: ["Town of Purcellville"]

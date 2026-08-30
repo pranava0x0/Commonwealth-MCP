@@ -1,0 +1,6 @@
+id: va:suffolk-city
+name: Suffolk City
+kind: independent-city
+fips: "51800"
+parent: va
+aliases: ["City of Suffolk"]

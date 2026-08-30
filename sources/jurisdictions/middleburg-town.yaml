@@ -1,0 +1,6 @@
+id: va:middleburg-town
+name: Middleburg (town)
+kind: town
+place_fips: "51448"
+parent: va:loudoun-county
+aliases: ["Town of Middleburg"]

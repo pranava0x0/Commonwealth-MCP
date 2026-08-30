@@ -1,0 +1,6 @@
+id: va:greene-county
+name: Greene County
+kind: county
+fips: "51079"
+parent: va
+aliases: ["County of Greene"]

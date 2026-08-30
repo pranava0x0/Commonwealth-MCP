@@ -1,0 +1,6 @@
+id: va:dungannon-town
+name: Dungannon (town)
+kind: town
+place_fips: "23952"
+parent: va:scott-county
+aliases: ["Town of Dungannon"]

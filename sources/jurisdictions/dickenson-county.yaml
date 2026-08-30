@@ -1,0 +1,6 @@
+id: va:dickenson-county
+name: Dickenson County
+kind: county
+fips: "51051"
+parent: va
+aliases: ["County of Dickenson"]

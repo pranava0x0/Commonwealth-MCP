@@ -1,0 +1,3787 @@
+{
+ "source_id": "va-vgin-road-centerlines",
+ "recorded_at": "2026-08-30T15:01:45Z",
+ "rights": {
+  "publisher": "Virginia Geographic Information Network (VGIN), part of the Virginia Department of Emergency Management",
+  "terms_url": "https://vgin.vdem.virginia.gov/datasets/virginia-road-centerlines/about",
+  "note": "Recorded government-published responses; third-party content excluded from the repo's CC0 grant (../../../design/architecture.md decision 0011)."
+ },
+ "summary": {
+  "health:centerlines": {
+   "layer": "centerlines",
+   "feature_count": 659179,
+   "min_expected": 500000,
+   "healthy": true
+  },
+  "health:primaries": {
+   "layer": "primaries",
+   "feature_count": 74242,
+   "min_expected": 60000,
+   "healthy": true
+  },
+  "query_layer": "centerlines",
+  "by_name_in_town": {
+   "scoped": true,
+   "record_count": 39,
+   "names": [
+    "Center St",
+    "Center St N",
+    "Center St S"
+   ]
+  },
+  "by_name_in_county": {
+   "scoped": true,
+   "record_count": 39,
+   "names": [
+    "Center St",
+    "Center St N",
+    "Center St S"
+   ]
+  },
+  "near_point": {
+   "record_count": 4,
+   "names": [
+    "Center St N",
+    "Center St S",
+    "Maple Ave E",
+    "Maple Ave W"
+   ]
+  },
+  "no_match": {
+   "record_count": 0
+  }
+ },
+ "exchanges": [
+  {
+   "url": "https://vginmaps.vdem.virginia.gov/arcgis/rest/services/VA_Base_Layers/VBMP_RCL/FeatureServer/4/query",
+   "params": {
+    "f": "json",
+    "where": "1=1",
+    "returnCountOnly": "true"
+   },
+   "response": {
+    "count": 659179
+   }
+  },
+  {
+   "url": "https://vginmaps.vdem.virginia.gov/arcgis/rest/services/VA_Base_Layers/VBMP_RCL/FeatureServer/1/query",
+   "params": {
+    "f": "json",
+    "where": "1=1",
+    "returnCountOnly": "true"
+   },
+   "response": {
+    "count": 74242
+   }
+  },
+  {
+   "url": "https://vginmaps.vdem.virginia.gov/arcgis/rest/services/VA_Base_Layers/VBMP_RCL/FeatureServer/4/query",
+   "params": {
+    "f": "json",
+    "outFields": "ADD_LF,ADD_LT,ADD_RF,ADD_RT,FIPS_L,FIPS_R,GEO_EFFDT,LOCAL_ID,MTFCC,OBJECTID,ONE_WAY,RCL_ID,SEG_EXISTS,SPEED_MPH,ST_FULL,ST_NAME,VDOT_ID,VDOT_RNAM,VDOT_RNUM,ZIP_L,ZIP_R",
+    "resultRecordCount": "50",
+    "returnGeometry": "false",
+    "where": "ST_FULL LIKE 'Center St%' ESCAPE '\\' AND ((FIPS_L = '51059') OR (FIPS_R = '51059'))"
+   },
+   "response": {
+    "objectIdFieldName": "OBJECTID",
+    "globalIdFieldName": "",
+    "geometryType": "esriGeometryPolyline",
+    "spatialReference": {
+     "wkid": 102100,
+     "latestWkid": 3857
+    },
+    "fields": [
+     {
+      "name": "ADD_LF",
+      "alias": "ADD_LF",
+      "type": "esriFieldTypeInteger"
+     },
+     {
+      "name": "ADD_LT",
+      "alias": "ADD_LT",
+      "type": "esriFieldTypeInteger"
+     },
+     {
+      "name": "ADD_RF",
+      "alias": "ADD_RF",
+      "type": "esriFieldTypeInteger"
+     },
+     {
+      "name": "ADD_RT",
+      "alias": "ADD_RT",
+      "type": "esriFieldTypeInteger"
+     },
+     {
+      "name": "FIPS_L",
+      "alias": "FIPS_L",
+      "type": "esriFieldTypeString",
+      "length": 7
+     },
+     {
+      "name": "FIPS_R",
+      "alias": "FIPS_R",
+      "type": "esriFieldTypeString",
+      "length": 7
+     },
+     {
+      "name": "GEO_EFFDT",
+      "alias": "GEO_EFFDT",
+      "type": "esriFieldTypeDate",
+      "length": 8
+     },
+     {
+      "name": "LOCAL_ID",
+      "alias": "LOCAL_ID",
+      "type": "esriFieldTypeDouble"
+     },
+     {
+      "name": "MTFCC",
+      "alias": "MTFCC",
+      "type": "esriFieldTypeString",
+      "length": 10
+     },
+     {
+      "name": "OBJECTID",
+      "alias": "OBJECTID",
+      "type": "esriFieldTypeOID"
+     },
+     {
+      "name": "ONE_WAY",
+      "alias": "ONE_WAY",
+      "type": "esriFieldTypeString",
+      "length": 2
+     },
+     {
+      "name": "RCL_ID",
+      "alias": "RCL_ID",
+      "type": "esriFieldTypeDouble"
+     },
+     {
+      "name": "SEG_EXISTS",
+      "alias": "SEG_EXISTS",
+      "type": "esriFieldTypeString",
+      "length": 1
+     },
+     {
+      "name": "SPEED_MPH",
+      "alias": "SPEED_MPH",
+      "type": "esriFieldTypeInteger"
+     },
+     {
+      "name": "ST_FULL",
+      "alias": "ST_FULL",
+      "type": "esriFieldTypeString",
+      "length": 100
+     },
+     {
+      "name": "ST_NAME",
+      "alias": "ST_NAME",
+      "type": "esriFieldTypeString",
+      "length": 75
+     },
+     {
+      "name": "VDOT_ID",
+      "alias": "VDOT_ID",
+      "type": "esriFieldTypeDouble"
+     },
+     {
+      "name": "VDOT_RNAM",
+      "alias": "VDOT_RNAM",
+      "type": "esriFieldTypeString",
+      "length": 60
+     },
+     {
+      "name": "VDOT_RNUM",
+      "alias": "VDOT_RNUM",
+      "type": "esriFieldTypeInteger"
+     },
+     {
+      "name": "ZIP_L",
+      "alias": "ZIP_L",
+      "type": "esriFieldTypeInteger"
+     },
+     {
+      "name": "ZIP_R",
+      "alias": "ZIP_R",
+      "type": "esriFieldTypeInteger"
+     }
+    ],
+    "features": [
+     {
+      "attributes": {
+       "ADD_LF": 623,
+       "ADD_LT": 637,
+       "ADD_RF": 624,
+       "ADD_RT": 638,
+       "FIPS_L": "51059",
+       "FIPS_R": "51059",
+       "GEO_EFFDT": null,
+       "LOCAL_ID": 5105900317523.0,
+       "MTFCC": "S1400",
+       "OBJECTID": 419337,
+       "ONE_WAY": "B",
+       "RCL_ID": 397044.0,
+       "SEG_EXISTS": "Y",
+       "SPEED_MPH": 25,
+       "ST_FULL": "Center St",
+       "ST_NAME": "CENTER",
+       "VDOT_ID": 613373.0,
+       "VDOT_RNAM": "S-VA235PR CENTER ST",
+       "VDOT_RNUM": 0,
+       "ZIP_L": 20170,
+       "ZIP_R": 20170
+      }
+     },
+     {
+      "attributes": {
+       "ADD_LF": 0,
+       "ADD_LT": 0,
+       "ADD_RF": 640,
+       "ADD_RT": 698,
+       "FIPS_L": "51059",
+       "FIPS_R": "51059",
+       "GEO_EFFDT": null,
+       "LOCAL_ID": 5105900337061.0,
+       "MTFCC": "S1400",
+       "OBJECTID": 419482,
+       "ONE_WAY": "B",
+       "RCL_ID": 397361.0,
+       "SEG_EXISTS": "Y",
+       "SPEED_MPH": 25,
+       "ST_FULL": "Center St",
+       "ST_NAME": "CENTER",
+       "VDOT_ID": 613374.0,
+       "VDOT_RNAM": "S-VA235PR CENTER ST",
+       "VDOT_RNUM": 0,
+       "ZIP_L": 20170,
+       "ZIP_R": 20170
+      }
+     },
+     {
+      "attributes": {
+       "ADD_LF": 701,
+       "ADD_LT": 717,
+       "ADD_RF": 700,
+       "ADD_RT": 718,
+       "FIPS_L": "51059",
+       "FIPS_R": "51059",
+       "GEO_EFFDT": null,
+       "LOCAL_ID": 5105900365865.0,
+       "MTFCC": "S1400",
+       "OBJECTID": 419711,
+       "ONE_WAY": "B",
+       "RCL_ID": 397632.0,
+       "SEG_EXISTS": "Y",
+       "SPEED_MPH": 25,
+       "ST_FULL": "Center St",
+       "ST_NAME": "CENTER",
+       "VDOT_ID": 297383.0,
+       "VDOT_RNAM": "S-VA235PR CENTER ST",
+       "VDOT_RNUM": 0,
+       "ZIP_L": 20170,
+       "ZIP_R": 20170
+      }
+     },
+     {
+      "attributes": {
+       "ADD_LF": 571,
+       "ADD_LT": 577,
+       "ADD_RF": 570,
+       "ADD_RT": 576,
+       "FIPS_L": "51059",
+       "FIPS_R": "51059",
+       "GEO_EFFDT": null,
+       "LOCAL_ID": 5105900327139.0,
+       "MTFCC": "S1400",
+       "OBJECTID": 419830,
+       "ONE_WAY": "B",
+       "RCL_ID": 397097.0,
+       "SEG_EXISTS": "Y",
+       "SPEED_MPH": 25,
+       "ST_FULL": "Center St",
+       "ST_NAME": "CENTER",
+       "VDOT_ID": 613375.0,
+       "VDOT_RNAM": "S-VA235PR CENTER ST",
+       "VDOT_RNUM": 0,
+       "ZIP_L": 20170,
+       "ZIP_R": 20170
+      }
+     },
+     {
+      "attributes": {
+       "ADD_LF": 579,
+       "ADD_LT": 599,
+       "ADD_RF": 578,
+       "ADD_RT": 598,
+       "FIPS_L": "51059",
+       "FIPS_R": "51059",
+       "GEO_EFFDT": null,
+       "LOCAL_ID": 5105900315579.0,
+       "MTFCC": "S1400",
+       "OBJECTID": 419870,
+       "ONE_WAY": "B",
+       "RCL_ID": 396918.0,
+       "SEG_EXISTS": "Y",
+       "SPEED_MPH": 25,
+       "ST_FULL": "Center St",
+       "ST_NAME": "CENTER",
+       "VDOT_ID": 605657.0,
+       "VDOT_RNAM": "S-VA235PR CENTER ST",
+       "VDOT_RNUM": 0,
+       "ZIP_L": 20170,
+       "ZIP_R": 20170
+      }
+     },
+     {
+      "attributes": {
+       "ADD_LF": 781,
+       "ADD_LT": 799,
+       "ADD_RF": 780,
+       "ADD_RT": 798,
+       "FIPS_L": "51059",
+       "FIPS_R": "51059",
+       "GEO_EFFDT": null,
+       "LOCAL_ID": 5105900350476.0,
+       "MTFCC": "S1400",
+       "OBJECTID": 419874,
+       "ONE_WAY": "B",
+       "RCL_ID": 396959.0,
+       "SEG_EXISTS": "Y",
+       "SPEED_MPH": 25,
+       "ST_FULL": "Center St",
+       "ST_NAME": "CENTER",
+       "VDOT_ID": 297405.0,
+       "VDOT_RNAM": "S-VA235PR CENTER ST",
+       "VDOT_RNUM": 0,
+       "ZIP_L": 20170,
+       "ZIP_R": 20170
+      }
+     },
+     {
+      "attributes": {
+       "ADD_LF": 601,
+       "ADD_LT": 621,
+       "ADD_RF": 600,
+       "ADD_RT": 622,
+       "FIPS_L": "51059",
+       "FIPS_R": "51059",
+       "GEO_EFFDT": null,
+       "LOCAL_ID": 5105900313387.0,
+       "MTFCC": "S1400",
+       "OBJECTID": 419894,
+       "ONE_WAY": "B",
+       "RCL_ID": 397085.0,
+       "SEG_EXISTS": "Y",
+       "SPEED_MPH": 25,
+       "ST_FULL": "Center St",
+       "ST_NAME": "CENTER",
+       "VDOT_ID": 297363.0,
+       "VDOT_RNAM": "S-VA235PR CENTER ST",
+       "VDOT_RNUM": 0,
+       "ZIP_L": 20170,
+       "ZIP_R": 20170
+      }
+     },
+     {
+      "attributes": {
+       "ADD_LF": 501,
+       "ADD_LT": 569,
+       "ADD_RF": 500,
+       "ADD_RT": 568,
+       "FIPS_L": "51059",
+       "FIPS_R": "51059",
+       "GEO_EFFDT": null,
+       "LOCAL_ID": 5105900327140.0,
+       "MTFCC": "S1400",
+       "OBJECTID": 419926,
+       "ONE_WAY": "B",
+       "RCL_ID": 397351.0,
+       "SEG_EXISTS": "Y",
+       "SPEED_MPH": 25,
+       "ST_FULL": "Center St",
+       "ST_NAME": "CENTER",
+       "VDOT_ID": 613376.0,
+       "VDOT_RNAM": "S-VA235PR CENTER ST",
+       "VDOT_RNUM": 0,
+       "ZIP_L": 20170,
+       "ZIP_R": 20170
+      }
+     },
+     {
+      "attributes": {
+       "ADD_LF": 719,
+       "ADD_LT": 733,
+       "ADD_RF": 720,
+       "ADD_RT": 740,
+       "FIPS_L": "51059",
+       "FIPS_R": "51059",
+       "GEO_EFFDT": null,
+       "LOCAL_ID": 5105900366025.0,
+       "MTFCC": "S1400",
+       "OBJECTID": 419959,
+       "ONE_WAY": "B",
+       "RCL_ID": 397484.0,
+       "SEG_EXISTS": "Y",
+       "SPEED_MPH": 25,
+       "ST_FULL": "Center St",
+       "ST_NAME": "CENTER",
+       "VDOT_ID": 297402.0,
+       "VDOT_RNAM": "S-VA235PR CENTER ST",
+       "VDOT_RNUM": 0,
+       "ZIP_L": 20170,
+       "ZIP_R": 20170
+      }
+     },
+     {
+      "attributes": {
+       "ADD_LF": 765,
+       "ADD_LT": 779,
+       "ADD_RF": 766,
+       "ADD_RT": 778,
+       "FIPS_L": "51059",
+       "FIPS_R": "51059",
+       "GEO_EFFDT": null,
+       "LOCAL_ID": 5105900366509.0,
+       "MTFCC": "S1400",
+       "OBJECTID": 419968,
+       "ONE_WAY": "B",
+       "RCL_ID": 397053.0,
+       "SEG_EXISTS": "Y",
+       "SPEED_MPH": 25,
+       "ST_FULL": "Center St",
+       "ST_NAME": "CENTER",
+       "VDOT_ID": 4279346.0,
+       "VDOT_RNAM": "S-VA235PR CENTER ST",
+       "VDOT_RNUM": 0,
+       "ZIP_L": 20170,
+       "ZIP_R": 20170
+      }
+     },
+     {
+      "attributes": {
+       "ADD_LF": 741,
+       "ADD_LT": 763,
+       "ADD_RF": 750,
+       "ADD_RT": 764,
+       "FIPS_L": "51059",
+       "FIPS_R": "51059",
+       "GEO_EFFDT": null,
+       "LOCAL_ID": 5105900366510.0,
+       "MTFCC": "S1400",
+       "OBJECTID": 419972,
+       "ONE_WAY": "B",
+       "RCL_ID": 667582.0,
+       "SEG_EXISTS": "Y",
+       "SPEED_MPH": 25,
+       "ST_FULL": "Center St",
+       "ST_NAME": "CENTER",
+       "VDOT_ID": 36611241.0,
+       "VDOT_RNAM": "S-VA235PR CENTER ST",
+       "VDOT_RNUM": 0,
+       "ZIP_L": 20170,
+       "ZIP_R": 20170
+      }
+     },
+     {
+      "attributes": {
+       "ADD_LF": 400,
+       "ADD_LT": 430,
+       "ADD_RF": 401,
+       "ADD_RT": 429,
+       "FIPS_L": "51059",
+       "FIPS_R": "51059",
+       "GEO_EFFDT": null,
+       "LOCAL_ID": 5105900349438.0,
+       "MTFCC": "S1400",
+       "OBJECTID": 423128,
+       "ONE_WAY": "B",
+       "RCL_ID": 391286.0,
+       "SEG_EXISTS": "Y",
+       "SPEED_MPH": 25,
+       "ST_FULL": "Center St N",
+       "ST_NAME": "CENTER",
+       "VDOT_ID": 300927.0,
+       "VDOT_RNAM": "S-VA153PR CENTER ST N",
+       "VDOT_RNUM": 0,
+       "ZIP_L": 22180,
+       "ZIP_R": 22180
+      }
+     },
+     {
+      "attributes": {
+       "ADD_LF": 0,
+       "ADD_LT": 0,
+       "ADD_RF": 0,
+       "ADD_RT": 0,
+       "FIPS_L": "51059",
+       "FIPS_R": "51059",
+       "GEO_EFFDT": null,
+       "LOCAL_ID": 5105900349653.0,
+       "MTFCC": "S1400",
+       "OBJECTID": 423164,
+       "ONE_WAY": "B",
+       "RCL_ID": 401505.0,
+       "SEG_EXISTS": "Y",
+       "SPEED_MPH": 25,
+       "ST_FULL": "Center St",
+       "ST_NAME": "CENTER",
+       "VDOT_ID": 338987.0,
+       "VDOT_RNAM": "R-VA029SC04359EB",
+       "VDOT_RNUM": 4359,
+       "ZIP_L": 22181,
+       "ZIP_R": 22181
+      }
+     },
+     {
+      "attributes": {
+       "ADD_LF": 9605,
+       "ADD_LT": 9699,
+       "ADD_RF": 9606,
+       "ADD_RT": 9698,
+       "FIPS_L": "51059",
+       "FIPS_R": "51059",
+       "GEO_EFFDT": null,
+       "LOCAL_ID": 5105900345399.0,
+       "MTFCC": "S1400",
+       "OBJECTID": 423251,
+       "ONE_WAY": "B",
+       "RCL_ID": 401474.0,
+       "SEG_EXISTS": "Y",
+       "SPEED_MPH": 25,
+       "ST_FULL": "Center St",
+       "ST_NAME": "CENTER",
+       "VDOT_ID": 338985.0,
+       "VDOT_RNAM": "R-VA029SC04359EB",
+       "VDOT_RNUM": 4359,
+       "ZIP_L": 22181,
+       "ZIP_R": 22181
+      }
+     },
+     {
+      "attributes": {
+       "ADD_LF": 9531,
+       "ADD_LT": 9599,
+       "ADD_RF": 9532,
+       "ADD_RT": 9598,
+       "FIPS_L": "51059",
+       "FIPS_R": "51059",
+       "GEO_EFFDT": null,
+       "LOCAL_ID": 5105900349645.0,
+       "MTFCC": "S1400",
+       "OBJECTID": 423257,
+       "ONE_WAY": "B",
+       "RCL_ID": 401501.0,
+       "SEG_EXISTS": "Y",
+       "SPEED_MPH": 25,
+       "ST_FULL": "Center St",
+       "ST_NAME": "CENTER",
+       "VDOT_ID": 338988.0,
+       "VDOT_RNAM": "R-VA029SC04359EB",
+       "VDOT_RNUM": 4359,
+       "ZIP_L": 22181,
+       "ZIP_R": 22181
+      }
+     },
+     {
+      "attributes": {
+       "ADD_LF": 9523,
+       "ADD_LT": 9529,
+       "ADD_RF": 9524,
+       "ADD_RT": 9530,
+       "FIPS_L": "51059",
+       "FIPS_R": "51059",
+       "GEO_EFFDT": null,
+       "LOCAL_ID": 5105900349912.0,
+       "MTFCC": "S1400",
+       "OBJECTID": 423279,
+       "ONE_WAY": "B",
+       "RCL_ID": 401553.0,
+       "SEG_EXISTS": "Y",
+       "SPEED_MPH": 25,
+       "ST_FULL": "Center St",
+       "ST_NAME": "CENTER",
+       "VDOT_ID": 338989.0,
+       "VDOT_RNAM": "R-VA029SC04359EB",
+       "VDOT_RNUM": 4359,
+       "ZIP_L": 22181,
+       "ZIP_R": 22181
+      }
+     },
+     {
+      "attributes": {
+       "ADD_LF": 432,
+       "ADD_LT": 498,
+       "ADD_RF": 431,
+       "ADD_RT": 499,
+       "FIPS_L": "51059",
+       "FIPS_R": "51059",
+       "GEO_EFFDT": null,
+       "LOCAL_ID": 5105900345287.0,
+       "MTFCC": "S1400",
+       "OBJECTID": 423317,
+       "ONE_WAY": "B",
+       "RCL_ID": 401485.0,
+       "SEG_EXISTS": "Y",
+       "SPEED_MPH": 25,
+       "ST_FULL": "Center St N",
+       "ST_NAME": "CENTER",
+       "VDOT_ID": 652705.0,
+       "VDOT_RNAM": "S-VA153PR CENTER ST N",
+       "VDOT_RNUM": 0,
+       "ZIP_L": 22180,
+       "ZIP_R": 22180
+      }
+     },
+     {
+      "attributes": {
+       "ADD_LF": 9501,
+       "ADD_LT": 9521,
+       "ADD_RF": 9500,
+       "ADD_RT": 9522,
+       "FIPS_L": "51059",
+       "FIPS_R": "51059",
+       "GEO_EFFDT": null,
+       "LOCAL_ID": 5105900345179.0,
+       "MTFCC": "S1400",
+       "OBJECTID": 423333,
+       "ONE_WAY": "B",
+       "RCL_ID": 401601.0,
+       "SEG_EXISTS": "Y",
+       "SPEED_MPH": 25,
+       "ST_FULL": "Center St",
+       "ST_NAME": "CENTER",
+       "VDOT_ID": 5702980.0,
+       "VDOT_RNAM": "R-VA029SC04359EB",
+       "VDOT_RNUM": 4359,
+       "ZIP_L": 22181,
+       "ZIP_R": 22181
+      }
+     },
+     {
+      "attributes": {
+       "ADD_LF": 9601,
+       "ADD_LT": 9603,
+       "ADD_RF": 9600,
+       "ADD_RT": 9604,
+       "FIPS_L": "51059",
+       "FIPS_R": "51059",
+       "GEO_EFFDT": null,
+       "LOCAL_ID": 5105900345250.0,
+       "MTFCC": "S1400",
+       "OBJECTID": 423378,
+       "ONE_WAY": "B",
+       "RCL_ID": 401690.0,
+       "SEG_EXISTS": "Y",
+       "SPEED_MPH": 25,
+       "ST_FULL": "Center St",
+       "ST_NAME": "CENTER",
+       "VDOT_ID": 338986.0,
+       "VDOT_RNAM": "R-VA029SC04359EB",
+       "VDOT_RNUM": 4359,
+       "ZIP_L": 22181,
+       "ZIP_R": 22181
+      }
+     },
+     {
+      "attributes": {
+       "ADD_LF": 500,
+       "ADD_LT": 598,
+       "ADD_RF": 501,
+       "ADD_RT": 599,
+       "FIPS_L": "51059",
+       "FIPS_R": "51059",
+       "GEO_EFFDT": null,
+       "LOCAL_ID": 5105900349862.0,
+       "MTFCC": "S1400",
+       "OBJECTID": 424050,
+       "ONE_WAY": "B",
+       "RCL_ID": 409458.0,
+       "SEG_EXISTS": "Y",
+       "SPEED_MPH": 25,
+       "ST_FULL": "Center St S",
+       "ST_NAME": "CENTER",
+       "VDOT_ID": 300871.0,
+       "VDOT_RNAM": "S-VA153PR CENTER ST S",
+       "VDOT_RNUM": 0,
+       "ZIP_L": 22180,
+       "ZIP_R": 22180
+      }
+     },
+     {
+      "attributes": {
+       "ADD_LF": 600,
+       "ADD_LT": 698,
+       "ADD_RF": 601,
+       "ADD_RT": 699,
+       "FIPS_L": "51059",
+       "FIPS_R": "51059",
+       "GEO_EFFDT": null,
+       "LOCAL_ID": 5105900349718.0,
+       "MTFCC": "S1400",
+       "OBJECTID": 424279,
+       "ONE_WAY": "B",
+       "RCL_ID": 409816.0,
+       "SEG_EXISTS": "Y",
+       "SPEED_MPH": 25,
+       "ST_FULL": "Center St S",
+       "ST_NAME": "CENTER",
+       "VDOT_ID": 300589.0,
+       "VDOT_RNAM": "S-VA153PR CENTER ST S",
+       "VDOT_RNUM": 0,
+       "ZIP_L": 22180,
+       "ZIP_R": 22180
+      }
+     },
+     {
+      "attributes": {
+       "ADD_LF": 700,
+       "ADD_LT": 798,
+       "ADD_RF": 701,
+       "ADD_RT": 799,
+       "FIPS_L": "51059",
+       "FIPS_R": "51059",
+       "GEO_EFFDT": null,
+       "LOCAL_ID": 5105900349635.0,
+       "MTFCC": "S1400",
+       "OBJECTID": 424477,
+       "ONE_WAY": "B",
+       "RCL_ID": 409612.0,
+       "SEG_EXISTS": "Y",
+       "SPEED_MPH": 25,
+       "ST_FULL": "Center St S",
+       "ST_NAME": "CENTER",
+       "VDOT_ID": 300875.0,
+       "VDOT_RNAM": "S-VA153PR CENTER ST S",
+       "VDOT_RNUM": 0,
+       "ZIP_L": 22180,
+       "ZIP_R": 22180
+      }
+     },
+     {
+      "attributes": {
+       "ADD_LF": 200,
+       "ADD_LT": 250,
+       "ADD_RF": 201,
+       "ADD_RT": 249,
+       "FIPS_L": "51059",
+       "FIPS_R": "51059",
+       "GEO_EFFDT": null,
+       "LOCAL_ID": 5105905003712.0,
+       "MTFCC": "S1400",
+       "OBJECTID": 424548,
+       "ONE_WAY": "B",
+       "RCL_ID": 409539.0,
+       "SEG_EXISTS": "Y",
+       "SPEED_MPH": 25,
+       "ST_FULL": "Center St S",
+       "ST_NAME": "CENTER",
+       "VDOT_ID": 5171697.0,
+       "VDOT_RNAM": "S-VA153PR CENTER ST S",
+       "VDOT_RNUM": 0,
+       "ZIP_L": 22180,
+       "ZIP_R": 22180
+      }
+     },
+     {
+      "attributes": {
+       "ADD_LF": 406,
+       "ADD_LT": 498,
+       "ADD_RF": 449,
+       "ADD_RT": 499,
+       "FIPS_L": "51059",
+       "FIPS_R": "51059",
+       "GEO_EFFDT": null,
+       "LOCAL_ID": 5105900349475.0,
+       "MTFCC": "S1400",
+       "OBJECTID": 424628,
+       "ONE_WAY": "B",
+       "RCL_ID": 409916.0,
+       "SEG_EXISTS": "Y",
+       "SPEED_MPH": 25,
+       "ST_FULL": "Center St S",
+       "ST_NAME": "CENTER",
+       "VDOT_ID": 300585.0,
+       "VDOT_RNAM": "S-VA153PR CENTER ST S",
+       "VDOT_RNUM": 0,
+       "ZIP_L": 22180,
+       "ZIP_R": 22180
+      }
+     },
+     {
+      "attributes": {
+       "ADD_LF": 100,
+       "ADD_LT": 198,
+       "ADD_RF": 101,
+       "ADD_RT": 199,
+       "FIPS_L": "51059",
+       "FIPS_R": "51059",
+       "GEO_EFFDT": null,
+       "LOCAL_ID": 5105900349828.0,
+       "MTFCC": "S1400",
+       "OBJECTID": 424646,
+       "ONE_WAY": "B",
+       "RCL_ID": 409923.0,
+       "SEG_EXISTS": "Y",
+       "SPEED_MPH": 25,
+       "ST_FULL": "Center St S",
+       "ST_NAME": "CENTER",
+       "VDOT_ID": 300582.0,
+       "VDOT_RNAM": "S-VA153PR CENTER ST S",
+       "VDOT_RNUM": 0,
+       "ZIP_L": 22180,
+       "ZIP_R": 22180
+      }
+     },
+     {
+      "attributes": {
+       "ADD_LF": 252,
+       "ADD_LT": 298,
+       "ADD_RF": 251,
+       "ADD_RT": 299,
+       "FIPS_L": "51059",
+       "FIPS_R": "51059",
+       "GEO_EFFDT": null,
+       "LOCAL_ID": 5105905003711.0,
+       "MTFCC": "S1400",
+       "OBJECTID": 424666,
+       "ONE_WAY": "B",
+       "RCL_ID": 410074.0,
+       "SEG_EXISTS": "Y",
+       "SPEED_MPH": 25,
+       "ST_FULL": "Center St S",
+       "ST_NAME": "CENTER",
+       "VDOT_ID": 5171696.0,
+       "VDOT_RNAM": "S-VA153PR CENTER ST S",
+       "VDOT_RNUM": 0,
+       "ZIP_L": 22180,
+       "ZIP_R": 22180
+      }
+     },
+     {
+      "attributes": {
+       "ADD_LF": 300,
+       "ADD_LT": 398,
+       "ADD_RF": 301,
+       "ADD_RT": 399,
+       "FIPS_L": "51059",
+       "FIPS_R": "51059",
+       "GEO_EFFDT": null,
+       "LOCAL_ID": 5105905003697.0,
+       "MTFCC": "S1400",
+       "OBJECTID": 424677,
+       "ONE_WAY": "B",
+       "RCL_ID": 410077.0,
+       "SEG_EXISTS": "Y",
+       "SPEED_MPH": 25,
+       "ST_FULL": "Center St S",
+       "ST_NAME": "CENTER",
+       "VDOT_ID": 5171519.0,
+       "VDOT_RNAM": "S-VA153PR CENTER ST S",
+       "VDOT_RNUM": 0,
+       "ZIP_L": 22180,
+       "ZIP_R": 22180
+      }
+     },
+     {
+      "attributes": {
+       "ADD_LF": 400,
+       "ADD_LT": 404,
+       "ADD_RF": 401,
+       "ADD_RT": 447,
+       "FIPS_L": "51059",
+       "FIPS_R": "51059",
+       "GEO_EFFDT": null,
+       "LOCAL_ID": 5105905003696.0,
+       "MTFCC": "S1400",
+       "OBJECTID": 424678,
+       "ONE_WAY": "B",
+       "RCL_ID": 410079.0,
+       "SEG_EXISTS": "Y",
+       "SPEED_MPH": 25,
+       "ST_FULL": "Center St S",
+       "ST_NAME": "CENTER",
+       "VDOT_ID": 5171520.0,
+       "VDOT_RNAM": "S-VA153PR CENTER ST S",
+       "VDOT_RNUM": 0,
+       "ZIP_L": 22180,
+       "ZIP_R": 22180
+      }
+     },
+     {
+      "attributes": {
+       "ADD_LF": 101,
+       "ADD_LT": 199,
+       "ADD_RF": 100,
+       "ADD_RT": 198,
+       "FIPS_L": "51059",
+       "FIPS_R": "51059",
+       "GEO_EFFDT": null,
+       "LOCAL_ID": 5105900349890.0,
+       "MTFCC": "S1400",
+       "OBJECTID": 424829,
+       "ONE_WAY": "B",
+       "RCL_ID": 409537.0,
+       "SEG_EXISTS": "Y",
+       "SPEED_MPH": 25,
+       "ST_FULL": "Center St N",
+       "ST_NAME": "CENTER",
+       "VDOT_ID": 300581.0,
+       "VDOT_RNAM": "S-VA153PR CENTER ST N",
+       "VDOT_RNUM": 0,
+       "ZIP_L": 22180,
+       "ZIP_R": 22180
+      }
+     },
+     {
+      "attributes": {
+       "ADD_LF": 208,
+       "ADD_LT": 298,
+       "ADD_RF": 209,
+       "ADD_RT": 299,
+       "FIPS_L": "51059",
+       "FIPS_R": "51059",
+       "GEO_EFFDT": null,
+       "LOCAL_ID": 5105900349469.0,
+       "MTFCC": "S1400",
+       "OBJECTID": 424848,
+       "ONE_WAY": "B",
+       "RCL_ID": 409950.0,
+       "SEG_EXISTS": "Y",
+       "SPEED_MPH": 25,
+       "ST_FULL": "Center St N",
+       "ST_NAME": "CENTER",
+       "VDOT_ID": 300483.0,
+       "VDOT_RNAM": "S-VA153PR CENTER ST N",
+       "VDOT_RNUM": 0,
+       "ZIP_L": 22180,
+       "ZIP_R": 22180
+      }
+     },
+     {
+      "attributes": {
+       "ADD_LF": 398,
+       "ADD_LT": 398,
+       "ADD_RF": 371,
+       "ADD_RT": 399,
+       "FIPS_L": "51059",
+       "FIPS_R": "51059",
+       "GEO_EFFDT": null,
+       "LOCAL_ID": 5105900345315.0,
+       "MTFCC": "S1400",
+       "OBJECTID": 424855,
+       "ONE_WAY": "B",
+       "RCL_ID": 409648.0,
+       "SEG_EXISTS": "Y",
+       "SPEED_MPH": 25,
+       "ST_FULL": "Center St N",
+       "ST_NAME": "CENTER",
+       "VDOT_ID": 300904.0,
+       "VDOT_RNAM": "S-VA153PR CENTER ST N",
+       "VDOT_RNUM": 0,
+       "ZIP_L": 22180,
+       "ZIP_R": 22180
+      }
+     },
+     {
+      "attributes": {
+       "ADD_LF": 300,
+       "ADD_LT": 396,
+       "ADD_RF": 301,
+       "ADD_RT": 369,
+       "FIPS_L": "51059",
+       "FIPS_R": "51059",
+       "GEO_EFFDT": null,
+       "LOCAL_ID": 5105900349750.0,
+       "MTFCC": "S1400",
+       "OBJECTID": 424860,
+       "ONE_WAY": "B",
+       "RCL_ID": 409828.0,
+       "SEG_EXISTS": "Y",
+       "SPEED_MPH": 20,
+       "ST_FULL": "Center St N",
+       "ST_NAME": "CENTER",
+       "VDOT_ID": 300903.0,
+       "VDOT_RNAM": "S-VA153PR CENTER ST N",
+       "VDOT_RNUM": 0,
+       "ZIP_L": 22180,
+       "ZIP_R": 22180
+      }
+     },
+     {
+      "attributes": {
+       "ADD_LF": 200,
+       "ADD_LT": 206,
+       "ADD_RF": 201,
+       "ADD_RT": 207,
+       "FIPS_L": "51059",
+       "FIPS_R": "51059",
+       "GEO_EFFDT": null,
+       "LOCAL_ID": 5105900345292.0,
+       "MTFCC": "S1400",
+       "OBJECTID": 425185,
+       "ONE_WAY": "B",
+       "RCL_ID": 409992.0,
+       "SEG_EXISTS": "Y",
+       "SPEED_MPH": 25,
+       "ST_FULL": "Center St N",
+       "ST_NAME": "CENTER",
+       "VDOT_ID": 300485.0,
+       "VDOT_RNAM": "S-VA153PR CENTER ST N",
+       "VDOT_RNUM": 0,
+       "ZIP_L": 22180,
+       "ZIP_R": 22180
+      }
+     },
+     {
+      "attributes": {
+       "ADD_LF": 7695,
+       "ADD_LT": 7699,
+       "ADD_RF": 7694,
+       "ADD_RT": 7698,
+       "FIPS_L": "51059",
+       "FIPS_R": "51059",
+       "GEO_EFFDT": null,
+       "LOCAL_ID": 5105900359436.0,
+       "MTFCC": "S1400",
+       "OBJECTID": 426044,
+       "ONE_WAY": "B",
+       "RCL_ID": 410355.0,
+       "SEG_EXISTS": "Y",
+       "SPEED_MPH": 25,
+       "ST_FULL": "Center St",
+       "ST_NAME": "CENTER",
+       "VDOT_ID": 1052740.0,
+       "VDOT_RNAM": "R-VA029SC10405EB",
+       "VDOT_RNUM": 10405,
+       "ZIP_L": 22043,
+       "ZIP_R": 22043
+      }
+     },
+     {
+      "attributes": {
+       "ADD_LF": 2401,
+       "ADD_LT": 2499,
+       "ADD_RF": 2400,
+       "ADD_RT": 2498,
+       "FIPS_L": "51059",
+       "FIPS_R": "51059",
+       "GEO_EFFDT": null,
+       "LOCAL_ID": 5105900343052.0,
+       "MTFCC": "S1400",
+       "OBJECTID": 426324,
+       "ONE_WAY": "B",
+       "RCL_ID": 410288.0,
+       "SEG_EXISTS": "Y",
+       "SPEED_MPH": 25,
+       "ST_FULL": "Center St",
+       "ST_NAME": "CENTER",
+       "VDOT_ID": 339712.0,
+       "VDOT_RNAM": "R-VA029SC04099NB",
+       "VDOT_RNUM": 4099,
+       "ZIP_L": 22043,
+       "ZIP_R": 22043
+      }
+     },
+     {
+      "attributes": {
+       "ADD_LF": 7601,
+       "ADD_LT": 7693,
+       "ADD_RF": 7600,
+       "ADD_RT": 7692,
+       "FIPS_L": "51059",
+       "FIPS_R": "51059",
+       "GEO_EFFDT": null,
+       "LOCAL_ID": 5105900347658.0,
+       "MTFCC": "S1400",
+       "OBJECTID": 426511,
+       "ONE_WAY": "B",
+       "RCL_ID": 410680.0,
+       "SEG_EXISTS": "Y",
+       "SPEED_MPH": 25,
+       "ST_FULL": "Center St",
+       "ST_NAME": "CENTER",
+       "VDOT_ID": 1052741.0,
+       "VDOT_RNAM": "R-VA029SC10405EB",
+       "VDOT_RNUM": 10405,
+       "ZIP_L": 22043,
+       "ZIP_R": 22043
+      }
+     },
+     {
+      "attributes": {
+       "ADD_LF": 0,
+       "ADD_LT": 0,
+       "ADD_RF": 0,
+       "ADD_RT": 0,
+       "FIPS_L": "51059",
+       "FIPS_R": "51059",
+       "GEO_EFFDT": null,
+       "LOCAL_ID": 5105900314591.0,
+       "MTFCC": "S1400",
+       "OBJECTID": 427906,
+       "ONE_WAY": "B",
+       "RCL_ID": 405531.0,
+       "SEG_EXISTS": "Y",
+       "SPEED_MPH": 25,
+       "ST_FULL": "Center St",
+       "ST_NAME": "CENTER",
+       "VDOT_ID": 348221.0,
+       "VDOT_RNAM": "R-VA029SC01897NB",
+       "VDOT_RNUM": 1897,
+       "ZIP_L": 22101,
+       "ZIP_R": 22101
+      }
+     },
+     {
+      "attributes": {
+       "ADD_LF": 1401,
+       "ADD_LT": 1499,
+       "ADD_RF": 1400,
+       "ADD_RT": 1498,
+       "FIPS_L": "51059",
+       "FIPS_R": "51059",
+       "GEO_EFFDT": null,
+       "LOCAL_ID": 5105900333146.0,
+       "MTFCC": "S1400",
+       "OBJECTID": 428209,
+       "ONE_WAY": "B",
+       "RCL_ID": 405073.0,
+       "SEG_EXISTS": "Y",
+       "SPEED_MPH": 25,
+       "ST_FULL": "Center St",
+       "ST_NAME": "CENTER",
+       "VDOT_ID": 348220.0,
+       "VDOT_RNAM": "R-VA029SC01897NB",
+       "VDOT_RNUM": 1897,
+       "ZIP_L": 22101,
+       "ZIP_R": 22101
+      }
+     },
+     {
+      "attributes": {
+       "ADD_LF": 735,
+       "ADD_LT": 739,
+       "ADD_RF": 742,
+       "ADD_RT": 748,
+       "FIPS_L": "51059",
+       "FIPS_R": "51059",
+       "GEO_EFFDT": null,
+       "LOCAL_ID": 5105905013514.0,
+       "MTFCC": "S1400",
+       "OBJECTID": 537880,
+       "ONE_WAY": "B",
+       "RCL_ID": 668401.0,
+       "SEG_EXISTS": "Y",
+       "SPEED_MPH": 25,
+       "ST_FULL": "Center St",
+       "ST_NAME": "CENTER",
+       "VDOT_ID": 36611243.0,
+       "VDOT_RNAM": "S-VA235PR CENTER ST",
+       "VDOT_RNUM": 0,
+       "ZIP_L": 20170,
+       "ZIP_R": 20170
+      }
+     }
+    ]
+   }
+  },
+  {
+   "url": "https://vginmaps.vdem.virginia.gov/arcgis/rest/services/VA_Base_Layers/VBMP_RCL/FeatureServer/4",
+   "params": {
+    "f": "json"
+   },
+   "response": {
+    "currentVersion": 11.3,
+    "cimVersion": "3.3.0",
+    "id": 4,
+    "name": "> 49,999",
+    "type": "Feature Layer",
+    "parentLayer": {
+     "id": 3,
+     "name": "All Other Centerlines"
+    },
+    "defaultVisibility": true,
+    "minScale": 0,
+    "maxScale": 49999,
+    "canScaleSymbols": false,
+    "geometryType": "esriGeometryPolyline",
+    "description": "The Virginia Geographic Information Network (VGIN) has coordinated and manages the development of a consistent, seamless, statewide digital road centerline file with address, road name, and state route number attribution, as part of the Virginia Base Mapping Program (VBMP). The Road Centerline Program (RCL) leverages the Commonwealth's investment in the VBMP digital orthophotography and is focused on creating a single statewide, consistent digital road file. The RCL data layer is a dynamic dataset supported and maintained by Virginia's Local Governments, VDOT, and VGIN. VBMP RCL is extracted and provided back to local governments and state agencies in many geographic data sets every quarter.",
+    "copyrightText": "",
+    "editFieldsInfo": null,
+    "ownershipBasedAccessControlForFeatures": null,
+    "syncCanReturnChanges": false,
+    "relationships": [],
+    "isDataVersioned": false,
+    "isDataArchived": false,
+    "infoInEstimates": [
+     "extent",
+     "count"
+    ],
+    "isDataBranchVersioned": false,
+    "isDataReplicaTracked": false,
+    "isCoGoEnabled": false,
+    "supportsRollbackOnFailureParameter": true,
+    "archivingInfo": {
+     "supportsQueryWithHistoricMoment": false,
+     "startArchivingMoment": -1
+    },
+    "supportsStatistics": true,
+    "supportsExceedsLimitStatistics": true,
+    "supportsAdvancedQueries": true,
+    "supportsValidateSQL": true,
+    "supportsCoordinatesQuantization": true,
+    "supportsQuantizationEditMode": true,
+    "supportsCalculate": true,
+    "supportsASyncCalculate": true,
+    "supportsDatumTransformation": true,
+    "advancedQueryCapabilities": {
+     "supportsPagination": true,
+     "supportsTrueCurve": true,
+     "supportsQueryWithDistance": true,
+     "supportsReturningQueryExtent": true,
+     "supportsStatistics": true,
+     "supportsPercentileStatistics": true,
+     "supportsHavingClause": true,
+     "supportsOrderBy": true,
+     "supportsDistinct": true,
+     "supportsCountDistinct": true,
+     "supportsAdvancedQueryRelated": true,
+     "supportsQueryRelatedPagination": true,
+     "supportsCurrentUserQueries": true,
+     "supportsQueryWithResultType": true,
+     "supportsReturningGeometryCentroid": false,
+     "supportsSqlExpression": true,
+     "supportsQueryWithDatumTransformation": true,
+     "supportsLod": false,
+     "supportsQueryWithLodSR": false,
+     "supportsQueryAnalytic": true
+    },
+    "advancedQueryAnalyticCapabilities": {
+     "supportsLinearRegression": true,
+     "supportsAsync": true,
+     "supportsPercentileAnalytic": true
+    },
+    "advancedEditingCapabilities": {
+     "supportedSqlFormatsInCalculate": [
+      "standard"
+     ],
+     "supportsAsyncApplyEdits": true,
+     "supportsApplyEditsbyUploadID": true,
+     "supportedApplyEditsUploadIDFormats": "JSON"
+    },
+    "hasGeometryProperties": true,
+    "geometryProperties": {
+     "shapeLengthFieldName": "Shape__Length",
+     "units": "esriMeters"
+    },
+    "hasMetadata": true,
+    "extent": {
+     "xmin": -9314103.0594,
+     "ymin": 4368851.470799997,
+     "xmax": -8385441.8039,
+     "ymax": 4794128.281900004,
+     "spatialReference": {
+      "wkid": 102100,
+      "latestWkid": 3857,
+      "xyTolerance": 0.001,
+      "zTolerance": 0.0002,
+      "mTolerance": 0.0002,
+      "falseX": -20037700,
+      "falseY": -30241100,
+      "xyUnits": 148923141.92838538,
+      "falseZ": -100000,
+      "zUnits": 10000,
+      "falseM": -100000,
+      "mUnits": 10000
+     }
+    },
+    "sourceSpatialReference": {
+     "wkid": 102100,
+     "latestWkid": 3857,
+     "xyTolerance": 0.001,
+     "zTolerance": 0.001,
+     "mTolerance": 0.001,
+     "falseX": -20037700,
+     "falseY": -30241100,
+     "xyUnits": 10000,
+     "falseZ": 0,
+     "zUnits": 1,
+     "falseM": 0,
+     "mUnits": 1
+    },
+    "effectiveMinScale": 500000,
+    "drawingInfo": {
+     "renderer": {
+      "type": "uniqueValue",
+      "field1": "MTFCC",
+      "uniqueValueGroups": [
+       {
+        "heading": "MTFCC",
+        "classes": [
+         {
+          "label": "4WD VEHICULAR TRAILS",
+          "description": "4WD VEHICULAR TRAILS",
+          "symbol": {
+           "type": "esriSLS",
+           "style": "esriSLSSolid",
+           "color": [
+            204,
+            204,
+            204,
+            255
+           ],
+           "width": 1
+          },
+          "values": [
+           [
+            "S1500"
+           ]
+          ]
+         },
+         {
+          "label": "ALLEYS",
+          "description": "ALLEYS",
+          "symbol": {
+           "type": "esriSLS",
+           "style": "esriSLSSolid",
+           "color": [
+            204,
+            204,
+            204,
+            255
+           ],
+           "width": 1
+          },
+          "values": [
+           [
+            "S1730"
+           ]
+          ]
+         },
+         {
+          "label": "BIKE PATHS OR TRAILS",
+          "description": "BIKE PATHS OR TRAILS",
+          "symbol": {
+           "type": "esriSLS",
+           "style": "esriSLSSolid",
+           "color": [
+            204,
+            204,
+            204,
+            255
+           ],
+           "width": 1
+          },
+          "values": [
+           [
+            "S1820"
+           ]
+          ]
+         },
+         {
+          "label": "BRIDLE PATHS",
+          "description": "BRIDLE PATHS",
+          "symbol": {
+           "type": "esriSLS",
+           "style": "esriSLSSolid",
+           "color": [
+            204,
+            204,
+            204,
+            255
+           ],
+           "width": 1
+          },
+          "values": [
+           [
+            "S1830"
+           ]
+          ]
+         },
+         {
+          "label": "DRIVEWAYS",
+          "description": "DRIVEWAYS",
+          "symbol": {
+           "type": "esriSLS",
+           "style": "esriSLSSolid",
+           "color": [
+            204,
+            204,
+            204,
+            255
+           ],
+           "width": 1
+          },
+          "values": [
+           [
+            "S9999"
+           ]
+          ]
+         },
+         {
+          "label": "LIMITED ACCESS HIGHWAY FRONTAGE",
+          "description": "LIMITED ACCESS HIGHWAY FRONTAGE",
+          "symbol": {
+           "type": "esriSLS",
+           "style": "esriSLSSolid",
+           "color": [
+            204,
+            204,
+            204,
+            255
+           ],
+           "width": 1
+          },
+          "values": [
+           [
+            "S1640"
+           ]
+          ]
+         },
+         {
+          "label": "LOCAL SECONDARIES",
+          "description": "LOCAL SECONDARIES",
+          "symbol": {
+           "type": "esriSLS",
+           "style": "esriSLSSolid",
+           "color": [
+            204,
+            204,
+            204,
+            255
+           ],
+           "width": 1
+          },
+          "values": [
+           [
+            "S1400"
+           ]
+          ]
+         },
+         {
+          "label": "PARKING LOT ROADS",
+          "description": "PARKING LOT ROADS",
+          "symbol": {
+           "type": "esriSLS",
+           "style": "esriSLSSolid",
+           "color": [
+            204,
+            204,
+            204,
+            255
+           ],
+           "width": 1
+          },
+          "values": [
+           [
+            "S1780"
+           ]
+          ]
+         },
+         {
+          "label": "ROAD MEDIANS",
+          "description": "ROAD MEDIANS",
+          "symbol": {
+           "type": "esriSLS",
+           "style": "esriSLSSolid",
+           "color": [
+            204,
+            204,
+            204,
+            255
+           ],
+           "width": 1
+          },
+          "values": [
+           [
+            "S2000"
+           ]
+          ]
+         },
+         {
+          "label": "SERVICE VEHICLE PRIVATE DRIVES",
+          "description": "SERVICE VEHICLE PRIVATE DRIVES",
+          "symbol": {
+           "type": "esriSLS",
+           "style": "esriSLSSolid",
+           "color": [
+            204,
+            204,
+            204,
+            255
+           ],
+           "width": 1
+          },
+          "values": [
+           [
+            "S1740"
+           ]
+          ]
+         },
+         {
+          "label": "STAIRWAYS",
+          "description": "STAIRWAYS",
+          "symbol": {
+           "type": "esriSLS",
+           "style": "esriSLSSolid",
+           "color": [
+            204,
+            204,
+            204,
+            255
+           ],
+           "width": 1
+          },
+          "values": [
+           [
+            "S1720"
+           ]
+          ]
+         },
+         {
+          "label": "WALKWAYS/PEDESTRIAN TRAILS",
+          "description": "WALKWAYS/PEDESTRIAN TRAILS",
+          "symbol": {
+           "type": "esriSLS",
+           "style": "esriSLSSolid",
+           "color": [
+            204,
+            204,
+            204,
+            255
+           ],
+           "width": 1
+          },
+          "values": [
+           [
+            "S1710"
+           ]
+          ]
+         }
+        ]
+       }
+      ],
+      "uniqueValueInfos": [
+       {
+        "symbol": {
+         "type": "esriSLS",
+         "style": "esriSLSSolid",
+         "color": [
+          204,
+          204,
+          204,
+          255
+         ],
+         "width": 1
+        },
+        "value": "S1500",
+        "label": "4WD VEHICULAR TRAILS"
+       },
+       {
+        "symbol": {
+         "type": "esriSLS",
+         "style": "esriSLSSolid",
+         "color": [
+          204,
+          204,
+          204,
+          255
+         ],
+         "width": 1
+        },
+        "value": "S1730",
+        "label": "ALLEYS"
+       },
+       {
+        "symbol": {
+         "type": "esriSLS",
+         "style": "esriSLSSolid",
+         "color": [
+          204,
+          204,
+          204,
+          255
+         ],
+         "width": 1
+        },
+        "value": "S1820",
+        "label": "BIKE PATHS OR TRAILS"
+       },
+       {
+        "symbol": {
+         "type": "esriSLS",
+         "style": "esriSLSSolid",
+         "color": [
+          204,
+          204,
+          204,
+          255
+         ],
+         "width": 1
+        },
+        "value": "S1830",
+        "label": "BRIDLE PATHS"
+       },
+       {
+        "symbol": {
+         "type": "esriSLS",
+         "style": "esriSLSSolid",
+         "color": [
+          204,
+          204,
+          204,
+          255
+         ],
+         "width": 1
+        },
+        "value": "S9999",
+        "label": "DRIVEWAYS"
+       },
+       {
+        "symbol": {
+         "type": "esriSLS",
+         "style": "esriSLSSolid",
+         "color": [
+          204,
+          204,
+          204,
+          255
+         ],
+         "width": 1
+        },
+        "value": "S1640",
+        "label": "LIMITED ACCESS HIGHWAY FRONTAGE"
+       },
+       {
+        "symbol": {
+         "type": "esriSLS",
+         "style": "esriSLSSolid",
+         "color": [
+          204,
+          204,
+          204,
+          255
+         ],
+         "width": 1
+        },
+        "value": "S1400",
+        "label": "LOCAL SECONDARIES"
+       },
+       {
+        "symbol": {
+         "type": "esriSLS",
+         "style": "esriSLSSolid",
+         "color": [
+          204,
+          204,
+          204,
+          255
+         ],
+         "width": 1
+        },
+        "value": "S1780",
+        "label": "PARKING LOT ROADS"
+       },
+       {
+        "symbol": {
+         "type": "esriSLS",
+         "style": "esriSLSSolid",
+         "color": [
+          204,
+          204,
+          204,
+          255
+         ],
+         "width": 1
+        },
+        "value": "S2000",
+        "label": "ROAD MEDIANS"
+       },
+       {
+        "symbol": {
+         "type": "esriSLS",
+         "style": "esriSLSSolid",
+         "color": [
+          204,
+          204,
+          204,
+          255
+         ],
+         "width": 1
+        },
+        "value": "S1740",
+        "label": "SERVICE VEHICLE PRIVATE DRIVES"
+       },
+       {
+        "symbol": {
+         "type": "esriSLS",
+         "style": "esriSLSSolid",
+         "color": [
+          204,
+          204,
+          204,
+          255
+         ],
+         "width": 1
+        },
+        "value": "S1720",
+        "label": "STAIRWAYS"
+       },
+       {
+        "symbol": {
+         "type": "esriSLS",
+         "style": "esriSLSSolid",
+         "color": [
+          204,
+          204,
+          204,
+          255
+         ],
+         "width": 1
+        },
+        "value": "S1710",
+        "label": "WALKWAYS/PEDESTRIAN TRAILS"
+       }
+      ],
+      "fieldDelimiter": ",",
+      "authoringInfo": {
+       "colorRamp": {
+        "type": "multipart",
+        "colorRamps": [
+         {
+          "type": "algorithmic",
+          "algorithm": "esriCIELabAlgorithm",
+          "fromColor": [
+           161,
+           191,
+           77,
+           255
+          ],
+          "toColor": [
+           161,
+           191,
+           77,
+           255
+          ]
+         },
+         {
+          "type": "algorithmic",
+          "algorithm": "esriCIELabAlgorithm",
+          "fromColor": [
+           39,
+           53,
+           179,
+           255
+          ],
+          "toColor": [
+           39,
+           53,
+           179,
+           255
+          ]
+         },
+         {
+          "type": "algorithmic",
+          "algorithm": "esriCIELabAlgorithm",
+          "fromColor": [
+           176,
+           37,
+           69,
+           255
+          ],
+          "toColor": [
+           176,
+           37,
+           69,
+           255
+          ]
+         },
+         {
+          "type": "algorithmic",
+          "algorithm": "esriCIELabAlgorithm",
+          "fromColor": [
+           38,
+           146,
+           173,
+           255
+          ],
+          "toColor": [
+           38,
+           146,
+           173,
+           255
+          ]
+         },
+         {
+          "type": "algorithmic",
+          "algorithm": "esriCIELabAlgorithm",
+          "fromColor": [
+           194,
+           60,
+           189,
+           255
+          ],
+          "toColor": [
+           194,
+           60,
+           189,
+           255
+          ]
+         },
+         {
+          "type": "algorithmic",
+          "algorithm": "esriCIELabAlgorithm",
+          "fromColor": [
+           194,
+           127,
+           56,
+           255
+          ],
+          "toColor": [
+           194,
+           127,
+           56,
+           255
+          ]
+         },
+         {
+          "type": "algorithmic",
+          "algorithm": "esriCIELabAlgorithm",
+          "fromColor": [
+           61,
+           196,
+           135,
+           255
+          ],
+          "toColor": [
+           61,
+           196,
+           135,
+           255
+          ]
+         },
+         {
+          "type": "algorithmic",
+          "algorithm": "esriCIELabAlgorithm",
+          "fromColor": [
+           51,
+           106,
+           184,
+           255
+          ],
+          "toColor": [
+           51,
+           106,
+           184,
+           255
+          ]
+         },
+         {
+          "type": "algorithmic",
+          "algorithm": "esriCIELabAlgorithm",
+          "fromColor": [
+           54,
+           186,
+           47,
+           255
+          ],
+          "toColor": [
+           54,
+           186,
+           47,
+           255
+          ]
+         },
+         {
+          "type": "algorithmic",
+          "algorithm": "esriCIELabAlgorithm",
+          "fromColor": [
+           191,
+           59,
+           130,
+           255
+          ],
+          "toColor": [
+           191,
+           59,
+           130,
+           255
+          ]
+         },
+         {
+          "type": "algorithmic",
+          "algorithm": "esriCIELabAlgorithm",
+          "fromColor": [
+           109,
+           63,
+           158,
+           255
+          ],
+          "toColor": [
+           109,
+           63,
+           158,
+           255
+          ]
+         },
+         {
+          "type": "algorithmic",
+          "algorithm": "esriCIELabAlgorithm",
+          "fromColor": [
+           58,
+           189,
+           178,
+           255
+          ],
+          "toColor": [
+           58,
+           189,
+           178,
+           255
+          ]
+         },
+         {
+          "type": "algorithmic",
+          "algorithm": "esriCIELabAlgorithm",
+          "fromColor": [
+           184,
+           163,
+           61,
+           255
+          ],
+          "toColor": [
+           184,
+           163,
+           61,
+           255
+          ]
+         }
+        ]
+       }
+      }
+     },
+     "scaleSymbols": true,
+     "transparency": 0,
+     "labelingInfo": null
+    },
+    "hasM": false,
+    "hasZ": false,
+    "allowGeometryUpdates": true,
+    "allowTrueCurvesUpdates": true,
+    "onlyAllowTrueCurveUpdatesByTrueCurveClients": true,
+    "hasAttachments": false,
+    "supportsApplyEditsWithGlobalIds": false,
+    "htmlPopupType": "esriServerHTMLPopupTypeAsHTMLText",
+    "objectIdField": "OBJECTID",
+    "globalIdField": "",
+    "displayField": "ST_NAME",
+    "typeIdField": "MTFCC",
+    "subtypeField": "",
+    "fields": [
+     {
+      "name": "Shape__Length",
+      "type": "esriFieldTypeDouble",
+      "alias": "SHAPE.STLength()",
+      "domain": null,
+      "editable": false,
+      "nullable": true,
+      "defaultValue": null,
+      "modelName": "SHAPE.STLength()",
+      "required": true
+     },
+     {
+      "name": "OBJECTID",
+      "type": "esriFieldTypeOID",
+      "alias": "OBJECTID",
+      "domain": null,
+      "editable": false,
+      "nullable": false,
+      "defaultValue": null,
+      "modelName": "OBJECTID"
+     },
+     {
+      "name": "RCL_ID",
+      "type": "esriFieldTypeDouble",
+      "alias": "RCL_ID",
+      "domain": null,
+      "editable": true,
+      "nullable": true,
+      "defaultValue": null,
+      "modelName": "RCL_ID"
+     },
+     {
+      "name": "LOCAL_ID",
+      "type": "esriFieldTypeDouble",
+      "alias": "LOCAL_ID",
+      "domain": null,
+      "editable": true,
+      "nullable": true,
+      "defaultValue": null,
+      "modelName": "LOCAL_ID"
+     },
+     {
+      "name": "VDOT_ID",
+      "type": "esriFieldTypeDouble",
+      "alias": "VDOT_ID",
+      "domain": null,
+      "editable": true,
+      "nullable": true,
+      "defaultValue": null,
+      "modelName": "VDOT_ID"
+     },
+     {
+      "name": "MFIPS",
+      "type": "esriFieldTypeString",
+      "alias": "MFIPS",
+      "domain": null,
+      "editable": true,
+      "nullable": true,
+      "length": 7,
+      "defaultValue": null,
+      "modelName": "MFIPS"
+     },
+     {
+      "name": "GEO_ET",
+      "type": "esriFieldTypeInteger",
+      "alias": "GEO_ET",
+      "domain": null,
+      "editable": true,
+      "nullable": true,
+      "defaultValue": null,
+      "modelName": "GEO_ET"
+     },
+     {
+      "name": "GEO_EFFDT",
+      "type": "esriFieldTypeDate",
+      "alias": "GEO_EFFDT",
+      "domain": null,
+      "editable": true,
+      "nullable": true,
+      "length": 8,
+      "defaultValue": null,
+      "modelName": "GEO_EFFDT"
+     },
+     {
+      "name": "GEO_SRC",
+      "type": "esriFieldTypeString",
+      "alias": "GEO_SRC",
+      "domain": null,
+      "editable": true,
+      "nullable": true,
+      "length": 4,
+      "defaultValue": null,
+      "modelName": "GEO_SRC"
+     },
+     {
+      "name": "GEO_ED",
+      "type": "esriFieldTypeDate",
+      "alias": "GEO_ED",
+      "domain": null,
+      "editable": true,
+      "nullable": true,
+      "length": 8,
+      "defaultValue": null,
+      "modelName": "GEO_ED"
+     },
+     {
+      "name": "ADD_LF",
+      "type": "esriFieldTypeInteger",
+      "alias": "ADD_LF",
+      "domain": null,
+      "editable": true,
+      "nullable": true,
+      "defaultValue": null,
+      "modelName": "ADD_LF"
+     },
+     {
+      "name": "ADD_LT",
+      "type": "esriFieldTypeInteger",
+      "alias": "ADD_LT",
+      "domain": null,
+      "editable": true,
+      "nullable": true,
+      "defaultValue": null,
+      "modelName": "ADD_LT"
+     },
+     {
+      "name": "ADD_RF",
+      "type": "esriFieldTypeInteger",
+      "alias": "ADD_RF",
+      "domain": null,
+      "editable": true,
+      "nullable": true,
+      "defaultValue": null,
+      "modelName": "ADD_RF"
+     },
+     {
+      "name": "ADD_RT",
+      "type": "esriFieldTypeInteger",
+      "alias": "ADD_RT",
+      "domain": null,
+      "editable": true,
+      "nullable": true,
+      "defaultValue": null,
+      "modelName": "ADD_RT"
+     },
+     {
+      "name": "ADD_FORMAT",
+      "type": "esriFieldTypeString",
+      "alias": "ADD_FORMAT",
+      "domain": null,
+      "editable": true,
+      "nullable": true,
+      "length": 1,
+      "defaultValue": null,
+      "modelName": "ADD_FORMAT"
+     },
+     {
+      "name": "ADD_SRC",
+      "type": "esriFieldTypeString",
+      "alias": "ADD_SRC",
+      "domain": null,
+      "editable": true,
+      "nullable": true,
+      "length": 4,
+      "defaultValue": null,
+      "modelName": "ADD_SRC"
+     },
+     {
+      "name": "ADD_ED",
+      "type": "esriFieldTypeDate",
+      "alias": "ADD_ED",
+      "domain": null,
+      "editable": true,
+      "nullable": true,
+      "length": 8,
+      "defaultValue": null,
+      "modelName": "ADD_ED"
+     },
+     {
+      "name": "ST_PREMD",
+      "type": "esriFieldTypeString",
+      "alias": "ST_PREMD",
+      "domain": null,
+      "editable": true,
+      "nullable": true,
+      "length": 10,
+      "defaultValue": null,
+      "modelName": "ST_PREMD"
+     },
+     {
+      "name": "ST_PREDIR",
+      "type": "esriFieldTypeString",
+      "alias": "ST_PREDIR",
+      "domain": null,
+      "editable": true,
+      "nullable": true,
+      "length": 2,
+      "defaultValue": null,
+      "modelName": "ST_PREDIR"
+     },
+     {
+      "name": "ST_NAME",
+      "type": "esriFieldTypeString",
+      "alias": "ST_NAME",
+      "domain": null,
+      "editable": true,
+      "nullable": true,
+      "length": 75,
+      "defaultValue": null,
+      "modelName": "ST_NAME"
+     },
+     {
+      "name": "ST_SUFFIX",
+      "type": "esriFieldTypeString",
+      "alias": "ST_SUFFIX",
+      "domain": null,
+      "editable": true,
+      "nullable": true,
+      "length": 4,
+      "defaultValue": null,
+      "modelName": "ST_SUFFIX"
+     },
+     {
+      "name": "ST_SUFFDIR",
+      "type": "esriFieldTypeString",
+      "alias": "ST_SUFFDIR",
+      "domain": null,
+      "editable": true,
+      "nullable": true,
+      "length": 2,
+      "defaultValue": null,
+      "modelName": "ST_SUFFDIR"
+     },
+     {
+      "name": "ST_PSTMD",
+      "type": "esriFieldTypeString",
+      "alias": "ST_PSTMD",
+      "domain": null,
+      "editable": true,
+      "nullable": true,
+      "length": 10,
+      "defaultValue": null,
+      "modelName": "ST_PSTMD"
+     },
+     {
+      "name": "ST_FULL",
+      "type": "esriFieldTypeString",
+      "alias": "ST_FULL",
+      "domain": null,
+      "editable": true,
+      "nullable": true,
+      "length": 100,
+      "defaultValue": null,
+      "modelName": "ST_FULL"
+     },
+     {
+      "name": "ST_SRC",
+      "type": "esriFieldTypeString",
+      "alias": "ST_SRC",
+      "domain": null,
+      "editable": true,
+      "nullable": true,
+      "length": 4,
+      "defaultValue": null,
+      "modelName": "ST_SRC"
+     },
+     {
+      "name": "ST_ED",
+      "type": "esriFieldTypeDate",
+      "alias": "ST_ED",
+      "domain": null,
+      "editable": true,
+      "nullable": true,
+      "length": 8,
+      "defaultValue": null,
+      "modelName": "ST_ED"
+     },
+     {
+      "name": "MTFCC",
+      "type": "esriFieldTypeString",
+      "alias": "MTFCC",
+      "domain": null,
+      "editable": true,
+      "nullable": true,
+      "length": 10,
+      "defaultValue": null,
+      "modelName": "MTFCC"
+     },
+     {
+      "name": "SEG_TYPE",
+      "type": "esriFieldTypeInteger",
+      "alias": "SEG_TYPE",
+      "domain": null,
+      "editable": true,
+      "nullable": true,
+      "defaultValue": null,
+      "modelName": "SEG_TYPE"
+     },
+     {
+      "name": "SPEED_MPH",
+      "type": "esriFieldTypeInteger",
+      "alias": "SPEED_MPH",
+      "domain": null,
+      "editable": true,
+      "nullable": true,
+      "defaultValue": null,
+      "modelName": "SPEED_MPH"
+     },
+     {
+      "name": "DUAL_CW",
+      "type": "esriFieldTypeString",
+      "alias": "DUAL_CW",
+      "domain": null,
+      "editable": true,
+      "nullable": true,
+      "length": 1,
+      "defaultValue": null,
+      "modelName": "DUAL_CW"
+     },
+     {
+      "name": "ONE_WAY",
+      "type": "esriFieldTypeString",
+      "alias": "ONE_WAY",
+      "domain": null,
+      "editable": true,
+      "nullable": true,
+      "length": 2,
+      "defaultValue": null,
+      "modelName": "ONE_WAY"
+     },
+     {
+      "name": "REVERSIBLE",
+      "type": "esriFieldTypeString",
+      "alias": "REVERSIBLE",
+      "domain": null,
+      "editable": true,
+      "nullable": true,
+      "length": 1,
+      "defaultValue": null,
+      "modelName": "REVERSIBLE"
+     },
+     {
+      "name": "SEG_EXISTS",
+      "type": "esriFieldTypeString",
+      "alias": "SEG_EXISTS",
+      "domain": null,
+      "editable": true,
+      "nullable": true,
+      "length": 1,
+      "defaultValue": null,
+      "modelName": "SEG_EXISTS"
+     },
+     {
+      "name": "FIPS_L",
+      "type": "esriFieldTypeString",
+      "alias": "FIPS_L",
+      "domain": null,
+      "editable": true,
+      "nullable": true,
+      "length": 7,
+      "defaultValue": null,
+      "modelName": "FIPS_L"
+     },
+     {
+      "name": "FIPS_R",
+      "type": "esriFieldTypeString",
+      "alias": "FIPS_R",
+      "domain": null,
+      "editable": true,
+      "nullable": true,
+      "length": 7,
+      "defaultValue": null,
+      "modelName": "FIPS_R"
+     },
+     {
+      "name": "MSAG_ESNL",
+      "type": "esriFieldTypeString",
+      "alias": "ESN_L",
+      "domain": null,
+      "editable": true,
+      "nullable": true,
+      "length": 5,
+      "defaultValue": null,
+      "modelName": "MSAG_ESNL"
+     },
+     {
+      "name": "MSAG_ESNR",
+      "type": "esriFieldTypeString",
+      "alias": "ESN_R",
+      "domain": null,
+      "editable": true,
+      "nullable": true,
+      "length": 5,
+      "defaultValue": null,
+      "modelName": "MSAG_ESNR"
+     },
+     {
+      "name": "MSAG_COMML",
+      "type": "esriFieldTypeString",
+      "alias": "MSAG_COMML",
+      "domain": null,
+      "editable": true,
+      "nullable": true,
+      "length": 50,
+      "defaultValue": null,
+      "modelName": "MSAG_COMML"
+     },
+     {
+      "name": "MSAG_COMMR",
+      "type": "esriFieldTypeString",
+      "alias": "MSAG_COMMR",
+      "domain": null,
+      "editable": true,
+      "nullable": true,
+      "length": 50,
+      "defaultValue": null,
+      "modelName": "MSAG_COMMR"
+     },
+     {
+      "name": "ZIP_L",
+      "type": "esriFieldTypeInteger",
+      "alias": "ZIP_L",
+      "domain": null,
+      "editable": true,
+      "nullable": true,
+      "defaultValue": null,
+      "modelName": "ZIP_L"
+     },
+     {
+      "name": "ZIP_R",
+      "type": "esriFieldTypeInteger",
+      "alias": "ZIP_R",
+      "domain": null,
+      "editable": true,
+      "nullable": true,
+      "defaultValue": null,
+      "modelName": "ZIP_R"
+     },
+     {
+      "name": "PO_L",
+      "type": "esriFieldTypeString",
+      "alias": "PO_L",
+      "domain": null,
+      "editable": true,
+      "nullable": true,
+      "length": 50,
+      "defaultValue": null,
+      "modelName": "PO_L"
+     },
+     {
+      "name": "PO_R",
+      "type": "esriFieldTypeString",
+      "alias": "PO_R",
+      "domain": null,
+      "editable": true,
+      "nullable": true,
+      "length": 50,
+      "defaultValue": null,
+      "modelName": "PO_R"
+     },
+     {
+      "name": "STATE_L",
+      "type": "esriFieldTypeString",
+      "alias": "STATE_L",
+      "domain": null,
+      "editable": true,
+      "nullable": true,
+      "length": 2,
+      "defaultValue": null,
+      "modelName": "STATE_L"
+     },
+     {
+      "name": "STATE_R",
+      "type": "esriFieldTypeString",
+      "alias": "STATE_R",
+      "domain": null,
+      "editable": true,
+      "nullable": true,
+      "length": 2,
+      "defaultValue": null,
+      "modelName": "STATE_R"
+     },
+     {
+      "name": "VDOT_RNAM",
+      "type": "esriFieldTypeString",
+      "alias": "VDOT_RNAM",
+      "domain": null,
+      "editable": true,
+      "nullable": true,
+      "length": 60,
+      "defaultValue": null,
+      "modelName": "VDOT_RNAM"
+     },
+     {
+      "name": "VDOT_RNUM",
+      "type": "esriFieldTypeInteger",
+      "alias": "VDOT_RNUM",
+      "domain": null,
+      "editable": true,
+      "nullable": true,
+      "defaultValue": null,
+      "modelName": "VDOT_RNUM"
+     },
+     {
+      "name": "VDOT_RTYP",
+      "type": "esriFieldTypeString",
+      "alias": "VDOT_RTYP",
+      "domain": null,
+      "editable": true,
+      "nullable": true,
+      "length": 3,
+      "defaultValue": null,
+      "modelName": "VDOT_RTYP"
+     },
+     {
+      "name": "VDOT_RCAT",
+      "type": "esriFieldTypeString",
+      "alias": "VDOT_RCAT",
+      "domain": null,
+      "editable": true,
+      "nullable": true,
+      "length": 6,
+      "defaultValue": null,
+      "modelName": "VDOT_RCAT"
+     },
+     {
+      "name": "VDOT_FC",
+      "type": "esriFieldTypeString",
+      "alias": "VDOT_FC",
+      "domain": null,
+      "editable": true,
+      "nullable": true,
+      "length": 3,
+      "defaultValue": null,
+      "modelName": "VDOT_FC"
+     },
+     {
+      "name": "VDOT_PTYP",
+      "type": "esriFieldTypeString",
+      "alias": "VDOT_PTYP",
+      "domain": null,
+      "editable": true,
+      "nullable": true,
+      "length": 6,
+      "defaultValue": null,
+      "modelName": "VDOT_PTYP"
+     },
+     {
+      "name": "VDOT_SPD",
+      "type": "esriFieldTypeInteger",
+      "alias": "VDOT_SPD",
+      "domain": null,
+      "editable": true,
+      "nullable": true,
+      "defaultValue": null,
+      "modelName": "VDOT_SPD"
+     },
+     {
+      "name": "VDOT_RST",
+      "type": "esriFieldTypeString",
+      "alias": "VDOT_RST",
+      "domain": null,
+      "editable": true,
+      "nullable": true,
+      "length": 254,
+      "defaultValue": null,
+      "modelName": "VDOT_RST"
+     },
+     {
+      "name": "VDOT_LC",
+      "type": "esriFieldTypeInteger",
+      "alias": "VDOT_LC",
+      "domain": null,
+      "editable": true,
+      "nullable": true,
+      "defaultValue": null,
+      "modelName": "VDOT_LC"
+     },
+     {
+      "name": "VDOT_PWM",
+      "type": "esriFieldTypeInteger",
+      "alias": "VDOT_PWM",
+      "domain": null,
+      "editable": true,
+      "nullable": true,
+      "defaultValue": null,
+      "modelName": "VDOT_PWM"
+     },
+     {
+      "name": "VDOT_SWM",
+      "type": "esriFieldTypeInteger",
+      "alias": "VDOT_SWM",
+      "domain": null,
+      "editable": true,
+      "nullable": true,
+      "defaultValue": null,
+      "modelName": "VDOT_SWM"
+     },
+     {
+      "name": "VDOT_AADT",
+      "type": "esriFieldTypeInteger",
+      "alias": "VDOT_AADT",
+      "domain": null,
+      "editable": true,
+      "nullable": true,
+      "defaultValue": null,
+      "modelName": "VDOT_AADT"
+     },
+     {
+      "name": "SHAPE_Leng",
+      "type": "esriFieldTypeDouble",
+      "alias": "SHAPE_Leng",
+      "domain": null,
+      "editable": true,
+      "nullable": true,
+      "defaultValue": null,
+      "modelName": "SHAPE_Length"
+     }
+    ],
+    "geometryField": {
+     "name": "SHAPE",
+     "type": "esriFieldTypeGeometry",
+     "alias": "SHAPE",
+     "domain": null,
+     "editable": true,
+     "nullable": true,
+     "defaultValue": null,
+     "modelName": "SHAPE"
+    },
+    "indexes": [
+     {
+      "name": "R1765_pk",
+      "fields": "OBJECTID",
+      "isAscending": true,
+      "isUnique": true,
+      "description": ""
+     },
+     {
+      "name": "S1647_idx",
+      "fields": "SHAPE",
+      "isAscending": true,
+      "isUnique": true,
+      "description": ""
+     }
+    ],
+    "datesInUnknownTimezone": false,
+    "dateFieldsTimeReference": {
+     "timeZone": "UTC",
+     "respectsDaylightSaving": false
+    },
+    "preferredTimeReference": null,
+    "types": [
+     {
+      "id": "S1500",
+      "name": "4WD VEHICULAR TRAILS",
+      "domains": {},
+      "templates": [
+       {
+        "name": "S1500",
+        "description": "",
+        "prototype": {
+         "attributes": {
+          "VDOT_AADT": null,
+          "VDOT_SWM": null,
+          "SHAPE_Leng": null,
+          "RCL_ID": null,
+          "LOCAL_ID": null,
+          "VDOT_ID": null,
+          "MFIPS": null,
+          "GEO_ET": null,
+          "GEO_EFFDT": null,
+          "GEO_SRC": null,
+          "GEO_ED": null,
+          "ADD_LF": null,
+          "ADD_LT": null,
+          "ADD_RF": null,
+          "ADD_RT": null,
+          "ADD_FORMAT": null,
+          "ADD_SRC": null,
+          "ADD_ED": null,
+          "ST_PREMD": null,
+          "ST_PREDIR": null,
+          "ST_NAME": null,
+          "ST_SUFFIX": null,
+          "ST_SUFFDIR": null,
+          "ST_PSTMD": null,
+          "ST_FULL": null,
+          "ST_SRC": null,
+          "ST_ED": null,
+          "MTFCC": "S1500",
+          "SEG_TYPE": null,
+          "SPEED_MPH": null,
+          "DUAL_CW": null,
+          "ONE_WAY": null,
+          "REVERSIBLE": null,
+          "SEG_EXISTS": null,
+          "FIPS_L": null,
+          "FIPS_R": null,
+          "MSAG_ESNL": null,
+          "MSAG_ESNR": null,
+          "MSAG_COMML": null,
+          "MSAG_COMMR": null,
+          "ZIP_L": null,
+          "ZIP_R": null,
+          "PO_L": null,
+          "PO_R": null,
+          "STATE_L": null,
+          "STATE_R": null,
+          "VDOT_RNAM": null,
+          "VDOT_RNUM": null,
+          "VDOT_RTYP": null,
+          "VDOT_RCAT": null,
+          "VDOT_FC": null,
+          "VDOT_PTYP": null,
+          "VDOT_SPD": null,
+          "VDOT_RST": null,
+          "VDOT_LC": null,
+          "VDOT_PWM": null
+         }
+        },
+        "drawingTool": "esriFeatureEditToolLine"
+       }
+      ]
+     },
+     {
+      "id": "S1730",
+      "name": "ALLEYS",
+      "domains": {},
+      "templates": [
+       {
+        "name": "S1730",
+        "description": "",
+        "prototype": {
+         "attributes": {
+          "VDOT_AADT": null,
+          "VDOT_SWM": null,
+          "SHAPE_Leng": null,
+          "RCL_ID": null,
+          "LOCAL_ID": null,
+          "VDOT_ID": null,
+          "MFIPS": null,
+          "GEO_ET": null,
+          "GEO_EFFDT": null,
+          "GEO_SRC": null,
+          "GEO_ED": null,
+          "ADD_LF": null,
+          "ADD_LT": null,
+          "ADD_RF": null,
+          "ADD_RT": null,
+          "ADD_FORMAT": null,
+          "ADD_SRC": null,
+          "ADD_ED": null,
+          "ST_PREMD": null,
+          "ST_PREDIR": null,
+          "ST_NAME": null,
+          "ST_SUFFIX": null,
+          "ST_SUFFDIR": null,
+          "ST_PSTMD": null,
+          "ST_FULL": null,
+          "ST_SRC": null,
+          "ST_ED": null,
+          "MTFCC": "S1730",
+          "SEG_TYPE": null,
+          "SPEED_MPH": null,
+          "DUAL_CW": null,
+          "ONE_WAY": null,
+          "REVERSIBLE": null,
+          "SEG_EXISTS": null,
+          "FIPS_L": null,
+          "FIPS_R": null,
+          "MSAG_ESNL": null,
+          "MSAG_ESNR": null,
+          "MSAG_COMML": null,
+          "MSAG_COMMR": null,
+          "ZIP_L": null,
+          "ZIP_R": null,
+          "PO_L": null,
+          "PO_R": null,
+          "STATE_L": null,
+          "STATE_R": null,
+          "VDOT_RNAM": null,
+          "VDOT_RNUM": null,
+          "VDOT_RTYP": null,
+          "VDOT_RCAT": null,
+          "VDOT_FC": null,
+          "VDOT_PTYP": null,
+          "VDOT_SPD": null,
+          "VDOT_RST": null,
+          "VDOT_LC": null,
+          "VDOT_PWM": null
+         }
+        },
+        "drawingTool": "esriFeatureEditToolLine"
+       }
+      ]
+     },
+     {
+      "id": "S1820",
+      "name": "BIKE PATHS OR TRAILS",
+      "domains": {},
+      "templates": [
+       {
+        "name": "S1820",
+        "description": "",
+        "prototype": {
+         "attributes": {
+          "VDOT_AADT": null,
+          "VDOT_SWM": null,
+          "SHAPE_Leng": null,
+          "RCL_ID": null,
+          "LOCAL_ID": null,
+          "VDOT_ID": null,
+          "MFIPS": null,
+          "GEO_ET": null,
+          "GEO_EFFDT": null,
+          "GEO_SRC": null,
+          "GEO_ED": null,
+          "ADD_LF": null,
+          "ADD_LT": null,
+          "ADD_RF": null,
+          "ADD_RT": null,
+          "ADD_FORMAT": null,
+          "ADD_SRC": null,
+          "ADD_ED": null,
+          "ST_PREMD": null,
+          "ST_PREDIR": null,
+          "ST_NAME": null,
+          "ST_SUFFIX": null,
+          "ST_SUFFDIR": null,
+          "ST_PSTMD": null,
+          "ST_FULL": null,
+          "ST_SRC": null,
+          "ST_ED": null,
+          "MTFCC": "S1820",
+          "SEG_TYPE": null,
+          "SPEED_MPH": null,
+          "DUAL_CW": null,
+          "ONE_WAY": null,
+          "REVERSIBLE": null,
+          "SEG_EXISTS": null,
+          "FIPS_L": null,
+          "FIPS_R": null,
+          "MSAG_ESNL": null,
+          "MSAG_ESNR": null,
+          "MSAG_COMML": null,
+          "MSAG_COMMR": null,
+          "ZIP_L": null,
+          "ZIP_R": null,
+          "PO_L": null,
+          "PO_R": null,
+          "STATE_L": null,
+          "STATE_R": null,
+          "VDOT_RNAM": null,
+          "VDOT_RNUM": null,
+          "VDOT_RTYP": null,
+          "VDOT_RCAT": null,
+          "VDOT_FC": null,
+          "VDOT_PTYP": null,
+          "VDOT_SPD": null,
+          "VDOT_RST": null,
+          "VDOT_LC": null,
+          "VDOT_PWM": null
+         }
+        },
+        "drawingTool": "esriFeatureEditToolLine"
+       }
+      ]
+     },
+     {
+      "id": "S1830",
+      "name": "BRIDLE PATHS",
+      "domains": {},
+      "templates": [
+       {
+        "name": "S1830",
+        "description": "",
+        "prototype": {
+         "attributes": {
+          "VDOT_AADT": null,
+          "VDOT_SWM": null,
+          "SHAPE_Leng": null,
+          "RCL_ID": null,
+          "LOCAL_ID": null,
+          "VDOT_ID": null,
+          "MFIPS": null,
+          "GEO_ET": null,
+          "GEO_EFFDT": null,
+          "GEO_SRC": null,
+          "GEO_ED": null,
+          "ADD_LF": null,
+          "ADD_LT": null,
+          "ADD_RF": null,
+          "ADD_RT": null,
+          "ADD_FORMAT": null,
+          "ADD_SRC": null,
+          "ADD_ED": null,
+          "ST_PREMD": null,
+          "ST_PREDIR": null,
+          "ST_NAME": null,
+          "ST_SUFFIX": null,
+          "ST_SUFFDIR": null,
+          "ST_PSTMD": null,
+          "ST_FULL": null,
+          "ST_SRC": null,
+          "ST_ED": null,
+          "MTFCC": "S1830",
+          "SEG_TYPE": null,
+          "SPEED_MPH": null,
+          "DUAL_CW": null,
+          "ONE_WAY": null,
+          "REVERSIBLE": null,
+          "SEG_EXISTS": null,
+          "FIPS_L": null,
+          "FIPS_R": null,
+          "MSAG_ESNL": null,
+          "MSAG_ESNR": null,
+          "MSAG_COMML": null,
+          "MSAG_COMMR": null,
+          "ZIP_L": null,
+          "ZIP_R": null,
+          "PO_L": null,
+          "PO_R": null,
+          "STATE_L": null,
+          "STATE_R": null,
+          "VDOT_RNAM": null,
+          "VDOT_RNUM": null,
+          "VDOT_RTYP": null,
+          "VDOT_RCAT": null,
+          "VDOT_FC": null,
+          "VDOT_PTYP": null,
+          "VDOT_SPD": null,
+          "VDOT_RST": null,
+          "VDOT_LC": null,
+          "VDOT_PWM": null
+         }
+        },
+        "drawingTool": "esriFeatureEditToolLine"
+       }
+      ]
+     },
+     {
+      "id": "S9999",
+      "name": "DRIVEWAYS",
+      "domains": {},
+      "templates": [
+       {
+        "name": "S9999",
+        "description": "",
+        "prototype": {
+         "attributes": {
+          "VDOT_AADT": null,
+          "VDOT_SWM": null,
+          "SHAPE_Leng": null,
+          "RCL_ID": null,
+          "LOCAL_ID": null,
+          "VDOT_ID": null,
+          "MFIPS": null,
+          "GEO_ET": null,
+          "GEO_EFFDT": null,
+          "GEO_SRC": null,
+          "GEO_ED": null,
+          "ADD_LF": null,
+          "ADD_LT": null,
+          "ADD_RF": null,
+          "ADD_RT": null,
+          "ADD_FORMAT": null,
+          "ADD_SRC": null,
+          "ADD_ED": null,
+          "ST_PREMD": null,
+          "ST_PREDIR": null,
+          "ST_NAME": null,
+          "ST_SUFFIX": null,
+          "ST_SUFFDIR": null,
+          "ST_PSTMD": null,
+          "ST_FULL": null,
+          "ST_SRC": null,
+          "ST_ED": null,
+          "MTFCC": "S9999",
+          "SEG_TYPE": null,
+          "SPEED_MPH": null,
+          "DUAL_CW": null,
+          "ONE_WAY": null,
+          "REVERSIBLE": null,
+          "SEG_EXISTS": null,
+          "FIPS_L": null,
+          "FIPS_R": null,
+          "MSAG_ESNL": null,
+          "MSAG_ESNR": null,
+          "MSAG_COMML": null,
+          "MSAG_COMMR": null,
+          "ZIP_L": null,
+          "ZIP_R": null,
+          "PO_L": null,
+          "PO_R": null,
+          "STATE_L": null,
+          "STATE_R": null,
+          "VDOT_RNAM": null,
+          "VDOT_RNUM": null,
+          "VDOT_RTYP": null,
+          "VDOT_RCAT": null,
+          "VDOT_FC": null,
+          "VDOT_PTYP": null,
+          "VDOT_SPD": null,
+          "VDOT_RST": null,
+          "VDOT_LC": null,
+          "VDOT_PWM": null
+         }
+        },
+        "drawingTool": "esriFeatureEditToolLine"
+       }
+      ]
+     },
+     {
+      "id": "S1640",
+      "name": "LIMITED ACCESS HIGHWAY FRONTAGE",
+      "domains": {},
+      "templates": [
+       {
+        "name": "S1640",
+        "description": "",
+        "prototype": {
+         "attributes": {
+          "VDOT_AADT": null,
+          "VDOT_SWM": null,
+          "SHAPE_Leng": null,
+          "RCL_ID": null,
+          "LOCAL_ID": null,
+          "VDOT_ID": null,
+          "MFIPS": null,
+          "GEO_ET": null,
+          "GEO_EFFDT": null,
+          "GEO_SRC": null,
+          "GEO_ED": null,
+          "ADD_LF": null,
+          "ADD_LT": null,
+          "ADD_RF": null,
+          "ADD_RT": null,
+          "ADD_FORMAT": null,
+          "ADD_SRC": null,
+          "ADD_ED": null,
+          "ST_PREMD": null,
+          "ST_PREDIR": null,
+          "ST_NAME": null,
+          "ST_SUFFIX": null,
+          "ST_SUFFDIR": null,
+          "ST_PSTMD": null,
+          "ST_FULL": null,
+          "ST_SRC": null,
+          "ST_ED": null,
+          "MTFCC": "S1640",
+          "SEG_TYPE": null,
+          "SPEED_MPH": null,
+          "DUAL_CW": null,
+          "ONE_WAY": null,
+          "REVERSIBLE": null,
+          "SEG_EXISTS": null,
+          "FIPS_L": null,
+          "FIPS_R": null,
+          "MSAG_ESNL": null,
+          "MSAG_ESNR": null,
+          "MSAG_COMML": null,
+          "MSAG_COMMR": null,
+          "ZIP_L": null,
+          "ZIP_R": null,
+          "PO_L": null,
+          "PO_R": null,
+          "STATE_L": null,
+          "STATE_R": null,
+          "VDOT_RNAM": null,
+          "VDOT_RNUM": null,
+          "VDOT_RTYP": null,
+          "VDOT_RCAT": null,
+          "VDOT_FC": null,
+          "VDOT_PTYP": null,
+          "VDOT_SPD": null,
+          "VDOT_RST": null,
+          "VDOT_LC": null,
+          "VDOT_PWM": null
+         }
+        },
+        "drawingTool": "esriFeatureEditToolLine"
+       }
+      ]
+     },
+     {
+      "id": "S1400",
+      "name": "LOCAL SECONDARIES",
+      "domains": {},
+      "templates": [
+       {
+        "name": "S1400",
+        "description": "",
+        "prototype": {
+         "attributes": {
+          "VDOT_AADT": null,
+          "VDOT_SWM": null,
+          "SHAPE_Leng": null,
+          "RCL_ID": null,
+          "LOCAL_ID": null,
+          "VDOT_ID": null,
+          "MFIPS": null,
+          "GEO_ET": null,
+          "GEO_EFFDT": null,
+          "GEO_SRC": null,
+          "GEO_ED": null,
+          "ADD_LF": null,
+          "ADD_LT": null,
+          "ADD_RF": null,
+          "ADD_RT": null,
+          "ADD_FORMAT": null,
+          "ADD_SRC": null,
+          "ADD_ED": null,
+          "ST_PREMD": null,
+          "ST_PREDIR": null,
+          "ST_NAME": null,
+          "ST_SUFFIX": null,
+          "ST_SUFFDIR": null,
+          "ST_PSTMD": null,
+          "ST_FULL": null,
+          "ST_SRC": null,
+          "ST_ED": null,
+          "MTFCC": "S1400",
+          "SEG_TYPE": null,
+          "SPEED_MPH": null,
+          "DUAL_CW": null,
+          "ONE_WAY": null,
+          "REVERSIBLE": null,
+          "SEG_EXISTS": null,
+          "FIPS_L": null,
+          "FIPS_R": null,
+          "MSAG_ESNL": null,
+          "MSAG_ESNR": null,
+          "MSAG_COMML": null,
+          "MSAG_COMMR": null,
+          "ZIP_L": null,
+          "ZIP_R": null,
+          "PO_L": null,
+          "PO_R": null,
+          "STATE_L": null,
+          "STATE_R": null,
+          "VDOT_RNAM": null,
+          "VDOT_RNUM": null,
+          "VDOT_RTYP": null,
+          "VDOT_RCAT": null,
+          "VDOT_FC": null,
+          "VDOT_PTYP": null,
+          "VDOT_SPD": null,
+          "VDOT_RST": null,
+          "VDOT_LC": null,
+          "VDOT_PWM": null
+         }
+        },
+        "drawingTool": "esriFeatureEditToolLine"
+       }
+      ]
+     },
+     {
+      "id": "S1780",
+      "name": "PARKING LOT ROADS",
+      "domains": {},
+      "templates": [
+       {
+        "name": "S1780",
+        "description": "",
+        "prototype": {
+         "attributes": {
+          "VDOT_AADT": null,
+          "VDOT_SWM": null,
+          "SHAPE_Leng": null,
+          "RCL_ID": null,
+          "LOCAL_ID": null,
+          "VDOT_ID": null,
+          "MFIPS": null,
+          "GEO_ET": null,
+          "GEO_EFFDT": null,
+          "GEO_SRC": null,
+          "GEO_ED": null,
+          "ADD_LF": null,
+          "ADD_LT": null,
+          "ADD_RF": null,
+          "ADD_RT": null,
+          "ADD_FORMAT": null,
+          "ADD_SRC": null,
+          "ADD_ED": null,
+          "ST_PREMD": null,
+          "ST_PREDIR": null,
+          "ST_NAME": null,
+          "ST_SUFFIX": null,
+          "ST_SUFFDIR": null,
+          "ST_PSTMD": null,
+          "ST_FULL": null,
+          "ST_SRC": null,
+          "ST_ED": null,
+          "MTFCC": "S1780",
+          "SEG_TYPE": null,
+          "SPEED_MPH": null,
+          "DUAL_CW": null,
+          "ONE_WAY": null,
+          "REVERSIBLE": null,
+          "SEG_EXISTS": null,
+          "FIPS_L": null,
+          "FIPS_R": null,
+          "MSAG_ESNL": null,
+          "MSAG_ESNR": null,
+          "MSAG_COMML": null,
+          "MSAG_COMMR": null,
+          "ZIP_L": null,
+          "ZIP_R": null,
+          "PO_L": null,
+          "PO_R": null,
+          "STATE_L": null,
+          "STATE_R": null,
+          "VDOT_RNAM": null,
+          "VDOT_RNUM": null,
+          "VDOT_RTYP": null,
+          "VDOT_RCAT": null,
+          "VDOT_FC": null,
+          "VDOT_PTYP": null,
+          "VDOT_SPD": null,
+          "VDOT_RST": null,
+          "VDOT_LC": null,
+          "VDOT_PWM": null
+         }
+        },
+        "drawingTool": "esriFeatureEditToolLine"
+       }
+      ]
+     },
+     {
+      "id": "S2000",
+      "name": "ROAD MEDIANS",
+      "domains": {},
+      "templates": [
+       {
+        "name": "S2000",
+        "description": "",
+        "prototype": {
+         "attributes": {
+          "VDOT_AADT": null,
+          "VDOT_SWM": null,
+          "SHAPE_Leng": null,
+          "RCL_ID": null,
+          "LOCAL_ID": null,
+          "VDOT_ID": null,
+          "MFIPS": null,
+          "GEO_ET": null,
+          "GEO_EFFDT": null,
+          "GEO_SRC": null,
+          "GEO_ED": null,
+          "ADD_LF": null,
+          "ADD_LT": null,
+          "ADD_RF": null,
+          "ADD_RT": null,
+          "ADD_FORMAT": null,
+          "ADD_SRC": null,
+          "ADD_ED": null,
+          "ST_PREMD": null,
+          "ST_PREDIR": null,
+          "ST_NAME": null,
+          "ST_SUFFIX": null,
+          "ST_SUFFDIR": null,
+          "ST_PSTMD": null,
+          "ST_FULL": null,
+          "ST_SRC": null,
+          "ST_ED": null,
+          "MTFCC": "S2000",
+          "SEG_TYPE": null,
+          "SPEED_MPH": null,
+          "DUAL_CW": null,
+          "ONE_WAY": null,
+          "REVERSIBLE": null,
+          "SEG_EXISTS": null,
+          "FIPS_L": null,
+          "FIPS_R": null,
+          "MSAG_ESNL": null,
+          "MSAG_ESNR": null,
+          "MSAG_COMML": null,
+          "MSAG_COMMR": null,
+          "ZIP_L": null,
+          "ZIP_R": null,
+          "PO_L": null,
+          "PO_R": null,
+          "STATE_L": null,
+          "STATE_R": null,
+          "VDOT_RNAM": null,
+          "VDOT_RNUM": null,
+          "VDOT_RTYP": null,
+          "VDOT_RCAT": null,
+          "VDOT_FC": null,
+          "VDOT_PTYP": null,
+          "VDOT_SPD": null,
+          "VDOT_RST": null,
+          "VDOT_LC": null,
+          "VDOT_PWM": null
+         }
+        },
+        "drawingTool": "esriFeatureEditToolLine"
+       }
+      ]
+     },
+     {
+      "id": "S1740",
+      "name": "SERVICE VEHICLE PRIVATE DRIVES",
+      "domains": {},
+      "templates": [
+       {
+        "name": "S1740",
+        "description": "",
+        "prototype": {
+         "attributes": {
+          "VDOT_AADT": null,
+          "VDOT_SWM": null,
+          "SHAPE_Leng": null,
+          "RCL_ID": null,
+          "LOCAL_ID": null,
+          "VDOT_ID": null,
+          "MFIPS": null,
+          "GEO_ET": null,
+          "GEO_EFFDT": null,
+          "GEO_SRC": null,
+          "GEO_ED": null,
+          "ADD_LF": null,
+          "ADD_LT": null,
+          "ADD_RF": null,
+          "ADD_RT": null,
+          "ADD_FORMAT": null,
+          "ADD_SRC": null,
+          "ADD_ED": null,
+          "ST_PREMD": null,
+          "ST_PREDIR": null,
+          "ST_NAME": null,
+          "ST_SUFFIX": null,
+          "ST_SUFFDIR": null,
+          "ST_PSTMD": null,
+          "ST_FULL": null,
+          "ST_SRC": null,
+          "ST_ED": null,
+          "MTFCC": "S1740",
+          "SEG_TYPE": null,
+          "SPEED_MPH": null,
+          "DUAL_CW": null,
+          "ONE_WAY": null,
+          "REVERSIBLE": null,
+          "SEG_EXISTS": null,
+          "FIPS_L": null,
+          "FIPS_R": null,
+          "MSAG_ESNL": null,
+          "MSAG_ESNR": null,
+          "MSAG_COMML": null,
+          "MSAG_COMMR": null,
+          "ZIP_L": null,
+          "ZIP_R": null,
+          "PO_L": null,
+          "PO_R": null,
+          "STATE_L": null,
+          "STATE_R": null,
+          "VDOT_RNAM": null,
+          "VDOT_RNUM": null,
+          "VDOT_RTYP": null,
+          "VDOT_RCAT": null,
+          "VDOT_FC": null,
+          "VDOT_PTYP": null,
+          "VDOT_SPD": null,
+          "VDOT_RST": null,
+          "VDOT_LC": null,
+          "VDOT_PWM": null
+         }
+        },
+        "drawingTool": "esriFeatureEditToolLine"
+       }
+      ]
+     },
+     {
+      "id": "S1720",
+      "name": "STAIRWAYS",
+      "domains": {},
+      "templates": [
+       {
+        "name": "S1720",
+        "description": "",
+        "prototype": {
+         "attributes": {
+          "VDOT_AADT": null,
+          "VDOT_SWM": null,
+          "SHAPE_Leng": null,
+          "RCL_ID": null,
+          "LOCAL_ID": null,
+          "VDOT_ID": null,
+          "MFIPS": null,
+          "GEO_ET": null,
+          "GEO_EFFDT": null,
+          "GEO_SRC": null,
+          "GEO_ED": null,
+          "ADD_LF": null,
+          "ADD_LT": null,
+          "ADD_RF": null,
+          "ADD_RT": null,
+          "ADD_FORMAT": null,
+          "ADD_SRC": null,
+          "ADD_ED": null,
+          "ST_PREMD": null,
+          "ST_PREDIR": null,
+          "ST_NAME": null,
+          "ST_SUFFIX": null,
+          "ST_SUFFDIR": null,
+          "ST_PSTMD": null,
+          "ST_FULL": null,
+          "ST_SRC": null,
+          "ST_ED": null,
+          "MTFCC": "S1720",
+          "SEG_TYPE": null,
+          "SPEED_MPH": null,
+          "DUAL_CW": null,
+          "ONE_WAY": null,
+          "REVERSIBLE": null,
+          "SEG_EXISTS": null,
+          "FIPS_L": null,
+          "FIPS_R": null,
+          "MSAG_ESNL": null,
+          "MSAG_ESNR": null,
+          "MSAG_COMML": null,
+          "MSAG_COMMR": null,
+          "ZIP_L": null,
+          "ZIP_R": null,
+          "PO_L": null,
+          "PO_R": null,
+          "STATE_L": null,
+          "STATE_R": null,
+          "VDOT_RNAM": null,
+          "VDOT_RNUM": null,
+          "VDOT_RTYP": null,
+          "VDOT_RCAT": null,
+          "VDOT_FC": null,
+          "VDOT_PTYP": null,
+          "VDOT_SPD": null,
+          "VDOT_RST": null,
+          "VDOT_LC": null,
+          "VDOT_PWM": null
+         }
+        },
+        "drawingTool": "esriFeatureEditToolLine"
+       }
+      ]
+     },
+     {
+      "id": "S1710",
+      "name": "WALKWAYS/PEDESTRIAN TRAILS",
+      "domains": {},
+      "templates": [
+       {
+        "name": "S1710",
+        "description": "",
+        "prototype": {
+         "attributes": {
+          "VDOT_AADT": null,
+          "VDOT_SWM": null,
+          "SHAPE_Leng": null,
+          "RCL_ID": null,
+          "LOCAL_ID": null,
+          "VDOT_ID": null,
+          "MFIPS": null,
+          "GEO_ET": null,
+          "GEO_EFFDT": null,
+          "GEO_SRC": null,
+          "GEO_ED": null,
+          "ADD_LF": null,
+          "ADD_LT": null,
+          "ADD_RF": null,
+          "ADD_RT": null,
+          "ADD_FORMAT": null,
+          "ADD_SRC": null,
+          "ADD_ED": null,
+          "ST_PREMD": null,
+          "ST_PREDIR": null,
+          "ST_NAME": null,
+          "ST_SUFFIX": null,
+          "ST_SUFFDIR": null,
+          "ST_PSTMD": null,
+          "ST_FULL": null,
+          "ST_SRC": null,
+          "ST_ED": null,
+          "MTFCC": "S1710",
+          "SEG_TYPE": null,
+          "SPEED_MPH": null,
+          "DUAL_CW": null,
+          "ONE_WAY": null,
+          "REVERSIBLE": null,
+          "SEG_EXISTS": null,
+          "FIPS_L": null,
+          "FIPS_R": null,
+          "MSAG_ESNL": null,
+          "MSAG_ESNR": null,
+          "MSAG_COMML": null,
+          "MSAG_COMMR": null,
+          "ZIP_L": null,
+          "ZIP_R": null,
+          "PO_L": null,
+          "PO_R": null,
+          "STATE_L": null,
+          "STATE_R": null,
+          "VDOT_RNAM": null,
+          "VDOT_RNUM": null,
+          "VDOT_RTYP": null,
+          "VDOT_RCAT": null,
+          "VDOT_FC": null,
+          "VDOT_PTYP": null,
+          "VDOT_SPD": null,
+          "VDOT_RST": null,
+          "VDOT_LC": null,
+          "VDOT_PWM": null
+         }
+        },
+        "drawingTool": "esriFeatureEditToolLine"
+       }
+      ]
+     }
+    ],
+    "templates": [],
+    "maxRecordCount": 2000,
+    "supportedQueryFormats": "JSON, geoJSON, PBF",
+    "supportedExportFormats": "sqlite,filegdb,shapefile,csv,geojson",
+    "capabilities": "Query",
+    "useStandardizedQueries": true,
+    "bigIntegerRestrictedTo53Bits": true,
+    "supportedSpatialRelationships": [
+     "esriSpatialRelIntersects",
+     "esriSpatialRelContains",
+     "esriSpatialRelCrosses",
+     "esriSpatialRelEnvelopeIntersects",
+     "esriSpatialRelIndexIntersects",
+     "esriSpatialRelOverlaps",
+     "esriSpatialRelTouches",
+     "esriSpatialRelWithin",
+     "esriSpatialRelRelation"
+    ],
+    "standardMaxRecordCount": 8000,
+    "tileMaxRecordCount": 4000,
+    "standardMaxRecordCountNoGeometry": 32000,
+    "maxRecordCountFactor": 1
+   }
+  },
+  {
+   "url": "https://vginmaps.vdem.virginia.gov/arcgis/rest/services/VA_Base_Layers/VBMP_RCL/FeatureServer/4/query",
+   "params": {
+    "f": "json",
+    "outFields": "ADD_LF,ADD_LT,ADD_RF,ADD_RT,FIPS_L,FIPS_R,GEO_EFFDT,LOCAL_ID,MTFCC,OBJECTID,ONE_WAY,RCL_ID,SEG_EXISTS,SPEED_MPH,ST_FULL,ST_NAME,VDOT_ID,VDOT_RNAM,VDOT_RNUM,ZIP_L,ZIP_R",
+    "resultRecordCount": "50",
+    "returnGeometry": "false",
+    "where": "((FIPS_L = '51059') OR (FIPS_R = '51059'))",
+    "geometry": "{\"x\": -77.2653, \"y\": 38.9012, \"spatialReference\": {\"wkid\": 4326}}",
+    "geometryType": "esriGeometryPoint",
+    "inSR": "4326",
+    "spatialRel": "esriSpatialRelIntersects",
+    "distance": "100.0",
+    "units": "esriSRUnit_Meter"
+   },
+   "response": {
+    "objectIdFieldName": "OBJECTID",
+    "globalIdFieldName": "",
+    "geometryType": "esriGeometryPolyline",
+    "spatialReference": {
+     "wkid": 102100,
+     "latestWkid": 3857
+    },
+    "fields": [
+     {
+      "name": "ADD_LF",
+      "alias": "ADD_LF",
+      "type": "esriFieldTypeInteger"
+     },
+     {
+      "name": "ADD_LT",
+      "alias": "ADD_LT",
+      "type": "esriFieldTypeInteger"
+     },
+     {
+      "name": "ADD_RF",
+      "alias": "ADD_RF",
+      "type": "esriFieldTypeInteger"
+     },
+     {
+      "name": "ADD_RT",
+      "alias": "ADD_RT",
+      "type": "esriFieldTypeInteger"
+     },
+     {
+      "name": "FIPS_L",
+      "alias": "FIPS_L",
+      "type": "esriFieldTypeString",
+      "length": 7
+     },
+     {
+      "name": "FIPS_R",
+      "alias": "FIPS_R",
+      "type": "esriFieldTypeString",
+      "length": 7
+     },
+     {
+      "name": "GEO_EFFDT",
+      "alias": "GEO_EFFDT",
+      "type": "esriFieldTypeDate",
+      "length": 8
+     },
+     {
+      "name": "LOCAL_ID",
+      "alias": "LOCAL_ID",
+      "type": "esriFieldTypeDouble"
+     },
+     {
+      "name": "MTFCC",
+      "alias": "MTFCC",
+      "type": "esriFieldTypeString",
+      "length": 10
+     },
+     {
+      "name": "OBJECTID",
+      "alias": "OBJECTID",
+      "type": "esriFieldTypeOID"
+     },
+     {
+      "name": "ONE_WAY",
+      "alias": "ONE_WAY",
+      "type": "esriFieldTypeString",
+      "length": 2
+     },
+     {
+      "name": "RCL_ID",
+      "alias": "RCL_ID",
+      "type": "esriFieldTypeDouble"
+     },
+     {
+      "name": "SEG_EXISTS",
+      "alias": "SEG_EXISTS",
+      "type": "esriFieldTypeString",
+      "length": 1
+     },
+     {
+      "name": "SPEED_MPH",
+      "alias": "SPEED_MPH",
+      "type": "esriFieldTypeInteger"
+     },
+     {
+      "name": "ST_FULL",
+      "alias": "ST_FULL",
+      "type": "esriFieldTypeString",
+      "length": 100
+     },
+     {
+      "name": "ST_NAME",
+      "alias": "ST_NAME",
+      "type": "esriFieldTypeString",
+      "length": 75
+     },
+     {
+      "name": "VDOT_ID",
+      "alias": "VDOT_ID",
+      "type": "esriFieldTypeDouble"
+     },
+     {
+      "name": "VDOT_RNAM",
+      "alias": "VDOT_RNAM",
+      "type": "esriFieldTypeString",
+      "length": 60
+     },
+     {
+      "name": "VDOT_RNUM",
+      "alias": "VDOT_RNUM",
+      "type": "esriFieldTypeInteger"
+     },
+     {
+      "name": "ZIP_L",
+      "alias": "ZIP_L",
+      "type": "esriFieldTypeInteger"
+     },
+     {
+      "name": "ZIP_R",
+      "alias": "ZIP_R",
+      "type": "esriFieldTypeInteger"
+     }
+    ],
+    "features": [
+     {
+      "attributes": {
+       "ADD_LF": 100,
+       "ADD_LT": 198,
+       "ADD_RF": 101,
+       "ADD_RT": 199,
+       "FIPS_L": "51059",
+       "FIPS_R": "51059",
+       "GEO_EFFDT": null,
+       "LOCAL_ID": 5105900349828.0,
+       "MTFCC": "S1400",
+       "OBJECTID": 424646,
+       "ONE_WAY": "B",
+       "RCL_ID": 409923.0,
+       "SEG_EXISTS": "Y",
+       "SPEED_MPH": 25,
+       "ST_FULL": "Center St S",
+       "ST_NAME": "CENTER",
+       "VDOT_ID": 300582.0,
+       "VDOT_RNAM": "S-VA153PR CENTER ST S",
+       "VDOT_RNUM": 0,
+       "ZIP_L": 22180,
+       "ZIP_R": 22180
+      }
+     },
+     {
+      "attributes": {
+       "ADD_LF": 100,
+       "ADD_LT": 198,
+       "ADD_RF": 101,
+       "ADD_RT": 199,
+       "FIPS_L": "51059",
+       "FIPS_R": "51059",
+       "GEO_EFFDT": null,
+       "LOCAL_ID": 5105900349932.0,
+       "MTFCC": "S1200PRI",
+       "OBJECTID": 424670,
+       "ONE_WAY": "B",
+       "RCL_ID": 410046.0,
+       "SEG_EXISTS": "Y",
+       "SPEED_MPH": 30,
+       "ST_FULL": "Maple Ave W",
+       "ST_NAME": "MAPLE",
+       "VDOT_ID": 350714.0,
+       "VDOT_RNAM": "R-VA   SR00123NB",
+       "VDOT_RNUM": 123,
+       "ZIP_L": 22180,
+       "ZIP_R": 22180
+      }
+     },
+     {
+      "attributes": {
+       "ADD_LF": 101,
+       "ADD_LT": 199,
+       "ADD_RF": 100,
+       "ADD_RT": 198,
+       "FIPS_L": "51059",
+       "FIPS_R": "51059",
+       "GEO_EFFDT": null,
+       "LOCAL_ID": 5105900349890.0,
+       "MTFCC": "S1400",
+       "OBJECTID": 424829,
+       "ONE_WAY": "B",
+       "RCL_ID": 409537.0,
+       "SEG_EXISTS": "Y",
+       "SPEED_MPH": 25,
+       "ST_FULL": "Center St N",
+       "ST_NAME": "CENTER",
+       "VDOT_ID": 300581.0,
+       "VDOT_RNAM": "S-VA153PR CENTER ST N",
+       "VDOT_RNUM": 0,
+       "ZIP_L": 22180,
+       "ZIP_R": 22180
+      }
+     },
+     {
+      "attributes": {
+       "ADD_LF": 100,
+       "ADD_LT": 150,
+       "ADD_RF": 101,
+       "ADD_RT": 153,
+       "FIPS_L": "51059",
+       "FIPS_R": "51059",
+       "GEO_EFFDT": null,
+       "LOCAL_ID": 5105900345408.0,
+       "MTFCC": "S1200PRI",
+       "OBJECTID": 424868,
+       "ONE_WAY": "B",
+       "RCL_ID": 410064.0,
+       "SEG_EXISTS": "Y",
+       "SPEED_MPH": 30,
+       "ST_FULL": "Maple Ave E",
+       "ST_NAME": "MAPLE",
+       "VDOT_ID": 36035435.0,
+       "VDOT_RNAM": "R-VA   SR00123NB",
+       "VDOT_RNUM": 123,
+       "ZIP_L": 22180,
+       "ZIP_R": 22180
+      }
+     }
+    ]
+   }
+  },
+  {
+   "url": "https://vginmaps.vdem.virginia.gov/arcgis/rest/services/VA_Base_Layers/VBMP_RCL/FeatureServer/4/query",
+   "params": {
+    "f": "json",
+    "outFields": "ADD_LF,ADD_LT,ADD_RF,ADD_RT,FIPS_L,FIPS_R,GEO_EFFDT,LOCAL_ID,MTFCC,OBJECTID,ONE_WAY,RCL_ID,SEG_EXISTS,SPEED_MPH,ST_FULL,ST_NAME,VDOT_ID,VDOT_RNAM,VDOT_RNUM,ZIP_L,ZIP_R",
+    "resultRecordCount": "50",
+    "returnGeometry": "false",
+    "where": "ST_FULL LIKE 'ZZZZ NO SUCH ROAD%' ESCAPE '\\' AND ((FIPS_L = '51059') OR (FIPS_R = '51059'))"
+   },
+   "response": {
+    "objectIdFieldName": "OBJECTID",
+    "globalIdFieldName": "",
+    "geometryType": "esriGeometryPolyline",
+    "spatialReference": {
+     "wkid": 102100,
+     "latestWkid": 3857
+    },
+    "features": []
+   }
+  }
+ ]
+}

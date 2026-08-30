@@ -43,6 +43,65 @@ sources:
   data_classification: open
   recorded_fixtures:
   - tests/fixtures/sources/va-richmond-city-parcels-zoning/recorded.json
+- id: va-deq-water-quality-stations
+  name: DEQ Water Quality Monitoring Stations
+  publisher: Virginia Department of Environmental Quality (DEQ)
+  manifest: sources/state/deq-environmental-sites.yaml
+  terms_url: https://apps.deq.virginia.gov/arcgis/rest/services/public
+  terms_reviewed_at: '2026-08-29'
+  automation_status: public_api
+  data_classification: open
+  recorded_fixtures:
+  - tests/fixtures/sources/va-deq-water-quality-stations/recorded.json
+- id: va-eva-procurement
+  name: eVA (Virginia procurement)
+  publisher: Virginia Department of General Services, Division of Purchases and
+    Supply
+  manifest: sources/state/eva-procurement.yaml
+  terms_url: https://eva.virginia.gov/
+  terms_reviewed_at: null
+  automation_status: unknown
+  data_classification: open
+  recorded_fixtures: []
+- id: va-scc
+  name: State Corporation Commission (business entities and utilities)
+  publisher: Virginia State Corporation Commission (SCC)
+  manifest: sources/state/scc.yaml
+  terms_url: https://www.scc.virginia.gov/
+  terms_reviewed_at: null
+  automation_status: unknown
+  data_classification: open
+  recorded_fixtures: []
+- id: va-vdh
+  name: Virginia Department of Health (no queryable endpoint found)
+  publisher: Virginia Department of Health (VDH)
+  manifest: sources/state/vdh.yaml
+  terms_url: https://www.vdh.virginia.gov/terms-of-use/
+  terms_reviewed_at: null
+  automation_status: unknown
+  data_classification: open
+  recorded_fixtures: []
+- id: va-vdot-lrs-routes
+  name: VDOT Route Master (LRS)
+  publisher: Virginia Department of Transportation (VDOT)
+  manifest: sources/state/vdot-lrs-routes.yaml
+  terms_url: https://www.virginiaroads.org/
+  terms_reviewed_at: '2026-08-29'
+  automation_status: public_api
+  data_classification: open
+  recorded_fixtures:
+  - tests/fixtures/sources/va-vdot-lrs-routes/recorded.json
+- id: va-vgin-address-points
+  name: Virginia Address Points (VGIN)
+  publisher: Virginia Geographic Information Network (VGIN), part of the Virginia
+    Department of Emergency Management
+  manifest: sources/state/vgin-address-points.yaml
+  terms_url: https://vgin.vdem.virginia.gov/datasets/virginia-address-points/about
+  terms_reviewed_at: '2026-08-29'
+  automation_status: public_api
+  data_classification: open
+  recorded_fixtures:
+  - tests/fixtures/sources/va-vgin-address-points/recorded.json
 - id: va-vgin-admin-boundaries
   name: Virginia Administrative Boundaries (VGIN)
   publisher: Virginia Geographic Information Network (VGIN), part of the Virginia
@@ -54,6 +113,39 @@ sources:
   data_classification: open
   recorded_fixtures:
   - tests/fixtures/sources/va-vgin-admin-boundaries/recorded.json
+- id: va-vgin-building-footprints
+  name: Virginia Building Footprints (VGIN)
+  publisher: Virginia Geographic Information Network (VGIN), part of the Virginia
+    Department of Emergency Management
+  manifest: sources/state/vgin-building-footprints.yaml
+  terms_url: https://vgin.vdem.virginia.gov/datasets/virginia-building-footprints/about
+  terms_reviewed_at: '2026-08-29'
+  automation_status: public_api
+  data_classification: open
+  recorded_fixtures:
+  - tests/fixtures/sources/va-vgin-building-footprints/recorded.json
+- id: va-vgin-composite-locator
+  name: Virginia Composite Locator (VGIN Geocoding Service)
+  publisher: Virginia Geographic Information Network (VGIN), part of the Virginia
+    Department of Emergency Management
+  manifest: sources/state/vgin-composite-locator.yaml
+  terms_url: https://vginmaps.vdem.virginia.gov/download/clearinghouse/documentation/VGIN_Geocoding_Service_Overview_and_Access_Instructions.pdf
+  terms_reviewed_at: '2026-08-29'
+  automation_status: public_api
+  data_classification: open
+  recorded_fixtures:
+  - tests/fixtures/sources/va-vgin-composite-locator/recorded.json
+- id: va-vgin-landmarks
+  name: Virginia Landmark Locations (VGIN)
+  publisher: Virginia Geographic Information Network (VGIN), part of the Virginia
+    Department of Emergency Management
+  manifest: sources/state/vgin-landmarks.yaml
+  terms_url: https://vgin.vdem.virginia.gov/datasets/virginia-landmarks/about
+  terms_reviewed_at: '2026-08-29'
+  automation_status: public_api
+  data_classification: open
+  recorded_fixtures:
+  - tests/fixtures/sources/va-vgin-landmarks/recorded.json
 - id: va-vgin-statewide-parcels
   name: Virginia Statewide Parcels (VGIN)
   publisher: Virginia Geographic Information Network (VGIN), part of the Virginia
@@ -65,6 +157,17 @@ sources:
   data_classification: open
   recorded_fixtures:
   - tests/fixtures/sources/va-vgin-statewide-parcels/recorded.json
+- id: va-vgin-road-centerlines
+  name: Virginia Road Centerlines (VGIN VBMP RCL)
+  publisher: Virginia Geographic Information Network (VGIN), part of the Virginia
+    Department of Emergency Management
+  manifest: sources/state/vgin-road-centerlines.yaml
+  terms_url: https://vgin.vdem.virginia.gov/datasets/virginia-road-centerlines/about
+  terms_reviewed_at: '2026-08-29'
+  automation_status: public_api
+  data_classification: open
+  recorded_fixtures:
+  - tests/fixtures/sources/va-vgin-road-centerlines/recorded.json
 - id: va-code-of-virginia
   name: Code of Virginia (law.lis.virginia.gov)
   publisher: Division of Legislative Automated Systems (DLAS), Virginia General
@@ -77,3 +180,12 @@ sources:
   recorded_fixtures:
   - tests/fixtures/sources/va-code-of-virginia/no-such-section.html
   - tests/fixtures/sources/va-code-of-virginia/section-1-500.html
+- id: va-open-data-portal
+  name: Virginia Open Data Portal (CKAN)
+  publisher: Virginia Office of Data Governance and Analytics
+  manifest: sources/state/virginia-open-data.yaml
+  terms_url: https://data.virginia.gov/pages/terms-of-use
+  terms_reviewed_at: null
+  automation_status: unknown
+  data_classification: open
+  recorded_fixtures: []

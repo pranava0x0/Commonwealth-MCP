@@ -1,0 +1,6 @@
+id: va:windsor-town
+name: Windsor (town)
+kind: town
+place_fips: "86784"
+parent: va:isle-of-wight-county
+aliases: ["Town of Windsor"]

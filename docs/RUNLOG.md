@@ -3,6 +3,126 @@
 One entry per significant work session or delegated research task: why it
 ran, cost where relevant, and whether it was worth it.
 
+## 2026-08-29 — eleven sources, the full jurisdiction table, four drifts closed
+
+Fifteen issues in one session: #2-#9 (sources), plus #14, #17, #21, #22,
+#25, #30, #32. 247 tests to 364. `doctor --live` green across 17
+manifests. [PR #38](https://github.com/pranava0x0/Commonwealth-MCP/pull/38).
+
+**Sources.** Seven new registrations with a tool each — the VGIN
+composite locator (`geo.resolve_location`), address points, building
+footprints, landmarks, road centerlines, VDOT's LRS route master, and
+DEQ's water-quality stations — plus four inventory-only manifests so the
+registry's proposed/active split stops reading as zero coverage debt.
+
+Four field checks changed a registration decision, and each finding
+outlasts the source it came with:
+
+1. **The issue specifying the address source was wrong about a field.**
+   It described `PLACENAME` as the postal place and said to map it as
+   one. Read live, `PLACENAME` holds facility names ("Rose Hill
+   Elementary School", "ABC Store 099") and is empty for ordinary
+   addresses; the postal city is `PO_NAME`. Mapping it as written would
+   have put a school's name in the field the tool's own warning tells
+   callers to distrust.
+2. **The plausible-sounding VDOT service is the derived one.**
+   `VA_Primary_and_Secondary_Roads` sounds like the operating agency's
+   network and is a republished Census TIGER extract — TIGER field names,
+   9,344 features statewide. `LRS_Route_Master`, whose name suggests an
+   internal system, is VDOT's own 196,896-route inventory. Field names
+   are a provenance fingerprint and they were the only thing that said
+   which was which.
+3. **VGIN's road service publishes four layers and one dataset.** Layers
+   4 and 5 are the same 659,179 segments at two map scales; 1 and 2 are
+   road-class subsets. Registering a subset and calling it "roads" would
+   have excluded 585,000 local roads.
+4. **Building footprint area is published in a projection that inflates
+   it.** `Shape__Area` carries `units: esriMeters`, which is true and is
+   what makes it dangerous: the layer is Web Mercator, where area is
+   inflated ~1.61x at Virginia's latitude. Returned unconverted under a
+   field name that says which projection, alongside a converted
+   approximation with the latitude it used declared in
+   `transformations`.
+
+**The jurisdiction table stopped being a seed.** 14 rows to 325 — all 133
+counties and independent cities, all 191 towns, generated from VGIN's
+boundary layer and Census TIGERweb, which agreed on all 133 with zero
+differences. Town parents are derived by containment against the locality
+polygons using TIGERweb's guaranteed-interior points, not centroids: the
+centroid property this project already falsified for counties would have
+been exactly the wrong tool. 189 derived cleanly. Columbia straddles the
+Fluvanna/Goochland line and the generator declined to pick; Columbia and
+St. Charles are both absent from TIGERweb's current Incorporated Places
+while VGIN still publishes their polygons, which is why they had no
+interior point at all.
+
+Trap 8 closed with a new `former_names` field. Three Virginia cities gave
+up their charters and became towns (South Boston 1995, Clifton Forge
+2001, Bedford 2013), so "Bedford City" now resolves to `va:bedford-town`
+with `basis: former_name` and an `alias_match` warning — an enum value
+the codebase had and nothing emitted. Seven of the resolution spec's
+eight named traps are regression tests now; only the one with an open
+policy question (#26) is not.
+
+**Two tests that passed on a wrong answer**, both written up in
+`design/testing-and-demos.md` § 5 and mirrored to the universal
+`TESTING.md`:
+
+The `evidence_ref` / `evidence_refs` drift survived because the contract
+tests had been written by reading the code. The artifact whose job was to
+catch the drift was derived from the thing it was checking. Its
+replacement asserts the field name appears in the spec file.
+
+Re-recording the statewide parcel fixture cleanly deleted five
+cross-source exchanges that had accumulated across three sessions from
+recording plans that no longer existed, breaking four tests in a
+different directory with errors that pointed at the reader rather than
+the writer. The recording plan now derives those cases from the registry.
+
+**Adapter growth, and whether it is slowing.** Five declarative
+additions this session — `numeric_fields`, `value_labels`,
+`jurisdiction_scope`, `where_prefix`, `where_any_of`, `distinct_fields` —
+each forced by a real layer. The new
+`docs/audits/source-onboarding-cost.md` (closing #32) records what each
+of eleven onboardings cost. Two needed no code, both today, and DEQ is
+the stronger signal: a different agency, a different host, a MapServer
+rather than a FeatureServer, and the adapter did not move. The earlier
+changes were bugs where code assumed one source; today's move a fact
+about a layer out of code and into the manifest, which is the direction
+the metric is supposed to measure.
+
+**Two dormant enum values started firing.** `alias_match` for a former
+name, and `terms_note` for `Access.terms_gap` — DEQ's own www site
+returns an Akamai 403 to a plain HTTP GET for its terms pages while its
+GIS service answers anonymously, and none of its 97 open-data datasets
+carries a license. A gap recorded only in YAML is a caveat one
+contributor reads once; it is now a warning on every envelope citing the
+source, retroactively covering Richmond's recorded gap too.
+
+**Two spec decisions settled** (#21, #22) because the tool count finally
+made them answerable. `default` is inside decision 0002's 8-12 band for
+the first time, at nine, and both ceilings now refuse at expansion while
+the floor warns and starts.
+
+**Usability** (#30): four `examples/` scripts, each a real question with
+a printed answer, running offline against recorded responses **by
+default** rather than behind a flag — a newcomer's first run should not
+be able to fail on a network. The offline seam moved out of
+`tests/conftest.py` into the package so a script does not import a test
+module, and each example is executed as a subprocess in CI exactly as a
+reader would run it.
+
+**Agents and tokens.** No delegated agents and no workflows this session,
+deliberately: every step was either a live endpoint probe (curl, then a
+`sources sample` recording) or an edit against a file already in context,
+and both are cheaper done directly than described to a subagent. The one
+place a fan-out would have paid is the four independent VGIN base-layer
+registrations, which have identical shapes and no shared state — worth
+trying next time a session registers three or more sources from one host.
+The expensive habit this session did have was re-running the full suite
+after every small edit; `pytest tests/servers/geo -q` first and the full
+run at commit boundaries would have cost a fraction.
+
 ## 2026-08-29 — docs consolidation, a site rewritten for newcomers, six issues closed
 
 Prompted by a review of the repo as a stranger would meet it. Two problems
@@ -111,7 +231,8 @@ returns bbox/centroid/area concise (~270 data tokens, well inside the
 2000-token budget) and generalized rings only at `detail: "full"`, because
 the resource store that should hold the true polygon does not exist yet.
 
-Three findings the live data forced, none of them predictable from schemas:
+Three findings from checking the live layers, none of them predictable
+from schemas:
 
 1. **The design's centroid property test is false.** § 6 of
    design/jurisdiction-resolution.md proposed "every jurisdiction's

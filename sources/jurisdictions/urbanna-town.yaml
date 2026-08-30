@@ -1,0 +1,6 @@
+id: va:urbanna-town
+name: Urbanna (town)
+kind: town
+place_fips: "80272"
+parent: va:middlesex-county
+aliases: ["Town of Urbanna"]

@@ -1,0 +1,6 @@
+id: va:albemarle-county
+name: Albemarle County
+kind: county
+fips: "51003"
+parent: va
+aliases: ["County of Albemarle"]

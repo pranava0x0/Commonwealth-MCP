@@ -1,0 +1,6 @@
+id: va:chesterfield-county
+name: Chesterfield County
+kind: county
+fips: "51041"
+parent: va
+aliases: ["County of Chesterfield"]

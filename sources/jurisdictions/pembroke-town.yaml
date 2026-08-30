@@ -1,0 +1,6 @@
+id: va:pembroke-town
+name: Pembroke (town)
+kind: town
+place_fips: "61336"
+parent: va:giles-county
+aliases: ["Town of Pembroke"]

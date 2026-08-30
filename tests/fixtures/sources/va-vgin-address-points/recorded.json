@@ -1,0 +1,1499 @@
+{
+ "source_id": "va-vgin-address-points",
+ "recorded_at": "2026-08-30T13:33:25Z",
+ "rights": {
+  "publisher": "Virginia Geographic Information Network (VGIN), part of the Virginia Department of Emergency Management",
+  "terms_url": "https://vgin.vdem.virginia.gov/datasets/virginia-address-points/about",
+  "note": "Recorded government-published responses; third-party content excluded from the repo's CC0 grant (../../../design/architecture.md decision 0011)."
+ },
+ "summary": {
+  "health:addresses": {
+   "layer": "addresses",
+   "feature_count": 3867706,
+   "min_expected": 3000000,
+   "healthy": true
+  },
+  "postal_city_trap": {
+   "prefix": "4501 CARLBY LN",
+   "fips": "51059",
+   "record_count": 1,
+   "po_name_vs_locality": [
+    [
+     "ALEXANDRIA",
+     "Fairfax County"
+    ]
+   ]
+  },
+  "by_point": {
+   "record_count": 24,
+   "first": [
+    "135 CENTER ST S STE 9",
+    "153 CENTER ST S STE 17",
+    "155 CENTER ST S STE 16"
+   ]
+  },
+  "zip_multi_locality": {
+   "zip": 24450,
+   "localities": [
+    [
+     "51023",
+     "Botetourt County"
+    ],
+    [
+     "51678",
+     "Lexington City"
+    ],
+    [
+     "51163",
+     "Rockbridge County"
+    ]
+   ]
+  },
+  "zip_single_locality": {
+   "zip": 22180,
+   "localities": [
+    [
+     "51059",
+     "Fairfax County"
+    ]
+   ]
+  },
+  "zip_no_match": {
+   "zip": 0,
+   "localities": []
+  }
+ },
+ "exchanges": [
+  {
+   "url": "https://vginmaps.vdem.virginia.gov/arcgis/rest/services/VA_Base_Layers/VA_Address_Points/FeatureServer/0/query",
+   "params": {
+    "f": "json",
+    "where": "1=1",
+    "returnCountOnly": "true"
+   },
+   "response": {
+    "count": 3867706
+   }
+  },
+  {
+   "url": "https://vginmaps.vdem.virginia.gov/arcgis/rest/services/VA_Base_Layers/VA_Address_Points/FeatureServer/0/query",
+   "params": {
+    "f": "json",
+    "outFields": "ADDPTKEY,ADDRCLASS,CAPTUREMETH,FIPS,FULLADDR,FULLNAME,LASTUPDATE,MUNICIPALITY,OBJECTID,PLACENAME,POINTTYPE,PO_NAME,SITEADDID,STATUS,ZIP_5",
+    "resultRecordCount": "50",
+    "returnGeometry": "false",
+    "where": "FIPS = '51059' AND FULLADDR LIKE '4501 CARLBY LN%' ESCAPE '\\'"
+   },
+   "response": {
+    "objectIdFieldName": "OBJECTID",
+    "globalIdFieldName": "",
+    "geometryType": "esriGeometryPoint",
+    "spatialReference": {
+     "wkid": 102100,
+     "latestWkid": 3857
+    },
+    "fields": [
+     {
+      "name": "ADDPTKEY",
+      "alias": "Address Point ID",
+      "type": "esriFieldTypeString",
+      "length": 20
+     },
+     {
+      "name": "ADDRCLASS",
+      "alias": "Description",
+      "type": "esriFieldTypeInteger"
+     },
+     {
+      "name": "CAPTUREMETH",
+      "alias": "Capture Method",
+      "type": "esriFieldTypeString",
+      "length": 30
+     },
+     {
+      "name": "FIPS",
+      "alias": "Jurisdiction FIPS Code",
+      "type": "esriFieldTypeString",
+      "length": 7
+     },
+     {
+      "name": "FULLADDR",
+      "alias": "Full Address",
+      "type": "esriFieldTypeString",
+      "length": 250
+     },
+     {
+      "name": "FULLNAME",
+      "alias": "Full Street Name",
+      "type": "esriFieldTypeString",
+      "length": 125
+     },
+     {
+      "name": "LASTUPDATE",
+      "alias": "Last Update Date",
+      "type": "esriFieldTypeDate",
+      "length": 8
+     },
+     {
+      "name": "MUNICIPALITY",
+      "alias": "Jurisdiction Name",
+      "type": "esriFieldTypeString",
+      "length": 100
+     },
+     {
+      "name": "OBJECTID",
+      "alias": "OBJECTID",
+      "type": "esriFieldTypeOID"
+     },
+     {
+      "name": "PLACENAME",
+      "alias": "Place Name",
+      "type": "esriFieldTypeString",
+      "length": 250
+     },
+     {
+      "name": "POINTTYPE",
+      "alias": "Location",
+      "type": "esriFieldTypeString",
+      "length": 30
+     },
+     {
+      "name": "PO_NAME",
+      "alias": "Post Office Name",
+      "type": "esriFieldTypeString",
+      "length": 50
+     },
+     {
+      "name": "SITEADDID",
+      "alias": "Site Address ID",
+      "type": "esriFieldTypeDouble"
+     },
+     {
+      "name": "STATUS",
+      "alias": "Status",
+      "type": "esriFieldTypeString",
+      "length": 30
+     },
+     {
+      "name": "ZIP_5",
+      "alias": "Zip Code",
+      "type": "esriFieldTypeInteger"
+     }
+    ],
+    "features": [
+     {
+      "attributes": {
+       "ADDPTKEY": "207773302168",
+       "ADDRCLASS": null,
+       "CAPTUREMETH": null,
+       "FIPS": "51059",
+       "FULLADDR": "4501 CARLBY LN STE 5",
+       "FULLNAME": "CARLBY LN",
+       "LASTUPDATE": 1770249600000,
+       "MUNICIPALITY": "Fairfax County",
+       "OBJECTID": 3429779,
+       "PLACENAME": "",
+       "POINTTYPE": null,
+       "PO_NAME": "ALEXANDRIA",
+       "SITEADDID": 51059000124197.0,
+       "STATUS": null,
+       "ZIP_5": 22309
+      }
+     }
+    ]
+   }
+  },
+  {
+   "url": "https://vginmaps.vdem.virginia.gov/arcgis/rest/services/VA_Base_Layers/VA_Address_Points/FeatureServer/0",
+   "params": {
+    "f": "json"
+   },
+   "response": {
+    "currentVersion": 11.3,
+    "cimVersion": "3.3.0",
+    "id": 0,
+    "name": "Virginia Address Points",
+    "type": "Feature Layer",
+    "parentLayer": null,
+    "defaultVisibility": true,
+    "minScale": 0,
+    "maxScale": 0,
+    "canScaleSymbols": true,
+    "referenceScale": 2256.994353,
+    "geometryType": "esriGeometryPoint",
+    "description": "The Virginia Geographic Information Network (VGIN) is coordinating the development and maintenance of a statewide Address Point data layer in conjunction with local governments across the Commonwealth in order to create a seamless feature class with address numbers and road names to complement the Virginia Base Mapping Program's (VBMP) Road Centerline (RCL) product by providing even more accurate geocoding results. Address Points can be used as a quality control resource for localities and VGIN for checking RCL address range and street name accuracy, which directly assists dispatch mapping systems. The Address Point data leverages the Commonwealth's investment in VBMP digital orthophotography as well as focusing its efforts to create a single statewide address point layer to be used in the VGIN Geocoding Web Service (GWS). Address Points are data developed and produced by Virginia's Local Governments and sent to VGIN along with Road centerline updates.  A series of checks are run on the locality data and the schema is pared where necessary.  An ETL process is run to match the VA Address Point model.",
+    "copyrightText": "Virginia Geographic Information Network (VGIN)",
+    "editFieldsInfo": null,
+    "ownershipBasedAccessControlForFeatures": null,
+    "syncCanReturnChanges": false,
+    "relationships": [],
+    "isDataVersioned": false,
+    "isDataArchived": false,
+    "infoInEstimates": [
+     "extent",
+     "count"
+    ],
+    "isDataBranchVersioned": false,
+    "isDataReplicaTracked": false,
+    "isCoGoEnabled": false,
+    "supportsRollbackOnFailureParameter": true,
+    "archivingInfo": {
+     "supportsQueryWithHistoricMoment": false,
+     "startArchivingMoment": -1
+    },
+    "supportsStatistics": true,
+    "supportsExceedsLimitStatistics": true,
+    "supportsAdvancedQueries": true,
+    "supportsValidateSQL": true,
+    "supportsCoordinatesQuantization": true,
+    "supportsQuantizationEditMode": true,
+    "supportsCalculate": true,
+    "supportsASyncCalculate": true,
+    "supportsDatumTransformation": true,
+    "advancedQueryCapabilities": {
+     "supportsPagination": true,
+     "supportsTrueCurve": true,
+     "supportsQueryWithDistance": true,
+     "supportsReturningQueryExtent": true,
+     "supportsStatistics": true,
+     "supportsPercentileStatistics": true,
+     "supportsHavingClause": true,
+     "supportsOrderBy": true,
+     "supportsDistinct": true,
+     "supportsCountDistinct": true,
+     "supportsAdvancedQueryRelated": true,
+     "supportsQueryRelatedPagination": true,
+     "supportsCurrentUserQueries": true,
+     "supportsQueryWithResultType": true,
+     "supportsReturningGeometryCentroid": false,
+     "supportsSqlExpression": true,
+     "supportsQueryWithDatumTransformation": true,
+     "supportsLod": false,
+     "supportsQueryWithLodSR": false,
+     "supportsQueryAnalytic": true
+    },
+    "advancedQueryAnalyticCapabilities": {
+     "supportsLinearRegression": true,
+     "supportsAsync": true,
+     "supportsPercentileAnalytic": true
+    },
+    "advancedEditingCapabilities": {
+     "supportedSqlFormatsInCalculate": [
+      "standard"
+     ],
+     "supportsAsyncApplyEdits": true,
+     "supportsApplyEditsbyUploadID": true,
+     "supportedApplyEditsUploadIDFormats": "JSON"
+    },
+    "hasMetadata": true,
+    "extent": {
+     "xmin": -9327816.173285577,
+     "ymin": 4364999.960299969,
+     "xmax": -8376151.340691452,
+     "ymax": 4788863.269412337,
+     "spatialReference": {
+      "wkid": 102100,
+      "latestWkid": 3857,
+      "xyTolerance": 0.001,
+      "zTolerance": 0.001,
+      "mTolerance": 0.001,
+      "falseX": -20037700,
+      "falseY": -30241100,
+      "xyUnits": 10000,
+      "falseZ": -100000,
+      "zUnits": 10000,
+      "falseM": -100000,
+      "mUnits": 10000
+     }
+    },
+    "sourceSpatialReference": {
+     "wkt2": "PROJCRS[\"VA_Lambert_Conformal_Conic\",BASEGEOGCRS[\"GCS_North_American_1983\",DATUM[\"D_North_American_1983\",ELLIPSOID[\"GRS_1980\",6378137.0,298.257222101,LENGTHUNIT[\"Meter\",1.0]]],PRIMEM[\"Greenwich\",0.0,ANGLEUNIT[\"Degree\",0.0174532925199433]],CS[ellipsoidal,2],ANGLEUNIT[\"Degree\",0.0174532925199433]],CONVERSION[\"Lambert_Conformal_Conic\",METHOD[\"Lambert_Conformal_Conic\"],PARAMETER[\"False_Easting\",0.0,LENGTHUNIT[\"Meter\",1.0]],PARAMETER[\"False_Northing\",0.0,LENGTHUNIT[\"Meter\",1.0]],PARAMETER[\"Central_Meridian\",-79.5,ANGLEUNIT[\"Degree\",0.0174532925199433]],PARAMETER[\"Standard_Parallel_1\",37.0,ANGLEUNIT[\"Degree\",0.0174532925199433]],PARAMETER[\"Standard_Parallel_2\",39.5,ANGLEUNIT[\"Degree\",0.0174532925199433]],PARAMETER[\"Latitude_Of_Origin\",36.0,ANGLEUNIT[\"Degree\",0.0174532925199433]]],CS[Cartesian,2],AXIS[\"Easting (X)\",east,ORDER[1]],AXIS[\"Northing (Y)\",north,ORDER[2]],LENGTHUNIT[\"Meter\",1.0]]",
+     "wkt": "PROJCS[\"VA_Lambert_Conformal_Conic\",GEOGCS[\"GCS_North_American_1983\",DATUM[\"D_North_American_1983\",SPHEROID[\"GRS_1980\",6378137.0,298.257222101]],PRIMEM[\"Greenwich\",0.0],UNIT[\"Degree\",0.0174532925199433]],PROJECTION[\"Lambert_Conformal_Conic\"],PARAMETER[\"False_Easting\",0.0],PARAMETER[\"False_Northing\",0.0],PARAMETER[\"Central_Meridian\",-79.5],PARAMETER[\"Standard_Parallel_1\",37.0],PARAMETER[\"Standard_Parallel_2\",39.5],PARAMETER[\"Latitude_Of_Origin\",36.0],UNIT[\"Meter\",1.0]]",
+     "xyTolerance": 0.001,
+     "zTolerance": 0.001,
+     "mTolerance": 0.001,
+     "falseX": -37232800,
+     "falseY": -28884600,
+     "xyUnits": 120957855.10008635,
+     "falseZ": 0,
+     "zUnits": 1,
+     "falseM": 0,
+     "mUnits": 1
+    },
+    "drawingInfo": {
+     "renderer": {
+      "type": "simple",
+      "symbol": {
+       "type": "esriPMS",
+       "url": "dcb948483d4101a45f00ae6ea65de75b",
+       "imageData": "iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAYAAAAfSC3RAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAA/UlEQVQoka2SsUrDUBSGv5PGTZCgFlvqExSKq4pzn0A3V9vSDgrW+gQ+gvR2ExRcu5Y+RAcXN4eSDMUsFZRg7pWIQ9PbECj+4w8f5//POS5ryv13MFRsBR6f1TOiXNAYxFd0BLpfhn0vJPb7jB3D9V6Ll0ww6HMnwu2CVQDqWjieDjipXDCxwOmAAzTdjOSbBc09cGSBTswp8jthpQwczhSl3QZBOqqwQ45izXbSaLnjaw4XOZo3K6r+5sFx6QHFVZQIj8U2HxZY6fDuK84xPAPeUsGxu8HlopU6R7nBaKaoRoYrgRowB4alJk8iyX4ywER/W7tJmU07+tq/+gPjhEMdWnfbyQAAAABJRU5ErkJggg==",
+       "contentType": "image/png",
+       "width": 10,
+       "height": 10,
+       "angle": 0,
+       "xoffset": 0,
+       "yoffset": 0
+      }
+     },
+     "scaleSymbols": true,
+     "transparency": 0,
+     "labelingInfo": null
+    },
+    "hasM": false,
+    "hasZ": false,
+    "allowGeometryUpdates": true,
+    "allowTrueCurvesUpdates": true,
+    "onlyAllowTrueCurveUpdatesByTrueCurveClients": true,
+    "hasAttachments": false,
+    "supportsApplyEditsWithGlobalIds": false,
+    "htmlPopupType": "esriServerHTMLPopupTypeAsHTMLText",
+    "objectIdField": "OBJECTID",
+    "globalIdField": "",
+    "displayField": "FULLADDR",
+    "typeIdField": "",
+    "subtypeField": "",
+    "fields": [
+     {
+      "name": "OBJECTID",
+      "type": "esriFieldTypeOID",
+      "alias": "OBJECTID",
+      "domain": null,
+      "editable": false,
+      "nullable": false,
+      "defaultValue": null,
+      "modelName": "OBJECTID"
+     },
+     {
+      "name": "SITEADDID",
+      "type": "esriFieldTypeDouble",
+      "alias": "Site Address ID",
+      "domain": null,
+      "editable": true,
+      "nullable": false,
+      "defaultValue": 0,
+      "modelName": "SITEADDID"
+     },
+     {
+      "name": "ADDPTKEY",
+      "type": "esriFieldTypeString",
+      "alias": "Address Point ID",
+      "domain": null,
+      "editable": true,
+      "nullable": true,
+      "length": 20,
+      "defaultValue": null,
+      "modelName": "ADDPTKEY"
+     },
+     {
+      "name": "PREADDRNUM",
+      "type": "esriFieldTypeString",
+      "alias": "Address Number Prefix",
+      "domain": null,
+      "editable": true,
+      "nullable": true,
+      "length": 5,
+      "defaultValue": null,
+      "modelName": "PREADDRNUM"
+     },
+     {
+      "name": "ADDRNUM",
+      "type": "esriFieldTypeString",
+      "alias": "Address Number",
+      "domain": null,
+      "editable": true,
+      "nullable": true,
+      "length": 20,
+      "defaultValue": null,
+      "modelName": "ADDRNUM"
+     },
+     {
+      "name": "ADDRNUMSUF",
+      "type": "esriFieldTypeString",
+      "alias": "Address Number Suffix",
+      "domain": null,
+      "editable": true,
+      "nullable": true,
+      "length": 11,
+      "defaultValue": null,
+      "modelName": "ADDRNUMSUF"
+     },
+     {
+      "name": "UNITTYPE",
+      "type": "esriFieldTypeString",
+      "alias": "Address Unit Type",
+      "domain": null,
+      "editable": true,
+      "nullable": true,
+      "length": 10,
+      "defaultValue": null,
+      "modelName": "UNITTYPE"
+     },
+     {
+      "name": "UNITID",
+      "type": "esriFieldTypeString",
+      "alias": "Address Unit Number",
+      "domain": null,
+      "editable": true,
+      "nullable": true,
+      "length": 10,
+      "defaultValue": null,
+      "modelName": "UNITID"
+     },
+     {
+      "name": "STREET_PREMOD",
+      "type": "esriFieldTypeString",
+      "alias": "Street Prefix Modifier",
+      "domain": null,
+      "editable": true,
+      "nullable": true,
+      "length": 2,
+      "defaultValue": null,
+      "modelName": "STREET_PREMOD"
+     },
+     {
+      "name": "STREET_PREFIX",
+      "type": "esriFieldTypeString",
+      "alias": "Street Prefix",
+      "domain": null,
+      "editable": true,
+      "nullable": true,
+      "length": 2,
+      "defaultValue": null,
+      "modelName": "STREET_PREFIX"
+     },
+     {
+      "name": "STREET_PRE_TYPE",
+      "type": "esriFieldTypeString",
+      "alias": "Street Pre Type",
+      "domain": null,
+      "editable": true,
+      "nullable": true,
+      "length": 3,
+      "defaultValue": null,
+      "modelName": "STREET_PRE_TYPE"
+     },
+     {
+      "name": "STREET_NAME",
+      "type": "esriFieldTypeString",
+      "alias": "Street Name",
+      "domain": null,
+      "editable": true,
+      "nullable": true,
+      "length": 60,
+      "defaultValue": null,
+      "modelName": "STREET_NAME"
+     },
+     {
+      "name": "STREET_TYPE",
+      "type": "esriFieldTypeString",
+      "alias": "Street Type",
+      "domain": null,
+      "editable": true,
+      "nullable": true,
+      "length": 4,
+      "defaultValue": null,
+      "modelName": "STREET_TYPE"
+     },
+     {
+      "name": "STREET_SUFFIX",
+      "type": "esriFieldTypeString",
+      "alias": "Street Suffix",
+      "domain": null,
+      "editable": true,
+      "nullable": true,
+      "length": 2,
+      "defaultValue": null,
+      "modelName": "STREET_SUFFIX"
+     },
+     {
+      "name": "FULLNAME",
+      "type": "esriFieldTypeString",
+      "alias": "Full Street Name",
+      "domain": null,
+      "editable": true,
+      "nullable": true,
+      "length": 125,
+      "defaultValue": null,
+      "modelName": "FULLNAME"
+     },
+     {
+      "name": "FULLADDR",
+      "type": "esriFieldTypeString",
+      "alias": "Full Address",
+      "domain": null,
+      "editable": true,
+      "nullable": true,
+      "length": 250,
+      "defaultValue": null,
+      "modelName": "FULLADDR"
+     },
+     {
+      "name": "PLACENAME",
+      "type": "esriFieldTypeString",
+      "alias": "Place Name",
+      "domain": null,
+      "editable": true,
+      "nullable": true,
+      "length": 250,
+      "defaultValue": null,
+      "modelName": "PLACENAME"
+     },
+     {
+      "name": "FIPS",
+      "type": "esriFieldTypeString",
+      "alias": "Jurisdiction FIPS Code",
+      "domain": null,
+      "editable": true,
+      "nullable": true,
+      "length": 7,
+      "defaultValue": null,
+      "modelName": "FIPS"
+     },
+     {
+      "name": "MUNICIPALITY",
+      "type": "esriFieldTypeString",
+      "alias": "Jurisdiction Name",
+      "domain": null,
+      "editable": true,
+      "nullable": true,
+      "length": 100,
+      "defaultValue": null,
+      "modelName": "MUNICIPALITY"
+     },
+     {
+      "name": "ESN",
+      "type": "esriFieldTypeString",
+      "alias": "Emergency Service Number",
+      "domain": null,
+      "editable": true,
+      "nullable": true,
+      "length": 5,
+      "defaultValue": null,
+      "modelName": "ESN"
+     },
+     {
+      "name": "PSAP",
+      "type": "esriFieldTypeString",
+      "alias": "Public Safety Answering Point",
+      "domain": null,
+      "editable": true,
+      "nullable": true,
+      "length": 4,
+      "defaultValue": null,
+      "modelName": "PSAP"
+     },
+     {
+      "name": "MSAG_COMMUNITY",
+      "type": "esriFieldTypeString",
+      "alias": "MSAG Community",
+      "domain": null,
+      "editable": true,
+      "nullable": true,
+      "length": 50,
+      "defaultValue": null,
+      "modelName": "MSAG_COMMUNITY"
+     },
+     {
+      "name": "USNGCOORD",
+      "type": "esriFieldTypeString",
+      "alias": "USNG Coordinate",
+      "domain": null,
+      "editable": true,
+      "nullable": true,
+      "length": 50,
+      "defaultValue": null,
+      "modelName": "USNGCOORD"
+     },
+     {
+      "name": "LAT",
+      "type": "esriFieldTypeDouble",
+      "alias": "Latitude",
+      "domain": null,
+      "editable": true,
+      "nullable": true,
+      "defaultValue": null,
+      "modelName": "LAT"
+     },
+     {
+      "name": "LONG",
+      "type": "esriFieldTypeDouble",
+      "alias": "Longitude",
+      "domain": null,
+      "editable": true,
+      "nullable": true,
+      "defaultValue": null,
+      "modelName": "LONG"
+     },
+     {
+      "name": "ADDRCLASS",
+      "type": "esriFieldTypeInteger",
+      "alias": "Description",
+      "domain": null,
+      "editable": true,
+      "nullable": true,
+      "defaultValue": null,
+      "modelName": "ADDRCLASS"
+     },
+     {
+      "name": "POINTTYPE",
+      "type": "esriFieldTypeString",
+      "alias": "Location",
+      "domain": null,
+      "editable": true,
+      "nullable": true,
+      "length": 30,
+      "defaultValue": null,
+      "modelName": "POINTTYPE"
+     },
+     {
+      "name": "CAPTUREMETH",
+      "type": "esriFieldTypeString",
+      "alias": "Capture Method",
+      "domain": null,
+      "editable": true,
+      "nullable": true,
+      "length": 30,
+      "defaultValue": null,
+      "modelName": "CAPTUREMETH"
+     },
+     {
+      "name": "STATUS",
+      "type": "esriFieldTypeString",
+      "alias": "Status",
+      "domain": null,
+      "editable": true,
+      "nullable": true,
+      "length": 30,
+      "defaultValue": null,
+      "modelName": "STATUS"
+     },
+     {
+      "name": "LASTUPDATE",
+      "type": "esriFieldTypeDate",
+      "alias": "Last Update Date",
+      "domain": null,
+      "editable": true,
+      "nullable": true,
+      "length": 8,
+      "defaultValue": null,
+      "modelName": "LASTUPDATE"
+     },
+     {
+      "name": "PO_NAME",
+      "type": "esriFieldTypeString",
+      "alias": "Post Office Name",
+      "domain": null,
+      "editable": true,
+      "nullable": true,
+      "length": 50,
+      "defaultValue": null,
+      "modelName": "PO_NAME"
+     },
+     {
+      "name": "STATE",
+      "type": "esriFieldTypeString",
+      "alias": "State Abbreviation",
+      "domain": null,
+      "editable": true,
+      "nullable": true,
+      "length": 2,
+      "defaultValue": null,
+      "modelName": "STATE"
+     },
+     {
+      "name": "ZIP_5",
+      "type": "esriFieldTypeInteger",
+      "alias": "Zip Code",
+      "domain": null,
+      "editable": true,
+      "nullable": true,
+      "defaultValue": null,
+      "modelName": "ZIP_5"
+     }
+    ],
+    "geometryField": {
+     "name": "SHAPE",
+     "type": "esriFieldTypeGeometry",
+     "alias": "SHAPE",
+     "domain": null,
+     "editable": true,
+     "nullable": true,
+     "defaultValue": null,
+     "modelName": "SHAPE"
+    },
+    "indexes": [
+     {
+      "name": "R1758_pk",
+      "fields": "OBJECTID",
+      "isAscending": true,
+      "isUnique": true,
+      "description": ""
+     },
+     {
+      "name": "S1640_idx",
+      "fields": "SHAPE",
+      "isAscending": true,
+      "isUnique": true,
+      "description": ""
+     }
+    ],
+    "datesInUnknownTimezone": false,
+    "dateFieldsTimeReference": {
+     "timeZone": "UTC",
+     "respectsDaylightSaving": false
+    },
+    "preferredTimeReference": null,
+    "types": [],
+    "templates": [
+     {
+      "name": "Virginia Address Points",
+      "description": "",
+      "prototype": {
+       "attributes": {
+        "STATE": null,
+        "ZIP_5": null,
+        "SITEADDID": 0,
+        "ADDPTKEY": null,
+        "PREADDRNUM": null,
+        "ADDRNUM": null,
+        "ADDRNUMSUF": null,
+        "UNITTYPE": null,
+        "UNITID": null,
+        "STREET_PREMOD": null,
+        "STREET_PREFIX": null,
+        "STREET_PRE_TYPE": null,
+        "STREET_NAME": null,
+        "STREET_TYPE": null,
+        "STREET_SUFFIX": null,
+        "FULLNAME": null,
+        "FULLADDR": null,
+        "PLACENAME": null,
+        "FIPS": null,
+        "MUNICIPALITY": null,
+        "ESN": null,
+        "PSAP": null,
+        "MSAG_COMMUNITY": null,
+        "USNGCOORD": null,
+        "LAT": null,
+        "LONG": null,
+        "ADDRCLASS": null,
+        "POINTTYPE": null,
+        "CAPTUREMETH": null,
+        "STATUS": null,
+        "LASTUPDATE": null,
+        "PO_NAME": null
+       }
+      },
+      "drawingTool": "esriFeatureEditToolPoint"
+     }
+    ],
+    "maxRecordCount": 2000,
+    "supportedQueryFormats": "JSON, geoJSON, PBF",
+    "supportedExportFormats": "sqlite,filegdb,shapefile,csv,geojson",
+    "capabilities": "Query",
+    "useStandardizedQueries": true,
+    "bigIntegerRestrictedTo53Bits": true,
+    "supportedSpatialRelationships": [
+     "esriSpatialRelIntersects",
+     "esriSpatialRelContains",
+     "esriSpatialRelCrosses",
+     "esriSpatialRelEnvelopeIntersects",
+     "esriSpatialRelIndexIntersects",
+     "esriSpatialRelOverlaps",
+     "esriSpatialRelTouches",
+     "esriSpatialRelWithin",
+     "esriSpatialRelRelation"
+    ],
+    "standardMaxRecordCount": 32000,
+    "tileMaxRecordCount": 8000,
+    "standardMaxRecordCountNoGeometry": 32000,
+    "maxRecordCountFactor": 1
+   }
+  },
+  {
+   "url": "https://vginmaps.vdem.virginia.gov/arcgis/rest/services/VA_Base_Layers/VA_Address_Points/FeatureServer/0/query",
+   "params": {
+    "f": "json",
+    "outFields": "ADDPTKEY,ADDRCLASS,CAPTUREMETH,FIPS,FULLADDR,FULLNAME,LASTUPDATE,MUNICIPALITY,OBJECTID,PLACENAME,POINTTYPE,PO_NAME,SITEADDID,STATUS,ZIP_5",
+    "resultRecordCount": "50",
+    "returnGeometry": "false",
+    "where": "FIPS = '51059'",
+    "geometry": "{\"x\": -77.26436153964, \"y\": 38.90067620715, \"spatialReference\": {\"wkid\": 4326}}",
+    "geometryType": "esriGeometryPoint",
+    "inSR": "4326",
+    "spatialRel": "esriSpatialRelIntersects",
+    "distance": "100.0",
+    "units": "esriSRUnit_Meter"
+   },
+   "response": {
+    "objectIdFieldName": "OBJECTID",
+    "globalIdFieldName": "",
+    "geometryType": "esriGeometryPoint",
+    "spatialReference": {
+     "wkid": 102100,
+     "latestWkid": 3857
+    },
+    "fields": [
+     {
+      "name": "ADDPTKEY",
+      "alias": "Address Point ID",
+      "type": "esriFieldTypeString",
+      "length": 20
+     },
+     {
+      "name": "ADDRCLASS",
+      "alias": "Description",
+      "type": "esriFieldTypeInteger"
+     },
+     {
+      "name": "CAPTUREMETH",
+      "alias": "Capture Method",
+      "type": "esriFieldTypeString",
+      "length": 30
+     },
+     {
+      "name": "FIPS",
+      "alias": "Jurisdiction FIPS Code",
+      "type": "esriFieldTypeString",
+      "length": 7
+     },
+     {
+      "name": "FULLADDR",
+      "alias": "Full Address",
+      "type": "esriFieldTypeString",
+      "length": 250
+     },
+     {
+      "name": "FULLNAME",
+      "alias": "Full Street Name",
+      "type": "esriFieldTypeString",
+      "length": 125
+     },
+     {
+      "name": "LASTUPDATE",
+      "alias": "Last Update Date",
+      "type": "esriFieldTypeDate",
+      "length": 8
+     },
+     {
+      "name": "MUNICIPALITY",
+      "alias": "Jurisdiction Name",
+      "type": "esriFieldTypeString",
+      "length": 100
+     },
+     {
+      "name": "OBJECTID",
+      "alias": "OBJECTID",
+      "type": "esriFieldTypeOID"
+     },
+     {
+      "name": "PLACENAME",
+      "alias": "Place Name",
+      "type": "esriFieldTypeString",
+      "length": 250
+     },
+     {
+      "name": "POINTTYPE",
+      "alias": "Location",
+      "type": "esriFieldTypeString",
+      "length": 30
+     },
+     {
+      "name": "PO_NAME",
+      "alias": "Post Office Name",
+      "type": "esriFieldTypeString",
+      "length": 50
+     },
+     {
+      "name": "SITEADDID",
+      "alias": "Site Address ID",
+      "type": "esriFieldTypeDouble"
+     },
+     {
+      "name": "STATUS",
+      "alias": "Status",
+      "type": "esriFieldTypeString",
+      "length": 30
+     },
+     {
+      "name": "ZIP_5",
+      "alias": "Zip Code",
+      "type": "esriFieldTypeInteger"
+     }
+    ],
+    "features": [
+     {
+      "attributes": {
+       "ADDPTKEY": "193912324238",
+       "ADDRCLASS": null,
+       "CAPTUREMETH": null,
+       "FIPS": "51059",
+       "FULLADDR": "135 CENTER ST S STE 9",
+       "FULLNAME": "CENTER ST S",
+       "LASTUPDATE": 1770249600000,
+       "MUNICIPALITY": "Fairfax County",
+       "OBJECTID": 3680151,
+       "PLACENAME": "",
+       "POINTTYPE": null,
+       "PO_NAME": "VIENNA",
+       "SITEADDID": 51059000367515.0,
+       "STATUS": null,
+       "ZIP_5": 22180
+      }
+     },
+     {
+      "attributes": {
+       "ADDPTKEY": "193912324209",
+       "ADDRCLASS": null,
+       "CAPTUREMETH": null,
+       "FIPS": "51059",
+       "FULLADDR": "153 CENTER ST S STE 17",
+       "FULLNAME": "CENTER ST S",
+       "LASTUPDATE": 1770249600000,
+       "MUNICIPALITY": "Fairfax County",
+       "OBJECTID": 3680152,
+       "PLACENAME": "",
+       "POINTTYPE": null,
+       "PO_NAME": "VIENNA",
+       "SITEADDID": 51059000367678.0,
+       "STATUS": null,
+       "ZIP_5": 22180
+      }
+     },
+     {
+      "attributes": {
+       "ADDPTKEY": "193909324205",
+       "ADDRCLASS": null,
+       "CAPTUREMETH": null,
+       "FIPS": "51059",
+       "FULLADDR": "155 CENTER ST S STE 16",
+       "FULLNAME": "CENTER ST S",
+       "LASTUPDATE": 1770249600000,
+       "MUNICIPALITY": "Fairfax County",
+       "OBJECTID": 3680153,
+       "PLACENAME": "",
+       "POINTTYPE": null,
+       "PO_NAME": "VIENNA",
+       "SITEADDID": 51059000367679.0,
+       "STATUS": null,
+       "ZIP_5": 22180
+      }
+     },
+     {
+      "attributes": {
+       "ADDPTKEY": "193905324200",
+       "ADDRCLASS": null,
+       "CAPTUREMETH": null,
+       "FIPS": "51059",
+       "FULLADDR": "157 CENTER ST S STE 15",
+       "FULLNAME": "CENTER ST S",
+       "LASTUPDATE": 1770249600000,
+       "MUNICIPALITY": "Fairfax County",
+       "OBJECTID": 3680154,
+       "PLACENAME": "",
+       "POINTTYPE": null,
+       "PO_NAME": "VIENNA",
+       "SITEADDID": 51059000367680.0,
+       "STATUS": null,
+       "ZIP_5": 22180
+      }
+     },
+     {
+      "attributes": {
+       "ADDPTKEY": "193900324195",
+       "ADDRCLASS": null,
+       "CAPTUREMETH": null,
+       "FIPS": "51059",
+       "FULLADDR": "159 CENTER ST S STE 14",
+       "FULLNAME": "CENTER ST S",
+       "LASTUPDATE": 1770249600000,
+       "MUNICIPALITY": "Fairfax County",
+       "OBJECTID": 3680155,
+       "PLACENAME": "",
+       "POINTTYPE": null,
+       "PO_NAME": "VIENNA",
+       "SITEADDID": 51059000367681.0,
+       "STATUS": null,
+       "ZIP_5": 22180
+      }
+     },
+     {
+      "attributes": {
+       "ADDPTKEY": "193915324235",
+       "ADDRCLASS": null,
+       "CAPTUREMETH": null,
+       "FIPS": "51059",
+       "FULLADDR": "137 CENTER ST S STE 8",
+       "FULLNAME": "CENTER ST S",
+       "LASTUPDATE": 1770249600000,
+       "MUNICIPALITY": "Fairfax County",
+       "OBJECTID": 3680156,
+       "PLACENAME": "",
+       "POINTTYPE": null,
+       "PO_NAME": "VIENNA",
+       "SITEADDID": 51059000367516.0,
+       "STATUS": null,
+       "ZIP_5": 22180
+      }
+     },
+     {
+      "attributes": {
+       "ADDPTKEY": "193919324231",
+       "ADDRCLASS": null,
+       "CAPTUREMETH": null,
+       "FIPS": "51059",
+       "FULLADDR": "139 CENTER ST S STE 7",
+       "FULLNAME": "CENTER ST S",
+       "LASTUPDATE": 1770249600000,
+       "MUNICIPALITY": "Fairfax County",
+       "OBJECTID": 3680157,
+       "PLACENAME": "",
+       "POINTTYPE": null,
+       "PO_NAME": "VIENNA",
+       "SITEADDID": 51059000367517.0,
+       "STATUS": null,
+       "ZIP_5": 22180
+      }
+     },
+     {
+      "attributes": {
+       "ADDPTKEY": "193924324226",
+       "ADDRCLASS": null,
+       "CAPTUREMETH": null,
+       "FIPS": "51059",
+       "FULLADDR": "141 CENTER ST S STE 6",
+       "FULLNAME": "CENTER ST S",
+       "LASTUPDATE": 1770249600000,
+       "MUNICIPALITY": "Fairfax County",
+       "OBJECTID": 3680158,
+       "PLACENAME": "",
+       "POINTTYPE": null,
+       "PO_NAME": "VIENNA",
+       "SITEADDID": 51059000367518.0,
+       "STATUS": null,
+       "ZIP_5": 22180
+      }
+     },
+     {
+      "attributes": {
+       "ADDPTKEY": "193929324222",
+       "ADDRCLASS": null,
+       "CAPTUREMETH": null,
+       "FIPS": "51059",
+       "FULLADDR": "143 CENTER ST S STE 5",
+       "FULLNAME": "CENTER ST S",
+       "LASTUPDATE": 1770249600000,
+       "MUNICIPALITY": "Fairfax County",
+       "OBJECTID": 3680159,
+       "PLACENAME": "",
+       "POINTTYPE": null,
+       "PO_NAME": "VIENNA",
+       "SITEADDID": 51059000367519.0,
+       "STATUS": null,
+       "ZIP_5": 22180
+      }
+     },
+     {
+      "attributes": {
+       "ADDPTKEY": "193932324192",
+       "ADDRCLASS": null,
+       "CAPTUREMETH": null,
+       "FIPS": "51059",
+       "FULLADDR": "101 LOCUST ST SW STE 10",
+       "FULLNAME": "LOCUST ST SW",
+       "LASTUPDATE": 1770249600000,
+       "MUNICIPALITY": "Fairfax County",
+       "OBJECTID": 3680160,
+       "PLACENAME": "",
+       "POINTTYPE": null,
+       "PO_NAME": "VIENNA",
+       "SITEADDID": 51059000367699.0,
+       "STATUS": null,
+       "ZIP_5": 22180
+      }
+     },
+     {
+      "attributes": {
+       "ADDPTKEY": "193928324187",
+       "ADDRCLASS": null,
+       "CAPTUREMETH": null,
+       "FIPS": "51059",
+       "FULLADDR": "103 LOCUST ST SW STE 11",
+       "FULLNAME": "LOCUST ST SW",
+       "LASTUPDATE": 1770249600000,
+       "MUNICIPALITY": "Fairfax County",
+       "OBJECTID": 3680161,
+       "PLACENAME": "",
+       "POINTTYPE": null,
+       "PO_NAME": "VIENNA",
+       "SITEADDID": 51059000367700.0,
+       "STATUS": null,
+       "ZIP_5": 22180
+      }
+     },
+     {
+      "attributes": {
+       "ADDPTKEY": "193924324183",
+       "ADDRCLASS": null,
+       "CAPTUREMETH": null,
+       "FIPS": "51059",
+       "FULLADDR": "105 LOCUST ST SW STE 12",
+       "FULLNAME": "LOCUST ST SW",
+       "LASTUPDATE": 1770249600000,
+       "MUNICIPALITY": "Fairfax County",
+       "OBJECTID": 3680162,
+       "PLACENAME": "",
+       "POINTTYPE": null,
+       "PO_NAME": "VIENNA",
+       "SITEADDID": 51059000367701.0,
+       "STATUS": null,
+       "ZIP_5": 22180
+      }
+     },
+     {
+      "attributes": {
+       "ADDPTKEY": "193920324179",
+       "ADDRCLASS": null,
+       "CAPTUREMETH": null,
+       "FIPS": "51059",
+       "FULLADDR": "107 LOCUST ST SW STE 13",
+       "FULLNAME": "LOCUST ST SW",
+       "LASTUPDATE": 1770249600000,
+       "MUNICIPALITY": "Fairfax County",
+       "OBJECTID": 3680163,
+       "PLACENAME": "",
+       "POINTTYPE": null,
+       "PO_NAME": "VIENNA",
+       "SITEADDID": 51059000367702.0,
+       "STATUS": null,
+       "ZIP_5": 22180
+      }
+     },
+     {
+      "attributes": {
+       "ADDPTKEY": "193821324214",
+       "ADDRCLASS": null,
+       "CAPTUREMETH": null,
+       "FIPS": "51059",
+       "FULLADDR": "115 HICKORY CIR SW",
+       "FULLNAME": "HICKORY CIR SW",
+       "LASTUPDATE": 1770249600000,
+       "MUNICIPALITY": "Fairfax County",
+       "OBJECTID": 3680221,
+       "PLACENAME": "",
+       "POINTTYPE": null,
+       "PO_NAME": "VIENNA",
+       "SITEADDID": 51059000000056.0,
+       "STATUS": null,
+       "ZIP_5": 22180
+      }
+     },
+     {
+      "attributes": {
+       "ADDPTKEY": "193931324317",
+       "ADDRCLASS": null,
+       "CAPTUREMETH": null,
+       "FIPS": "51059",
+       "FULLADDR": "128 CENTER ST S",
+       "FULLNAME": "CENTER ST S",
+       "LASTUPDATE": 1770249600000,
+       "MUNICIPALITY": "Fairfax County",
+       "OBJECTID": 3680265,
+       "PLACENAME": "Vienna Elementary School",
+       "POINTTYPE": null,
+       "PO_NAME": "VIENNA",
+       "SITEADDID": 51059000049764.0,
+       "STATUS": null,
+       "ZIP_5": 22180
+      }
+     },
+     {
+      "attributes": {
+       "ADDPTKEY": "193843324207",
+       "ADDRCLASS": null,
+       "CAPTUREMETH": null,
+       "FIPS": "51059",
+       "FULLADDR": "113 HICKORY CIR SW",
+       "FULLNAME": "HICKORY CIR SW",
+       "LASTUPDATE": 1770249600000,
+       "MUNICIPALITY": "Fairfax County",
+       "OBJECTID": 3680419,
+       "PLACENAME": "",
+       "POINTTYPE": null,
+       "PO_NAME": "VIENNA",
+       "SITEADDID": 51059000281667.0,
+       "STATUS": null,
+       "ZIP_5": 22180
+      }
+     },
+     {
+      "attributes": {
+       "ADDPTKEY": "193856324189",
+       "ADDRCLASS": null,
+       "CAPTUREMETH": null,
+       "FIPS": "51059",
+       "FULLADDR": "112 HICKORY CIR SW",
+       "FULLNAME": "HICKORY CIR SW",
+       "LASTUPDATE": 1770249600000,
+       "MUNICIPALITY": "Fairfax County",
+       "OBJECTID": 3680425,
+       "PLACENAME": "",
+       "POINTTYPE": null,
+       "PO_NAME": "VIENNA",
+       "SITEADDID": 51059000286529.0,
+       "STATUS": null,
+       "ZIP_5": 22180
+      }
+     },
+     {
+      "attributes": {
+       "ADDPTKEY": "193884324265",
+       "ADDRCLASS": null,
+       "CAPTUREMETH": null,
+       "FIPS": "51059",
+       "FULLADDR": "127 CENTER ST S",
+       "FULLNAME": "CENTER ST S",
+       "LASTUPDATE": 1770249600000,
+       "MUNICIPALITY": "Fairfax County",
+       "OBJECTID": 3680456,
+       "PLACENAME": "",
+       "POINTTYPE": null,
+       "PO_NAME": "VIENNA",
+       "SITEADDID": 51059000024874.0,
+       "STATUS": null,
+       "ZIP_5": 22180
+      }
+     },
+     {
+      "attributes": {
+       "ADDPTKEY": "193830324289",
+       "ADDRCLASS": null,
+       "CAPTUREMETH": null,
+       "FIPS": "51059",
+       "FULLADDR": "111 CENTER ST S",
+       "FULLNAME": "CENTER ST S",
+       "LASTUPDATE": 1770249600000,
+       "MUNICIPALITY": "Fairfax County",
+       "OBJECTID": 3680536,
+       "PLACENAME": "",
+       "POINTTYPE": null,
+       "PO_NAME": "VIENNA",
+       "SITEADDID": 51059000024899.0,
+       "STATUS": null,
+       "ZIP_5": 22180
+      }
+     },
+     {
+      "attributes": {
+       "ADDPTKEY": "193856324286",
+       "ADDRCLASS": null,
+       "CAPTUREMETH": null,
+       "FIPS": "51059",
+       "FULLADDR": "125 CENTER ST S",
+       "FULLNAME": "CENTER ST S",
+       "LASTUPDATE": 1770249600000,
+       "MUNICIPALITY": "Fairfax County",
+       "OBJECTID": 3680548,
+       "PLACENAME": "",
+       "POINTTYPE": null,
+       "PO_NAME": "VIENNA",
+       "SITEADDID": 51059000044768.0,
+       "STATUS": null,
+       "ZIP_5": 22180
+      }
+     },
+     {
+      "attributes": {
+       "ADDPTKEY": "193934324216",
+       "ADDRCLASS": null,
+       "CAPTUREMETH": null,
+       "FIPS": "51059",
+       "FULLADDR": "145 CENTER ST S STE 4",
+       "FULLNAME": "CENTER ST S",
+       "LASTUPDATE": 1770249600000,
+       "MUNICIPALITY": "Fairfax County",
+       "OBJECTID": 3706764,
+       "PLACENAME": "",
+       "POINTTYPE": null,
+       "PO_NAME": "VIENNA",
+       "SITEADDID": 51059000367526.0,
+       "STATUS": null,
+       "ZIP_5": 22180
+      }
+     },
+     {
+      "attributes": {
+       "ADDPTKEY": "193940324212",
+       "ADDRCLASS": null,
+       "CAPTUREMETH": null,
+       "FIPS": "51059",
+       "FULLADDR": "147 CENTER ST S STE 3",
+       "FULLNAME": "CENTER ST S",
+       "LASTUPDATE": 1770249600000,
+       "MUNICIPALITY": "Fairfax County",
+       "OBJECTID": 3706765,
+       "PLACENAME": "",
+       "POINTTYPE": null,
+       "PO_NAME": "VIENNA",
+       "SITEADDID": 51059000367520.0,
+       "STATUS": null,
+       "ZIP_5": 22180
+      }
+     },
+     {
+      "attributes": {
+       "ADDPTKEY": "193944324208",
+       "ADDRCLASS": null,
+       "CAPTUREMETH": null,
+       "FIPS": "51059",
+       "FULLADDR": "149 CENTER ST S STE 2",
+       "FULLNAME": "CENTER ST S",
+       "LASTUPDATE": 1770249600000,
+       "MUNICIPALITY": "Fairfax County",
+       "OBJECTID": 3706766,
+       "PLACENAME": "",
+       "POINTTYPE": null,
+       "PO_NAME": "VIENNA",
+       "SITEADDID": 51059000367521.0,
+       "STATUS": null,
+       "ZIP_5": 22180
+      }
+     },
+     {
+      "attributes": {
+       "ADDPTKEY": "193948324204",
+       "ADDRCLASS": null,
+       "CAPTUREMETH": null,
+       "FIPS": "51059",
+       "FULLADDR": "151 CENTER ST S STE 1",
+       "FULLNAME": "CENTER ST S",
+       "LASTUPDATE": 1770249600000,
+       "MUNICIPALITY": "Fairfax County",
+       "OBJECTID": 3706767,
+       "PLACENAME": "",
+       "POINTTYPE": null,
+       "PO_NAME": "VIENNA",
+       "SITEADDID": 51059000367522.0,
+       "STATUS": null,
+       "ZIP_5": 22180
+      }
+     }
+    ]
+   }
+  },
+  {
+   "url": "https://vginmaps.vdem.virginia.gov/arcgis/rest/services/VA_Base_Layers/VA_Address_Points/FeatureServer/0/query",
+   "params": {
+    "f": "json",
+    "outFields": "FIPS,MUNICIPALITY",
+    "returnGeometry": "false",
+    "where": "ZIP_5 = 24450",
+    "returnDistinctValues": "true"
+   },
+   "response": {
+    "objectIdFieldName": "OBJECTID",
+    "globalIdFieldName": "",
+    "geometryType": "esriGeometryPoint",
+    "spatialReference": {
+     "wkid": 102100,
+     "latestWkid": 3857
+    },
+    "fields": [
+     {
+      "name": "FIPS",
+      "alias": "Jurisdiction FIPS Code",
+      "type": "esriFieldTypeString",
+      "length": 7
+     },
+     {
+      "name": "MUNICIPALITY",
+      "alias": "Jurisdiction Name",
+      "type": "esriFieldTypeString",
+      "length": 100
+     }
+    ],
+    "features": [
+     {
+      "attributes": {
+       "FIPS": "51023",
+       "MUNICIPALITY": "Botetourt County"
+      }
+     },
+     {
+      "attributes": {
+       "FIPS": "51678",
+       "MUNICIPALITY": "Lexington City"
+      }
+     },
+     {
+      "attributes": {
+       "FIPS": "51163",
+       "MUNICIPALITY": "Rockbridge County"
+      }
+     }
+    ]
+   }
+  },
+  {
+   "url": "https://vginmaps.vdem.virginia.gov/arcgis/rest/services/VA_Base_Layers/VA_Address_Points/FeatureServer/0/query",
+   "params": {
+    "f": "json",
+    "outFields": "FIPS,MUNICIPALITY",
+    "returnGeometry": "false",
+    "where": "ZIP_5 = 22180",
+    "returnDistinctValues": "true"
+   },
+   "response": {
+    "objectIdFieldName": "OBJECTID",
+    "globalIdFieldName": "",
+    "geometryType": "esriGeometryPoint",
+    "spatialReference": {
+     "wkid": 102100,
+     "latestWkid": 3857
+    },
+    "fields": [
+     {
+      "name": "FIPS",
+      "alias": "Jurisdiction FIPS Code",
+      "type": "esriFieldTypeString",
+      "length": 7
+     },
+     {
+      "name": "MUNICIPALITY",
+      "alias": "Jurisdiction Name",
+      "type": "esriFieldTypeString",
+      "length": 100
+     }
+    ],
+    "features": [
+     {
+      "attributes": {
+       "FIPS": "51059",
+       "MUNICIPALITY": "Fairfax County"
+      }
+     }
+    ]
+   }
+  },
+  {
+   "url": "https://vginmaps.vdem.virginia.gov/arcgis/rest/services/VA_Base_Layers/VA_Address_Points/FeatureServer/0/query",
+   "params": {
+    "f": "json",
+    "outFields": "FIPS,MUNICIPALITY",
+    "returnGeometry": "false",
+    "where": "ZIP_5 = 0",
+    "returnDistinctValues": "true"
+   },
+   "response": {
+    "objectIdFieldName": "OBJECTID",
+    "globalIdFieldName": "",
+    "geometryType": "esriGeometryPoint",
+    "spatialReference": {
+     "wkid": 102100,
+     "latestWkid": 3857
+    },
+    "features": []
+   }
+  }
+ ]
+}

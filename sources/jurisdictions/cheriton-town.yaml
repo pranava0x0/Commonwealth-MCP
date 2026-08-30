@@ -1,0 +1,6 @@
+id: va:cheriton-town
+name: Cheriton (town)
+kind: town
+place_fips: "15112"
+parent: va:northampton-county
+aliases: ["Town of Cheriton"]

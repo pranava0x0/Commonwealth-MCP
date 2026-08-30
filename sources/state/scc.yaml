@@ -1,0 +1,60 @@
+# Inventory only (design/source-registry.md § 6.3).
+id: va-scc
+name: State Corporation Commission (business entities and utilities)
+jurisdiction: va
+
+publisher:
+  agency: Virginia State Corporation Commission (SCC)
+  authority_level: primary
+
+domains: [business, utilities]
+
+capabilities: []
+
+adapter:
+  type: none
+  discovery_url: https://cis.scc.virginia.gov/
+
+access:
+  mode: unknown
+  automation_status: unknown
+  terms_url: https://www.scc.virginia.gov/
+  terms_notes: >
+    Not reviewed, and not researched. The Clerk's Information System
+    answered 200 on 2026-08-29 behind a cookie-consent redirect; nothing
+    else about it has been checked.
+  data_classification: open
+
+freshness:
+  expected_cadence: unknown
+  cadence_source: unknown
+  ttl_hint_seconds: 86400
+
+coverage:
+  geography: va
+  temporal: current
+  known_limitations:
+    - >
+      No endpoint discovery has run. The Clerk's Information System is a
+      session-based web application, which is the shape most likely to
+      have no public API at all and the shape this project's egress policy
+      is least willing to work around.
+    - >
+      Business-entity records name registered agents at their own
+      addresses. That is public by statute and still a sensitive_public
+      classification question, reviewed before anything activates.
+
+authority_notes: >
+  The SCC is the system of record for Virginia business entity
+  registrations and for regulated utilities, so it is primary for both.
+  Two capabilities, likely two manifests, when either is built.
+
+health:
+  probe: none
+  expect: {}
+
+lifecycle:
+  declared_state: proposed
+  added: "2026-08-29"
+  last_verified: "2026-08-29"
+  verified_by: pranava0x0

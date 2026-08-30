@@ -404,3 +404,49 @@ def test_short_quotes_do_not_shift_the_pairing(tmp_path):
     assert "trailing-negation" not in out, out
     # ...and the prose after it is still scanned.
     assert "llm-register" in out, out
+
+
+def test_flags_an_artifact_written_as_the_protagonist(tmp_path):
+    """Found 2026-08-30 in a PR body. Data does not correct a plan —
+    somebody read it, was wrong, and changed their mind. Each of these
+    four shipped before the rule existed."""
+    target = tmp_path / "sample.md"
+    target.write_text(
+        "### Where the live data corrected the plan\n\n"
+        "Two ways a green suite lied, and what their data forced.\n\n"
+        "Write down the rules that kept this PR honest.\n")
+    code, out = _run("", "--files", str(target))
+    assert out.count("inanimate-protagonist") >= 4, out
+    assert code != 0
+
+
+def test_does_not_flag_an_artifact_doing_an_artifacts_job(tmp_path):
+    """The rule has to stay narrow. Sources disagreeing, a service
+    rejecting a query, a manifest recording terms, and a test asserting
+    something are ordinary technical writing, and every one of them is
+    live prose in this repo."""
+    target = tmp_path / "sample.md"
+    target.write_text(
+        "Official sources disagree; both answers are shown and neither has "
+        "been reconciled away. ArcGIS rejected the query against the "
+        "address layer. The manifest records what the terms actually say, "
+        "and a test asserts the registered layer id resolves. The code "
+        "says so rather than inventing a figure.\n")
+    _, out = _run("", "--files", str(target))
+    assert "inanimate-protagonist" not in out, out
+
+
+def test_the_pr_scanner_is_wired_and_skips_bot_comments():
+    """A PR body is the most-read prose this project produces and was the
+    one surface nothing checked. Asserted on the flag's plumbing rather
+    than by calling GitHub, so the suite stays offline."""
+    import inspect
+    import sys
+    sys.path.insert(0, str(ROOT / "tools"))
+    import check_writing
+
+    source = inspect.getsource(check_writing.gh_pr_texts)
+    assert '"pr", "view"' in source and "comments" in source
+    assert "[bot]" in source, "a bot's prose is not this project's to fix"
+    code, out = _run("", "--help")
+    assert "--pr" in out and code == 0

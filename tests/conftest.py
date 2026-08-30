@@ -15,6 +15,7 @@ from pathlib import Path
 import pytest
 
 from commonwealth.adapters.arcgis import ArcGISAdapter
+from commonwealth.adapters.arcgis_geocode import ArcGISGeocodeAdapter
 from commonwealth.adapters.base import TTLCache
 from commonwealth.adapters.virginia_law import VirginiaLawAdapter
 from commonwealth.core.jurisdiction import JurisdictionTable
@@ -43,18 +44,15 @@ from commonwealth.adapters.replay import (HtmlReplayFetcher,  # noqa: E402,F401
                                           ReplayFetcher)
 
 
+# One implementation of the offline seam, in the package rather than
+# here, so the example scripts can reach it without importing a test
+# module (commonwealth/fixtures.py).
+from commonwealth.fixtures import (recorded_exchanges,  # noqa: E402
+                                   recorded_pages)
+
+
 def load_civic_pages() -> dict[str, tuple[str, str]]:
-    """The two recorded law.lis.virginia.gov pages (a real section, and
-    the real redirect-landing page for a section the site doesn't have),
-    keyed by the request URL the adapter actually builds."""
-    found_html = (CIVIC_FIXTURE_DIR / "section-1-500.html").read_text()
-    not_found_html = (CIVIC_FIXTURE_DIR / "no-such-section.html").read_text()
-    return {
-        f"{CIVIC_SERVICE_URL}/1-500/": (
-            found_html, f"{CIVIC_SERVICE_URL}/1-500/"),
-        f"{CIVIC_SERVICE_URL}/1-999999/": (
-            not_found_html, f"{CIVIC_SERVICE_URL}/title1/"),
-    }
+    return recorded_pages()
 
 
 def _real_manifest() -> SourceManifest:
@@ -106,24 +104,22 @@ def sample_pin(recording) -> str:
 
 
 def load_all_recordings() -> list[dict]:
-    """Every committed source's own fixture, merged. `build_ctx` loads the
-    real (multi-source) registry, so a query against one jurisdiction can
-    legitimately reach more than one source (../design/architecture.md decision 0005-C) — the replay
-    pool has to cover whichever ones actually get queried, not just
-    Fairfax's."""
-    exchanges: list[dict] = []
-    for path in sorted((FIXTURES / "sources").glob("*/recorded.json")):
-        exchanges.extend(json.loads(path.read_text())["exchanges"])
-    return exchanges
+    return recorded_exchanges()
 
 
 def build_ctx(extra_manifests: list[SourceManifest] | None = None,
               extra_exchanges: list[dict] | None = None,
               fetcher: object | None = None,
-              civic_fetcher: object | None = None) -> RuntimeContext:
+              civic_fetcher: object | None = None,
+              geocode_fetcher: object | None = None) -> RuntimeContext:
     exchanges = load_all_recordings() + list(extra_exchanges or [])
     replay = fetcher or ReplayFetcher(exchanges)
     civic_replay = civic_fetcher or HtmlReplayFetcher(load_civic_pages())
+    # The geocoder replays from the same pool: its recorded exchanges are
+    # JSON GETs like every other, so one fetcher would do — but the two
+    # adapters are given separate instances so a test can swap one for a
+    # failure stub without also breaking the other's replay.
+    geocode_replay = geocode_fetcher or ReplayFetcher(exchanges)
     real = SourceRegistry.load(SOURCES_DIR)
     manifests = list(real.manifests.values()) + list(extra_manifests or [])
     registry = SourceRegistry(manifests, real.capability_vocab, real.revision)
@@ -131,6 +127,8 @@ def build_ctx(extra_manifests: list[SourceManifest] | None = None,
         sources=registry,
         jurisdictions=JurisdictionTable.load(SOURCES_DIR / "jurisdictions"),
         arcgis=ArcGISAdapter(fetcher=replay, cache=TTLCache()),
+        geocoder=ArcGISGeocodeAdapter(fetcher=geocode_replay,
+                                      cache=TTLCache()),
         virginia_law=VirginiaLawAdapter(fetcher=civic_replay))
 
 

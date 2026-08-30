@@ -71,6 +71,42 @@ The repository root holds `README.md` and `CONTRIBUTING.md`. Nothing else.
 Adding a new top-level document needs a reason that one of these cannot
 hold.
 
+## 6.1 The site ships with the change (added 2026-08-30)
+
+`docs/` is a published artifact. GitHub Pages serves it from `main`, so a
+PR that changes what the server does and leaves the page describing the
+old behaviour publishes a lie the moment it merges. Rebuild it in the
+same PR:
+
+```bash
+.venv/bin/python tools/build_site.py --fixtures
+```
+
+What that catches on its own, and what it does not:
+
+- **Counts are derived**, so they cannot drift — `site.json` is built by
+  calling the live registries and a test rebuilds it and compares.
+- **The recorded call trail is not**, and that is where it went wrong.
+  The page walked eight tools for as long as it took the server to reach
+  fourteen, because `DEMO_CALLS` is a written list. It now has a test
+  that derives the expected set from the tool registry, so adding a tool
+  without a demo fails the build. A demo should show what the tool gets
+  right, not that it runs.
+- **Hand-written prose is not**, and it is the remaining soft spot. The
+  page said "Fourteen real lookups" while the count had moved; the fix
+  was to compute the sentence from the embedded data rather than to
+  correct the number. Anything on the page that states a figure should be
+  written by JavaScript reading the data block.
+- **Badges and labels are not.** The call badge read the warning count,
+  so the registry-gap call — the one answer the page exists to
+  distinguish — showed green. A label derived from the wrong field is
+  worse than no label, because it is read as a verdict.
+
+Verify in a browser before pushing, not only in tests: zero console
+errors, and no horizontal overflow at 375px.
+
+---
+
 ## 7. Surfaces the writing checker reads
 
 `tools/check_writing.py` scans more than the Markdown tree, because copy

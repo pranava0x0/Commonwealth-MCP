@@ -1,0 +1,7 @@
+id: va:brookneal-town
+name: Brookneal (town)
+kind: town
+place_fips: "10296"
+parent: va:campbell-county
+aliases: ["Town of Brookneal"]
+also_within: ["va:halifax-county"]

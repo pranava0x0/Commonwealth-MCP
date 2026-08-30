@@ -1,0 +1,6 @@
+id: va:staunton-city
+name: Staunton City
+kind: independent-city
+fips: "51790"
+parent: va
+aliases: ["City of Staunton"]

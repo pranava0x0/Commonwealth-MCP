@@ -1,10 +1,10 @@
 {
  "source_id": "va-charles-city-county-parcels",
- "recorded_at": "2026-08-28T15:48:14Z",
+ "recorded_at": "2026-08-30T03:38:42Z",
  "rights": {
   "publisher": "Charles City County government (GIS)",
   "terms_url": "https://dataportal-charlescityvagis.hub.arcgis.com/datasets/967223223e134e7b8b4411e9226d2872_0/about",
-  "note": "Recorded government-published responses; third-party content excluded from the repo's CC0 grant (DECISIONS.md 0011)."
+  "note": "Recorded government-published responses; third-party content excluded from the repo's CC0 grant (../../../design/architecture.md decision 0011)."
  },
  "summary": {
   "health:parcels": {
@@ -713,6 +713,31 @@
      "isSystemMaintained": true
     },
     "globalIdFieldName": "",
+    "features": []
+   }
+  },
+  {
+   "url": "https://services5.arcgis.com/7ELQsoO4nWXrJNri/arcgis/rest/services/Parcels_with_Sales_Valuation_and_Reports_View/FeatureServer/0/query",
+   "params": {
+    "f": "json",
+    "outFields": "MAP_PIN,OBJECTID",
+    "resultRecordCount": "50",
+    "returnGeometry": "true",
+    "where": "MAP_PIN = 'NO SUCH PIN'",
+    "outSR": "4326"
+   },
+   "response": {
+    "objectIdFieldName": "OBJECTID",
+    "uniqueIdField": {
+     "name": "OBJECTID",
+     "isSystemMaintained": true
+    },
+    "globalIdFieldName": "",
+    "geometryProperties": {
+     "shapeAreaFieldName": "Shape__Area",
+     "shapeLengthFieldName": "Shape__Length",
+     "units": "esriMeters"
+    },
     "features": []
    }
   },

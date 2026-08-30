@@ -1,0 +1,6 @@
+id: va:grundy-town
+name: Grundy (town)
+kind: town
+place_fips: "33648"
+parent: va:buchanan-county
+aliases: ["Town of Grundy"]
