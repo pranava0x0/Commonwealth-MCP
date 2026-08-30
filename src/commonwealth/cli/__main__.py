@@ -512,6 +512,52 @@ async def _statewide_crosschecks(adapter, m, ctx) -> dict:
     return out
 
 
+async def _sample_roads(adapter, m, params, ctx) -> dict:
+    """Recording plan for a road source. Records the same street in the
+    same town from whichever of the two publishers this is, so the
+    disagreement between them replays as a comparison rather than as a
+    hand-written conflict."""
+    from ..domains.geo import (ROAD_RADIUS_M, _jurisdiction_filter,
+                               _road_layer)
+    out: dict[str, Any] = {}
+    for layer in sorted(params.layers):
+        out[f"health:{layer}"] = await adapter.health(m, layer)
+
+    layer_key = _road_layer(ctx, m)
+    out["query_layer"] = layer_key
+    # Vienna: a town inside Fairfax County, and a street both publishers
+    # carry under names that do not match.
+    for label, stack in (("in_town", ["va:vienna-town", "va:fairfax-county",
+                                      "va"]),
+                         ("in_county", ["va:fairfax-county", "va"])):
+        scope = _jurisdiction_filter(ctx, m, layer_key, stack)
+        q = await adapter.query(m, layer_key,
+                                where_prefix={"street_name": "Center St"},
+                                where_any_of=scope)
+        out[f"by_name_{label}"] = {
+            "scoped": scope is not None,
+            "record_count": len(q.records),
+            "names": sorted({str(r.canonical.get("street_name"))
+                             for r in q.records})[:6]}
+
+    point_scope = _jurisdiction_filter(
+        ctx, m, layer_key, ["va:vienna-town", "va:fairfax-county", "va"])
+    pq = await adapter.query(m, layer_key,
+                             geometry_point=(-77.2653, 38.9012),
+                             distance_meters=ROAD_RADIUS_M,
+                             where_any_of=point_scope)
+    out["near_point"] = {"record_count": len(pq.records),
+                         "names": sorted({str(r.canonical.get("street_name"))
+                                          for r in pq.records})[:6]}
+    miss = await adapter.query(
+        m, layer_key,
+        where_prefix={"street_name": "ZZZZ NO SUCH ROAD"},
+        where_any_of=_jurisdiction_filter(ctx, m, layer_key,
+                                          ["va:fairfax-county", "va"]))
+    out["no_match"] = {"record_count": len(miss.records)}
+    return out
+
+
 async def _sample_buildings(adapter, m, params, ctx) -> dict:
     """Recording plan for building footprints. Records a residential point
     (a handful of neighbours), a dense downtown point that the service
@@ -653,6 +699,13 @@ def cmd_sources_sample(args: argparse.Namespace) -> int:
         HttpFetcher(policy=egress_policy_for(m, params.service_url)))
     adapter = arcgis_mod.ArcGISAdapter(fetcher=recorder,
                                        cache=arcgis_mod.TTLCache())
+
+    if "road.lookup" in m.capability_ids():
+        try:
+            summary = asyncio.run(_sample_roads(adapter, m, params, ctx))
+        except CommonwealthError as err:
+            return _fail(f"{err.code}: {err}")
+        return _write_fixture(m, recorder, summary)
 
     if "building.lookup" in m.capability_ids():
         try:

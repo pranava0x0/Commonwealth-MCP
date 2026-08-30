@@ -1,0 +1,649 @@
+{
+ "annotations": {
+  "destructive_hint": false,
+  "open_world_hint": true,
+  "read_only_hint": true
+ },
+ "description": "Find road segments and routes in a Virginia jurisdiction, by street-name prefix or near a lon/lat point. TWO official sources answer this and they are expected to disagree: VDOT's route inventory is a linear-referencing model with its own route names and measures, VGIN's centerlines are an aggregation of local submissions with segment-level detail. Both are returned unreconciled and the comparison block says whether their names agree \u2014 a difference is usually a difference in how the road is modelled, not an error. Centerlines are not right-of-way boundaries. A road along a locality line belongs to both localities in the results.",
+ "input_schema": {
+  "properties": {
+   "jurisdiction": {
+    "title": "Jurisdiction",
+    "type": "string"
+   },
+   "lat": {
+    "anyOf": [
+     {
+      "type": "number"
+     },
+     {
+      "type": "null"
+     }
+    ],
+    "default": null,
+    "title": "Lat"
+   },
+   "lon": {
+    "anyOf": [
+     {
+      "type": "number"
+     },
+     {
+      "type": "null"
+     }
+    ],
+    "default": null,
+    "title": "Lon"
+   },
+   "radius_meters": {
+    "default": 100.0,
+    "title": "Radius Meters",
+    "type": "number"
+   },
+   "street_name": {
+    "default": "",
+    "title": "Street Name",
+    "type": "string"
+   }
+  },
+  "required": [
+   "jurisdiction"
+  ],
+  "title": "geo_find_roadsArguments",
+  "type": "object"
+ },
+ "output_schema": {
+  "$defs": {
+   "AccessPath": {
+    "enum": [
+     "live",
+     "cache",
+     "index"
+    ],
+    "title": "AccessPath",
+    "type": "string"
+   },
+   "AuthorityLevel": {
+    "enum": [
+     "primary",
+     "official_secondary",
+     "official_derived",
+     "third_party",
+     "unverified"
+    ],
+    "title": "AuthorityLevel",
+    "type": "string"
+   },
+   "Coverage": {
+    "additionalProperties": false,
+    "description": "Five independent dimensions; never collapse them into one status.",
+    "properties": {
+     "execution": {
+      "$ref": "#/$defs/ExecutionCoverage"
+     },
+     "jurisdictions_searched": {
+      "items": {
+       "type": "string"
+      },
+      "title": "Jurisdictions Searched",
+      "type": "array"
+     },
+     "jurisdictions_unavailable": {
+      "items": {
+       "$ref": "#/$defs/JurisdictionGap"
+      },
+      "title": "Jurisdictions Unavailable",
+      "type": "array"
+     },
+     "known_limitations": {
+      "items": {
+       "type": "string"
+      },
+      "title": "Known Limitations",
+      "type": "array"
+     },
+     "pagination": {
+      "$ref": "#/$defs/PaginationCoverage",
+      "default": "unknown"
+     },
+     "registry": {
+      "$ref": "#/$defs/RegistryCoverage"
+     },
+     "result": {
+      "$ref": "#/$defs/ResultCoverage"
+     },
+     "source_claim": {
+      "$ref": "#/$defs/SourceClaimCoverage",
+      "default": "unknown"
+     },
+     "source_failures": {
+      "items": {
+       "$ref": "#/$defs/SourceFailure"
+      },
+      "title": "Source Failures",
+      "type": "array"
+     },
+     "time_range": {
+      "anyOf": [
+       {
+        "$ref": "#/$defs/TimeRange"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "default": null
+     }
+    },
+    "required": [
+     "registry",
+     "execution",
+     "result"
+    ],
+    "title": "Coverage",
+    "type": "object"
+   },
+   "Evidence": {
+    "additionalProperties": false,
+    "properties": {
+     "effective_at": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "default": null,
+      "title": "Effective At"
+     },
+     "id": {
+      "title": "Id",
+      "type": "string"
+     },
+     "locator": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "default": null,
+      "title": "Locator"
+     },
+     "payload_hash": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "default": null,
+      "title": "Payload Hash"
+     },
+     "raw_recovery": {
+      "$ref": "#/$defs/RawRecovery",
+      "default": "available"
+     },
+     "record_id": {
+      "title": "Record Id",
+      "type": "string"
+     },
+     "retrieved_at": {
+      "title": "Retrieved At",
+      "type": "string"
+     },
+     "source_ref": {
+      "title": "Source Ref",
+      "type": "string"
+     },
+     "transformations": {
+      "items": {
+       "type": "string"
+      },
+      "title": "Transformations",
+      "type": "array"
+     }
+    },
+    "required": [
+     "id",
+     "source_ref",
+     "record_id",
+     "retrieved_at"
+    ],
+    "title": "Evidence",
+    "type": "object"
+   },
+   "ExecutionCoverage": {
+    "enum": [
+     "complete",
+     "partial",
+     "failed"
+    ],
+    "title": "ExecutionCoverage",
+    "type": "string"
+   },
+   "ExecutionProvenance": {
+    "additionalProperties": false,
+    "properties": {
+     "adapters": {
+      "additionalProperties": {
+       "type": "string"
+      },
+      "title": "Adapters",
+      "type": "object"
+     },
+     "envelope_version": {
+      "default": "1",
+      "title": "Envelope Version",
+      "type": "string"
+     },
+     "registry_revision": {
+      "title": "Registry Revision",
+      "type": "string"
+     },
+     "request_id": {
+      "title": "Request Id",
+      "type": "string"
+     },
+     "server": {
+      "title": "Server",
+      "type": "string"
+     },
+     "server_version": {
+      "title": "Server Version",
+      "type": "string"
+     },
+     "tool": {
+      "title": "Tool",
+      "type": "string"
+     },
+     "tool_contract_version": {
+      "title": "Tool Contract Version",
+      "type": "string"
+     }
+    },
+    "required": [
+     "server",
+     "server_version",
+     "tool",
+     "tool_contract_version",
+     "registry_revision",
+     "request_id"
+    ],
+    "title": "ExecutionProvenance",
+    "type": "object"
+   },
+   "JurisdictionGap": {
+    "additionalProperties": false,
+    "properties": {
+     "jurisdiction": {
+      "title": "Jurisdiction",
+      "type": "string"
+     },
+     "reason": {
+      "title": "Reason",
+      "type": "string"
+     }
+    },
+    "required": [
+     "jurisdiction",
+     "reason"
+    ],
+    "title": "JurisdictionGap",
+    "type": "object"
+   },
+   "NextAction": {
+    "additionalProperties": false,
+    "properties": {
+     "finding": {
+      "title": "Finding",
+      "type": "string"
+     },
+     "reason": {
+      "title": "Reason",
+      "type": "string"
+     },
+     "suggested_capability": {
+      "title": "Suggested Capability",
+      "type": "string"
+     }
+    },
+    "required": [
+     "finding",
+     "suggested_capability",
+     "reason"
+    ],
+    "title": "NextAction",
+    "type": "object"
+   },
+   "PaginationCoverage": {
+    "enum": [
+     "complete",
+     "truncated",
+     "unknown"
+    ],
+    "title": "PaginationCoverage",
+    "type": "string"
+   },
+   "RawRecovery": {
+    "enum": [
+     "available",
+     "forbidden_by_terms",
+     "expired"
+    ],
+    "title": "RawRecovery",
+    "type": "string"
+   },
+   "RegistryCoverage": {
+    "enum": [
+     "covered",
+     "partial",
+     "none",
+     "unknown"
+    ],
+    "title": "RegistryCoverage",
+    "type": "string"
+   },
+   "ResourceRef": {
+    "additionalProperties": false,
+    "properties": {
+     "description": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "default": null,
+      "title": "Description"
+     },
+     "media_type": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "default": null,
+      "title": "Media Type"
+     },
+     "uri": {
+      "title": "Uri",
+      "type": "string"
+     }
+    },
+    "required": [
+     "uri"
+    ],
+    "title": "ResourceRef",
+    "type": "object"
+   },
+   "ResultCoverage": {
+    "enum": [
+     "hit",
+     "empty"
+    ],
+    "title": "ResultCoverage",
+    "type": "string"
+   },
+   "SourceClaimCoverage": {
+    "enum": [
+     "complete",
+     "partial",
+     "unknown"
+    ],
+    "title": "SourceClaimCoverage",
+    "type": "string"
+   },
+   "SourceEntry": {
+    "additionalProperties": false,
+    "properties": {
+     "access_path": {
+      "$ref": "#/$defs/AccessPath"
+     },
+     "authority_level": {
+      "$ref": "#/$defs/AuthorityLevel"
+     },
+     "cache_age_seconds": {
+      "title": "Cache Age Seconds",
+      "type": "integer"
+     },
+     "dataset": {
+      "title": "Dataset",
+      "type": "string"
+     },
+     "id": {
+      "title": "Id",
+      "type": "string"
+     },
+     "jurisdiction": {
+      "title": "Jurisdiction",
+      "type": "string"
+     },
+     "publisher": {
+      "title": "Publisher",
+      "type": "string"
+     },
+     "retrieved_at": {
+      "title": "Retrieved At",
+      "type": "string"
+     },
+     "source_id": {
+      "title": "Source Id",
+      "type": "string"
+     },
+     "source_updated_at": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Source Updated At"
+     },
+     "system": {
+      "title": "System",
+      "type": "string"
+     }
+    },
+    "required": [
+     "id",
+     "source_id",
+     "publisher",
+     "system",
+     "dataset",
+     "jurisdiction",
+     "authority_level",
+     "access_path",
+     "source_updated_at",
+     "retrieved_at",
+     "cache_age_seconds"
+    ],
+    "title": "SourceEntry",
+    "type": "object"
+   },
+   "SourceFailure": {
+    "additionalProperties": false,
+    "properties": {
+     "detail": {
+      "title": "Detail",
+      "type": "string"
+     },
+     "error": {
+      "title": "Error",
+      "type": "string"
+     },
+     "source_id": {
+      "title": "Source Id",
+      "type": "string"
+     }
+    },
+    "required": [
+     "source_id",
+     "error",
+     "detail"
+    ],
+    "title": "SourceFailure",
+    "type": "object"
+   },
+   "TimeRange": {
+    "additionalProperties": false,
+    "properties": {
+     "from": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "default": null,
+      "title": "From"
+     },
+     "to": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "default": null,
+      "title": "To"
+     }
+    },
+    "title": "TimeRange",
+    "type": "object"
+   },
+   "WarningCode": {
+    "description": "Adding a value is a reviewed change (spec \u00a7 5).",
+    "enum": [
+     "screening_only",
+     "stale_source",
+     "freshness_unavailable",
+     "boundary_precision",
+     "alias_match",
+     "mixed_vintages",
+     "terms_note",
+     "sensitive_public_data",
+     "insecure_transport",
+     "truncated_inline"
+    ],
+    "title": "WarningCode",
+    "type": "string"
+   },
+   "WarningNote": {
+    "additionalProperties": false,
+    "properties": {
+     "code": {
+      "$ref": "#/$defs/WarningCode"
+     },
+     "message": {
+      "title": "Message",
+      "type": "string"
+     },
+     "source_id": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "default": null,
+      "title": "Source Id"
+     }
+    },
+    "required": [
+     "code",
+     "message"
+    ],
+    "title": "WarningNote",
+    "type": "object"
+   }
+  },
+  "additionalProperties": false,
+  "properties": {
+   "_execution": {
+    "anyOf": [
+     {
+      "$ref": "#/$defs/ExecutionProvenance"
+     },
+     {
+      "type": "null"
+     }
+    ],
+    "default": null
+   },
+   "coverage": {
+    "$ref": "#/$defs/Coverage"
+   },
+   "data": {
+    "additionalProperties": true,
+    "title": "Data",
+    "type": "object"
+   },
+   "evidence": {
+    "items": {
+     "$ref": "#/$defs/Evidence"
+    },
+    "title": "Evidence",
+    "type": "array"
+   },
+   "next_actions": {
+    "items": {
+     "$ref": "#/$defs/NextAction"
+    },
+    "title": "Next Actions",
+    "type": "array"
+   },
+   "provenance": {
+    "items": {
+     "$ref": "#/$defs/SourceEntry"
+    },
+    "title": "Provenance",
+    "type": "array"
+   },
+   "requires_user_choice": {
+    "default": false,
+    "title": "Requires User Choice",
+    "type": "boolean"
+   },
+   "resources": {
+    "items": {
+     "$ref": "#/$defs/ResourceRef"
+    },
+    "title": "Resources",
+    "type": "array"
+   },
+   "warnings": {
+    "items": {
+     "$ref": "#/$defs/WarningNote"
+    },
+    "title": "Warnings",
+    "type": "array"
+   }
+  },
+  "required": [
+   "data",
+   "coverage"
+  ],
+  "title": "Envelope",
+  "type": "object"
+ }
+}

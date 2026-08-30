@@ -165,6 +165,47 @@ def _compare(blocks: list[dict], field_name: str) -> dict | None:
     return out
 
 
+def _jurisdiction_names(ctx: RuntimeContext, stack: list[str]) -> list[str]:
+    """Every way the leaf jurisdiction's name is written, for a layer that
+    keys on names rather than codes. Both the table's own name and its
+    aliases go in, because VDOT writes "Fairfax County" for a county and
+    "City of Fairfax" for an independent city, which are the table's name
+    and its alias respectively."""
+    j = ctx.jurisdictions.get(stack[0]) if stack else None
+    if j is None:
+        return []
+    names = [j.name] + list(j.aliases)
+    # A town's name in the table carries a "(town)" suffix the publisher
+    # does not use; its "Town of X" alias is the form that matches.
+    return [n for n in names if "(" not in n]
+
+
+def _jurisdiction_filter(ctx: RuntimeContext, m: SourceManifest,
+                         layer_key: str, stack: list[str],
+                         ) -> list[dict[str, str]] | None:
+    """`where_any_of` groups narrowing a layer to one jurisdiction, driven
+    by the layer's own `jurisdiction_scope` declaration.
+
+    Returns None when the layer declares no scope or the stack supplies
+    nothing to scope by. The query then runs unscoped and the tool names
+    which sources it could not narrow, so a statewide answer is never
+    read as a local one."""
+    scope = ctx.arcgis.jurisdiction_scope(m, layer_key)
+    if scope is None or scope.mode == "none":
+        return None
+    if scope.mode == "jurisdiction_names":
+        names = _jurisdiction_names(ctx, stack)
+        field = scope.fields[0]
+        return [{field: n} for n in names] or None
+    fips = next((j.fips for jid in stack
+                 if (j := ctx.jurisdictions.get(jid)) and j.fips), None)
+    if fips is None:
+        return None
+    if scope.mode == "fips":
+        return [{scope.fields[0]: fips}]
+    return [{field: fips} for field in scope.fields]
+
+
 def _scoped_where(ctx: RuntimeContext, m: SourceManifest, layer_key: str,
                   stack: list[str], where_equals: dict[str, str],
                   ) -> dict[str, str]:
@@ -1269,3 +1310,137 @@ GEO_TOOLS.register(ToolSpec(
         "publisher. Record URLs are returned as data and are never "
         "fetched. Pass at least one filter."),
     toolset="spatial", contract_version="1", fn=find_landmarks))
+
+
+# --- roads (GitHub issue #5) -----------------------------------------------
+
+ROAD_RADIUS_M = 100.0
+
+
+async def find_roads(ctx: RuntimeContext, jurisdiction: str,
+                     street_name: str = "", lon: float | None = None,
+                     lat: float | None = None,
+                     radius_meters: float = ROAD_RADIUS_M) -> Envelope:
+    b = _builder(ctx, "geo.find_roads")
+    if (lon is None) != (lat is None):
+        raise InvalidQuery("a point needs both lon and lat")
+    if bool(street_name) == (lon is not None and lat is not None):
+        raise InvalidQuery(
+            "pass exactly one of `street_name` or a lon/lat point")
+
+    frame = _resolve_frame(ctx, b, jurisdiction)
+    if frame.early is not None:
+        return frame.early
+    stack = frame.stack or []
+
+    selected = ctx.sources.select("road.lookup", stack)
+    registry_dim, gaps = selection_coverage(ctx.sources, "road.lookup",
+                                            stack, selected)
+    blocks: list[dict] = []
+    failures = []
+    queries: list[ArcGISQueryResult] = []
+    unscoped: list[str] = []
+    for m in selected:
+        layer_key = _road_layer(ctx, m)
+        scope = _jurisdiction_filter(ctx, m, layer_key, stack)
+        if scope is None:
+            unscoped.append(m.id)
+        try:
+            q = await ctx.arcgis.query(
+                m, layer_key,
+                where_prefix={"street_name": street_name}
+                if street_name else None,
+                where_any_of=scope,
+                geometry_point=(lon, lat) if lon is not None else None,
+                distance_meters=(radius_meters if lon is not None else None))
+        except CommonwealthError as err:
+            failures.append(failure(m.id, err.code, str(err)))
+            continue
+        queries.append(q)
+        block = _records_block(b, _source_entry(b, m, q), q, m)
+        block["layer"] = layer_key
+        for row in block["records"]:
+            if "last_update" in row:
+                row["record_updated_at"] = _epoch_ms_to_iso(
+                    row.pop("last_update"))
+            if "geometry_effective_date" in row:
+                row["geometry_effective_date"] = _epoch_ms_to_iso(
+                    row.get("geometry_effective_date"))
+        blocks.append(block)
+
+    execution = (ExecutionCoverage.complete if not failures
+                 else ExecutionCoverage.failed if not blocks
+                 else ExecutionCoverage.partial)
+    total = sum(blk["record_count"] for blk in blocks)
+    data: dict = {"results": blocks}
+    comparison = _compare(blocks, "street_name")
+    if comparison:
+        if comparison["agreement"] is False:
+            # Only when they actually differ. `agreement: None` means one
+            # source returned nothing, which is a different fact and
+            # carries its own note — overwriting it would collapse "these
+            # two disagree" and "only one of them has this road" into one
+            # sentence.
+            comparison["note"] = (
+                "These two publishers describe the same roads differently "
+                "by design: one is the operating agency's route inventory "
+                "with its own identifiers, the other aggregates local "
+                "centerline submissions. A difference here is usually a "
+                "difference in how the road is named or modelled, not an "
+                "error in either. Neither has been reconciled away.")
+        data["comparison"] = comparison
+    if unscoped:
+        data["unscoped_sources"] = {
+            "source_ids": unscoped,
+            "note": "These sources could not be narrowed to the requested "
+                    "jurisdiction — the layer either declares no "
+                    "jurisdiction key or the jurisdiction supplies no "
+                    "value for it — so their results are statewide for "
+                    "the query. Read them accordingly."}
+    if total:
+        b.warn(WarningCode.screening_only,
+               "Road geometry is a centerline or a linear reference, not "
+               "a right-of-way boundary, and neither publisher offers it "
+               "as a survey. The two sources model roads differently and "
+               "both answers are shown unreconciled.")
+    return b.build(data, Coverage(
+        registry=registry_dim, execution=execution,
+        pagination=_pagination_dim(queries), result=result_dim(total),
+        jurisdictions_searched=stack if selected else [],
+        jurisdictions_unavailable=gaps, source_failures=failures,
+        known_limitations=sorted({lim for m in selected
+                                  for lim in m.coverage.known_limitations})))
+
+
+def _road_layer(ctx: RuntimeContext, m: SourceManifest) -> str:
+    """The layer a road source is queried through.
+
+    VGIN's centerline service publishes four layers of which only one is
+    the complete feature class; the others are cartographic subsets and a
+    scale duplicate, registered for their health floors. Picking by
+    convention over the manifest's own layer keys keeps that decision in
+    one place."""
+    layers = set(ctx.arcgis.layer_keys(m))
+    for preferred in ("centerlines", "routes"):
+        if preferred in layers:
+            return preferred
+    raise InvalidQuery(
+        f"{m.id} answers road.lookup but declares no 'centerlines' or "
+        f"'routes' layer; declared: {sorted(layers)}")
+
+
+GEO_TOOLS.register(ToolSpec(
+    name="geo.find_roads",
+    description=(
+        "Find road segments and routes in a Virginia jurisdiction, by "
+        "street-name prefix or near a lon/lat point. TWO official sources "
+        "answer this and they are expected to disagree: VDOT's route "
+        "inventory is a linear-referencing model with its own route names "
+        "and measures, VGIN's centerlines are an aggregation of local "
+        "submissions with segment-level detail. Both are returned "
+        "unreconciled and the comparison block says whether their names "
+        "agree — a difference is usually a difference in how the road is "
+        "modelled, not an error. Centerlines are not right-of-way "
+        "boundaries. A road along a locality line belongs to both "
+        "localities in the results."),
+    toolset="spatial", contract_version="1", fn=find_roads))

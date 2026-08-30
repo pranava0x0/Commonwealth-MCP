@@ -1,0 +1,152 @@
+# VGIN's road centerline file (VBMP RCL). Endpoint, layer contents,
+# field types, counts, and terms verified live 2026-08-29.
+#
+# The service publishes four layers and only two of them are distinct
+# data. Counts read live: layer 1 "Limited Access and Primaries" 74,242;
+# layer 2 "Ramps and Local Main Arteries" 63,303; layers 4 "> 49,999" and
+# 5 "< 50,000" both 659,179 with identical 58-field schemas. Layers 4 and
+# 5 are the SAME complete feature class at two map scales (minScale/
+# maxScale differ, definitionExpression is null on all four); 1 and 2 are
+# road-class subsets of it. So layer 4 is the query target — it covers
+# every road class the service publishes — and layer 1 is registered
+# alongside it purely so the per-layer health floors have a second, very
+# different number to hold.
+id: va-vgin-road-centerlines
+name: Virginia Road Centerlines (VGIN VBMP RCL)
+jurisdiction: va
+
+publisher:
+  agency: Virginia Geographic Information Network (VGIN), part of the
+    Virginia Department of Emergency Management
+  authority_level: official_secondary
+
+domains: [geo, transportation]
+
+capabilities:
+  - id: road.lookup
+    tool_hint: geo.find_roads
+
+adapter:
+  type: arcgis
+  service_url: https://vginmaps.vdem.virginia.gov/arcgis/rest/services/VA_Base_Layers/VBMP_RCL/FeatureServer
+  field_mapping_version: "1"
+  layers:
+    centerlines:
+      layer_id: 4
+      id_field: OBJECTID
+      geometry: line
+      field_mapping:
+        segment_id: RCL_ID
+        local_id: LOCAL_ID
+        vdot_id: VDOT_ID
+        street_name: ST_FULL
+        street_base_name: ST_NAME
+        vdot_route_name: VDOT_RNAM
+        vdot_route_number: VDOT_RNUM
+        speed_limit_mph: SPEED_MPH
+        one_way: ONE_WAY
+        segment_exists: SEG_EXISTS
+        feature_class_code: MTFCC
+        fips_left: FIPS_L
+        fips_right: FIPS_R
+        zip_left: ZIP_L
+        zip_right: ZIP_R
+        address_left_from: ADD_LF
+        address_left_to: ADD_LT
+        address_right_from: ADD_RF
+        address_right_to: ADD_RT
+        geometry_effective_date: GEO_EFFDT
+      # A segment carries the FIPS of the locality on each SIDE. A road
+      # running along a county line has two different ones, so "in this
+      # locality" is an OR, not an equality — an AND of the two would
+      # return only roads with the same locality on both sides and
+      # silently drop every boundary road.
+      jurisdiction_scope:
+        mode: fips_any_of
+        fields: [fips_left, fips_right]
+    primaries:
+      # Registered for its health floor, not for querying: a cartographic
+      # subset of the same feature class. See the header comment.
+      layer_id: 1
+      id_field: OBJECTID
+      geometry: line
+      field_mapping:
+        segment_id: RCL_ID
+        street_name: ST_FULL
+        fips_left: FIPS_L
+        fips_right: FIPS_R
+      jurisdiction_scope:
+        mode: fips_any_of
+        fields: [fips_left, fips_right]
+
+access:
+  mode: anonymous
+  automation_status: public_api
+  terms_url: https://vgin.vdem.virginia.gov/datasets/virginia-road-centerlines/about
+  terms_notes: >
+    Same VGIN Base Data terms as the other base layers, reviewed
+    together: cartographic and spatial-analysis use only, not a legal
+    description, all accuracy warranties expressly disclaimed. No
+    redistribution restriction found; anonymous query access confirmed
+    live 2026-08-29. Re-review with the standard 12-month cadence.
+  terms_reviewed_at: "2026-08-29"
+  data_classification: open
+
+freshness:
+  expected_cadence: quarterly
+  cadence_source: >
+    Stated by the publisher for the geocoding service built on this
+    layer: "Underlying locator files within the service for Address
+    Points and RCL are updated quarterly." Segments carry their own
+    GEO_EFFDT.
+  ttl_hint_seconds: 86400
+
+coverage:
+  geography: va
+  temporal: current
+  known_limitations:
+    - Cartographic/analysis use only per the publisher's own disclaimer;
+      a centerline is not a right-of-way boundary or a survey.
+    - >
+      Aggregated from local government submissions on the data-call
+      cycle, so currency varies by locality.
+    - >
+      Registration queries layer 4 only. Verified live 2026-08-29, that
+      is the complete 659,179-segment feature class; layer 5 is the same
+      data at a different map scale and layers 1 and 2 are road-class
+      subsets of it, so nothing is excluded by the choice.
+    - >
+      A road along a locality line has different FIPS on its two sides.
+      Jurisdiction filtering matches EITHER side, so such a road is
+      returned for both localities. That is correct and it means a
+      result is not evidence the road lies wholly inside one.
+    - >
+      SEG_TYPE, MTFCC, and SEG_EXISTS are publisher codes with no coded-
+      value domain published on the layer, so they are returned raw with
+      their field names intact rather than given invented labels.
+
+authority_notes: >
+  VGIN aggregates centerlines from local government submissions rather
+  than maintaining the road network, hence official_secondary. VDOT's own
+  route inventory is registered separately for the same capability and
+  the two are queried together, unranked, per
+  ../../design/architecture.md decision 0005. They disagree in ways that
+  are real rather than erroneous: VGIN's segment carries VDOT's route
+  name as an attribute copied at submission time, and it can differ from
+  what VDOT's own current LRS calls the same road.
+
+health:
+  probe: arcgis_layer_count
+  expect:
+    # Observed live 2026-08-29: layer 4 (complete) 659,179; layer 1
+    # (limited access and primaries) 74,242. Two orders of magnitude
+    # apart, which is exactly why one shared floor would be useless.
+    min_features:
+      centerlines: 500000
+      primaries: 60000
+
+lifecycle:
+  declared_state: active
+  added: "2026-08-29"
+  last_verified: "2026-08-29"
+  verified_by: pranava0x0

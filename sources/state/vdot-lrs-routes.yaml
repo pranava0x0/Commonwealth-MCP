@@ -1,0 +1,137 @@
+# VDOT's own route inventory. Endpoint, field types, jurisdiction values,
+# counts, and terms verified live 2026-08-29.
+#
+# Which VDOT service to register was the real work here, and the
+# plausible-sounding one is the wrong one. `VA_Primary_and_Secondary_Roads`
+# looks like the obvious pick and is not: its fields are Census TIGER's
+# (LINEARID, MTFCC, RTTYP, FULLNAME) and it holds 9,344 statewide
+# features, so it is a republished TIGER extract rather than VDOT's
+# network. Registering it as "the operating agency's own roads" would
+# have been exactly the mistake worth avoiding.
+#
+# LRS_Route_Master is VDOT's own: 196,896 routes with official state
+# measures, "updated annually as part of VDOT's LRS Release and ...
+# current as of the latest release, March 2026" per the service
+# description. It is a LINEAR-REFERENCING model, not a centerline
+# topology — a route is a named linear feature carrying measures, not an
+# edge between intersections — and the tool description says so.
+id: va-vdot-lrs-routes
+name: VDOT Route Master (LRS)
+jurisdiction: va
+
+publisher:
+  agency: Virginia Department of Transportation (VDOT)
+  authority_level: primary
+
+domains: [geo, transportation]
+
+capabilities:
+  - id: road.lookup
+    tool_hint: geo.find_roads
+
+adapter:
+  type: arcgis
+  service_url: https://services.arcgis.com/p5v98VHDX9Atv3l7/arcgis/rest/services/LRS_Route_Master/FeatureServer
+  field_mapping_version: "1"
+  layers:
+    routes:
+      layer_id: 0
+      id_field: OBJECTID
+      geometry: line
+      field_mapping:
+        route_name: RTE_NM
+        street_name: RTE_COMMON_NM
+        street_base_name: RTE_STREET_NM
+        route_number: RTE_NBR
+        route_type: RTE_TYPE_NM
+        route_category: RTE_CATEGORY_NM
+        route_status: RTE_STATUS_NM
+        jurisdiction_name: RTE_JURIS_PROPER_NM
+        vdot_jurisdiction_code: RTE_JURIS_CD
+        length_miles: LEN
+        last_update: LRM_CURRENCY_DT
+      # RTE_JURIS_CD is VDOT's OWN jurisdiction numbering, not FIPS —
+      # observed live 2026-08-29, City of Manassas is "155" and City of
+      # Suffolk "133", neither of which is that locality's FIPS. So the
+      # scoping key is the NAME field instead, whose 217 distinct values
+      # ("Fairfax County", "City of Fairfax", "Town of Vienna") match the
+      # jurisdiction table's own names and aliases.
+      jurisdiction_scope:
+        mode: jurisdiction_names
+        fields: [jurisdiction_name]
+
+access:
+  mode: anonymous
+  automation_status: public_api
+  terms_url: https://www.virginiaroads.org/
+  terms_notes: >
+    Published through VDOT's public ArcGIS Online organization
+    (services.arcgis.com/p5v98VHDX9Atv3l7), reachable anonymously —
+    confirmed live 2026-08-29. VDOT's open-data portal, Virginia Roads,
+    is the publisher's own distribution point for these services and
+    states no automated-use restriction on them. As with the Richmond
+    manifest, this records what the publisher's material actually says
+    rather than inventing a terms page; confirmation should go to VDOT's
+    GIS group and the finding re-reviewed on the standard 12-month
+    cadence.
+  terms_reviewed_at: "2026-08-29"
+  data_classification: open
+
+freshness:
+  expected_cadence: annually
+  cadence_source: >
+    Stated by the publisher in the service description: "updated annually
+    as part of VDOT's LRS Release and is current as of the latest
+    release, March 2026." Routes also carry their own LRM_CURRENCY_DT.
+  ttl_hint_seconds: 86400
+
+coverage:
+  geography: va
+  temporal: current
+  known_limitations:
+    - >
+      A linear-referencing route model, not a centerline topology. A
+      route is a named linear feature with official state measures; it
+      is not an edge between two intersections and route records do not
+      correspond one-to-one with centerline segments.
+    - >
+      RTE_JURIS_CD is VDOT's own jurisdiction numbering and is NOT a
+      FIPS code. Observed live 2026-08-29: City of Manassas is "155",
+      City of Suffolk "133". Do not join it to federal data.
+    - >
+      RTE_JURIS_PROPER_NM is null on about 6,500 of the 196,896 routes
+      (190,372 populated, read live 2026-08-29), largely the interstate
+      and frontage-road records that span localities. Those are missed
+      by a jurisdiction-scoped query and found by a proximity one.
+    - >
+      Covers routes VDOT maintains a linear reference for. Roads
+      maintained entirely by a locality may be absent, which is not
+      evidence the road does not exist — it is what the two registered
+      road sources exist to show each other.
+
+authority_notes: >
+  VDOT is the operating agency for the state-maintained network, so this
+  is its own system of record and registered primary. VGIN's centerline
+  aggregation answers the same capability and the two are queried
+  together and never ranked, per
+  ../../design/architecture.md decision 0005 — the roads pairing is its
+  second standing example after parcels, and unlike parcels the two are
+  EXPECTED to differ: an operating agency's route inventory and an
+  aggregation of local submissions describe the same ground with
+  different identifiers, different names, and different completeness.
+  Observed live 2026-08-29 on one road in Vienna: VGIN's centerline
+  carries VDOT route name "S-VA235PR CENTER ST" while VDOT's own current
+  LRS calls it "S-VA153PR CENTER ST N". Both are shown.
+
+health:
+  probe: arcgis_layer_count
+  expect:
+    # Observed live 2026-08-29: 196,896 routes.
+    min_features:
+      routes: 150000
+
+lifecycle:
+  declared_state: active
+  added: "2026-08-29"
+  last_verified: "2026-08-29"
+  verified_by: pranava0x0

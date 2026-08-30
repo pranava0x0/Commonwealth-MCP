@@ -71,6 +71,16 @@ sources:
   automation_status: unknown
   data_classification: open
   recorded_fixtures: []
+- id: va-vdot-lrs-routes
+  name: VDOT Route Master (LRS)
+  publisher: Virginia Department of Transportation (VDOT)
+  manifest: sources/state/vdot-lrs-routes.yaml
+  terms_url: https://www.virginiaroads.org/
+  terms_reviewed_at: '2026-08-29'
+  automation_status: public_api
+  data_classification: open
+  recorded_fixtures:
+  - tests/fixtures/sources/va-vdot-lrs-routes/recorded.json
 - id: va-vgin-address-points
   name: Virginia Address Points (VGIN)
   publisher: Virginia Geographic Information Network (VGIN), part of the Virginia
@@ -137,6 +147,17 @@ sources:
   data_classification: open
   recorded_fixtures:
   - tests/fixtures/sources/va-vgin-statewide-parcels/recorded.json
+- id: va-vgin-road-centerlines
+  name: Virginia Road Centerlines (VGIN VBMP RCL)
+  publisher: Virginia Geographic Information Network (VGIN), part of the Virginia
+    Department of Emergency Management
+  manifest: sources/state/vgin-road-centerlines.yaml
+  terms_url: https://vgin.vdem.virginia.gov/datasets/virginia-road-centerlines/about
+  terms_reviewed_at: '2026-08-29'
+  automation_status: public_api
+  data_classification: open
+  recorded_fixtures:
+  - tests/fixtures/sources/va-vgin-road-centerlines/recorded.json
 - id: va-code-of-virginia
   name: Code of Virginia (law.lis.virginia.gov)
   publisher: Division of Legislative Automated Systems (DLAS), Virginia General

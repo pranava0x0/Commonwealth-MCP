@@ -24,6 +24,23 @@ from .base import (FetchResult, Fetcher, HttpFetcher, TTLCache, log,
                    egress_policy_for, log_source_call, shared_cache)
 
 
+class JurisdictionScope(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    mode: str
+    fields: list[str] = Field(default_factory=list)
+
+    @model_validator(mode="after")
+    def _known_mode(self) -> "JurisdictionScope":
+        known = {"fips", "fips_any_of", "jurisdiction_names", "none"}
+        if self.mode not in known:
+            raise ValueError(f"jurisdiction_scope.mode must be one of "
+                             f"{sorted(known)}, got {self.mode!r}")
+        if self.mode != "none" and not self.fields:
+            raise ValueError(f"jurisdiction_scope mode {self.mode!r} needs "
+                             "at least one field")
+        return self
+
+
 class LayerDecl(BaseModel):
     model_config = ConfigDict(extra="forbid")
     layer_id: int
@@ -43,6 +60,18 @@ class LayerDecl(BaseModel):
     # done from a list a publisher published; there is no inferring what
     # a code might mean.
     value_labels: dict[str, dict[str, str]] = Field(default_factory=dict)
+    # How a query against this layer is narrowed to one jurisdiction.
+    # Left unset, the tools fall back to a single mapped `fips` field,
+    # which is what every layer registered before roads needed. Roads
+    # broke that twice over: VGIN's centerlines carry FIPS_L and FIPS_R
+    # for the two sides of a segment, so "in this locality" is genuinely
+    # a disjunction; and VDOT's route master keys on its own jurisdiction
+    # NAMES ("Fairfax County", "Town of Vienna") under a code column that
+    # is VDOT's numbering rather than FIPS. Both live here so the
+    # knowledge stays in the manifest.
+    #   mode: fips | fips_any_of | jurisdiction_names | none
+    #   fields: canonical field names the mode applies to
+    jurisdiction_scope: JurisdictionScope | None = None
     # Real publishers sometimes split layers across separate FeatureServers
     # (e.g. Richmond City: Parcels and ZoningDistricts are two services on
     # the same host, not two layers of one service like Fairfax). Most
@@ -571,6 +600,19 @@ class ArcGISAdapter:
                 f"manifest {manifest.id} declares no layer {layer_key!r}; "
                 f"declared: {sorted(p.layers)}")
         return layer
+
+    def layer_keys(self, manifest: SourceManifest) -> frozenset[str]:
+        """The layer keys a manifest declares, so a tool can choose among
+        them without reaching into ArcGIS-specific structure."""
+        return frozenset(_params_of(manifest).layers)
+
+    def jurisdiction_scope(self, manifest: SourceManifest,
+                           layer_key: str) -> "JurisdictionScope | None":
+        """A layer's own declaration of how it is narrowed to one
+        jurisdiction. Callers read this rather than reaching into
+        ArcGIS-specific structure themselves."""
+        p = _params_of(manifest)
+        return self._layer(p, layer_key, manifest).jurisdiction_scope
 
     def mapped_canonical_fields(self, manifest: SourceManifest,
                                 layer_key: str) -> frozenset[str]:

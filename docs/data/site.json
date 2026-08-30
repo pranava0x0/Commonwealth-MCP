@@ -3,12 +3,12 @@
  "registry_revision": "2026-08-29",
  "counts": {
   "servers": 1,
-  "tools": 12,
+  "tools": 13,
   "packages": 3,
-  "sources": 14,
-  "sources_active": 10,
+  "sources": 16,
+  "sources_active": 12,
   "sources_proposed": 4,
-  "capabilities": 8,
+  "capabilities": 9,
   "jurisdictions": 325,
   "trap_pairs": 5
  },
@@ -68,6 +68,13 @@
    "toolset": "spatial",
    "contract_version": "1",
    "description": "Find named public places in a Virginia jurisdiction \u2014 schools, libraries, fire stations, DMV offices, state parks \u2014 by name prefix, by the publisher's own place_type vocabulary, or near a lon/lat point. NOT an inventory: a place missing from this layer may simply never have been added, so an empty result never means there is no school there. Each record names the organisation it came from, and that organisation is its authority, not the map publisher. Record URLs are returned as data and are never fetched. Pass at least one filter."
+  },
+  {
+   "name": "geo.find_roads",
+   "package": "geo",
+   "toolset": "spatial",
+   "contract_version": "1",
+   "description": "Find road segments and routes in a Virginia jurisdiction, by street-name prefix or near a lon/lat point. TWO official sources answer this and they are expected to disagree: VDOT's route inventory is a linear-referencing model with its own route names and measures, VGIN's centerlines are an aggregation of local submissions with segment-level detail. Both are returned unreconciled and the comparison block says whether their names agree \u2014 a difference is usually a difference in how the road is modelled, not an error. Centerlines are not right-of-way boundaries. A road along a locality line belongs to both localities in the results."
   },
   {
    "name": "registry.resolve_jurisdiction",
@@ -234,6 +241,25 @@
    ]
   },
   {
+   "id": "va-vdot-lrs-routes",
+   "name": "VDOT Route Master (LRS)",
+   "jurisdiction": "va",
+   "publisher": "Virginia Department of Transportation (VDOT)",
+   "authority_level": "primary",
+   "capabilities": [
+    "road.lookup"
+   ],
+   "data_classification": "open",
+   "declared_state": "active",
+   "terms_url": "https://www.virginiaroads.org/",
+   "known_limitations": [
+    "A linear-referencing route model, not a centerline topology. A route is a named linear feature with official state measures; it is not an edge between two intersections and route records do not correspond one-to-one with centerline segments.\n",
+    "RTE_JURIS_CD is VDOT's own jurisdiction numbering and is NOT a FIPS code. Observed live 2026-08-29: City of Manassas is \"155\", City of Suffolk \"133\". Do not join it to federal data.\n",
+    "RTE_JURIS_PROPER_NM is null on about 6,500 of the 196,896 routes (190,372 populated, read live 2026-08-29), largely the interstate and frontage-road records that span localities. Those are missed by a jurisdiction-scoped query and found by a proximity one.\n",
+    "Covers routes VDOT maintains a linear reference for. Roads maintained entirely by a locality may be absent, which is not evidence the road does not exist \u2014 it is what the two registered road sources exist to show each other.\n"
+   ]
+  },
+  {
    "id": "va-vgin-address-points",
    "name": "Virginia Address Points (VGIN)",
    "jurisdiction": "va",
@@ -337,6 +363,26 @@
    ]
   },
   {
+   "id": "va-vgin-road-centerlines",
+   "name": "Virginia Road Centerlines (VGIN VBMP RCL)",
+   "jurisdiction": "va",
+   "publisher": "Virginia Geographic Information Network (VGIN), part of the Virginia Department of Emergency Management",
+   "authority_level": "official_secondary",
+   "capabilities": [
+    "road.lookup"
+   ],
+   "data_classification": "open",
+   "declared_state": "active",
+   "terms_url": "https://vgin.vdem.virginia.gov/datasets/virginia-road-centerlines/about",
+   "known_limitations": [
+    "Cartographic/analysis use only per the publisher's own disclaimer; a centerline is not a right-of-way boundary or a survey.",
+    "Aggregated from local government submissions on the data-call cycle, so currency varies by locality.\n",
+    "Registration queries layer 4 only. Verified live 2026-08-29, that is the complete 659,179-segment feature class; layer 5 is the same data at a different map scale and layers 1 and 2 are road-class subsets of it, so nothing is excluded by the choice.\n",
+    "A road along a locality line has different FIPS on its two sides. Jurisdiction filtering matches EITHER side, so such a road is returned for both localities. That is correct and it means a result is not evidence the road lies wholly inside one.\n",
+    "SEG_TYPE, MTFCC, and SEG_EXISTS are publisher codes with no coded- value domain published on the layer, so they are returned raw with their field names intact rather than given invented labels.\n"
+   ]
+  },
+  {
    "id": "va-vgin-statewide-parcels",
    "name": "Virginia Statewide Parcels (VGIN)",
    "jurisdiction": "va",
@@ -365,6 +411,7 @@
   "geocode.address",
   "landmark.lookup",
   "parcel.lookup",
+  "road.lookup",
   "zoning.lookup"
  ],
  "jurisdiction_kinds": {
@@ -398,7 +445,7 @@
  "profiles": {
   "default": 6,
   "discovery": 9,
-  "all": 12
+  "all": 13
  },
  "skills": [
   {
@@ -18032,6 +18079,2286 @@
      "jurisdiction": "va:york-county",
      "sources": [
       "va-vgin-statewide-parcels"
+     ]
+    }
+   ],
+   "gaps": []
+  },
+  "road.lookup": {
+   "covered": [
+    {
+     "jurisdiction": "va",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:abingdon-town",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:accomac-town",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:accomack-county",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:albemarle-county",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:alberta-town",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:alexandria-city",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:alleghany-county",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:altavista-town",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:amelia-county",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:amherst-county",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:amherst-town",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:appalachia-town",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:appomattox-county",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:appomattox-town",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:arlington-county",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:ashland-town",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:augusta-county",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:bath-county",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:bedford-county",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:bedford-town",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:belle-haven-town",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:berryville-town",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:big-stone-gap-town",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:blacksburg-town",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:blackstone-town",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:bland-county",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:bloxom-town",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:bluefield-town",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:boones-mill-town",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:botetourt-county",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:bowling-green-town",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:boyce-town",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:boydton-town",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:boykins-town",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:branchville-town",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:bridgewater-town",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:bristol-city",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:broadway-town",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:brodnax-town",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:brookneal-town",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:brunswick-county",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:buchanan-county",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:buchanan-town",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:buckingham-county",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:buena-vista-city",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:burkeville-town",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:campbell-county",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:cape-charles-town",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:capron-town",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:caroline-county",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:carroll-county",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:cedar-bluff-town",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:charles-city-county",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:charlotte-county",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:charlotte-court-house-town",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:charlottesville-city",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:chase-city-town",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:chatham-town",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:cheriton-town",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:chesapeake-city",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:chesterfield-county",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:chilhowie-town",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:chincoteague-town",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:christiansburg-town",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:claremont-town",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:clarke-county",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:clarksville-town",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:cleveland-town",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:clifton-forge-town",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:clifton-town",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:clinchco-town",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:clinchport-town",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:clintwood-town",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:coeburn-town",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:colonial-beach-town",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:colonial-heights-city",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:columbia-town",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:courtland-town",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:covington-city",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:craig-county",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:craigsville-town",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:crewe-town",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:culpeper-county",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:culpeper-town",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:cumberland-county",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:damascus-town",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:danville-city",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:dayton-town",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:dendron-town",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:dickenson-county",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:dillwyn-town",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:dinwiddie-county",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:drakes-branch-town",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:dublin-town",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:duffield-town",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:dumfries-town",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:dungannon-town",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:eastville-town",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:edinburg-town",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:elkton-town",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:emporia-city",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:essex-county",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:exmore-town",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:fairfax-city",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:fairfax-county",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:falls-church-city",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:farmville-town",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:fauquier-county",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:fincastle-town",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:floyd-county",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:floyd-town",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:fluvanna-county",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:franklin-city",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:franklin-county",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:frederick-county",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:fredericksburg-city",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:fries-town",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:front-royal-town",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:galax-city",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:gate-city-town",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:giles-county",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:glade-spring-town",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:glasgow-town",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:glen-lyn-town",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:gloucester-county",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:goochland-county",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:gordonsville-town",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:goshen-town",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:grayson-county",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:greene-county",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:greensville-county",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:gretna-town",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:grottoes-town",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:grundy-town",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:halifax-county",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:halifax-town",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:hallwood-town",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:hamilton-town",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:hampton-city",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:hanover-county",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:harrisonburg-city",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:haymarket-town",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:haysi-town",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:henrico-county",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:henry-county",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:herndon-town",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:highland-county",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:hillsboro-town",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:hillsville-town",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:honaker-town",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:hopewell-city",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:hurt-town",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:independence-town",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:iron-gate-town",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:irvington-town",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:isle-of-wight-county",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:ivor-town",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:james-city-county",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:jarratt-town",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:jonesville-town",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:keller-town",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:kenbridge-town",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:keysville-town",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:kilmarnock-town",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:king-and-queen-county",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:king-george-county",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:king-william-county",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:la-crosse-town",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:lancaster-county",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:lawrenceville-town",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:lebanon-town",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:lee-county",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:leesburg-town",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:lexington-city",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:loudoun-county",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:louisa-county",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:louisa-town",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:lovettsville-town",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:lunenburg-county",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:luray-town",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:lynchburg-city",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:madison-county",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:madison-town",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:manassas-city",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:manassas-park-city",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:marion-town",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:martinsville-city",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:mathews-county",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:mckenney-town",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:mecklenburg-county",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:melfa-town",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:middleburg-town",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:middlesex-county",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:middletown-town",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:mineral-town",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:monterey-town",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:montgomery-county",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:montross-town",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:mount-crawford-town",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:mount-jackson-town",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:narrows-town",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:nassawadox-town",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:nelson-county",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:new-castle-town",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:new-kent-county",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:new-market-town",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:newport-news-city",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:newsoms-town",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:nickelsville-town",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:norfolk-city",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:northampton-county",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:northumberland-county",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:norton-city",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:nottoway-county",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:occoquan-town",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:onancock-town",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:onley-town",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:orange-county",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:orange-town",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:page-county",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:painter-town",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:pamplin-city-town",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:parksley-town",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:patrick-county",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:pearisburg-town",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:pembroke-town",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:pennington-gap-town",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:petersburg-city",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:phenix-town",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:pittsylvania-county",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:pocahontas-town",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:poquoson-city",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:port-royal-town",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:portsmouth-city",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:pound-town",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:powhatan-county",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:prince-edward-county",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:prince-george-county",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:prince-william-county",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:pulaski-county",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:pulaski-town",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:purcellville-town",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:quantico-town",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:radford-city",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:rappahannock-county",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:remington-town",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:rich-creek-town",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:richlands-town",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:richmond-city",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:richmond-county",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:ridgeway-town",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:roanoke-city",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:roanoke-county",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:rockbridge-county",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:rockingham-county",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:rocky-mount-town",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:round-hill-town",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:rural-retreat-town",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:russell-county",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:salem-city",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:saltville-town",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:saxis-town",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:scott-county",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:scottsburg-town",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:scottsville-town",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:shenandoah-county",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:shenandoah-town",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:smithfield-town",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:smyth-county",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:south-boston-town",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:south-hill-town",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:southampton-county",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:spotsylvania-county",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:st-charles-town",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:st-paul-town",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:stafford-county",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:stanardsville-town",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:stanley-town",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:staunton-city",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:stephens-city-town",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:stony-creek-town",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:strasburg-town",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:stuart-town",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:suffolk-city",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:surry-county",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:surry-town",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:sussex-county",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:tangier-town",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:tappahannock-town",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:tazewell-county",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:tazewell-town",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:the-plains-town",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:timberville-town",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:toms-brook-town",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:troutdale-town",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:troutville-town",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:urbanna-town",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:victoria-town",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:vienna-town",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:vinton-town",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:virgilina-town",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:virginia-beach-city",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:wachapreague-town",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:wakefield-town",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:warren-county",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:warrenton-town",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:warsaw-town",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:washington-county",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:washington-town",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:waverly-town",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:waynesboro-city",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:weber-city-town",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:west-point-town",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:westmoreland-county",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:white-stone-town",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:williamsburg-city",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:winchester-city",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:windsor-town",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:wise-county",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:wise-town",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:woodstock-town",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:wythe-county",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:wytheville-town",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
+     ]
+    },
+    {
+     "jurisdiction": "va:york-county",
+     "sources": [
+      "va-vdot-lrs-routes",
+      "va-vgin-road-centerlines"
      ]
     }
    ],

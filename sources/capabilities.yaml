@@ -32,3 +32,8 @@ capabilities:
       Find named public places — schools, libraries, fire stations, parks
       — from the publisher's curated list. Not an inventory: absence
       proves nothing.
+  - id: road.lookup
+    description: >
+      Find road segments or routes by street name or near a coordinate.
+      Two publishers answer this, an operating agency and an aggregation
+      of local submissions, and they disagree in ways that are real.
