@@ -38,6 +38,19 @@ class Jurisdiction(BaseModel):
     fips: str | None = None
     place_fips: str | None = None
     parent: str | None = None
+    # Other jurisdictions whose territory this one also lies in. Twenty of
+    # Virginia's incorporated towns straddle a county line — Herndon is in
+    # Fairfax and Loudoun, Farmville in Prince Edward and Cumberland — and
+    # `parent` can name only one of them. Deriving the parent from a single
+    # interior point silently lost the rest.
+    #
+    # These reach `layered_authorities` and NOT the source-selection
+    # stack, deliberately. A name alone cannot say which part of a
+    # straddling town is meant, so querying the second county's sources
+    # for "Herndon" would add records from ground the caller may not have
+    # asked about. A coordinate does say, and point resolution already
+    # returns the county that actually contains it.
+    also_within: list[str] = Field(default_factory=list)
     aliases: list[str] = Field(default_factory=list)
     not_to_be_confused_with: list[str] = Field(default_factory=list)
     # Names of a government that no longer exists, whose territory this row
@@ -204,6 +217,13 @@ class JurisdictionTable:
         layered = [{"id": p.id, "relationship": "parent-" + p.kind.value}
                    for p in self.parents_of(j)]
         seen = {row["id"] for row in layered}
+        for other_id in j.also_within:
+            other = self._by_id.get(other_id)
+            if other is not None and other.id not in seen:
+                layered.append({"id": other.id,
+                                "relationship": "also-within-" +
+                                                other.kind.value})
+                seen.add(other.id)
         for other_id in j.not_to_be_confused_with:
             other = self._by_id.get(other_id)
             # A place already in the stack as a parent needs no second row

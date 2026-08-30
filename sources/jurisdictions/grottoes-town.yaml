@@ -4,3 +4,4 @@ kind: town
 place_fips: "33488"
 parent: va:rockingham-county
 aliases: ["Town of Grottoes"]
+also_within: ["va:augusta-county"]

@@ -4,3 +4,4 @@ kind: town
 place_fips: "01528"
 parent: va:campbell-county
 aliases: ["Town of Altavista"]
+also_within: ["va:pittsylvania-county"]

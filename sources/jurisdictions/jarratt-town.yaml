@@ -4,3 +4,4 @@ kind: town
 place_fips: "40536"
 parent: va:greensville-county
 aliases: ["Town of Jarratt"]
+also_within: ["va:sussex-county"]

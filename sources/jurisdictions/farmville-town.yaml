@@ -4,3 +4,4 @@ kind: town
 place_fips: "27440"
 parent: va:prince-edward-county
 aliases: ["Town of Farmville"]
+also_within: ["va:cumberland-county"]

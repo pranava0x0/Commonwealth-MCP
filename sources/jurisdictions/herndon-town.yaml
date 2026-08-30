@@ -4,3 +4,4 @@ kind: town
 place_fips: "36648"
 parent: va:fairfax-county
 aliases: ["Town of Herndon"]
+also_within: ["va:loudoun-county"]

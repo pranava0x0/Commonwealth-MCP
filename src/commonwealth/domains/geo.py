@@ -1006,6 +1006,13 @@ async def resolve_location(ctx: RuntimeContext, address: str = "",
             "precedence rule between them, and silently preferring one "
             "would hide a contradiction between what you typed and where "
             "it points")
+    if address and ZIP_PATTERN.match(address):
+        # A bare ZIP through the `address` parameter is still a ZIP, and
+        # the locator answers one with a single centroid — the
+        # one-to-many-collapsed-to-one failure the ZIP path exists to
+        # prevent. Routing rather than refusing, because the caller asked
+        # a question this tool can answer correctly.
+        return await _resolve_zip(ctx, b, address)
     if zip_code:
         if not ZIP_PATTERN.match(zip_code.strip()):
             raise InvalidQuery(
@@ -1109,14 +1116,24 @@ async def resolve_location(ctx: RuntimeContext, address: str = "",
         seen: dict[tuple[float, float], GeocodeCandidate] = {}
         for cand in confident:
             seen.setdefault((round(cand.lon, 5), round(cand.lat, 5)), cand)
-        distinct = list(seen.values())[:MAX_GEOCODE_CONTAINMENT_CHECKS]
-        if len(distinct) > 1:
+        all_distinct = list(seen.values())
+        distinct = all_distinct[:MAX_GEOCODE_CONTAINMENT_CHECKS]
+        unchecked = len(all_distinct) - len(distinct)
+        # Gated on how many distinct places the locator returned, not on
+        # how many this got around to placing. Gating on the checked
+        # prefix meant a cap of one skipped the block outright and
+        # resolved the first candidate — the defect, one level down.
+        if len(all_distinct) > 1:
             placed = []
             for cand in distinct:
                 cont = await resolve_point(ctx, b, cand.lon, cand.lat)
                 leaf = cont.leaf
                 placed.append((cand, (leaf or {}).get("jurisdiction")))
-            if len({j.id if j else None for _, j in placed}) > 1:
+            # Unchecked candidates are not evidence of agreement. Four
+            # matching prefixes and a fifth in another county reads
+            # identically to five matching ones from here, so the cap
+            # forces the same answer disagreement would.
+            if len({j.id if j else None for _, j in placed}) > 1 or unchecked:
                 refs = {
                     cand.record_id: b.add_evidence(
                         source_ref=geo_ref, record_id=cand.record_id,
@@ -1139,6 +1156,11 @@ async def resolve_location(ctx: RuntimeContext, address: str = "",
                 data["note"] = (
                     f"{len(distinct)} matches scored at or above "
                     f"{g.min_score} and they are in different governments. "
+                    if len({j.id if j else None for _, j in placed}) > 1
+                    else f"{len(all_distinct)} matches scored at or above "
+                         f"{g.min_score}; the first {len(distinct)} were "
+                         "placed and agree, and the rest were not checked. "
+                    ) + (
                     "Picking one would choose a government the user did "
                     "not. Present them and let the user choose, or pass a "
                     "fuller address.")
@@ -1158,12 +1180,35 @@ async def resolve_location(ctx: RuntimeContext, address: str = "",
                         payload_hash=g.payload_hash())
     data["geocode"].update({**best.canonical(), "evidence_refs": [ev]})
     if best.address_type.lower() in ("postal", "postalext", "locality"):
-        b.warn(WarningCode.boundary_precision,
-               f"The locator matched this address at the {best.address_type} "
-               "level, which is a centroid for a whole postal or place "
-               "area rather than the address itself. The jurisdiction "
-               "below is the one containing that centroid, which is not "
-               "necessarily the one containing the address.")
+        # The locator fell back to a postal or place centroid, so its
+        # answer is about an AREA, not the address. Resolving that
+        # centroid returns the one government that happens to contain a
+        # point in the middle of a ZIP, which is exactly what the ZIP
+        # path refuses to do — so hand it to that path when there is a
+        # ZIP to hand over, and withhold when there is not.
+        if best.postal_code and ZIP_PATTERN.match(best.postal_code):
+            zip_env = await _resolve_zip(ctx, b, best.postal_code)
+            zip_env.data["geocode"] = data["geocode"]
+            zip_env.data["note"] = (
+                f"The locator had no match for {address!r} closer than the "
+                f"{best.address_type} level, so this answers about ZIP "
+                f"{best.postal_code} instead. "
+                + str(zip_env.data.get("note") or ""))
+            return zip_env
+        data["resolved"] = None
+        data["candidates"] = []
+        data["note"] = (
+            f"The locator matched only at the {best.address_type} level — "
+            "a centroid for a whole postal or place area, not this "
+            "address. Resolving that centroid would name the one "
+            "government containing the middle of an area that may cross "
+            "several. Pass a fuller street address.")
+        return b.build(data, Coverage(
+            registry=registry_dim, execution=ExecutionCoverage.complete,
+            pagination=PaginationCoverage.complete,
+            result=ResultCoverage.hit, jurisdictions_searched=["va"],
+            known_limitations=sorted(m.coverage.known_limitations)),
+            requires_user_choice=True)
 
     # A geocode is never a resolution on its own: the point goes through
     # the same point-in-polygon path registry.resolve_jurisdiction uses,
@@ -1334,6 +1379,7 @@ async def find_buildings(ctx: RuntimeContext, jurisdiction: str,
     parcel_geometry: dict | None = None
     parcel_note: str | None = None
     parcel_evidence_ref: str | None = None
+    any_parcel_answered = False
     failures = []
     if pin:
         # Composing with the parcel sources rather than duplicating them:
@@ -1354,6 +1400,7 @@ async def find_buildings(ctx: RuntimeContext, jurisdiction: str,
             # "no such PIN" was contacted, and its identity and freshness
             # belong in the envelope — an empty answer with empty
             # provenance hides which sources were even asked.
+            any_parcel_answered = True
             parcel_ref = _source_entry(b, pm, pq)
             if pq.records:
                 parcel_geometry = dict(pq.records[0].geometry or {})
@@ -1377,14 +1424,25 @@ async def find_buildings(ctx: RuntimeContext, jurisdiction: str,
                         "for the first. The others are not searched.")
                 break
         if parcel_geometry is None:
+            # An outage is not a miss. When every parcel source raised,
+            # nothing was searched, and reporting "no parcel with that
+            # PIN" would turn a service being down into a fact about the
+            # ground — the distinction this envelope exists to keep.
+            all_failed = bool(failures) and not any_parcel_answered
             return b.build(
                 {"results": [],
-                 "note": f"No parcel with PIN {pin!r} was found, so there "
-                         "is no polygon to look for buildings on. That is "
-                         "a parcel-lookup miss, not a statement that the "
-                         "ground is unbuilt."},
+                 "note": ("Every registered parcel source failed, so no "
+                          "parcel geometry could be fetched and no "
+                          "building search ran. This is an outage, not a "
+                          "statement about this PIN or this ground."
+                          if all_failed else
+                          f"No parcel with PIN {pin!r} was found, so there "
+                          "is no polygon to look for buildings on. That is "
+                          "a parcel-lookup miss, not a statement that the "
+                          "ground is unbuilt.")},
                 Coverage(registry=registry_dim,
-                         execution=(ExecutionCoverage.partial if failures
+                         execution=(ExecutionCoverage.failed if all_failed
+                                    else ExecutionCoverage.partial if failures
                                     else ExecutionCoverage.complete),
                          pagination=PaginationCoverage.complete,
                          result=ResultCoverage.empty,

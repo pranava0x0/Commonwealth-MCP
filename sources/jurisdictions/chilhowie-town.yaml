@@ -4,3 +4,4 @@ kind: town
 place_fips: "16480"
 parent: va:smyth-county
 aliases: ["Town of Chilhowie"]
+also_within: ["va:washington-county"]

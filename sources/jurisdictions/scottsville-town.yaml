@@ -4,3 +4,4 @@ kind: town
 place_fips: "70800"
 parent: va:albemarle-county
 aliases: ["Town of Scottsville"]
+also_within: ["va:buckingham-county", "va:fluvanna-county"]

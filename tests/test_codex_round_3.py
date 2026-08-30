@@ -321,3 +321,77 @@ def test_the_live_demo_build_tracks_the_geocoders_requests():
     assert "fetcher=tracker" in src
     assert src.count("ArcGISGeocodeAdapter(") == 1, (
         "an untracked branch is how the live trail lost the locator")
+
+
+# --- round 7 -------------------------------------------------------------
+
+def test_towns_that_cross_a_county_line_name_every_county():
+    """Twenty of Virginia's incorporated towns straddle a line — Herndon
+    is in Fairfax and Loudoun, Farmville in Prince Edward and Cumberland.
+    An interior point finds one county and silently loses the rest, so
+    the authority stack said one government governed ground two do."""
+    table = JurisdictionTable.load(JURISDICTIONS)
+    straddling = [jid for jid in table.ids()
+                  if table.get(jid).also_within]
+    assert len(straddling) >= 19, straddling
+    herndon = table.get("va:herndon-town")
+    assert herndon.parent == "va:fairfax-county"
+    assert herndon.also_within == ["va:loudoun-county"]
+
+
+def test_a_straddling_town_surfaces_both_counties_in_its_stack():
+    table = JurisdictionTable.load(JURISDICTIONS)
+    r = table.resolve("Town of Herndon")
+    rels = {a["id"]: a["relationship"] for a in r.layered_authorities}
+    assert rels["va:fairfax-county"] == "parent-county"
+    assert rels["va:loudoun-county"] == "also-within-county"
+
+
+async def test_a_bare_zip_through_the_address_parameter_is_still_a_zip(
+        cw_ctx):
+    """The locator answers a bare ZIP with one centroid, which is the
+    one-to-many-collapsed-to-one failure the ZIP path exists to prevent.
+    Reaching it through the other parameter got the wrong answer."""
+    env = await resolve_location(cw_ctx, address="24450")
+    assert env.data["resolved"] is None
+    assert env.requires_user_choice is True
+    assert len(env.data["localities_touched"]) == 3
+
+
+async def test_an_unchecked_confident_candidate_forces_a_user_choice(
+        cw_ctx, monkeypatch):
+    """The cap checks the first four distinct coordinates. Four that
+    agree and a fifth in another county read identically from there, so
+    an unchecked candidate has to force the same answer disagreement
+    would rather than being treated as agreement."""
+    import commonwealth.domains.geo as geo
+
+    monkeypatch.setattr(geo, "MAX_GEOCODE_CONTAINMENT_CHECKS", 1)
+    env = await resolve_location(
+        cw_ctx, address="127 Center St S, Vienna, VA 22180")
+    assert env.data["resolved"] is None
+    assert env.requires_user_choice is True
+    assert "were not checked" in env.data["note"]
+
+
+async def test_an_all_source_parcel_outage_is_failed_not_a_miss(
+        cw_ctx, monkeypatch):
+    """When every parcel source raises, nothing was searched. Reporting
+    "no parcel with that PIN" turns a service being down into a fact
+    about the ground."""
+    from commonwealth.core.errors import SourceUnavailable
+
+    real = cw_ctx.arcgis.query
+
+    async def flaky(manifest, layer_key, **kw):
+        if layer_key == "parcels":
+            raise SourceUnavailable("parcel layer is down (test)")
+        return await real(manifest, layer_key, **kw)
+
+    monkeypatch.setattr(cw_ctx.arcgis, "query", flaky)
+    env = await find_buildings(cw_ctx, jurisdiction="Richmond City",
+                               pin="C0010126019")
+    assert env.coverage.execution.value == "failed"
+    assert env.coverage.source_failures
+    assert "This is an outage" in env.data["note"]
+    assert "not a statement about this PIN" in env.data["note"]

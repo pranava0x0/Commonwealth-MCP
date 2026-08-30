@@ -249,6 +249,42 @@ def point_in_rings(lon: float, lat: float, rings: list) -> bool:
     return inside
 
 
+def town_polygon_counties(polygons: list[tuple[str, list]],
+                          ) -> dict[str, list[str]]:
+    """{place_fips: [locality fips]} from the town POLYGONS, not from one
+    point each.
+
+    A town that crosses a county line has territory in both, and both
+    govern parts of it. Sampling the polygon's own vertices finds that;
+    an interior point never can. Generalized geometry is fine here — the
+    question is which counties a town reaches, not where the line is.
+    """
+    payload = fetch(VGIN_TOWNS, {
+        "f": "json", "where": "1=1", "returnGeometry": "true",
+        "outFields": "STPLFIPS", "outSR": "4326",
+        "maxAllowableOffset": "0.0005", "resultRecordCount": "500"})
+    out: dict[str, list[str]] = {}
+    for feat in payload.get("features") or []:
+        raw = str((feat.get("attributes") or {}).get("STPLFIPS") or "")
+        if not raw:
+            continue
+        bare = raw[len(STATE_FIPS):] if raw.startswith(STATE_FIPS) else raw
+        rings = (feat.get("geometry") or {}).get("rings") or []
+        verts = [pt for ring in rings for pt in ring]
+        if not verts:
+            continue
+        # Every 25th vertex or so: enough to notice a town leaving its
+        # county, cheap enough to run over all 191 in one pass.
+        step = max(1, len(verts) // 25)
+        counties = set()
+        for vx in verts[::step]:
+            for fips, crings in polygons:
+                if point_in_rings(vx[0], vx[1], crings):
+                    counties.add(fips)
+        out[bare] = sorted(counties)
+    return out
+
+
 def town_rows(towns: dict[str, dict], localities: list[dict],
               ) -> tuple[list[dict], list[str]]:
     """Towns get a `place_fips` and a `parent`.
@@ -263,6 +299,7 @@ def town_rows(towns: dict[str, dict], localities: list[dict],
                if row.get("fips")}
     points = tigerweb_place_points()
     polygons = locality_polygons()
+    polygon_counties = town_polygon_counties(polygons)
     rows, notes = [], []
     for place_fips, t in sorted(towns.items()):
         row = {"id": f"va:{slugify(t['name'])}-town",
@@ -294,6 +331,19 @@ def town_rows(towns: dict[str, dict], localities: list[dict],
         basis = "TIGERweb interior point"
         containing = sorted({fips for fips, rings in polygons
                              if point_in_rings(point[0], point[1], rings)})
+        # The interior point names the PRIMARY county and cannot see that
+        # a town crosses a line: 20 of Virginia's towns do, and every one
+        # of them lost its second county here. The polygon is what knows.
+        extra = [f for f in polygon_counties.get(place_fips, [])
+                 if f not in containing]
+        if extra:
+            row["also_within"] = [by_fips[f] for f in sorted(extra)
+                                  if f in by_fips]
+            notes.append(
+                f"town {place_fips} ({t['name']}): polygon also lies in "
+                f"{', '.join(row['also_within'])}; recorded as "
+                "`also_within`, which reaches layered_authorities but not "
+                "the source-selection stack")
         parents = [by_fips[f] for f in containing if f in by_fips]
         if len(parents) == 1:
             row["parent"] = parents[0]
@@ -320,8 +370,13 @@ def load_existing() -> dict[str, tuple[Path, dict]]:
     return out
 
 
-IDENTITY = ("name", "kind", "fips", "place_fips")
-EDITORIAL_LISTS = ("aliases", "not_to_be_confused_with", "former_names")
+# Derived from the sources on every run, so a row on disk never keeps a
+# stale copy. `also_within` is here rather than in EDITORIAL because it
+# answers a geometric question — which counties this town's polygon
+# reaches — that the publishers settle, not a person.
+IDENTITY = ("name", "kind", "fips", "place_fips", "also_within")
+EDITORIAL_LISTS = ("aliases", "not_to_be_confused_with", "former_names",
+                   "also_within")
 EDITORIAL = ("parent",) + EDITORIAL_LISTS
 
 
@@ -420,14 +475,21 @@ def main() -> int:
         if row["id"] in existing:
             _, doc = existing[row["id"]]
             merged = dict(doc)
-            if args.force:
-                deltas = [f"{k}: {doc.get(k)!r} -> {row[k]!r}"
-                          for k in IDENTITY
-                          if k in row and doc.get(k) != row[k]]
-                if deltas:
-                    changed.append(f"{row['id']}: " + "; ".join(deltas))
-                    merged.update({k: v for k, v in row.items()
-                                   if k in IDENTITY})
+            # `also_within` refreshes without --force: it is derived, and
+            # a row that silently keeps a stale copy is the failure this
+            # field exists to fix. Everything else in IDENTITY still needs
+            # --force, since renaming a place is a reviewed change.
+            derived = {"also_within"}
+            fields = IDENTITY if args.force else derived
+            deltas = [f"{k}: {doc.get(k)!r} -> {row[k]!r}" for k in fields
+                      if (row.get(k) or None) != (doc.get(k) or None)]
+            if deltas:
+                changed.append(f"{row['id']}: " + "; ".join(deltas))
+                for k in fields:
+                    if row.get(k):
+                        merged[k] = row[k]
+                    else:
+                        merged.pop(k, None)
             else:
                 kept.append(row["id"])
             planned[row["id"]] = merged

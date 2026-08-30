@@ -4,3 +4,4 @@ kind: town
 place_fips: "05912"
 parent: va:accomack-county
 aliases: ["Town of Belle Haven"]
+also_within: ["va:northampton-county"]

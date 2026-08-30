@@ -351,3 +351,32 @@ The first of those four candidates is addressed FALLS CHURCH and places
 into Fairfax County — the postal-city trap turning up inside the
 ambiguity check, and one more reason the comparison is on placed
 governments rather than on the strings the locator returned.
+
+---
+
+## 14. Twenty incorporated towns cross a county line
+
+- **Source:** `va-vgin-admin-boundaries` (towns layer)
+- **Observed:** 2026-08-30, in review
+- **Test:** `tests/test_codex_round_3.py::test_towns_that_cross_a_county_line_name_every_county`
+
+Deriving a town's county from a single interior point finds one county
+and cannot see that the town extends into another. Twenty of Virginia's
+191 towns do: Herndon reaches Fairfax and Loudoun, Farmville reaches
+Prince Edward and Cumberland, West Point reaches King and Queen and New
+Kent, and Vinton reaches Roanoke County and Roanoke City.
+
+Two governments genuinely apply across that ground, which is the thing
+this project's jurisdiction model exists to represent, and the table said
+one did.
+
+**What the code does:** the generator samples each town's own polygon
+rather than one point, and records the extra counties as `also_within`.
+They reach `layered_authorities` and **not** the source-selection stack,
+deliberately: a name alone cannot say which part of a straddling town is
+meant, so querying the second county's sources for "Herndon" would return
+records from ground the caller may not have asked about. A coordinate can
+say, and point resolution already returns the county that contains it.
+`also_within` refreshes on every generator run without `--force`, since
+it answers a geometric question the publishers settle rather than an
+editorial one.
