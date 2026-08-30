@@ -264,3 +264,60 @@ def test_sources_probe_dispatches_on_every_active_adapter_type():
     assert missing == [], (
         f"`sources probe` has no branch for active adapter type(s): "
         f"{missing}")
+
+
+# --- round 6: three smaller ones -----------------------------------------
+
+@pytest.mark.parametrize("blank", ["   ", "\t", "\n  "])
+async def test_a_blank_address_is_a_caller_error_not_an_outage(cw_ctx,
+                                                               blank):
+    """A whitespace-only address is truthy, so it passed the
+    exactly-one-input check and failed inside the adapter — where the
+    broad handler turned it into an envelope saying the geocoder was
+    unreachable. False outage telemetry, plus advice to retry something
+    that can never work."""
+    from commonwealth.core.errors import InvalidQuery
+
+    with pytest.raises(InvalidQuery) as err:
+        await resolve_location(cw_ctx, address=blank)
+    assert "exactly one" in str(err.value)
+
+
+async def test_a_recorded_terms_gap_is_visible_in_describe_source(cw_ctx):
+    """DEQ's `terms_notes` says "see terms_gap" and this tool omitted the
+    field, so the one caveat a caller most needs before using a source
+    pointed at nothing."""
+    from commonwealth.domains.registry import describe_source
+
+    env = await describe_source(cw_ctx,
+                                source_id="va-deq-water-quality-stations")
+    src = env.data["source"]
+    assert "see terms_gap" in src["terms_notes"]
+    assert src["terms_gap"], "the field the notes point at"
+    assert "not a licence" in src["terms_gap"]
+
+
+async def test_a_source_with_no_gap_omits_the_field(cw_ctx):
+    """Absent when the review came back clean, so its presence means
+    something."""
+    from commonwealth.domains.registry import describe_source
+
+    env = await describe_source(cw_ctx, source_id="va-vgin-statewide-parcels")
+    assert "terms_gap" not in env.data["source"]
+
+
+def test_the_live_demo_build_tracks_the_geocoders_requests():
+    """The page presents `http_calls` as the real outbound trail. A
+    standalone adapter in live mode left the locator's request out of it
+    while the page still claimed completeness."""
+    import inspect
+    import sys
+
+    from commonwealth.runtime import PROJECT_ROOT
+    sys.path.insert(0, str(PROJECT_ROOT / "tools"))
+    import build_site
+
+    src = inspect.getsource(build_site._geocoder)
+    assert "fetcher=tracker" in src
+    assert src.count("ArcGISGeocodeAdapter(") == 1, (
+        "an untracked branch is how the live trail lost the locator")

@@ -527,8 +527,11 @@ def _geocoder(mode: str, tracker):
     page's HTTP view alongside the ArcGIS ones."""
     from commonwealth.adapters.arcgis_geocode import ArcGISGeocodeAdapter
     from commonwealth.adapters.base import TTLCache
-    if mode != "fixtures":
-        return ArcGISGeocodeAdapter()
+    # The tracker in BOTH modes. Its live branch builds a per-host
+    # HttpFetcher, so an untracked adapter here bought nothing and cost
+    # the page its honesty: a --live build presented http_calls as the
+    # real outbound trail while the locator's request was missing from it.
+    del mode
     return ArcGISGeocodeAdapter(fetcher=tracker, cache=TTLCache())
 
 

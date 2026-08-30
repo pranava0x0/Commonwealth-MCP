@@ -994,6 +994,12 @@ async def _resolve_zip(ctx: RuntimeContext, b: EnvelopeBuilder,
 async def resolve_location(ctx: RuntimeContext, address: str = "",
                            zip_code: str = "") -> Envelope:
     b = _builder(ctx, "geo.resolve_location")
+    # Stripped first. "   " is truthy, so it passed the exactly-one check
+    # and then failed inside the adapter, where the broad handler below
+    # turned a caller error into an envelope saying the geocoder was
+    # unreachable — false outage telemetry, and advice to retry something
+    # that will never work.
+    address = address.strip()
     if bool(address) == bool(zip_code):
         raise InvalidQuery(
             "pass exactly one of `address` or `zip_code` — there is no "

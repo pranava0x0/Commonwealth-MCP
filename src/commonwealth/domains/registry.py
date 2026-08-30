@@ -337,6 +337,11 @@ async def describe_source(ctx: RuntimeContext, source_id: str) -> Envelope:
         "capabilities": sorted(m.capability_ids()),
         "terms_url": m.access.terms_url,
         "terms_notes": m.access.terms_notes,
+        # DEQ's terms_notes says "see terms_gap" and this tool omitted
+        # the field, so the one caveat a caller most needs before using a
+        # source pointed at nothing. Absent when the review came back
+        # clean, so its presence means something.
+        **({"terms_gap": m.access.terms_gap} if m.access.terms_gap else {}),
         "data_classification": m.access.data_classification.value,
         "known_limitations": m.coverage.known_limitations,
         "authority_notes": m.authority_notes,
