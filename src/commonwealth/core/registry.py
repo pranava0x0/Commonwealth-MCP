@@ -96,6 +96,12 @@ class Access(_Strict):
     # nobody has read yet; making the field mandatory would force it to
     # invent a review date, which is worse than admitting there is none.
     terms_reviewed_at: str | None = None
+    # What the terms review could NOT establish, in the publisher's terms
+    # rather than this project's. Set it and every envelope citing this
+    # source carries a terms_note warning quoting it, so a gap recorded in
+    # a manifest becomes a disclosure at the point of use instead of a
+    # caveat only a contributor ever reads.
+    terms_gap: str | None = None
     data_classification: DataClassification = DataClassification.open
     exposure_allowlist: list[str] | None = None
     classification_reviewed_by: str | None = None

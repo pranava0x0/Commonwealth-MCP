@@ -230,3 +230,28 @@ record is that organisation's, and a null `LastCheck` produces an explicit
 "the publisher has no verification date" note rather than any date at all.
 Record `URL` values are returned as data and never fetched; a test asserts
 no record URL appears in the fetcher's call log.
+
+---
+
+## 10. A publisher's website can refuse a request its GIS service answers
+
+- **Source:** `va-deq-water-quality-stations`
+- **Observed:** 2026-08-29, live
+- **Note only** — recorded because it changes how a terms review ends,
+  not what any code does.
+
+`apps.deq.virginia.gov`'s ArcGIS REST directory answers anonymously and
+the service declares `copyrightText: "Virginia DEQ"` and capabilities
+`Query,Map,Data`. `www.deq.virginia.gov/terms-of-use` returns an Akamai
+"Access Denied" 403 to a plain HTTP GET, and so does
+`/our-programs/data`. The agency's data is reachable and its terms are
+not.
+
+DEQ's 97 datasets on the Virginia Open Data Portal do not close the gap
+either: none carries a license field.
+
+**What the code does:** `Access.terms_gap` holds what a review could not
+establish, and every envelope citing that source carries a `terms_note`
+warning quoting it. A gap recorded only in YAML is a caveat a contributor
+reads once; this makes it a disclosure at the point of use. Richmond's
+recorded terms gap uses the same field.

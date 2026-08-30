@@ -3,12 +3,12 @@
  "registry_revision": "2026-08-29",
  "counts": {
   "servers": 1,
-  "tools": 13,
+  "tools": 14,
   "packages": 3,
-  "sources": 16,
-  "sources_active": 12,
+  "sources": 17,
+  "sources_active": 13,
   "sources_proposed": 4,
-  "capabilities": 9,
+  "capabilities": 10,
   "jurisdictions": 325,
   "trap_pairs": 5
  },
@@ -77,6 +77,13 @@
    "description": "Find road segments and routes in a Virginia jurisdiction, by street-name prefix or near a lon/lat point. TWO official sources answer this and they are expected to disagree: VDOT's route inventory is a linear-referencing model with its own route names and measures, VGIN's centerlines are an aggregation of local submissions with segment-level detail. Both are returned unreconciled and the comparison block says whether their names agree \u2014 a difference is usually a difference in how the road is modelled, not an error. Centerlines are not right-of-way boundaries. A road along a locality line belongs to both localities in the results."
   },
   {
+   "name": "geo.find_environmental_sites",
+   "package": "geo",
+   "toolset": "spatial",
+   "contract_version": "1",
+   "description": "Find the environmental monitoring stations a Virginia agency has on record near a lon/lat point. READ THE LIMITS BEFORE USING THIS: it is NOT a complete inventory of environmental sites, and it is NOT a determination that any site is safe, contaminated, or suitable for a given use. What is registered today is DEQ's water-quality monitoring network \u2014 air, waste, and land programmes are not in it. A station on record means that spot is or was sampled and nothing more; historic stations are included, so read last_sample_date. An empty result means no station of that kind is on record near the point, never that the ground is clean. Say all of this to the user; do not summarise it away. A point is required \u2014 this source has no locality field."
+  },
+  {
    "name": "registry.resolve_jurisdiction",
    "package": "registry",
    "toolset": "discovery-min",
@@ -139,6 +146,26 @@
     "Direct citation lookup only \u2014 this reads one section page per call; there is no full-text search against this adapter (the site's own search feature was not reverse-engineered).",
     "HTML-page scraping, not a structured API \u2014 a redesign of the site's markup would break parsing before it broke any published contract.",
     "No machine-readable last-edit date per section; retrieval time is known, the underlying text's amendment date is only what the section's own citation-history paragraph states in prose."
+   ]
+  },
+  {
+   "id": "va-deq-water-quality-stations",
+   "name": "DEQ Water Quality Monitoring Stations",
+   "jurisdiction": "va",
+   "publisher": "Virginia Department of Environmental Quality (DEQ)",
+   "authority_level": "primary",
+   "capabilities": [
+    "environmental_site.lookup"
+   ],
+   "data_classification": "open",
+   "declared_state": "active",
+   "terms_url": "https://apps.deq.virginia.gov/arcgis/rest/services/public",
+   "known_limitations": [
+    "NOT a complete inventory of environmental sites. These are DEQ's water-quality monitoring stations, active and historic. A location with no station near it has no DEQ monitoring station near it, and that is the whole of what the absence means.\n",
+    "A station is not a finding. Its presence says DEQ monitors or has monitored that spot; it says nothing about whether anything was found, whether a site is contaminated, or whether ground is safe or suitable for any use.\n",
+    "Historic stations are included. LAST_SAMPLE_DATE can be decades old, so a station in a result is not evidence of current monitoring. Read the per-station dates.\n",
+    "The layer carries no locality or FIPS field. It is organised by watershed (HUC) and DEQ administrative region, so a query is scoped by geography and never by jurisdiction, and results near a boundary can belong to a neighbouring locality.\n",
+    "Water quality only. DEQ also regulates air, waste, and land, and none of those programmes is in this layer or this registration.\n"
    ]
   },
   {
@@ -408,6 +435,7 @@
   "boundary.lookup",
   "building.lookup",
   "code_section.lookup",
+  "environmental_site.lookup",
   "geocode.address",
   "landmark.lookup",
   "parcel.lookup",
@@ -445,7 +473,7 @@
  "profiles": {
   "default": 6,
   "discovery": 9,
-  "all": 13
+  "all": 14
  },
  "skills": [
   {
@@ -12208,6 +12236,1961 @@
      "jurisdiction": "va:york-county",
      "sources": [
       "va-code-of-virginia"
+     ]
+    }
+   ],
+   "gaps": []
+  },
+  "environmental_site.lookup": {
+   "covered": [
+    {
+     "jurisdiction": "va",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:abingdon-town",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:accomac-town",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:accomack-county",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:albemarle-county",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:alberta-town",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:alexandria-city",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:alleghany-county",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:altavista-town",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:amelia-county",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:amherst-county",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:amherst-town",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:appalachia-town",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:appomattox-county",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:appomattox-town",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:arlington-county",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:ashland-town",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:augusta-county",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:bath-county",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:bedford-county",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:bedford-town",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:belle-haven-town",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:berryville-town",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:big-stone-gap-town",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:blacksburg-town",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:blackstone-town",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:bland-county",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:bloxom-town",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:bluefield-town",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:boones-mill-town",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:botetourt-county",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:bowling-green-town",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:boyce-town",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:boydton-town",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:boykins-town",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:branchville-town",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:bridgewater-town",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:bristol-city",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:broadway-town",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:brodnax-town",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:brookneal-town",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:brunswick-county",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:buchanan-county",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:buchanan-town",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:buckingham-county",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:buena-vista-city",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:burkeville-town",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:campbell-county",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:cape-charles-town",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:capron-town",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:caroline-county",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:carroll-county",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:cedar-bluff-town",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:charles-city-county",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:charlotte-county",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:charlotte-court-house-town",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:charlottesville-city",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:chase-city-town",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:chatham-town",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:cheriton-town",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:chesapeake-city",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:chesterfield-county",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:chilhowie-town",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:chincoteague-town",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:christiansburg-town",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:claremont-town",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:clarke-county",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:clarksville-town",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:cleveland-town",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:clifton-forge-town",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:clifton-town",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:clinchco-town",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:clinchport-town",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:clintwood-town",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:coeburn-town",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:colonial-beach-town",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:colonial-heights-city",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:columbia-town",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:courtland-town",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:covington-city",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:craig-county",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:craigsville-town",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:crewe-town",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:culpeper-county",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:culpeper-town",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:cumberland-county",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:damascus-town",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:danville-city",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:dayton-town",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:dendron-town",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:dickenson-county",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:dillwyn-town",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:dinwiddie-county",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:drakes-branch-town",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:dublin-town",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:duffield-town",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:dumfries-town",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:dungannon-town",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:eastville-town",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:edinburg-town",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:elkton-town",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:emporia-city",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:essex-county",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:exmore-town",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:fairfax-city",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:fairfax-county",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:falls-church-city",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:farmville-town",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:fauquier-county",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:fincastle-town",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:floyd-county",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:floyd-town",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:fluvanna-county",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:franklin-city",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:franklin-county",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:frederick-county",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:fredericksburg-city",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:fries-town",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:front-royal-town",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:galax-city",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:gate-city-town",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:giles-county",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:glade-spring-town",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:glasgow-town",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:glen-lyn-town",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:gloucester-county",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:goochland-county",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:gordonsville-town",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:goshen-town",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:grayson-county",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:greene-county",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:greensville-county",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:gretna-town",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:grottoes-town",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:grundy-town",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:halifax-county",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:halifax-town",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:hallwood-town",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:hamilton-town",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:hampton-city",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:hanover-county",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:harrisonburg-city",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:haymarket-town",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:haysi-town",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:henrico-county",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:henry-county",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:herndon-town",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:highland-county",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:hillsboro-town",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:hillsville-town",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:honaker-town",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:hopewell-city",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:hurt-town",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:independence-town",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:iron-gate-town",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:irvington-town",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:isle-of-wight-county",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:ivor-town",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:james-city-county",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:jarratt-town",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:jonesville-town",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:keller-town",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:kenbridge-town",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:keysville-town",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:kilmarnock-town",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:king-and-queen-county",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:king-george-county",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:king-william-county",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:la-crosse-town",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:lancaster-county",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:lawrenceville-town",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:lebanon-town",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:lee-county",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:leesburg-town",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:lexington-city",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:loudoun-county",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:louisa-county",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:louisa-town",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:lovettsville-town",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:lunenburg-county",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:luray-town",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:lynchburg-city",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:madison-county",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:madison-town",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:manassas-city",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:manassas-park-city",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:marion-town",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:martinsville-city",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:mathews-county",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:mckenney-town",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:mecklenburg-county",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:melfa-town",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:middleburg-town",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:middlesex-county",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:middletown-town",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:mineral-town",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:monterey-town",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:montgomery-county",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:montross-town",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:mount-crawford-town",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:mount-jackson-town",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:narrows-town",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:nassawadox-town",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:nelson-county",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:new-castle-town",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:new-kent-county",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:new-market-town",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:newport-news-city",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:newsoms-town",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:nickelsville-town",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:norfolk-city",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:northampton-county",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:northumberland-county",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:norton-city",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:nottoway-county",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:occoquan-town",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:onancock-town",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:onley-town",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:orange-county",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:orange-town",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:page-county",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:painter-town",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:pamplin-city-town",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:parksley-town",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:patrick-county",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:pearisburg-town",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:pembroke-town",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:pennington-gap-town",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:petersburg-city",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:phenix-town",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:pittsylvania-county",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:pocahontas-town",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:poquoson-city",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:port-royal-town",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:portsmouth-city",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:pound-town",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:powhatan-county",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:prince-edward-county",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:prince-george-county",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:prince-william-county",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:pulaski-county",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:pulaski-town",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:purcellville-town",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:quantico-town",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:radford-city",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:rappahannock-county",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:remington-town",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:rich-creek-town",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:richlands-town",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:richmond-city",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:richmond-county",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:ridgeway-town",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:roanoke-city",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:roanoke-county",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:rockbridge-county",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:rockingham-county",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:rocky-mount-town",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:round-hill-town",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:rural-retreat-town",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:russell-county",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:salem-city",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:saltville-town",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:saxis-town",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:scott-county",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:scottsburg-town",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:scottsville-town",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:shenandoah-county",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:shenandoah-town",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:smithfield-town",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:smyth-county",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:south-boston-town",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:south-hill-town",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:southampton-county",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:spotsylvania-county",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:st-charles-town",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:st-paul-town",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:stafford-county",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:stanardsville-town",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:stanley-town",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:staunton-city",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:stephens-city-town",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:stony-creek-town",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:strasburg-town",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:stuart-town",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:suffolk-city",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:surry-county",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:surry-town",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:sussex-county",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:tangier-town",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:tappahannock-town",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:tazewell-county",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:tazewell-town",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:the-plains-town",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:timberville-town",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:toms-brook-town",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:troutdale-town",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:troutville-town",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:urbanna-town",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:victoria-town",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:vienna-town",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:vinton-town",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:virgilina-town",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:virginia-beach-city",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:wachapreague-town",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:wakefield-town",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:warren-county",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:warrenton-town",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:warsaw-town",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:washington-county",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:washington-town",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:waverly-town",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:waynesboro-city",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:weber-city-town",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:west-point-town",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:westmoreland-county",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:white-stone-town",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:williamsburg-city",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:winchester-city",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:windsor-town",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:wise-county",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:wise-town",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:woodstock-town",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:wythe-county",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:wytheville-town",
+     "sources": [
+      "va-deq-water-quality-stations"
+     ]
+    },
+    {
+     "jurisdiction": "va:york-county",
+     "sources": [
+      "va-deq-water-quality-stations"
      ]
     }
    ],

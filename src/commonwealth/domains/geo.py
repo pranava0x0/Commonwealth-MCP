@@ -107,7 +107,8 @@ def _source_entry(b: EnvelopeBuilder, m: SourceManifest,
         authority_level=m.publisher.authority_level,
         access_path=AccessPath.cache if q.from_cache else AccessPath.live,
         source_updated_at=q.source_updated_at, retrieved_at=q.retrieved_at,
-        cache_age_seconds=q.cache_age_seconds)
+        cache_age_seconds=q.cache_age_seconds,
+        terms_gap=m.access.terms_gap)
 
 
 def _records_block(b: EnvelopeBuilder, src_ref: str, q: ArcGISQueryResult,
@@ -714,7 +715,8 @@ def _geocode_source(b: EnvelopeBuilder, m: SourceManifest,
         authority_level=m.publisher.authority_level,
         access_path=AccessPath.cache if g.from_cache else AccessPath.live,
         source_updated_at=None, retrieved_at=g.retrieved_at,
-        cache_age_seconds=g.cache_age_seconds)
+        cache_age_seconds=g.cache_age_seconds,
+        terms_gap=m.access.terms_gap)
 
 
 async def _resolve_zip(ctx: RuntimeContext, b: EnvelopeBuilder,
@@ -1444,3 +1446,106 @@ GEO_TOOLS.register(ToolSpec(
         "boundaries. A road along a locality line belongs to both "
         "localities in the results."),
     toolset="spatial", contract_version="1", fn=find_roads))
+
+
+# --- environmental sites (GitHub issue #8) ---------------------------------
+
+# One mile, the distance a property screening conventionally asks about.
+ENVIRONMENTAL_RADIUS_M = 1609.0
+
+
+async def find_environmental_sites(
+        ctx: RuntimeContext, jurisdiction: str, lon: float | None = None,
+        lat: float | None = None,
+        radius_meters: float = ENVIRONMENTAL_RADIUS_M) -> Envelope:
+    b = _builder(ctx, "geo.find_environmental_sites")
+    if lon is None or lat is None:
+        # The registered layer carries no locality field, so a
+        # jurisdiction-only query would return every station in Virginia
+        # under a heading that says one county. Requiring the point is the
+        # difference between a scoped answer and a mislabelled one.
+        raise InvalidQuery(
+            "a lon/lat point is required: the registered environmental "
+            "source is organised by watershed, not by jurisdiction, so "
+            "there is no jurisdiction filter to apply and a "
+            "jurisdiction-only query would return the whole state")
+
+    frame = _resolve_frame(ctx, b, jurisdiction)
+    if frame.early is not None:
+        return frame.early
+    stack = frame.stack or []
+
+    selected = ctx.sources.select("environmental_site.lookup", stack)
+    registry_dim, gaps = selection_coverage(
+        ctx.sources, "environmental_site.lookup", stack, selected)
+    blocks: list[dict] = []
+    failures = []
+    queries: list[ArcGISQueryResult] = []
+    for m in selected:
+        try:
+            q = await ctx.arcgis.query(m, "stations",
+                                       geometry_point=(lon, lat),
+                                       distance_meters=radius_meters)
+        except CommonwealthError as err:
+            failures.append(failure(m.id, err.code, str(err)))
+            continue
+        queries.append(q)
+        block = _records_block(b, _source_entry(b, m, q), q, m)
+        for row in block["records"]:
+            for field in ("first_sample_date", "last_sample_date",
+                          "last_benthic_date"):
+                row[field] = _epoch_ms_to_iso(row.get(field))
+            row["record_note"] = (
+                "A monitoring station on record. It says this spot is or "
+                "was sampled; it says nothing about what was found, "
+                "whether anything is contaminated, or whether the ground "
+                "is suitable for any use. Check last_sample_date — "
+                "historic stations are included.")
+        block["search_note"] = (
+            f"Stations within {radius_meters:.0f} m of the point. This "
+            "source has no locality field, so the search is geographic "
+            "and results may sit in a neighbouring jurisdiction.")
+        blocks.append(block)
+
+    execution = (ExecutionCoverage.complete if not failures
+                 else ExecutionCoverage.failed if not blocks
+                 else ExecutionCoverage.partial)
+    total = sum(blk["record_count"] for blk in blocks)
+    # The disclaimer rides on every answer, including the empty one — an
+    # empty environmental result is the one most likely to be read as
+    # "nothing here", which is exactly what it does not mean.
+    b.warn(WarningCode.screening_only,
+           "This is NOT a complete inventory of environmental sites and "
+           "NOT a determination that any site is safe, contaminated, or "
+           "suitable for a given use. It is one agency's water-quality "
+           "monitoring network. An empty result means no monitoring "
+           "station of that kind is on record near this point, and "
+           "nothing more than that.")
+    return b.build(
+        {"point": {"lon": lon, "lat": lat}, "results": blocks},
+        Coverage(registry=registry_dim, execution=execution,
+                 pagination=_pagination_dim(queries),
+                 result=result_dim(total),
+                 jurisdictions_searched=stack if selected else [],
+                 jurisdictions_unavailable=gaps, source_failures=failures,
+                 known_limitations=sorted(
+                     {lim for m in selected
+                      for lim in m.coverage.known_limitations})))
+
+
+GEO_TOOLS.register(ToolSpec(
+    name="geo.find_environmental_sites",
+    description=(
+        "Find the environmental monitoring stations a Virginia agency has "
+        "on record near a lon/lat point. READ THE LIMITS BEFORE USING "
+        "THIS: it is NOT a complete inventory of environmental sites, and "
+        "it is NOT a determination that any site is safe, contaminated, "
+        "or suitable for a given use. What is registered today is DEQ's "
+        "water-quality monitoring network — air, waste, and land "
+        "programmes are not in it. A station on record means that spot is "
+        "or was sampled and nothing more; historic stations are included, "
+        "so read last_sample_date. An empty result means no station of "
+        "that kind is on record near the point, never that the ground is "
+        "clean. Say all of this to the user; do not summarise it away. "
+        "A point is required — this source has no locality field."),
+    toolset="spatial", contract_version="1", fn=find_environmental_sites))

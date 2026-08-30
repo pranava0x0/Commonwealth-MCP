@@ -512,6 +512,26 @@ async def _statewide_crosschecks(adapter, m, ctx) -> dict:
     return out
 
 
+async def _sample_environmental(adapter, m, params) -> dict:
+    """Recording plan for the environmental source. Records a point on the
+    James in Richmond (stations nearby) and a point well away from any
+    monitored water, because an empty environmental answer is the one
+    most likely to be misread and has to replay exactly."""
+    from ..domains.geo import ENVIRONMENTAL_RADIUS_M
+    out: dict[str, Any] = {}
+    for layer in sorted(params.layers):
+        out[f"health:{layer}"] = await adapter.health(m, layer)
+    for label, point in (("near_the_james_in_richmond", (-77.4360, 37.5407)),
+                         ("open_water_offshore", (-74.5000, 36.5000))):
+        q = await adapter.query(m, "stations", geometry_point=point,
+                                distance_meters=ENVIRONMENTAL_RADIUS_M)
+        out[label] = {
+            "point": list(point), "record_count": len(q.records),
+            "stations": [r.canonical.get("station_id")
+                         for r in q.records[:5]]}
+    return out
+
+
 async def _sample_roads(adapter, m, params, ctx) -> dict:
     """Recording plan for a road source. Records the same street in the
     same town from whichever of the two publishers this is, so the
@@ -699,6 +719,13 @@ def cmd_sources_sample(args: argparse.Namespace) -> int:
         HttpFetcher(policy=egress_policy_for(m, params.service_url)))
     adapter = arcgis_mod.ArcGISAdapter(fetcher=recorder,
                                        cache=arcgis_mod.TTLCache())
+
+    if "environmental_site.lookup" in m.capability_ids():
+        try:
+            summary = asyncio.run(_sample_environmental(adapter, m, params))
+        except CommonwealthError as err:
+            return _fail(f"{err.code}: {err}")
+        return _write_fixture(m, recorder, summary)
 
     if "road.lookup" in m.capability_ids():
         try:

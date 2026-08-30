@@ -149,7 +149,8 @@ async def resolve_point(ctx: RuntimeContext, b: EnvelopeBuilder,
                 else AccessPath.live,
                 source_updated_at=q.source_updated_at,
                 retrieved_at=q.retrieved_at,
-                cache_age_seconds=q.cache_age_seconds)
+                cache_age_seconds=q.cache_age_seconds,
+                terms_gap=m.access.terms_gap)
         for r in q.records:
             b.add_evidence(source_ref=out.source_ref, record_id=r.record_id,
                            retrieved_at=q.retrieved_at,

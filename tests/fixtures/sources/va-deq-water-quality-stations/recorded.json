@@ -1,0 +1,1184 @@
+{
+ "source_id": "va-deq-water-quality-stations",
+ "recorded_at": "2026-08-30T03:30:47Z",
+ "rights": {
+  "publisher": "Virginia Department of Environmental Quality (DEQ)",
+  "terms_url": "https://apps.deq.virginia.gov/arcgis/rest/services/public",
+  "note": "Recorded government-published responses; third-party content excluded from the repo's CC0 grant (../../../design/architecture.md decision 0011)."
+ },
+ "summary": {
+  "health:stations": {
+   "layer": "stations",
+   "feature_count": 16298,
+   "min_expected": 12000,
+   "healthy": true
+  },
+  "near_the_james_in_richmond": {
+   "point": [
+    -77.436,
+    37.5407
+   ],
+   "record_count": 17,
+   "stations": [
+    "QACO",
+    "2-JMS110.49",
+    "2-JMS110.90",
+    "IRpipeline1",
+    "2BJMS111.04"
+   ]
+  },
+  "open_water_offshore": {
+   "point": [
+    -74.5,
+    36.5
+   ],
+   "record_count": 0,
+   "stations": []
+  }
+ },
+ "exchanges": [
+  {
+   "url": "https://apps.deq.virginia.gov/arcgis/rest/services/public/WQM_STATIONS_ALL/MapServer/0/query",
+   "params": {
+    "f": "json",
+    "where": "1=1",
+    "returnCountOnly": "true"
+   },
+   "response": {
+    "count": 16298
+   }
+  },
+  {
+   "url": "https://apps.deq.virginia.gov/arcgis/rest/services/public/WQM_STATIONS_ALL/MapServer/0/query",
+   "params": {
+    "f": "json",
+    "outFields": "BASIN,BENTHIC_COUNT,FIRST_SAMPLE_DATE,HUC6_HUC_12,HUC6_HUC_12_NAME,LAST_BENTHIC_DATE,LAST_SAMPLE_DATE,MAJOR_BASIN_NAME,MONITORING_REGION,OBJECTID,SAMPLE_COUNT,STATION,STATION_DESCRIPTION,STREAM_NAME,SUBBASIN,SURVEY_PROGRAM_CODE,VADEQ_ADMIN_REGION",
+    "resultRecordCount": "50",
+    "returnGeometry": "false",
+    "geometry": "{\"x\": -77.436, \"y\": 37.5407, \"spatialReference\": {\"wkid\": 4326}}",
+    "geometryType": "esriGeometryPoint",
+    "inSR": "4326",
+    "spatialRel": "esriSpatialRelIntersects",
+    "distance": "1609.0",
+    "units": "esriSRUnit_Meter"
+   },
+   "response": {
+    "displayFieldName": "STREAM_NAME",
+    "fieldAliases": {
+     "BASIN": "BASIN",
+     "BENTHIC_COUNT": "BENTHIC_COUNT",
+     "FIRST_SAMPLE_DATE": "FIRST_SAMPLE_DATE",
+     "HUC6_HUC_12": "HUC6_HUC_12",
+     "HUC6_HUC_12_NAME": "HUC6_HUC_12_NAME",
+     "LAST_BENTHIC_DATE": "LAST_BENTHIC_DATE",
+     "LAST_SAMPLE_DATE": "LAST_SAMPLE_DATE",
+     "MAJOR_BASIN_NAME": "MAJOR_BASIN_NAME",
+     "MONITORING_REGION": "MONITORING_REGION",
+     "OBJECTID": "OBJECTID",
+     "SAMPLE_COUNT": "SAMPLE_COUNT",
+     "STATION": "STATION",
+     "STATION_DESCRIPTION": "STATION_DESCRIPTION",
+     "STREAM_NAME": "STREAM_NAME",
+     "SUBBASIN": "SUBBASIN",
+     "SURVEY_PROGRAM_CODE": "SURVEY_PROGRAM_CODE",
+     "VADEQ_ADMIN_REGION": "VADEQ_ADMIN_REGION"
+    },
+    "fields": [
+     {
+      "name": "BASIN",
+      "type": "esriFieldTypeString",
+      "alias": "BASIN",
+      "length": 255
+     },
+     {
+      "name": "BENTHIC_COUNT",
+      "type": "esriFieldTypeInteger",
+      "alias": "BENTHIC_COUNT"
+     },
+     {
+      "name": "FIRST_SAMPLE_DATE",
+      "type": "esriFieldTypeDate",
+      "alias": "FIRST_SAMPLE_DATE",
+      "length": 8
+     },
+     {
+      "name": "HUC6_HUC_12",
+      "type": "esriFieldTypeString",
+      "alias": "HUC6_HUC_12",
+      "length": 255
+     },
+     {
+      "name": "HUC6_HUC_12_NAME",
+      "type": "esriFieldTypeString",
+      "alias": "HUC6_HUC_12_NAME",
+      "length": 510
+     },
+     {
+      "name": "LAST_BENTHIC_DATE",
+      "type": "esriFieldTypeDate",
+      "alias": "LAST_BENTHIC_DATE",
+      "length": 8
+     },
+     {
+      "name": "LAST_SAMPLE_DATE",
+      "type": "esriFieldTypeDate",
+      "alias": "LAST_SAMPLE_DATE",
+      "length": 8
+     },
+     {
+      "name": "MAJOR_BASIN_NAME",
+      "type": "esriFieldTypeString",
+      "alias": "MAJOR_BASIN_NAME",
+      "length": 255
+     },
+     {
+      "name": "MONITORING_REGION",
+      "type": "esriFieldTypeString",
+      "alias": "MONITORING_REGION",
+      "length": 255
+     },
+     {
+      "name": "OBJECTID",
+      "type": "esriFieldTypeOID",
+      "alias": "OBJECTID"
+     },
+     {
+      "name": "SAMPLE_COUNT",
+      "type": "esriFieldTypeInteger",
+      "alias": "SAMPLE_COUNT"
+     },
+     {
+      "name": "STATION",
+      "type": "esriFieldTypeString",
+      "alias": "STATION",
+      "length": 510
+     },
+     {
+      "name": "STATION_DESCRIPTION",
+      "type": "esriFieldTypeString",
+      "alias": "STATION_DESCRIPTION",
+      "length": 255
+     },
+     {
+      "name": "STREAM_NAME",
+      "type": "esriFieldTypeString",
+      "alias": "STREAM_NAME",
+      "length": 510
+     },
+     {
+      "name": "SUBBASIN",
+      "type": "esriFieldTypeString",
+      "alias": "SUBBASIN",
+      "length": 255
+     },
+     {
+      "name": "SURVEY_PROGRAM_CODE",
+      "type": "esriFieldTypeString",
+      "alias": "SURVEY_PROGRAM_CODE",
+      "length": 8000
+     },
+     {
+      "name": "VADEQ_ADMIN_REGION",
+      "type": "esriFieldTypeString",
+      "alias": "VADEQ_ADMIN_REGION",
+      "length": 30
+     }
+    ],
+    "features": [
+     {
+      "attributes": {
+       "BASIN": "James River Basin",
+       "BENTHIC_COUNT": null,
+       "FIRST_SAMPLE_DATE": 1343754000000,
+       "HUC6_HUC_12": "020802050607",
+       "HUC6_HUC_12_NAME": "James River-Little Westham Creek",
+       "LAST_BENTHIC_DATE": null,
+       "LAST_SAMPLE_DATE": 1485340800000,
+       "MAJOR_BASIN_NAME": "Mid Atlantic",
+       "MONITORING_REGION": "CO",
+       "OBJECTID": 2470,
+       "SAMPLE_COUNT": 7,
+       "STATION": "QACO",
+       "STATION_DESCRIPTION": "629 E Main St, Richmond, VA 23219",
+       "STREAM_NAME": "James River-Little Westham Creek",
+       "SUBBASIN": "MIDDLE JAMES-WILLIS",
+       "SURVEY_PROGRAM_CODE": "QA, BN",
+       "VADEQ_ADMIN_REGION": "Piedmont"
+      }
+     },
+     {
+      "attributes": {
+       "BASIN": "James River Basin",
+       "BENTHIC_COUNT": null,
+       "FIRST_SAMPLE_DATE": 810822120000,
+       "HUC6_HUC_12": "020802050607",
+       "HUC6_HUC_12_NAME": "James River-Little Westham Creek",
+       "LAST_BENTHIC_DATE": null,
+       "LAST_SAMPLE_DATE": 998573160000,
+       "MAJOR_BASIN_NAME": "Mid Atlantic",
+       "MONITORING_REGION": "PRO",
+       "OBJECTID": 3159,
+       "SAMPLE_COUNT": 70,
+       "STATION": "2-JMS110.49",
+       "STATION_DESCRIPTION": "JAMES RIVER AT DOWNSTREAM END OF HAXALL",
+       "STREAM_NAME": "James River",
+       "SUBBASIN": "MIDDLE JAMES-WILLIS",
+       "SURVEY_PROGRAM_CODE": "AQ",
+       "VADEQ_ADMIN_REGION": "Piedmont"
+      }
+     },
+     {
+      "attributes": {
+       "BASIN": "James River Basin",
+       "BENTHIC_COUNT": null,
+       "FIRST_SAMPLE_DATE": 772724700000,
+       "HUC6_HUC_12": "020802050607",
+       "HUC6_HUC_12_NAME": "James River-Little Westham Creek",
+       "LAST_BENTHIC_DATE": null,
+       "LAST_SAMPLE_DATE": 1274106300000,
+       "MAJOR_BASIN_NAME": "Mid Atlantic",
+       "MONITORING_REGION": "PRO",
+       "OBJECTID": 3160,
+       "SAMPLE_COUNT": 88,
+       "STATION": "2-JMS110.90",
+       "STATION_DESCRIPTION": "JAMES R, MANCHESTER BR. NEAR SOUTH BANK",
+       "STREAM_NAME": "James River",
+       "SUBBASIN": "MIDDLE JAMES-WILLIS",
+       "SURVEY_PROGRAM_CODE": "AQ, TM",
+       "VADEQ_ADMIN_REGION": "Piedmont"
+      }
+     },
+     {
+      "attributes": {
+       "BASIN": "James River Basin",
+       "BENTHIC_COUNT": null,
+       "FIRST_SAMPLE_DATE": 1721217300000,
+       "HUC6_HUC_12": "020802050607",
+       "HUC6_HUC_12_NAME": "James River-Little Westham Creek",
+       "LAST_BENTHIC_DATE": null,
+       "LAST_SAMPLE_DATE": 1722333900000,
+       "MAJOR_BASIN_NAME": "Mid Atlantic",
+       "MONITORING_REGION": "PRO",
+       "OBJECTID": 5314,
+       "SAMPLE_COUNT": 4,
+       "STATION": "IRpipeline1",
+       "STATION_DESCRIPTION": "at pipeline leak near JMS",
+       "STREAM_NAME": "James River-Little Westham Creek",
+       "SUBBASIN": "MIDDLE JAMES-WILLIS",
+       "SURVEY_PROGRAM_CODE": "IR",
+       "VADEQ_ADMIN_REGION": "Piedmont"
+      }
+     },
+     {
+      "attributes": {
+       "BASIN": "James River Basin",
+       "BENTHIC_COUNT": null,
+       "FIRST_SAMPLE_DATE": 1541417400000,
+       "HUC6_HUC_12": "020802050607",
+       "HUC6_HUC_12_NAME": "James River-Little Westham Creek",
+       "LAST_BENTHIC_DATE": null,
+       "LAST_SAMPLE_DATE": 1543833300000,
+       "MAJOR_BASIN_NAME": "Mid Atlantic",
+       "MONITORING_REGION": "PRO",
+       "OBJECTID": 5338,
+       "SAMPLE_COUNT": 3,
+       "STATION": "2BJMS111.04",
+       "STATION_DESCRIPTION": "James River South Channel",
+       "STREAM_NAME": "James River, Middle",
+       "SUBBASIN": "MIDDLE JAMES-WILLIS",
+       "SURVEY_PROGRAM_CODE": "TM",
+       "VADEQ_ADMIN_REGION": "Piedmont"
+      }
+     },
+     {
+      "attributes": {
+       "BASIN": "James River Basin",
+       "BENTHIC_COUNT": null,
+       "FIRST_SAMPLE_DATE": 1266310260000,
+       "HUC6_HUC_12": "020802050607",
+       "HUC6_HUC_12_NAME": "James River-Little Westham Creek",
+       "LAST_BENTHIC_DATE": null,
+       "LAST_SAMPLE_DATE": 1384850880000,
+       "MAJOR_BASIN_NAME": "Mid Atlantic",
+       "MONITORING_REGION": "CO",
+       "OBJECTID": 11755,
+       "SAMPLE_COUNT": 2,
+       "STATION": "CB5.1W",
+       "STATION_DESCRIPTION": "Chesapeake Bay",
+       "STREAM_NAME": "James River-Little Westham Creek",
+       "SUBBASIN": "MIDDLE JAMES-WILLIS",
+       "SURVEY_PROGRAM_CODE": "CB",
+       "VADEQ_ADMIN_REGION": "Piedmont"
+      }
+     },
+     {
+      "attributes": {
+       "BASIN": "James River Basin",
+       "BENTHIC_COUNT": null,
+       "FIRST_SAMPLE_DATE": 1427374800000,
+       "HUC6_HUC_12": "020802050607",
+       "HUC6_HUC_12_NAME": "James River-Little Westham Creek",
+       "LAST_BENTHIC_DATE": null,
+       "LAST_SAMPLE_DATE": 1450276200000,
+       "MAJOR_BASIN_NAME": "Mid Atlantic",
+       "MONITORING_REGION": "PRO",
+       "OBJECTID": 13912,
+       "SAMPLE_COUNT": 11,
+       "STATION": "2CXCA000.05",
+       "STATION_DESCRIPTION": "UTJames R, for Shockoe SSO, DS Dock St.",
+       "STREAM_NAME": "UT to James R for CSO006",
+       "SUBBASIN": "LOWER JAMES",
+       "SURVEY_PROGRAM_CODE": "TM",
+       "VADEQ_ADMIN_REGION": "Piedmont"
+      }
+     },
+     {
+      "attributes": {
+       "BASIN": "James River Basin",
+       "BENTHIC_COUNT": 41,
+       "FIRST_SAMPLE_DATE": 784213200000,
+       "HUC6_HUC_12": "020802050607",
+       "HUC6_HUC_12_NAME": "James River-Little Westham Creek",
+       "LAST_BENTHIC_DATE": 1434456900000,
+       "LAST_SAMPLE_DATE": 1748431800000,
+       "MAJOR_BASIN_NAME": "Mid Atlantic",
+       "MONITORING_REGION": "PRO",
+       "OBJECTID": 14014,
+       "SAMPLE_COUNT": 181,
+       "STATION": "2-JMS110.44",
+       "STATION_DESCRIPTION": "NORTH BANK JAMES RIVER BELOW FALL ZONE R",
+       "STREAM_NAME": "James River",
+       "SUBBASIN": "MIDDLE JAMES-WILLIS",
+       "SURVEY_PROGRAM_CODE": "TM, SS, RB, IM, HF, IR",
+       "VADEQ_ADMIN_REGION": "Piedmont"
+      }
+     },
+     {
+      "attributes": {
+       "BASIN": "James River Basin",
+       "BENTHIC_COUNT": null,
+       "FIRST_SAMPLE_DATE": 810821460000,
+       "HUC6_HUC_12": "020802050607",
+       "HUC6_HUC_12_NAME": "James River-Little Westham Creek",
+       "LAST_BENTHIC_DATE": null,
+       "LAST_SAMPLE_DATE": 1753698600000,
+       "MAJOR_BASIN_NAME": "Mid Atlantic",
+       "MONITORING_REGION": "PRO",
+       "OBJECTID": 14293,
+       "SAMPLE_COUNT": 291,
+       "STATION": "2-JMS111.17",
+       "STATION_DESCRIPTION": "JAMES RIVER, AT TREDEGAR IRON WORKS",
+       "STREAM_NAME": "James River",
+       "SUBBASIN": "MIDDLE JAMES-WILLIS",
+       "SURVEY_PROGRAM_CODE": "IM, AW, HF, QA, SS, TM, IR, AQ",
+       "VADEQ_ADMIN_REGION": "Piedmont"
+      }
+     },
+     {
+      "attributes": {
+       "BASIN": "James River Basin",
+       "BENTHIC_COUNT": null,
+       "FIRST_SAMPLE_DATE": 428249220000,
+       "HUC6_HUC_12": "020802050607",
+       "HUC6_HUC_12_NAME": "James River-Little Westham Creek",
+       "LAST_BENTHIC_DATE": null,
+       "LAST_SAMPLE_DATE": 434822220000,
+       "MAJOR_BASIN_NAME": "Mid Atlantic",
+       "MONITORING_REGION": "PRO",
+       "OBJECTID": 15043,
+       "SAMPLE_COUNT": 18,
+       "STATION": "2-JMS109.98",
+       "STATION_DESCRIPTION": "I 95 BRIDGE (CITY OF RICHMOND)",
+       "STREAM_NAME": "James River",
+       "SUBBASIN": "LOWER JAMES",
+       "SURVEY_PROGRAM_CODE": "AQ",
+       "VADEQ_ADMIN_REGION": "Piedmont"
+      }
+     },
+     {
+      "attributes": {
+       "BASIN": "James River Basin",
+       "BENTHIC_COUNT": null,
+       "FIRST_SAMPLE_DATE": -58946400000,
+       "HUC6_HUC_12": "020802050607",
+       "HUC6_HUC_12_NAME": "James River-Little Westham Creek",
+       "LAST_BENTHIC_DATE": null,
+       "LAST_SAMPLE_DATE": 1785836700000,
+       "MAJOR_BASIN_NAME": "Mid Atlantic",
+       "MONITORING_REGION": "PRO",
+       "OBJECTID": 15044,
+       "SAMPLE_COUNT": 1216,
+       "STATION": "2-JMS110.30",
+       "STATION_DESCRIPTION": "JAMES RIVER, RT. 360 MAYOS BRIDGE",
+       "STREAM_NAME": "James River",
+       "SUBBASIN": "LOWER JAMES",
+       "SURVEY_PROGRAM_CODE": "TR, PC, SS, AQ, CB, QA",
+       "VADEQ_ADMIN_REGION": "Piedmont"
+      }
+     },
+     {
+      "attributes": {
+       "BASIN": "James River Basin",
+       "BENTHIC_COUNT": 20,
+       "FIRST_SAMPLE_DATE": 1253286000000,
+       "HUC6_HUC_12": "020802050607",
+       "HUC6_HUC_12_NAME": "James River-Little Westham Creek",
+       "LAST_BENTHIC_DATE": 1434452400000,
+       "LAST_SAMPLE_DATE": 1434452400000,
+       "MAJOR_BASIN_NAME": "Mid Atlantic",
+       "MONITORING_REGION": "PRO",
+       "OBJECTID": 15322,
+       "SAMPLE_COUNT": 10,
+       "STATION": "2BJMS110.53",
+       "STATION_DESCRIPTION": "S BANK JAMES R. US RR BRIDGE FALL LINE",
+       "STREAM_NAME": "James River, Middle",
+       "SUBBASIN": "LOWER JAMES",
+       "SURVEY_PROGRAM_CODE": "RB, TM",
+       "VADEQ_ADMIN_REGION": "Piedmont"
+      }
+     },
+     {
+      "attributes": {
+       "BASIN": "James River Basin",
+       "BENTHIC_COUNT": null,
+       "FIRST_SAMPLE_DATE": 1056010500000,
+       "HUC6_HUC_12": "020802050607",
+       "HUC6_HUC_12_NAME": "James River-Little Westham Creek",
+       "LAST_BENTHIC_DATE": null,
+       "LAST_SAMPLE_DATE": 1056010500000,
+       "MAJOR_BASIN_NAME": "Mid Atlantic",
+       "MONITORING_REGION": "PRO",
+       "OBJECTID": 15565,
+       "SAMPLE_COUNT": 1,
+       "STATION": "HAXALL",
+       "STATION_DESCRIPTION": "Haxall Canal at 7th St. walkbridge",
+       "STREAM_NAME": "James River-Little Westham Creek",
+       "SUBBASIN": "MIDDLE JAMES-WILLIS",
+       "SURVEY_PROGRAM_CODE": "IR",
+       "VADEQ_ADMIN_REGION": "Piedmont"
+      }
+     },
+     {
+      "attributes": {
+       "BASIN": "James River Basin",
+       "BENTHIC_COUNT": 21,
+       "FIRST_SAMPLE_DATE": 783784800000,
+       "HUC6_HUC_12": "020802050607",
+       "HUC6_HUC_12_NAME": "James River-Little Westham Creek",
+       "LAST_BENTHIC_DATE": 1284378600000,
+       "LAST_SAMPLE_DATE": 1592316300000,
+       "MAJOR_BASIN_NAME": "Mid Atlantic",
+       "MONITORING_REGION": "PRO",
+       "OBJECTID": 15589,
+       "SAMPLE_COUNT": 177,
+       "STATION": "2-JMS110.34",
+       "STATION_DESCRIPTION": "SOUTH BANK OF JAMES RIVER AT LAST RAPID",
+       "STREAM_NAME": "James River",
+       "SUBBASIN": "LOWER JAMES",
+       "SURVEY_PROGRAM_CODE": "RB, IM, TM, SS, QA",
+       "VADEQ_ADMIN_REGION": "Piedmont"
+      }
+     },
+     {
+      "attributes": {
+       "BASIN": "James River Basin",
+       "BENTHIC_COUNT": null,
+       "FIRST_SAMPLE_DATE": 772721700000,
+       "HUC6_HUC_12": "020802050607",
+       "HUC6_HUC_12_NAME": "James River-Little Westham Creek",
+       "LAST_BENTHIC_DATE": null,
+       "LAST_SAMPLE_DATE": 998573940000,
+       "MAJOR_BASIN_NAME": "Mid Atlantic",
+       "MONITORING_REGION": "PRO",
+       "OBJECTID": 15627,
+       "SAMPLE_COUNT": 89,
+       "STATION": "2-JMS110.07",
+       "STATION_DESCRIPTION": "JAMES RIVER,I-95 BR.AT NORTH BANK, DS SH",
+       "STREAM_NAME": "James River",
+       "SUBBASIN": "LOWER JAMES",
+       "SURVEY_PROGRAM_CODE": "AQ",
+       "VADEQ_ADMIN_REGION": "Piedmont"
+      }
+     },
+     {
+      "attributes": {
+       "BASIN": "James River Basin",
+       "BENTHIC_COUNT": null,
+       "FIRST_SAMPLE_DATE": 1352808000000,
+       "HUC6_HUC_12": "020802050607",
+       "HUC6_HUC_12_NAME": "James River-Little Westham Creek",
+       "LAST_BENTHIC_DATE": null,
+       "LAST_SAMPLE_DATE": 1352808000000,
+       "MAJOR_BASIN_NAME": "Mid Atlantic",
+       "MONITORING_REGION": "PRO",
+       "OBJECTID": 15804,
+       "SAMPLE_COUNT": 1,
+       "STATION": "2-JMS110.00",
+       "STATION_DESCRIPTION": "James River near I-95 Bridge",
+       "STREAM_NAME": "James River",
+       "SUBBASIN": "LOWER JAMES",
+       "SURVEY_PROGRAM_CODE": "TM",
+       "VADEQ_ADMIN_REGION": "Piedmont"
+      }
+     },
+     {
+      "attributes": {
+       "BASIN": "James River Basin",
+       "BENTHIC_COUNT": null,
+       "FIRST_SAMPLE_DATE": 772721100000,
+       "HUC6_HUC_12": "020802050607",
+       "HUC6_HUC_12_NAME": "James River-Little Westham Creek",
+       "LAST_BENTHIC_DATE": null,
+       "LAST_SAMPLE_DATE": 1701089400000,
+       "MAJOR_BASIN_NAME": "Mid Atlantic",
+       "MONITORING_REGION": "PRO",
+       "OBJECTID": 15805,
+       "SAMPLE_COUNT": 104,
+       "STATION": "2-JMS110.31",
+       "STATION_DESCRIPTION": "JAMES RIVER,MAYOS BR., NORTH CHANNEL US",
+       "STREAM_NAME": "James River",
+       "SUBBASIN": "LOWER JAMES",
+       "SURVEY_PROGRAM_CODE": "IM, AQ",
+       "VADEQ_ADMIN_REGION": "Piedmont"
+      }
+     }
+    ]
+   }
+  },
+  {
+   "url": "https://apps.deq.virginia.gov/arcgis/rest/services/public/WQM_STATIONS_ALL/MapServer/0",
+   "params": {
+    "f": "json"
+   },
+   "response": {
+    "currentVersion": 11.5,
+    "cimVersion": "3.5.0",
+    "id": 0,
+    "name": "WQM_STATIONS_METADATA",
+    "type": "Feature Layer",
+    "description": "",
+    "geometryType": "esriGeometryPoint",
+    "sourceSpatialReference": {
+     "wkid": 4326,
+     "latestWkid": 4326,
+     "xyTolerance": 8.983152841195215e-09,
+     "zTolerance": 0.001,
+     "mTolerance": 0.001,
+     "falseX": -400,
+     "falseY": -400,
+     "xyUnits": 999999999.9999999,
+     "falseZ": -100000,
+     "zUnits": 10000,
+     "falseM": -100000,
+     "mUnits": 10000
+    },
+    "spatialReference": {
+     "wkid": 102100,
+     "latestWkid": 3857,
+     "xyTolerance": 0.001,
+     "zTolerance": 2,
+     "mTolerance": 0.001,
+     "falseX": -20037700,
+     "falseY": -30241100,
+     "xyUnits": 148923141.92838538,
+     "falseZ": 0,
+     "zUnits": 1,
+     "falseM": -100000,
+     "mUnits": 10000
+    },
+    "copyrightText": "",
+    "parentLayer": null,
+    "subLayers": [],
+    "minScale": 0,
+    "maxScale": 0,
+    "referenceScale": 0.0,
+    "drawingInfo": {
+     "renderer": {
+      "type": "simple",
+      "symbol": {
+       "type": "esriSMS",
+       "style": "esriSMSCircle",
+       "color": [
+        0,
+        133,
+        88,
+        255
+       ],
+       "size": 4,
+       "angle": 0,
+       "xoffset": 0,
+       "yoffset": 0,
+       "outline": {
+        "color": [
+         0,
+         0,
+         0,
+         255
+        ],
+        "width": 1
+       }
+      }
+     },
+     "scaleSymbols": true,
+     "transparency": 0,
+     "labelingInfo": null
+    },
+    "defaultVisibility": true,
+    "extent": {
+     "xmin": -9309134.162396545,
+     "ymin": 1378016.8589796233,
+     "xmax": 8972914.756093085,
+     "ymax": 5505685.5991230365,
+     "spatialReference": {
+      "wkid": 102100,
+      "latestWkid": 3857,
+      "xyTolerance": 0.001,
+      "zTolerance": 2,
+      "mTolerance": 0.001,
+      "falseX": -20037700,
+      "falseY": -30241100,
+      "xyUnits": 148923141.92838538,
+      "falseZ": 0,
+      "zUnits": 1,
+      "falseM": -100000,
+      "mUnits": 10000
+     }
+    },
+    "hasAttachments": false,
+    "htmlPopupType": "esriServerHTMLPopupTypeAsHTMLText",
+    "displayField": "STREAM_NAME",
+    "typeIdField": null,
+    "subtypeFieldName": null,
+    "subtypeField": null,
+    "defaultSubtypeCode": null,
+    "fields": [
+     {
+      "name": "OBJECTID",
+      "type": "esriFieldTypeOID",
+      "alias": "OBJECTID",
+      "domain": null
+     },
+     {
+      "name": "Shape",
+      "type": "esriFieldTypeGeometry",
+      "alias": "SHAPE",
+      "domain": null
+     },
+     {
+      "name": "STATION",
+      "type": "esriFieldTypeString",
+      "alias": "STATION",
+      "length": 510,
+      "domain": null
+     },
+     {
+      "name": "STREAM_NAME",
+      "type": "esriFieldTypeString",
+      "alias": "STREAM_NAME",
+      "length": 510,
+      "domain": null
+     },
+     {
+      "name": "LATITUDE",
+      "type": "esriFieldTypeDouble",
+      "alias": "LATITUDE",
+      "domain": null
+     },
+     {
+      "name": "LONGITUDE",
+      "type": "esriFieldTypeDouble",
+      "alias": "LONGITUDE",
+      "domain": null
+     },
+     {
+      "name": "VADEQ_ADMIN_REGION",
+      "type": "esriFieldTypeString",
+      "alias": "VADEQ_ADMIN_REGION",
+      "length": 30,
+      "domain": null
+     },
+     {
+      "name": "MONITORING_REGION",
+      "type": "esriFieldTypeString",
+      "alias": "MONITORING_REGION",
+      "length": 255,
+      "domain": null
+     },
+     {
+      "name": "SURVEY_PROGRAM_CODE",
+      "type": "esriFieldTypeString",
+      "alias": "SURVEY_PROGRAM_CODE",
+      "length": 8000,
+      "domain": null
+     },
+     {
+      "name": "TOPOMAP",
+      "type": "esriFieldTypeString",
+      "alias": "TOPOMAP",
+      "length": 559,
+      "domain": null
+     },
+     {
+      "name": "HUC6_STATES",
+      "type": "esriFieldTypeString",
+      "alias": "HUC6_STATES",
+      "length": 255,
+      "domain": null
+     },
+     {
+      "name": "HUC6_HUC_12",
+      "type": "esriFieldTypeString",
+      "alias": "HUC6_HUC_12",
+      "length": 255,
+      "domain": null
+     },
+     {
+      "name": "HUC6_HUC_12_NAME",
+      "type": "esriFieldTypeString",
+      "alias": "HUC6_HUC_12_NAME",
+      "length": 510,
+      "domain": null
+     },
+     {
+      "name": "HUC6_VAHU5",
+      "type": "esriFieldTypeString",
+      "alias": "HUC6_VAHU5",
+      "length": 255,
+      "domain": null
+     },
+     {
+      "name": "HUC6_VAHU6",
+      "type": "esriFieldTypeString",
+      "alias": "HUC6_VAHU6",
+      "length": 255,
+      "domain": null
+     },
+     {
+      "name": "HUC6_TOHUC",
+      "type": "esriFieldTypeString",
+      "alias": "HUC6_TOHUC",
+      "length": 255,
+      "domain": null
+     },
+     {
+      "name": "HUC6_HUC_8",
+      "type": "esriFieldTypeString",
+      "alias": "HUC6_HUC_8",
+      "length": 510,
+      "domain": null
+     },
+     {
+      "name": "HUC6_HUC_8_NAME",
+      "type": "esriFieldTypeString",
+      "alias": "HUC6_HUC_8_NAME",
+      "length": 510,
+      "domain": null
+     },
+     {
+      "name": "BASIN",
+      "type": "esriFieldTypeString",
+      "alias": "BASIN",
+      "length": 255,
+      "domain": null
+     },
+     {
+      "name": "SUBBASIN",
+      "type": "esriFieldTypeString",
+      "alias": "SUBBASIN",
+      "length": 255,
+      "domain": null
+     },
+     {
+      "name": "MAJOR_BASIN_CODE",
+      "type": "esriFieldTypeString",
+      "alias": "MAJOR_BASIN_CODE",
+      "length": 255,
+      "domain": null
+     },
+     {
+      "name": "MAJOR_BASIN_NAME",
+      "type": "esriFieldTypeString",
+      "alias": "MAJOR_BASIN_NAME",
+      "length": 255,
+      "domain": null
+     },
+     {
+      "name": "BASIN_SECTION",
+      "type": "esriFieldTypeString",
+      "alias": "BASIN_SECTION",
+      "length": 255,
+      "domain": null
+     },
+     {
+      "name": "STATION_DESCRIPTION",
+      "type": "esriFieldTypeString",
+      "alias": "STATION_DESCRIPTION",
+      "length": 255,
+      "domain": null
+     },
+     {
+      "name": "STA_CBP_NAME",
+      "type": "esriFieldTypeString",
+      "alias": "STA_CBP_NAME",
+      "length": 255,
+      "domain": null
+     },
+     {
+      "name": "STA_LV1_CODE",
+      "type": "esriFieldTypeString",
+      "alias": "STA_LV1_CODE",
+      "length": 255,
+      "domain": null
+     },
+     {
+      "name": "STA_LV2_CODE",
+      "type": "esriFieldTypeString",
+      "alias": "STA_LV2_CODE",
+      "length": 255,
+      "domain": null
+     },
+     {
+      "name": "STA_LV3_CODE",
+      "type": "esriFieldTypeString",
+      "alias": "STA_LV3_CODE",
+      "length": 255,
+      "domain": null
+     },
+     {
+      "name": "STA_LV4_CODE",
+      "type": "esriFieldTypeString",
+      "alias": "STA_LV4_CODE",
+      "length": 255,
+      "domain": null
+     },
+     {
+      "name": "STA_LV5_CODE",
+      "type": "esriFieldTypeString",
+      "alias": "STA_LV5_CODE",
+      "length": 255,
+      "domain": null
+     },
+     {
+      "name": "STRAHER_ORDER",
+      "type": "esriFieldTypeString",
+      "alias": "STRAHER_ORDER",
+      "length": 255,
+      "domain": null
+     },
+     {
+      "name": "SHREVE_ORDER",
+      "type": "esriFieldTypeString",
+      "alias": "SHREVE_ORDER",
+      "length": 255,
+      "domain": null
+     },
+     {
+      "name": "WADABLE",
+      "type": "esriFieldTypeString",
+      "alias": "WADABLE",
+      "length": 255,
+      "domain": null
+     },
+     {
+      "name": "COMMENT",
+      "type": "esriFieldTypeString",
+      "alias": "COMMENT",
+      "length": 2000,
+      "domain": null
+     },
+     {
+      "name": "STA_STR_STREAM_CODE",
+      "type": "esriFieldTypeString",
+      "alias": "STA_STR_STREAM_CODE",
+      "length": 255,
+      "domain": null
+     },
+     {
+      "name": "FIRST_SAMPLE_DATE",
+      "type": "esriFieldTypeDate",
+      "alias": "FIRST_SAMPLE_DATE",
+      "length": 8,
+      "domain": null
+     },
+     {
+      "name": "LAST_SAMPLE_DATE",
+      "type": "esriFieldTypeDate",
+      "alias": "LAST_SAMPLE_DATE",
+      "length": 8,
+      "domain": null
+     },
+     {
+      "name": "SAMPLE_COUNT",
+      "type": "esriFieldTypeInteger",
+      "alias": "SAMPLE_COUNT",
+      "domain": null
+     },
+     {
+      "name": "FIRST_FISH_DATE",
+      "type": "esriFieldTypeDate",
+      "alias": "FIRST_FISH_DATE",
+      "length": 8,
+      "domain": null
+     },
+     {
+      "name": "LAST_FISH_DATE",
+      "type": "esriFieldTypeDate",
+      "alias": "LAST_FISH_DATE",
+      "length": 8,
+      "domain": null
+     },
+     {
+      "name": "FISH_COUNT",
+      "type": "esriFieldTypeInteger",
+      "alias": "FISH_COUNT",
+      "domain": null
+     },
+     {
+      "name": "FIRST_BENTHIC_DATE",
+      "type": "esriFieldTypeDate",
+      "alias": "FIRST_BENTHIC_DATE",
+      "length": 8,
+      "domain": null
+     },
+     {
+      "name": "LAST_BENTHIC_DATE",
+      "type": "esriFieldTypeDate",
+      "alias": "LAST_BENTHIC_DATE",
+      "length": 8,
+      "domain": null
+     },
+     {
+      "name": "BENTHIC_COUNT",
+      "type": "esriFieldTypeInteger",
+      "alias": "BENTHIC_COUNT",
+      "domain": null
+     }
+    ],
+    "geometryField": {
+     "name": "Shape",
+     "type": "esriFieldTypeGeometry",
+     "alias": "SHAPE"
+    },
+    "indexes": [
+     {
+      "name": "FDO_OBJECTID",
+      "fields": "OBJECTID",
+      "isAscending": true,
+      "isUnique": true,
+      "description": ""
+     },
+     {
+      "name": "FDO_Shape",
+      "fields": "Shape",
+      "isAscending": true,
+      "isUnique": false,
+      "description": ""
+     }
+    ],
+    "subtypes": [],
+    "relationships": [],
+    "canModifyLayer": true,
+    "canScaleSymbols": false,
+    "hasLabels": false,
+    "capabilities": "Query,Map,Data",
+    "maxRecordCount": 1000,
+    "maxSelectionCount": 2000,
+    "supportsStatistics": true,
+    "supportsExceedsLimitStatistics": true,
+    "supportsAdvancedQueries": true,
+    "supportedQueryFormats": "JSON, geoJSON, PBF",
+    "isDataVersioned": false,
+    "ownershipBasedAccessControlForFeatures": {
+     "allowOthersToQuery": true
+    },
+    "useStandardizedQueries": true,
+    "supportedSpatialRelationships": [
+     "esriSpatialRelIntersects",
+     "esriSpatialRelContains",
+     "esriSpatialRelCrosses",
+     "esriSpatialRelEnvelopeIntersects",
+     "esriSpatialRelIndexIntersects",
+     "esriSpatialRelOverlaps",
+     "esriSpatialRelTouches",
+     "esriSpatialRelWithin",
+     "esriSpatialRelRelation"
+    ],
+    "advancedQueryCapabilities": {
+     "useStandardizedQueries": true,
+     "supportsStatistics": true,
+     "supportsPercentileStatistics": true,
+     "supportsHavingClause": true,
+     "supportsOrderBy": true,
+     "supportsDistinct": true,
+     "supportsCountDistinct": true,
+     "supportsAdvancedQueryRelated": true,
+     "supportsQueryRelatedPagination": true,
+     "supportsPagination": true,
+     "supportsLod": false,
+     "supportsQueryWithLodSR": false,
+     "supportsTrueCurve": true,
+     "supportsQueryWithDatumTransformation": true,
+     "supportsReturningQueryExtent": true,
+     "supportsQueryWithDistance": true,
+     "supportsSqlExpression": true,
+     "supportsTimeRelation": true,
+     "supportsSqlFormat": false,
+     "supportsQueryAnalytic": false,
+     "supportsCurrentUserQueries": true
+    },
+    "supportsDatumTransformation": true,
+    "dateFieldsTimeReference": null,
+    "preferredTimeReference": null,
+    "datesInUnknownTimezone": false,
+    "hasMetadata": true,
+    "isDataArchived": false,
+    "archivingInfo": {
+     "supportsQueryWithHistoricMoment": false,
+     "startArchivingMoment": -1
+    },
+    "supportsCoordinatesQuantization": true,
+    "supportsDynamicLegends": true,
+    "serviceItemId": "7ac5111473234e8c83b173a5b7297304"
+   }
+  },
+  {
+   "url": "https://apps.deq.virginia.gov/arcgis/rest/services/public/WQM_STATIONS_ALL/MapServer/0/query",
+   "params": {
+    "f": "json",
+    "outFields": "BASIN,BENTHIC_COUNT,FIRST_SAMPLE_DATE,HUC6_HUC_12,HUC6_HUC_12_NAME,LAST_BENTHIC_DATE,LAST_SAMPLE_DATE,MAJOR_BASIN_NAME,MONITORING_REGION,OBJECTID,SAMPLE_COUNT,STATION,STATION_DESCRIPTION,STREAM_NAME,SUBBASIN,SURVEY_PROGRAM_CODE,VADEQ_ADMIN_REGION",
+    "resultRecordCount": "50",
+    "returnGeometry": "false",
+    "geometry": "{\"x\": -74.5, \"y\": 36.5, \"spatialReference\": {\"wkid\": 4326}}",
+    "geometryType": "esriGeometryPoint",
+    "inSR": "4326",
+    "spatialRel": "esriSpatialRelIntersects",
+    "distance": "1609.0",
+    "units": "esriSRUnit_Meter"
+   },
+   "response": {
+    "displayFieldName": "STREAM_NAME",
+    "fieldAliases": {
+     "BASIN": "BASIN",
+     "BENTHIC_COUNT": "BENTHIC_COUNT",
+     "FIRST_SAMPLE_DATE": "FIRST_SAMPLE_DATE",
+     "HUC6_HUC_12": "HUC6_HUC_12",
+     "HUC6_HUC_12_NAME": "HUC6_HUC_12_NAME",
+     "LAST_BENTHIC_DATE": "LAST_BENTHIC_DATE",
+     "LAST_SAMPLE_DATE": "LAST_SAMPLE_DATE",
+     "MAJOR_BASIN_NAME": "MAJOR_BASIN_NAME",
+     "MONITORING_REGION": "MONITORING_REGION",
+     "OBJECTID": "OBJECTID",
+     "SAMPLE_COUNT": "SAMPLE_COUNT",
+     "STATION": "STATION",
+     "STATION_DESCRIPTION": "STATION_DESCRIPTION",
+     "STREAM_NAME": "STREAM_NAME",
+     "SUBBASIN": "SUBBASIN",
+     "SURVEY_PROGRAM_CODE": "SURVEY_PROGRAM_CODE",
+     "VADEQ_ADMIN_REGION": "VADEQ_ADMIN_REGION"
+    },
+    "fields": [
+     {
+      "name": "BASIN",
+      "type": "esriFieldTypeString",
+      "alias": "BASIN",
+      "length": 255
+     },
+     {
+      "name": "BENTHIC_COUNT",
+      "type": "esriFieldTypeInteger",
+      "alias": "BENTHIC_COUNT"
+     },
+     {
+      "name": "FIRST_SAMPLE_DATE",
+      "type": "esriFieldTypeDate",
+      "alias": "FIRST_SAMPLE_DATE",
+      "length": 8
+     },
+     {
+      "name": "HUC6_HUC_12",
+      "type": "esriFieldTypeString",
+      "alias": "HUC6_HUC_12",
+      "length": 255
+     },
+     {
+      "name": "HUC6_HUC_12_NAME",
+      "type": "esriFieldTypeString",
+      "alias": "HUC6_HUC_12_NAME",
+      "length": 510
+     },
+     {
+      "name": "LAST_BENTHIC_DATE",
+      "type": "esriFieldTypeDate",
+      "alias": "LAST_BENTHIC_DATE",
+      "length": 8
+     },
+     {
+      "name": "LAST_SAMPLE_DATE",
+      "type": "esriFieldTypeDate",
+      "alias": "LAST_SAMPLE_DATE",
+      "length": 8
+     },
+     {
+      "name": "MAJOR_BASIN_NAME",
+      "type": "esriFieldTypeString",
+      "alias": "MAJOR_BASIN_NAME",
+      "length": 255
+     },
+     {
+      "name": "MONITORING_REGION",
+      "type": "esriFieldTypeString",
+      "alias": "MONITORING_REGION",
+      "length": 255
+     },
+     {
+      "name": "OBJECTID",
+      "type": "esriFieldTypeOID",
+      "alias": "OBJECTID"
+     },
+     {
+      "name": "SAMPLE_COUNT",
+      "type": "esriFieldTypeInteger",
+      "alias": "SAMPLE_COUNT"
+     },
+     {
+      "name": "STATION",
+      "type": "esriFieldTypeString",
+      "alias": "STATION",
+      "length": 510
+     },
+     {
+      "name": "STATION_DESCRIPTION",
+      "type": "esriFieldTypeString",
+      "alias": "STATION_DESCRIPTION",
+      "length": 255
+     },
+     {
+      "name": "STREAM_NAME",
+      "type": "esriFieldTypeString",
+      "alias": "STREAM_NAME",
+      "length": 510
+     },
+     {
+      "name": "SUBBASIN",
+      "type": "esriFieldTypeString",
+      "alias": "SUBBASIN",
+      "length": 255
+     },
+     {
+      "name": "SURVEY_PROGRAM_CODE",
+      "type": "esriFieldTypeString",
+      "alias": "SURVEY_PROGRAM_CODE",
+      "length": 8000
+     },
+     {
+      "name": "VADEQ_ADMIN_REGION",
+      "type": "esriFieldTypeString",
+      "alias": "VADEQ_ADMIN_REGION",
+      "length": 30
+     }
+    ],
+    "features": []
+   }
+  }
+ ]
+}

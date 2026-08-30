@@ -2200,7 +2200,7 @@ V1 is successful when:
 
 Measured additions (2026-08-26 review § 7), tracked from the first milestone:
 
-13. Median time to add an ArcGIS source, and the percentage of source additions needing no server-code change.
+13. Median time to add an ArcGIS source, and the percentage of source additions needing no server-code change. *(Kept from 2026-08-29 in [docs/audits/source-onboarding-cost.md](../docs/audits/source-onboarding-cost.md), one row per registered source. Eleven onboardings so far, two of them new adapter types where a code change was the point; of the other nine, seven needed code and two did not. The count is not yet falling and the reason is legible: the adapter's model of "a layer" was built from one publisher's and has been growing to fit real ones.)*
 14. Coverage-dimension accuracy on hidden traps, and claim-to-evidence completeness (every material record resolves its evidence refs).
 15. Tool-selection accuracy by model and profile (Tier-2 evals).
 16. Warm healthy-source latency, and a partial-response deadline during a simulated upstream outage.

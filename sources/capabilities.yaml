@@ -37,3 +37,8 @@ capabilities:
       Find road segments or routes by street name or near a coordinate.
       Two publishers answer this, an operating agency and an aggregation
       of local submissions, and they disagree in ways that are real.
+  - id: environmental_site.lookup
+    description: >
+      Find the environmental monitoring stations and regulated sites a
+      state environmental agency has on record near a location. A station
+      on record means the agency monitors that spot and nothing more.

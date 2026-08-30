@@ -26,6 +26,7 @@ async def test_every_tool_has_output_schema_and_stable_order(server):
                      "geo.find_boundaries", "geo.find_address",
                      "geo.resolve_location", "geo.find_buildings",
                      "geo.find_landmarks", "geo.find_roads",
+                     "geo.find_environmental_sites",
                      "civic.get_code_section"], (
         "registration order changed — that is a contract change, make it "
         "deliberately")

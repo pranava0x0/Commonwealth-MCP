@@ -43,6 +43,16 @@ sources:
   data_classification: open
   recorded_fixtures:
   - tests/fixtures/sources/va-richmond-city-parcels-zoning/recorded.json
+- id: va-deq-water-quality-stations
+  name: DEQ Water Quality Monitoring Stations
+  publisher: Virginia Department of Environmental Quality (DEQ)
+  manifest: sources/state/deq-environmental-sites.yaml
+  terms_url: https://apps.deq.virginia.gov/arcgis/rest/services/public
+  terms_reviewed_at: '2026-08-29'
+  automation_status: public_api
+  data_classification: open
+  recorded_fixtures:
+  - tests/fixtures/sources/va-deq-water-quality-stations/recorded.json
 - id: va-eva-procurement
   name: eVA (Virginia procurement)
   publisher: Virginia Department of General Services, Division of Purchases and
