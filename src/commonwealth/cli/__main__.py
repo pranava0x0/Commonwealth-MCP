@@ -285,6 +285,7 @@ def cmd_sources_probe(args: argparse.Namespace) -> int:
     ids = [args.source_id] if args.source_id else sorted(ctx.sources.manifests)
     problems = 0
     checked = 0
+    inventory = 0
     for sid in ids:
         m = ctx.sources.get(sid)
         if m is None:
@@ -328,7 +329,12 @@ def cmd_sources_probe(args: argparse.Namespace) -> int:
             continue
         if m.adapter.type == INVENTORY_ADAPTER:
             # Inventory has no endpoint by construction, so "not probed"
-            # is the correct outcome rather than a gap.
+            # is the correct outcome rather than a gap. Counted as
+            # handled: without this, `sources probe va-vdh` printed the
+            # right thing and then exited 1 on the zero-probes guard,
+            # which made a documented valid state look like a failure to
+            # anything reading the exit code.
+            inventory += 1
             print(f"- {sid}: inventory only, nothing to probe")
             continue
         if m.adapter.type != "arcgis":
@@ -349,8 +355,14 @@ def cmd_sources_probe(args: argparse.Namespace) -> int:
                   f"(min {h['min_expected']})")
             if not h["healthy"]:
                 problems += 1
-    print(f"probed {checked} layer(s), {problems} problem(s)")
-    return 1 if problems or checked == 0 else 0
+    summary = f"probed {checked} layer(s), {problems} problem(s)"
+    if inventory:
+        summary += f", {inventory} inventory source(s) with nothing to probe"
+    print(summary)
+    # Zero probes is still a failure when nothing was examined at all —
+    # a glob that matched nothing must not read as a pass — but an
+    # inventory-only selection examined exactly what there was.
+    return 1 if problems or (checked == 0 and inventory == 0) else 0
 
 
 class _RecordingFetcher:

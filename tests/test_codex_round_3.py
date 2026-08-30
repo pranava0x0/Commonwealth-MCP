@@ -395,3 +395,99 @@ async def test_an_all_source_parcel_outage_is_failed_not_a_miss(
     assert env.coverage.source_failures
     assert "This is an outage" in env.data["note"]
     assert "not a statement about this PIN" in env.data["note"]
+
+
+# --- round 8 -------------------------------------------------------------
+
+async def test_a_failed_placement_is_an_outage_not_ambiguity(cw_ctx,
+                                                             monkeypatch):
+    """A candidate whose boundary queries failed has no leaf, which reads
+    exactly like a candidate that landed outside every polygon — so an
+    outage on one placement counted as a second, different government and
+    came back as address ambiguity with execution=complete."""
+    from commonwealth.core.errors import SourceUnavailable
+
+    real = cw_ctx.arcgis.query
+    seen = {"n": 0}
+
+    async def flaky(manifest, layer_key, **kw):
+        # Fail only the later placements, so the first succeeds and the
+        # loop has a real mix.
+        if layer_key in ("localities", "towns"):
+            seen["n"] += 1
+            if seen["n"] > 4:
+                raise SourceUnavailable("boundary layer is down (test)")
+        return await real(manifest, layer_key, **kw)
+
+    monkeypatch.setattr(cw_ctx.arcgis, "query", flaky)
+    env = await resolve_location(cw_ctx, address="Cntr Steet Viena VA")
+    assert env.data["resolved"] is None
+    assert env.coverage.execution.value == "partial"
+    assert env.coverage.source_failures, "an outage with no failures listed"
+    assert "not ambiguous" in env.data["note"]
+    assert not env.data["candidates"], (
+        "a failed placement must not be offered as a location to choose")
+
+
+async def test_the_winning_placement_is_not_queried_twice(cw_ctx,
+                                                          monkeypatch):
+    """When several confident coordinates agree, the winner was placed in
+    the ambiguity loop and then placed again below — four more requests
+    to a government service, a duplicate provenance entry, and a second
+    chance for an already-successful check to fail."""
+    calls: list[tuple[str, object]] = []
+    real = cw_ctx.arcgis.query
+
+    async def spy(manifest, layer_key, **kw):
+        if layer_key in ("localities", "towns"):
+            # Each placement issues an exact AND a buffered query per
+            # layer, so the buffer distance is part of a call's identity.
+            calls.append((layer_key, str(kw.get("geometry_point")),
+                          kw.get("distance_meters")))
+        return await real(manifest, layer_key, **kw)
+
+    monkeypatch.setattr(cw_ctx.arcgis, "query", spy)
+    env = await resolve_location(
+        cw_ctx, address="127 Center St S, Vienna, VA 22180")
+    assert env.data["resolved"]["id"] == "va:vienna-town"
+    assert len(calls) == len(set(calls)), (
+        f"the same boundary query ran twice: {calls}")
+    # Two distinct coordinates, two layers, exact plus buffered. Placing
+    # the winner a second time made it twelve.
+    assert len(calls) == 8, calls
+    boundary_sources = [s for s in env.provenance
+                        if s.source_id == "va-vgin-admin-boundaries"]
+    assert len(boundary_sources) == 1, (
+        "a repeated placement adds a duplicate provenance entry")
+
+
+def test_probing_an_inventory_source_succeeds():
+    """`sources probe va-vdh` printed the right thing and exited 1 on the
+    zero-probes guard, making a documented valid state indistinguishable
+    from a probe failure to anything reading the exit code."""
+    import subprocess
+    import sys
+
+    from commonwealth.runtime import PROJECT_ROOT
+
+    proc = subprocess.run(
+        [sys.executable, "-m", "commonwealth.cli", "sources", "probe",
+         "va-vdh"],
+        capture_output=True, text=True, cwd=PROJECT_ROOT, timeout=120)
+    assert proc.returncode == 0, proc.stdout + proc.stderr
+    assert "nothing to probe" in proc.stdout
+
+
+def test_probing_a_source_that_does_not_exist_still_fails():
+    """The zero-probes guard still has to catch a selection that examined
+    nothing, or it stops being a guard."""
+    import subprocess
+    import sys
+
+    from commonwealth.runtime import PROJECT_ROOT
+
+    proc = subprocess.run(
+        [sys.executable, "-m", "commonwealth.cli", "sources", "probe",
+         "va-no-such-source"],
+        capture_output=True, text=True, cwd=PROJECT_ROOT, timeout=120)
+    assert proc.returncode != 0

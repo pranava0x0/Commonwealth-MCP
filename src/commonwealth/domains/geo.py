@@ -1056,6 +1056,8 @@ async def resolve_location(ctx: RuntimeContext, address: str = "",
 
     geo_ref = _geocode_source(b, m, g)
     confident = g.confident()
+    # Set when the ambiguity check already placed the winning candidate.
+    already_placed = None
     data: dict = {"address": address,
                   "geocode": {"source_ref": geo_ref,
                               "min_score": g.min_score,
@@ -1125,22 +1127,48 @@ async def resolve_location(ctx: RuntimeContext, address: str = "",
         # resolved the first candidate — the defect, one level down.
         if len(all_distinct) > 1:
             placed = []
+            boundary_ref: str | None = None
             for cand in distinct:
-                cont = await resolve_point(ctx, b, cand.lon, cand.lat)
+                cont = await resolve_point(ctx, b, cand.lon, cand.lat,
+                                           reuse_source_ref=boundary_ref)
+                boundary_ref = boundary_ref or cont.source_ref
                 leaf = cont.leaf
-                placed.append((cand, (leaf or {}).get("jurisdiction")))
+                placed.append((cand, (leaf or {}).get("jurisdiction"), cont))
+            # A candidate whose boundary queries FAILED has no leaf, which
+            # is indistinguishable from a candidate that landed outside
+            # every polygon — so an outage on one placement read as a
+            # second, different government and turned into apparent
+            # address ambiguity with execution=complete.
+            placement_failures = [f for _, _, cont in placed
+                                  for f in cont.failures]
             # Unchecked candidates are not evidence of agreement. Four
             # matching prefixes and a fifth in another county reads
             # identically to five matching ones from here, so the cap
             # forces the same answer disagreement would.
-            if len({j.id if j else None for _, j in placed}) > 1 or unchecked:
+            if placement_failures:
+                data["resolved"] = None
+                data["candidates"] = []
+                data["note"] = (
+                    "The address geocoded, but the boundary source failed "
+                    "while placing one of the equally confident matches. "
+                    "Which government this address is in is unknown — not "
+                    "ambiguous. Retry rather than choosing between the "
+                    "matches below.")
+                return b.build(data, Coverage(
+                    registry=registry_dim,
+                    execution=ExecutionCoverage.partial,
+                    pagination=PaginationCoverage.complete,
+                    result=ResultCoverage.hit,
+                    jurisdictions_searched=["va"],
+                    source_failures=placement_failures))
+            if len({j.id if j else None for _, j, _ in placed}) > 1 or unchecked:
                 refs = {
                     cand.record_id: b.add_evidence(
                         source_ref=geo_ref, record_id=cand.record_id,
                         retrieved_at=g.retrieved_at,
                         transformations=g.transformations,
                         payload_hash=g.payload_hash())
-                    for cand, _ in placed}
+                    for cand, _, _ in placed}
                 data["resolved"] = None
                 data["candidates"] = [
                     {**cand.canonical(),
@@ -1152,11 +1180,11 @@ async def resolve_location(ctx: RuntimeContext, address: str = "",
                          f"{cand.matched_by or 'an unnamed locator element'}"
                          + (f", in {j.name}" if j
                             else ", in no mapped jurisdiction")}
-                    for cand, j in placed]
+                    for cand, j, _ in placed]
                 data["note"] = (
                     f"{len(distinct)} matches scored at or above "
                     f"{g.min_score} and they are in different governments. "
-                    if len({j.id if j else None for _, j in placed}) > 1
+                    if len({j.id if j else None for _, j, _ in placed}) > 1
                     else f"{len(all_distinct)} matches scored at or above "
                          f"{g.min_score}; the first {len(distinct)} were "
                          "placed and agree, and the rest were not checked. "
@@ -1172,6 +1200,12 @@ async def resolve_location(ctx: RuntimeContext, address: str = "",
                     jurisdictions_searched=["va"],
                     known_limitations=sorted(m.coverage.known_limitations)),
                     requires_user_choice=True)
+            # They agree. `best` is `distinct[0]` — the locator's own
+            # first result — and it was already placed in that loop.
+            # Calling resolve_point again costs four more requests to a
+            # government service, adds a duplicate provenance entry, and
+            # gives an already-successful check a second chance to fail.
+            already_placed = placed[0][2]
 
     best = confident[0]
     ev = b.add_evidence(source_ref=geo_ref, record_id=best.record_id,
@@ -1213,7 +1247,8 @@ async def resolve_location(ctx: RuntimeContext, address: str = "",
     # A geocode is never a resolution on its own: the point goes through
     # the same point-in-polygon path registry.resolve_jurisdiction uses,
     # and the government that owns the polygon is the answer.
-    c = await resolve_point(ctx, b, best.lon, best.lat)
+    c = already_placed if already_placed is not None \
+        else await resolve_point(ctx, b, best.lon, best.lat)
     if c.manifest is None or c.unreachable:
         data["resolved"] = None
         data["candidates"] = []

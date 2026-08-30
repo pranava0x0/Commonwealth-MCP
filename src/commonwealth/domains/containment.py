@@ -137,7 +137,8 @@ def _identify(ctx: RuntimeContext, layer: str, rec) -> dict:
 
 
 async def resolve_point(ctx: RuntimeContext, b: EnvelopeBuilder,
-                        lon: float, lat: float) -> Containment:
+                        lon: float, lat: float,
+                        reuse_source_ref: str | None = None) -> Containment:
     """Query the registered boundary source at a coordinate.
 
     Two layers are consulted because Virginia stacks governments: an
@@ -145,6 +146,11 @@ async def resolve_point(ctx: RuntimeContext, b: EnvelopeBuilder,
     and 'whose zoning' and 'whose schools' have different answers there.
     """
     out = Containment()
+    # Placing several coordinates in one call consults one source several
+    # times, and registering it once per placement puts the same source
+    # in `provenance` repeatedly. The caller passes back the ref it got
+    # from the first placement.
+    out.source_ref = reuse_source_ref
     selected = ctx.sources.select("boundary.lookup", STATEWIDE_STACK)
     out.registry_dim, out.gaps = selection_coverage(
         ctx.sources, "boundary.lookup", STATEWIDE_STACK, selected)
