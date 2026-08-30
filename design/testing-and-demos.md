@@ -81,7 +81,7 @@ Every enumerating check derives its list from the registry it checks (servers fr
 
 ---
 
-## 5. Two ways a green suite lies here (learned 2026-08-29)
+## 5. Two tests that pass on a wrong answer (learned 2026-08-29)
 
 These are not hypotheticals. Both happened in this repo, both left the
 suite green, and both are cheap to avoid once named. They mirror entries

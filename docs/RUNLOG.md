@@ -15,8 +15,8 @@ footprints, landmarks, road centerlines, VDOT's LRS route master, and
 DEQ's water-quality stations — plus four inventory-only manifests so the
 registry's proposed/active split stops reading as zero coverage debt.
 
-Four times the live data corrected the plan, and each is worth more than
-the source it came with:
+Four field checks changed a registration decision, and each finding
+outlasts the source it came with:
 
 1. **The issue specifying the address source was wrong about a field.**
    It described `PLACENAME` as the postal place and said to map it as
@@ -64,7 +64,7 @@ the codebase had and nothing emitted. Seven of the resolution spec's
 eight named traps are regression tests now; only the one with an open
 policy question (#26) is not.
 
-**Two ways a green suite lied**, both written up in
+**Two tests that passed on a wrong answer**, both written up in
 `design/testing-and-demos.md` § 5 and mirrored to the universal
 `TESTING.md`:
 
@@ -231,7 +231,8 @@ returns bbox/centroid/area concise (~270 data tokens, well inside the
 2000-token budget) and generalized rings only at `detail: "full"`, because
 the resource store that should hold the true polygon does not exist yet.
 
-Three findings the live data forced, none of them predictable from schemas:
+Three findings from checking the live layers, none of them predictable
+from schemas:
 
 1. **The design's centroid property test is false.** § 6 of
    design/jurisdiction-resolution.md proposed "every jurisdiction's

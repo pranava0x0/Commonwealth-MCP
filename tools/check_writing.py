@@ -187,6 +187,32 @@ BANNED = [
     # Adapters", "Evidence Over Confidence Scores". A heading is a label a
     # reader scans to find something. A slogan makes them read the section
     # to learn what the section is about.
+    # Found 2026-08-30 in a PR body: "Where the live data corrected the
+    # plan". Data does not correct a plan — somebody read it, was wrong,
+    # and changed their mind. Re-attributing that to the artifact writes
+    # the author out of the sentence and makes the work sound like a
+    # story that happened to them. Shipped four times before it was
+    # named: that heading, "what their data forced", "two ways a green
+    # suite lied", and "the rules that kept this PR honest".
+    #
+    # Deliberately narrow. An artifact doing an artifact's job is
+    # ordinary technical writing and stays clean: sources disagree, a
+    # service rejects a query, a manifest records terms, a test asserts.
+    # What fires is an inanimate subject taking an action that needs
+    # intent, judgment, or a conscience.
+    Rule("inanimate-protagonist", "FAIL",
+         r"\b(?:the|their|its|a|an|this|that|our)\s+"
+         r"(?:\w+\s+){0,2}"
+         r"(?:data|numbers|suite|tests|fixtures?|schema|registry|spec|"
+         r"plan|page|docs|reality|code|checker|answers?)\s+"
+         r"(?:corrected|forced|taught|lied|insisted|demanded|decided|"
+         r"knew|wanted|argued|confessed|admitted)\b"
+         r"|\bkept\s+(?:me|us|him|her|them|this|the)\s+\w+\s+honest\b"
+         r"|\breality\s+(?:bit|intervened|had other)\b"
+         r"|\bwhat\s+(?:the|their|its|our)\s+\w*\s*"
+         r"(?:data|numbers|source|sources|fixtures?)\s+"
+         r"(?:forced|taught|demanded|corrected)\b",
+         "the artifact is not the protagonist; say who did what"),
     Rule("slogan-heading", "FAIL",
          r"^#{2,6}\s+(?:[\d.]+\s+)?"
          r"[A-Z][\w-]*(?:\s+[A-Z][\w-]*)*\s+"
@@ -672,6 +698,63 @@ def gh_issue_texts() -> Iterator[tuple[str, str]]:
                f"# {issue['title']}\n\n{issue.get('body') or ''}")
 
 
+def gh_pr_texts(target: str | None = None):
+    """(label, text) for pull request bodies and their comments.
+
+    A PR body is the most-read prose this project produces — more people
+    see it than read the specs — and it was the one surface nothing
+    checked. The `inanimate-protagonist` rule exists because "Where the
+    live data corrected the plan" shipped in one.
+
+    Reviews and review comments are included: a reply to a bot is still
+    published writing. Comments authored by bots are skipped, since their
+    prose is not ours to fix.
+
+    Needs `gh` on PATH and an authenticated session; without either this
+    prints why and scans nothing rather than failing the run.
+    """
+    import subprocess
+
+    def gh(*args: str) -> str | None:
+        try:
+            proc = subprocess.run(["gh", *args], cwd=ROOT,
+                                  capture_output=True, text=True, timeout=60)
+        except (FileNotFoundError, subprocess.TimeoutExpired) as exc:
+            print(f"skipping PRs: {exc}", file=sys.stderr)
+            return None
+        if proc.returncode != 0:
+            print(f"skipping PRs: {proc.stderr.strip()}", file=sys.stderr)
+            return None
+        return proc.stdout
+
+    if target:
+        listing = gh("pr", "view", target, "--json", "number")
+        numbers = [json.loads(listing)["number"]] if listing else []
+    else:
+        listing = gh("pr", "list", "--state", "open", "--limit", "20",
+                     "--json", "number")
+        numbers = [row["number"] for row in json.loads(listing)] if listing \
+            else []
+
+    for number in numbers:
+        raw = gh("pr", "view", str(number), "--json",
+                 "number,title,body,comments,reviews")
+        if raw is None:
+            continue
+        pr = json.loads(raw)
+        yield (f"PR #{pr['number']} body",
+               f"# {pr['title']}\n\n{pr.get('body') or ''}")
+        for kind in ("comments", "reviews"):
+            for i, item in enumerate(pr.get(kind) or [], start=1):
+                author = ((item.get("author") or {}).get("login") or "")
+                # A bot's review text is not this project's writing.
+                if author.endswith("[bot]") or "codex" in author.lower():
+                    continue
+                body = (item.get("body") or "").strip()
+                if body:
+                    yield (f"PR #{pr['number']} {kind[:-1]} {i}", body)
+
+
 def collect_files() -> list[Path]:
     out: list[Path] = []
     for pattern in DOC_GLOBS:
@@ -694,6 +777,10 @@ def main() -> int:
     ap.add_argument("--list", action="store_true", help="List rules and exit.")
     ap.add_argument("--issues", action="store_true",
                     help="Also scan open GitHub issue titles and bodies.")
+    ap.add_argument("--pr", nargs="?", const="", default=None,
+                    metavar="NUMBER",
+                    help="Also scan pull request bodies and human comments. "
+                         "Bare --pr scans every open PR; --pr 38 scans one.")
     ap.add_argument("--code", action="store_true",
                     help="Also scan comments and docstrings under src/, "
                          "tests/, and tools/.")
@@ -763,6 +850,15 @@ def main() -> int:
                 hits += list(scan_structure(label,
                                             prose_paragraphs_md(body)))
 
+    if args.pr is not None:
+        # A PR body is an engineering document like an issue, so the
+        # copy-only rules stay off for the same reason.
+        pr_rules = [r for r in all_rules if not r.copy_only]
+        for label, body in gh_pr_texts(args.pr or None):
+            hits += list(scan_text(label, prose_lines_md(body), pr_rules))
+            if not args.only:
+                hits += list(scan_structure(label, prose_paragraphs_md(body)))
+
     fails = [h for h in hits if h.rule.level == "FAIL"]
     warns = [h for h in hits if h.rule.level == "WARN"]
     for h in fails + warns:
@@ -771,6 +867,8 @@ def main() -> int:
     scanned = "stdin" if args.stdin else f"{len(targets)} files"
     if args.issues:
         scanned += " + open issues"
+    if args.pr is not None:
+        scanned += f" + PR {args.pr or 'bodies and comments'}"
     print("\n" + "=" * 78)
     print(f"{len(fails)} banned · {len(warns)} review   (scanned {scanned})")
     if not hits:
