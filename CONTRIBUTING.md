@@ -92,6 +92,40 @@ both deliberately:
 Both records note what would revive the option that lost. Read that before
 re-arguing the case from scratch.
 
+## Licensing and sign-off
+
+Three licenses apply, to three different kinds of thing:
+
+| What | License |
+|---|---|
+| Code (`src/`, `tools/`, `tests/`) | Apache-2.0, see [LICENSE](LICENSE) |
+| The source registry you wrote (`sources/`) | CC0-1.0, see [sources/LICENSE](sources/LICENSE) |
+| Documentation prose | CC-BY-4.0, see [docs/LICENSE-DOCS](docs/LICENSE-DOCS) |
+
+Recorded government responses under `tests/fixtures/` are not covered by
+any of those. They are the publisher's content under the publisher's
+terms, inventoried in [THIRD_PARTY_DATA.yml](THIRD_PARTY_DATA.yml). That
+file is generated:
+
+```bash
+python3 tools/build_third_party_data.py
+```
+
+**Sign your commits off.** Every commit needs a Developer Certificate of
+Origin line, which `git commit -s` adds:
+
+```
+Signed-off-by: Your Name <your.email@example.com>
+```
+
+It states that you wrote the contribution, or have the right to submit it
+under these licenses. The full text is at
+[developercertificate.org](https://developercertificate.org/).
+
+If you are registering a government source, that sign-off covers the
+manifest you wrote. It does not and cannot cover the government data
+itself.
+
 ## Writing
 
 There is a checker:

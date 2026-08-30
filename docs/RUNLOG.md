@@ -273,7 +273,7 @@ page exists (checked rva.gov and the city's ArcGIS Hub site), so the
 manifest's `terms_url` points at Esri's general terms with that gap
 noted in `terms_notes` rather than inventing a page. Live health probe
 (76,879 parcels, 679 zoning polygons) and both `geo.find_parcel` /
-`geo.find_zoning` tool calls verified end-to-end against real Richmond
+`geo.find_zoning` tool calls verified against real Richmond
 data, including the parcel-geometry-intersects-zoning path that
 exercises the cross-service_url split. Found and fixed a real bug along
 the way: `commonwealth doctor --live` hardcoded the Fairfax manifest id,

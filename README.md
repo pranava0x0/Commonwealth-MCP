@@ -149,6 +149,16 @@ docs/         the demo site and the run log
 tools/        research and site-build scripts, stdlib Python only
 ```
 
+## License
+
+Code is Apache-2.0. The source registry is CC0. Documentation prose is
+CC-BY-4.0. Recorded government responses belong to their publishers and
+keep those publishers' terms.
+
+[NOTICE](NOTICE) says which applies to what, and
+[THIRD_PARTY_DATA.yml](THIRD_PARTY_DATA.yml) lists every government source
+this repo redistributes anything from.
+
 ## Reproducing the research
 
 The searches behind `research/` are scripts, so you can re-run them:

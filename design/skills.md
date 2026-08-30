@@ -13,7 +13,7 @@ Commonwealth Skills are standard Agent Skills (the spec is vendor-neutral at age
 - `name`: lowercase-hyphen, matches directory, ≤64 chars. Namespace by outcome, not by agency: `development-site-due-diligence`, never `vdot-workflows`.
 - `description`: covers what AND when, keyword-rich because ~100 tokens of metadata is all a host loads until activation. Write it like a tool description: the router reads it, not a human.
 - Body under 500 lines; deep material goes to `references/` one level down (checklists, per-domain source notes, glossaries of Virginia terms of art like "by-right", "proffer", "2232 review").
-- `scripts/` only for deterministic helpers a model reliably fumbles (e.g., chronology sorting/merging of mixed-date-type events). Scripts follow base-files Python standards and stay optional: a skill must degrade gracefully on hosts that refuse script execution.
+- `scripts/` only for deterministic helpers a model reliably fumbles (e.g., chronology sorting/merging of mixed-date-type events). Scripts follow this repo's Python standards and stay optional: a skill must degrade gracefully on hosts that refuse script execution.
 - `compatibility` names required Commonwealth servers ("Requires commonwealth-geo and commonwealth-civic v0.x tools") so a host missing them can say so instead of flailing.
 - `metadata` carries the machine-readable requirement: `commonwealth.required_capabilities: [zoning.lookup, parcel.lookup]`. Profile generation reads this (a skill's walk defines its profile), and server startup with that profile fails when a listed capability has no route (design/hub-catalog.md § 2). A skill consuming an external server also names it and its `integration_mode`, because a foreign contract is part of the skill's compatibility surface.
 - Every skill ships with its bench tasks (§ 5). A skill without evals is a blog post in a trench coat.
@@ -46,4 +46,4 @@ Standing rule from the research: each skill's § 2 walk names the *capability* (
 
 ## 5. Evaluation
 
-Each skill ships `evals/skills/<name>/`: 3+ end-to-end tasks with fixture-backed sources (no live network in CI), scored on the bench dimensions (design/bench.md), with at least one task per failure mode: an ambiguity trap, a no-coverage jurisdiction, a source outage mid-walk. The skill's documented output contract is the scoring rubric; if the contract says "evidence matrix", the scorer checks provenance completeness of that matrix.
+Each skill ships `evals/skills/<name>/`: 3+ tasks that exercise the whole walk, with fixture-backed sources (no live network in CI), scored on the bench dimensions (design/bench.md), with at least one task per failure mode: an ambiguity trap, a no-coverage jurisdiction, a source outage mid-walk. The skill's documented output contract is the scoring rubric; if the contract says "evidence matrix", the scorer checks provenance completeness of that matrix.

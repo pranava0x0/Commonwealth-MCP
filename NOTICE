@@ -1,0 +1,46 @@
+Commonwealth-MCP
+Copyright 2026 Commonwealth-MCP contributors
+
+This product includes software developed by the Commonwealth-MCP
+contributors (https://github.com/pranava0x0/Commonwealth-MCP).
+
+Independent project. Not affiliated with, endorsed by, or maintained by
+the Commonwealth of Virginia or any of its agencies or localities.
+
+--------------------------------------------------------------------------
+Three licenses apply, to three different kinds of thing
+--------------------------------------------------------------------------
+
+Code                Apache-2.0. See LICENSE.
+                    src/, tools/, tests/, and any skills directories.
+
+Project data        CC0-1.0. See sources/LICENSE.
+                    Source manifests, the jurisdiction table, and the
+                    capability vocabulary under sources/ — the parts this
+                    project wrote. Third-party payloads are excluded; see
+                    below.
+
+Documentation       CC-BY-4.0. See docs/LICENSE-DOCS.
+                    Prose under design/, research/, docs/, and the
+                    Markdown files at the repository root.
+
+--------------------------------------------------------------------------
+Third-party government content
+--------------------------------------------------------------------------
+
+Recorded fixtures under tests/fixtures/ are responses captured from
+government services. They are third-party content, and the publisher's own
+terms travel with them. They are NOT covered by the CC0 grant above.
+
+THIRD_PARTY_DATA.yml lists each source, its publisher, and where its terms
+are published. Check that file before redistributing any fixture.
+
+--------------------------------------------------------------------------
+Incorporated code
+--------------------------------------------------------------------------
+
+No third-party code is vendored into this repository. Dependencies are
+declared in pyproject.toml and carry their own licenses.
+
+Where an idea came from another project, it was re-implemented rather than
+copied, and the source is named in a comment at the point of use.

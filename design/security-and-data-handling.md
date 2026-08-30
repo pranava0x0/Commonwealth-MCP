@@ -1,7 +1,7 @@
 # Spec: Security and Data Handling
 
 **Plugs into:** architecture.md § 19 (Authentication and Security), § 20 (Legal/Terms), § 23 (Observability); architecture.md decision 0014 fixes the choices this spec applies.
-**Status:** Draft for review. Added after the 2026-08-26 architecture review (§ 3.1-3.2), which correctly called the prior posture asserted-but-undefined. base-files/SECURITY.md remains the house template; this document is the Commonwealth-specific contract.
+**Status:** Draft for review. Added after the 2026-08-26 architecture review (§ 3.1-3.2), which correctly called the prior posture asserted-but-undefined. This document is the Commonwealth-specific security contract.
 
 ---
 
@@ -15,7 +15,7 @@ Adversaries and the failures they produce:
 |---|---|---|
 | Indirect prompt injection | Adversarial text inside government-published records (agendas, comments, filings) | Results are data by contract; no tool output is ever executed or treated as instruction; injection-trap bench tasks (design/bench.md § 2); envelope carries no model-directed imperatives |
 | SSRF / egress abuse | A manifest, redirect, or DNS answer steering requests at internal or third-party targets | Egress baseline (§ 2), registry-bound outbound only, manifest review as the grant review |
-| Supply-chain | Malicious or compromised dependencies; typosquats | Pinned deps, lockfile review per base-files/SECURITY.md; no vendored unofficial-API clients (architecture.md decision 0011) |
+| Supply-chain | Malicious or compromised dependencies; typosquats | Pinned deps, lockfile review; no vendored unofficial-API clients (architecture.md decision 0011) |
 | Tool-contract tampering ("rug pull") | A modified server presenting altered tool semantics | Published schemas + toolsnaps make drift diffable; registry namespace verification for published artifacts |
 | Data misuse via aggregation | Individually-public fields combined into profiles (owner names × permits × licenses) | Classification + field allowlists (§ 3); no cross-source person-keyed joins in V1 (architecture.md decision 0010 scope) |
 | Resource abuse of upstreams | Runaway agents hammering county servers | Politeness budgets per host (design/adapters.md § 1.5), probe cadence caps, response limits |

@@ -2379,7 +2379,7 @@ Expose everything; mark all but a core set defer-loaded; let clients that suppor
 Commonwealth Core defines tools as plain typed functions + schemas; a small adapter binds them to whichever framework, so switching is contained.
 
 - For: hedges the still-moving SDK landscape; keeps domain code framework-free (good for testing anyway).
-- Against: an abstraction with one consumer on day one is exactly the speculative layer base-files/CLAUDE.md bans; both candidate frameworks are decorator-shaped, so the shim would mostly reinvent their surface; the real hedge is that tool logic already lives in core modules the servers import.
+- Against: an abstraction with one consumer on day one is the speculative layer this project avoids on principle; both candidate frameworks are decorator-shaped, so the shim would mostly reinvent their surface; the real hedge is that tool logic already lives in core modules the servers import.
 
 ### Recommendation
 
@@ -2584,7 +2584,7 @@ A constrained runtime (per-call sandbox: no network except adapter calls, no fil
 
 Developers explore with `commonwealth sources probe/sample` and ordinary scripting; Explorer-as-MCP waits until demand is demonstrated.
 
-- For: zero new surface; the promotion pipeline's real users in year one are contributors, who have the CLI; avoids building ahead of a user (base-files north star).
+- For: zero new surface; the promotion pipeline's real users in year one are contributors, who have the CLI; avoids building ahead of a user.
 - Against: gives up the agent-assisted source-mapping flywheel (an agent drafting manifests from exploration is a genuinely good fit); "no long-tail story" weakens the coverage pitch; the registry-bound design makes A cheap enough that deferring saves little.
 
 ### Recommendation
@@ -2642,7 +2642,7 @@ Direct remote endpoints + reverse proxy (the null gateway — always the baselin
 
 Matches only on exact keys: SCC entity ID, parcel ID, case number, bill ID, FEIN where public. Name similarity is never a match; it can be a *suggestion* labeled as such.
 
-- For: every match is defensible and explainable ("same SCC ID"); no silent conflations of distinct LLCs (the base-files 2026-08-19 lesson about person-vs-company attribution is this failure class in the wild); simplest to test.
+- For: every match is defensible and explainable ("same SCC ID"); no silent conflations of distinct LLCs (conflating a person with a company they are associated with is this failure class in the wild); simplest to test.
 - Against: government data's dirty secret is that shared keys are rare across systems — eVA vendor IDs, SCC IDs, and locality applicant names rarely co-occur; A leaves the flagship join workflows mostly answering "cannot confirm same entity," which is honest and also nearly useless for the project-trace pitch.
 
 ### Option B: Deterministic core + declared normalization matches
@@ -2718,7 +2718,7 @@ CC0 applies to *project-authored* registry metadata only. Recorded fixtures and 
 ## 0012 — Canonical Schema Scope for V1
 
 **Status:** Chosen 2026-08-26, freezes at Gate A. Join-spine first; freeze on mapping evidence, never on a date.
-**Context:** § 9.1 lists seventeen candidate entities. Freezing all seventeen before mapping real sources would repeat Power-Agent's noted over-reach risk (a universal ontology nobody's data fits); freezing none leaves every tool inventing shapes. The base-files rule applies twice over: a spec's data assumptions are guesses until you query the data.
+**Context:** § 9.1 lists seventeen candidate entities. Freezing all seventeen before mapping real sources would repeat Power-Agent's noted over-reach risk (a universal ontology nobody's data fits); freezing none leaves every tool inventing shapes. The rule applies twice over: a spec's data assumptions are guesses until you query the data.
 
 ---
 
@@ -3031,7 +3031,7 @@ A source manifest is an outbound network grant. Define:
 - per-host concurrency and retry budgets,
 - credentials removed on cross-host redirects.
 
-Add a project-root threat model. The current `base-files/SECURITY.md` is a house template, not a Commonwealth-specific security contract.
+Add a project-root threat model. Nothing in the repo states a Commonwealth-specific security contract.
 
 Suggested record: `0014-egress-and-data-classification.md`.
 
@@ -3237,7 +3237,7 @@ Initial performance budgets should be hypotheses, measured during the spike, the
 
 <sub>Was `docs/architecture.md` — “Commonwealth-MCP Architecture Diagrams”.</sub>
 
-The flows in Part 1, drawn. Mermaid source renders on GitHub and most doc tooling; keep diagrams in this file (not screenshots) so diffs review like code. Each diagram states the question it answers. Delete any diagram that cannot state one. Subsections here are numbered D1–D6 (renamed 2026-08-28) so they never collide with the spec's own § 1–6.
+These diagrams draw the flows described in Part 1. Mermaid source renders on GitHub and most doc tooling; keep diagrams in this file (not screenshots) so diffs review like code. Each diagram states the question it answers. Delete any diagram that cannot state one. Subsections here are numbered D1–D6 (renamed 2026-08-28) so they never collide with the spec's own § 1–6.
 
 ---
 
@@ -3295,7 +3295,7 @@ flowchart TB
     bench -.evaluates.-> toolplane
 ```
 
-### D2. One request, end to end
+### D2. One request, from tool call to answer
 
 Answers: what actually happens on `geo.find_zoning("123 Main St, Vienna VA")`, and where provenance/coverage come from.
 

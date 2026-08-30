@@ -33,7 +33,7 @@ Rules:
 ## 2. Register: the anti-slop gate is part of CI
 
 - `tools/check_writing.py` runs over docs, specs, decisions, skills prose, and (once code exists) tool descriptions and error strings extracted from the tool registry. FAIL findings block; WARN findings need a human reading, and exemptions carry written reasons in the script's allowlist.
-- The base-files DESIGN.md § 11.1 register rules apply in full: lead with the specific (a number, a county, a date), no marketing vapor, no negation slogans, no announced virtue. "Tracks 133 Virginia localities' zoning through one tool contract" beats any adjective.
+- The register rules enforced by `tools/check_writing.py` apply in full: lead with the specific (a number, a county, a date), no marketing vapor, no negation slogans, no announced virtue. "Tracks 133 Virginia localities' zoning through one tool contract" beats any adjective.
 - READMEs get the strictest read: they are the artifact the community judges first, and the corpus shows judgment is swift.
 - **The WARN count is the gate, and the script has no diff mode** (learned 2026-08-28). "0 banned, N review" is only meaningful against the count before the edit, and `check_writing.py` scans the working tree with no way to ask "what did this change add?" To claim the count is unchanged, save the edited file, put HEAD's version in its place, run the script, then restore — the restore is the step that is easy to forget and it clobbers the edit: `cp <path> /tmp/new && git show HEAD:<path> > <path> && python tools/check_writing.py; cp /tmp/new <path>`. Doing this caught two `wall-paragraph` WARNs that a single correction paragraph had added — both fixed by splitting the paragraph, not by rewording.
 

@@ -1478,7 +1478,7 @@ The rebuttals that survived contact, mostly from the Zero-Touch OAuth thread ([H
 
 1. **Auth isolation.** MCP keeps credentials out of the model's context and out of the harness. "Maybe the idealized form of MCP is just an auth gateway for the API" (sean_lynch). Skills and CLIs put secrets in reach of generated code.
 2. **The semantic layer travels with the server.** "Skills are client side and don't know the server's capabilities. MCP lets the server explain its API... so clients who have no prior knowledge of the server can use it intelligently" (brookst, a self-described convert after building two large servers).
-3. **Audit and centralized control.** Per-tool audit trails, org-level rollout, and revocation have no skills equivalent; the state of the art for deploying skills is "copy this file into this place" (mooreds).
+3. **Audit and centralized control.** Per-tool audit trails, org-level rollout, and revocation have no skills equivalent; the current best practice for deploying skills is "copy this file into this place" (mooreds).
 4. **No local runtime required.** Hosted agents in restricted containers can't run arbitrary CLIs; remote MCP is how non-developer users connect anything at all (9dev, lavataco).
 5. **Non-binary.** "Which is better, a knife or a saw?" (Ferret7446). Teams increasingly ship MCP for connection/auth/data and skills for workflow knowledge on top.
 
@@ -1527,7 +1527,7 @@ From the Mapbox geospatial MCP thread: given a fuzzy place-search tool, the mode
 ### 9. Determinism, testing, and evals are the ecosystem's weak spot
 
 - "It amazes me that they're so good at coding when they're so bad at tool use" ([HN 45347914](https://news.ycombinator.com/item?id=45347914)); teams that measured tool-use quality (Strata, Notion) treated eval numbers as the product claim.
-- The skills-vs-MCP determinism argument ("MCPs are deterministic, SKILLS.md isn't") was picked apart in-thread: the tool may be deterministic, the system isn't, so only end-to-end evals say anything.
+- The skills-vs-MCP determinism argument ("MCPs are deterministic, SKILLS.md isn't") was picked apart in-thread: the tool may be deterministic, the system isn't, so only evals over the whole system say anything.
 - Very few servers ship benchmarks at all; reviewers asking "is there a benchmark?" of new tools became a refrain.
 
 **Implication for Commonwealth.** Shipping Commonwealth Bench alongside V1 is a differentiator, and the public/hidden split the spec borrows from PowerAgentBench matches what the strongest teams do privately. Publishing per-toolset accuracy numbers would be nearly unique among civic data projects.
@@ -1539,7 +1539,7 @@ Two threads in the corpus turned on writing quality rather than code:
 - On mcp2cli: "This post and the project README are obviously generated slop, which personally makes me completely skip the project altogether, even if it works. If you want humans to spend time reading your prose, then spend time actually writing it" ([HN 47305149](https://news.ycombinator.com/item?id=47305149)). A second commenter quoted the tell ("We measured this. Not estimates — actual token counts...").
 - The Octelium launch drew sustained criticism for a buzzword README that hid a real system; the fix praised in-thread was the doc page that "starts by explaining the core primitives... and builds up from there" ([HN 44412207](https://news.ycombinator.com/item?id=44412207)).
 
-**Implication for Commonwealth.** House anti-slop rules (base-files/DESIGN.md § 11.1, enforced by `tools/check_writing.py`) apply to the READMEs, tool descriptions, and error messages, which are themselves agent-facing surfaces. Structure docs primitives-first: source registry → adapters → tools → skills, one concept per page, before any feature list.
+**Implication for Commonwealth.** The anti-slop rules enforced by `tools/check_writing.py` apply to the READMEs, tool descriptions, and error messages, which are themselves agent-facing surfaces. Structure docs primitives-first: source registry → adapters → tools → skills, one concept per page, before any feature list.
 
 ### 11. Scattered practical advice worth keeping
 

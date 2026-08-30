@@ -89,7 +89,7 @@ Schema rules:
 1. **Every field above except `layers.*.field_mapping` extras is required.** A manifest missing `terms_url`/`terms_notes` does not validate; "unknown" is written explicitly (`automation_status: unknown`) and blocks activation (§ 3).
 2. **`capabilities[].id` comes from a controlled vocabulary** (`capabilities.yaml` in the registry root). Adding a capability ID is a reviewed change; this is what keeps source-to-tool routing coherent, and every routing table iterates the vocabulary file rather than restating it.
 3. **`adapter.type` must name a registered adapter**; the manifest validator loads the adapter's own parameter schema and validates the block against it (an `arcgis` block validates layer IDs and field mappings; a `socrata` block validates dataset IDs and SoQL field names).
-4. **Field mappings map source fields to canonical fields**, and the canonical field names come from the entity schemas in Commonwealth Core. The validator rejects a mapping onto a canonical field that does not exist. This is the single-source-of-truth discipline from base-files/CLAUDE.md applied to data plumbing.
+4. **Field mappings map source fields to canonical fields**, and the canonical field names come from the entity schemas in Commonwealth Core. The validator rejects a mapping onto a canonical field that does not exist. This is single-source-of-truth discipline applied to data plumbing.
 5. **No secrets in manifests, ever.** `access.mode: api_key` names an env var (`credential_ref: VDOT_API_KEY`), never a value.
 
 ## 2. Source selection metadata
@@ -144,7 +144,7 @@ External contributions have prerequisites beyond tooling: GOVERNANCE.md, CONTRIB
 The registry is also the project's research notebook made executable. Phase 0/1 sequencing:
 
 1. Seed `sources/state/` with the known majors (VGIN, Virginia Open Data, LIS, Virginia Law, VDOT, DEQ, VDH, eVA/procurement, SCC) as manifests even where `status: proposed`, terms not yet reviewed.
-2. Seed four localities end to end through the full workflow including terms review: Fairfax County, Richmond City, one rural county, and one incorporated town inside a county (revised per the 2026-08-26 review — the rural and nested-town cases exercise the jurisdiction traps and thin-data reality that two big suburban counties cannot; Loudoun follows right after). These force the schema to be honest before it freezes.
+2. Seed four localities through the full workflow including terms review: Fairfax County, Richmond City, one rural county, and one incorporated town inside a county (revised per the 2026-08-26 review — the rural and nested-town cases exercise the jurisdiction traps and thin-data reality that two big suburban counties cannot; Loudoun follows right after). These force the schema to be honest before it freezes.
 3. Every "we should cover X someday" idea becomes a `proposed` manifest instead of a backlog line; the registry's proposed/active split then measures coverage debt for free (`commonwealth sources stats`).
 
 ## 7. Testing hooks

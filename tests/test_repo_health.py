@@ -2,6 +2,7 @@
 profile ceilings, alias wiring. The counts print so a vacuous pass is visible."""
 import ast
 import json
+import sys
 from pathlib import Path
 
 import pytest
@@ -133,3 +134,30 @@ def test_committed_fixture_carries_rights_metadata():
         assert doc["rights"]["publisher"], f
         assert doc["recorded_at"], f
     print(f"rights metadata checked on {len(fixture_files)} fixture file(s)")
+
+
+def test_third_party_data_inventory_is_current():
+    """GitHub issue #24 / decision 0011. THIRD_PARTY_DATA.yml records whose
+    terms each recorded fixture is under. A stale copy would misstate
+    somebody's licensing, so it is generated and checked rather than
+    hand-maintained."""
+    import subprocess
+    proc = subprocess.run(
+        [sys.executable, str(ROOT / "tools" / "build_third_party_data.py"),
+         "--check"],
+        capture_output=True, text=True, cwd=ROOT)
+    assert proc.returncode == 0, proc.stderr or proc.stdout
+    print(proc.stdout.strip())
+
+
+def test_the_license_set_decision_0011_chose_exists():
+    """The repo was public with only a pyproject line, which covers the
+    Python package metadata and nothing else."""
+    missing = [name for name in (
+        "LICENSE", "NOTICE", "THIRD_PARTY_DATA.yml",
+        "sources/LICENSE", "docs/LICENSE-DOCS",
+    ) if not (ROOT / name).exists()]
+    assert missing == [], f"missing license files: {missing}"
+    assert "Apache License" in (ROOT / "LICENSE").read_text()[:200]
+    assert "CC0" in (ROOT / "sources" / "LICENSE").read_text()
+    print("license set present: 5 files")

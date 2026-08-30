@@ -48,7 +48,7 @@ Adaptations from the surveyed patterns, with reasons:
 | bench Tier 2 (tool selection) | release + contract-touching PRs | none | yes |
 | bench Tier 3 (workflows) | release candidates | none | yes |
 
-CI never depends on government uptime; live checks are scheduled and produce reviewable artifacts instead of red PRs (the base-files rule about time/VCS-drift checks being advisory applies to upstream drift too).
+CI never depends on government uptime; live checks are scheduled and produce reviewable artifacts instead of red PRs (the rule that time and VCS drift checks stay advisory applies to upstream drift too).
 
 ## 3. Demos
 

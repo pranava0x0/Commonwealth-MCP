@@ -10,7 +10,7 @@ denominators, envelope-first `tools call`) hold in all of them. Not yet
 built: `configure` (backlog High), `--json`, `--servers`/`--port` on
 serve, `sources search|inspect|scaffold|candidates|stats`, `catalog`,
 `eval`, `version`.
-**Why this exists:** Three audiences: developers who script (and who the CLI-vs-MCP research says will prefer a CLI for anything mechanical; ../research/README.md part 4 § 3), contributors onboarding sources (the workflow in source-registry.md § 4 is CLI-shaped), and the project itself (base-files/CLAUDE.md: CLI-first so agents can self-validate; every gate the docs mention must be runnable locally). The CLI is also the demo surface: `commonwealth ask`-style flows show value before anyone configures a client.
+**Why this exists:** Three audiences: developers who script (and who the CLI-vs-MCP research says will prefer a CLI for anything mechanical; ../research/README.md part 4 § 3), contributors onboarding sources (the workflow in source-registry.md § 4 is CLI-shaped), and the project itself (CLI-first, so agents can validate their own work: every gate the docs mention must be runnable locally). The CLI is also the demo surface: `commonwealth ask`-style flows show value before anyone configures a client.
 
 ---
 

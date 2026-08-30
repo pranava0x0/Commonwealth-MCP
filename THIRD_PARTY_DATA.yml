@@ -1,0 +1,79 @@
+# Government content this repository redistributes, and whose terms it is
+# under. GENERATED — do not edit by hand.
+#
+#   regenerate:  python3 tools/build_third_party_data.py
+#   verify:      python3 tools/build_third_party_data.py --check
+#
+# The CC0 dedication in sources/LICENSE covers the manifests this project
+# wrote. It does not cover the responses recorded from these services. Read
+# a source's own terms before redistributing anything recorded from it.
+#
+# `automation_status` is what the publisher's terms say about automated
+# access, as reviewed on `terms_reviewed_at`. `unknown` means nobody has
+# reviewed it yet, and such a source cannot go active.
+
+sources:
+- id: va-charles-city-county-parcels
+  name: Charles City County Tax Parcels (GIS Open Data)
+  publisher: Charles City County government (GIS)
+  manifest: sources/local/charles-city-county/parcels.yaml
+  terms_url: https://dataportal-charlescityvagis.hub.arcgis.com/datasets/967223223e134e7b8b4411e9226d2872_0/about
+  terms_reviewed_at: '2026-08-28'
+  automation_status: public_api
+  data_classification: open
+  recorded_fixtures:
+  - tests/fixtures/sources/va-charles-city-county-parcels/recorded.json
+- id: va-fairfax-parcels-zoning
+  name: Fairfax County Parcels and Zoning (Open Data)
+  publisher: Fairfax County government (GIS and Mapping Services, Open Data)
+  manifest: sources/local/fairfax-county/parcels-zoning.yaml
+  terms_url: https://www.fairfaxcounty.gov/maps/disclaimer
+  terms_reviewed_at: '2026-08-27'
+  automation_status: public_api
+  data_classification: open
+  recorded_fixtures:
+  - tests/fixtures/sources/va-fairfax-parcels-zoning/recorded.json
+- id: va-richmond-city-parcels-zoning
+  name: Richmond City Parcels and Zoning (GIS Open Data)
+  publisher: City of Richmond (Information Technology / Assessor of Real Estate)
+  manifest: sources/local/richmond-city/parcels-zoning.yaml
+  terms_url: https://www.arcgis.com/home/termsofuse.html
+  terms_reviewed_at: '2026-08-28'
+  automation_status: public_api
+  data_classification: open
+  recorded_fixtures:
+  - tests/fixtures/sources/va-richmond-city-parcels-zoning/recorded.json
+- id: va-vgin-admin-boundaries
+  name: Virginia Administrative Boundaries (VGIN)
+  publisher: Virginia Geographic Information Network (VGIN), part of the Virginia
+    Department of Emergency Management
+  manifest: sources/state/vgin-admin-boundaries.yaml
+  terms_url: https://vgin.vdem.virginia.gov/datasets/VGIN::virginia-administrative-boundaries/about
+  terms_reviewed_at: '2026-08-28'
+  automation_status: public_api
+  data_classification: open
+  recorded_fixtures:
+  - tests/fixtures/sources/va-vgin-admin-boundaries/recorded.json
+- id: va-vgin-statewide-parcels
+  name: Virginia Statewide Parcels (VGIN)
+  publisher: Virginia Geographic Information Network (VGIN), part of the Virginia
+    Department of Emergency Management
+  manifest: sources/state/vgin-parcels.yaml
+  terms_url: https://vgin.vdem.virginia.gov/datasets/virginia-parcels/about
+  terms_reviewed_at: '2026-08-28'
+  automation_status: public_api
+  data_classification: open
+  recorded_fixtures:
+  - tests/fixtures/sources/va-vgin-statewide-parcels/recorded.json
+- id: va-code-of-virginia
+  name: Code of Virginia (law.lis.virginia.gov)
+  publisher: Division of Legislative Automated Systems (DLAS), Virginia General
+    Assembly
+  manifest: sources/state/virginia-law-code.yaml
+  terms_url: https://law.lis.virginia.gov/vacode/
+  terms_reviewed_at: '2026-08-28'
+  automation_status: public_api
+  data_classification: open
+  recorded_fixtures:
+  - tests/fixtures/sources/va-code-of-virginia/no-such-section.html
+  - tests/fixtures/sources/va-code-of-virginia/section-1-500.html

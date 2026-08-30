@@ -47,7 +47,7 @@ risk: low
 
 Rules:
 
-- `capabilities` and `toolsets` are generated from the server's own tool registry at build time and committed; a drift test regenerates and diffs, so the catalog cannot quietly disagree with the code (the mirrored-list rule from base-files/CLAUDE.md, applied to the catalog).
+- `capabilities` and `toolsets` are generated from the server's own tool registry at build time and committed; a drift test regenerates and diffs, so the catalog cannot quietly disagree with the code (the mirrored-list rule, applied to the catalog: never hand-maintain a second copy of a derivable list).
 - Exports are derived artifacts: official MCP Registry `server.json`, GSA/Obot-format entries if federal federation ever wants them, client config snippets for the docs (`claude mcp add ...`), and the plugin/bundle manifests. One generator, many formats; none hand-maintained.
 - External servers Commonwealth recommends but does not operate get entries under `catalog/external/` with `operated_by: external` and no runtime block beyond the public endpoint. Each entry additionally declares (2026-08-26 review § 4.3, tools research § 10):
   - `integration_mode: native-external | commonwealth-wrapper` — catalog registration does NOT make a foreign server speak Commonwealth envelopes; either the consuming skill understands the foreign contract as-is, or a maintained wrapper translates it, and the entry says which.

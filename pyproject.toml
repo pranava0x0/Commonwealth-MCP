@@ -4,6 +4,9 @@ version = "0.1.0.dev0"
 description = "MCP servers for Virginia state and local public data, with provenance on every answer."
 requires-python = ">=3.12"
 license = "Apache-2.0"
+# Code only. The registry under sources/ is CC0 and docs prose is
+# CC-BY-4.0; see NOTICE for the split and THIRD_PARTY_DATA.yml for
+# the government content this repo redistributes.
 dependencies = [
     # Exact-pin per DECISIONS.md 0003: this is an application/deployment tree, not
     # a published library. Bump deliberately, with the compat spike re-run.

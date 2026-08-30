@@ -83,4 +83,4 @@ the GitHub issues.
 
 ## 5. What deliberately does not exist in V1
 
-Finance, infrastructure, environment, people servers stay at design-spec sketch level; their tool lists are not contracts yet, and writing them before their sources are registered would freeze guesses (base-files: data assumptions are guesses until queried). The design spec's lists remain the shape for those phases; each gets a contract page in this spec's format when its Phase begins. NEPA-MCP federation covers the environmental screen in the meantime via the external-catalog entry (design/hub-catalog.md § 1).
+Finance, infrastructure, environment, people servers stay at design-spec sketch level; their tool lists are not contracts yet, and writing them before their sources are registered would freeze guesses (data assumptions are guesses until the data is queried). The design spec's lists remain the shape for those phases; each gets a contract page in this spec's format when its Phase begins. NEPA-MCP federation covers the environmental screen in the meantime via the external-catalog entry (design/hub-catalog.md § 1).

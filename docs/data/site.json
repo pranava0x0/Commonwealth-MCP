@@ -232,7 +232,7 @@
   },
   {
    "name": "development-site-due-diligence",
-   "status": "deferred until coverage earns the name",
+   "status": "deferred until there is coverage to justify it",
    "capabilities": []
   }
  ],
@@ -739,7 +739,7 @@
    "values": {
     "covered": "A registered source should answer this.",
     "partial": "Some but not all of what was asked is covered.",
-    "none": "Commonwealth has no source for this \u2014 the gap is named, never reported as \u201cno results.\u201d",
+    "none": "No source is registered for this place. The answer says so, and says which place it means.",
     "unknown": "Coverage could not be determined."
    }
   },
@@ -755,7 +755,7 @@
    "question": "Was the record set fully paged?",
    "values": {
     "complete": "Every page was retrieved.",
-    "truncated": "The source's own transfer limit cut the result short (ArcGIS exceededTransferLimit); honestly labeled, not silently dropped.",
+    "truncated": "The source's own transfer limit cut the result short (ArcGIS exceededTransferLimit). The answer is labelled as partial.",
     "unknown": "Paging completeness could not be determined."
    }
   },
@@ -763,14 +763,14 @@
    "question": "Did anything match?",
    "values": {
     "hit": "At least one record matched.",
-    "empty": "Nothing matched \u2014 a successful state, not an error."
+    "empty": "The search ran and matched nothing. That is a result, and it is reported separately from a failure."
    }
   }
  },
  "warning_definitions": {
   "screening_only": "GIS zoning is a screening layer. The adopted zoning ordinance and official zoning map govern; confirm before any legal reliance.",
   "stale_source": "The source's own update cadence was missed.",
-  "freshness_unavailable": "The publisher exposes no machine-readable update date for this layer; retrieval time is known, data vintage isn't.",
+  "freshness_unavailable": "The publisher gives no machine-readable update date for this layer. The fetch time is known; how old the data itself is cannot be established.",
   "boundary_precision": "Parcel or boundary geometry is generalized, not surveyed.",
   "alias_match": "The entity matched via a registered alias, not its exact id.",
   "mixed_vintages": "Results combine records with different as-of dates.",

@@ -303,3 +303,104 @@ def test_quotes_do_not_smuggle_prose_past_a_rule(tmp_path):
                       'leverages a robust pipeline.\n')
     code, out = _run("", "--files", str(target))
     assert "llm-register" in out, out
+
+
+def test_definition_by_negation_fires_on_the_sentence_that_prompted_it(tmp_path):
+    """Verbatim from GitHub issue #35. Three sentences opening on what the
+    thing is not, to reach a point that fits in one. Issue bodies are
+    published writing and were the last surface nothing checked."""
+    target = tmp_path / "sample.md"
+    target.write_text(
+        "A source manifest is not an ordinary code contribution. It tells "
+        "this project which government service to trust and send requests "
+        "to, so the review has to check the service is real.\n")
+    _, out = _run("", "--files", str(target))
+    assert "definition-by-negation" in out, out
+
+
+@pytest.mark.parametrize("sentence", [
+    "This is not a legal determination.",
+    "The zoning answer is not a permit decision.",
+    "A quirk with no test is a note, and it says so.",
+    "The centroid is not guaranteed to be interior.",
+])
+def test_real_caveats_are_not_called_negations(tmp_path, sentence):
+    """Government data needs sentences saying what a result is NOT. The rule
+    keys on a definition opening a sentence, not on any negation."""
+    target = tmp_path / "sample.md"
+    target.write_text(sentence + "\n")
+    _, out = _run("", "--files", str(target))
+    assert "definition-by-negation" not in out, out
+
+
+def test_issue_scanning_degrades_without_gh(monkeypatch):
+    """--issues needs `gh` and a login. On a machine with neither it should
+    say so and scan nothing, not blow up a docs check."""
+    import importlib.util
+    spec = importlib.util.spec_from_file_location("cw", SCRIPT)
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+
+    def boom(*a, **k):
+        raise FileNotFoundError("gh")
+    # gh_issue_texts imports subprocess inside the function, so patch the
+    # module it reaches for rather than an attribute on the script.
+    monkeypatch.setattr(subprocess, "run", boom)
+    assert list(mod.gh_issue_texts()) == []
+
+
+def test_json_copy_is_scanned(tmp_path):
+    """The decoder text — what each coverage value and warning code means —
+    is authored as dict literals in tools/build_site.py and rendered into
+    the page at load time. It reached neither the HTML scan (which has to
+    skip JSON blocks) nor --code (which reads comments, not string
+    constants). "Nothing matched — a successful state, not an error."
+    shipped that way."""
+    target = tmp_path / "site.json"
+    target.write_text(
+        '{"id":"skip-me-leverage","url":"https://x.gov/robust",'
+        '"warning_definitions":{"x":"Telling those apart is the product."}}')
+    code, out = _run("", "--files", str(target))
+    assert "maxim-voice" in out, out
+    assert "leverage" not in out, "scanned an id or a URL as prose"
+    assert code == 1
+
+
+def test_trailing_negation_runs_on_copy_not_on_specs():
+    """'a warning, not an error' is precision in a contract document and
+    decoration on a landing page. The rule is scoped so a full-tree scan
+    does not nag the specs about their own vocabulary.
+
+    A path passed explicitly with --files gets every rule, scope or not:
+    naming a file is a request to check it properly.
+    """
+    _, tree = _run("")
+    offenders = [l for l in tree.splitlines()
+                 if "trailing-negation" in l and "design/" in l]
+    assert offenders == [], offenders
+
+    src = (ROOT / "tools" / "check_writing.py").read_text()
+    assert 'COPY_PATHS = ("docs/index.html"' in src, \
+        "the copy-surface list moved; rescope trailing-negation"
+
+
+def test_short_quotes_do_not_shift_the_pairing(tmp_path):
+    """Quotes are paired in document order, not matched by a regex needing
+    12+ characters between the marks.
+
+    The regex version skipped a short quote like "0 ms", so its closing
+    mark read as the OPENING of the next quote. Every pair after it shifted
+    by one, which both exempted prose that should have been scanned and
+    exposed the tail of a real quotation. Correcting it surfaced four
+    banned phrases that had been hidden in this repo.
+    """
+    target = tmp_path / "sample.md"
+    target.write_text(
+        'It printed "0 ms" fourteen times. The rule fires because '
+        '"a warning, not an error" is precision in a spec, and this '
+        'sentence leverages a robust pipeline.\n')
+    _, out = _run("", "--files", str(target))
+    # The long quote is exempt...
+    assert "trailing-negation" not in out, out
+    # ...and the prose after it is still scanned.
+    assert "llm-register" in out, out

@@ -7,7 +7,7 @@ models and a test keeps the two identical.
 
 Serialization rules (§ 1/§ 4.1 of the spec):
 - absent-means-false / absent-means-none fields are dropped when empty
-  (`requires_user_choice`, `next_actions`, `resources`, `conflict`);
+  (`requires_user_choice`, `next_actions`, `resources`);
 - `warnings` is always present, often [];
 - execution provenance rides under the reserved `_execution` key.
 """

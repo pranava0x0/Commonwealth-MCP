@@ -1,0 +1,56 @@
+# Commonwealth-MCP
+
+> An MCP server that lets AI assistants look things up in Virginia's
+> government records. Every answer names the government system it came
+> from and when it was fetched.
+
+Independent project. Not affiliated with or maintained by the Commonwealth
+of Virginia.
+
+Virginia has 133 counties and independent cities, and each publishes its
+records its own way. This project does the per-locality work once and
+exposes the result through the Model Context Protocol.
+
+## What it answers today
+
+- Which local government covers a place, by name, FIPS code, or
+  coordinates. Ambiguous names return every match rather than a guess:
+  Fairfax City is not inside Fairfax County, and none of Virginia's 38
+  independent cities sit inside the county they share a name with.
+- What a parcel record says, by parcel ID or by a point. Street addresses
+  do not work yet; no geocoder is registered.
+- How a parcel is zoned, in Fairfax County and Richmond City only. This is
+  screening evidence from a county GIS layer. The adopted ordinance
+  governs.
+- The text of a Code of Virginia section, by citation.
+- Where a jurisdiction's boundary runs, statewide.
+
+## What it does not do
+
+- Street addresses, until a geocoder is registered.
+- Most localities: 12 of the 133 are in the jurisdiction table. A
+  coordinate anywhere in Virginia resolves, but for the rest the answer
+  says the boundary source knows the government and this project cannot
+  route a query to it.
+- Any write. It reads published public records and submits nothing.
+
+## Two kinds of empty
+
+An empty result says which kind it is. Either the records were searched
+and nothing matched, or no source is registered for that place. Most
+systems return the same blank for both.
+
+## Docs
+
+- [README](https://github.com/pranava0x0/Commonwealth-MCP/blob/main/README.md): what works, how to run it
+- [Architecture and decisions](https://github.com/pranava0x0/Commonwealth-MCP/blob/main/design/architecture.md): how it is built, and one record per choice with the rejected options kept
+- [Design specs](https://github.com/pranava0x0/Commonwealth-MCP/blob/main/design/README.md): the per-feature contract the code is written against
+- [Source quirks](https://github.com/pranava0x0/Commonwealth-MCP/blob/main/design/source-quirks.md): things real government data does that its schema does not predict
+- [Research](https://github.com/pranava0x0/Commonwealth-MCP/blob/main/research/README.md): the evidence behind the design
+- [Contributing](https://github.com/pranava0x0/Commonwealth-MCP/blob/main/CONTRIBUTING.md): how to add a government source
+- [Open issues](https://github.com/pranava0x0/Commonwealth-MCP/issues): what is next, by priority label
+
+## Optional
+
+- [Demo site](https://pranava0x0.github.io/Commonwealth-MCP/): fourteen recorded calls with the full answer each returned
+- [Run log](https://github.com/pranava0x0/Commonwealth-MCP/blob/main/docs/RUNLOG.md): what happened when
