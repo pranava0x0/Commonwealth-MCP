@@ -123,19 +123,75 @@ WARNING_DEFINITIONS = {
         "inline; narrow the query for the rest.",
 }
 
-# The demo walk: cross-tool calls that exercise resolution, ambiguity, data,
-# emptiness, a registry gap, discovery, and one typed error.
+# The recorded trail the site walks through. One flat, ordered list: it
+# was two lists spliced together (`DEMO_CALLS[5:5] = [...]`) because the
+# boundary calls were added later, which put them in the middle of a
+# narrative that had not been re-read. Order here is reading order.
+#
+# A test asserts every registered tool appears at least once
+# (tests/test_site_data.py), so adding a tool without a demo fails CI
+# rather than shipping a page that quietly covers less than it claims.
 DEMO_CALLS = [
+    # --- whose government is this? ---
     ("registry.resolve_jurisdiction", {"query": "fairfax"},
      "Ambiguous on purpose: Fairfax City vs Fairfax County"),
     ("registry.resolve_jurisdiction", {"query": "Fairfax County"},
      "Exact resolution with the authority stack"),
+    ("registry.resolve_jurisdiction", {"query": "Bedford City"},
+     "A government that no longer exists: Bedford gave up its city "
+     "charter in 2013, so the name resolves to the town that replaced "
+     "it, labelled historical"),
+    ("registry.resolve_jurisdiction", {"lon": -77.3064, "lat": 38.8462},
+     "A coordinate inside Fairfax City resolves to the CITY, never the "
+     "county that surrounds it"),
+    ("registry.resolve_jurisdiction", {"lon": -77.2653, "lat": 38.9012},
+     "A coordinate in Vienna returns the town AND its county: both "
+     "govern that ground"),
+    ("geo.resolve_location",
+     {"address": "6800 Beulah St, Alexandria, VA 22310"},
+     "A mailing address is not a government: this Alexandria address is "
+     "in Fairfax County, and the answer says both"),
+    ("geo.resolve_location", {"zip_code": "24450"},
+     "A ZIP is a delivery route, not a boundary: 24450 covers three "
+     "localities and all three come back unchosen"),
+
+    # --- what is here? ---
     ("geo.find_parcel", {"jurisdiction": "Fairfax County",
                          "pin": "__SAMPLE_PIN__"},
      "Parcel record with evidence and provenance"),
     ("geo.find_zoning", {"jurisdiction": "Fairfax County",
                          "pin": "__SAMPLE_PIN__"},
      "Zoning via parcel-geometry intersection; screening warnings"),
+    ("geo.find_address", {"jurisdiction": "Fairfax County",
+                          "address": "4501 Carlby Ln"},
+     "The postal city on this Fairfax County address reads ALEXANDRIA, "
+     "which is a different government entirely"),
+    ("geo.find_buildings", {"jurisdiction": "Richmond City",
+                            "pin": "C0010126019"},
+     "What is built on a parcel, with the publisher's area figure and a "
+     "converted one — the raw number is in a projection that inflates "
+     "area by about 1.6x here"),
+    ("geo.find_roads", {"jurisdiction": "Vienna",
+                        "street_name": "Center St"},
+     "Two official sources describing one street differently, neither "
+     "reconciled away — and a note that one of them can only narrow to "
+     "the county"),
+    ("geo.find_landmarks", {"jurisdiction": "Vienna",
+                            "lon": -77.2653, "lat": 38.9012},
+     "Named public places, each carrying the agency whose record it "
+     "actually is — a school is the Department of Education's, not the "
+     "map publisher's"),
+    ("geo.find_environmental_sites", {"jurisdiction": "Richmond City",
+                                      "lon": -77.4360, "lat": 37.5407},
+     "Monitored sites near a point, under the registry's strongest "
+     "disclaimer: a station on record is not a finding about the ground"),
+    ("geo.find_boundaries", {"jurisdiction": "Prince George County"},
+     "One jurisdiction, two official polygons under one FIPS — both "
+     "returned, neither picked"),
+    ("civic.get_code_section", {"citation": "1-500"},
+     "Code of Virginia section text with its own citation history"),
+
+    # --- the four ways an answer comes back with no data ---
     ("geo.find_parcel", {"jurisdiction": "Fairfax County",
                          "pin": "__NO_MATCH_PIN__"},
      "A clean empty: covered registry, no record"),
@@ -144,31 +200,22 @@ DEMO_CALLS = [
     # no-local-source county is zoning.lookup, not parcel.lookup.
     ("geo.find_zoning", {"jurisdiction": "Craig County", "pin": "123"},
      "A registry gap: coverage says none, not 'no results'"),
+    ("geo.find_environmental_sites", {"jurisdiction": "Virginia",
+                                      "lon": -74.5, "lat": 36.5},
+     "An empty environmental answer, carrying the same disclaimer as a "
+     "hit — 'no station on record here' is not 'nothing here'"),
+
+    # --- what is registered at all? ---
     ("registry.search_sources", {"capability": "zoning.lookup"},
      "What covers zoning.lookup, with authority levels"),
-    ("registry.describe_source", {"source_id": "va-fairfax-parcels-zoning"},
-     "Terms, limitations, and authority notes for the source"),
+    ("registry.describe_source",
+     {"source_id": "va-deq-water-quality-stations"},
+     "Terms, limitations, and authority notes — including a terms review "
+     "that came back incomplete and says so"),
     ("registry.source_status", {},
      "Declared vs operational state for every registered source"),
     ("registry.search_sources", {"capability": "unicorns.lookup"},
      "A typed error: unknown capability, said plainly"),
-]
-
-# Added 2026-08-28 with the boundary source. The walk above predates
-# point-in-polygon, boundaries, and the civic tool, so it showed five of
-# eight tools — a demo that quietly omits a third of the surface.
-DEMO_CALLS[5:5] = [
-    ("registry.resolve_jurisdiction", {"lon": -77.3064, "lat": 38.8462},
-     "A coordinate inside Fairfax City resolves to the CITY, never the "
-     "county that surrounds it"),
-    ("registry.resolve_jurisdiction", {"lon": -77.2653, "lat": 38.9012},
-     "A coordinate in Vienna returns the town AND its county: both "
-     "govern that ground"),
-    ("geo.find_boundaries", {"jurisdiction": "Prince George County"},
-     "One jurisdiction, two official polygons under one FIPS — both "
-     "returned, neither picked"),
-    ("civic.get_code_section", {"citation": "1-500"},
-     "Code of Virginia section text with its own citation history"),
 ]
 
 
@@ -436,7 +483,7 @@ async def run_demo(mode: str) -> dict:
     else:
         tracker = TrackingFetcher()  # live mode: per-host HttpFetchers
     adapter = ArcGISAdapter(fetcher=tracker, cache=TTLCache())
-    ctx = load_context(arcgis=adapter,
+    ctx = load_context(arcgis=adapter, geocoder=_geocoder(mode, tracker),
                        virginia_law=_virginia_law_adapter(mode))
 
     server = build_server(ctx, profile="all")
@@ -471,6 +518,18 @@ async def run_demo(mode: str) -> dict:
             "call_count": len(calls),
             "fixture_recorded_at": recording["recorded_at"],
             "calls": calls}
+
+
+def _geocoder(mode: str, tracker):
+    """The locator is a different service shape from a FeatureServer, but
+    it speaks the same JSON-over-GET, so it replays through the same
+    tracked fetcher — which is what puts its outbound request in the
+    page's HTTP view alongside the ArcGIS ones."""
+    from commonwealth.adapters.arcgis_geocode import ArcGISGeocodeAdapter
+    from commonwealth.adapters.base import TTLCache
+    if mode != "fixtures":
+        return ArcGISGeocodeAdapter()
+    return ArcGISGeocodeAdapter(fetcher=tracker, cache=TTLCache())
 
 
 def _virginia_law_adapter(mode: str):

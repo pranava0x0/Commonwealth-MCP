@@ -62,6 +62,49 @@ def test_demo_trail_covers_every_call(demo):
           f"{demo['mode']}")
 
 
+def test_the_demo_trail_exercises_every_registered_tool(demo):
+    """The page says these calls are what the server does. A tool with no
+    call on the page is a tool the page silently does not demonstrate,
+    and for six of them that was true for a while — the trail was written
+    when the server had eight tools and nothing failed when it reached
+    fourteen.
+
+    Derived from the tool registry, per the structural rule in
+    design/testing-and-demos.md § 4: never a hand-typed list."""
+    from commonwealth.core import toolreg
+    from commonwealth.servers.build import registries
+
+    registered = {s.name for s in toolreg.expand_profile("all", registries())}
+    assert registered, "no tools registered — the derivation basis vanished"
+    demonstrated = {c["audit"]["tool"] for c in demo["calls"]}
+    missing = sorted(registered - demonstrated)
+    assert missing == [], (
+        f"tools with no demo call: {missing} — add one to DEMO_CALLS in "
+        "tools/build_site.py and rebuild")
+    stale = sorted(demonstrated - registered)
+    assert stale == [], f"demo calls for tools that no longer exist: {stale}"
+    print(f"demo trail exercises {len(registered)} registered tools")
+
+
+def test_the_demo_trail_shows_every_way_an_answer_comes_back_empty(demo):
+    """The page's claim is that an empty answer means different things
+    and says which. That claim needs one call per shape on the page: a
+    covered search that matched nothing, a registry gap, and an ambiguity
+    the tool refused to resolve."""
+    shapes = set()
+    for c in demo["calls"]:
+        env = c["envelope"] or {}
+        cov = env.get("coverage") or {}
+        if c["is_error"]:
+            shapes.add("typed_error")
+        elif env.get("requires_user_choice"):
+            shapes.add("requires_user_choice")
+        elif cov.get("result") == "empty":
+            shapes.add("gap" if cov.get("registry") == "none" else "no_match")
+    assert shapes == {"typed_error", "requires_user_choice", "gap",
+                      "no_match"}, sorted(shapes)
+
+
 def test_demo_envelopes_validate_against_committed_schema(demo,
                                                           project_root):
     schema = json.loads(

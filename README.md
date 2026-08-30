@@ -144,9 +144,9 @@ differently. [examples/README.md](examples/README.md) has the table.
 ## The demo site
 
 [docs/index.html](docs/index.html) is a static page with no build step. It
-shows what is registered, and walks through fourteen real recorded calls
-one at a time: successful lookups, an ambiguous jurisdiction, an empty
-result, a registry gap, and a typed error.
+shows what is registered, and walks through a recorded call for every
+tool the server exposes, one at a time: successful lookups, an ambiguous
+jurisdiction, an empty result, a registry gap, and a typed error.
 
 Three parts of it are interactive, and all three run on recorded data
 rather than a mock-up. The jurisdiction resolver calls the real
