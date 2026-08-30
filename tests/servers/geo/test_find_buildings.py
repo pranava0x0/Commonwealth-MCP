@@ -29,7 +29,7 @@ async def test_by_parcel_pin_composes_with_the_parcel_sources(cw_ctx):
     block = env.data["results"][0]
     assert block["record_count"] == 2
     ev = next(e for e in env.evidence
-              if e.id == block["records"][0]["evidence_ref"])
+              if e.id == block["records"][0]["evidence_refs"][0])
     assert "parcel_geometry_intersection" in ev.transformations
 
 

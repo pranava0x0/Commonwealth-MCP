@@ -78,6 +78,61 @@ def test_profiles_expand_within_ceilings_and_all_toolsets_exist():
         print(f"profile {profile}: {len(specs)} tools")
 
 
+def test_the_ceilings_refuse_at_expansion_not_only_in_ci(monkeypatch):
+    """GitHub issue #22. `PROFILE_DEFAULT_CEILING` was defined and never
+    read at runtime, so an oversized default failed CI rather than
+    refusing to start — the claim the ceiling makes was false at runtime
+    while CI reported success. Mutation-checked, because a constant that
+    nothing reads passes every test that only reads it too."""
+    import pytest
+
+    regs = registries()
+    monkeypatch.setattr(toolreg, "PROFILE_DEFAULT_CEILING", 2)
+    with pytest.raises(ValueError) as err:
+        toolreg.expand_profile("default", regs)
+    assert "ceiling of 2" in str(err.value)
+
+    monkeypatch.setattr(toolreg, "PROFILE_DEFAULT_CEILING", 12)
+    monkeypatch.setattr(toolreg, "PROFILE_HARD_CEILING", 3)
+    with pytest.raises(ValueError) as err:
+        toolreg.expand_profile("all", regs)
+    assert "ceiling of 3" in str(err.value)
+
+
+def test_the_floor_warns_and_starts_rather_than_refusing(monkeypatch, caplog):
+    """The other half of #22, decided the other way: a hard floor would
+    refuse to start the server that exists whenever a domain is still
+    being built."""
+    import logging
+
+    regs = registries()
+    monkeypatch.setattr(toolreg, "PROFILE_FLOOR", 99)
+    with caplog.at_level(logging.WARNING, logger="commonwealth.toolreg"):
+        specs = toolreg.expand_profile("default", regs)
+    assert specs, "the profile still expands"
+    assert "under decision 0002's floor" in caplog.text
+
+
+def test_the_default_profile_is_inside_the_0002_band():
+    """0002 chose 8-12 for a default profile. `default` was five tools
+    when #22 was written and is the shape the amendment describes now."""
+    specs = toolreg.expand_profile("default", registries())
+    assert toolreg.PROFILE_FLOOR <= len(specs) <= \
+        toolreg.PROFILE_DEFAULT_CEILING, [s.name for s in specs]
+
+
+def test_one_registry_tool_is_in_default_and_the_meta_tools_are_not():
+    """Decision 0001's 2026-08-29 amendment (GitHub issue #21):
+    resolve_jurisdiction answers a question about Virginia and ships in
+    `default`; the three that answer questions about the registry itself
+    stay in `discovery`."""
+    names = {s.name for s in toolreg.expand_profile("default", registries())}
+    assert "registry.resolve_jurisdiction" in names
+    assert not (names & {"registry.search_sources",
+                         "registry.describe_source",
+                         "registry.source_status"})
+
+
 def test_alias_mechanism_fires_when_given_an_alias(monkeypatch):
     """The table is empty by design; prove the mechanism works by injecting
     a fake alias and watching it resolve and register."""

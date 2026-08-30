@@ -13,7 +13,7 @@ async def test_found_section_returns_heading_and_text(cw_ctx):
     assert any("Virtus" in p for p in blk["paragraphs"]), (
         "the recorded page's real body text must come through unmangled")
     assert blk["source_url"].endswith("/1-500/")
-    assert blk["evidence_ref"] in {e.id for e in env.evidence}
+    assert blk["evidence_refs"] == [e.id for e in env.evidence][:1]
 
 
 async def test_missing_section_is_a_clean_empty_not_an_error(cw_ctx):

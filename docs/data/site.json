@@ -44,7 +44,7 @@
   {
    "name": "geo.find_address",
    "package": "geo",
-   "toolset": "spatial",
+   "toolset": "default",
    "contract_version": "1",
    "description": "Find address-point records in a Virginia jurisdiction, by address string or by a lon/lat point. The string path is a PREFIX match on the publisher's own spelling (\"6800 BEULAH ST\"), not a fuzzy search \u2014 use geo.resolve_location when the input is a typed address that needs interpreting. A record's `po_name` is a POSTAL city and is never the government: a Fairfax County address reads \"ALEXANDRIA\". Read `locality` and `fips` for the jurisdiction. An empty result means this publisher has no record, which is not the same as no such address existing."
   },
@@ -58,7 +58,7 @@
   {
    "name": "geo.find_buildings",
    "package": "geo",
-   "toolset": "spatial",
+   "toolset": "default",
    "contract_version": "1",
    "description": "Find building footprints at a lon/lat point (with a radius) or on a parcel PIN in a Virginia jurisdiction. Answers 'is this ground built on, and how much of it'. An empty result is NOT evidence of vacant land \u2014 this is a derived layer whose coverage varies by locality. Height, storey, and class fields are frequently null, which means the publisher has no value. Footprint area is published in Web Mercator, where area is inflated about 1.6x at Virginia's latitudes; both the publisher's number and a converted approximation are returned, each labelled. A dense urban query truncates \u2014 narrow the radius rather than reading a short list as the whole answer."
   },
@@ -79,7 +79,7 @@
   {
    "name": "geo.find_environmental_sites",
    "package": "geo",
-   "toolset": "spatial",
+   "toolset": "default",
    "contract_version": "1",
    "description": "Find the environmental monitoring stations a Virginia agency has on record near a lon/lat point. READ THE LIMITS BEFORE USING THIS: it is NOT a complete inventory of environmental sites, and it is NOT a determination that any site is safe, contaminated, or suitable for a given use. What is registered today is DEQ's water-quality monitoring network \u2014 air, waste, and land programmes are not in it. A station on record means that spot is or was sampled and nothing more; historic stations are included, so read last_sample_date. An empty result means no station of that kind is on record near the point, never that the ground is clean. Say all of this to the user; do not summarise it away. A point is required \u2014 this source has no locality field."
   },
@@ -471,8 +471,8 @@
   ]
  ],
  "profiles": {
-  "default": 6,
-  "discovery": 9,
+  "default": 9,
+  "discovery": 12,
   "all": 14
  },
  "skills": [

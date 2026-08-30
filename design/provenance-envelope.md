@@ -52,7 +52,9 @@ Two linked levels, so a mixed-source result can prove which source supports whic
 
 **Evidence objects** — one per retrieved record or record-set that any material fact rests on, each with an `id` (`evidence_01`) and a `source_ref` naming its source entry. Every material record in `data` (a planning case, a chronology event, a finding) carries `evidence_refs: [...]`; a record with no evidence ref is a contract-test failure, which is what makes the skill-level evidence matrix mechanically checkable.
 
-> **Divergence, found 2026-08-28 (the GitHub issues):** the shipped wire emits a singular `evidence_ref` string per record, not this section's `evidence_refs` array — the review round 2 § 2.2 shape was adopted here but not implemented. The array is still the contract this spec intends: the GitHub issues already records a live case needing it (a multi-polygon PIN whose zoning answer rests on several parcel geometries). Recommendation on file: migrate the wire to the plural array while it has zero external consumers. The architect decides.
+> **Divergence found 2026-08-28, resolved 2026-08-29 in favour of the spec.** The shipped wire emitted a singular `evidence_ref` string per record. The array is what the review round 2 § 2.2 shape adopted here always intended, and the migration ran while the wire had zero external consumers. The contract tests were the reason the drift survived: they were written from the code rather than from this section, so they passed on the wrong shape. The replacements read the field name out of this file.
+>
+> The live case that needed it shipped in the same change: a PIN matching several parcel polygons is intersected against all of them (bounded at five) and the districts are the union, so each district names every polygon it rests on. Before, the caller was told how many polygons matched and given the zoning of the first — right about the count, silent about the rest of the ground.
 
 ```json
 {

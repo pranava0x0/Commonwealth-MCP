@@ -36,6 +36,12 @@ INLINE_RECORD_CAP = 25
 # `transformations`, and in a boundary_precision warning — never silently.
 BOUNDARY_SIMPLIFY_DEGREES = 0.0002
 
+# How many parcel polygons one PIN may be intersected against. Each is
+# another request to a government service, and a PIN matching more
+# than a handful is a data problem rather than a parcel — the answer
+# says how many were used and how many were not.
+MAX_PARCEL_POLYGONS = 5
+
 # How far from a coordinate an address point may sit and still be
 # "at" it. Address points are placed on structures, so a point taken
 # from a map click or a parcel centroid is routinely tens of metres
@@ -124,8 +130,14 @@ def _records_block(b: EnvelopeBuilder, src_ref: str, q: ArcGISQueryResult,
                             retrieved_at=q.retrieved_at,
                             transformations=q.transformations,
                             payload_hash=q.payload_hash())
+        # A list, per design/provenance-envelope.md § 2, even where a
+        # record rests on exactly one piece of evidence today. A record
+        # that rests on several is not hypothetical — a PIN matching
+        # several parcel polygons is one — and a shape that changes when
+        # the second one arrives is a breaking change deferred rather
+        # than avoided.
         rows.append({**r.canonical, "record_id": r.record_id,
-                     "evidence_ref": ev})
+                     "evidence_refs": [ev]})
     return {"source_ref": src_ref, "source_id": m.id,
             "records": rows, "record_count": len(q.records)}
 
@@ -311,7 +323,8 @@ async def find_zoning(ctx: RuntimeContext, jurisdiction: str,
     parcel_note: str | None = None
 
     for m in selected:
-        parcel_evidence_ref: str | None = None
+        parcel_evidence_refs: list[str] = []
+        polygons_used = 0
         try:
             if pin:
                 pq = await ctx.arcgis.query(m, "parcels",
@@ -330,22 +343,58 @@ async def find_zoning(ctx: RuntimeContext, jurisdiction: str,
                                            f"{m.id}"})
                     queries.append(pq)
                     continue
-                if len(pq.records) > 1:
-                    parcel_note = (f"PIN {pin!r} matched "
-                                   f"{len(pq.records)} parcel polygons; "
-                                   "zoning uses the first, others listed in "
-                                   "record_count.")
-                parcel_evidence_ref = b.add_evidence(
-                    source_ref=parcel_ref,
-                    record_id=pq.records[0].record_id,
-                    retrieved_at=pq.retrieved_at,
-                    transformations=pq.transformations,
-                    payload_hash=pq.payload_hash())
-                geometry = dict(pq.records[0].geometry or {})
-                geometry.setdefault("spatialReference", {"wkid": 4326})
-                q = await ctx.arcgis.query(m, "zoning",
-                                           intersect_geometry=geometry)
-                q.transformations.append("parcel_geometry_intersection")
+                # Every polygon the PIN matched, up to a bound. Taking the
+                # first was right for the count and wrong for the answer:
+                # a parcel split across polygons can carry more than one
+                # zoning district, and reporting one district for it is
+                # correct about part of the ground and silent about the
+                # rest.
+                used = pq.records[:MAX_PARCEL_POLYGONS]
+                polygons_used = len(used)
+                if len(pq.records) > len(used):
+                    parcel_note = (
+                        f"PIN {pin!r} matched {len(pq.records)} parcel "
+                        f"polygons; the first {len(used)} were intersected "
+                        "and the rest were not. Narrow the query — this "
+                        "answer covers part of the parcel.")
+                elif len(used) > 1:
+                    parcel_note = (
+                        f"PIN {pin!r} matched {len(used)} parcel polygons. "
+                        "All were intersected and the districts below are "
+                        "the union across them, so more than one district "
+                        "here means the parcel is split, not that the "
+                        "sources disagree.")
+                merged: dict[str, object] = {}
+                q = None
+                for parcel in used:
+                    parcel_evidence_refs.append(b.add_evidence(
+                        source_ref=parcel_ref, record_id=parcel.record_id,
+                        retrieved_at=pq.retrieved_at,
+                        transformations=pq.transformations,
+                        payload_hash=pq.payload_hash()))
+                    geometry = dict(parcel.geometry or {})
+                    geometry.setdefault("spatialReference", {"wkid": 4326})
+                    zq = await ctx.arcgis.query(m, "zoning",
+                                                intersect_geometry=geometry)
+                    zq.transformations.append("parcel_geometry_intersection")
+                    for rec in zq.records:
+                        # One zoning polygon can touch several parcel
+                        # polygons; deduplicating on the record id keeps a
+                        # district from being counted twice for one parcel.
+                        merged.setdefault(rec.record_id, rec)
+                    if q is None:
+                        q = zq
+                    else:
+                        q.exceeded_transfer_limit |= zq.exceeded_transfer_limit
+                        q.cache_age_seconds = max(q.cache_age_seconds,
+                                                  zq.cache_age_seconds)
+                        q.retrieved_at = min(q.retrieved_at, zq.retrieved_at)
+                        q.from_cache = q.from_cache or zq.from_cache
+                assert q is not None  # `used` is non-empty here
+                if polygons_used > 1:
+                    q.transformations.append(
+                        f"parcel_polygons_unioned:{polygons_used}")
+                q.records = list(merged.values())
             else:
                 q = await ctx.arcgis.query(m, "zoning",
                                            geometry_point=(lon, lat))
@@ -354,8 +403,16 @@ async def find_zoning(ctx: RuntimeContext, jurisdiction: str,
             continue
         queries.append(q)
         block = _records_block(b, _source_entry(b, m, q), q, m)
-        if parcel_evidence_ref is not None:
-            block["parcel_evidence_ref"] = parcel_evidence_ref
+        if parcel_evidence_refs:
+            block["parcel_evidence_refs"] = parcel_evidence_refs
+            block["parcel_polygons_intersected"] = polygons_used
+            # Each district rests on whichever parcel polygons were
+            # intersected, so those refs ride on the record too — this is
+            # the case design/provenance-envelope.md § 2's array exists
+            # for.
+            for row in block["records"]:
+                row["evidence_refs"] = (list(row["evidence_refs"])
+                                        + parcel_evidence_refs)
         blocks.append(block)
 
     if any(blk["record_count"] for blk in blocks):
@@ -453,7 +510,8 @@ def _boundary_records(b: EnvelopeBuilder, src_ref: str, q: ArcGISQueryResult,
                             retrieved_at=q.retrieved_at,
                             transformations=q.transformations,
                             payload_hash=q.payload_hash())
-        row = {**r.canonical, "record_id": r.record_id, "evidence_ref": ev}
+        row = {**r.canonical, "record_id": r.record_id,
+               "evidence_refs": [ev]}
         # The layer publishes no layer-level edit date, but every feature
         # carries its own LASTUPDATE. Surfacing it converted gives each
         # boundary the vintage the layer itself withholds.
@@ -694,7 +752,7 @@ GEO_TOOLS.register(ToolSpec(
         "An empty result means this "
         "publisher has no record, which is not the same as no such "
         "address existing."),
-    toolset="spatial", contract_version="1", fn=find_address))
+    toolset="default", contract_version="1", fn=find_address))
 
 
 # --- address and ZIP resolution (GitHub issue #3) --------------------------
@@ -1209,7 +1267,7 @@ GEO_TOOLS.register(ToolSpec(
         "approximation are returned, each labelled. A dense urban query "
         "truncates — narrow the radius rather than reading a short list "
         "as the whole answer."),
-    toolset="spatial", contract_version="1", fn=find_buildings))
+    toolset="default", contract_version="1", fn=find_buildings))
 
 
 # --- landmarks (GitHub issue #7) -------------------------------------------
@@ -1548,4 +1606,4 @@ GEO_TOOLS.register(ToolSpec(
         "that kind is on record near the point, never that the ground is "
         "clean. Say all of this to the user; do not summarise it away. "
         "A point is required — this source has no locality field."),
-    toolset="spatial", contract_version="1", fn=find_environmental_sites))
+    toolset="default", contract_version="1", fn=find_environmental_sites))

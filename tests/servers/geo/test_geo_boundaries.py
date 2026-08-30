@@ -41,7 +41,7 @@ async def test_split_polygon_locality_returns_both(cw_ctx):
     assert len(records) == 2, "a deduping regression would drop an official record"
     assert {r["fips"] for r in records} == {"51149"}
     assert len({r["record_id"] for r in records}) == 2
-    assert len({r["evidence_ref"] for r in records}) == 2
+    assert len({r["evidence_refs"][0] for r in records}) == 2
     assert len(env.evidence) == 2
     note = env.data["results"][0]["note"]
     assert "2 separate polygons" in note and "none is picked" in note

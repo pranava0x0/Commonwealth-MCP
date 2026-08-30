@@ -87,7 +87,8 @@ def _section_block(b: EnvelopeBuilder, m: SourceManifest,
     return {"source_ref": src_ref, "source_id": m.id, "found": True,
             "citation": section.citation, "heading": section.heading,
             "paragraphs": section.paragraphs,
-            "source_url": section.source_url, "evidence_ref": ev_ref}
+            "source_url": section.source_url,
+            "evidence_refs": [ev_ref]}
 
 
 def _now() -> str:

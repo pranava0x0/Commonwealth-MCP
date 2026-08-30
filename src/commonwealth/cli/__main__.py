@@ -512,6 +512,39 @@ async def _statewide_crosschecks(adapter, m, ctx) -> dict:
     return out
 
 
+async def _find_multi_polygon_pin(adapter, m) -> str | None:
+    """A PIN this layer publishes as more than one polygon, or None.
+
+    Asked of the layer with a grouped count rather than guessed, so the
+    recorded fixture is a real case in this publisher's data rather than
+    a shape somebody invented. The result is only used to choose what to
+    record; it is not itself part of the fixture the tests replay."""
+    import urllib.parse
+    import urllib.request
+
+    params = arcgis_mod.ArcGISParams.model_validate(
+        m.adapter.model_dump(exclude={"type"}))
+    layer = params.layers["parcels"]
+    base = layer.service_url or params.service_url
+    pin_field = layer.field_mapping["pin"]
+    query = urllib.parse.urlencode({
+        "where": "1=1", "outFields": pin_field, "returnGeometry": "false",
+        "groupByFieldsForStatistics": pin_field,
+        "outStatistics": json.dumps([{
+            "statisticType": "count", "onStatisticField": layer.id_field,
+            "outStatisticFieldName": "n"}]),
+        "having": f"COUNT({layer.id_field}) > 1",
+        "resultRecordCount": "1", "f": "json"})
+    url = f"{base}/{layer.layer_id}/query?{query}"
+    try:
+        with urllib.request.urlopen(url, timeout=120) as resp:
+            payload = json.loads(resp.read())
+    except Exception:  # noqa: BLE001 — a discovery aid, not a contract
+        return None
+    features = payload.get("features") or []
+    return str(features[0]["attributes"][pin_field]) if features else None
+
+
 async def _sample_environmental(adapter, m, params) -> dict:
     """Recording plan for the environmental source. Records a point on the
     James in Richmond (stations nearby) and a point well away from any
@@ -795,6 +828,27 @@ def cmd_sources_sample(args: argparse.Namespace) -> int:
         zq = await adapter.query(m, "zoning", intersect_geometry=geometry)
         out["zoning_districts"] = sorted(
             {r.canonical.get("district") for r in zq.records})
+        # A PIN matching SEVERAL polygons, where one exists. This is the
+        # case find_zoning used to answer from the first polygon alone
+        # (GitHub issue #17) and the case the plural evidence_refs array
+        # exists for. Discovered with a grouped count rather than guessed:
+        # the query below asks the layer which PINs have more than one row.
+        multi = await _find_multi_polygon_pin(adapter, m)
+        if multi:
+            mq = await adapter.query(m, "parcels",
+                                     where_equals={"pin": multi},
+                                     return_geometry=True)
+            districts = set()
+            for parcel in mq.records[:5]:
+                pg = dict(parcel.geometry or {})
+                pg.setdefault("spatialReference", {"wkid": 4326})
+                zq2 = await adapter.query(m, "zoning",
+                                          intersect_geometry=pg)
+                districts |= {r.canonical.get("district")
+                              for r in zq2.records}
+            out["multi_polygon_pin"] = {
+                "pin": multi, "polygon_count": len(mq.records),
+                "districts": sorted(d for d in districts if d)}
         ring = (pq.records[0].geometry or {}).get("rings", [[[None, None]]])
         vx = ring[0][0]
         if vx[0] is not None:

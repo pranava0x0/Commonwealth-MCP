@@ -60,7 +60,8 @@ async def test_two_sources_agree(sample_pin):
     # the zoning answer) is its own consulted source, registered alongside
     # the zoning query itself — not folded silently into it.
     assert len(env.provenance) == 4
-    assert all(blk.get("parcel_evidence_ref") for blk in env.data["results"])
+    assert all(blk.get("parcel_evidence_refs")
+               for blk in env.data["results"])
 
 
 async def test_zoning_no_match_still_registers_parcel_provenance(cw_ctx, recording):

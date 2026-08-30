@@ -10,9 +10,12 @@
 """
 from __future__ import annotations
 
+import logging
 from collections.abc import Awaitable, Callable
 from dataclasses import dataclass, field
 from typing import Any
+
+log = logging.getLogger("commonwealth.toolreg")
 
 # old-name -> current-name. Empty until the first rename; never delete rows.
 DEPRECATED_TOOL_ALIASES: dict[str, str] = {}
@@ -68,6 +71,14 @@ PROFILES: dict[str, list[tuple[str, str]]] = {
     "all": [("registry", "*"), ("geo", "*"), ("civic", "*")],
 }
 
+# ../../../design/architecture.md decision 0002, amended 2026-08-29 (GitHub
+# issue #22). Both ceilings are enforced here, at expansion, so an
+# oversized profile refuses to start rather than only failing CI. The
+# floor is a WARNING, not a refusal: it describes a filled-out toolset,
+# and a hard floor would refuse to start the server that exists whenever
+# a domain is still being built. The amendment on 0002 records that
+# split.
+PROFILE_FLOOR = 8
 PROFILE_DEFAULT_CEILING = 12
 PROFILE_HARD_CEILING = 20
 
@@ -90,4 +101,16 @@ def expand_profile(profile: str,
         raise ValueError(
             f"profile {profile!r} expands to {len(out)} tools, over the "
             f"../../../design/architecture.md decision 0002 ceiling of {PROFILE_HARD_CEILING}")
+    if profile == "default" and len(out) > PROFILE_DEFAULT_CEILING:
+        raise ValueError(
+            f"the 'default' profile expands to {len(out)} tools, over "
+            f"decision 0002's ceiling of {PROFILE_DEFAULT_CEILING} for it. "
+            "A task profile may go to 20; the default one may not — the "
+            "measured selection cliffs are what the number is for.")
+    if len(out) < PROFILE_FLOOR:
+        log.warning(
+            "profile %r expands to %d tools, under decision 0002's floor "
+            "of %d. The floor describes a filled-out toolset; this is a "
+            "report that a domain is still being built, not a fault.",
+            profile, len(out), PROFILE_FLOOR)
     return out

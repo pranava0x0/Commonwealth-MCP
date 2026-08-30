@@ -76,7 +76,9 @@ async def test_every_material_record_resolves_evidence(server, sample_pin):
     records = [r for blk in wire["data"]["results"] for r in blk["records"]]
     assert records, "the recorded PIN must return its parcel"
     for r in records:
-        assert r["evidence_ref"] in evidence_ids, r
+        assert r["evidence_refs"], r
+        for ref in r["evidence_refs"]:
+            assert ref in evidence_ids, r
     for e in wire["evidence"]:
         assert e["source_ref"] in source_ids, e
 

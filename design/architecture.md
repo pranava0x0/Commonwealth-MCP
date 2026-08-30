@@ -1264,9 +1264,9 @@ The ecosystem may contain more than 100 tools eventually.
 
 The active agent context should contain 8–12 tools per profile, with a hard task-profile ceiling of 20 — the numbers decision 0002 chose.
 
-What `core/toolreg.py` enforces is narrower. This section records the gap. `expand_profile()` raises only above `PROFILE_HARD_CEILING = 20`. `PROFILE_DEFAULT_CEILING = 12` is defined but never read at runtime — `tests/test_repo_health.py` asserts it, so an oversized `default` fails CI, not startup.
+`core/toolreg.py` enforces both ceilings at expansion (updated 2026-08-29, GitHub issue #22): `expand_profile()` raises above `PROFILE_HARD_CEILING = 20` for any profile, and above `PROFILE_DEFAULT_CEILING = 12` for `default`. The 8-tool floor logs a warning and starts, because a hard floor would refuse to start the server that exists whenever a domain is still being built. 0002's amendment records why the two are treated differently.
 
-The 8-tool floor is enforced nowhere, and `default` expands to five tools today: `registry.resolve_jurisdiction`, `geo.find_parcel`, `geo.find_zoning`, `geo.find_boundaries`, `civic.get_code_section`. That is under 0002's band because the domains that would fill it are unbuilt. Both gaps are logged in the GitHub issues; closing them is either enforcement code or a dated 0002 amendment, and that call is the architect's.
+`default` expands to nine tools: `registry.resolve_jurisdiction`, `geo.find_parcel`, `geo.find_zoning`, `geo.find_boundaries`, `geo.find_address`, `geo.resolve_location`, `geo.find_buildings`, `geo.find_environmental_sites`, `civic.get_code_section`. It was five when the issue was written and under the band; the geo sources registered on 2026-08-29 filled it. `geo.find_roads` and `geo.find_landmarks` stay in `spatial` — they answer a different kind of question, and adding them to reach a number would be the opposite of what the band is for.
 
 (History: this paragraph said "20–50", was revised 2026-08-26 to "12–25" on the measured accuracy cliffs, and still said "12–25" after 0002 settled on 8–12/20; corrected 2026-08-28. The measurements: selection accuracy falls below 90% at 10–15 tools for small models and 20–30 for mid-tier ones, and Anthropic's own guidance flags degradation past 30–50 — [research part 4](../research/README.md) § 1. 0002 also covers deferred loading / tool search as the growth path.)
 
@@ -2313,6 +2313,30 @@ Geo and civic are the only tool surfaces; source resolution happens inside them 
 
 **A, with B's boundaries enforced in code**, as recommended: one process, three packages (registry/geo/civic) with no cross-imports except through Commonwealth Core, separate tool registries, toolset-per-domain. Registry tools ship in a `discovery` toolset, not `default`. No change from the recommendation on file.
 
+### Amendment (2026-08-29) — `registry.resolve_jurisdiction` is in `default`
+
+The code had made this change and nothing recorded it, so the decision
+record and the code disagreed and a reader had no way to tell which was
+current (GitHub issue #21). The change stands, and this is the record.
+
+One registry tool, `registry.resolve_jurisdiction`, ships in `default`
+through a `discovery-min` toolset. The other three — `search_sources`,
+`describe_source`, `source_status` — stay out, in `discovery`, exactly as
+this decision says.
+
+The reason is that the two groups are not the same kind of tool. The
+three that stay out are meta-tools: they answer questions about the
+registry, and exposing them by default is the tool-count confusion this
+decision was avoiding. `resolve_jurisdiction` answers a question about
+Virginia. Every other tool in `default` takes a jurisdiction as its first
+argument, so removing it leaves a profile that can look up a parcel in a
+jurisdiction it cannot name — and "which government covers this point" is
+the question this project exists for, not a lookup about itself.
+
+**What would change this back:** a Tier-2 sweep showing the tool is being
+called when it is not needed, or a redesign where the domain tools accept
+a coordinate directly and resolve internally.
+
 ---
 
 ## 0002 — Active Toolset Sizing and Exposure
@@ -2352,6 +2376,40 @@ Expose everything; mark all but a core set defer-loaded; let clients that suppor
 ### Choice (2026-08-26)
 
 **A now, C as it matures**, as recommended: 8-12 tools per profile default, task-profile ceiling of 20. Profiles are generated from skill metadata so they never drift from what a workflow actually needs. Adopt deferred loading/progressive discovery once client support is verified, not assumed. No change from the recommendation on file.
+
+### Amendment (2026-08-29) — what is enforced, and what warns
+
+The band was half enforced (GitHub issue #22): `PROFILE_HARD_CEILING = 20`
+refused at expansion, `PROFILE_DEFAULT_CEILING = 12` was defined and never
+read at runtime, and the 8-tool floor was checked nowhere. Both gaps are
+closed, and they are closed differently on purpose.
+
+**The two ceilings are refusals.** `expand_profile()` now raises for a
+`default` profile over 12 as well as for any profile over 20. A ceiling is
+a claim about what a model can select from reliably, and a server that
+quietly exceeds it is making the claim false at runtime while CI reports
+success.
+
+**The floor is a warning.** A hard floor would refuse to start the server
+that exists whenever a domain is still being built, which is a worse
+outcome than a small profile. The floor describes a filled-out toolset;
+under it, `expand_profile()` logs that a domain is still being built and
+starts.
+
+The occasion for settling this was that `default` reached the band. It
+expanded to five tools when the issue was written and expands to nine
+now: `registry.resolve_jurisdiction`, `geo.find_parcel`,
+`geo.find_zoning`, `geo.find_boundaries`, `geo.find_address`,
+`geo.resolve_location`, `geo.find_buildings`,
+`geo.find_environmental_sites`, `civic.get_code_section` — the walk a
+property question actually takes. `geo.find_roads` and
+`geo.find_landmarks` are real tools and answer a different kind of
+question, so they stay in `spatial` rather than being added to reach a
+number.
+
+**What would change this:** a Tier-2 sweep (bench.md § 1) showing
+selection accuracy holding above 12 for this toolset, which is the
+evidence the ceiling was always meant to rest on.
 
 ---
 
