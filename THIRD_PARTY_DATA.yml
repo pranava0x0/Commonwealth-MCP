@@ -71,6 +71,17 @@ sources:
   automation_status: unknown
   data_classification: open
   recorded_fixtures: []
+- id: va-vgin-address-points
+  name: Virginia Address Points (VGIN)
+  publisher: Virginia Geographic Information Network (VGIN), part of the Virginia
+    Department of Emergency Management
+  manifest: sources/state/vgin-address-points.yaml
+  terms_url: https://vgin.vdem.virginia.gov/datasets/virginia-address-points/about
+  terms_reviewed_at: '2026-08-29'
+  automation_status: public_api
+  data_classification: open
+  recorded_fixtures:
+  - tests/fixtures/sources/va-vgin-address-points/recorded.json
 - id: va-vgin-admin-boundaries
   name: Virginia Administrative Boundaries (VGIN)
   publisher: Virginia Geographic Information Network (VGIN), part of the Virginia
@@ -82,6 +93,17 @@ sources:
   data_classification: open
   recorded_fixtures:
   - tests/fixtures/sources/va-vgin-admin-boundaries/recorded.json
+- id: va-vgin-composite-locator
+  name: Virginia Composite Locator (VGIN Geocoding Service)
+  publisher: Virginia Geographic Information Network (VGIN), part of the Virginia
+    Department of Emergency Management
+  manifest: sources/state/vgin-composite-locator.yaml
+  terms_url: https://vginmaps.vdem.virginia.gov/download/clearinghouse/documentation/VGIN_Geocoding_Service_Overview_and_Access_Instructions.pdf
+  terms_reviewed_at: '2026-08-29'
+  automation_status: public_api
+  data_classification: open
+  recorded_fixtures:
+  - tests/fixtures/sources/va-vgin-composite-locator/recorded.json
 - id: va-vgin-statewide-parcels
   name: Virginia Statewide Parcels (VGIN)
   publisher: Virginia Geographic Information Network (VGIN), part of the Virginia

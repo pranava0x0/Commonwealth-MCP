@@ -4,9 +4,18 @@
   "open_world_hint": true,
   "read_only_hint": true
  },
- "description": "Resolve a Virginia jurisdiction from a name, alias, or FIPS code, or from a lon/lat point by point-in-polygon against official boundaries. Use FIRST whenever a place is named or a coordinate is given: Virginia has independent cities that are not inside the counties sharing their names (Fairfax City is not in Fairfax County), and towns that sit inside a county so BOTH governments apply \u2014 read layered_authorities, do not assume the resolved leaf answers everything. Pass `query` OR lon/lat, never both. If the result carries candidates with requires_user_choice, present them to the user and never pick one yourself. For a street address or a ZIP, use geo.resolve_location instead.",
+ "description": "Find address-point records in a Virginia jurisdiction, by address string or by a lon/lat point. The string path is a PREFIX match on the publisher's own spelling (\"6800 BEULAH ST\"), not a fuzzy search \u2014 use geo.resolve_location when the input is a typed address that needs interpreting. A record's `po_name` is a POSTAL city and is never the government: a Fairfax County address reads \"ALEXANDRIA\". Read `locality` and `fips` for the jurisdiction. An empty result means this publisher has no record, which is not the same as no such address existing.",
  "input_schema": {
   "properties": {
+   "address": {
+    "default": "",
+    "title": "Address",
+    "type": "string"
+   },
+   "jurisdiction": {
+    "title": "Jurisdiction",
+    "type": "string"
+   },
    "lat": {
     "anyOf": [
      {
@@ -30,14 +39,12 @@
     ],
     "default": null,
     "title": "Lon"
-   },
-   "query": {
-    "default": "",
-    "title": "Query",
-    "type": "string"
    }
   },
-  "title": "registry_resolve_jurisdictionArguments",
+  "required": [
+   "jurisdiction"
+  ],
+  "title": "geo_find_addressArguments",
   "type": "object"
  },
  "output_schema": {

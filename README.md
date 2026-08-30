@@ -65,13 +65,20 @@ The tests replay recorded government responses, so they run offline:
 
 | Question | Coverage |
 |---|---|
-| Which government covers this? | By name, FIPS code, or coordinates: all 133 localities and 191 towns |
+| Which government covers this? | By name, FIPS code, street address, ZIP, or coordinates: all 133 localities and 191 towns |
+| What is at this address? | Statewide address points |
 | What is this parcel? | Fairfax County, Richmond City, Charles City County, VGIN statewide |
 | How is it zoned? | Fairfax County and Richmond City |
 | Where does this jurisdiction end? | Statewide: 133 localities, 191 towns |
 | What does § 18.2-57 say? | The full Code of Virginia |
 
 Some examples of what that looks like in practice:
+
+**A mailing address is not a government.** "Alexandria, VA 22310" is a
+Fairfax County address. Ask about it and the answer is Fairfax County,
+with a note saying the mailing city and the government differ. A ZIP that
+spans several localities comes back as all of them, because a ZIP is a
+delivery route and picking one would be a guess.
 
 **Ambiguous names come back ambiguous.** Ask about "Fairfax" and you get
 both candidates back. Fairfax City is not inside Fairfax County —
@@ -97,9 +104,6 @@ GIS layer says. The adopted ordinance is what governs, and the answer says
 so every time.
 
 ## What it cannot do yet
-
-**Addresses.** No geocoder is registered, so a jurisdiction resolves from
-a name, a FIPS code, or coordinates. Street addresses do not work yet.
 
 **Data for most localities.** Every one of the 133 counties and
 independent cities is in the jurisdiction table, along with all 191

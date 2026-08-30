@@ -4,40 +4,21 @@
   "open_world_hint": true,
   "read_only_hint": true
  },
- "description": "Resolve a Virginia jurisdiction from a name, alias, or FIPS code, or from a lon/lat point by point-in-polygon against official boundaries. Use FIRST whenever a place is named or a coordinate is given: Virginia has independent cities that are not inside the counties sharing their names (Fairfax City is not in Fairfax County), and towns that sit inside a county so BOTH governments apply \u2014 read layered_authorities, do not assume the resolved leaf answers everything. Pass `query` OR lon/lat, never both. If the result carries candidates with requires_user_choice, present them to the user and never pick one yourself. For a street address or a ZIP, use geo.resolve_location instead.",
+ "description": "Turn a Virginia street address or a 5-digit ZIP into the government that covers it. Use this FIRST when the user gives an address \u2014 the other tools take a jurisdiction name or a coordinate, not an address. An address is geocoded and the resulting point is placed by point-in-polygon; the geocoder's own city field is a POSTAL city and is never the answer (a Fairfax County address reads 'Alexandria'). A ZIP returns every locality it touches: ZIPs are delivery routes and cross government boundaries constantly, so a multi-locality ZIP comes back as candidates with requires_user_choice and must go to the user unchosen. Pass exactly one of `address` or `zip_code`.",
  "input_schema": {
   "properties": {
-   "lat": {
-    "anyOf": [
-     {
-      "type": "number"
-     },
-     {
-      "type": "null"
-     }
-    ],
-    "default": null,
-    "title": "Lat"
-   },
-   "lon": {
-    "anyOf": [
-     {
-      "type": "number"
-     },
-     {
-      "type": "null"
-     }
-    ],
-    "default": null,
-    "title": "Lon"
-   },
-   "query": {
+   "address": {
     "default": "",
-    "title": "Query",
+    "title": "Address",
+    "type": "string"
+   },
+   "zip_code": {
+    "default": "",
+    "title": "Zip Code",
     "type": "string"
    }
   },
-  "title": "registry_resolve_jurisdictionArguments",
+  "title": "geo_resolve_locationArguments",
   "type": "object"
  },
  "output_schema": {

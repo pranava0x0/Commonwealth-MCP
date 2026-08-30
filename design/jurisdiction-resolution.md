@@ -10,10 +10,10 @@ resolution (§ 2 `address` and `zip` rows, § 4) remains unbuilt — both need
 a registered geocoder.
 
 Fixture accounting for § 3's eight traps, added 2026-08-28, corrected the
-same day after review, and updated 2026-08-29 when the full table landed:
-2, 3, 6, and 8 are built as tests; 1, 4, and 5 wait on the geocoder; 7
-ships as a warning rather than candidates (annotated below; policy call in
-the GitHub issues).
+same day after review, and updated 2026-08-29 when the full table and the
+geocoder landed: seven of the eight are built as tests. Only 7 is not, and
+it ships as a warning rather than candidates (annotated below; the policy
+call is in the GitHub issues).
 
 The table itself stopped being a seed on 2026-08-29. It now carries all
 133 counties and independent cities and all 191 incorporated towns,
@@ -75,9 +75,13 @@ exists.
 | `address` | "123 Main St, Vienna, VA" | geocode (§ 4), then point-in-polygon |
 | `point` | `{lon, lat}` | point-in-polygon against boundary geometries |
 | `fips` | "51059" | exact table lookup |
-| `zip` | "22180" | ZIP-to-jurisdiction table, often one-to-many |
+| `zip` | "22180" | every locality the ZIP touches, often one-to-many |
 
 Passing more than one input is an `InvalidQuery` error naming the conflict, not a silent precedence rule.
+
+**Where each input lives (amended 2026-08-29).** `registry.resolve_jurisdiction` takes `name`, `fips`, and `point`. `address` and `zip` are `geo.resolve_location`, a separate tool in the geo package. Three reasons, recorded so the split is a decision rather than drift: the geocode step needs a registered `geocode.address` source and the ZIP step needs a registered `address.lookup` source, both of which are geo registrations; a single tool with five mutually exclusive inputs is a worse contract than two with two and three; and `registry.resolve_jurisdiction` sits in the `discovery-min` toolset, where a tool whose answer depends on two more source registrations is a surprise. The resolution semantics are identical either way — an address is geocoded and then placed by the same point-in-polygon path, and a ZIP never collapses to one locality.
+
+The `zip` row also changed shape. A "ZIP-to-jurisdiction table" was going to be project-maintained data; it is instead a DISTINCT query over the registered address-point layer's own `ZIP_5` and `FIPS` fields, so the answer is the publisher's rather than a table this project would have to keep current.
 
 ### 2.1 Result shape
 
@@ -109,11 +113,11 @@ Client-interaction note: candidates-in-`data` is the portable mechanism and the 
 
 These are the required regression set; each is a named fixture:
 
-1. Mailing address "Alexandria, VA 22310" that is in Fairfax County, not Alexandria City.
+1. Mailing address "Alexandria, VA 22310" that is in Fairfax County, not Alexandria City. *(Built 2026-08-29. `geo.resolve_location` geocodes it through VGIN's composite locator and places the point by point-in-polygon; the answer carries a `postal_city_note` naming both. `test_resolve_location.py::test_case_1_a_mailing_city_is_not_the_government`.)*
 2. `name: "Fairfax"` → two candidates, city and county, with distinguishers.
 3. "Richmond" → Richmond City vs. Richmond County (opposite ends of the state).
-4. A Vienna address → town resolved, county in `layered_authorities`. *(Unbuilt — geocoder-blocked, § 4. The point and name paths into Vienna are tested; the address path this case names is not, and it is the address that carries the trap.)*
-5. ZIP 24450 (Lexington + Rockbridge County mix) → candidates, not a guess.
+4. A Vienna address → town resolved, county in `layered_authorities`. *(Built 2026-08-29 as an address, which is what the case names — the point and name paths were already tested and were never this trap. `test_resolve_location.py::test_case_4_a_town_address_returns_the_town_and_its_county`.)*
+5. ZIP 24450 (Lexington + Rockbridge County mix) → candidates, not a guess. *(Built 2026-08-29, and the real data corrects this description: 24450 touches **three** localities, not two — Botetourt County as well as Lexington City and Rockbridge County, per a DISTINCT query against VGIN's address points on 2026-08-29. The composite locator geocodes a bare ZIP to one centroid in Lexington, which is exactly the one-to-many-collapsed-to-one failure this case forbids, so the ZIP path does not use the locator at all: it asks the address-point layer which localities carry that ZIP. `test_resolve_location.py::test_case_5_a_multi_locality_zip_returns_candidates`.)*
 6. Charles City County by name → county, with a `not_to_be_confused_with` note absent (no such city exists; the trap is assuming it does). *(Both halves asserted: `test_jurisdiction.py::test_charles_city_county_is_a_county_not_a_city`. The absence assertion was added 2026-08-28 after review found the test checking only the `kind`.)*
 7. A point on the Fairfax City/County boundary line → both as candidates with `boundary_precision` warning. *(Shipped 2026-08-28 as the containing polygon plus a warning naming the neighbour, not candidates; the upgrade needs the when-does-a-warning-become-a-refusal policy call tracked in the GitHub issues. The test pinning today's behaviour: `test_resolve_by_point.py::test_point_near_a_boundary_warns_instead_of_asserting`.)*
 8. Bedford: the dissolved-city history (reverted to town, 2013) must not surface a stale `va:bedford-city`. *(Built 2026-08-29. There is no `va:bedford-city` row and a test asserts there is not. The other half — a record that names the dead city must not come back as "no such place" — is handled by a new `former_names` field: "Bedford City" resolves to `va:bedford-town` with `basis: former_name`, an `alias_match` warning, and a `former_name_match` block saying the name is historical. Former names are consulted only after every current name fails, so a live government can never be shadowed by a dead one. Virginia has three of these reversions and all three are seeded: South Boston 1995, Clifton Forge 2001, Bedford 2013.)*
@@ -122,7 +126,9 @@ These are the required regression set; each is a named fixture:
 
 Address resolution needs a geocoder, which is a source like any other, registered in the Government Source Registry with provenance:
 
-- Primary: Virginia's state geocoding service (VGIN composite geocoder) where its terms permit automated use. Verified 2026-08-28: the official service overview states no credentials are needed, offers batch geocoding, and publishes no automated-use restriction (../research/README.md part 3 § 9); the manifest records that finding rather than an invented permission.
+- Primary: Virginia's state geocoding service (VGIN composite geocoder) where its terms permit automated use. Verified 2026-08-28: the official service overview states no credentials are needed, offers batch geocoding, and publishes no automated-use restriction (../research/README.md part 3 § 9); the manifest records that finding rather than an invented permission. **Registered 2026-08-29** as `va-vgin-composite-locator` through a new `arcgis_geocode` adapter — a `GeocodeServer` is a different request and response from a `FeatureServer` query, so it is its own adapter type rather than another layer on the ArcGIS one.
+- A score below a declared threshold returns candidates with `requires_user_choice`, never a best guess. The threshold is 90 and it is **Commonwealth's number, not the publisher's**: Esri documents `score` as 0-100 match quality and states no cut-off. It is calibrated against the observed spread — a rooftop match and a street-centreline interpolation both score 100, a fallback to the ZIP centroid scores 84 — and it lives in the manifest where a reader can find it.
+- The locator's own `City` is a POSTAL city and its `Subregion` is inconsistent between the locator's own elements (observed 2026-08-29 for one query: the road-centerline element returned FIPS "51059", the address-point element returned "Fairfax County"). Both are returned as data and neither is ever read as the jurisdiction.
 - Fallback: Census Bureau geocoder (public API, no key).
 - The geocoder used appears in `provenance`; a geocode that falls back is a `warnings` entry, because positional quality differs.
 - Never a commercial geocoder by default: terms generally forbid storing/deriving, and provenance would leave the public-data story.

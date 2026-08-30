@@ -20,7 +20,8 @@ from ..adapters.base import HttpFetcher, egress_policy_for
 from ..core import toolreg
 from ..core.envelope import utc_now_iso
 from ..core.errors import CommonwealthError
-from ..core.registry import SourceManifest, validate_manifest
+from ..core.registry import (INVENTORY_ADAPTER, SourceManifest,
+                             validate_manifest)
 from ..runtime import PROJECT_ROOT, SOURCES_DIR, RuntimeContext, load_context
 
 FIXTURES_DIR = PROJECT_ROOT / "tests" / "fixtures" / "sources"
@@ -73,6 +74,7 @@ def cmd_doctor(args: argparse.Namespace) -> int:
     print(f"default profile: {len(tools)} tools: {', '.join(tools)}")
 
     if args.live:
+        inventory = 0
         for m in ctx.sources.manifests.values():
             if m.adapter.type == "arcgis":
                 layers = m.adapter.model_dump().get("layers", {})
@@ -102,10 +104,34 @@ def cmd_doctor(args: argparse.Namespace) -> int:
                 except CommonwealthError as err:
                     print(f"✗ live {m.id}: {err.code}: {err}")
                     problems += 1
+            elif m.adapter.type == "arcgis_geocode":
+                # A locator that answers HTTP 200 with zero candidates for
+                # everything is broken in a way a reachability check
+                # cannot see, so the probe geocodes a known address.
+                try:
+                    h = asyncio.run(ctx.geocoder.health(m))
+                    mark = "✓" if h["healthy"] else "✗"
+                    print(f"{mark} live {m.id}: {h['address']!r} -> "
+                          f"{h['candidates']} candidate(s), best score "
+                          f"{h['best_score']} (min {h['min_score']})")
+                    if not h["healthy"]:
+                        problems += 1
+                except CommonwealthError as err:
+                    print(f"✗ live {m.id}: {err.code}: {err}")
+                    problems += 1
+            elif m.adapter.type == INVENTORY_ADAPTER:
+                # Not a gap: an inventory row names a publisher with no
+                # endpoint behind it, so there is nothing to probe and
+                # counting it as a problem would make `doctor` red for
+                # doing exactly what design/source-registry.md § 6.3 asks.
+                inventory += 1
             else:
                 print(f"? live {m.id}: no live probe wired for adapter "
                       f"type {m.adapter.type!r}")
                 problems += 1
+        if inventory:
+            print(f"- {inventory} inventory source(s) not probed: "
+                  "declared_state=proposed, no endpoint to reach")
     else:
         print("(live source probes skipped; pass --live)")
 
@@ -331,7 +357,7 @@ async def _sample_boundaries(adapter, m, params, ctx) -> dict:
     await boundary("towns", {"place_fips": f"{state_fips}81072"}, "vienna_town")
     await boundary("localities", {"fips": "51999"}, "no_such_fips")
 
-    from ..domains.registry import BOUNDARY_PROXIMITY_METERS
+    from ..domains.containment import BOUNDARY_PROXIMITY_METERS
 
     async def at_point(lon: float, lat: float, label: str) -> None:
         hits, nearby = {}, {}
@@ -358,10 +384,106 @@ async def _sample_boundaries(adapter, m, params, ctx) -> dict:
     # the boundary-straddle case design/jurisdiction-resolution.md § 3.7
     # names. Chosen from a real vertex of the city's own polygon.
     await at_point(-77.26917, 38.85378, "point_on_city_county_line")
-    # Virginia Beach is a real locality the pilot jurisdiction table does
-    # not carry, so this records the 'source knows it, we do not' path.
+    # Virginia Beach: recorded when the table was a 14-row seed and this
+    # was the "source knows it, we do not" path. The table now carries it,
+    # so the recording backs the opposite assertion plus a reduced-table
+    # test of the unmapped branch.
     await at_point(-75.9780, 36.8529, "point_untabled_locality")
+    # The two coordinates geo.resolve_location lands on after geocoding
+    # design/jurisdiction-resolution.md § 3's address traps. Copied from
+    # the composite locator's own recorded responses (the fixture at
+    # tests/fixtures/sources/va-vgin-composite-locator), because the
+    # containment step replays these exact floats.
+    await at_point(-77.15375027322, 38.770195471615,
+                   "point_geocoded_alexandria_mailing_address")
+    await at_point(-77.26436153964, 38.90067620715,
+                   "point_geocoded_vienna_address")
     return out
+
+
+async def _sample_addresses(adapter, m, params, ctx) -> dict:
+    """Recording plan for the address-point layer. Records the postal-city
+    trap (a Fairfax County address whose mailing city is an independent
+    city it is not in) and the ZIP distinct queries that back
+    geo.resolve_location's ZIP path — one ZIP inside a single locality,
+    one spanning three, and one that matches nothing."""
+    del ctx
+    out: dict[str, Any] = {}
+    for layer in sorted(params.layers):
+        out[f"health:{layer}"] = await adapter.health(m, layer)
+
+    # Chosen live: a Fairfax County address whose postal city is
+    # Alexandria, an independent city it is not in.
+    trap = await adapter.query(
+        m, "addresses", where_equals={"fips": "51059"},
+        where_prefix={"full_address": "4501 CARLBY LN"})
+    out["postal_city_trap"] = {
+        "prefix": "4501 CARLBY LN", "fips": "51059",
+        "record_count": len(trap.records),
+        "po_name_vs_locality": [(r.canonical.get("po_name"),
+                                 r.canonical.get("locality"))
+                                for r in trap.records[:3]]}
+
+    point = await adapter.query(m, "addresses",
+                                geometry_point=(-77.26436153964, 38.90067620715),
+                                distance_meters=100.0)
+    out["by_point"] = {"record_count": len(point.records),
+                       "first": [r.canonical.get("full_address")
+                                 for r in point.records[:3]]}
+
+    for zip_code, label in ((24450, "zip_multi_locality"),
+                            (22180, "zip_single_locality"),
+                            (0, "zip_no_match")):
+        q = await adapter.query(m, "addresses",
+                                where_equals={"zip_code": zip_code},
+                                distinct_fields=["fips", "locality"])
+        out[label] = {"zip": zip_code,
+                      "localities": [(r.canonical.get("fips"),
+                                      r.canonical.get("locality"))
+                                     for r in q.records]}
+    return out
+
+
+def _sample_geocoder(m, ctx) -> int:
+    """A locator records differently: no layers, no field mappings, one
+    operation. The recorded set is § 3's postal-city traps, plus a
+    deliberate no-match, because 'the locator found nothing' has to replay
+    as faithfully as a hit."""
+    del ctx
+    from ..adapters import arcgis_geocode as geo_mod
+    p = geo_mod.ArcGISGeocodeParams.model_validate(
+        m.adapter.model_dump(exclude={"type"}))
+    recorder = _RecordingFetcher(
+        HttpFetcher(policy=egress_policy_for(m, p.service_url)))
+    adapter = geo_mod.ArcGISGeocodeAdapter(fetcher=recorder,
+                                           cache=arcgis_mod.TTLCache())
+
+    async def run() -> dict:
+        out: dict[str, Any] = {"health": await adapter.health(m)}
+        for label, text in (
+                # § 3 case 1: a mailing address whose postal city is an
+                # independent city the address is not in.
+                ("postal_city_trap", "6800 Beulah St, Alexandria, VA 22310"),
+                # § 3 case 4: a town address, so the town AND its county
+                # both have to come back.
+                ("town_address", "127 Center St S, Vienna, VA 22180"),
+                # A bare ZIP, recorded to prove the locator answers it with
+                # ONE centroid — which is why the ZIP path does not use it.
+                ("bare_zip", "24450"),
+                ("no_match", "zzzz nowhere at all qqq")):
+            result = await adapter.geocode(m, text)
+            out[label] = {
+                "query": text,
+                "candidates": [(c.address, round(c.score, 2), c.matched_by)
+                               for c in result.candidates],
+                "confident": len(result.confident())}
+        return out
+
+    try:
+        summary = asyncio.run(run())
+    except CommonwealthError as err:
+        return _fail(f"{err.code}: {err}")
+    return _write_fixture(m, recorder, summary)
 
 
 def cmd_sources_sample(args: argparse.Namespace) -> int:
@@ -369,15 +491,24 @@ def cmd_sources_sample(args: argparse.Namespace) -> int:
     m = ctx.sources.get(args.source_id)
     if m is None:
         return _fail(f"unknown source {args.source_id!r}")
+    if m.adapter.type == "arcgis_geocode":
+        return _sample_geocoder(m, ctx)
     if m.adapter.type != "arcgis":
-        return _fail(f"sample supports arcgis only for now, not "
-                     f"{m.adapter.type!r}")
+        return _fail(f"sample supports arcgis and arcgis_geocode for now, "
+                     f"not {m.adapter.type!r}")
     params = arcgis_mod.ArcGISParams.model_validate(
         m.adapter.model_dump(exclude={"type"}))
     recorder = _RecordingFetcher(
         HttpFetcher(policy=egress_policy_for(m, params.service_url)))
     adapter = arcgis_mod.ArcGISAdapter(fetcher=recorder,
                                        cache=arcgis_mod.TTLCache())
+
+    if "address.lookup" in m.capability_ids():
+        try:
+            summary = asyncio.run(_sample_addresses(adapter, m, params, ctx))
+        except CommonwealthError as err:
+            return _fail(f"{err.code}: {err}")
+        return _write_fixture(m, recorder, summary)
 
     if "boundary.lookup" in m.capability_ids():
         try:

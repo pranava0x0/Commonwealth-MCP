@@ -8,9 +8,11 @@ outages, and empty results are three different coverage shapes, never one.
 """
 from __future__ import annotations
 
+import re
 from dataclasses import dataclass
 
 from ..adapters.arcgis import ArcGISQueryResult
+from ..adapters.arcgis_geocode import GeocodeResult
 from ..core.assemble import (EnvelopeBuilder, failure, result_dim,
                              selection_coverage)
 from ..core.envelope import (AccessPath, Coverage, Envelope,
@@ -21,6 +23,7 @@ from ..core.jurisdiction import Jurisdiction, JurisdictionKind
 from ..core.registry import SourceManifest
 from ..core.toolreg import ToolRegistry, ToolSpec
 from ..runtime import RuntimeContext
+from .containment import resolve_point, warn_if_near_a_border
 
 GEO_TOOLS = ToolRegistry(package="geo")
 
@@ -32,6 +35,13 @@ INLINE_RECORD_CAP = 25
 # draw the right shape. It is lossy, so it is declared in the record, in
 # `transformations`, and in a boundary_precision warning — never silently.
 BOUNDARY_SIMPLIFY_DEGREES = 0.0002
+
+# How far from a coordinate an address point may sit and still be
+# "at" it. Address points are placed on structures, so a point taken
+# from a map click or a parcel centroid is routinely tens of metres
+# from the rooftop it belongs to; an exact intersect would answer
+# "no address here" for a house.
+ADDRESS_POINT_RADIUS_M = 100.0
 
 # Which boundary layer answers for which kind of jurisdiction. Virginia's
 # independent cities live in the SAME layer as counties, not inside them,
@@ -181,10 +191,13 @@ async def find_parcel(ctx: RuntimeContext, jurisdiction: str,
                       pin: str = "", lon: float | None = None,
                       lat: float | None = None) -> Envelope:
     b = _builder(ctx, "geo.find_parcel")
-    if bool(pin) == (lon is not None and lat is not None):
-        raise InvalidQuery("pass exactly one of `pin` or a lon/lat point")
+    # Half a point first: with only `lon`, the two-input check below
+    # sees no point at all and reports "pass exactly one", which is
+    # a misdiagnosis of a missing `lat`.
     if (lon is None) != (lat is None):
         raise InvalidQuery("a point needs both lon and lat")
+    if bool(pin) == (lon is not None and lat is not None):
+        raise InvalidQuery("pass exactly one of `pin` or a lon/lat point")
 
     frame = _resolve_frame(ctx, b, jurisdiction)
     if frame.early is not None:
@@ -234,10 +247,13 @@ async def find_zoning(ctx: RuntimeContext, jurisdiction: str,
                       pin: str = "", lon: float | None = None,
                       lat: float | None = None) -> Envelope:
     b = _builder(ctx, "geo.find_zoning")
-    if bool(pin) == (lon is not None and lat is not None):
-        raise InvalidQuery("pass exactly one of `pin` or a lon/lat point")
+    # Half a point first: with only `lon`, the two-input check below
+    # sees no point at all and reports "pass exactly one", which is
+    # a misdiagnosis of a missing `lat`.
     if (lon is None) != (lat is None):
         raise InvalidQuery("a point needs both lon and lat")
+    if bool(pin) == (lon is not None and lat is not None):
+        raise InvalidQuery("pass exactly one of `pin` or a lon/lat point")
 
     frame = _resolve_frame(ctx, b, jurisdiction)
     if frame.early is not None:
@@ -336,8 +352,9 @@ GEO_TOOLS.register(ToolSpec(
         "resolution and its ambiguities are handled here, and candidate "
         "lists must go back to the user unchosen. Results carry provenance "
         "and coverage; an empty result with coverage.registry='none' means "
-        "Commonwealth has no source there, not that no parcel exists. Not "
-        "for street addresses yet (no geocoding in this release)."),
+        "Commonwealth has no source there, not that no parcel exists. For "
+        "a street address, call geo.resolve_location first to get the "
+        "jurisdiction and a coordinate."),
     toolset="default", contract_version="1", fn=find_parcel))
 GEO_TOOLS.register(ToolSpec(
     name="geo.find_zoning",
@@ -543,3 +560,428 @@ GEO_TOOLS.register(ToolSpec(
         "Not a containment test: to find which jurisdiction covers a "
         "point, use registry.resolve_jurisdiction with lon/lat."),
     toolset="default", contract_version="1", fn=find_boundaries))
+
+
+# --- addresses (GitHub issue #4) -------------------------------------------
+
+async def find_address(ctx: RuntimeContext, jurisdiction: str,
+                       address: str = "", lon: float | None = None,
+                       lat: float | None = None) -> Envelope:
+    b = _builder(ctx, "geo.find_address")
+    if (lon is None) != (lat is None):
+        raise InvalidQuery("a point needs both lon and lat")
+    if bool(address) == (lon is not None and lat is not None):
+        raise InvalidQuery("pass exactly one of `address` or a lon/lat point")
+
+    frame = _resolve_frame(ctx, b, jurisdiction)
+    if frame.early is not None:
+        return frame.early
+    stack = frame.stack or []
+
+    selected = ctx.sources.select("address.lookup", stack)
+    registry_dim, gaps = selection_coverage(ctx.sources, "address.lookup",
+                                            stack, selected)
+    blocks: list[dict] = []
+    failures = []
+    queries: list[ArcGISQueryResult] = []
+    for m in selected:
+        try:
+            if address:
+                # A prefix match on the publisher's own spelling, scoped to
+                # the jurisdiction so a street name shared across Virginia
+                # does not answer from the wrong locality.
+                where = _scoped_where(ctx, m, "addresses", stack, {})
+                q = await ctx.arcgis.query(
+                    m, "addresses", where_equals=where or None,
+                    where_prefix={"full_address": address.upper()})
+            else:
+                q = await ctx.arcgis.query(m, "addresses",
+                                           geometry_point=(lon, lat),
+                                           distance_meters=ADDRESS_POINT_RADIUS_M)
+        except CommonwealthError as err:
+            failures.append(failure(m.id, err.code, str(err)))
+            continue
+        queries.append(q)
+        block = _records_block(b, _source_entry(b, m, q), q, m)
+        for row in block["records"]:
+            row["record_updated_at"] = _epoch_ms_to_iso(
+                row.pop("last_update", None))
+            # The postal place and the government can disagree, and the
+            # disagreement is the whole reason this field is labelled.
+            row["place_note"] = (
+                "`po_name` is a postal city, not a government: a Fairfax "
+                "County address reads ALEXANDRIA. `landmark_name` is a "
+                "facility name where the publisher has one, not a place. "
+                "The jurisdiction for this record is `locality` / `fips`.")
+        blocks.append(block)
+
+    if any(blk["record_count"] for blk in blocks):
+        b.warn(WarningCode.screening_only,
+               "An address point is the publisher's record of an address, "
+               "not a legal description or a survey, and a locality behind "
+               "on its data submission looks the same as an address that "
+               "does not exist.")
+
+    execution = (ExecutionCoverage.complete if not failures
+                 else ExecutionCoverage.failed if not blocks
+                 else ExecutionCoverage.partial)
+    total = sum(blk["record_count"] for blk in blocks)
+    data: dict = {"results": blocks}
+    comparison = _compare(blocks, "full_address")
+    if comparison:
+        data["comparison"] = comparison
+    return b.build(data, Coverage(
+        registry=registry_dim, execution=execution,
+        pagination=_pagination_dim(queries), result=result_dim(total),
+        jurisdictions_searched=stack if selected else [],
+        jurisdictions_unavailable=gaps, source_failures=failures,
+        known_limitations=sorted({lim for m in selected
+                                  for lim in m.coverage.known_limitations})))
+
+
+GEO_TOOLS.register(ToolSpec(
+    name="geo.find_address",
+    description=(
+        "Find address-point records in a Virginia jurisdiction, by address "
+        "string or by a lon/lat point. The string path is a PREFIX match "
+        "on the publisher's own spelling (\"6800 BEULAH ST\"), not a fuzzy "
+        "search — use geo.resolve_location when the input is a typed "
+        "address that needs interpreting. A record's `po_name` is a POSTAL "
+        "city and is never the government: a Fairfax County address reads "
+        "\"ALEXANDRIA\". Read `locality` and `fips` for the jurisdiction. "
+        "An empty result means this "
+        "publisher has no record, which is not the same as no such "
+        "address existing."),
+    toolset="spatial", contract_version="1", fn=find_address))
+
+
+# --- address and ZIP resolution (GitHub issue #3) --------------------------
+
+# What a ZIP code is asked of. The composite locator geocodes a ZIP to one
+# centroid, which for a ZIP spanning several localities answers a question
+# nobody asked. The address-point layer carries both ZIP_5 and FIPS per
+# record, so one DISTINCT query returns every locality the ZIP actually
+# touches — the difference between a convenience and an answer.
+ZIP_PATTERN = re.compile(r"^\d{5}$")
+
+
+def _geocode_source(b: EnvelopeBuilder, m: SourceManifest,
+                    g: GeocodeResult) -> str:
+    return b.add_source(
+        source_id=m.id, publisher=m.publisher.agency, system=m.adapter.type,
+        dataset=m.name, jurisdiction=m.jurisdiction,
+        authority_level=m.publisher.authority_level,
+        access_path=AccessPath.cache if g.from_cache else AccessPath.live,
+        source_updated_at=None, retrieved_at=g.retrieved_at,
+        cache_age_seconds=g.cache_age_seconds)
+
+
+async def _resolve_zip(ctx: RuntimeContext, b: EnvelopeBuilder,
+                       zip_code: str) -> Envelope:
+    """Every locality a ZIP touches, from the address-point layer.
+
+    design/jurisdiction-resolution.md § 3 case 5: a one-to-many ZIP that
+    resolves to one jurisdiction is a bug, not a convenience. So this never
+    picks — a ZIP inside one locality resolves, and a ZIP spanning several
+    comes back as candidates with requires_user_choice."""
+    selected = ctx.sources.select("address.lookup", ["va"])
+    registry_dim, gaps = selection_coverage(ctx.sources, "address.lookup",
+                                            ["va"], selected)
+    if not selected:
+        return b.build(
+            {"resolved": None, "candidates": [], "zip_code": zip_code,
+             "note": "No address source is registered, so a ZIP cannot be "
+                     "mapped to the localities it covers. This is a "
+                     "Commonwealth coverage gap, not a statement about "
+                     "the ZIP."},
+            Coverage(registry=registry_dim,
+                     execution=ExecutionCoverage.complete,
+                     pagination=PaginationCoverage.complete,
+                     result=ResultCoverage.empty,
+                     jurisdictions_unavailable=gaps))
+    m = selected[0]
+    try:
+        # int, not str: ZIP_5 is a numeric column on this layer and the
+        # quoted form is rejected. The tool's own input stays a string,
+        # because a ZIP with a leading zero is not the number it looks
+        # like — the cast happens here, after the 5-digit check.
+        q = await ctx.arcgis.query(
+            m, "addresses", where_equals={"zip_code": int(zip_code)},
+            distinct_fields=["fips", "locality"])
+    except CommonwealthError as err:
+        return b.build(
+            {"resolved": None, "candidates": [], "zip_code": zip_code,
+             "note": "The address source could not be reached, so this ZIP "
+                     "was not mapped. That is an outage, not an answer."},
+            Coverage(registry=registry_dim,
+                     execution=ExecutionCoverage.failed,
+                     pagination=PaginationCoverage.complete,
+                     result=ResultCoverage.empty,
+                     source_failures=[failure(m.id, err.code, str(err))]))
+
+    src_ref = _source_entry(b, m, q)
+    matches = []
+    for r in q.records:
+        b.add_evidence(source_ref=src_ref, record_id=r.record_id,
+                       retrieved_at=q.retrieved_at,
+                       transformations=q.transformations,
+                       payload_hash=q.payload_hash())
+        fips = str(r.canonical.get("fips") or "")
+        j = ctx.jurisdictions.by_fips(fips)
+        matches.append({"fips": fips,
+                        "source_name": r.canonical.get("locality"),
+                        "id": j.id if j else None,
+                        "name": j.name if j else r.canonical.get("locality"),
+                        "kind": j.kind.value if j else None})
+    matches.sort(key=lambda mm: mm["fips"])
+
+    data: dict = {"zip_code": zip_code, "source_ref": src_ref,
+                  "localities_touched": matches}
+    if not matches:
+        data["resolved"] = None
+        data["candidates"] = []
+        data["note"] = (
+            f"No address point in the registered layer carries ZIP "
+            f"{zip_code}. That is what this publisher has on record, not "
+            "proof the ZIP does not exist or covers nothing in Virginia.")
+        return b.build(data, Coverage(
+            registry=registry_dim, execution=ExecutionCoverage.complete,
+            pagination=_pagination_dim([q]), result=ResultCoverage.empty,
+            jurisdictions_searched=["va"],
+            known_limitations=sorted(m.coverage.known_limitations)))
+
+    if len(matches) == 1:
+        only = matches[0]
+        data["resolved"] = ({"id": only["id"], "name": only["name"],
+                             "kind": only["kind"], "fips": only["fips"],
+                             "basis": "zip_unique"}
+                            if only["id"] else None)
+        data["candidates"] = []
+        if only["id"] is None:
+            data["note"] = (
+                f"ZIP {zip_code} covers one locality, {only['source_name']}, "
+                "which is not in Commonwealth's jurisdiction table.")
+        return b.build(data, Coverage(
+            registry=registry_dim, execution=ExecutionCoverage.complete,
+            pagination=_pagination_dim([q]), result=ResultCoverage.hit,
+            jurisdictions_searched=["va"],
+            known_limitations=sorted(m.coverage.known_limitations)))
+
+    data["resolved"] = None
+    data["candidates"] = [
+        {"id": mm["id"], "name": mm["name"], "kind": mm["kind"],
+         "distinguisher": f"one of {len(matches)} localities ZIP "
+                          f"{zip_code} covers (FIPS {mm['fips']})"}
+        for mm in matches]
+    data["note"] = (
+        f"ZIP {zip_code} spans {len(matches)} Virginia localities. A ZIP is "
+        "a postal delivery route, not a government boundary, and picking "
+        "one of these would be a guess. Present the candidates to the "
+        "user, or geocode the full street address instead.")
+    return b.build(data, Coverage(
+        registry=registry_dim, execution=ExecutionCoverage.complete,
+        pagination=_pagination_dim([q]), result=ResultCoverage.hit,
+        jurisdictions_searched=["va"],
+        known_limitations=sorted(m.coverage.known_limitations)),
+        requires_user_choice=True)
+
+
+async def resolve_location(ctx: RuntimeContext, address: str = "",
+                           zip_code: str = "") -> Envelope:
+    b = _builder(ctx, "geo.resolve_location")
+    if bool(address) == bool(zip_code):
+        raise InvalidQuery(
+            "pass exactly one of `address` or `zip_code` — there is no "
+            "precedence rule between them, and silently preferring one "
+            "would hide a contradiction between what you typed and where "
+            "it points")
+    if zip_code:
+        if not ZIP_PATTERN.match(zip_code.strip()):
+            raise InvalidQuery(
+                f"{zip_code!r} is not a 5-digit ZIP code. ZIP+4 is not "
+                "supported: the +4 narrows a delivery route, not a "
+                "government boundary, and this tool answers about "
+                "governments.")
+        return await _resolve_zip(ctx, b, zip_code.strip())
+
+    selected = ctx.sources.select("geocode.address", ["va"])
+    registry_dim, gaps = selection_coverage(ctx.sources, "geocode.address",
+                                            ["va"], selected)
+    if not selected:
+        return b.build(
+            {"resolved": None, "candidates": [], "address": address,
+             "note": "No geocoder is registered, so an address cannot be "
+                     "turned into a coordinate. Pass a lon/lat point to "
+                     "registry.resolve_jurisdiction instead. This is a "
+                     "Commonwealth coverage gap, not a statement about "
+                     "the address."},
+            Coverage(registry=registry_dim,
+                     execution=ExecutionCoverage.complete,
+                     pagination=PaginationCoverage.complete,
+                     result=ResultCoverage.empty,
+                     jurisdictions_unavailable=gaps))
+
+    m = selected[0]
+    try:
+        g = await ctx.geocoder.geocode(m, address)
+    except CommonwealthError as err:
+        return b.build(
+            {"resolved": None, "candidates": [], "address": address,
+             "note": "The geocoder could not be reached, so this address "
+                     "was not placed. That is an outage, not an address "
+                     "that does not exist."},
+            Coverage(registry=registry_dim,
+                     execution=ExecutionCoverage.failed,
+                     pagination=PaginationCoverage.complete,
+                     result=ResultCoverage.empty,
+                     source_failures=[failure(m.id, err.code, str(err))]))
+
+    geo_ref = _geocode_source(b, m, g)
+    confident = g.confident()
+    data: dict = {"address": address,
+                  "geocode": {"source_ref": geo_ref,
+                              "min_score": g.min_score,
+                              "candidate_count": len(g.candidates)}}
+
+    if not confident:
+        # Below the declared threshold, or nothing at all. Both are the
+        # same instruction to the caller — do not proceed on this — but
+        # they are different facts, so they read differently.
+        data["resolved"] = None
+        data["candidates"] = [
+            {**c.canonical(), "distinguisher":
+                f"score {c.score} is under the {g.min_score} threshold; "
+                f"matched by {c.matched_by or 'an unnamed locator element'}"}
+            for c in g.candidates[:INLINE_RECORD_CAP]]
+        data["note"] = (
+            f"The geocoder returned no match at or above score "
+            f"{g.min_score}. " + (
+                "Nothing was returned at all, so the address may be "
+                "outside Virginia (the publisher states the locator "
+                "covers the Commonwealth only) or spelled in a way the "
+                "locator does not recognise."
+                if not g.candidates else
+                "The weaker candidates are listed; present them to the "
+                "user and let them choose, rather than picking one."))
+        return b.build(data, Coverage(
+            registry=registry_dim, execution=ExecutionCoverage.complete,
+            pagination=PaginationCoverage.complete,
+            result=result_dim(len(g.candidates)),
+            jurisdictions_searched=["va"],
+            known_limitations=sorted(m.coverage.known_limitations)),
+            requires_user_choice=bool(g.candidates))
+
+    best = confident[0]
+    ev = b.add_evidence(source_ref=geo_ref, record_id=best.record_id,
+                        retrieved_at=g.retrieved_at,
+                        transformations=g.transformations,
+                        payload_hash=g.payload_hash())
+    data["geocode"].update({**best.canonical(), "evidence_ref": ev})
+    if best.address_type.lower() in ("postal", "postalext", "locality"):
+        b.warn(WarningCode.boundary_precision,
+               f"The locator matched this address at the {best.address_type} "
+               "level, which is a centroid for a whole postal or place "
+               "area rather than the address itself. The jurisdiction "
+               "below is the one containing that centroid, which is not "
+               "necessarily the one containing the address.")
+
+    # A geocode is never a resolution on its own: the point goes through
+    # the same point-in-polygon path registry.resolve_jurisdiction uses,
+    # and the government that owns the polygon is the answer.
+    c = await resolve_point(ctx, b, best.lon, best.lat)
+    if c.manifest is None or c.unreachable:
+        data["resolved"] = None
+        data["candidates"] = []
+        data["note"] = (
+            "The address geocoded, but the boundary source that would "
+            "place the coordinate in a jurisdiction "
+            + ("is not registered." if c.manifest is None
+               else "could not be reached — an outage, not an answer.")
+            + " The coordinate is in `geocode` and can be passed to "
+              "registry.resolve_jurisdiction later.")
+        return b.build(data, Coverage(
+            registry=(RegistryCoverage.partial if c.manifest is None
+                      else registry_dim),
+            execution=(ExecutionCoverage.complete if c.manifest is None
+                       else ExecutionCoverage.partial),
+            pagination=PaginationCoverage.complete,
+            result=ResultCoverage.hit,
+            jurisdictions_unavailable=c.gaps,
+            source_failures=c.failures))
+
+    if c.empty:
+        data["resolved"] = None
+        data["candidates"] = []
+        data["note"] = (
+            "The address geocoded to a coordinate that no Virginia "
+            "locality polygon contains. The locator covers the "
+            "Commonwealth only, so this usually means the match landed "
+            "just outside the mapped boundary rather than that the "
+            "address is unreal.")
+        return b.build(data, Coverage(
+            registry=registry_dim, execution=ExecutionCoverage.complete,
+            pagination=PaginationCoverage.complete,
+            result=ResultCoverage.hit,
+            jurisdictions_searched=["va"], source_failures=c.failures))
+
+    leaf = c.leaf
+    assert leaf is not None
+    resolved_j = leaf["jurisdiction"]
+    if resolved_j is not None:
+        data["resolved"] = {"id": resolved_j.id, "name": resolved_j.name,
+                            "kind": resolved_j.kind.value,
+                            "fips": resolved_j.fips,
+                            "basis": "geocode_then_point_in_polygon"}
+    else:
+        data["resolved"] = None
+        data["unmapped_match"] = {
+            "source_name": leaf["source_name"],
+            "source_fips": leaf["source_fips"], "layer": leaf["layer"],
+            "note": "The boundary source places this address in the "
+                    "jurisdiction named here, which is not in "
+                    "Commonwealth's jurisdiction table. The place is "
+                    "real; the gap is ours."}
+    data["candidates"] = []
+    data["layered_authorities"] = c.layered(ctx)
+    if best.postal_city and resolved_j is not None and \
+            best.postal_city.lower() not in resolved_j.name.lower():
+        # design/jurisdiction-resolution.md § 3 case 1. The postal city and
+        # the government routinely differ, and an agent that reads the
+        # mailing address as the jurisdiction gets a plausible wrong
+        # government's records.
+        data["postal_city_note"] = (
+            f"The mailing address says {best.postal_city.title()}; the "
+            f"government is {resolved_j.name}. A postal city is a delivery "
+            "route name, not a jurisdiction, and these disagree often in "
+            "Virginia. The government is what applies.")
+    warn_if_near_a_border(b, c)
+    if c.nearby:
+        data["nearby_jurisdictions"] = c.nearby
+
+    return b.build(data, Coverage(
+        registry=registry_dim,
+        execution=(ExecutionCoverage.partial if c.failures
+                   else ExecutionCoverage.complete),
+        pagination=PaginationCoverage.complete,
+        result=ResultCoverage.hit,
+        jurisdictions_searched=["va"], source_failures=c.failures,
+        known_limitations=sorted(
+            set(m.coverage.known_limitations)
+            | set(c.manifest.coverage.known_limitations))))
+
+
+GEO_TOOLS.register(ToolSpec(
+    name="geo.resolve_location",
+    description=(
+        "Turn a Virginia street address or a 5-digit ZIP into the "
+        "government that covers it. Use this FIRST when the user gives an "
+        "address — the other tools take a jurisdiction name or a "
+        "coordinate, not an address. An address is geocoded and the "
+        "resulting point is placed by point-in-polygon; the geocoder's own "
+        "city field is a POSTAL city and is never the answer (a Fairfax "
+        "County address reads 'Alexandria'). A ZIP returns every locality "
+        "it touches: ZIPs are delivery routes and cross government "
+        "boundaries constantly, so a multi-locality ZIP comes back as "
+        "candidates with requires_user_choice and must go to the user "
+        "unchosen. Pass exactly one of `address` or `zip_code`."),
+    toolset="default", contract_version="1", fn=resolve_location))

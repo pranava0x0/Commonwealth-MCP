@@ -15,6 +15,7 @@ from pathlib import Path
 import pytest
 
 from commonwealth.adapters.arcgis import ArcGISAdapter
+from commonwealth.adapters.arcgis_geocode import ArcGISGeocodeAdapter
 from commonwealth.adapters.base import TTLCache
 from commonwealth.adapters.virginia_law import VirginiaLawAdapter
 from commonwealth.core.jurisdiction import JurisdictionTable
@@ -120,10 +121,16 @@ def load_all_recordings() -> list[dict]:
 def build_ctx(extra_manifests: list[SourceManifest] | None = None,
               extra_exchanges: list[dict] | None = None,
               fetcher: object | None = None,
-              civic_fetcher: object | None = None) -> RuntimeContext:
+              civic_fetcher: object | None = None,
+              geocode_fetcher: object | None = None) -> RuntimeContext:
     exchanges = load_all_recordings() + list(extra_exchanges or [])
     replay = fetcher or ReplayFetcher(exchanges)
     civic_replay = civic_fetcher or HtmlReplayFetcher(load_civic_pages())
+    # The geocoder replays from the same pool: its recorded exchanges are
+    # JSON GETs like every other, so one fetcher would do — but the two
+    # adapters are given separate instances so a test can swap one for a
+    # failure stub without also breaking the other's replay.
+    geocode_replay = geocode_fetcher or ReplayFetcher(exchanges)
     real = SourceRegistry.load(SOURCES_DIR)
     manifests = list(real.manifests.values()) + list(extra_manifests or [])
     registry = SourceRegistry(manifests, real.capability_vocab, real.revision)
@@ -131,6 +138,8 @@ def build_ctx(extra_manifests: list[SourceManifest] | None = None,
         sources=registry,
         jurisdictions=JurisdictionTable.load(SOURCES_DIR / "jurisdictions"),
         arcgis=ArcGISAdapter(fetcher=replay, cache=TTLCache()),
+        geocoder=ArcGISGeocodeAdapter(fetcher=geocode_replay,
+                                      cache=TTLCache()),
         virginia_law=VirginiaLawAdapter(fetcher=civic_replay))
 
 

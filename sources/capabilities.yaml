@@ -13,3 +13,13 @@ capabilities:
     description: >
       Get a jurisdiction's official boundary polygon and identity
       attributes (FIPS, GNIS, area, jurisdiction type).
+  - id: address.lookup
+    description: >
+      Find address-point records at a coordinate or matching an address
+      string. Returns what the address publisher has on record; an address
+      absent from the layer is not evidence that no such address exists.
+  - id: geocode.address
+    description: >
+      Turn a typed address or place string into candidate coordinates with
+      a match score. A coordinate, never a jurisdiction: the jurisdiction
+      comes from running that coordinate through boundary.lookup.

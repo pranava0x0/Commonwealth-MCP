@@ -23,7 +23,8 @@ async def test_every_tool_has_output_schema_and_stable_order(server):
     assert first == ["registry.resolve_jurisdiction", "registry.search_sources",
                      "registry.describe_source", "registry.source_status",
                      "geo.find_parcel", "geo.find_zoning",
-                     "geo.find_boundaries", "civic.get_code_section"], (
+                     "geo.find_boundaries", "geo.find_address",
+                     "geo.resolve_location", "civic.get_code_section"], (
         "registration order changed — that is a contract change, make it "
         "deliberately")
     async with Client(server) as client:

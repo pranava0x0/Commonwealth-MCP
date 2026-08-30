@@ -1,0 +1,135 @@
+# Statewide layer, jurisdiction `va` — the same stack-inheritance shape as
+# VGIN's parcels and boundaries manifests, so it is selectable for any
+# locality. Endpoint, fields, count, and terms verified live 2026-08-29.
+#
+# This is not the composite locator. The locator turns a typed string into
+# a coordinate; this layer is a queryable inventory of address records with
+# their own identifiers and attribution. Registering one does not
+# substitute for the other, and both are registered.
+id: va-vgin-address-points
+name: Virginia Address Points (VGIN)
+jurisdiction: va
+
+publisher:
+  agency: Virginia Geographic Information Network (VGIN), part of the
+    Virginia Department of Emergency Management
+  authority_level: official_secondary
+
+domains: [geo]
+
+capabilities:
+  - id: address.lookup
+    tool_hint: geo.find_address
+
+adapter:
+  type: arcgis
+  service_url: https://vginmaps.vdem.virginia.gov/arcgis/rest/services/VA_Base_Layers/VA_Address_Points/FeatureServer
+  field_mapping_version: "1"
+  layers:
+    addresses:
+      layer_id: 0
+      id_field: OBJECTID
+      geometry: point
+      field_mapping:
+        # Every name here was read off the live layer schema on
+        # 2026-08-29, not copied from a ticket.
+        address_id: SITEADDID
+        address_key: ADDPTKEY
+        full_address: FULLADDR
+        street_full_name: FULLNAME
+        # PO_NAME is the postal city — the field that disagrees with the
+        # government. PLACENAME is NOT a postal place despite the name;
+        # see known_limitations. `locality` and `fips` are what feed the
+        # jurisdiction table.
+        landmark_name: PLACENAME
+        fips: FIPS
+        locality: MUNICIPALITY
+        address_class: ADDRCLASS
+        point_type: POINTTYPE
+        capture_method: CAPTUREMETH
+        status: STATUS
+        zip_code: ZIP_5
+        po_name: PO_NAME
+        last_update: LASTUPDATE
+
+access:
+  mode: anonymous
+  automation_status: public_api
+  terms_url: https://vgin.vdem.virginia.gov/datasets/virginia-address-points/about
+  terms_notes: >
+    Same VGIN Base Data terms as the parcels and administrative-boundary
+    layers, reviewed together: "The Virginia Base Data layers are intended
+    for cartographic use and spatial analysis only, and not for use as a
+    legal description ... all warranties regarding the accuracy of the map
+    data ... are hereby expressly disclaimed." No redistribution
+    restriction found; anonymous query access confirmed live 2026-08-29.
+    Re-review with the standard 12-month cadence.
+  terms_reviewed_at: "2026-08-29"
+  data_classification: open
+
+freshness:
+  expected_cadence: unknown
+  cadence_source: >
+    Publisher states address points are "developed and produced by
+    Virginia's Local Governments and sent to VGIN along with Road
+    centerline updates", on the Local Government Data Call cycle. The
+    geocoding service overview states the underlying address-point and RCL
+    locators are rebuilt quarterly. No per-locality SLA.
+  ttl_hint_seconds: 86400
+
+coverage:
+  geography: va
+  temporal: current
+  known_limitations:
+    - Cartographic/analysis use only per the publisher's own disclaimer;
+      an address point is not a legal description or a survey.
+    - >
+      Aggregated from local submissions on the data-call cycle, so
+      currency varies by locality. A locality that has submitted nothing
+      since its last call is covered by the registry and stale in the
+      layer, which are two different facts.
+    - >
+      PO_NAME is a postal city, not a government. Verified live
+      2026-08-29: 4501 CARLBY LN in Fairfax County carries PO_NAME
+      "ALEXANDRIA", an independent city it is not in. Only FIPS and
+      MUNICIPALITY name a jurisdiction here.
+    - >
+      PLACENAME is NOT a postal place, despite the name, and mapping it
+      as one would have been wrong. Read live 2026-08-29, its populated
+      values are landmark and facility names — "Rose Hill Elementary
+      School", "ABC Store 099", "DMV Customer Service Center Fairfax" —
+      and it is empty for ordinary residential addresses. It is mapped as
+      `landmark_name` for that reason.
+    - >
+      An address absent from this layer is not evidence that no such
+      address exists. A locality behind on its data call, a new
+      subdivision, and a genuinely invented address all look identical
+      here.
+    - >
+      Address-string matching is an exact or prefix match on the
+      publisher's own FULLADDR spelling ("6800 BEULAH ST"), not a fuzzy
+      search. Use the composite locator (geo.resolve_location) when the
+      input is a typed address that needs interpreting.
+
+authority_notes: >
+  VGIN aggregates from local government submissions rather than
+  maintaining primary address records itself, hence official_secondary.
+  The locality's own addressing authority is primary. This is the NG911-
+  derived layer, so it carries FIPS and MUNICIPALITY alongside the parsed
+  street components, which is what makes it usable for jurisdiction work
+  rather than just as a geocoded pin.
+
+health:
+  probe: arcgis_layer_count
+  expect:
+    # Observed live 2026-08-29: 3,867,706 address points statewide. Floor
+    # set well under that; a single locality's resubmission should not
+    # flip this unhealthy, an emptied layer must.
+    min_features:
+      addresses: 3000000
+
+lifecycle:
+  declared_state: active
+  added: "2026-08-29"
+  last_verified: "2026-08-29"
+  verified_by: pranava0x0

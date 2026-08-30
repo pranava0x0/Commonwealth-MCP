@@ -224,7 +224,9 @@ class ArcGISAdapter:
         return result.payload
 
     async def query(self, manifest: SourceManifest, layer_key: str, *,
-                    where_equals: dict[str, str] | None = None,
+                    where_equals: dict[str, str | int | float] | None = None,
+                    where_prefix: dict[str, str] | None = None,
+                    where_any_of: list[dict[str, str | int | float]] | None = None,
                     object_ids: list[int] | None = None,
                     geometry_point: tuple[float, float] | None = None,
                     intersect_geometry: dict | None = None,
@@ -232,6 +234,7 @@ class ArcGISAdapter:
                     return_geometry: bool = False,
                     return_centroid: bool = False,
                     simplify_tolerance: float | None = None,
+                    distinct_fields: list[str] | None = None,
                     record_count: int = 50,
                     sample_rows: int | None = None) -> ArcGISQueryResult:
         """`where_equals` takes CANONICAL field names (the manifest's
@@ -258,18 +261,61 @@ class ArcGISAdapter:
         }
         transformations = [f"field_mapping:v{p.field_mapping_version}"]
         clauses = 0
+
+        def src_field_of(canon: str) -> str:
+            field = layer.field_mapping.get(canon)
+            if field is None:
+                raise InvalidQuery(
+                    f"field {canon!r} is not mapped on layer "
+                    f"{layer_key!r} of {manifest.id}; mapped: "
+                    f"{sorted(layer.field_mapping)}")
+            return field
+
+        def literal(value: object) -> str:
+            """A quoted string, or a bare number for a numeric column.
+
+            ArcGIS rejects `NUMERIC_COL = '24450'` with a bare "Unable to
+            complete operation" (HTTP 200, error 400) — VGIN's address
+            points store ZIP_5 as an integer, and the quoted form fails
+            there while working on every string column tried before it.
+            Only a real Python int or float goes unquoted, so a string
+            that merely looks numeric cannot skip escaping."""
+            if isinstance(value, bool) or not isinstance(value, (int, float)):
+                return "'" + str(value).replace("'", "''") + "'"
+            return repr(value)
+
+        where_parts: list[str] = []
         if where_equals is not None:
-            parts = []
             for canon, value in sorted(where_equals.items()):
-                src_field = layer.field_mapping.get(canon)
-                if src_field is None:
-                    raise InvalidQuery(
-                        f"field {canon!r} is not mapped on layer "
-                        f"{layer_key!r} of {manifest.id}; mapped: "
-                        f"{sorted(layer.field_mapping)}")
-                escaped = str(value).replace("'", "''")
-                parts.append(f"{src_field} = '{escaped}'")
-            params["where"] = " AND ".join(parts)
+                where_parts.append(
+                    f"{src_field_of(canon)} = {literal(value)}")
+        if where_prefix is not None:
+            for canon, value in sorted(where_prefix.items()):
+                # LIKE 'x%' is a prefix match, not a fuzzy one, and the
+                # tool descriptions say so. `%` and `_` are LIKE's own
+                # wildcards, so a caller's literal ones are escaped to
+                # stop "50% Grade Rd" matching everything.
+                escaped = (str(value).replace("'", "''")
+                           .replace("\\", "\\\\")
+                           .replace("%", "\\%").replace("_", "\\_"))
+                where_parts.append(
+                    f"{src_field_of(canon)} LIKE '{escaped}%' ESCAPE '\\'")
+        if where_any_of:
+            # A disjunction ANDed with the rest. Real layers split one
+            # concept across several fields — VGIN's road centerlines
+            # carry FIPS_L and FIPS_R for the two sides of a segment, so
+            # "in this locality" is genuinely an OR and an AND of
+            # equalities cannot express it.
+            groups = []
+            for group in where_any_of:
+                terms = [f"{src_field_of(c)} = {literal(v)}"
+                         for c, v in sorted(group.items())]
+                if terms:
+                    groups.append("(" + " AND ".join(terms) + ")")
+            if groups:
+                where_parts.append("(" + " OR ".join(groups) + ")")
+        if where_parts:
+            params["where"] = " AND ".join(where_parts)
             clauses += 1
         if object_ids is not None:
             params["objectIds"] = ",".join(str(i) for i in object_ids)
@@ -312,6 +358,29 @@ class ArcGISAdapter:
         if clauses == 0:
             raise InvalidQuery("refusing an unbounded ArcGIS query: pass "
                                "field filters, object ids, or geometry")
+        if distinct_fields is not None:
+            # The platform's own DISTINCT. It answers "which localities
+            # does this ZIP touch" in one request instead of paging every
+            # address point in the ZIP and de-duplicating here — which for
+            # a dense ZIP would be tens of thousands of rows to learn
+            # three values.
+            if return_geometry or return_centroid:
+                raise InvalidQuery(
+                    "distinct_fields returns attribute tuples, not "
+                    "features; it cannot be combined with geometry")
+            params["outFields"] = ",".join(
+                src_field_of(c) for c in distinct_fields)
+            params["returnDistinctValues"] = "true"
+            # Observed on VGIN's address points, 2026-08-29: the same
+            # distinct query succeeds without `resultRecordCount` and
+            # fails with it, HTTP 200 carrying error 400 "Unable to
+            # complete operation". So the row cap comes off, and the only
+            # thing keeping the answer bounded is that a distinct query
+            # must be over a low-cardinality field — locality codes, not
+            # address ids. The egress byte cap is the backstop.
+            params.pop("resultRecordCount", None)
+            transformations.append(
+                "distinct:" + ",".join(sorted(distinct_fields)))
         if return_centroid:
             params["returnCentroid"] = "true"
         if return_geometry or return_centroid:
@@ -396,6 +465,20 @@ class ArcGISAdapter:
         records = []
         for feat in features:
             attrs = feat.get("attributes", {})
+            if distinct_fields is not None:
+                # A distinct row is a tuple of values, not a feature: the
+                # id_field is not in the response and there is no single
+                # record it came from. Naming it OBJECTID:None would
+                # invent a record that does not exist, so the identity is
+                # the tuple itself.
+                canonical = {canon: attrs.get(src_field_of(canon))
+                             for canon in distinct_fields}
+                rid = "|".join(f"{c}={canonical[c]}"
+                               for c in sorted(distinct_fields))
+                records.append(ArcGISRecord(
+                    canonical=canonical, record_id=f"distinct:{rid}",
+                    raw=attrs, geometry=None))
+                continue
             canonical = {canon: attrs.get(src)
                          for canon, src in layer.field_mapping.items()}
             rid = attrs.get(layer.id_field)

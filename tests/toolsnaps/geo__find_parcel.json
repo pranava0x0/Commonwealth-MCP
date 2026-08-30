@@ -4,7 +4,7 @@
   "open_world_hint": true,
   "read_only_hint": true
  },
- "description": "Find parcel records in a Virginia jurisdiction by parcel PIN or by a lon/lat point. Pass the user's jurisdiction string as given \u2014 resolution and its ambiguities are handled here, and candidate lists must go back to the user unchosen. Results carry provenance and coverage; an empty result with coverage.registry='none' means Commonwealth has no source there, not that no parcel exists. Not for street addresses yet (no geocoding in this release).",
+ "description": "Find parcel records in a Virginia jurisdiction by parcel PIN or by a lon/lat point. Pass the user's jurisdiction string as given \u2014 resolution and its ambiguities are handled here, and candidate lists must go back to the user unchosen. Results carry provenance and coverage; an empty result with coverage.registry='none' means Commonwealth has no source there, not that no parcel exists. For a street address, call geo.resolve_location first to get the jurisdiction and a coordinate.",
  "input_schema": {
   "properties": {
    "jurisdiction": {
