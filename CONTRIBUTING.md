@@ -126,20 +126,54 @@ If you are registering a government source, that sign-off covers the
 manifest you wrote. It does not and cannot cover the government data
 itself.
 
-## Writing
+## Before you open a pull request
 
-There is a checker:
+Two things go stale on their own and both are checked in CI, so it is
+cheaper to run them yourself than to read about them in a failed build.
+
+**Rebuild the site.** `docs/` is published — GitHub Pages serves it from
+`main` — so it ships in the same PR as the change it describes, never in
+a follow-up.
 
 ```bash
-python3 tools/check_writing.py
+.venv/bin/python tools/build_site.py --fixtures
 ```
 
-It reads the docs and the site and flags the habits this project keeps
-falling into: slogan headings, sentences that state a principle instead of
-a fact, paragraphs with no verb in them, and cross-references welded onto
-the end of a sentence with a dash.
+Run it after anything that touches sources, tools, capabilities, or the
+jurisdiction table. Never hand-edit `docs/data/*.json`; the page embeds
+those files and a test compares the two copies byte for byte.
+
+If you added a tool, add a `DEMO_CALLS` entry for it in
+`tools/build_site.py`. The page walks one recorded call per tool and a
+test derives that list from the tool registry, so a tool with no demo
+fails the build. Pick a call that shows what the tool gets right, not
+that it runs.
+
+**Run the writing checker**, every time prose changes rather than once at
+the end:
+
+```bash
+python3 tools/check_writing.py          # the Markdown tree and the site
+python3 tools/check_writing.py --code   # adds comments and docstrings; CI runs this
+python3 tools/check_writing.py --issues # open GitHub issues
+```
+
+Prose here means everything with sentences in it: Markdown, code comments
+and docstrings, tool descriptions and error strings, commit messages, PR
+bodies, and issue bodies.
+
+## Writing
+
+The checker reads the docs and the site and flags the habits this project
+keeps falling into: slogan headings, sentences that state a principle
+instead of a fact, paragraphs with no verb in them, and cross-references
+welded onto the end of a sentence with a dash.
 
 Every rule in it exists because prose that shipped here tripped it. If a
 rule fires on something that is genuinely load-bearing, that is worth
 arguing about in the PR. The rules are not sacred; they are a record of
 what went wrong before.
+
+When prose does get past it, add a rule with the offending sentence as
+its test case in `tests/test_writing_lint.py`. A checker with no test
+quietly stops catching things.
