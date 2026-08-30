@@ -111,11 +111,25 @@ class Containment:
         leaf = self.leaf
         resolved = leaf["jurisdiction"] if leaf else None
         if resolved is not None:
+            # A cross-county town's `parent` names ONE of its counties,
+            # and a point in the other part is not in that one. The
+            # containing locality was retrieved from the polygon that
+            # actually holds this coordinate, so it wins: a static county
+            # parent that contradicts it is dropped rather than listed as
+            # an applicable authority. Everything above the county — the
+            # state — still applies wherever the point is.
+            containing_ids = {row["id"] for row in rows
+                              if row["relationship"] == "containing-locality"}
             for p in ctx.jurisdictions.parents_of(resolved):
-                if not any(row.get("id") == p.id for row in rows):
-                    rows.append({"id": p.id,
-                                 "relationship": "parent-" + p.kind.value,
-                                 "name": p.name})
+                if any(row.get("id") == p.id for row in rows):
+                    continue
+                if (containing_ids
+                        and p.kind.value in ("county", "independent-city")
+                        and p.id not in containing_ids):
+                    continue
+                rows.append({"id": p.id,
+                             "relationship": "parent-" + p.kind.value,
+                             "name": p.name})
         return rows
 
 

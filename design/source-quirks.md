@@ -380,3 +380,10 @@ say, and point resolution already returns the county that contains it.
 `also_within` refreshes on every generator run without `--force`, since
 it answers a geometric question the publishers settle rather than an
 editorial one.
+
+It cuts the other way at a coordinate. A point in the Loudoun part of
+Herndon is not in Fairfax, so listing Herndon's static `parent` there
+would name a county that does not contain the point as an authority over
+it. Point resolution takes the containing locality from the polygon that
+actually holds the coordinate and drops a county parent that contradicts
+it; the state above still applies wherever the point is.

@@ -491,3 +491,90 @@ def test_probing_a_source_that_does_not_exist_still_fails():
          "va-no-such-source"],
         capture_output=True, text=True, cwd=PROJECT_ROOT, timeout=120)
     assert proc.returncode != 0
+
+
+# --- round 9 -------------------------------------------------------------
+
+def test_a_non_containing_county_parent_is_dropped_from_a_point_stack():
+    """Herndon's `parent` names Fairfax, and Herndon also lies in Loudoun.
+    A point in the Loudoun part is not in Fairfax, but `parents_of()`
+    added it anyway — claiming a county that does not contain the
+    coordinate is an applicable authority. The containing locality came
+    from the polygon that actually holds the point, so it wins; the state
+    above it still applies wherever the point is."""
+    from commonwealth.domains.containment import Containment
+    from tests.conftest import build_ctx
+
+    ctx = build_ctx()
+    herndon = ctx.jurisdictions.get("va:herndon-town")
+    loudoun = ctx.jurisdictions.get("va:loudoun-county")
+    assert herndon.parent == "va:fairfax-county"
+    assert "va:loudoun-county" in herndon.also_within
+
+    c = Containment(
+        town=[{"source_name": "Herndon town", "source_fips": "5137000",
+               "layer": "towns", "jurisdiction": herndon}],
+        locality=[{"source_name": "Loudoun County", "source_fips": "51107",
+                   "layer": "localities", "jurisdiction": loudoun}])
+    rels = {row["id"]: row["relationship"] for row in c.layered(ctx)}
+    assert rels["va:loudoun-county"] == "containing-locality"
+    assert "va:fairfax-county" not in rels, (
+        "a county that does not contain the point is not an authority "
+        "over it")
+    assert rels["va"] == "parent-state", "the state applies either way"
+
+
+def test_the_containing_county_is_kept_when_it_is_also_the_parent():
+    """The common case has to keep working: a point in the Fairfax part
+    of Vienna lists Fairfax once, as the containing locality."""
+    from commonwealth.domains.containment import Containment
+    from tests.conftest import build_ctx
+
+    ctx = build_ctx()
+    vienna = ctx.jurisdictions.get("va:vienna-town")
+    fairfax = ctx.jurisdictions.get("va:fairfax-county")
+    c = Containment(
+        town=[{"source_name": "Vienna town", "source_fips": "5181072",
+               "layer": "towns", "jurisdiction": vienna}],
+        locality=[{"source_name": "Fairfax County", "source_fips": "51059",
+                   "layer": "localities", "jurisdiction": fairfax}])
+    rows = c.layered(ctx)
+    ids = [row["id"] for row in rows]
+    assert ids.count("va:fairfax-county") == 1
+    assert {row["id"]: row["relationship"] for row in rows}[
+        "va:fairfax-county"] == "containing-locality"
+    assert "va" in ids
+
+
+async def test_a_zoning_district_names_only_the_polygons_that_produced_it(
+        cw_ctx, split_pin_fixture):
+    """A parcel split across polygons was given every parcel reference on
+    every district, so each district claimed support from polygons it
+    never intersected. For a parcel that straddles two districts that is
+    a false statement about where each one applies."""
+    env = await find_zoning(cw_ctx, jurisdiction="Richmond City",
+                            pin=split_pin_fixture)
+    block = env.data["results"][0]
+    parcel_refs = set(block["parcel_evidence_refs"])
+    assert len(parcel_refs) == 2
+    for row in block["records"]:
+        attached = set(row["evidence_refs"]) & parcel_refs
+        assert attached, f"{row['district']} names no parcel polygon"
+        assert attached <= parcel_refs
+    # Nothing may claim a polygon that produced no record of its own.
+    covered = set()
+    for row in block["records"]:
+        covered |= set(row["evidence_refs"]) & parcel_refs
+    assert covered <= parcel_refs
+
+
+@pytest.fixture()
+def split_pin_fixture() -> str:
+    import json
+
+    from commonwealth.runtime import PROJECT_ROOT
+    summary = json.loads(
+        (PROJECT_ROOT / "tests" / "fixtures" / "sources" /
+         "va-richmond-city-parcels-zoning" / "recorded.json").read_text()
+    )["summary"]
+    return summary["multi_polygon_pin"]["pin"]

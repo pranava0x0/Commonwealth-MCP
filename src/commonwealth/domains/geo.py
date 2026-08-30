@@ -448,13 +448,20 @@ async def find_zoning(ctx: RuntimeContext, jurisdiction: str,
                         "here means the parcel is split, not that the "
                         "sources disagree.")
                 merged: dict[str, object] = {}
+                # Which parcel polygon produced which zoning record.
+                # Attaching every parcel ref to every district said each
+                # one was supported by polygons it never intersected —
+                # which for a parcel split across two districts is a
+                # false claim about where each district applies.
+                produced_by: dict[str, list[str]] = {}
                 q = None
                 for parcel in used:
-                    parcel_evidence_refs.append(b.add_evidence(
+                    this_ref = b.add_evidence(
                         source_ref=parcel_ref, record_id=parcel.record_id,
                         retrieved_at=pq.retrieved_at,
                         transformations=pq.transformations,
-                        payload_hash=pq.payload_hash()))
+                        payload_hash=pq.payload_hash())
+                    parcel_evidence_refs.append(this_ref)
                     geometry = dict(parcel.geometry or {})
                     geometry.setdefault("spatialReference", {"wkid": 4326})
                     zq = await ctx.arcgis.query(m, "zoning",
@@ -465,6 +472,8 @@ async def find_zoning(ctx: RuntimeContext, jurisdiction: str,
                         # polygons; deduplicating on the record id keeps a
                         # district from being counted twice for one parcel.
                         merged.setdefault(rec.record_id, rec)
+                        produced_by.setdefault(rec.record_id, []).append(
+                            this_ref)
                     if q is None:
                         q = zq
                     else:
@@ -489,13 +498,15 @@ async def find_zoning(ctx: RuntimeContext, jurisdiction: str,
         if parcel_evidence_refs:
             block["parcel_evidence_refs"] = parcel_evidence_refs
             block["parcel_polygons_intersected"] = polygons_used
-            # Each district rests on whichever parcel polygons were
-            # intersected, so those refs ride on the record too — this is
+            # Each district rests on the parcel polygons that ACTUALLY
+            # produced it, which for a split parcel is a subset — this is
             # the case design/provenance-envelope.md § 2's array exists
-            # for.
+            # for, and attaching all of them to all of them would have
+            # answered it wrongly.
             for row in block["records"]:
-                row["evidence_refs"] = (list(row["evidence_refs"])
-                                        + parcel_evidence_refs)
+                row["evidence_refs"] = (
+                    list(row["evidence_refs"])
+                    + produced_by.get(row["record_id"], []))
         blocks.append(block)
 
     if any(blk["record_count"] for blk in blocks):
