@@ -64,6 +64,14 @@ examples/
 ```
 
 - Every script runs keyless against live sources (`python examples/zoning_lookup.py`), takes a `--fixtures` flag to run offline from the recorded fixtures, and prints the provenance block prominently — the demo's job is to sell the envelope, not just the answer.
+
+**Shipped 2026-08-29 (GitHub issue #30), with two changes to the sketch above.** `examples/` holds four scripts — `whose_government.py`, `screen_a_parcel.py`, `what_is_covered.py`, `two_sources_disagree.py` — chosen around what the registry can now answer rather than the names guessed here; `bill_to_code.py` still waits on the legislative API. Each prints the five coverage dimensions, sources, and warnings alongside the answer.
+
+The first change: **`--fixtures` is the default, not the flag.** A newcomer's first run should not be able to fail on a network, a firewall, or a government service being down at the wrong moment, so the recorded mode runs unless `--live` is passed. The scripts say which mode they ran in on their first line.
+
+The second: **the offline seam moved into the package** (`commonwealth/fixtures.py`). It lived in `tests/conftest.py`, and a script someone runs should not have to import a test module to work. `conftest` now calls it, so there is one implementation rather than two that can drift.
+
+`tests/test_examples.py` runs each script as a subprocess exactly as a reader would — imports, argument parsing, and all — because an example nobody runs rots into a wrong tutorial. It also asserts the README's table lists every script, and that no example imports from the test suite.
 - The walkthrough transcript is a maintained artifact with a date, refreshed by the release process, because a stale demo transcript is anti-marketing.
 - MCP Inspector configs (`examples/inspector/`) ship for each server: the survey's universal baseline, and the first thing an evaluating developer reaches for.
 

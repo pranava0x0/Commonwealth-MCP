@@ -123,6 +123,24 @@ and people are sketched in the architecture and not built.
 [Open issues](https://github.com/pranava0x0/Commonwealth-MCP/issues) is
 the list of what comes next, ordered by priority label.
 
+## Try it in a terminal
+
+Four short scripts in [examples/](examples/), each a real question with a
+printed answer. They run offline against recorded government responses by
+default, so a first run cannot fail on a network or a service being down:
+
+```bash
+python examples/whose_government.py          # recorded responses
+python examples/whose_government.py --live   # the real services
+```
+
+`whose_government.py` asks about a mailing address whose city is not its
+government, `screen_a_parcel.py` walks a property question from PIN to
+zoning to buildings to monitored sites,
+`what_is_covered.py` shows what an empty answer means here, and
+`two_sources_disagree.py` shows two official sources describing one road
+differently. [examples/README.md](examples/README.md) has the table.
+
 ## The demo site
 
 [docs/index.html](docs/index.html) is a static page with no build step. It
