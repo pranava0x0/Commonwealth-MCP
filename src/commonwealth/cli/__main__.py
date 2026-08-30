@@ -199,6 +199,61 @@ def cmd_sources_validate(args: argparse.Namespace) -> int:
     return _validate_all(_load_ctx())
 
 
+def registry_stats(ctx: RuntimeContext) -> dict[str, Any]:
+    """Coverage debt, counted rather than remembered.
+
+    design/source-registry.md § 6.3: every "we should cover X someday" idea
+    becomes a `proposed` manifest, so the proposed/active split is the
+    measurement. Derived from the loaded registry — a hand-maintained
+    mirror of these numbers anywhere is a test failure by design (§ 7)."""
+    from ..core.registry import DeclaredState
+
+    manifests = list(ctx.sources.manifests.values())
+    by_state = {s.value: 0 for s in DeclaredState}
+    for m in manifests:
+        by_state[m.lifecycle.declared_state.value] += 1
+    active = [m for m in manifests
+              if m.lifecycle.declared_state == DeclaredState.active]
+    answered = {cap for m in active for cap in m.capability_ids()}
+    unanswered = sorted(ctx.sources.capability_vocab - answered)
+    by_adapter: dict[str, int] = {}
+    for m in manifests:
+        by_adapter[m.adapter.type] = by_adapter.get(m.adapter.type, 0) + 1
+    return {
+        "total": len(manifests),
+        "by_declared_state": by_state,
+        "by_adapter_type": dict(sorted(by_adapter.items())),
+        "capabilities_in_vocabulary": len(ctx.sources.capability_vocab),
+        "capabilities_with_an_active_source": len(answered),
+        "capabilities_with_no_active_source": unanswered,
+        "jurisdictions_in_table": len(ctx.jurisdictions),
+        "jurisdictions_with_a_local_source": len(
+            {m.jurisdiction for m in active if m.jurisdiction != "va"}),
+    }
+
+
+def cmd_sources_stats(args: argparse.Namespace) -> int:
+    ctx = _load_ctx()
+    stats = registry_stats(ctx)
+    if args.json:
+        print(json.dumps(stats, indent=2))
+        return 0
+    states = stats["by_declared_state"]
+    print(f"source manifests: {stats['total']}")
+    for state in ("active", "proposed", "retired"):
+        print(f"  {state:9} {states[state]}")
+    print("adapter types: " + ", ".join(
+        f"{k}={v}" for k, v in stats["by_adapter_type"].items()))
+    print(f"capabilities: {stats['capabilities_with_an_active_source']}"
+          f"/{stats['capabilities_in_vocabulary']} have an active source")
+    for cap in stats["capabilities_with_no_active_source"]:
+        print(f"  no active source: {cap}")
+    print(f"jurisdictions: {stats['jurisdictions_with_a_local_source']}"
+          f"/{stats['jurisdictions_in_table']} have a source of their own "
+          "(statewide sources cover the rest)")
+    return 0
+
+
 def cmd_sources_probe(args: argparse.Namespace) -> int:
     ctx = _load_ctx()
     ids = [args.source_id] if args.source_id else sorted(ctx.sources.manifests)
@@ -499,6 +554,11 @@ def main() -> int:
     sp = ssub.add_parser("probe")
     sp.add_argument("source_id", nargs="?")
     sp.set_defaults(fn=cmd_sources_probe)
+    sst = ssub.add_parser("stats", help="registry coverage debt: the "
+                                        "proposed/active split and what "
+                                        "no active source answers")
+    sst.add_argument("--json", action="store_true")
+    sst.set_defaults(fn=cmd_sources_stats)
     ss = ssub.add_parser("sample")
     ss.add_argument("source_id")
     ss.set_defaults(fn=cmd_sources_sample)

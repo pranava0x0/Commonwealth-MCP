@@ -36,6 +36,12 @@ class AutomationStatus(str, enum.Enum):
 ACTIVATABLE = {AutomationStatus.permitted, AutomationStatus.public_api,
                AutomationStatus.public_download}
 
+# The adapter type and probe name a manifest carries when it describes no
+# endpoint at all (design/source-registry.md § 6.3). Both are refused at the
+# activation gate, so an inventory row can never be queried or probed.
+INVENTORY_ADAPTER = "none"
+NO_PROBE = "none"
+
 
 class DataClassification(str, enum.Enum):
     open = "open"
@@ -85,7 +91,11 @@ class Access(_Strict):
     automation_status: AutomationStatus
     terms_url: str
     terms_notes: str
-    terms_reviewed_at: str
+    # Optional at the schema level, required to activate (checked in
+    # validate_manifest). A `proposed` manifest is inventory whose terms
+    # nobody has read yet; making the field mandatory would force it to
+    # invent a review date, which is worse than admitting there is none.
+    terms_reviewed_at: str | None = None
     data_classification: DataClassification = DataClassification.open
     exposure_allowlist: list[str] | None = None
     classification_reviewed_by: str | None = None
@@ -173,6 +183,32 @@ def validate_manifest(manifest: SourceManifest, path: str,
     if active and status not in ACTIVATABLE:
         bad(f"declared_state=active requires automation_status in "
             f"{sorted(s.value for s in ACTIVATABLE)}, got {status.value!r}")
+    # What an active source must carry that inventory need not. Each was
+    # previously mandatory for every manifest, so a `proposed` row could
+    # only validate by inventing a terms review that never happened, a
+    # probe with nothing to probe, and a capability claim with no endpoint
+    # behind it. Checking them at the activation gate instead lets an
+    # inventory row record what it knows and still validate.
+    if active and not manifest.access.terms_reviewed_at:
+        bad("declared_state=active requires terms_reviewed_at; a source "
+            "cannot be queried on terms nobody has read")
+    if active and manifest.adapter.type == INVENTORY_ADAPTER:
+        bad(f"adapter type {INVENTORY_ADAPTER!r} names the absence of an "
+            "endpoint and cannot be active; it is inventory only")
+    if active and manifest.health.probe == NO_PROBE:
+        bad(f"declared_state=active requires a real health probe, not "
+            f"{NO_PROBE!r}")
+    if active and not manifest.capabilities:
+        bad("declared_state=active requires at least one capability; an "
+            "active source with none can never be selected")
+    if not active and manifest.capabilities:
+        # A capability id is a routing promise. Selection already filters
+        # on declared_state, so a proposed manifest declaring one is not
+        # dangerous — it is just untrue, and `sources stats` counts
+        # capability coverage from these rows.
+        bad("only an active manifest may declare capabilities; record the "
+            "intended capability in authority_notes until the source is "
+            "wired up")
     if manifest.access.data_classification == DataClassification.restricted \
             and active:
         bad("data_classification=restricted cannot be active in V1")

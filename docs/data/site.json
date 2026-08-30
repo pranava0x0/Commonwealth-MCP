@@ -1,11 +1,13 @@
 {
  "version": "0.1.0.dev0",
- "registry_revision": "2026-08-28",
+ "registry_revision": "2026-08-29",
  "counts": {
   "servers": 1,
   "tools": 8,
   "packages": 3,
-  "sources": 6,
+  "sources": 10,
+  "sources_active": 6,
+  "sources_proposed": 4,
   "capabilities": 4,
   "jurisdictions": 14,
   "trap_pairs": 4
@@ -105,6 +107,21 @@
    ]
   },
   {
+   "id": "va-eva-procurement",
+   "name": "eVA (Virginia procurement)",
+   "jurisdiction": "va",
+   "publisher": "Virginia Department of General Services, Division of Purchases and Supply",
+   "authority_level": "primary",
+   "capabilities": [],
+   "data_classification": "open",
+   "declared_state": "proposed",
+   "terms_url": "https://eva.virginia.gov/",
+   "known_limitations": [
+    "No endpoint discovery has run. Whether eVA exposes solicitations or awards through anything other than its own web UI is an open question, not a recorded finding.\n",
+    "Procurement records name private parties, so the data-classification review here is a real one rather than a formality \u2014 an award record is public, a losing bidder's contact details may not be.\n"
+   ]
+  },
+  {
    "id": "va-fairfax-parcels-zoning",
    "name": "Fairfax County Parcels and Zoning (Open Data)",
    "jurisdiction": "va:fairfax-county",
@@ -123,6 +140,22 @@
    ]
   },
   {
+   "id": "va-open-data-portal",
+   "name": "Virginia Open Data Portal (CKAN)",
+   "jurisdiction": "va",
+   "publisher": "Virginia Office of Data Governance and Analytics",
+   "authority_level": "official_secondary",
+   "capabilities": [],
+   "data_classification": "open",
+   "declared_state": "proposed",
+   "terms_url": "https://data.virginia.gov/pages/terms-of-use",
+   "known_limitations": [
+    "Verified 2026-08-29: CKAN 2.9.11 with the Action API reachable anonymously (`/api/3/action/status_show` returns 200), 64 publishing organizations.\n",
+    "This is a catalog, not a data source. Its records describe other agencies' datasets; a query against it answers \"who published something about X\", never \"what is at this address\". The capability it would answer is dataset discovery, which overlaps `registry.search_sources` and needs a design decision before a tool, not just a manifest.\n",
+    "Most resources are file downloads (CSV, shapefile) rather than queryable services, so onboarding one of them means the download question decision 0006 defers, not another ArcGIS registration.\n"
+   ]
+  },
+  {
    "id": "va-richmond-city-parcels-zoning",
    "name": "Richmond City Parcels and Zoning (GIS Open Data)",
    "jurisdiction": "va:richmond-city",
@@ -138,6 +171,38 @@
    "known_limitations": [
     "GIS zoning is a screening representation; the adopted zoning ordinance and official zoning map govern.",
     "Parcels layer stacks multiple ownership records under one geometry for multi-owner PINs (see the CountOfPIN field in the publisher's schema)."
+   ]
+  },
+  {
+   "id": "va-scc",
+   "name": "State Corporation Commission (business entities and utilities)",
+   "jurisdiction": "va",
+   "publisher": "Virginia State Corporation Commission (SCC)",
+   "authority_level": "primary",
+   "capabilities": [],
+   "data_classification": "open",
+   "declared_state": "proposed",
+   "terms_url": "https://www.scc.virginia.gov/",
+   "known_limitations": [
+    "No endpoint discovery has run. The Clerk's Information System is a session-based web application, which is the shape most likely to have no public API at all and the shape this project's egress policy is least willing to work around.\n",
+    "Business-entity records name registered agents at their own addresses. That is public by statute and still a sensitive_public classification question, reviewed before anything activates.\n"
+   ]
+  },
+  {
+   "id": "va-vdh",
+   "name": "Virginia Department of Health (no queryable endpoint found)",
+   "jurisdiction": "va",
+   "publisher": "Virginia Department of Health (VDH)",
+   "authority_level": "primary",
+   "capabilities": [],
+   "data_classification": "open",
+   "declared_state": "proposed",
+   "terms_url": "https://www.vdh.virginia.gov/terms-of-use/",
+   "known_limitations": [
+    "Checked 2026-08-29. `gis.vdh.virginia.gov` does not resolve (NXDOMAIN), so the ArcGIS REST directory the other state publishers expose has no VDH equivalent.\n",
+    "Checked 2026-08-29. VDH does publish through the state open-data portal: 144 datasets under the `virginia-department-of-health` organization on data.virginia.gov. Every resource sampled is a CSV download of an aggregate public-use dataset (COVID-19, mpox, healthcare-associated infections, heat-related illness), not a record-shaped service that answers a query about a place or a facility. A bulk CSV is a real publication and a poor fit for a capability whose contract is \"look this up\".\n",
+    "Checked 2026-08-29. No licensed-facility or inspection registry with an API surfaced under VDH. Health-professional licensing sits with the Department of Health Professions, a separate agency and a separate future manifest, not this one.\n",
+    "Absence of an endpoint is not absence of data. This row exists so the gap is inventory rather than memory, and re-checking it is a re-verification of this manifest rather than a fresh search.\n"
    ]
   },
   {

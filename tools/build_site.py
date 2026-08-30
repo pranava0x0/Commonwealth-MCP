@@ -278,6 +278,14 @@ def build_catalog() -> dict:
             "tools": len(tools),
             "packages": len(regs),
             "sources": len(sources),
+            # A `proposed` manifest is inventory, not an endpoint
+            # (design/source-registry.md § 6.3), so the page must never
+            # present the registry total as the number of systems it can
+            # actually query.
+            "sources_active": sum(1 for s in sources
+                                  if s["declared_state"] == "active"),
+            "sources_proposed": sum(1 for s in sources
+                                    if s["declared_state"] == "proposed"),
             "capabilities": len(ctx.sources.capability_vocab),
             "jurisdictions": len(ctx.jurisdictions),
             "trap_pairs": len(trap_pairs),

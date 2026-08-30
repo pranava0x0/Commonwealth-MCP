@@ -43,6 +43,34 @@ sources:
   data_classification: open
   recorded_fixtures:
   - tests/fixtures/sources/va-richmond-city-parcels-zoning/recorded.json
+- id: va-eva-procurement
+  name: eVA (Virginia procurement)
+  publisher: Virginia Department of General Services, Division of Purchases and
+    Supply
+  manifest: sources/state/eva-procurement.yaml
+  terms_url: https://eva.virginia.gov/
+  terms_reviewed_at: null
+  automation_status: unknown
+  data_classification: open
+  recorded_fixtures: []
+- id: va-scc
+  name: State Corporation Commission (business entities and utilities)
+  publisher: Virginia State Corporation Commission (SCC)
+  manifest: sources/state/scc.yaml
+  terms_url: https://www.scc.virginia.gov/
+  terms_reviewed_at: null
+  automation_status: unknown
+  data_classification: open
+  recorded_fixtures: []
+- id: va-vdh
+  name: Virginia Department of Health (no queryable endpoint found)
+  publisher: Virginia Department of Health (VDH)
+  manifest: sources/state/vdh.yaml
+  terms_url: https://www.vdh.virginia.gov/terms-of-use/
+  terms_reviewed_at: null
+  automation_status: unknown
+  data_classification: open
+  recorded_fixtures: []
 - id: va-vgin-admin-boundaries
   name: Virginia Administrative Boundaries (VGIN)
   publisher: Virginia Geographic Information Network (VGIN), part of the Virginia
@@ -77,3 +105,12 @@ sources:
   recorded_fixtures:
   - tests/fixtures/sources/va-code-of-virginia/no-such-section.html
   - tests/fixtures/sources/va-code-of-virginia/section-1-500.html
+- id: va-open-data-portal
+  name: Virginia Open Data Portal (CKAN)
+  publisher: Virginia Office of Data Governance and Analytics
+  manifest: sources/state/virginia-open-data.yaml
+  terms_url: https://data.virginia.gov/pages/terms-of-use
+  terms_reviewed_at: null
+  automation_status: unknown
+  data_classification: open
+  recorded_fixtures: []
