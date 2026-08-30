@@ -52,3 +52,41 @@ Rules:
 ## 5. Diagrams
 
 architecture.md § D6 conventions govern ("Flows, drawn" appendix): Mermaid-in-Markdown, one question per diagram, real artifact names, no boxes without specs. Diagrams are reviewed like prose: a reviewer who cannot answer the diagram's stated question from the diagram rejects it.
+
+## 6. Where documentation lives (2026-08-29 consolidation)
+
+The repository root holds `README.md` and `CONTRIBUTING.md`. Nothing else.
+
+- **How it works and why** — `design/architecture.md`, one file, with the
+  decision records as its second half. They were split across two 80KB
+  files and almost every question raised by the first was answered in the
+  second.
+- **Per-feature contracts** — the other files in `design/`.
+- **Evidence** — `research/README.md`.
+- **What is next, and what is broken** — GitHub issues, not files. A
+  gitignored `backlog.md` holds maintainer-only notes that would be noise
+  in a public tracker; it points at issue numbers rather than copying
+  them.
+
+Adding a new top-level document needs a reason that one of these cannot
+hold.
+
+## 7. Surfaces the writing checker reads
+
+`tools/check_writing.py` scans more than the Markdown tree, because copy
+escaped through every gap it did not:
+
+| Surface | Why it is scanned |
+|---|---|
+| `docs/index.html` | The first thing most readers see; it was never scanned |
+| `<script>` blocks in it | About half the site's visible copy is built in JavaScript |
+| `docs/data/site.json` | The coverage decoder text is authored as Python dict literals and rendered at load time |
+| `docs/llms.txt` | What an agent reads instead of the page |
+| Open GitHub issues (`--issues`) | Published writing, held to the same standard |
+| Comments and docstrings (`--code`) | Read by people, and they rot the same way |
+
+Run it on anything before it ships, commit messages and PR bodies
+included (`--stdin`). When prose gets past it, add a rule with the
+offending sentence as that rule's test case rather than only fixing the
+sentence.
+

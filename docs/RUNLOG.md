@@ -3,6 +3,50 @@
 One entry per significant work session or delegated research task: why it
 ran, cost where relevant, and whether it was worth it.
 
+## 2026-08-29 — docs consolidation, a site rewritten for newcomers, six issues closed
+
+Prompted by a review of the repo as a stranger would meet it. Two problems
+with one cause: eight markdown files at the root, three over 80KB, with
+the architecture in one and the reasons for it in another; and a site that
+opened on a capability table full of undefined terms.
+
+**Docs.** Root went from 8 markdown files to 2. `ARCHITECTURE.md` and
+`DECISIONS.md` merged into `design/architecture.md`; `RESEARCH.md` became
+`research/README.md`; `KNOWN_SOURCE_QUIRKS.md` became
+`design/source-quirks.md`; the backlog and issue log became GitHub issues.
+Four architecture sections were dropped as restatements of the decision
+records they cited. Cross-references in 53 files updated.
+
+**Site.** Opens on what the problem is, what MCP is, and what this project
+does. Call cards and coverage blocks became accordions (47px collapsed,
+down from ~400). The page had no responsive breakpoints at all before
+this, only a dark-mode query, which is why the disclaimer and nav ran off
+the side of a phone.
+
+**Issues closed:** #15 (egress rules 6 and 7, plus a decompression limit
+that did not exist), #18, #23, #24 (the license set decision 0011 chose,
+absent from a public repo), #29 (`commonwealth configure`), #34 (ArcGIS
+paging).
+
+**Review.** Codex left 10 comments, a local pass found 11, one bug in
+both. All 19 fixed. The one that mattered: the new paging walk extended a
+list held inside a TTL-cached payload, so repeating a query returned 250,
+450, 650, then 850 records. Two more in the same loop — sample mode was
+paged past its own cap, and the duplicate-page guard could not do what its
+comment claimed.
+
+**Writing checker.** Eleven new rules, four ported from sibling checkers,
+each with the sentence that prompted it as its test case. Four blind spots
+closed, of which two were the checker's own bugs: its JS pattern skipped
+every string containing an apostrophe, and its quote-pairing shifted every
+pair after a short quote, hiding four banned phrases.
+
+**Also.** Twenty cross-project references removed — the specs cited local
+gitignored notes as an authority, which is both a dangling pointer and a
+disclosure.
+
+163 tests to 246.
+
 ## 2026-08-28 — plan-vs-built review: on track, 18 drift findings, docs corrected
 
 An evaluation pass rather than a build session: the repo, demos, and
