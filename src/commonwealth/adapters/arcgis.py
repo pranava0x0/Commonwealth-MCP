@@ -351,6 +351,12 @@ class ArcGISAdapter:
         # (measured: 250, 450, 650, 850 records on four identical calls).
         # The walk builds its own list.
         features = list(features)
+        # Provenance is per page. Page one can come from cache while a
+        # later page is fetched live (an earlier walk cached page one and
+        # then failed, or the pages straddle the TTL), and reporting only
+        # page one's would label later-page evidence with the wrong access
+        # path and retrieval time.
+        page_results = [result]
         # `sample_rows` is a deliberately tiny bounded read for fixture
         # recording. Any layer with more rows than the sample sets
         # exceededTransferLimit on the first response, so paging here would
@@ -381,6 +387,7 @@ class ArcGISAdapter:
                             manifest.id, layer_key)
                 break
             features.extend(batch)
+            page_results.append(page)
             pages_read += 1
             more_remains = bool(page.payload.get("exceededTransferLimit"))
         if pages_read > 1:
@@ -404,11 +411,14 @@ class ArcGISAdapter:
 
         log_source_call(manifest, f"query:{layer_key}",
                         params, len(records))
+        # Report the weakest link across the pages. Claiming the freshest
+        # page's numbers for the whole set would overstate how current the
+        # answer is, which is the one thing this envelope exists not to do.
         return ArcGISQueryResult(
             records=records,
-            retrieved_at=result.retrieved_at,
-            cache_age_seconds=result.cache_age_seconds,
-            from_cache=result.from_cache,
+            retrieved_at=min(r.retrieved_at for r in page_results),
+            cache_age_seconds=max(r.cache_age_seconds for r in page_results),
+            from_cache=any(r.from_cache for r in page_results),
             source_updated_at=updated,
             # True only when rows remain AFTER the page budget ran out,
             # so a result that paged to completion is not called partial.

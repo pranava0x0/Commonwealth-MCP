@@ -324,3 +324,42 @@ async def test_a_layer_that_ignores_result_offset_does_not_duplicate_rows():
     ids = [r.canonical.get("pin") for r in result.records]
     assert len(ids) == len(set(ids)), "returned duplicate rows"
     assert len(result.records) == 50
+
+
+async def test_provenance_reports_the_weakest_page_not_the_first():
+    """A walk can mix cached and live pages, and the stale one is not
+    always page one.
+
+    Reporting page one's provenance for the whole set claims the answer is
+    fresher than it is, and labels later-page evidence with an access path
+    it did not take. The discriminating case is a LIVE first page with a
+    CACHED later one: taking page one's values reports `from_cache=False`
+    for a result that is partly served from cache.
+    """
+    svc = _PagingService(total=120)
+    cache = TTLCache()
+    adapter = ArcGISAdapter(fetcher=svc, cache=cache)
+    manifest = _real_manifest()
+
+    # First walk caches all three pages.
+    first = await adapter.query(manifest, "parcels",
+                                where_equals={"pin": "x"})
+    assert len(first.records) == 120
+    assert first.from_cache is False
+
+    # Evict page one only, leaving pages two and three cached. That is the
+    # state a short-TTL eviction or a partial cache clear produces.
+    page_one = [k for k in cache._store if '"resultOffset"' not in k
+                and "/query" in k]
+    assert len(page_one) == 1, page_one
+    del cache._store[page_one[0]]
+
+    result = await adapter.query(manifest, "parcels",
+                                 where_equals={"pin": "x"})
+
+    assert len(result.records) == 120
+    assert result.from_cache is True, (
+        "page one was live and the later pages came from cache; reporting "
+        "page one's provenance calls the whole answer fresh")
+
+
