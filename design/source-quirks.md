@@ -255,3 +255,37 @@ establish, and every envelope citing that source carries a `terms_note`
 warning quoting it. A gap recorded only in YAML is a caveat a contributor
 reads once; this makes it a disclosure at the point of use. Richmond's
 recorded terms gap uses the same field.
+
+---
+
+## 11. A town borrows its county's FIPS, so a FIPS-keyed layer cannot be narrowed to a town
+
+- **Sources:** every registered layer keyed on FIPS
+  (`va-vgin-road-centerlines`, `va-vgin-address-points`,
+  `va-vgin-landmarks`, `va-vgin-statewide-parcels`)
+- **Observed:** 2026-08-30, in review
+- **Test:** `tests/test_codex_round_2.py::test_a_town_query_says_when_it_was_widened_to_the_county`
+
+Virginia's incorporated towns have a place FIPS and no county FIPS of
+their own: Vienna is `place_fips: 81072`, and the only county code
+available to it is Fairfax County's `51059`. So a jurisdiction filter
+built from the stack walks past the town and lands on the county.
+
+The filter is still right to apply. It is a correct superset — everything
+in Vienna is in Fairfax County — and it is what stops a locality-scoped
+identifier matching another locality's record on a statewide layer, which
+was a real false hit before the filter existed. What is wrong is
+reporting the result under the town's name: a `find_roads(jurisdiction=
+"Vienna")` answer scoped to Fairfax County returned 39 county-wide
+segments where the town has a handful.
+
+The two registered road sources make the difference visible in one call.
+VDOT's route master keys on the jurisdiction NAME, so "Town of Vienna" is
+the town and it returns 2 routes; VGIN's centerlines key on FIPS and
+return 39.
+
+**What the code does:** `_jurisdiction_scope()` returns the filter *and*
+the jurisdiction it actually reaches. When those differ, the answer
+carries a `widened_scope` note naming both — "this source has no key for
+Vienna (town), so the query was narrowed to Fairfax County instead". A
+source whose scope is exact says nothing, so the note stays meaningful.

@@ -193,30 +193,76 @@ def _jurisdiction_names(ctx: RuntimeContext, stack: list[str]) -> list[str]:
     return [n for n in names if "(" not in n]
 
 
-def _jurisdiction_filter(ctx: RuntimeContext, m: SourceManifest,
-                         layer_key: str, stack: list[str],
-                         ) -> list[dict[str, str]] | None:
-    """`where_any_of` groups narrowing a layer to one jurisdiction, driven
-    by the layer's own `jurisdiction_scope` declaration.
+@dataclass
+class _Scope:
+    """A jurisdiction filter and the jurisdiction it actually narrows to.
 
-    Returns None when the layer declares no scope or the stack supplies
-    nothing to scope by. The query then runs unscoped and the tool names
-    which sources it could not narrow, so a statewide answer is never
-    read as a local one."""
+    The two are not always the same. A town has no FIPS of its own — the
+    code is its county's — so a layer keyed on FIPS can only be narrowed
+    to the county. That filter is still worth applying (it is a correct
+    superset, and it is what stops a locality-scoped PIN matching another
+    locality's parcel on a statewide layer), but a result scoped to the
+    county and labelled with the town is a claim the data does not
+    support. `narrowed_to` is what the tools report.
+    """
+
+    groups: list[dict[str, str]] | None = None
+    narrowed_to: str | None = None
+
+    def note(self, ctx: RuntimeContext, requested: str) -> str | None:
+        if self.narrowed_to is None or self.narrowed_to == requested:
+            return None
+        wanted = ctx.jurisdictions.get(requested)
+        got = ctx.jurisdictions.get(self.narrowed_to)
+        return (
+            f"This source has no key for {wanted.name if wanted else requested}"
+            f", so the query was narrowed to "
+            f"{got.name if got else self.narrowed_to} instead. The results "
+            "cover that whole jurisdiction, not just the one asked about.")
+
+
+def _fips_scope(ctx: RuntimeContext, stack: list[str]) -> tuple[str | None,
+                                                                str | None]:
+    """(fips, the jurisdiction id it belongs to) walking up the stack."""
+    for jid in stack:
+        j = ctx.jurisdictions.get(jid)
+        if j and j.fips:
+            return j.fips, j.id
+    return None, None
+
+
+def _jurisdiction_scope(ctx: RuntimeContext, m: SourceManifest,
+                        layer_key: str, stack: list[str]) -> _Scope:
+    """The filter narrowing a layer to one jurisdiction, and which
+    jurisdiction it reaches, driven by the layer's own
+    `jurisdiction_scope` declaration.
+
+    `groups` is None when the layer declares no scope or the stack
+    supplies nothing to scope by. The query then runs unscoped and the
+    tool names which sources it could not narrow, so a statewide answer is
+    never read as a local one."""
     scope = ctx.arcgis.jurisdiction_scope(m, layer_key)
     if scope is None or scope.mode == "none":
-        return None
+        return _Scope()
     if scope.mode == "jurisdiction_names":
         names = _jurisdiction_names(ctx, stack)
         field = scope.fields[0]
-        return [{field: n} for n in names] or None
-    fips = next((j.fips for jid in stack
-                 if (j := ctx.jurisdictions.get(jid)) and j.fips), None)
+        # Names key on the leaf directly: VDOT writes "Town of Vienna",
+        # which is the town and not its county.
+        return _Scope([{field: n} for n in names] or None,
+                      stack[0] if names and stack else None)
+    fips, owner = _fips_scope(ctx, stack)
     if fips is None:
-        return None
+        return _Scope()
     if scope.mode == "fips":
-        return [{scope.fields[0]: fips}]
-    return [{field: fips} for field in scope.fields]
+        return _Scope([{scope.fields[0]: fips}], owner)
+    return _Scope([{field: fips} for field in scope.fields], owner)
+
+
+def _jurisdiction_filter(ctx: RuntimeContext, m: SourceManifest,
+                         layer_key: str, stack: list[str],
+                         ) -> list[dict[str, str]] | None:
+    return _jurisdiction_scope(ctx, m, layer_key, stack).groups
 
 
 def _scoped_where(ctx: RuntimeContext, m: SourceManifest, layer_key: str,
@@ -234,11 +280,30 @@ def _scoped_where(ctx: RuntimeContext, m: SourceManifest, layer_key: str,
         return where_equals
     if "fips" not in ctx.arcgis.mapped_canonical_fields(m, layer_key):
         return where_equals
-    fips = next((j.fips for jid in stack
-                if (j := ctx.jurisdictions.get(jid)) and j.fips), None)
+    fips, _ = _fips_scope(ctx, stack)
     if fips is None:
         return where_equals
     return {**where_equals, "fips": fips}
+
+
+def _widened_note(ctx: RuntimeContext, m: SourceManifest, layer_key: str,
+                  stack: list[str]) -> str | None:
+    """The sentence a tool prints when `_scoped_where` narrowed to
+    something broader than the jurisdiction asked about."""
+    owner = _scoped_where_owner(ctx, m, layer_key, stack)
+    return _Scope(narrowed_to=owner).note(ctx, stack[0]) if owner else None
+
+
+def _scoped_where_owner(ctx: RuntimeContext, m: SourceManifest,
+                        layer_key: str, stack: list[str]) -> str | None:
+    """Which jurisdiction `_scoped_where`'s filter actually reaches, or
+    None when it applies no filter. A town borrows its county's FIPS, so
+    this is not always `stack[0]`."""
+    if m.jurisdiction == stack[0]:
+        return stack[0]
+    if "fips" not in ctx.arcgis.mapped_canonical_fields(m, layer_key):
+        return None
+    return _fips_scope(ctx, stack)[1]
 
 
 async def find_parcel(ctx: RuntimeContext, jurisdiction: str,
@@ -693,6 +758,7 @@ async def find_address(ctx: RuntimeContext, jurisdiction: str,
             # locality's addresses — which the envelope would then report
             # under `jurisdictions_searched: [the one you asked for]`.
             where = _scoped_where(ctx, m, "addresses", stack, {})
+            scope_note = _widened_note(ctx, m, "addresses", stack)
             if address:
                 q = await ctx.arcgis.query(
                     m, "addresses", where_equals=where or None,
@@ -707,6 +773,8 @@ async def find_address(ctx: RuntimeContext, jurisdiction: str,
             continue
         queries.append(q)
         block = _records_block(b, _source_entry(b, m, q), q, m)
+        if scope_note:
+            block["widened_scope"] = scope_note
         for row in block["records"]:
             row["record_updated_at"] = _epoch_ms_to_iso(
                 row.pop("last_update", None))
@@ -827,17 +895,22 @@ async def _resolve_zip(ctx: RuntimeContext, b: EnvelopeBuilder,
     src_ref = _source_entry(b, m, q)
     matches = []
     for r in q.records:
-        b.add_evidence(source_ref=src_ref, record_id=r.record_id,
-                       retrieved_at=q.retrieved_at,
-                       transformations=q.transformations,
-                       payload_hash=q.payload_hash())
+        ev = b.add_evidence(source_ref=src_ref, record_id=r.record_id,
+                            retrieved_at=q.retrieved_at,
+                            transformations=q.transformations,
+                            payload_hash=q.payload_hash())
         fips = str(r.canonical.get("fips") or "")
         j = ctx.jurisdictions.by_fips(fips)
+        # Each locality is a material record resting on one distinct
+        # publisher tuple, so it names that tuple
+        # (design/provenance-envelope.md § 2). Creating the evidence and
+        # discarding its id left the whole answer unlinkable.
         matches.append({"fips": fips,
                         "source_name": r.canonical.get("locality"),
                         "id": j.id if j else None,
                         "name": j.name if j else r.canonical.get("locality"),
-                        "kind": j.kind.value if j else None})
+                        "kind": j.kind.value if j else None,
+                        "evidence_refs": [ev]})
     matches.sort(key=lambda mm: mm["fips"])
 
     data: dict = {"zip_code": zip_code, "source_ref": src_ref,
@@ -859,7 +932,8 @@ async def _resolve_zip(ctx: RuntimeContext, b: EnvelopeBuilder,
         only = matches[0]
         data["resolved"] = ({"id": only["id"], "name": only["name"],
                              "kind": only["kind"], "fips": only["fips"],
-                             "basis": "zip_unique"}
+                             "basis": "zip_unique",
+                             "evidence_refs": only["evidence_refs"]}
                             if only["id"] else None)
         data["candidates"] = []
         if only["id"] is None:
@@ -875,6 +949,7 @@ async def _resolve_zip(ctx: RuntimeContext, b: EnvelopeBuilder,
     data["resolved"] = None
     data["candidates"] = [
         {"id": mm["id"], "name": mm["name"], "kind": mm["kind"],
+         "evidence_refs": mm["evidence_refs"],
          "distinguisher": f"one of {len(matches)} localities ZIP "
                           f"{zip_code} covers (FIPS {mm['fips']})"}
         for mm in matches]
@@ -1324,6 +1399,7 @@ async def find_landmarks(ctx: RuntimeContext, jurisdiction: str,
     queries: list[ArcGISQueryResult] = []
     for m in selected:
         equals = _scoped_where(ctx, m, "landmarks", stack, {})
+        scope_note = _widened_note(ctx, m, "landmarks", stack)
         if place_type:
             equals = {**equals, "place_type": place_type}
         try:
@@ -1338,6 +1414,8 @@ async def find_landmarks(ctx: RuntimeContext, jurisdiction: str,
             continue
         queries.append(q)
         block = _records_block(b, _source_entry(b, m, q), q, m)
+        if scope_note:
+            block["widened_scope"] = scope_note
         for row in block["records"]:
             checked = _epoch_ms_to_iso(row.pop("last_checked", None))
             row["record_checked_at"] = checked
@@ -1422,17 +1500,21 @@ async def find_roads(ctx: RuntimeContext, jurisdiction: str,
     failures = []
     queries: list[ArcGISQueryResult] = []
     unscoped: list[str] = []
+    widened: dict[str, str] = {}
     for m in selected:
         layer_key = _road_layer(ctx, m)
-        scope = _jurisdiction_filter(ctx, m, layer_key, stack)
-        if scope is None:
+        scope = _jurisdiction_scope(ctx, m, layer_key, stack)
+        if scope.groups is None:
             unscoped.append(m.id)
+        note = scope.note(ctx, stack[0])
+        if note:
+            widened[m.id] = note
         try:
             q = await ctx.arcgis.query(
                 m, layer_key,
                 where_prefix={"street_name": street_name}
                 if street_name else None,
-                where_any_of=scope,
+                where_any_of=scope.groups,
                 geometry_point=(lon, lat) if lon is not None else None,
                 distance_meters=(radius_meters if lon is not None else None))
         except CommonwealthError as err:
@@ -1479,6 +1561,12 @@ async def find_roads(ctx: RuntimeContext, jurisdiction: str,
                     "jurisdiction key or the jurisdiction supplies no "
                     "value for it — so their results are statewide for "
                     "the query. Read them accordingly."}
+    if widened:
+        # A town has no FIPS of its own, so a layer keyed on FIPS reaches
+        # its county and no further. Saying so is the difference between
+        # a county's roads labelled "Vienna" and a county's roads that
+        # say they are the county's.
+        data["widened_scope"] = widened
     if total:
         b.warn(WarningCode.screening_only,
                "Road geometry is a centerline or a linear reference, not "

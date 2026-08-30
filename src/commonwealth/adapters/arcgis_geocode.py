@@ -65,6 +65,13 @@ class GeocodeCandidate:
     address_type: str
     postal_city: str
     postal_code: str
+    # The WHOLE candidate object, not just its `attributes`. A locator
+    # puts the facts that matter most — `location`, `score`, `address` —
+    # at the top level, and those coordinates are what the jurisdiction
+    # answer is computed from. Hashing only `attributes` meant a response
+    # whose coordinates or confidence had changed could carry the same
+    # evidence payload hash, which is the one thing the hash exists to
+    # make impossible.
     raw: dict[str, Any] = field(default_factory=dict)
 
     @property
@@ -170,7 +177,7 @@ class ArcGISGeocodeAdapter:
                 address_type=str(attrs.get("Addr_type") or ""),
                 postal_city=str(attrs.get("City") or ""),
                 postal_code=str(attrs.get("Postal") or ""),
-                raw=attrs))
+                raw=cand))
         # The publisher's own ranking, preserved. Sorting by score here
         # would silently reorder ties the locator's element hierarchy
         # already resolved (address points before centerlines before ZIP
