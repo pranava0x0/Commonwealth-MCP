@@ -1,6 +1,6 @@
 {
  "source_id": "va-vgin-road-centerlines",
- "recorded_at": "2026-08-30T15:01:45Z",
+ "recorded_at": "2026-09-02T05:31:52Z",
  "rights": {
   "publisher": "Virginia Geographic Information Network (VGIN), part of the Virginia Department of Emergency Management",
   "terms_url": "https://vgin.vdem.virginia.gov/datasets/virginia-road-centerlines/about",
@@ -10,13 +10,13 @@
   "health:centerlines": {
    "layer": "centerlines",
    "feature_count": 659179,
-   "min_expected": 500000,
+   "min_expected": 590000,
    "healthy": true
   },
   "health:primaries": {
    "layer": "primaries",
    "feature_count": 74242,
-   "min_expected": 60000,
+   "min_expected": 66000,
    "healthy": true
   },
   "query_layer": "centerlines",
@@ -48,6 +48,20 @@
    ]
   },
   "no_match": {
+   "record_count": 0
+  },
+  "sterling_loudoun:centerlines": {
+   "point": [
+    -77.408014727372,
+    39.025534437083
+   ],
+   "record_count": 8
+  },
+  "sterling_loudoun:primaries": {
+   "point": [
+    -77.408014727372,
+    39.025534437083
+   ],
    "record_count": 0
   }
  },
@@ -3771,6 +3785,2112 @@
     "resultRecordCount": "50",
     "returnGeometry": "false",
     "where": "ST_FULL LIKE 'ZZZZ NO SUCH ROAD%' ESCAPE '\\' AND ((FIPS_L = '51059') OR (FIPS_R = '51059'))"
+   },
+   "response": {
+    "objectIdFieldName": "OBJECTID",
+    "globalIdFieldName": "",
+    "geometryType": "esriGeometryPolyline",
+    "spatialReference": {
+     "wkid": 102100,
+     "latestWkid": 3857
+    },
+    "features": []
+   }
+  },
+  {
+   "url": "https://vginmaps.vdem.virginia.gov/arcgis/rest/services/VA_Base_Layers/VBMP_RCL/FeatureServer/4/query",
+   "params": {
+    "f": "json",
+    "outFields": "ADD_LF,ADD_LT,ADD_RF,ADD_RT,FIPS_L,FIPS_R,GEO_EFFDT,LOCAL_ID,MTFCC,OBJECTID,ONE_WAY,RCL_ID,SEG_EXISTS,SPEED_MPH,ST_FULL,ST_NAME,VDOT_ID,VDOT_RNAM,VDOT_RNUM,ZIP_L,ZIP_R",
+    "resultRecordCount": "50",
+    "returnGeometry": "false",
+    "where": "((FIPS_L = '51107') OR (FIPS_R = '51107'))",
+    "geometry": "{\"x\": -77.408014727372, \"y\": 39.025534437083, \"spatialReference\": {\"wkid\": 4326}}",
+    "geometryType": "esriGeometryPoint",
+    "inSR": "4326",
+    "spatialRel": "esriSpatialRelIntersects",
+    "distance": "100.0",
+    "units": "esriSRUnit_Meter"
+   },
+   "response": {
+    "objectIdFieldName": "OBJECTID",
+    "globalIdFieldName": "",
+    "geometryType": "esriGeometryPolyline",
+    "spatialReference": {
+     "wkid": 102100,
+     "latestWkid": 3857
+    },
+    "fields": [
+     {
+      "name": "ADD_LF",
+      "alias": "ADD_LF",
+      "type": "esriFieldTypeInteger"
+     },
+     {
+      "name": "ADD_LT",
+      "alias": "ADD_LT",
+      "type": "esriFieldTypeInteger"
+     },
+     {
+      "name": "ADD_RF",
+      "alias": "ADD_RF",
+      "type": "esriFieldTypeInteger"
+     },
+     {
+      "name": "ADD_RT",
+      "alias": "ADD_RT",
+      "type": "esriFieldTypeInteger"
+     },
+     {
+      "name": "FIPS_L",
+      "alias": "FIPS_L",
+      "type": "esriFieldTypeString",
+      "length": 7
+     },
+     {
+      "name": "FIPS_R",
+      "alias": "FIPS_R",
+      "type": "esriFieldTypeString",
+      "length": 7
+     },
+     {
+      "name": "GEO_EFFDT",
+      "alias": "GEO_EFFDT",
+      "type": "esriFieldTypeDate",
+      "length": 8
+     },
+     {
+      "name": "LOCAL_ID",
+      "alias": "LOCAL_ID",
+      "type": "esriFieldTypeDouble"
+     },
+     {
+      "name": "MTFCC",
+      "alias": "MTFCC",
+      "type": "esriFieldTypeString",
+      "length": 10
+     },
+     {
+      "name": "OBJECTID",
+      "alias": "OBJECTID",
+      "type": "esriFieldTypeOID"
+     },
+     {
+      "name": "ONE_WAY",
+      "alias": "ONE_WAY",
+      "type": "esriFieldTypeString",
+      "length": 2
+     },
+     {
+      "name": "RCL_ID",
+      "alias": "RCL_ID",
+      "type": "esriFieldTypeDouble"
+     },
+     {
+      "name": "SEG_EXISTS",
+      "alias": "SEG_EXISTS",
+      "type": "esriFieldTypeString",
+      "length": 1
+     },
+     {
+      "name": "SPEED_MPH",
+      "alias": "SPEED_MPH",
+      "type": "esriFieldTypeInteger"
+     },
+     {
+      "name": "ST_FULL",
+      "alias": "ST_FULL",
+      "type": "esriFieldTypeString",
+      "length": 100
+     },
+     {
+      "name": "ST_NAME",
+      "alias": "ST_NAME",
+      "type": "esriFieldTypeString",
+      "length": 75
+     },
+     {
+      "name": "VDOT_ID",
+      "alias": "VDOT_ID",
+      "type": "esriFieldTypeDouble"
+     },
+     {
+      "name": "VDOT_RNAM",
+      "alias": "VDOT_RNAM",
+      "type": "esriFieldTypeString",
+      "length": 60
+     },
+     {
+      "name": "VDOT_RNUM",
+      "alias": "VDOT_RNUM",
+      "type": "esriFieldTypeInteger"
+     },
+     {
+      "name": "ZIP_L",
+      "alias": "ZIP_L",
+      "type": "esriFieldTypeInteger"
+     },
+     {
+      "name": "ZIP_R",
+      "alias": "ZIP_R",
+      "type": "esriFieldTypeInteger"
+     }
+    ],
+    "features": [
+     {
+      "attributes": {
+       "ADD_LF": 21641,
+       "ADD_LT": 21659,
+       "ADD_RF": 21640,
+       "ADD_RT": 21658,
+       "FIPS_L": "51107",
+       "FIPS_R": "51107",
+       "GEO_EFFDT": null,
+       "LOCAL_ID": 5110700003964.0,
+       "MTFCC": "S1400",
+       "OBJECTID": 553679,
+       "ONE_WAY": "B",
+       "RCL_ID": 297882.0,
+       "SEG_EXISTS": "Y",
+       "SPEED_MPH": 25,
+       "ST_FULL": "Ridgetop Cir",
+       "ST_NAME": "RIDGETOP",
+       "VDOT_ID": 664718.0,
+       "VDOT_RNAM": "R-VA053SC01790EB",
+       "VDOT_RNUM": 1790,
+       "ZIP_L": 20166,
+       "ZIP_R": 20166
+      }
+     },
+     {
+      "attributes": {
+       "ADD_LF": 0,
+       "ADD_LT": 0,
+       "ADD_RF": 0,
+       "ADD_RT": 0,
+       "FIPS_L": "51107",
+       "FIPS_R": "51107",
+       "GEO_EFFDT": null,
+       "LOCAL_ID": 5110700003981.0,
+       "MTFCC": "S1400",
+       "OBJECTID": 559064,
+       "ONE_WAY": "B",
+       "RCL_ID": 297880.0,
+       "SEG_EXISTS": "Y",
+       "SPEED_MPH": 25,
+       "ST_FULL": "Manekin Plz",
+       "ST_NAME": "MANEKIN",
+       "VDOT_ID": 664738.0,
+       "VDOT_RNAM": null,
+       "VDOT_RNUM": null,
+       "ZIP_L": 20166,
+       "ZIP_R": 20166
+      }
+     },
+     {
+      "attributes": {
+       "ADD_LF": 0,
+       "ADD_LT": 0,
+       "ADD_RF": 0,
+       "ADD_RT": 0,
+       "FIPS_L": "51107",
+       "FIPS_R": "51107",
+       "GEO_EFFDT": null,
+       "LOCAL_ID": 5110700003970.0,
+       "MTFCC": "S1400",
+       "OBJECTID": 559065,
+       "ONE_WAY": "B",
+       "RCL_ID": 297983.0,
+       "SEG_EXISTS": "Y",
+       "SPEED_MPH": 25,
+       "ST_FULL": "Manekin Plz",
+       "ST_NAME": "MANEKIN",
+       "VDOT_ID": 664727.0,
+       "VDOT_RNAM": "S-VA053PR MANEKIN PLZ",
+       "VDOT_RNUM": 0,
+       "ZIP_L": 20166,
+       "ZIP_R": 20166
+      }
+     },
+     {
+      "attributes": {
+       "ADD_LF": 0,
+       "ADD_LT": 0,
+       "ADD_RF": 0,
+       "ADD_RT": 0,
+       "FIPS_L": "51107",
+       "FIPS_R": "51107",
+       "GEO_EFFDT": null,
+       "LOCAL_ID": 5110700003982.0,
+       "MTFCC": "S1400",
+       "OBJECTID": 559066,
+       "ONE_WAY": "B",
+       "RCL_ID": 297652.0,
+       "SEG_EXISTS": "Y",
+       "SPEED_MPH": 25,
+       "ST_FULL": "Manekin Plz",
+       "ST_NAME": "MANEKIN",
+       "VDOT_ID": 664739.0,
+       "VDOT_RNAM": "S-VA053PR MANEKIN PLZ",
+       "VDOT_RNUM": 0,
+       "ZIP_L": 20166,
+       "ZIP_R": 20166
+      }
+     },
+     {
+      "attributes": {
+       "ADD_LF": 0,
+       "ADD_LT": 0,
+       "ADD_RF": 46000,
+       "ADD_RT": 46050,
+       "FIPS_L": "51107",
+       "FIPS_R": "51107",
+       "GEO_EFFDT": null,
+       "LOCAL_ID": 5110700003975.0,
+       "MTFCC": "S1400",
+       "OBJECTID": 562165,
+       "ONE_WAY": "B",
+       "RCL_ID": 297698.0,
+       "SEG_EXISTS": "Y",
+       "SPEED_MPH": 25,
+       "ST_FULL": "Manekin Plz",
+       "ST_NAME": "MANEKIN",
+       "VDOT_ID": 664747.0,
+       "VDOT_RNAM": "S-VA053PR MANEKIN PLZ",
+       "VDOT_RNUM": 0,
+       "ZIP_L": 20166,
+       "ZIP_R": 20166
+      }
+     },
+     {
+      "attributes": {
+       "ADD_LF": 0,
+       "ADD_LT": 0,
+       "ADD_RF": 0,
+       "ADD_RT": 0,
+       "FIPS_L": "51107",
+       "FIPS_R": "51107",
+       "GEO_EFFDT": null,
+       "LOCAL_ID": 5110700003966.0,
+       "MTFCC": "S1400",
+       "OBJECTID": 564945,
+       "ONE_WAY": "B",
+       "RCL_ID": 297985.0,
+       "SEG_EXISTS": "Y",
+       "SPEED_MPH": 25,
+       "ST_FULL": "Manekin Plz",
+       "ST_NAME": "MANEKIN",
+       "VDOT_ID": 664720.0,
+       "VDOT_RNAM": "S-VA053PR MANEKIN PLZ",
+       "VDOT_RNUM": 0,
+       "ZIP_L": 20166,
+       "ZIP_R": 20166
+      }
+     },
+     {
+      "attributes": {
+       "ADD_LF": 45872,
+       "ADD_LT": 45998,
+       "ADD_RF": 45873,
+       "ADD_RT": 45999,
+       "FIPS_L": "51107",
+       "FIPS_R": "51107",
+       "GEO_EFFDT": null,
+       "LOCAL_ID": 5110700003900.0,
+       "MTFCC": "S1400",
+       "OBJECTID": 564954,
+       "ONE_WAY": "B",
+       "RCL_ID": 297650.0,
+       "SEG_EXISTS": "Y",
+       "SPEED_MPH": 25,
+       "ST_FULL": "Horseshoe Dr",
+       "ST_NAME": "HORSESHOE",
+       "VDOT_ID": 167515.0,
+       "VDOT_RNAM": "R-VA053SC01791EB",
+       "VDOT_RNUM": 1791,
+       "ZIP_L": 20166,
+       "ZIP_R": 20166
+      }
+     },
+     {
+      "attributes": {
+       "ADD_LF": 21621,
+       "ADD_LT": 21639,
+       "ADD_RF": 21620,
+       "ADD_RT": 21638,
+       "FIPS_L": "51107",
+       "FIPS_R": "51107",
+       "GEO_EFFDT": null,
+       "LOCAL_ID": 5110700003899.0,
+       "MTFCC": "S1400",
+       "OBJECTID": 565113,
+       "ONE_WAY": "B",
+       "RCL_ID": 297875.0,
+       "SEG_EXISTS": "Y",
+       "SPEED_MPH": 25,
+       "ST_FULL": "Ridgetop Cir",
+       "ST_NAME": "RIDGETOP",
+       "VDOT_ID": 167521.0,
+       "VDOT_RNAM": "R-VA053SC01790EB",
+       "VDOT_RNUM": 1790,
+       "ZIP_L": 20166,
+       "ZIP_R": 20166
+      }
+     }
+    ]
+   }
+  },
+  {
+   "url": "https://vginmaps.vdem.virginia.gov/arcgis/rest/services/VA_Base_Layers/VBMP_RCL/FeatureServer/4/query",
+   "params": {
+    "f": "json",
+    "outFields": "ADD_LF,ADD_LT,ADD_RF,ADD_RT,FIPS_L,FIPS_R,GEO_EFFDT,LOCAL_ID,MTFCC,OBJECTID,ONE_WAY,RCL_ID,SEG_EXISTS,SPEED_MPH,ST_FULL,ST_NAME,VDOT_ID,VDOT_RNAM,VDOT_RNUM,ZIP_L,ZIP_R",
+    "resultRecordCount": "50",
+    "returnGeometry": "false",
+    "geometry": "{\"x\": -77.408014727372, \"y\": 39.025534437083, \"spatialReference\": {\"wkid\": 4326}}",
+    "geometryType": "esriGeometryPoint",
+    "inSR": "4326",
+    "spatialRel": "esriSpatialRelIntersects",
+    "distance": "100.0",
+    "units": "esriSRUnit_Meter"
+   },
+   "response": {
+    "objectIdFieldName": "OBJECTID",
+    "globalIdFieldName": "",
+    "geometryType": "esriGeometryPolyline",
+    "spatialReference": {
+     "wkid": 102100,
+     "latestWkid": 3857
+    },
+    "fields": [
+     {
+      "name": "ADD_LF",
+      "alias": "ADD_LF",
+      "type": "esriFieldTypeInteger"
+     },
+     {
+      "name": "ADD_LT",
+      "alias": "ADD_LT",
+      "type": "esriFieldTypeInteger"
+     },
+     {
+      "name": "ADD_RF",
+      "alias": "ADD_RF",
+      "type": "esriFieldTypeInteger"
+     },
+     {
+      "name": "ADD_RT",
+      "alias": "ADD_RT",
+      "type": "esriFieldTypeInteger"
+     },
+     {
+      "name": "FIPS_L",
+      "alias": "FIPS_L",
+      "type": "esriFieldTypeString",
+      "length": 7
+     },
+     {
+      "name": "FIPS_R",
+      "alias": "FIPS_R",
+      "type": "esriFieldTypeString",
+      "length": 7
+     },
+     {
+      "name": "GEO_EFFDT",
+      "alias": "GEO_EFFDT",
+      "type": "esriFieldTypeDate",
+      "length": 8
+     },
+     {
+      "name": "LOCAL_ID",
+      "alias": "LOCAL_ID",
+      "type": "esriFieldTypeDouble"
+     },
+     {
+      "name": "MTFCC",
+      "alias": "MTFCC",
+      "type": "esriFieldTypeString",
+      "length": 10
+     },
+     {
+      "name": "OBJECTID",
+      "alias": "OBJECTID",
+      "type": "esriFieldTypeOID"
+     },
+     {
+      "name": "ONE_WAY",
+      "alias": "ONE_WAY",
+      "type": "esriFieldTypeString",
+      "length": 2
+     },
+     {
+      "name": "RCL_ID",
+      "alias": "RCL_ID",
+      "type": "esriFieldTypeDouble"
+     },
+     {
+      "name": "SEG_EXISTS",
+      "alias": "SEG_EXISTS",
+      "type": "esriFieldTypeString",
+      "length": 1
+     },
+     {
+      "name": "SPEED_MPH",
+      "alias": "SPEED_MPH",
+      "type": "esriFieldTypeInteger"
+     },
+     {
+      "name": "ST_FULL",
+      "alias": "ST_FULL",
+      "type": "esriFieldTypeString",
+      "length": 100
+     },
+     {
+      "name": "ST_NAME",
+      "alias": "ST_NAME",
+      "type": "esriFieldTypeString",
+      "length": 75
+     },
+     {
+      "name": "VDOT_ID",
+      "alias": "VDOT_ID",
+      "type": "esriFieldTypeDouble"
+     },
+     {
+      "name": "VDOT_RNAM",
+      "alias": "VDOT_RNAM",
+      "type": "esriFieldTypeString",
+      "length": 60
+     },
+     {
+      "name": "VDOT_RNUM",
+      "alias": "VDOT_RNUM",
+      "type": "esriFieldTypeInteger"
+     },
+     {
+      "name": "ZIP_L",
+      "alias": "ZIP_L",
+      "type": "esriFieldTypeInteger"
+     },
+     {
+      "name": "ZIP_R",
+      "alias": "ZIP_R",
+      "type": "esriFieldTypeInteger"
+     }
+    ],
+    "features": [
+     {
+      "attributes": {
+       "ADD_LF": 21641,
+       "ADD_LT": 21659,
+       "ADD_RF": 21640,
+       "ADD_RT": 21658,
+       "FIPS_L": "51107",
+       "FIPS_R": "51107",
+       "GEO_EFFDT": null,
+       "LOCAL_ID": 5110700003964.0,
+       "MTFCC": "S1400",
+       "OBJECTID": 553679,
+       "ONE_WAY": "B",
+       "RCL_ID": 297882.0,
+       "SEG_EXISTS": "Y",
+       "SPEED_MPH": 25,
+       "ST_FULL": "Ridgetop Cir",
+       "ST_NAME": "RIDGETOP",
+       "VDOT_ID": 664718.0,
+       "VDOT_RNAM": "R-VA053SC01790EB",
+       "VDOT_RNUM": 1790,
+       "ZIP_L": 20166,
+       "ZIP_R": 20166
+      }
+     },
+     {
+      "attributes": {
+       "ADD_LF": 0,
+       "ADD_LT": 0,
+       "ADD_RF": 0,
+       "ADD_RT": 0,
+       "FIPS_L": "51107",
+       "FIPS_R": "51107",
+       "GEO_EFFDT": null,
+       "LOCAL_ID": 5110700003981.0,
+       "MTFCC": "S1400",
+       "OBJECTID": 559064,
+       "ONE_WAY": "B",
+       "RCL_ID": 297880.0,
+       "SEG_EXISTS": "Y",
+       "SPEED_MPH": 25,
+       "ST_FULL": "Manekin Plz",
+       "ST_NAME": "MANEKIN",
+       "VDOT_ID": 664738.0,
+       "VDOT_RNAM": null,
+       "VDOT_RNUM": null,
+       "ZIP_L": 20166,
+       "ZIP_R": 20166
+      }
+     },
+     {
+      "attributes": {
+       "ADD_LF": 0,
+       "ADD_LT": 0,
+       "ADD_RF": 0,
+       "ADD_RT": 0,
+       "FIPS_L": "51107",
+       "FIPS_R": "51107",
+       "GEO_EFFDT": null,
+       "LOCAL_ID": 5110700003970.0,
+       "MTFCC": "S1400",
+       "OBJECTID": 559065,
+       "ONE_WAY": "B",
+       "RCL_ID": 297983.0,
+       "SEG_EXISTS": "Y",
+       "SPEED_MPH": 25,
+       "ST_FULL": "Manekin Plz",
+       "ST_NAME": "MANEKIN",
+       "VDOT_ID": 664727.0,
+       "VDOT_RNAM": "S-VA053PR MANEKIN PLZ",
+       "VDOT_RNUM": 0,
+       "ZIP_L": 20166,
+       "ZIP_R": 20166
+      }
+     },
+     {
+      "attributes": {
+       "ADD_LF": 0,
+       "ADD_LT": 0,
+       "ADD_RF": 0,
+       "ADD_RT": 0,
+       "FIPS_L": "51107",
+       "FIPS_R": "51107",
+       "GEO_EFFDT": null,
+       "LOCAL_ID": 5110700003982.0,
+       "MTFCC": "S1400",
+       "OBJECTID": 559066,
+       "ONE_WAY": "B",
+       "RCL_ID": 297652.0,
+       "SEG_EXISTS": "Y",
+       "SPEED_MPH": 25,
+       "ST_FULL": "Manekin Plz",
+       "ST_NAME": "MANEKIN",
+       "VDOT_ID": 664739.0,
+       "VDOT_RNAM": "S-VA053PR MANEKIN PLZ",
+       "VDOT_RNUM": 0,
+       "ZIP_L": 20166,
+       "ZIP_R": 20166
+      }
+     },
+     {
+      "attributes": {
+       "ADD_LF": 0,
+       "ADD_LT": 0,
+       "ADD_RF": 46000,
+       "ADD_RT": 46050,
+       "FIPS_L": "51107",
+       "FIPS_R": "51107",
+       "GEO_EFFDT": null,
+       "LOCAL_ID": 5110700003975.0,
+       "MTFCC": "S1400",
+       "OBJECTID": 562165,
+       "ONE_WAY": "B",
+       "RCL_ID": 297698.0,
+       "SEG_EXISTS": "Y",
+       "SPEED_MPH": 25,
+       "ST_FULL": "Manekin Plz",
+       "ST_NAME": "MANEKIN",
+       "VDOT_ID": 664747.0,
+       "VDOT_RNAM": "S-VA053PR MANEKIN PLZ",
+       "VDOT_RNUM": 0,
+       "ZIP_L": 20166,
+       "ZIP_R": 20166
+      }
+     },
+     {
+      "attributes": {
+       "ADD_LF": 0,
+       "ADD_LT": 0,
+       "ADD_RF": 0,
+       "ADD_RT": 0,
+       "FIPS_L": "51107",
+       "FIPS_R": "51107",
+       "GEO_EFFDT": null,
+       "LOCAL_ID": 5110700003966.0,
+       "MTFCC": "S1400",
+       "OBJECTID": 564945,
+       "ONE_WAY": "B",
+       "RCL_ID": 297985.0,
+       "SEG_EXISTS": "Y",
+       "SPEED_MPH": 25,
+       "ST_FULL": "Manekin Plz",
+       "ST_NAME": "MANEKIN",
+       "VDOT_ID": 664720.0,
+       "VDOT_RNAM": "S-VA053PR MANEKIN PLZ",
+       "VDOT_RNUM": 0,
+       "ZIP_L": 20166,
+       "ZIP_R": 20166
+      }
+     },
+     {
+      "attributes": {
+       "ADD_LF": 45872,
+       "ADD_LT": 45998,
+       "ADD_RF": 45873,
+       "ADD_RT": 45999,
+       "FIPS_L": "51107",
+       "FIPS_R": "51107",
+       "GEO_EFFDT": null,
+       "LOCAL_ID": 5110700003900.0,
+       "MTFCC": "S1400",
+       "OBJECTID": 564954,
+       "ONE_WAY": "B",
+       "RCL_ID": 297650.0,
+       "SEG_EXISTS": "Y",
+       "SPEED_MPH": 25,
+       "ST_FULL": "Horseshoe Dr",
+       "ST_NAME": "HORSESHOE",
+       "VDOT_ID": 167515.0,
+       "VDOT_RNAM": "R-VA053SC01791EB",
+       "VDOT_RNUM": 1791,
+       "ZIP_L": 20166,
+       "ZIP_R": 20166
+      }
+     },
+     {
+      "attributes": {
+       "ADD_LF": 21621,
+       "ADD_LT": 21639,
+       "ADD_RF": 21620,
+       "ADD_RT": 21638,
+       "FIPS_L": "51107",
+       "FIPS_R": "51107",
+       "GEO_EFFDT": null,
+       "LOCAL_ID": 5110700003899.0,
+       "MTFCC": "S1400",
+       "OBJECTID": 565113,
+       "ONE_WAY": "B",
+       "RCL_ID": 297875.0,
+       "SEG_EXISTS": "Y",
+       "SPEED_MPH": 25,
+       "ST_FULL": "Ridgetop Cir",
+       "ST_NAME": "RIDGETOP",
+       "VDOT_ID": 167521.0,
+       "VDOT_RNAM": "R-VA053SC01790EB",
+       "VDOT_RNUM": 1790,
+       "ZIP_L": 20166,
+       "ZIP_R": 20166
+      }
+     }
+    ]
+   }
+  },
+  {
+   "url": "https://vginmaps.vdem.virginia.gov/arcgis/rest/services/VA_Base_Layers/VBMP_RCL/FeatureServer/1/query",
+   "params": {
+    "f": "json",
+    "outFields": "FIPS_L,FIPS_R,OBJECTID,RCL_ID,ST_FULL",
+    "resultRecordCount": "50",
+    "returnGeometry": "false",
+    "where": "((FIPS_L = '51107') OR (FIPS_R = '51107'))",
+    "geometry": "{\"x\": -77.408014727372, \"y\": 39.025534437083, \"spatialReference\": {\"wkid\": 4326}}",
+    "geometryType": "esriGeometryPoint",
+    "inSR": "4326",
+    "spatialRel": "esriSpatialRelIntersects",
+    "distance": "100.0",
+    "units": "esriSRUnit_Meter"
+   },
+   "response": {
+    "objectIdFieldName": "OBJECTID",
+    "globalIdFieldName": "",
+    "geometryType": "esriGeometryPolyline",
+    "spatialReference": {
+     "wkid": 102100,
+     "latestWkid": 3857
+    },
+    "features": []
+   }
+  },
+  {
+   "url": "https://vginmaps.vdem.virginia.gov/arcgis/rest/services/VA_Base_Layers/VBMP_RCL/FeatureServer/1",
+   "params": {
+    "f": "json"
+   },
+   "response": {
+    "currentVersion": 11.3,
+    "cimVersion": "3.3.0",
+    "id": 1,
+    "name": "Limited Access and Primaries",
+    "type": "Feature Layer",
+    "parentLayer": {
+     "id": 0,
+     "name": "VBMP RCL"
+    },
+    "defaultVisibility": true,
+    "minScale": 0,
+    "maxScale": 0,
+    "canScaleSymbols": false,
+    "geometryType": "esriGeometryPolyline",
+    "description": "The Virginia Geographic Information Network (VGIN) has coordinated and manages the development of a consistent, seamless, statewide digital road centerline file with address, road name, and state route number attribution, as part of the Virginia Base Mapping Program (VBMP). The Road Centerline Program (RCL) leverages the Commonwealth's investment in the VBMP digital orthophotography and is focused on creating a single statewide, consistent digital road file. The RCL data layer is a dynamic dataset supported and maintained by Virginia's Local Governments, VDOT, and VGIN. VBMP RCL is extracted and provided back to local governments and state agencies in many geographic data sets every quarter.",
+    "copyrightText": "",
+    "editFieldsInfo": null,
+    "ownershipBasedAccessControlForFeatures": null,
+    "syncCanReturnChanges": false,
+    "relationships": [],
+    "isDataVersioned": false,
+    "isDataArchived": false,
+    "infoInEstimates": [
+     "extent",
+     "count"
+    ],
+    "isDataBranchVersioned": false,
+    "isDataReplicaTracked": false,
+    "isCoGoEnabled": false,
+    "supportsRollbackOnFailureParameter": true,
+    "archivingInfo": {
+     "supportsQueryWithHistoricMoment": false,
+     "startArchivingMoment": -1
+    },
+    "supportsStatistics": true,
+    "supportsExceedsLimitStatistics": true,
+    "supportsAdvancedQueries": true,
+    "supportsValidateSQL": true,
+    "supportsCoordinatesQuantization": true,
+    "supportsQuantizationEditMode": true,
+    "supportsCalculate": true,
+    "supportsASyncCalculate": true,
+    "supportsDatumTransformation": true,
+    "advancedQueryCapabilities": {
+     "supportsPagination": true,
+     "supportsTrueCurve": true,
+     "supportsQueryWithDistance": true,
+     "supportsReturningQueryExtent": true,
+     "supportsStatistics": true,
+     "supportsPercentileStatistics": true,
+     "supportsHavingClause": true,
+     "supportsOrderBy": true,
+     "supportsDistinct": true,
+     "supportsCountDistinct": true,
+     "supportsAdvancedQueryRelated": true,
+     "supportsQueryRelatedPagination": true,
+     "supportsCurrentUserQueries": true,
+     "supportsQueryWithResultType": true,
+     "supportsReturningGeometryCentroid": false,
+     "supportsSqlExpression": true,
+     "supportsQueryWithDatumTransformation": true,
+     "supportsLod": false,
+     "supportsQueryWithLodSR": false,
+     "supportsQueryAnalytic": true
+    },
+    "advancedQueryAnalyticCapabilities": {
+     "supportsLinearRegression": true,
+     "supportsAsync": true,
+     "supportsPercentileAnalytic": true
+    },
+    "advancedEditingCapabilities": {
+     "supportedSqlFormatsInCalculate": [
+      "standard"
+     ],
+     "supportsAsyncApplyEdits": true,
+     "supportsApplyEditsbyUploadID": true,
+     "supportedApplyEditsUploadIDFormats": "JSON"
+    },
+    "hasGeometryProperties": true,
+    "geometryProperties": {
+     "shapeLengthFieldName": "Shape__Length",
+     "units": "esriMeters"
+    },
+    "hasMetadata": true,
+    "extent": {
+     "xmin": -9314103.0594,
+     "ymin": 4368851.470799997,
+     "xmax": -8385441.8039,
+     "ymax": 4794128.281900004,
+     "spatialReference": {
+      "wkid": 102100,
+      "latestWkid": 3857,
+      "xyTolerance": 0.001,
+      "zTolerance": 0.0002,
+      "mTolerance": 0.0002,
+      "falseX": -20037700,
+      "falseY": -30241100,
+      "xyUnits": 148923141.92838538,
+      "falseZ": -100000,
+      "zUnits": 10000,
+      "falseM": -100000,
+      "mUnits": 10000
+     }
+    },
+    "sourceSpatialReference": {
+     "wkid": 102100,
+     "latestWkid": 3857,
+     "xyTolerance": 0.001,
+     "zTolerance": 0.001,
+     "mTolerance": 0.001,
+     "falseX": -20037700,
+     "falseY": -30241100,
+     "xyUnits": 10000,
+     "falseZ": 0,
+     "zUnits": 1,
+     "falseM": 0,
+     "mUnits": 1
+    },
+    "drawingInfo": {
+     "renderer": {
+      "type": "uniqueValue",
+      "field1": "MTFCC",
+      "uniqueValueGroups": [
+       {
+        "heading": "MTFCC",
+        "classes": [
+         {
+          "label": "LIMITED ACCESS HIGHWAYS",
+          "description": "LIMITED ACCESS HIGHWAYS",
+          "symbol": {
+           "type": "esriSLS",
+           "style": "esriSLSSolid",
+           "color": [
+            0,
+            0,
+            0,
+            255
+           ],
+           "width": 4.5
+          },
+          "values": [
+           [
+            "S1100"
+           ]
+          ]
+         },
+         {
+          "label": "HIGH OCCUPANCY VEHICLE (HOV) LANES",
+          "description": "HIGH OCCUPANCY VEHICLE (HOV) LANES",
+          "symbol": {
+           "type": "esriSLS",
+           "style": "esriSLSSolid",
+           "color": [
+            52,
+            52,
+            52,
+            255
+           ],
+           "width": 1
+          },
+          "values": [
+           [
+            "S1100HOV"
+           ]
+          ]
+         },
+         {
+          "label": "US AND VA PRIMARY HIGHWAYS",
+          "description": "US AND VA PRIMARY HIGHWAYS",
+          "symbol": {
+           "type": "esriSLS",
+           "style": "esriSLSSolid",
+           "color": [
+            78,
+            78,
+            78,
+            255
+           ],
+           "width": 4
+          },
+          "values": [
+           [
+            "S1200PRI"
+           ]
+          ]
+         }
+        ]
+       }
+      ],
+      "uniqueValueInfos": [
+       {
+        "symbol": {
+         "type": "esriSLS",
+         "style": "esriSLSSolid",
+         "color": [
+          0,
+          0,
+          0,
+          255
+         ],
+         "width": 4.5
+        },
+        "value": "S1100",
+        "label": "LIMITED ACCESS HIGHWAYS"
+       },
+       {
+        "symbol": {
+         "type": "esriSLS",
+         "style": "esriSLSSolid",
+         "color": [
+          52,
+          52,
+          52,
+          255
+         ],
+         "width": 1
+        },
+        "value": "S1100HOV",
+        "label": "HIGH OCCUPANCY VEHICLE (HOV) LANES"
+       },
+       {
+        "symbol": {
+         "type": "esriSLS",
+         "style": "esriSLSSolid",
+         "color": [
+          78,
+          78,
+          78,
+          255
+         ],
+         "width": 4
+        },
+        "value": "S1200PRI",
+        "label": "US AND VA PRIMARY HIGHWAYS"
+       }
+      ],
+      "fieldDelimiter": ",",
+      "authoringInfo": {
+       "colorRamp": {
+        "type": "multipart",
+        "colorRamps": [
+         {
+          "type": "algorithmic",
+          "algorithm": "esriCIELabAlgorithm",
+          "fromColor": [
+           46,
+           42,
+           156,
+           255
+          ],
+          "toColor": [
+           46,
+           42,
+           156,
+           255
+          ]
+         },
+         {
+          "type": "algorithmic",
+          "algorithm": "esriCIELabAlgorithm",
+          "fromColor": [
+           45,
+           156,
+           37,
+           255
+          ],
+          "toColor": [
+           45,
+           156,
+           37,
+           255
+          ]
+         },
+         {
+          "type": "algorithmic",
+          "algorithm": "esriCIELabAlgorithm",
+          "fromColor": [
+           196,
+           49,
+           56,
+           255
+          ],
+          "toColor": [
+           196,
+           49,
+           56,
+           255
+          ]
+         },
+         {
+          "type": "algorithmic",
+          "algorithm": "esriCIELabAlgorithm",
+          "fromColor": [
+           44,
+           167,
+           191,
+           255
+          ],
+          "toColor": [
+           44,
+           167,
+           191,
+           255
+          ]
+         },
+         {
+          "type": "algorithmic",
+          "algorithm": "esriCIELabAlgorithm",
+          "fromColor": [
+           201,
+           52,
+           162,
+           255
+          ],
+          "toColor": [
+           201,
+           52,
+           162,
+           255
+          ]
+         },
+         {
+          "type": "algorithmic",
+          "algorithm": "esriCIELabAlgorithm",
+          "fromColor": [
+           191,
+           146,
+           48,
+           255
+          ],
+          "toColor": [
+           191,
+           146,
+           48,
+           255
+          ]
+         },
+         {
+          "type": "algorithmic",
+          "algorithm": "esriCIELabAlgorithm",
+          "fromColor": [
+           51,
+           105,
+           176,
+           255
+          ],
+          "toColor": [
+           51,
+           105,
+           176,
+           255
+          ]
+         },
+         {
+          "type": "algorithmic",
+          "algorithm": "esriCIELabAlgorithm",
+          "fromColor": [
+           73,
+           191,
+           144,
+           255
+          ],
+          "toColor": [
+           73,
+           191,
+           144,
+           255
+          ]
+         },
+         {
+          "type": "algorithmic",
+          "algorithm": "esriCIELabAlgorithm",
+          "fromColor": [
+           176,
+           196,
+           41,
+           255
+          ],
+          "toColor": [
+           176,
+           196,
+           41,
+           255
+          ]
+         },
+         {
+          "type": "algorithmic",
+          "algorithm": "esriCIELabAlgorithm",
+          "fromColor": [
+           156,
+           62,
+           95,
+           255
+          ],
+          "toColor": [
+           156,
+           62,
+           95,
+           255
+          ]
+         },
+         {
+          "type": "algorithmic",
+          "algorithm": "esriCIELabAlgorithm",
+          "fromColor": [
+           147,
+           54,
+           186,
+           255
+          ],
+          "toColor": [
+           147,
+           54,
+           186,
+           255
+          ]
+         },
+         {
+          "type": "algorithmic",
+          "algorithm": "esriCIELabAlgorithm",
+          "fromColor": [
+           156,
+           83,
+           61,
+           255
+          ],
+          "toColor": [
+           156,
+           83,
+           61,
+           255
+          ]
+         },
+         {
+          "type": "algorithmic",
+          "algorithm": "esriCIELabAlgorithm",
+          "fromColor": [
+           124,
+           153,
+           55,
+           255
+          ],
+          "toColor": [
+           124,
+           153,
+           55,
+           255
+          ]
+         }
+        ]
+       }
+      }
+     },
+     "scaleSymbols": true,
+     "transparency": 0,
+     "labelingInfo": null
+    },
+    "hasM": false,
+    "hasZ": false,
+    "allowGeometryUpdates": true,
+    "allowTrueCurvesUpdates": true,
+    "onlyAllowTrueCurveUpdatesByTrueCurveClients": true,
+    "hasAttachments": false,
+    "supportsApplyEditsWithGlobalIds": false,
+    "htmlPopupType": "esriServerHTMLPopupTypeAsHTMLText",
+    "objectIdField": "OBJECTID",
+    "globalIdField": "",
+    "displayField": "ST_NAME",
+    "typeIdField": "MTFCC",
+    "subtypeField": "",
+    "fields": [
+     {
+      "name": "Shape__Length",
+      "type": "esriFieldTypeDouble",
+      "alias": "SHAPE.STLength()",
+      "domain": null,
+      "editable": false,
+      "nullable": true,
+      "defaultValue": null,
+      "modelName": "SHAPE.STLength()",
+      "required": true
+     },
+     {
+      "name": "OBJECTID",
+      "type": "esriFieldTypeOID",
+      "alias": "OBJECTID",
+      "domain": null,
+      "editable": false,
+      "nullable": false,
+      "defaultValue": null,
+      "modelName": "OBJECTID"
+     },
+     {
+      "name": "RCL_ID",
+      "type": "esriFieldTypeDouble",
+      "alias": "RCL_ID",
+      "domain": null,
+      "editable": true,
+      "nullable": true,
+      "defaultValue": null,
+      "modelName": "RCL_ID"
+     },
+     {
+      "name": "LOCAL_ID",
+      "type": "esriFieldTypeDouble",
+      "alias": "LOCAL_ID",
+      "domain": null,
+      "editable": true,
+      "nullable": true,
+      "defaultValue": null,
+      "modelName": "LOCAL_ID"
+     },
+     {
+      "name": "VDOT_ID",
+      "type": "esriFieldTypeDouble",
+      "alias": "VDOT_ID",
+      "domain": null,
+      "editable": true,
+      "nullable": true,
+      "defaultValue": null,
+      "modelName": "VDOT_ID"
+     },
+     {
+      "name": "MFIPS",
+      "type": "esriFieldTypeString",
+      "alias": "MFIPS",
+      "domain": null,
+      "editable": true,
+      "nullable": true,
+      "length": 7,
+      "defaultValue": null,
+      "modelName": "MFIPS"
+     },
+     {
+      "name": "GEO_ET",
+      "type": "esriFieldTypeInteger",
+      "alias": "GEO_ET",
+      "domain": null,
+      "editable": true,
+      "nullable": true,
+      "defaultValue": null,
+      "modelName": "GEO_ET"
+     },
+     {
+      "name": "GEO_EFFDT",
+      "type": "esriFieldTypeDate",
+      "alias": "GEO_EFFDT",
+      "domain": null,
+      "editable": true,
+      "nullable": true,
+      "length": 8,
+      "defaultValue": null,
+      "modelName": "GEO_EFFDT"
+     },
+     {
+      "name": "GEO_SRC",
+      "type": "esriFieldTypeString",
+      "alias": "GEO_SRC",
+      "domain": null,
+      "editable": true,
+      "nullable": true,
+      "length": 4,
+      "defaultValue": null,
+      "modelName": "GEO_SRC"
+     },
+     {
+      "name": "GEO_ED",
+      "type": "esriFieldTypeDate",
+      "alias": "GEO_ED",
+      "domain": null,
+      "editable": true,
+      "nullable": true,
+      "length": 8,
+      "defaultValue": null,
+      "modelName": "GEO_ED"
+     },
+     {
+      "name": "ADD_LF",
+      "type": "esriFieldTypeInteger",
+      "alias": "ADD_LF",
+      "domain": null,
+      "editable": true,
+      "nullable": true,
+      "defaultValue": null,
+      "modelName": "ADD_LF"
+     },
+     {
+      "name": "ADD_LT",
+      "type": "esriFieldTypeInteger",
+      "alias": "ADD_LT",
+      "domain": null,
+      "editable": true,
+      "nullable": true,
+      "defaultValue": null,
+      "modelName": "ADD_LT"
+     },
+     {
+      "name": "ADD_RF",
+      "type": "esriFieldTypeInteger",
+      "alias": "ADD_RF",
+      "domain": null,
+      "editable": true,
+      "nullable": true,
+      "defaultValue": null,
+      "modelName": "ADD_RF"
+     },
+     {
+      "name": "ADD_RT",
+      "type": "esriFieldTypeInteger",
+      "alias": "ADD_RT",
+      "domain": null,
+      "editable": true,
+      "nullable": true,
+      "defaultValue": null,
+      "modelName": "ADD_RT"
+     },
+     {
+      "name": "ADD_FORMAT",
+      "type": "esriFieldTypeString",
+      "alias": "ADD_FORMAT",
+      "domain": null,
+      "editable": true,
+      "nullable": true,
+      "length": 1,
+      "defaultValue": null,
+      "modelName": "ADD_FORMAT"
+     },
+     {
+      "name": "ADD_SRC",
+      "type": "esriFieldTypeString",
+      "alias": "ADD_SRC",
+      "domain": null,
+      "editable": true,
+      "nullable": true,
+      "length": 4,
+      "defaultValue": null,
+      "modelName": "ADD_SRC"
+     },
+     {
+      "name": "ADD_ED",
+      "type": "esriFieldTypeDate",
+      "alias": "ADD_ED",
+      "domain": null,
+      "editable": true,
+      "nullable": true,
+      "length": 8,
+      "defaultValue": null,
+      "modelName": "ADD_ED"
+     },
+     {
+      "name": "ST_PREMD",
+      "type": "esriFieldTypeString",
+      "alias": "ST_PREMD",
+      "domain": null,
+      "editable": true,
+      "nullable": true,
+      "length": 10,
+      "defaultValue": null,
+      "modelName": "ST_PREMD"
+     },
+     {
+      "name": "ST_PREDIR",
+      "type": "esriFieldTypeString",
+      "alias": "ST_PREDIR",
+      "domain": null,
+      "editable": true,
+      "nullable": true,
+      "length": 2,
+      "defaultValue": null,
+      "modelName": "ST_PREDIR"
+     },
+     {
+      "name": "ST_NAME",
+      "type": "esriFieldTypeString",
+      "alias": "ST_NAME",
+      "domain": null,
+      "editable": true,
+      "nullable": true,
+      "length": 75,
+      "defaultValue": null,
+      "modelName": "ST_NAME"
+     },
+     {
+      "name": "ST_SUFFIX",
+      "type": "esriFieldTypeString",
+      "alias": "ST_SUFFIX",
+      "domain": null,
+      "editable": true,
+      "nullable": true,
+      "length": 4,
+      "defaultValue": null,
+      "modelName": "ST_SUFFIX"
+     },
+     {
+      "name": "ST_SUFFDIR",
+      "type": "esriFieldTypeString",
+      "alias": "ST_SUFFDIR",
+      "domain": null,
+      "editable": true,
+      "nullable": true,
+      "length": 2,
+      "defaultValue": null,
+      "modelName": "ST_SUFFDIR"
+     },
+     {
+      "name": "ST_PSTMD",
+      "type": "esriFieldTypeString",
+      "alias": "ST_PSTMD",
+      "domain": null,
+      "editable": true,
+      "nullable": true,
+      "length": 10,
+      "defaultValue": null,
+      "modelName": "ST_PSTMD"
+     },
+     {
+      "name": "ST_FULL",
+      "type": "esriFieldTypeString",
+      "alias": "ST_FULL",
+      "domain": null,
+      "editable": true,
+      "nullable": true,
+      "length": 100,
+      "defaultValue": null,
+      "modelName": "ST_FULL"
+     },
+     {
+      "name": "ST_SRC",
+      "type": "esriFieldTypeString",
+      "alias": "ST_SRC",
+      "domain": null,
+      "editable": true,
+      "nullable": true,
+      "length": 4,
+      "defaultValue": null,
+      "modelName": "ST_SRC"
+     },
+     {
+      "name": "ST_ED",
+      "type": "esriFieldTypeDate",
+      "alias": "ST_ED",
+      "domain": null,
+      "editable": true,
+      "nullable": true,
+      "length": 8,
+      "defaultValue": null,
+      "modelName": "ST_ED"
+     },
+     {
+      "name": "MTFCC",
+      "type": "esriFieldTypeString",
+      "alias": "MTFCC",
+      "domain": null,
+      "editable": true,
+      "nullable": true,
+      "length": 10,
+      "defaultValue": null,
+      "modelName": "MTFCC"
+     },
+     {
+      "name": "SEG_TYPE",
+      "type": "esriFieldTypeInteger",
+      "alias": "SEG_TYPE",
+      "domain": null,
+      "editable": true,
+      "nullable": true,
+      "defaultValue": null,
+      "modelName": "SEG_TYPE"
+     },
+     {
+      "name": "SPEED_MPH",
+      "type": "esriFieldTypeInteger",
+      "alias": "SPEED_MPH",
+      "domain": null,
+      "editable": true,
+      "nullable": true,
+      "defaultValue": null,
+      "modelName": "SPEED_MPH"
+     },
+     {
+      "name": "DUAL_CW",
+      "type": "esriFieldTypeString",
+      "alias": "DUAL_CW",
+      "domain": null,
+      "editable": true,
+      "nullable": true,
+      "length": 1,
+      "defaultValue": null,
+      "modelName": "DUAL_CW"
+     },
+     {
+      "name": "ONE_WAY",
+      "type": "esriFieldTypeString",
+      "alias": "ONE_WAY",
+      "domain": null,
+      "editable": true,
+      "nullable": true,
+      "length": 2,
+      "defaultValue": null,
+      "modelName": "ONE_WAY"
+     },
+     {
+      "name": "REVERSIBLE",
+      "type": "esriFieldTypeString",
+      "alias": "REVERSIBLE",
+      "domain": null,
+      "editable": true,
+      "nullable": true,
+      "length": 1,
+      "defaultValue": null,
+      "modelName": "REVERSIBLE"
+     },
+     {
+      "name": "SEG_EXISTS",
+      "type": "esriFieldTypeString",
+      "alias": "SEG_EXISTS",
+      "domain": null,
+      "editable": true,
+      "nullable": true,
+      "length": 1,
+      "defaultValue": null,
+      "modelName": "SEG_EXISTS"
+     },
+     {
+      "name": "FIPS_L",
+      "type": "esriFieldTypeString",
+      "alias": "FIPS_L",
+      "domain": null,
+      "editable": true,
+      "nullable": true,
+      "length": 7,
+      "defaultValue": null,
+      "modelName": "FIPS_L"
+     },
+     {
+      "name": "FIPS_R",
+      "type": "esriFieldTypeString",
+      "alias": "FIPS_R",
+      "domain": null,
+      "editable": true,
+      "nullable": true,
+      "length": 7,
+      "defaultValue": null,
+      "modelName": "FIPS_R"
+     },
+     {
+      "name": "MSAG_ESNL",
+      "type": "esriFieldTypeString",
+      "alias": "ESN_L",
+      "domain": null,
+      "editable": true,
+      "nullable": true,
+      "length": 5,
+      "defaultValue": null,
+      "modelName": "MSAG_ESNL"
+     },
+     {
+      "name": "MSAG_ESNR",
+      "type": "esriFieldTypeString",
+      "alias": "ESN_R",
+      "domain": null,
+      "editable": true,
+      "nullable": true,
+      "length": 5,
+      "defaultValue": null,
+      "modelName": "MSAG_ESNR"
+     },
+     {
+      "name": "MSAG_COMML",
+      "type": "esriFieldTypeString",
+      "alias": "MSAG_COMML",
+      "domain": null,
+      "editable": true,
+      "nullable": true,
+      "length": 50,
+      "defaultValue": null,
+      "modelName": "MSAG_COMML"
+     },
+     {
+      "name": "MSAG_COMMR",
+      "type": "esriFieldTypeString",
+      "alias": "MSAG_COMMR",
+      "domain": null,
+      "editable": true,
+      "nullable": true,
+      "length": 50,
+      "defaultValue": null,
+      "modelName": "MSAG_COMMR"
+     },
+     {
+      "name": "ZIP_L",
+      "type": "esriFieldTypeInteger",
+      "alias": "ZIP_L",
+      "domain": null,
+      "editable": true,
+      "nullable": true,
+      "defaultValue": null,
+      "modelName": "ZIP_L"
+     },
+     {
+      "name": "ZIP_R",
+      "type": "esriFieldTypeInteger",
+      "alias": "ZIP_R",
+      "domain": null,
+      "editable": true,
+      "nullable": true,
+      "defaultValue": null,
+      "modelName": "ZIP_R"
+     },
+     {
+      "name": "PO_L",
+      "type": "esriFieldTypeString",
+      "alias": "PO_L",
+      "domain": null,
+      "editable": true,
+      "nullable": true,
+      "length": 50,
+      "defaultValue": null,
+      "modelName": "PO_L"
+     },
+     {
+      "name": "PO_R",
+      "type": "esriFieldTypeString",
+      "alias": "PO_R",
+      "domain": null,
+      "editable": true,
+      "nullable": true,
+      "length": 50,
+      "defaultValue": null,
+      "modelName": "PO_R"
+     },
+     {
+      "name": "STATE_L",
+      "type": "esriFieldTypeString",
+      "alias": "STATE_L",
+      "domain": null,
+      "editable": true,
+      "nullable": true,
+      "length": 2,
+      "defaultValue": null,
+      "modelName": "STATE_L"
+     },
+     {
+      "name": "STATE_R",
+      "type": "esriFieldTypeString",
+      "alias": "STATE_R",
+      "domain": null,
+      "editable": true,
+      "nullable": true,
+      "length": 2,
+      "defaultValue": null,
+      "modelName": "STATE_R"
+     },
+     {
+      "name": "VDOT_RNAM",
+      "type": "esriFieldTypeString",
+      "alias": "VDOT_RNAM",
+      "domain": null,
+      "editable": true,
+      "nullable": true,
+      "length": 60,
+      "defaultValue": null,
+      "modelName": "VDOT_RNAM"
+     },
+     {
+      "name": "VDOT_RNUM",
+      "type": "esriFieldTypeInteger",
+      "alias": "VDOT_RNUM",
+      "domain": null,
+      "editable": true,
+      "nullable": true,
+      "defaultValue": null,
+      "modelName": "VDOT_RNUM"
+     },
+     {
+      "name": "VDOT_RTYP",
+      "type": "esriFieldTypeString",
+      "alias": "VDOT_RTYP",
+      "domain": null,
+      "editable": true,
+      "nullable": true,
+      "length": 3,
+      "defaultValue": null,
+      "modelName": "VDOT_RTYP"
+     },
+     {
+      "name": "VDOT_RCAT",
+      "type": "esriFieldTypeString",
+      "alias": "VDOT_RCAT",
+      "domain": null,
+      "editable": true,
+      "nullable": true,
+      "length": 6,
+      "defaultValue": null,
+      "modelName": "VDOT_RCAT"
+     },
+     {
+      "name": "VDOT_FC",
+      "type": "esriFieldTypeString",
+      "alias": "VDOT_FC",
+      "domain": null,
+      "editable": true,
+      "nullable": true,
+      "length": 3,
+      "defaultValue": null,
+      "modelName": "VDOT_FC"
+     },
+     {
+      "name": "VDOT_PTYP",
+      "type": "esriFieldTypeString",
+      "alias": "VDOT_PTYP",
+      "domain": null,
+      "editable": true,
+      "nullable": true,
+      "length": 6,
+      "defaultValue": null,
+      "modelName": "VDOT_PTYP"
+     },
+     {
+      "name": "VDOT_SPD",
+      "type": "esriFieldTypeInteger",
+      "alias": "VDOT_SPD",
+      "domain": null,
+      "editable": true,
+      "nullable": true,
+      "defaultValue": null,
+      "modelName": "VDOT_SPD"
+     },
+     {
+      "name": "VDOT_RST",
+      "type": "esriFieldTypeString",
+      "alias": "VDOT_RST",
+      "domain": null,
+      "editable": true,
+      "nullable": true,
+      "length": 254,
+      "defaultValue": null,
+      "modelName": "VDOT_RST"
+     },
+     {
+      "name": "VDOT_LC",
+      "type": "esriFieldTypeInteger",
+      "alias": "VDOT_LC",
+      "domain": null,
+      "editable": true,
+      "nullable": true,
+      "defaultValue": null,
+      "modelName": "VDOT_LC"
+     },
+     {
+      "name": "VDOT_PWM",
+      "type": "esriFieldTypeInteger",
+      "alias": "VDOT_PWM",
+      "domain": null,
+      "editable": true,
+      "nullable": true,
+      "defaultValue": null,
+      "modelName": "VDOT_PWM"
+     },
+     {
+      "name": "VDOT_SWM",
+      "type": "esriFieldTypeInteger",
+      "alias": "VDOT_SWM",
+      "domain": null,
+      "editable": true,
+      "nullable": true,
+      "defaultValue": null,
+      "modelName": "VDOT_SWM"
+     },
+     {
+      "name": "VDOT_AADT",
+      "type": "esriFieldTypeInteger",
+      "alias": "VDOT_AADT",
+      "domain": null,
+      "editable": true,
+      "nullable": true,
+      "defaultValue": null,
+      "modelName": "VDOT_AADT"
+     },
+     {
+      "name": "SHAPE_Leng",
+      "type": "esriFieldTypeDouble",
+      "alias": "SHAPE_Leng",
+      "domain": null,
+      "editable": true,
+      "nullable": true,
+      "defaultValue": null,
+      "modelName": "SHAPE_Length"
+     }
+    ],
+    "geometryField": {
+     "name": "SHAPE",
+     "type": "esriFieldTypeGeometry",
+     "alias": "SHAPE",
+     "domain": null,
+     "editable": true,
+     "nullable": true,
+     "defaultValue": null,
+     "modelName": "SHAPE"
+    },
+    "indexes": [
+     {
+      "name": "R1765_pk",
+      "fields": "OBJECTID",
+      "isAscending": true,
+      "isUnique": true,
+      "description": ""
+     },
+     {
+      "name": "S1647_idx",
+      "fields": "SHAPE",
+      "isAscending": true,
+      "isUnique": true,
+      "description": ""
+     }
+    ],
+    "datesInUnknownTimezone": false,
+    "dateFieldsTimeReference": {
+     "timeZone": "UTC",
+     "respectsDaylightSaving": false
+    },
+    "preferredTimeReference": null,
+    "types": [
+     {
+      "id": "S1100",
+      "name": "LIMITED ACCESS HIGHWAYS",
+      "domains": {},
+      "templates": [
+       {
+        "name": "S1100",
+        "description": "",
+        "prototype": {
+         "attributes": {
+          "VDOT_AADT": null,
+          "VDOT_SWM": null,
+          "SHAPE_Leng": null,
+          "RCL_ID": null,
+          "LOCAL_ID": null,
+          "VDOT_ID": null,
+          "MFIPS": null,
+          "GEO_ET": null,
+          "GEO_EFFDT": null,
+          "GEO_SRC": null,
+          "GEO_ED": null,
+          "ADD_LF": null,
+          "ADD_LT": null,
+          "ADD_RF": null,
+          "ADD_RT": null,
+          "ADD_FORMAT": null,
+          "ADD_SRC": null,
+          "ADD_ED": null,
+          "ST_PREMD": null,
+          "ST_PREDIR": null,
+          "ST_NAME": null,
+          "ST_SUFFIX": null,
+          "ST_SUFFDIR": null,
+          "ST_PSTMD": null,
+          "ST_FULL": null,
+          "ST_SRC": null,
+          "ST_ED": null,
+          "MTFCC": "S1100",
+          "SEG_TYPE": null,
+          "SPEED_MPH": null,
+          "DUAL_CW": null,
+          "ONE_WAY": null,
+          "REVERSIBLE": null,
+          "SEG_EXISTS": null,
+          "FIPS_L": null,
+          "FIPS_R": null,
+          "MSAG_ESNL": null,
+          "MSAG_ESNR": null,
+          "MSAG_COMML": null,
+          "MSAG_COMMR": null,
+          "ZIP_L": null,
+          "ZIP_R": null,
+          "PO_L": null,
+          "PO_R": null,
+          "STATE_L": null,
+          "STATE_R": null,
+          "VDOT_RNAM": null,
+          "VDOT_RNUM": null,
+          "VDOT_RTYP": null,
+          "VDOT_RCAT": null,
+          "VDOT_FC": null,
+          "VDOT_PTYP": null,
+          "VDOT_SPD": null,
+          "VDOT_RST": null,
+          "VDOT_LC": null,
+          "VDOT_PWM": null
+         }
+        },
+        "drawingTool": "esriFeatureEditToolLine"
+       }
+      ]
+     },
+     {
+      "id": "S1100HOV",
+      "name": "HIGH OCCUPANCY VEHICLE (HOV) LANES",
+      "domains": {},
+      "templates": [
+       {
+        "name": "S1100HOV",
+        "description": "",
+        "prototype": {
+         "attributes": {
+          "VDOT_AADT": null,
+          "VDOT_SWM": null,
+          "SHAPE_Leng": null,
+          "RCL_ID": null,
+          "LOCAL_ID": null,
+          "VDOT_ID": null,
+          "MFIPS": null,
+          "GEO_ET": null,
+          "GEO_EFFDT": null,
+          "GEO_SRC": null,
+          "GEO_ED": null,
+          "ADD_LF": null,
+          "ADD_LT": null,
+          "ADD_RF": null,
+          "ADD_RT": null,
+          "ADD_FORMAT": null,
+          "ADD_SRC": null,
+          "ADD_ED": null,
+          "ST_PREMD": null,
+          "ST_PREDIR": null,
+          "ST_NAME": null,
+          "ST_SUFFIX": null,
+          "ST_SUFFDIR": null,
+          "ST_PSTMD": null,
+          "ST_FULL": null,
+          "ST_SRC": null,
+          "ST_ED": null,
+          "MTFCC": "S1100HOV",
+          "SEG_TYPE": null,
+          "SPEED_MPH": null,
+          "DUAL_CW": null,
+          "ONE_WAY": null,
+          "REVERSIBLE": null,
+          "SEG_EXISTS": null,
+          "FIPS_L": null,
+          "FIPS_R": null,
+          "MSAG_ESNL": null,
+          "MSAG_ESNR": null,
+          "MSAG_COMML": null,
+          "MSAG_COMMR": null,
+          "ZIP_L": null,
+          "ZIP_R": null,
+          "PO_L": null,
+          "PO_R": null,
+          "STATE_L": null,
+          "STATE_R": null,
+          "VDOT_RNAM": null,
+          "VDOT_RNUM": null,
+          "VDOT_RTYP": null,
+          "VDOT_RCAT": null,
+          "VDOT_FC": null,
+          "VDOT_PTYP": null,
+          "VDOT_SPD": null,
+          "VDOT_RST": null,
+          "VDOT_LC": null,
+          "VDOT_PWM": null
+         }
+        },
+        "drawingTool": "esriFeatureEditToolLine"
+       }
+      ]
+     },
+     {
+      "id": "S1200PRI",
+      "name": "US AND VA PRIMARY HIGHWAYS",
+      "domains": {},
+      "templates": [
+       {
+        "name": "S1200PRI",
+        "description": "",
+        "prototype": {
+         "attributes": {
+          "VDOT_AADT": null,
+          "VDOT_SWM": null,
+          "SHAPE_Leng": null,
+          "RCL_ID": null,
+          "LOCAL_ID": null,
+          "VDOT_ID": null,
+          "MFIPS": null,
+          "GEO_ET": null,
+          "GEO_EFFDT": null,
+          "GEO_SRC": null,
+          "GEO_ED": null,
+          "ADD_LF": null,
+          "ADD_LT": null,
+          "ADD_RF": null,
+          "ADD_RT": null,
+          "ADD_FORMAT": null,
+          "ADD_SRC": null,
+          "ADD_ED": null,
+          "ST_PREMD": null,
+          "ST_PREDIR": null,
+          "ST_NAME": null,
+          "ST_SUFFIX": null,
+          "ST_SUFFDIR": null,
+          "ST_PSTMD": null,
+          "ST_FULL": null,
+          "ST_SRC": null,
+          "ST_ED": null,
+          "MTFCC": "S1200PRI",
+          "SEG_TYPE": null,
+          "SPEED_MPH": null,
+          "DUAL_CW": null,
+          "ONE_WAY": null,
+          "REVERSIBLE": null,
+          "SEG_EXISTS": null,
+          "FIPS_L": null,
+          "FIPS_R": null,
+          "MSAG_ESNL": null,
+          "MSAG_ESNR": null,
+          "MSAG_COMML": null,
+          "MSAG_COMMR": null,
+          "ZIP_L": null,
+          "ZIP_R": null,
+          "PO_L": null,
+          "PO_R": null,
+          "STATE_L": null,
+          "STATE_R": null,
+          "VDOT_RNAM": null,
+          "VDOT_RNUM": null,
+          "VDOT_RTYP": null,
+          "VDOT_RCAT": null,
+          "VDOT_FC": null,
+          "VDOT_PTYP": null,
+          "VDOT_SPD": null,
+          "VDOT_RST": null,
+          "VDOT_LC": null,
+          "VDOT_PWM": null
+         }
+        },
+        "drawingTool": "esriFeatureEditToolLine"
+       }
+      ]
+     }
+    ],
+    "templates": [],
+    "maxRecordCount": 2000,
+    "supportedQueryFormats": "JSON, geoJSON, PBF",
+    "supportedExportFormats": "sqlite,filegdb,shapefile,csv,geojson",
+    "capabilities": "Query",
+    "useStandardizedQueries": true,
+    "bigIntegerRestrictedTo53Bits": true,
+    "supportedSpatialRelationships": [
+     "esriSpatialRelIntersects",
+     "esriSpatialRelContains",
+     "esriSpatialRelCrosses",
+     "esriSpatialRelEnvelopeIntersects",
+     "esriSpatialRelIndexIntersects",
+     "esriSpatialRelOverlaps",
+     "esriSpatialRelTouches",
+     "esriSpatialRelWithin",
+     "esriSpatialRelRelation"
+    ],
+    "standardMaxRecordCount": 8000,
+    "tileMaxRecordCount": 4000,
+    "standardMaxRecordCountNoGeometry": 32000,
+    "maxRecordCountFactor": 1
+   }
+  },
+  {
+   "url": "https://vginmaps.vdem.virginia.gov/arcgis/rest/services/VA_Base_Layers/VBMP_RCL/FeatureServer/1/query",
+   "params": {
+    "f": "json",
+    "outFields": "FIPS_L,FIPS_R,OBJECTID,RCL_ID,ST_FULL",
+    "resultRecordCount": "50",
+    "returnGeometry": "false",
+    "geometry": "{\"x\": -77.408014727372, \"y\": 39.025534437083, \"spatialReference\": {\"wkid\": 4326}}",
+    "geometryType": "esriGeometryPoint",
+    "inSR": "4326",
+    "spatialRel": "esriSpatialRelIntersects",
+    "distance": "100.0",
+    "units": "esriSRUnit_Meter"
    },
    "response": {
     "objectIdFieldName": "OBJECTID",

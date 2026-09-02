@@ -1,0 +1,16 @@
+# A ZIP is a mail delivery route, not a boundary. Returning one locality
+# for a ZIP that touches several is a guess presented as a fact.
+id: skill-wg-multi-locality-zip
+tier: 3
+skill: whose-government
+question: "What locality is ZIP 24450 in?"
+toolset: default
+fixtures: [va-vgin-address-points]
+expected:
+  # Three: Botetourt County, Lexington City, Rockbridge County. An
+  # independent city and two counties, which is the shape that makes
+  # picking one especially wrong.
+  localities: [va:botetourt-county, va:lexington-city, va:rockbridge-county]
+  must_say: ["Botetourt", "Lexington", "Rockbridge"]
+score: [{kind: coverage_honesty}, {kind: restraint}]
+traps: [ambiguity]

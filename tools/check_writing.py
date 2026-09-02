@@ -45,6 +45,16 @@ ROOT = Path(__file__).resolve().parents[1]
 
 DOC_GLOBS = (
     "*.md",
+    # GOVERNANCE.md and SECURITY.md live here rather than in the root, and
+    # they are read by the people this project most wants to keep: an
+    # outside contributor sending a source manifest, and whoever is
+    # reporting a security problem.
+    ".github/*.md",
+    # skills.md § 4 says this checker covers skill prose. It did not until
+    # 2026-09-01, when the first skill was written (#27) and the claim
+    # became checkable.
+    "skills/**/SKILL.md",
+    "evals/**/*.md",
     "docs/**/*.md",
     "design/**/*.md",
     "research/*.md",
@@ -98,7 +108,13 @@ BANNED = [
          r"\b(delve|delving|tapestry|nestled|vibrant|leverag(?:e|es|ing)|"
          r"seamless(?:ly)?|elevate[sd]?\b|harness(?:ing)? the|empower(?:s|ing)?|"
          r"robust(?:ly|ness)?|pivotal|game[-\s]chang(?:er|ing)|"
-         r"cutting[-\s]edge|ever[-\s]evolving|comprehensive(?:ly)?|"
+         r"cutting[-\s]edge|ever[-\s]evolving|"
+         # A comprehensive plan is the land-use document every Virginia
+         # locality adopts under Code of Virginia § 15.2-2223. The word is
+         # register everywhere else and the name of a real thing here, so
+         # the rule steps around that one pairing rather than around the
+         # word.
+         r"comprehensive(?![-\s]plans?\b)(?:ly)?|"
          r"a testament to|stands? as a testament|"
          r"unlock(?:ing)? the (?:power|potential)|"
          r"navigat(?:e|ing) the complex\w*)\b",

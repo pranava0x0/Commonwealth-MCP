@@ -3,6 +3,352 @@
 One entry per significant work session or delegated research task: why it
 ran, cost where relevant, and whether it was worth it.
 
+## 2026-09-02 — the review of the above, applied
+
+Fifteen findings from a review of PR #42, plus three from the Codex bot.
+Five were bugs the tests did not reach; two were claims this branch made
+that its own code contradicted.
+
+**The fetch path.** Two of these predate the branch and were exposed by
+rewriting `_fetch` around them.
+
+A redirect dropped the query string. `params = {}` is not "no params" in
+httpx — it *sets* the query, so a host redirecting
+`.../query?where=...&f=json` to its canonical name was re-asked for a bare
+`.../query`, answered with its HTML form, and was reported as an outage. A
+test now drives a real 3xx through `_fetch`, which nothing did before.
+
+Pinning the connection to a checked address had quietly given up
+happy-eyeballs. `getaddrinfo` returns AAAA records with no IPv6 route and
+usually sorts them first, and `approved[attempt % len(approved)]` gave
+each address its own attempt — so a host publishing two AAAA before any A
+would spend the whole retry budget on an address family the machine
+cannot reach and report a healthy service as down. `services.arcgis.com`
+resolves that way today, and it is the source that timed out in the first
+audit run. Every approved address is now tried inside one attempt, so the
+retry budget is spent on failures.
+
+A proxy also stopped working the moment an explicit transport was passed,
+because httpx reads `HTTPS_PROXY` only when there is none. Pinning and a
+forward proxy genuinely cannot coexist, so the adapter says so once per
+process rather than failing mutely.
+
+**The result store.** One stray file in the shared cache stopped every
+command from starting: `sweep()` caught three exception types and the two
+it missed came from a JSON document that is not an object and a timestamp
+in another format, and `load_context()` is on the startup path of the CLI
+and the server alike. Reads had the same gap. Both swallow anything now,
+and an unreadable payload reads as `not_found` rather than as a traceback.
+
+An unwritable store failed calls whose inline answers were complete, and
+the second geometry request killed `find_boundaries(detail="full")` for
+every jurisdiction but the one whose un-generalized rings were recorded —
+the offline replay seam raises a bare `AssertionError`, which
+`except CommonwealthError` does not catch. Both degrade to "no handle this
+time" now, which is what the docstrings already claimed.
+
+Codex found the sharper one: `sensitive_public` sources were retainable.
+`retention` defaults to allowed and the store only refused `restricted`,
+while § 3 of the security spec has always required no stored payload
+beyond the response cache for that classification. It is read off the
+classification now — a rule that fires only when someone remembers a
+second field is a reminder.
+
+**The audit tool, one week old and already wrong in five places.**
+Nullable columns reported drift from row order alone, and a real type
+change was invisible while the first value stayed null; types are
+collected across every feature now. `spatialReference` was captured and
+compared nowhere, so the projection change the module docstring promises
+to catch was the one it dropped — as were renamed geocoder fields, which
+Codex caught. The inventory skip tested for `"inventory"` while every such
+manifest declares `none`, so four by-design non-probes were reported as
+missing recordings. A failed probe wrote a null count into the reading
+history and then crashed the report that formats it, committing the poison
+and losing the run. An unreachable source was counted as a changed one, so
+a total outage read as thirteen sources drifting. And `--out` raised after
+writing the report, failing a job whose work had succeeded.
+
+**Two claims this branch made about itself.** `containment.py` was the one
+`selection_coverage()` call site left without a builder, and it is the
+path a coordinate takes — so the registry-gap hint was not emitted
+uniformly, whatever the run log said. And the entry above said the skill
+capability check refuses to start while the spec and the code said it
+warns; the behaviour changed partway through and the log did not follow.
+
+**Also.** The site build wrote payloads into the developer's own cache and
+baked a random handle into published data that no reader could resolve; it
+uses a memory store with numbered ids now, so a rebuild produces the same
+bytes. The README's claim that `tools/` is stdlib-only had been false
+since `build_site.py` first imported the package.
+
+565 tests.
+
+## 2026-09-02 — drift on a schedule, floors from a range, and every question asked about one address
+
+#31 and #19, and the Sterling walk that turned three latent problems up.
+
+**#31: the fixtures get replayed against the live services.**
+`tools/upstream_audit.py` sends every recorded request again and compares
+what comes back structurally: field names and types, layer ids, geometry
+presence, counts against the floors. A reordered feature list is not
+drift; a retyped field is. It writes `docs/audits/upstream-<date>.md`,
+which names every source under **changed**, **checked and unchanged**, or
+**could not be reached**, because an empty diff and a source nobody
+visited are different facts. Weekly, in
+`.github/workflows/upstream-drift.yml`, which is under the fastest
+`expected_cadence` any manifest declares.
+
+The first run earned its keep immediately: Fairfax parcels 369,392 to
+369,394, Richmond 76,879 to 76,908, DEQ stations 16,298 to 16,300, and one
+VDOT read timeout that a re-run cleared. Ordinary churn, and nobody had
+been able to see it before.
+
+**#19: no floor rests on one reading now.** The readings that would have
+answered this were already in the repository — every `sources sample` run
+wrote the day's live feature count into the fixture summary, and it went
+nowhere afterwards. `--backfill` collected them, so every probed layer has
+its registration-day count and a live re-probe days later.
+
+What the range says: every layer moved by under 0.05%. The floors sat 20%
+under a single observation, which is far looser than the data needs, so
+they were reset to ten per cent under the lowest reading, rounded down to
+two significant figures, and never loosened. Fifteen layers, fourteen
+tightened. Localities stayed at 130 against a count of 134, because a
+percentage under a fixed set of governments would have been looser than
+what was already there.
+
+Two readings days apart cannot see an annual reassessment or a bulk
+republish, so ten per cent is deliberately slack, and the audit keeps
+adding readings.
+
+**One address in Sterling, and what it exposed.** Sterling is a Census
+Designated Place in Loudoun County — a postal city with no government —
+and Loudoun registers no parcel or zoning layer here. Walking one address
+there produces all three answers in a row: the parcel is **found** from a
+statewide source, the zoning is **not covered**, and nearby public places
+are **checked and absent**. `examples/one_address_every_question.py` runs
+it offline, and the site's call trail now opens on it.
+
+Recording that walk turned up three things worth having:
+
+- `registry.resolve_jurisdiction` told a caller the table covered
+  "counties and independent cities in the pilot set, and pilot towns".
+  The table stopped being a pilot on 2026-08-29. A miss now says the
+  table is complete, so an unmatched name is a neighbourhood, a postal
+  city, or a CDP rather than a place not reached yet.
+- `sample_pin` was whatever a parcels layer returned first, and Richmond's
+  row order moved: a re-record renamed the PIN that fifteen tests,
+  examples, and the site generator refer to by name. Each parcel manifest
+  declares its sample PIN now, and #31 makes re-recording routine enough
+  that this had to stop being luck.
+- `test_point_query_path` took "the first point exchange in the file",
+  which silently became a coordinate in another county once the recording
+  gained a second point. It reads `sample_point` from the summary.
+
+**CI exists.** `CONTRIBUTING.md` has been telling contributors that the
+tests and the writing checker run on every pull request, and they ran
+nowhere. `.github/workflows/ci.yml` runs both, with
+`COMMONWEALTH_DENY_NETWORK=1` and a `git diff --exit-code` over
+`tests/fixtures/`, so a run that reaches a government service or rewrites
+a recording fails there rather than on someone's machine.
+
+## 2026-09-02 — the result store, two more skills, and a doc consolidation
+
+#26 settled, #33 built, the skill set to three, and `docs-practices.md`
+folded away. Nothing pushed.
+
+**#26: the warning is the answer.** § 3.7 used to say a point near a
+shared boundary should return candidate jurisdictions the way an ambiguous
+*name* does. It now records the opposite as the decision, with the
+reasoning: the refusal would rest on a 50 m threshold this project
+invented, VGIN publishes no positional accuracy for that layer, and one
+number would be standing in for two unknowns — how far the point is from
+the published line, which is measured exactly, and how far the published
+line is from the legal one, which nobody knows.
+
+An ambiguous name and a near-border point are not the same situation. A
+name matching two governments has no answer to give. A coordinate falls in
+exactly one polygon, and the doubt is about the map rather than the input;
+returning candidates would misreport which. The reopen condition is a
+measured figure for how far VGIN's lines sit from localities' own, which
+#31's replay could collect as a by-product.
+
+**#33: results have somewhere to live.** `core/results.py`, with 0013's
+six properties: 128-bit ids, a 24-hour expiry stamped into the envelope, a
+50 MB cap, write-time terms classification, an expiry sweep at process
+start, and a disk directory behind the three methods an object store would
+implement. `MemoryResultStore` shares the write and read paths rather than
+reimplementing them, so the offline tests cannot describe refusals that do
+not ship.
+
+What it bought, in numbers: `geo.find_boundaries` at `detail='full'`
+returns Fairfax County's boundary at 523 vertices inline and a handle to
+the publisher's own 16,641. `geo.find_buildings` on downtown Richmond
+returns 25 footprints inline and a handle to all 205, with the truncation
+warning naming it. The handle lands in `_records_block()`, which seven geo
+tools share, so it applies wherever a result truncates.
+
+Handles resolve over the protocol as resource templates at the URIs the
+envelope carries. Reading an expired one says so and names the call that
+rebuilds it, and the error is raised as `ResourceError` because the SDK
+re-raises that unchanged and wraps everything else in a generic message
+that would have thrown that distinction away.
+
+The un-generalized geometry needs a second request, so it was added to the
+boundary source's recording plan and the fixture re-recorded: one query
+added, 61 exchanges to 62, no existing response changed.
+
+**Two more skills.** `whose-government` and `site-context-screen`, with
+nine eval tasks between them, taking the set to three. Their walks replay
+against fixtures alongside the first one's, and the format checks are
+derived from what is on disk rather than named, so a fourth skill is
+covered by them the day it is written. `tests/test_skills.py` is one file
+now instead of one per skill.
+
+The startup capability check became a warning. It refused to start when a
+registry could not serve a skill's declared capability, which also refuses
+a fork that registered one locality's parcels — punishing the wrong
+person for the same reason decision 0002's amendment made the profile
+floor a warning. Every tool still answers; only that skill's walk stops
+early, and the log says which and why.
+
+**Docs.** `design/docs-practices.md` is gone. Its § 1 described a
+documentation tree that was never built and would now contradict `docs/`
+being the published site; its tool-description template moved into
+`domain-servers.md` § 1, which is where the code cites it from; the rest
+went to CONTRIBUTING.md, where the people it addresses already look. That
+takes `design/` from fifteen files to fourteen and leaves the root at two.
+
+`design/README.md` opens with three files to read first and says
+`architecture.md` is a reference rather than a next step. The README's two
+navigation blocks became one, ordered as a path.
+
+534 tests, passing offline and with the network denied.
+
+## 2026-09-01 — the first skill, and four gaps between the docs and the code
+
+Five issues: #39, #16, #41, #35, #27, plus one of #28's four
+prerequisites. Nothing was pushed; the work sits on the branch for review.
+
+**A test run stopped calling a live government service.** #39.
+`sources sample va-vgin-composite-locator` ran as a subprocess in the
+suite, and its docstring said "the run is expected to fail without a
+network." On a connected machine it did not fail: it geocoded against
+VGIN and rewrote the recorded fixture, so every contributor's `pytest`
+left the working tree dirty and sent live traffic to a state geocoder.
+
+The fix is a policy switch rather than a test patch.
+`COMMONWEALTH_DENY_NETWORK` refuses every host in `EgressPolicy` before
+the scheme, the allowlist, or DNS are looked at, through the same typed
+`EgressRefused` as any other rule. The subprocess sets it and asserts the
+fixture is byte-identical afterwards. Two egress tests that judge a URL on
+its merits now clear the variable, so exporting it for a whole suite run
+works — which is what turns "the tests are offline" from a habit into a
+property. `COMMONWEALTH_DENY_NETWORK=1 pytest` passes.
+
+**The DNS check now decides which machine is connected to.** #16. The
+egress policy resolved a hostname and checked the addresses, and then
+httpx resolved the same name again when it opened the connection. Whoever
+controls a short-TTL DNS answer chose which of the two the connection
+used. `validate_url` returns the addresses it approved and a
+`PinnedAddressTransport` connects to one of them, carrying the hostname in
+the `Host` header and in the TLS handshake so the certificate is still
+checked against the name. The transport restores the hostname URL
+afterwards, because `Response.url` reads through to the request and the
+Code of Virginia publishes that URL as a section's `source_url`.
+
+Two specs had described this as a re-check at connect time for weeks. Both
+now say what the code does, with the date.
+
+**Six status lines said the opposite of what shipped.** #41. The design
+docs carry dated built-vs-planned annotations and the last two sessions
+outran them: `geo.resolve_location` and address/ZIP resolution were
+recorded as unbuilt, `configure` as not built, the license files as not
+written, `parcel-zoning-screen` as shipped. Each is corrected in place
+with its date rather than deleted. Five geo tools that shipped without a
+contract entry — `find_address`, `find_buildings`,
+`find_environmental_sites`, `find_landmarks`, `find_roads` — now have one,
+written from the shipped signatures.
+
+**The governance files exist.** #35. `GOVERNANCE.md`, `SECURITY.md`, and
+`CODEOWNERS` under `.github/`, which keeps the repository root at README
+and CONTRIBUTING while GitHub still surfaces the security policy and
+honours the review routing. They are the last of the five prerequisites
+`design/security-and-data-handling.md` § 5 sets before an outside source
+manifest is accepted, and a repo-health test pins them. Private
+vulnerability reporting is off in the repository settings and has to be
+turned on for the channel `SECURITY.md` names to work.
+
+**The first skill.** #27. `skills/parcel-zoning-screen/SKILL.md`, five
+eval tasks, and a replay test that walks the skill's own sequence over
+recorded fixtures for the four cases it promises to tell apart: one
+polygon, the split parcel from #17, a locality with parcels and no zoning
+source, and a locality with neither. Every expectation in the test is read
+out of the task files, so a task and the code cannot drift apart.
+
+Decision 0002 says profiles are generated from skill metadata. They still
+are not, and the dated amendment says why: generating `default` from one
+skill's two capabilities would delete the seven tools the 2026-08-29
+amendment chose deliberately, and call that consistency. What is built
+instead is the check — `check_skill_capabilities()` warns when no active
+source answers a capability a skill requires, which is the
+`design/hub-catalog.md` § 2 gate that had nothing to check until a skill
+declared something. It warns rather than refusing for the reason 0002's
+amendment gives about the profile floor: a fork registering one
+locality's sources has a working server and one skill whose walk stops
+early, and refusing to serve the tools that do work punishes the wrong
+person.
+
+Writing the skill turned up one thing worth recording: step 1 of every
+walk, resolving the jurisdiction, is the one step with no capability id
+behind it, because the jurisdiction table is not a registered source.
+
+**One of #28's prerequisites.** `EnvelopeBuilder.next_action()` existed
+and had zero call sites in `src/`, so no envelope had ever carried a
+`next_actions` hint and the `registry_gap` trap would have passed against
+an envelope that could not fail it. A total registry gap now carries the
+hint, emitted from `selection_coverage()` so every tool that reports the
+gap emits it the same way. It names `registry.search_sources`, a tool,
+which is the one exception to the capabilities-not-tools rule and is
+recorded as such: the registry's own tools read the registry rather than a
+registered source. The site's Craig County demo call shows it.
+
+`tools/check_writing.py` gained the `.github`, `skills/`, and `evals/`
+trees, which `design/skills.md` § 4 had claimed for skills all along, and
+one rule change: a comprehensive plan is the land-use document every
+Virginia locality adopts under Code of Virginia § 15.2-2223, so the
+llm-register rule steps around that one pairing and keeps banning the word
+everywhere else.
+
+**The reader-facing pages were the stalest files in the repo.** Asked
+whether the doc structure works for someone new, and the structure is
+fine: site to README to `examples/` is a good path and the site explains
+MCP plainly. What failed is that the two pages written for strangers are
+hand-typed prose that states numbers, while everything derived from the
+registry updates itself.
+
+`docs/llms.txt` said no geocoder was registered and street addresses did
+not work, three days after both shipped, and put 12 localities in a
+jurisdiction table holding 133. The site called `parcel-zoning-screen`
+planned while it sat on disk, said "the four questions it can answer" over
+a fourteen-tool server, and repeated the address claim.
+
+And the town count: VGIN publishes 191 town polygons, two of which are
+Census Designated Places with no government. Both were removed on
+2026-08-30 with a test pinning their absence, and the README, the site's
+own tooltip, and `jurisdiction-resolution.md` went on saying 191 — a
+coverage claim, overstated, in the three places a stranger reads first.
+All corrected to 189, and `test_site_data.py` now derives the number from
+the table and fails on any other figure in those three files, including a
+future one that is right today.
+
+The site's skill roster reads `skills/*/SKILL.md` from disk now instead of
+a typed list. `docs/README.md` says what that folder is, because `docs/`
+holds the published site and not the documentation, and the name is the
+GitHub Pages convention rather than a description.
+
+461 tests, all passing, offline and with the network denied.
+
 ## 2026-08-29 — eleven sources, the full jurisdiction table, four drifts closed
 
 Fifteen issues in one session: #2-#9 (sources), plus #14, #17, #21, #22,

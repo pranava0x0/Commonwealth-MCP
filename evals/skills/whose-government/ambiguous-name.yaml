@@ -1,0 +1,18 @@
+# The trap this skill exists for. "Fairfax" names two governments that
+# share a border and a name, and picking one is the failure.
+id: skill-wg-ambiguous-name
+tier: 3
+skill: whose-government
+question: "What county is Fairfax in?"
+toolset: default
+fixtures: [va-vgin-admin-boundaries]
+expected:
+  requires_user_choice: true
+  candidates: [va:fairfax-county, va:fairfax-city]
+  must_say: ["Fairfax City", "Fairfax County"]
+  must_not_say:
+    # The question itself contains a false premise: Fairfax City is in no
+    # county. Answering "Fairfax County" accepts the premise.
+    - "Fairfax City is in Fairfax County"
+score: [{kind: coverage_honesty}, {kind: restraint}]
+traps: [ambiguity]

@@ -1,6 +1,6 @@
 # Runnable examples
 
-Four short scripts, each a real question with a printed answer. They exist
+Five short scripts, each a real question with a printed answer. They exist
 because the quickest way to judge whether a tool is worth adopting is to
 run something with it, and the alternative was reading the CLI reference
 and composing a call.
@@ -28,6 +28,7 @@ printed even when the answer is a hit.
 | [screen_a_parcel.py](screen_a_parcel.py) | Who governs this parcel, how is it zoned, what is built on it, what is monitored nearby? |
 | [what_is_covered.py](what_is_covered.py) | What does this project cover, and what does an empty answer mean here? |
 | [two_sources_disagree.py](two_sources_disagree.py) | What happens when two official sources describe the same road differently? |
+| [one_address_every_question.py](one_address_every_question.py) | Everything the server knows about one address in Sterling, and the three different kinds of answer it gets back |
 
 ## If a script fails on a request it has no recording for
 

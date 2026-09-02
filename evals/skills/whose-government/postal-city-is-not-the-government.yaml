@@ -1,0 +1,14 @@
+# A mailing address whose city is an independent city the address is not
+# in. The postal city is the wrong answer and the plausible one.
+id: skill-wg-postal-city
+tier: 3
+skill: whose-government
+question: "Which local government covers 6800 Beulah St, Alexandria, VA 22310?"
+toolset: default
+fixtures: [va-vgin-composite-locator, va-vgin-admin-boundaries]
+expected:
+  jurisdiction: va:fairfax-county
+  must_say: ["Fairfax County", "postal"]
+  must_not_say: ["Alexandria City is the government"]
+score: [{kind: retrieval_correctness}, {kind: provenance_present}, {kind: restraint}]
+traps: []

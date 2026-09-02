@@ -1,6 +1,6 @@
 {
  "source_id": "va-richmond-city-parcels-zoning",
- "recorded_at": "2026-08-30T03:38:06Z",
+ "recorded_at": "2026-09-02T05:29:39Z",
  "rights": {
   "publisher": "City of Richmond (Information Technology / Assessor of Real Estate)",
   "terms_url": "https://www.arcgis.com/home/termsofuse.html",
@@ -9,19 +9,26 @@
  "summary": {
   "health:parcels": {
    "layer": "parcels",
-   "feature_count": 76879,
-   "min_expected": 60000,
+   "feature_count": 76908,
+   "min_expected": 69000,
    "healthy": true
   },
   "health:zoning": {
    "layer": "zoning",
    "feature_count": 679,
-   "min_expected": 500,
+   "min_expected": 610,
    "healthy": true
   },
   "sample_pin": "C0010126019",
   "no_match_pin": "NO SUCH PIN",
   "no_match_count": 0,
+  "sterling_loudoun": {
+   "point": [
+    -77.408014727372,
+    39.025534437083
+   ],
+   "record_count": 0
+  },
   "zoning_districts": [
    "R-2"
   ],
@@ -46,7 +53,7 @@
     "returnCountOnly": "true"
    },
    "response": {
-    "count": 76879
+    "count": 76908
    }
   },
   {
@@ -65,9 +72,9 @@
    "params": {
     "f": "json",
     "outFields": "OBJECTID,PIN,PropertyClass",
-    "resultRecordCount": "2",
+    "resultRecordCount": "50",
     "returnGeometry": "true",
-    "where": "1=1",
+    "where": "PIN = 'C0010126019'",
     "outSR": "4326"
    },
    "response": {
@@ -115,11 +122,10 @@
       "defaultValue": null
      }
     ],
-    "exceededTransferLimit": true,
     "features": [
      {
       "attributes": {
-       "OBJECTID": 1,
+       "OBJECTID": 1116,
        "PIN": "C0010126019",
        "PropertyClass": "R One Story"
       },
@@ -181,47 +187,6 @@
         ]
        ]
       }
-     },
-     {
-      "attributes": {
-       "OBJECTID": 2,
-       "PIN": "C0010170020",
-       "PropertyClass": "R One Story+ (1.25, 1.5, 1.75)"
-      },
-      "geometry": {
-       "rings": [
-        [
-         [
-          -77.5468904769593,
-          37.55742903272
-         ],
-         [
-          -77.5475725796877,
-          37.5575072960087
-         ],
-         [
-          -77.5478153260559,
-          37.5576296542379
-         ],
-         [
-          -77.5477195658419,
-          37.5577781846465
-         ],
-         [
-          -77.5473411931744,
-          37.5581617966882
-         ],
-         [
-          -77.546761545202,
-          37.5581869734405
-         ],
-         [
-          -77.5468904769593,
-          37.55742903272
-         ]
-        ]
-       ]
-      }
      }
     ]
    }
@@ -243,9 +208,9 @@
     "copyrightText": "City of Richmond Departments of Information Technology and Assessor of Real Estate",
     "defaultVisibility": true,
     "editingInfo": {
-     "lastEditDate": 1788010474606,
-     "schemaLastEditDate": 1788010474606,
-     "dataLastEditDate": 1788010474606
+     "lastEditDate": 1788186167564,
+     "schemaLastEditDate": 1788186167564,
+     "dataLastEditDate": 1788186167564
     },
     "relationships": [],
     "isDataVersioned": false,
@@ -772,7 +737,7 @@
     ],
     "indexes": [
      {
-      "name": "PK__PARCELS___F4B70D851DCDB022",
+      "name": "PK__PARCELS___F4B70D858571A298",
       "fields": "OBJECTID",
       "isAscending": true,
       "isUnique": true,
@@ -780,7 +745,7 @@
       "indexType": "Attribute"
      },
      {
-      "name": "user_9663.PARCELS_PARCELS_Shape_sidx",
+      "name": "user_9663.PARCELS_PARCELS2_Shape_sidx",
       "fields": "Shape",
       "isAscending": true,
       "isUnique": false,
@@ -932,7 +897,7 @@
     "features": [
      {
       "attributes": {
-       "OBJECTID": 1,
+       "OBJECTID": 1116,
        "PIN": "C0010126019",
        "PropertyClass": "R One Story"
       }
@@ -990,8 +955,33 @@
     "f": "json",
     "outFields": "OBJECTID,PIN,PropertyClass",
     "resultRecordCount": "50",
+    "returnGeometry": "false",
+    "geometry": "{\"x\": -77.408014727372, \"y\": 39.025534437083, \"spatialReference\": {\"wkid\": 4326}}",
+    "geometryType": "esriGeometryPoint",
+    "inSR": "4326",
+    "spatialRel": "esriSpatialRelIntersects"
+   },
+   "response": {
+    "objectIdFieldName": "OBJECTID",
+    "uniqueIdField": {
+     "name": "OBJECTID",
+     "isSystemMaintained": true
+    },
+    "globalIdFieldName": "",
+    "features": []
+   }
+  },
+  {
+   "url": "https://services1.arcgis.com/k3vhq11XkBNeeOfM/arcgis/rest/services/Parcels/FeatureServer/0/query",
+   "params": {
+    "f": "json",
+    "outFields": "OBJECTID,PIN,PropertyClass",
+    "resultRecordCount": "50",
     "returnGeometry": "true",
-    "where": "PIN = 'C0010126019'",
+    "geometry": "{\"x\": -77.408014727372, \"y\": 39.025534437083, \"spatialReference\": {\"wkid\": 4326}}",
+    "geometryType": "esriGeometryPoint",
+    "inSR": "4326",
+    "spatialRel": "esriSpatialRelIntersects",
     "outSR": "4326"
    },
    "response": {
@@ -1006,106 +996,7 @@
      "shapeLengthFieldName": "Shape__Length",
      "units": "esriFeet"
     },
-    "geometryType": "esriGeometryPolygon",
-    "spatialReference": {
-     "wkid": 4326,
-     "latestWkid": 4326
-    },
-    "fields": [
-     {
-      "name": "OBJECTID",
-      "type": "esriFieldTypeOID",
-      "alias": "OBJECTID",
-      "sqlType": "sqlTypeOther",
-      "domain": null,
-      "defaultValue": null
-     },
-     {
-      "name": "PIN",
-      "type": "esriFieldTypeString",
-      "alias": "PIN",
-      "sqlType": "sqlTypeOther",
-      "length": 26,
-      "domain": null,
-      "defaultValue": null
-     },
-     {
-      "name": "PropertyClass",
-      "type": "esriFieldTypeString",
-      "alias": "PropertyClass",
-      "sqlType": "sqlTypeOther",
-      "length": 40,
-      "domain": null,
-      "defaultValue": null
-     }
-    ],
-    "features": [
-     {
-      "attributes": {
-       "OBJECTID": 1,
-       "PIN": "C0010126019",
-       "PropertyClass": "R One Story"
-      },
-      "geometry": {
-       "rings": [
-        [
-         [
-          -77.5501706303165,
-          37.5578957842074
-         ],
-         [
-          -77.5500957492371,
-          37.5578817392567
-         ],
-         [
-          -77.5508649846163,
-          37.5571443756955
-         ],
-         [
-          -77.5509301020127,
-          37.5571916372004
-         ],
-         [
-          -77.5504260613473,
-          37.5576519493607
-         ],
-         [
-          -77.5505410252275,
-          37.5578147394507
-         ],
-         [
-          -77.5508779279231,
-          37.5582917895684
-         ],
-         [
-          -77.5506247936061,
-          37.558406538684
-         ],
-         [
-          -77.5506089159853,
-          37.5584140212447
-         ],
-         [
-          -77.5505882308931,
-          37.5584237693922
-         ],
-         [
-          -77.550505365469,
-          37.5583019015663
-         ],
-         [
-          -77.5502377876569,
-          37.557908379573
-         ],
-         [
-          -77.5501706303165,
-          37.5578957842074
-         ]
-        ]
-       ]
-      }
-     }
-    ]
+    "features": []
    }
   },
   {
@@ -2299,7 +2190,7 @@
     "features": [
      {
       "attributes": {
-       "OBJECTID": 28484,
+       "OBJECTID": 27030,
        "PIN": "E0000720034",
        "PropertyClass": "R Single Family Vacant (R1-R7)"
       },
@@ -2332,7 +2223,7 @@
      },
      {
       "attributes": {
-       "OBJECTID": 28485,
+       "OBJECTID": 27031,
        "PIN": "E0000720034",
        "PropertyClass": "R Single Family Vacant (R1-R7)"
       },
@@ -3079,7 +2970,7 @@
     "features": [
      {
       "attributes": {
-       "OBJECTID": 1471,
+       "OBJECTID": 1697,
        "PIN": "C0010126021",
        "PropertyClass": "R One Story+ (1.25, 1.5, 1.75)"
       }

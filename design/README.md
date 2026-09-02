@@ -2,13 +2,26 @@
 
 Everything about how Commonwealth-MCP works and why.
 
-Start with **[architecture.md](architecture.md)**. It has two parts: how
-the system is put together (§ 1–39), and one record per architectural
-choice with the options that lost still written out (decisions 0001–0015).
+## New here? Read three files, in this order
 
-The other files here are per-feature contracts. Each one is written to be
-read on its own, and the source code cites them by filename, so a comment
-in `core/envelope.py` pointing at `provenance-envelope.md § 2` resolves to
+1. **[provenance-envelope.md](provenance-envelope.md)** — what comes back
+   from every single tool. Nothing else makes sense before this one.
+2. **[jurisdiction-resolution.md](jurisdiction-resolution.md)** — how a
+   place becomes a government, and why Virginia makes that hard.
+3. **[source-registry.md](source-registry.md)** — what a government source
+   is here, and what it takes to add one.
+
+That is enough to read the code. Come back for the rest when you need it.
+
+**[architecture.md](architecture.md)** is the long one, and it is a
+reference rather than a next step. Two parts: how the system is put
+together (§ 1–33 and § 37–39), and one record per architectural choice
+with the options that lost still written out (decisions 0001–0015). Read a
+decision record when you want to disagree with a choice.
+
+The other files here are per-feature contracts. Each is written to be read
+on its own, and the source code cites them by filename, so a comment in
+`core/envelope.py` pointing at `provenance-envelope.md § 2` resolves to
 something specific.
 
 ## The specs
@@ -29,7 +42,6 @@ Roughly in dependency order, which is also a reasonable reading order:
 | [testing-and-demos.md](testing-and-demos.md) | Test layout, the quirks register, drift audits, and demos | — |
 | [hub-catalog.md](hub-catalog.md) | Catalog schema, capability routing, profiles, and tenancy. Mostly ahead of what is built | 0009, 0013 |
 | [explorer.md](explorer.md) | Querying the long tail, and how an ad-hoc query becomes a registered source. Deferred, not built | 0008 |
-| [docs-practices.md](docs-practices.md) | How the docs are structured and what the writing checker enforces | — |
 
 Two more files sit alongside them:
 
@@ -37,6 +49,11 @@ Two more files sit alongside them:
   does that its schema does not predict. Every entry names how it was
   found, when, and what the code does about it.
 - **[architecture.md](architecture.md)** — the map the specs expand.
+
+The result store has no file of its own on purpose. Decision 0013 holds
+the choice and what was built, `provenance-envelope.md` §§ 6 and 9 hold
+the contract a caller sees, and the code cites both. A third document
+would be a place for the two to disagree.
 
 ## Conventions
 
@@ -48,6 +65,7 @@ edit that changes a contract updates the spec's status line with the date.
 
 | Date | What changed |
 |---|---|
+| 2026-09-02 | `docs-practices.md` folded into CONTRIBUTING.md, where the people it addresses already look. Its § 1 described a documentation tree that was never built and would have conflicted with `docs/` being the published site; its tool-description template moved to `domain-servers.md` § 1, which is where the code cites it from. |
 | 2026-08-26 | Specs and decision records written together in this folder. |
 | 2026-08-28 | The fifteen decision records merged into one file. They were only ever read as a set, and each one's status was correct only in the index table it had been separated from. |
 | 2026-08-28 | Plan-vs-built review. Specs that described unbuilt things in the present tense got dated annotations saying so. Contract-level disagreements between spec and code were filed as issues rather than edited away. |

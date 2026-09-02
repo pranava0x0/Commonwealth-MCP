@@ -162,7 +162,7 @@ One JSON Schema (versioned with the envelope, shipped in-repo and generated into
 - Execution provenance rides inside `structuredContent` under the reserved `_execution` key — the one underscore-prefixed key, signaling "not part of the answer."
 - MCP `resultType` is `"complete"` for ordinary results; `"input_required"` appears only if/when architecture.md decision 0004 layers MRTR on.
 - MCP `isError: true` carries only § 7 total failures; the envelope still rides along with `coverage.execution: "failed"`.
-- Result handles appear both as envelope `resources` entries and as MCP resource links, same URIs.
+- Result handles appear both as envelope `resources` entries and as MCP resource links, same URIs. **Built 2026-09-02** (#33): `commonwealth://results/{id}` and `commonwealth://evidence/{id}` are registered resource templates, and `resources` is filled by `EnvelopeBuilder.add_resource()`. Reading an expired handle says so and names the call that rebuilds it, which is a different answer from a handle that was never minted.
 - Protocol `_meta` carries only protocol-defined keys (version, OTel trace context); nothing Commonwealth-specific hides there.
 - `ttlMs`/`cacheScope` appear where the protocol defines them — list results and `resources/read` responses (result resources declare them from source-manifest hints) — and never as envelope fields.
 
@@ -193,6 +193,10 @@ Escalation hints that skills consume (architecture.md § 18). Machine-readable, 
 ```
 
 Rules: a `next_action` names a capability, not a tool on a specific server, so routing stays with the Hub; at most 3 per response; the bench scores whether skills follow them when warranted and ignore them when not.
+
+**Built 2026-09-01.** `EnvelopeBuilder.next_action()` existed and had no call site anywhere in `src/`, so no envelope had ever carried one. The registry gap in § 10 below is the first: a `coverage.registry: none` result now carries a hint toward `registry.search_sources`, emitted from `selection_coverage()` so every tool that can report the gap emits it the same way.
+
+That one hint names a tool, against the rule above, for a reason worth writing down: the registry's own tools read the registry rather than a registered source, so `registry.search_sources` has no capability id to name in its place. Adding one to the vocabulary would invent a capability no manifest can declare. Every other hint follows the rule.
 
 ## 7. Error model integration
 

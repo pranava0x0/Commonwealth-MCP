@@ -1,0 +1,14 @@
+# Three Virginia cities gave up their charters. Someone using the old name
+# is usually working from an old document, which matters downstream.
+id: skill-wg-former-name
+tier: 3
+skill: whose-government
+question: "Which government covers Bedford City?"
+toolset: default
+fixtures: [va-vgin-admin-boundaries]
+expected:
+  jurisdiction: va:bedford-town
+  basis: former_name
+  must_say: ["town", "2013"]
+score: [{kind: retrieval_correctness}, {kind: coverage_honesty}]
+traps: [stale]

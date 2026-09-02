@@ -1,0 +1,18 @@
+# "Fairfax" names two governments that share a border and a name. Passing
+# means showing both and stopping; failing means picking one.
+id: skill-pzs-ambiguity
+tier: 3
+skill: parcel-zoning-screen
+question: "What is the zoning for 10455 Armstrong Street in Fairfax?"
+toolset: default
+fixtures: [va-vgin-admin-boundaries, va-vgin-composite-locator]
+expected:
+  requires_user_choice: true
+  candidates: [va:fairfax-county, va:fairfax-city]
+  must_say:
+    - "Fairfax City"
+    - "Fairfax County"
+score:
+  - kind: coverage_honesty
+  - kind: restraint
+traps: [ambiguity]

@@ -1,6 +1,6 @@
 {
  "source_id": "va-vgin-landmarks",
- "recorded_at": "2026-08-30T03:11:10Z",
+ "recorded_at": "2026-09-02T05:30:45Z",
  "rights": {
   "publisher": "Virginia Geographic Information Network (VGIN), part of the Virginia Department of Emergency Management",
   "terms_url": "https://vgin.vdem.virginia.gov/datasets/virginia-landmarks/about",
@@ -10,7 +10,7 @@
   "health:landmarks": {
    "layer": "landmarks",
    "feature_count": 9437,
-   "min_expected": 7000,
+   "min_expected": 8400,
    "healthy": true
   },
   "near_vienna": {
@@ -36,6 +36,13 @@
   "by_place_type": {
    "place_type": "Public Library Points",
    "record_count": 23
+  },
+  "sterling_loudoun": {
+   "point": [
+    -77.408014727372,
+    39.025534437083
+   ],
+   "record_count": 0
   }
  },
  "exchanges": [
@@ -1421,6 +1428,31 @@
       }
      }
     ]
+   }
+  },
+  {
+   "url": "https://vginmaps.vdem.virginia.gov/arcgis/rest/services/VA_Base_Layers/VA_Landmarks/FeatureServer/1/query",
+   "params": {
+    "f": "json",
+    "outFields": "Address,City,FIPScode,FIPSname,LandmkName,LastCheck,OBJECTID,Phone,PlaceType,Src,SrcTyp,State,URL,VAPID,Zip",
+    "resultRecordCount": "50",
+    "returnGeometry": "false",
+    "where": "FIPScode = 51107",
+    "geometry": "{\"x\": -77.408014727372, \"y\": 39.025534437083, \"spatialReference\": {\"wkid\": 4326}}",
+    "geometryType": "esriGeometryPoint",
+    "inSR": "4326",
+    "spatialRel": "esriSpatialRelIntersects",
+    "distance": "1000.0",
+    "units": "esriSRUnit_Meter"
+   },
+   "response": {
+    "objectIdFieldName": "OBJECTID",
+    "globalIdFieldName": "",
+    "geometryType": "esriGeometryPoint",
+    "spatialReference": {
+     "wkt": "PROJCS[\"Lambert_Conformal_Conic_Virginia\",GEOGCS[\"GCS_North_American_1983\",DATUM[\"D_North_American_1983\",SPHEROID[\"GRS_1980\",6378137.0,298.257222101]],PRIMEM[\"Greenwich\",0.0],UNIT[\"Degree\",0.0174532925199433]],PROJECTION[\"Lambert_Conformal_Conic\"],PARAMETER[\"False_Easting\",0.0],PARAMETER[\"False_Northing\",0.0],PARAMETER[\"Central_Meridian\",-79.5],PARAMETER[\"Standard_Parallel_1\",37.0],PARAMETER[\"Standard_Parallel_2\",39.5],PARAMETER[\"Latitude_Of_Origin\",36.0],UNIT[\"Meter\",1.0]]"
+    },
+    "features": []
    }
   }
  ]

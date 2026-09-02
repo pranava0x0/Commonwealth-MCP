@@ -167,7 +167,7 @@ async def resolve_point(ctx: RuntimeContext, b: EnvelopeBuilder,
     out.source_ref = reuse_source_ref
     selected = ctx.sources.select("boundary.lookup", STATEWIDE_STACK)
     out.registry_dim, out.gaps = selection_coverage(
-        ctx.sources, "boundary.lookup", STATEWIDE_STACK, selected)
+        ctx.sources, "boundary.lookup", STATEWIDE_STACK, selected, builder=b)
     if not selected:
         return out
 

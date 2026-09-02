@@ -1,6 +1,6 @@
 {
  "source_id": "va-vdot-lrs-routes",
- "recorded_at": "2026-08-30T15:01:48Z",
+ "recorded_at": "2026-09-02T05:31:57Z",
  "rights": {
   "publisher": "Virginia Department of Transportation (VDOT)",
   "terms_url": "https://www.virginiaroads.org/",
@@ -10,7 +10,7 @@
   "health:routes": {
    "layer": "routes",
    "feature_count": 196896,
-   "min_expected": 150000,
+   "min_expected": 170000,
    "healthy": true
   },
   "query_layer": "routes",
@@ -37,6 +37,13 @@
   },
   "no_match": {
    "record_count": 0
+  },
+  "sterling_loudoun:routes": {
+   "point": [
+    -77.408014727372,
+    39.025534437083
+   ],
+   "record_count": 3
   }
  },
  "exchanges": [
@@ -1957,6 +1964,377 @@
     },
     "globalIdFieldName": "",
     "features": []
+   }
+  },
+  {
+   "url": "https://services.arcgis.com/p5v98VHDX9Atv3l7/arcgis/rest/services/LRS_Route_Master/FeatureServer/0/query",
+   "params": {
+    "f": "json",
+    "outFields": "LEN,LRM_CURRENCY_DT,OBJECTID,RTE_CATEGORY_NM,RTE_COMMON_NM,RTE_JURIS_CD,RTE_JURIS_PROPER_NM,RTE_NBR,RTE_NM,RTE_STATUS_NM,RTE_STREET_NM,RTE_TYPE_NM",
+    "resultRecordCount": "50",
+    "returnGeometry": "false",
+    "where": "((RTE_JURIS_PROPER_NM = 'Loudoun County') OR (RTE_JURIS_PROPER_NM = 'County of Loudoun'))",
+    "geometry": "{\"x\": -77.408014727372, \"y\": 39.025534437083, \"spatialReference\": {\"wkid\": 4326}}",
+    "geometryType": "esriGeometryPoint",
+    "inSR": "4326",
+    "spatialRel": "esriSpatialRelIntersects",
+    "distance": "100.0",
+    "units": "esriSRUnit_Meter"
+   },
+   "response": {
+    "objectIdFieldName": "OBJECTID",
+    "uniqueIdField": {
+     "name": "OBJECTID",
+     "isSystemMaintained": true
+    },
+    "globalIdFieldName": "",
+    "geometryType": "esriGeometryPolyline",
+    "spatialReference": {
+     "wkid": 102100,
+     "latestWkid": 3857
+    },
+    "fields": [
+     {
+      "name": "LEN",
+      "type": "esriFieldTypeDouble",
+      "alias": "LEN",
+      "sqlType": "sqlTypeOther",
+      "domain": null,
+      "defaultValue": null
+     },
+     {
+      "name": "LRM_CURRENCY_DT",
+      "type": "esriFieldTypeDate",
+      "alias": "LRM_CURRENCY_DT",
+      "sqlType": "sqlTypeOther",
+      "length": 8,
+      "domain": null,
+      "defaultValue": null
+     },
+     {
+      "name": "OBJECTID",
+      "type": "esriFieldTypeOID",
+      "alias": "OBJECTID",
+      "sqlType": "sqlTypeOther",
+      "domain": null,
+      "defaultValue": null
+     },
+     {
+      "name": "RTE_CATEGORY_NM",
+      "type": "esriFieldTypeString",
+      "alias": "RTE_CATEGORY_NM",
+      "sqlType": "sqlTypeOther",
+      "length": 60,
+      "domain": null,
+      "defaultValue": null
+     },
+     {
+      "name": "RTE_COMMON_NM",
+      "type": "esriFieldTypeString",
+      "alias": "RTE_COMMON_NM",
+      "sqlType": "sqlTypeOther",
+      "length": 60,
+      "domain": null,
+      "defaultValue": null
+     },
+     {
+      "name": "RTE_JURIS_CD",
+      "type": "esriFieldTypeString",
+      "alias": "RTE_JURIS_CD",
+      "sqlType": "sqlTypeOther",
+      "length": 3,
+      "domain": null,
+      "defaultValue": null
+     },
+     {
+      "name": "RTE_JURIS_PROPER_NM",
+      "type": "esriFieldTypeString",
+      "alias": "RTE_JURIS_PROPER_NM",
+      "sqlType": "sqlTypeOther",
+      "length": 60,
+      "domain": null,
+      "defaultValue": null
+     },
+     {
+      "name": "RTE_NBR",
+      "type": "esriFieldTypeInteger",
+      "alias": "RTE_NBR",
+      "sqlType": "sqlTypeOther",
+      "domain": null,
+      "defaultValue": null
+     },
+     {
+      "name": "RTE_NM",
+      "type": "esriFieldTypeString",
+      "alias": "RTE_NM",
+      "sqlType": "sqlTypeOther",
+      "length": 60,
+      "domain": null,
+      "defaultValue": null
+     },
+     {
+      "name": "RTE_STATUS_NM",
+      "type": "esriFieldTypeString",
+      "alias": "RTE_STATUS_NM",
+      "sqlType": "sqlTypeOther",
+      "length": 60,
+      "domain": null,
+      "defaultValue": null
+     },
+     {
+      "name": "RTE_STREET_NM",
+      "type": "esriFieldTypeString",
+      "alias": "RTE_STREET_NM",
+      "sqlType": "sqlTypeOther",
+      "length": 30,
+      "domain": null,
+      "defaultValue": null
+     },
+     {
+      "name": "RTE_TYPE_NM",
+      "type": "esriFieldTypeString",
+      "alias": "RTE_TYPE_NM",
+      "sqlType": "sqlTypeOther",
+      "length": 60,
+      "domain": null,
+      "defaultValue": null
+     }
+    ],
+    "features": [
+     {
+      "attributes": {
+       "LEN": null,
+       "LRM_CURRENCY_DT": 1745884462000,
+       "OBJECTID": 40449,
+       "RTE_CATEGORY_NM": "Secondary",
+       "RTE_COMMON_NM": "SC-1790E (Loudoun County)",
+       "RTE_JURIS_CD": "053",
+       "RTE_JURIS_PROPER_NM": "Loudoun County",
+       "RTE_NBR": 1790,
+       "RTE_NM": "R-VA053SC01790EB",
+       "RTE_STATUS_NM": null,
+       "RTE_STREET_NM": null,
+       "RTE_TYPE_NM": "Secondary Route"
+      }
+     },
+     {
+      "attributes": {
+       "LEN": null,
+       "LRM_CURRENCY_DT": 1668811821000,
+       "OBJECTID": 40450,
+       "RTE_CATEGORY_NM": "Secondary",
+       "RTE_COMMON_NM": "SC-1791E (Loudoun County)",
+       "RTE_JURIS_CD": "053",
+       "RTE_JURIS_PROPER_NM": "Loudoun County",
+       "RTE_NBR": 1791,
+       "RTE_NM": "R-VA053SC01791EB",
+       "RTE_STATUS_NM": null,
+       "RTE_STREET_NM": null,
+       "RTE_TYPE_NM": "Secondary Route"
+      }
+     },
+     {
+      "attributes": {
+       "LEN": null,
+       "LRM_CURRENCY_DT": 1668815389000,
+       "OBJECTID": 101728,
+       "RTE_CATEGORY_NM": "Streets",
+       "RTE_COMMON_NM": "Manekin PLZ (PR - Loudoun County)",
+       "RTE_JURIS_CD": "053",
+       "RTE_JURIS_PROPER_NM": "Loudoun County",
+       "RTE_NBR": null,
+       "RTE_NM": "S-VA053PR MANEKIN PLZ",
+       "RTE_STATUS_NM": null,
+       "RTE_STREET_NM": "Manekin",
+       "RTE_TYPE_NM": "Street Route"
+      }
+     }
+    ]
+   }
+  },
+  {
+   "url": "https://services.arcgis.com/p5v98VHDX9Atv3l7/arcgis/rest/services/LRS_Route_Master/FeatureServer/0/query",
+   "params": {
+    "f": "json",
+    "outFields": "LEN,LRM_CURRENCY_DT,OBJECTID,RTE_CATEGORY_NM,RTE_COMMON_NM,RTE_JURIS_CD,RTE_JURIS_PROPER_NM,RTE_NBR,RTE_NM,RTE_STATUS_NM,RTE_STREET_NM,RTE_TYPE_NM",
+    "resultRecordCount": "50",
+    "returnGeometry": "false",
+    "geometry": "{\"x\": -77.408014727372, \"y\": 39.025534437083, \"spatialReference\": {\"wkid\": 4326}}",
+    "geometryType": "esriGeometryPoint",
+    "inSR": "4326",
+    "spatialRel": "esriSpatialRelIntersects",
+    "distance": "100.0",
+    "units": "esriSRUnit_Meter"
+   },
+   "response": {
+    "objectIdFieldName": "OBJECTID",
+    "uniqueIdField": {
+     "name": "OBJECTID",
+     "isSystemMaintained": true
+    },
+    "globalIdFieldName": "",
+    "geometryType": "esriGeometryPolyline",
+    "spatialReference": {
+     "wkid": 102100,
+     "latestWkid": 3857
+    },
+    "fields": [
+     {
+      "name": "LEN",
+      "type": "esriFieldTypeDouble",
+      "alias": "LEN",
+      "sqlType": "sqlTypeOther",
+      "domain": null,
+      "defaultValue": null
+     },
+     {
+      "name": "LRM_CURRENCY_DT",
+      "type": "esriFieldTypeDate",
+      "alias": "LRM_CURRENCY_DT",
+      "sqlType": "sqlTypeOther",
+      "length": 8,
+      "domain": null,
+      "defaultValue": null
+     },
+     {
+      "name": "OBJECTID",
+      "type": "esriFieldTypeOID",
+      "alias": "OBJECTID",
+      "sqlType": "sqlTypeOther",
+      "domain": null,
+      "defaultValue": null
+     },
+     {
+      "name": "RTE_CATEGORY_NM",
+      "type": "esriFieldTypeString",
+      "alias": "RTE_CATEGORY_NM",
+      "sqlType": "sqlTypeOther",
+      "length": 60,
+      "domain": null,
+      "defaultValue": null
+     },
+     {
+      "name": "RTE_COMMON_NM",
+      "type": "esriFieldTypeString",
+      "alias": "RTE_COMMON_NM",
+      "sqlType": "sqlTypeOther",
+      "length": 60,
+      "domain": null,
+      "defaultValue": null
+     },
+     {
+      "name": "RTE_JURIS_CD",
+      "type": "esriFieldTypeString",
+      "alias": "RTE_JURIS_CD",
+      "sqlType": "sqlTypeOther",
+      "length": 3,
+      "domain": null,
+      "defaultValue": null
+     },
+     {
+      "name": "RTE_JURIS_PROPER_NM",
+      "type": "esriFieldTypeString",
+      "alias": "RTE_JURIS_PROPER_NM",
+      "sqlType": "sqlTypeOther",
+      "length": 60,
+      "domain": null,
+      "defaultValue": null
+     },
+     {
+      "name": "RTE_NBR",
+      "type": "esriFieldTypeInteger",
+      "alias": "RTE_NBR",
+      "sqlType": "sqlTypeOther",
+      "domain": null,
+      "defaultValue": null
+     },
+     {
+      "name": "RTE_NM",
+      "type": "esriFieldTypeString",
+      "alias": "RTE_NM",
+      "sqlType": "sqlTypeOther",
+      "length": 60,
+      "domain": null,
+      "defaultValue": null
+     },
+     {
+      "name": "RTE_STATUS_NM",
+      "type": "esriFieldTypeString",
+      "alias": "RTE_STATUS_NM",
+      "sqlType": "sqlTypeOther",
+      "length": 60,
+      "domain": null,
+      "defaultValue": null
+     },
+     {
+      "name": "RTE_STREET_NM",
+      "type": "esriFieldTypeString",
+      "alias": "RTE_STREET_NM",
+      "sqlType": "sqlTypeOther",
+      "length": 30,
+      "domain": null,
+      "defaultValue": null
+     },
+     {
+      "name": "RTE_TYPE_NM",
+      "type": "esriFieldTypeString",
+      "alias": "RTE_TYPE_NM",
+      "sqlType": "sqlTypeOther",
+      "length": 60,
+      "domain": null,
+      "defaultValue": null
+     }
+    ],
+    "features": [
+     {
+      "attributes": {
+       "LEN": null,
+       "LRM_CURRENCY_DT": 1745884462000,
+       "OBJECTID": 40449,
+       "RTE_CATEGORY_NM": "Secondary",
+       "RTE_COMMON_NM": "SC-1790E (Loudoun County)",
+       "RTE_JURIS_CD": "053",
+       "RTE_JURIS_PROPER_NM": "Loudoun County",
+       "RTE_NBR": 1790,
+       "RTE_NM": "R-VA053SC01790EB",
+       "RTE_STATUS_NM": null,
+       "RTE_STREET_NM": null,
+       "RTE_TYPE_NM": "Secondary Route"
+      }
+     },
+     {
+      "attributes": {
+       "LEN": null,
+       "LRM_CURRENCY_DT": 1668811821000,
+       "OBJECTID": 40450,
+       "RTE_CATEGORY_NM": "Secondary",
+       "RTE_COMMON_NM": "SC-1791E (Loudoun County)",
+       "RTE_JURIS_CD": "053",
+       "RTE_JURIS_PROPER_NM": "Loudoun County",
+       "RTE_NBR": 1791,
+       "RTE_NM": "R-VA053SC01791EB",
+       "RTE_STATUS_NM": null,
+       "RTE_STREET_NM": null,
+       "RTE_TYPE_NM": "Secondary Route"
+      }
+     },
+     {
+      "attributes": {
+       "LEN": null,
+       "LRM_CURRENCY_DT": 1668815389000,
+       "OBJECTID": 101728,
+       "RTE_CATEGORY_NM": "Streets",
+       "RTE_COMMON_NM": "Manekin PLZ (PR - Loudoun County)",
+       "RTE_JURIS_CD": "053",
+       "RTE_JURIS_PROPER_NM": "Loudoun County",
+       "RTE_NBR": null,
+       "RTE_NM": "S-VA053PR MANEKIN PLZ",
+       "RTE_STATUS_NM": null,
+       "RTE_STREET_NM": "Manekin",
+       "RTE_TYPE_NM": "Street Route"
+      }
+     }
+    ]
    }
   }
  ]

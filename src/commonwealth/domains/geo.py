@@ -22,6 +22,7 @@ from ..core.envelope import (AccessPath, Coverage, Envelope,
 from ..core.errors import CommonwealthError, InvalidQuery
 from ..core.jurisdiction import Jurisdiction, JurisdictionKind
 from ..core.registry import SourceManifest
+from ..core.results import RetentionForbidden, resource_ref
 from ..core.toolreg import ToolRegistry, ToolSpec
 from ..runtime import RuntimeContext
 from .containment import resolve_point, warn_if_near_a_border
@@ -132,12 +133,26 @@ def _source_entry(b: EnvelopeBuilder, m: SourceManifest,
 
 
 def _records_block(b: EnvelopeBuilder, src_ref: str, q: ArcGISQueryResult,
-                   m: SourceManifest) -> dict:
+                   m: SourceManifest, ctx: RuntimeContext | None = None,
+                   arguments: dict | None = None) -> dict:
+    """One source's records, capped at what fits inline.
+
+    Above the cap the retrieved records used to be dropped and the caller
+    told to narrow the query, which meant the request had been paid for
+    and the answer thrown away. Pass `ctx` and the call's own arguments
+    and the full set goes to the result store instead, with the handle
+    named in the truncation warning (decision 0013; GitHub issue #33).
+    """
     inline = q.records[:INLINE_RECORD_CAP]
+    handle = None
     if len(q.records) > len(inline):
+        if ctx is not None:
+            handle = _store_full_records(ctx, b, m, q, arguments or {})
         b.warn(WarningCode.truncated_inline,
                f"{len(q.records)} records retrieved; {len(inline)} shown "
-               "inline. Narrow the query for the rest.", m.id)
+               "inline. " + (f"All {len(q.records)} are at {handle}. "
+                             if handle else "")
+               + "Narrow the query to see more of them inline.", m.id)
     rows = []
     for r in inline:
         ev = b.add_evidence(source_ref=src_ref, record_id=r.record_id,
@@ -152,8 +167,52 @@ def _records_block(b: EnvelopeBuilder, src_ref: str, q: ArcGISQueryResult,
         # than avoided.
         rows.append({**r.canonical, "record_id": r.record_id,
                      "evidence_refs": [ev]})
-    return {"source_ref": src_ref, "source_id": m.id,
-            "records": rows, "record_count": len(q.records)}
+    block = {"source_ref": src_ref, "source_id": m.id,
+             "records": rows, "record_count": len(q.records)}
+    if handle:
+        block["full_records_ref"] = handle
+    return block
+
+
+def _store_full_records(ctx: RuntimeContext, b: EnvelopeBuilder,
+                        m: SourceManifest, q: ArcGISQueryResult,
+                        arguments: dict) -> str | None:
+    """Put every retrieved record in the store and return its handle.
+
+    Returns None where the payload cannot be kept — a publisher whose
+    terms forbid retention, or a result over the store's cap. The inline
+    records still stand; the warning simply does not name a handle, which
+    is the truthful thing to say when there is none.
+    """
+    payload = {
+        "source_id": m.id,
+        "record_count": len(q.records),
+        "retrieved_at": q.retrieved_at,
+        "transformations": q.transformations,
+        "records": [{**r.canonical, "record_id": r.record_id}
+                    for r in q.records],
+    }
+    try:
+        stored = ctx.results.put(
+            kind="results", payload=payload, media_type="application/json",
+            manifests=[m], origin_tool=b.tool_name,
+            origin_arguments=arguments)
+    except RetentionForbidden:
+        b.warn(WarningCode.terms_note,
+               f"{m.id}'s terms do not allow keeping a copy of its "
+               "records, so the ones past the inline cap are not stored. "
+               "Narrow the query to see them.", m.id)
+        return None
+    except (ValueError, OSError):
+        # ValueError is the size cap; OSError is a store that cannot be
+        # written (a read-only mount, a sandboxed home). Neither is a
+        # reason to fail a call whose inline records were complete, and
+        # `_bind` catches only CommonwealthError, so letting an OSError
+        # through returns an untyped error and writes no audit record.
+        return None
+    return b.add_resource(resource_ref(
+        stored, f"All {len(q.records)} records {m.id} returned for this "
+                "query, including the ones past the inline cap."))
 
 
 def _pagination_dim(results: list[ArcGISQueryResult]) -> PaginationCoverage:
@@ -343,7 +402,7 @@ async def find_parcel(ctx: RuntimeContext, jurisdiction: str,
 
     selected = ctx.sources.select("parcel.lookup", stack)
     registry_dim, gaps = selection_coverage(ctx.sources, "parcel.lookup", stack,
-                                             selected)
+                                            selected, builder=b)
     blocks: list[dict] = []
     failures = []
     queries: list[ArcGISQueryResult] = []
@@ -359,7 +418,9 @@ async def find_parcel(ctx: RuntimeContext, jurisdiction: str,
             failures.append(failure(m.id, err.code, str(err)))
             continue
         queries.append(q)
-        blocks.append(_records_block(b, _source_entry(b, m, q), q, m))
+        blocks.append(_records_block(
+            b, _source_entry(b, m, q), q, m, ctx,
+            {"jurisdiction": jurisdiction, "pin": pin, "lon": lon, "lat": lat}))
     execution = (ExecutionCoverage.complete if not failures
                  else ExecutionCoverage.failed if not blocks
                  else ExecutionCoverage.partial)
@@ -399,7 +460,7 @@ async def find_zoning(ctx: RuntimeContext, jurisdiction: str,
 
     selected = ctx.sources.select("zoning.lookup", stack)
     registry_dim, gaps = selection_coverage(ctx.sources, "zoning.lookup", stack,
-                                             selected)
+                                            selected, builder=b)
     blocks: list[dict] = []
     failures = []
     queries: list[ArcGISQueryResult] = []
@@ -494,7 +555,9 @@ async def find_zoning(ctx: RuntimeContext, jurisdiction: str,
             failures.append(failure(m.id, err.code, str(err)))
             continue
         queries.append(q)
-        block = _records_block(b, _source_entry(b, m, q), q, m)
+        block = _records_block(
+            b, _source_entry(b, m, q), q, m, ctx,
+            {"jurisdiction": jurisdiction, "pin": pin, "lon": lon, "lat": lat})
         if parcel_evidence_refs:
             block["parcel_evidence_refs"] = parcel_evidence_refs
             block["parcel_polygons_intersected"] = polygons_used
@@ -641,6 +704,73 @@ def _epoch_ms_to_iso(value: object) -> str | None:
         "%Y-%m-%dT%H:%M:%SZ")
 
 
+async def _store_full_geometry(ctx: RuntimeContext, b: EnvelopeBuilder,
+                               m, layer_key: str, where: dict,
+                               jurisdiction: str, j) -> str | None:
+    """Put the publisher's un-generalized rings in the result store.
+
+    A second request, and the only place in this tool that makes one. It
+    runs at `detail='full'` and nowhere else, because the caller asking
+    for full detail is the caller who wants the real geometry, and the
+    politeness budget should not pay for a payload nobody asked for.
+
+    Returns the handle, or None when the source's terms forbid keeping its
+    bytes or the polygon is over the store's cap. Neither is a failure of
+    the answer: the generalized rings are still inline, and the tool says
+    what happened rather than pretending the handle exists.
+    """
+    try:
+        full = await ctx.arcgis.query(
+            m, layer_key, where_equals=where, return_geometry=True)
+    except Exception as err:  # noqa: BLE001 — see below
+        # Deliberately every exception, not just CommonwealthError. The
+        # offline replay seam raises a bare AssertionError for an exchange
+        # nobody recorded, and the recording plan only captures this
+        # second request for one jurisdiction — so every other one raised
+        # out of the envelope entirely, which is the opposite of what this
+        # function is for. The inline rings are already good; a missing
+        # handle is a smaller loss than a failed call.
+        code = getattr(err, "code", err.__class__.__name__)
+        b.warn(WarningCode.boundary_precision,
+               f"The generalized rings are inline; fetching the "
+               f"un-generalized geometry failed ({code}), so there is "
+               "no handle to the publisher's own vertices this time.", m.id)
+        return None
+
+    payload = {
+        "jurisdiction": {"id": j.id, "name": j.name, "kind": j.kind.value},
+        "source_id": m.id,
+        "layer": layer_key,
+        "spatial_reference": {"wkid": 4326},
+        "retrieved_at": full.retrieved_at,
+        "transformations": full.transformations,
+        "features": [{"record_id": r.record_id, "geometry": r.geometry}
+                     for r in full.records],
+    }
+    try:
+        stored = ctx.results.put(
+            kind="results", payload=payload,
+            media_type="application/json", manifests=[m],
+            origin_tool="geo.find_boundaries",
+            origin_arguments={"jurisdiction": jurisdiction,
+                              "detail": "full"})
+    except RetentionForbidden:
+        b.warn(WarningCode.terms_note,
+               "This publisher's terms do not allow keeping a copy of its "
+               "geometry, so the full-resolution rings are not stored and "
+               "there is no handle. Query the publisher directly for them.",
+               m.id)
+        return None
+    except (ValueError, OSError) as err:
+        b.warn(WarningCode.boundary_precision,
+               f"The un-generalized geometry was not stored: {err}", m.id)
+        return None
+    return b.add_resource(resource_ref(
+        stored,
+        f"{j.name}'s boundary as {m.id} publishes it, with no "
+        "generalization applied."))
+
+
 async def find_boundaries(ctx: RuntimeContext, jurisdiction: str,
                           detail: str = "concise") -> Envelope:
     b = _builder(ctx, "geo.find_boundaries")
@@ -657,7 +787,7 @@ async def find_boundaries(ctx: RuntimeContext, jurisdiction: str,
 
     selected = ctx.sources.select("boundary.lookup", stack)
     registry_dim, gaps = selection_coverage(ctx.sources, "boundary.lookup",
-                                            stack, selected)
+                                            stack, selected, builder=b)
 
     plan = _boundary_plan(ctx, j)
     layered = [{"id": p.id, "relationship": "parent-" + p.kind.value}
@@ -705,6 +835,11 @@ async def find_boundaries(ctx: RuntimeContext, jurisdiction: str,
                  "layer": layer_key,
                  "records": _boundary_records(b, src_ref, q, detail),
                  "record_count": len(q.records)}
+        if detail == "full" and q.records:
+            handle = await _store_full_geometry(ctx, b, m, layer_key, where,
+                                                jurisdiction, j)
+            if handle:
+                block["full_geometry_ref"] = handle
         if len(q.records) > 1:
             block["note"] = (
                 f"{len(q.records)} separate polygons carry this "
@@ -715,12 +850,19 @@ async def find_boundaries(ctx: RuntimeContext, jurisdiction: str,
 
     total = sum(blk["record_count"] for blk in blocks)
     if total:
+        stored = [blk["full_geometry_ref"] for blk in blocks
+                  if blk.get("full_geometry_ref")]
+        where_full = (
+            f" The publisher's own un-generalized rings are at "
+            f"{', '.join(stored)}." if stored else
+            " Pass detail='full' for a handle to the publisher's own "
+            "un-generalized rings." if detail != "full" else "")
         b.warn(WarningCode.boundary_precision,
                "Boundary geometry is generalized to "
                f"{BOUNDARY_SIMPLIFY_DEGREES} degrees (~22 m) so it fits an "
                "inline response, and the publisher disclaims it for legal "
                "description or survey use. Do not use it to decide which "
-               "side of a line a specific address falls on.")
+               "side of a line a specific address falls on." + where_full)
     if detail == "concise" and total:
         base["geometry_note"] = (
             "Vertex coordinates are omitted at detail='concise'; bbox, "
@@ -774,7 +916,7 @@ async def find_address(ctx: RuntimeContext, jurisdiction: str,
 
     selected = ctx.sources.select("address.lookup", stack)
     registry_dim, gaps = selection_coverage(ctx.sources, "address.lookup",
-                                            stack, selected)
+                                            stack, selected, builder=b)
     blocks: list[dict] = []
     failures = []
     queries: list[ArcGISQueryResult] = []
@@ -801,7 +943,9 @@ async def find_address(ctx: RuntimeContext, jurisdiction: str,
             failures.append(failure(m.id, err.code, str(err)))
             continue
         queries.append(q)
-        block = _records_block(b, _source_entry(b, m, q), q, m)
+        block = _records_block(
+            b, _source_entry(b, m, q), q, m, ctx,
+            {"jurisdiction": jurisdiction, "address": address, "lon": lon, "lat": lat})
         if scope_note:
             block["widened_scope"] = scope_note
         for row in block["records"]:
@@ -895,7 +1039,7 @@ async def _resolve_zip(ctx: RuntimeContext, b: EnvelopeBuilder,
     comes back as candidates with requires_user_choice."""
     selected = ctx.sources.select("address.lookup", ["va"])
     registry_dim, gaps = selection_coverage(ctx.sources, "address.lookup",
-                                            ["va"], selected)
+                                            ["va"], selected, builder=b)
     if not selected:
         return b.build(
             {"resolved": None, "candidates": [], "zip_code": zip_code,
@@ -1035,7 +1179,7 @@ async def resolve_location(ctx: RuntimeContext, address: str = "",
 
     selected = ctx.sources.select("geocode.address", ["va"])
     registry_dim, gaps = selection_coverage(ctx.sources, "geocode.address",
-                                            ["va"], selected)
+                                            ["va"], selected, builder=b)
     if not selected:
         return b.build(
             {"resolved": None, "candidates": [], "address": address,
@@ -1421,7 +1565,7 @@ async def find_buildings(ctx: RuntimeContext, jurisdiction: str,
 
     selected = ctx.sources.select("building.lookup", stack)
     registry_dim, gaps = selection_coverage(ctx.sources, "building.lookup",
-                                            stack, selected)
+                                            stack, selected, builder=b)
     parcel_geometry: dict | None = None
     parcel_note: str | None = None
     parcel_evidence_ref: str | None = None
@@ -1470,10 +1614,11 @@ async def find_buildings(ctx: RuntimeContext, jurisdiction: str,
                         "for the first. The others are not searched.")
                 break
         if parcel_geometry is None:
-            # An outage is not a miss. When every parcel source raised,
-            # nothing was searched, and reporting "no parcel with that
-            # PIN" would turn a service being down into a fact about the
-            # ground — the distinction this envelope exists to keep.
+            # An outage means the question went unanswered; a miss means
+            # it was answered with nothing. When every parcel source
+            # raised, nothing was searched, and reporting "no parcel with
+            # that PIN" would turn a service being down into a fact about
+            # the ground — the distinction this envelope exists to keep.
             all_failed = bool(failures) and not any_parcel_answered
             return b.build(
                 {"results": [],
@@ -1529,7 +1674,9 @@ async def find_buildings(ctx: RuntimeContext, jurisdiction: str,
         if ref_lat is not None:
             q.transformations.append(
                 f"area:web_mercator_to_ground(lat={round(ref_lat, 4)})")
-        block = _records_block(b, _source_entry(b, m, q), q, m)
+        block = _records_block(
+            b, _source_entry(b, m, q), q, m, ctx,
+            {"jurisdiction": jurisdiction, "lon": lon, "lat": lat, "pin": pin, "radius_meters": radius_meters})
         if parcel_geometry is None:
             note = _widened_note(ctx, m, "buildings", stack)
             if note:
@@ -1632,7 +1779,7 @@ async def find_landmarks(ctx: RuntimeContext, jurisdiction: str,
 
     selected = ctx.sources.select("landmark.lookup", stack)
     registry_dim, gaps = selection_coverage(ctx.sources, "landmark.lookup",
-                                            stack, selected)
+                                            stack, selected, builder=b)
     blocks: list[dict] = []
     failures = []
     queries: list[ArcGISQueryResult] = []
@@ -1652,7 +1799,9 @@ async def find_landmarks(ctx: RuntimeContext, jurisdiction: str,
             failures.append(failure(m.id, err.code, str(err)))
             continue
         queries.append(q)
-        block = _records_block(b, _source_entry(b, m, q), q, m)
+        block = _records_block(
+            b, _source_entry(b, m, q), q, m, ctx,
+            {"jurisdiction": jurisdiction, "name": name, "place_type": place_type, "lon": lon, "lat": lat, "radius_meters": radius_meters})
         if scope_note:
             block["widened_scope"] = scope_note
         for row in block["records"]:
@@ -1734,7 +1883,7 @@ async def find_roads(ctx: RuntimeContext, jurisdiction: str,
 
     selected = ctx.sources.select("road.lookup", stack)
     registry_dim, gaps = selection_coverage(ctx.sources, "road.lookup",
-                                            stack, selected)
+                                            stack, selected, builder=b)
     blocks: list[dict] = []
     failures = []
     queries: list[ArcGISQueryResult] = []
@@ -1772,7 +1921,9 @@ async def find_roads(ctx: RuntimeContext, jurisdiction: str,
             failures.append(failure(m.id, err.code, str(err)))
             continue
         queries.append(q)
-        block = _records_block(b, _source_entry(b, m, q), q, m)
+        block = _records_block(
+            b, _source_entry(b, m, q), q, m, ctx,
+            {"jurisdiction": jurisdiction, "street_name": street_name, "lon": lon, "lat": lat, "radius_meters": radius_meters})
         block["layer"] = layer_key
         for row in block["records"]:
             if "last_update" in row:
@@ -1904,7 +2055,7 @@ async def find_environmental_sites(
 
     selected = ctx.sources.select("environmental_site.lookup", stack)
     registry_dim, gaps = selection_coverage(
-        ctx.sources, "environmental_site.lookup", stack, selected)
+        ctx.sources, "environmental_site.lookup", stack, selected, builder=b)
     blocks: list[dict] = []
     failures = []
     queries: list[ArcGISQueryResult] = []
@@ -1917,7 +2068,9 @@ async def find_environmental_sites(
             failures.append(failure(m.id, err.code, str(err)))
             continue
         queries.append(q)
-        block = _records_block(b, _source_entry(b, m, q), q, m)
+        block = _records_block(
+            b, _source_entry(b, m, q), q, m, ctx,
+            {"jurisdiction": jurisdiction, "lon": lon, "lat": lat, "radius_meters": radius_meters})
         for row in block["records"]:
             for field in ("first_sample_date", "last_sample_date",
                           "last_benthic_date"):

@@ -74,11 +74,25 @@ authority_notes: >
 health:
   probe: arcgis_layer_count
   expect:
-    # Per-layer floors: counts observed live 2026-08-27 were 369,392 parcels
-    # and 6,440 zoning polygons; floors sit ~20% under those.
+    # Floors reset 2026-09-02 from a range rather than a single reading
+    # (GitHub issue #19). Two observations per layer now sit in
+    # docs/audits/probe-history.json — the registration-day count and a
+    # live re-probe days later — and every layer moved by under 0.05%
+    # between them. The rule: ten per cent under the lowest reading,
+    # rounded down to two significant figures, and never looser than the
+    # floor it replaces. Two readings days apart cannot see an annual
+    # reassessment or a bulk republish, so ten per cent is deliberately
+    # slack; `tools/upstream_audit.py` keeps adding readings and the
+    # floors tighten as the range earns it.
+    # The PIN the fixture is recorded against. Declared rather than taken
+    # from whatever the layer returns first: row order moved on a
+    # 2026-09-02 re-record and renamed the sample PIN, which fifteen
+    # tests, examples, and the site generator refer to by name. A refresh
+    # must not be able to rename what everything is written against.
+    sample_pin: "0102 14  0231"
     min_features:
-      parcels: 300000
-      zoning: 5000
+      parcels: 330000
+      zoning: 5700
 
 lifecycle:
   declared_state: active

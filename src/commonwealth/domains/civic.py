@@ -40,7 +40,8 @@ async def get_code_section(ctx: RuntimeContext, citation: str) -> Envelope:
     b = _builder(ctx, "civic.get_code_section")
     selected = ctx.sources.select("code_section.lookup", _STATEWIDE_STACK)
     registry_dim, gaps = selection_coverage(
-        ctx.sources, "code_section.lookup", _STATEWIDE_STACK, selected)
+        ctx.sources, "code_section.lookup", _STATEWIDE_STACK, selected,
+        builder=b)
 
     blocks: list[dict] = []
     failures = []

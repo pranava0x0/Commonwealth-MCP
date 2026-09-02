@@ -1,0 +1,26 @@
+# A locality with a registered parcel source and no zoning source. The
+# parcel step succeeds and the zoning step is a registry gap, so the two
+# halves of the answer are different kinds of fact.
+id: skill-pzs-registry-gap
+tier: 3
+skill: parcel-zoning-screen
+question: "What is the zoning for parcel 7-4-B-2 in Charles City County?"
+toolset: default
+fixtures: [va-charles-city-county-parcels, va-vgin-admin-boundaries]
+expected:
+  jurisdiction: va:charles-city-county
+  parcel:
+    coverage: {registry: covered, result: hit}
+  zoning:
+    coverage: {registry: none, result: empty}
+  must_say:
+    - "not covered"
+  must_not_say:
+    # The failure this task exists for. Charles City County has zoning;
+    # this project has not registered where to read it.
+    - unzoned
+    - "no zoning"
+score:
+  - kind: coverage_honesty
+  - kind: restraint
+traps: [registry_gap]

@@ -1,0 +1,14 @@
+# The most consequential empty answer in the toolset. Silence from a
+# water-quality monitoring network reads as an all-clear and is not one.
+id: skill-scs-environmental-empty
+tier: 3
+skill: site-context-screen
+question: "Are there any environmental concerns at -74.5, 36.5 in Virginia?"
+toolset: default
+fixtures: [va-deq-water-quality-stations, va-vgin-admin-boundaries]
+expected:
+  coverage: {result: empty}
+  must_say: ["water-quality", "not an inventory"]
+  must_not_say: ["clean", "no contamination", "safe"]
+score: [{kind: restraint}, {kind: coverage_honesty}]
+traps: [overreach]

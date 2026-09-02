@@ -5,9 +5,12 @@ it is.
 
 This file has two halves:
 
-- **Part 1, the system** (§ 1–39) — what exists. The servers, the
-  provenance envelope every answer carries, the source registry, the
-  adapter layer, and what is planned next.
+- **Part 1, the system** (§ 1–33 and § 37–39) — what exists. The servers,
+  the provenance envelope every answer carries, the source registry, the
+  adapter layer, and what is planned next. Sections 34 to 36 went in the
+  2026-08-29 consolidation and the numbering of the rest stayed put, so
+  cross-references written before that date still land where they meant
+  to.
 - **Part 2, the decisions** (0001–0015) — one record per architectural
   choice. Each keeps the options that lost, so you can disagree with a
   choice from what is written here rather than from memory.
@@ -2411,6 +2414,43 @@ number.
 selection accuracy holding above 12 for this toolset, which is the
 evidence the ceiling was always meant to rest on.
 
+### Amendment (2026-09-01) — profiles stay hand-written for now
+
+This decision's Choice says profiles are generated from skill metadata so
+they never drift from what a workflow needs. They are not generated. They
+are `PROFILES` in `core/toolreg.py`, a hand-written dict, and until
+2026-09-01 there was no skill to generate from, so the mechanism could not
+be started (GitHub issue #27).
+
+The first skill exists now, and the dict stays anyway. `parcel-zoning-screen`
+declares two required capabilities, `parcel.lookup` and `zoning.lookup`.
+Generating `default` from that would produce a two-capability profile —
+`geo.find_parcel` and `geo.find_zoning` — and delete the seven tools the
+2026-08-29 amendment above chose deliberately as the walk a property
+question takes. Generation from one skill does not converge on a good
+default; it converges on that skill.
+
+What is built instead is the check rather than the generation.
+`check_skill_capabilities()` runs at server startup, reads every skill's
+`commonwealth.required_capabilities`, and warns when no active source
+answers one of them (design/hub-catalog.md § 2 asked for this and had
+nothing to check until a skill declared something). That closes the drift
+this decision was worried about in the direction that matters: a skill can
+no longer claim a capability the registry cannot serve without saying so.
+
+A warning rather than a refusal, for the reason the floor above is a
+warning. A fork that registers one locality's parcels has a working server
+and one skill whose walk stops early, and refusing to serve the tools that
+do work punishes the wrong person. Every tool still answers; only that
+skill's walk stops early.
+
+**What would change this:** three or more skills covering the geo and
+civic walks. At that point the union of their required capabilities is a
+description of the daily-driver profile rather than a description of one
+workflow, and generating `default` from it is the better mechanism this
+decision chose. Until then, generation would make the profile worse and
+call it consistency.
+
 ---
 
 ## 0003 — Python Server Framework
@@ -2817,7 +2857,7 @@ Publish all as "v0 provisional," freeze the lot at Gate A.
 
 ## 0013 — Result Handles and Cache Backend
 
-**Status:** Chosen 2026-08-26. Stored resources for evidence and payloads, plus signed cursors for pagination.
+**Status:** Chosen 2026-08-26. Stored resources for evidence and payloads, plus signed cursors for pagination. **Result resources built 2026-09-02** (#33); pagination cursors remain unbuilt.
 **Context:** The envelope returns `commonwealth://results/{id}` handles for payloads too large for context (provenance-envelope.md), and the 2026-08-26 architecture review (Part 2 review round 2 § 2.4) flagged the gap: the protocol is stateless and hosted replicas share nothing by default, so an in-memory handle minted by one replica is unresolvable on another. The handle design decides the cache backend, and decision 0006 (retention) is contingent on this record. Whatever is chosen must answer: identifier entropy, expiry, cross-replica access, authorization, maximum object size, re-query after expiry, deletion, and source-terms classification of the stored bytes.
 
 ---
@@ -2853,6 +2893,18 @@ Two mechanisms with distinct names: result *resources* (stored bytes, Option A) 
 
 **C**, as recommended: stored result resources (128-bit unguessable IDs, 24h default expiry stamped in the envelope, stated/tested size cap, write-time source-terms classification, expiry-sweep deletion) for evidence and oversized payloads; signed, TTL-bounded, payload-free cursors for pagination only. V1 backend is a disk directory implementing the same interface a hosted object store implements later. No change from the recommendation on file.
 
+### Built (2026-09-02, GitHub issue #33)
+
+`core/results.py`, with all six properties this record names: 128-bit ids from `secrets`, a 24-hour default expiry stamped into the envelope's `resources` description, a 50 MB cap, write-time classification taken from the manifests that produced the payload, an expiry sweep that runs when a process starts, and a disk directory behind the same three methods (`put`, `get`, `sweep`) an object store would implement. `MemoryResultStore` is the same store with nothing on disk, sharing one implementation of what is refused so the offline tests cannot describe behaviour that does not ship.
+
+Two tools stopped discarding what they had already retrieved. `geo.find_boundaries` at `detail: "full"` returns the generalized rings inline and a handle to the publisher's un-generalized geometry — 523 vertices against 16,641 for Fairfax County, which is the size of the gap the handle closes. `geo.find_buildings` returns the inline 25 and a handle to the whole retrieved set, with the `truncated_inline` warning naming it. The handle lands in `_records_block()`, which seven geo tools share, so this applies wherever a result truncates rather than only where someone remembered.
+
+Handles resolve over the protocol as MCP resource templates at the same URIs the envelope carries. An expired handle reads as expired and names the call that would rebuild it; a handle this server never minted reads as not found. The two are kept apart deliberately, the same way an empty result and an uncovered jurisdiction are.
+
+Retention is enforced at write. `access.retention: forbidden` in a manifest, a `restricted` classification, or a `sensitive_public` one refuses the write and the tool says the full result cannot be kept instead of returning a handle. The `sensitive_public` case is read off the classification rather than waiting for a reviewer to also set the explicit field, because `retention` defaults to allowed and § 3 of the security spec already forbids such a source keeping any stored payload — a rule that only fires when someone remembers a second field is a reminder, not a rule. No source registered today sets it. A test derives that from the registry rather than asserting it, so a source that arrives with a retention condition shows up as a failure instead of quietly disabling handles for itself.
+
+**Still unbuilt:** signed pagination cursors, which this record specifies alongside the store and which nothing yet needs; and the `include_raw` path that would put a source's raw record behind a `commonwealth://evidence/...` handle. The evidence kind is registered and resolvable, and no tool writes one.
+
 ---
 
 ## 0014 — Egress Policy and Data Classification
@@ -2868,7 +2920,7 @@ Every outbound request from adapters, probes, or Explorer-class tools:
 
 1. HTTPS required; plain HTTP only when a manifest declares `insecure_transport: true` with a written reason (some locality GIS servers are HTTP-only; the flag is visible in provenance warnings).
 2. Destination host must match the manifest's registered host set; IP literals refused.
-3. Resolved addresses in private, loopback, link-local, and cloud-metadata ranges are refused, and resolution is re-checked at connect time (DNS-rebinding defense).
+3. Resolved addresses in private, loopback, link-local, and cloud-metadata ranges are refused, and the connection is opened to an approved address rather than to a second resolution of the name (DNS-rebinding defense). Built 2026-09-01 (#16); before that the connection re-resolved the name and this line described a check that did not exist.
 4. Redirects followed only within the registered host set, max 3; credentials and auth headers stripped on any cross-host redirect.
 5. Ports 443/80 only unless the manifest declares otherwise with a reason.
 6. Response size and decompression-expansion limits enforced. Both are checked during a streamed read, so an oversized or over-expanding body stops the transfer instead of being downloaded and rejected afterwards. Defaults: `MAX_RESPONSE_BYTES` 20 MB, `MAX_DECOMPRESSION_RATIO` 50x above a 64 KB floor (recorded government payloads measure 4.6x to 18.1x). Per-manifest overrides carry reasons.

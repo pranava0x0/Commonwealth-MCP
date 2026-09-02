@@ -1,6 +1,6 @@
 {
  "source_id": "va-vgin-building-footprints",
- "recorded_at": "2026-08-30T15:01:58Z",
+ "recorded_at": "2026-09-02T05:31:11Z",
  "rights": {
   "publisher": "Virginia Geographic Information Network (VGIN), part of the Virginia Department of Emergency Management",
   "terms_url": "https://vgin.vdem.virginia.gov/datasets/virginia-building-footprints/about",
@@ -10,7 +10,7 @@
   "health:buildings": {
    "layer": "buildings",
    "feature_count": 4471131,
-   "min_expected": 3500000,
+   "min_expected": 4000000,
    "healthy": true
   },
   "residential_point": {
@@ -24,6 +24,13 @@
   "on_parcel": {
    "pin": "C0010126019",
    "record_count": 2
+  },
+  "sterling_loudoun": {
+   "point": [
+    -77.408014727372,
+    39.025534437083
+   ],
+   "record_count": 1
   }
  },
  "exchanges": [
@@ -4521,6 +4528,118 @@
        "OBJECTID": 1358633,
        "SOURCEFEATUREID": "172204174742",
        "Shape__Area": 399.526252255
+      }
+     }
+    ]
+   }
+  },
+  {
+   "url": "https://vginmaps.vdem.virginia.gov/arcgis/rest/services/VA_Base_Layers/VA_Building_Footprints/FeatureServer/0/query",
+   "params": {
+    "f": "json",
+    "outFields": "BLDGHEIGHT,BUILDINGCLASS,DATASOURCENAME,FEATURECODE,FIPS,LASTEDITOR,LASTUPDATE,MUNICIPALITY,NUMSTORIES,OBJECTID,SOURCEFEATUREID,Shape__Area",
+    "resultRecordCount": "50",
+    "returnGeometry": "false",
+    "where": "FIPS = '51107'",
+    "geometry": "{\"x\": -77.408014727372, \"y\": 39.025534437083, \"spatialReference\": {\"wkid\": 4326}}",
+    "geometryType": "esriGeometryPoint",
+    "inSR": "4326",
+    "spatialRel": "esriSpatialRelIntersects",
+    "distance": "50.0",
+    "units": "esriSRUnit_Meter"
+   },
+   "response": {
+    "objectIdFieldName": "OBJECTID",
+    "globalIdFieldName": "",
+    "geometryType": "esriGeometryPolygon",
+    "spatialReference": {
+     "wkid": 102100,
+     "latestWkid": 3857
+    },
+    "fields": [
+     {
+      "name": "BLDGHEIGHT",
+      "alias": "Building Height",
+      "type": "esriFieldTypeInteger"
+     },
+     {
+      "name": "BUILDINGCLASS",
+      "alias": "Building Class",
+      "type": "esriFieldTypeSmallInteger"
+     },
+     {
+      "name": "DATASOURCENAME",
+      "alias": "Data Source",
+      "type": "esriFieldTypeString",
+      "length": 100
+     },
+     {
+      "name": "FEATURECODE",
+      "alias": "Facility Site Code",
+      "type": "esriFieldTypeString",
+      "length": 100
+     },
+     {
+      "name": "FIPS",
+      "alias": "Jurisdiction FIPS Code",
+      "type": "esriFieldTypeString",
+      "length": 7
+     },
+     {
+      "name": "LASTEDITOR",
+      "alias": "Last Editor",
+      "type": "esriFieldTypeString",
+      "length": 50
+     },
+     {
+      "name": "LASTUPDATE",
+      "alias": "Last Update From Locality",
+      "type": "esriFieldTypeDate",
+      "length": 8
+     },
+     {
+      "name": "MUNICIPALITY",
+      "alias": "Jurisdiction Name",
+      "type": "esriFieldTypeString",
+      "length": 100
+     },
+     {
+      "name": "NUMSTORIES",
+      "alias": "Number of Stories",
+      "type": "esriFieldTypeSmallInteger"
+     },
+     {
+      "name": "OBJECTID",
+      "alias": "OBJECTID",
+      "type": "esriFieldTypeOID"
+     },
+     {
+      "name": "SOURCEFEATUREID",
+      "alias": "GEO ID",
+      "type": "esriFieldTypeString",
+      "length": 20
+     },
+     {
+      "name": "Shape__Area",
+      "alias": "SHAPE.STArea()",
+      "type": "esriFieldTypeDouble"
+     }
+    ],
+    "features": [
+     {
+      "attributes": {
+       "BLDGHEIGHT": null,
+       "BUILDINGCLASS": null,
+       "DATASOURCENAME": "Jurisdiction",
+       "FEATURECODE": null,
+       "FIPS": "51107",
+       "LASTEDITOR": "VGIN",
+       "LASTUPDATE": 1769126400000,
+       "MUNICIPALITY": "Loudoun County",
+       "NUMSTORIES": null,
+       "OBJECTID": 2776626,
+       "SOURCEFEATUREID": "181113337825",
+       "Shape__Area": 2802.573631135
       }
      }
     ]

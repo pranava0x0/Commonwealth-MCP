@@ -42,15 +42,32 @@ def _all_recorded_exchanges() -> list[dict]:
 # The only declared (not derived) rosters on the page, each shown with its
 # status or cited against the spec text it paraphrases (checked below by
 # WARNING_DEFINITIONS/COVERAGE_DEFINITIONS coverage asserts).
+#
+# Skills that exist are read off disk instead, by `skill_roster()` below.
+# `parcel-zoning-screen` sat here as "planned" for two days after it
+# shipped, which is the drift a typed roster produces.
 PLANNED_SKILLS = [
-    {"name": "parcel-zoning-screen", "status": "planned (developer-product phase)",
-     "capabilities": ["parcel.lookup", "zoning.lookup"]},
     {"name": "legislative-impact-analysis", "status": "milestone 1b (civic)",
      "capabilities": []},
     {"name": "development-site-due-diligence",
      "status": "deferred until there is coverage to justify it",
      "capabilities": []},
 ]
+
+
+def skill_roster() -> list[dict]:
+    """Skills on disk, then the ones still declared as planned.
+
+    A skill's capabilities come from its own frontmatter, so the page
+    cannot claim a skill needs something the skill does not ask for.
+    """
+    from commonwealth.core.skills import load_skills
+
+    shipped = [{"name": sk.name, "status": "shipped",
+                "capabilities": list(sk.required_capabilities)}
+               for sk in load_skills(ROOT / "skills")]
+    names = {sk["name"] for sk in shipped}
+    return shipped + [sk for sk in PLANNED_SKILLS if sk["name"] not in names]
 
 # design/provenance-envelope.md § 3 table, transcribed with the spec's own
 # wording; a test asserts this covers every dimension value the models emit.
@@ -131,7 +148,34 @@ WARNING_DEFINITIONS = {
 # A test asserts every registered tool appears at least once
 # (tests/test_site_data.py), so adding a tool without a demo fails CI
 # rather than shipping a page that quietly covers less than it claims.
+# Loudoun County, from a point in Sterling. The address the walk starts
+# from is 21641 Ridgetop Cir, Sterling, VA 20166.
+LOUDOUN = {"jurisdiction": "Loudoun County",
+           "lon": -77.408014727372, "lat": 39.025534437083}
+
 DEMO_CALLS = [
+    # --- one place, every question (examples/one_address_every_question.py) ---
+    ("registry.resolve_jurisdiction", {"query": "Sterling"},
+     "Sterling is a postal city with no government behind it. The table "
+     "holds every Virginia government and none is named Sterling, so the "
+     "answer says so and says what to ask instead"),
+    ("geo.resolve_location",
+     {"address": "21641 Ridgetop Cir, Sterling, VA 20166"},
+     "The same address resolves: the envelope says Sterling and the "
+     "government is Loudoun County"),
+    ("geo.find_parcel", dict(LOUDOUN),
+     "Loudoun publishes no parcel layer here, so VGIN's statewide one "
+     "answers. FOUND"),
+    ("geo.find_zoning", dict(LOUDOUN),
+     "The same point, one question over: no zoning source is registered "
+     "for Loudoun. NOT COVERED — the county has a zoning ordinance and "
+     "this project has nowhere to read it, which is not the same as "
+     "unzoned"),
+    ("geo.find_landmarks", dict(LOUDOUN),
+     "And a third kind of answer: the statewide landmarks layer was "
+     "queried and holds nothing within a kilometre. CHECKED, NOTHING "
+     "FOUND — a fact about the layer, not about Sterling"),
+
     # --- whose government is this? ---
     ("registry.resolve_jurisdiction", {"query": "fairfax"},
      "Ambiguous on purpose: Fairfax City vs Fairfax County"),
@@ -227,6 +271,7 @@ def build_catalog() -> dict:
         ExecutionCoverage, PaginationCoverage, RegistryCoverage,
         ResultCoverage, WarningCode,
     )
+    from commonwealth.core.results import MemoryResultStore
     from commonwealth.runtime import SOURCES_DIR, load_context
     from commonwealth.servers.build import registries
 
@@ -248,7 +293,7 @@ def build_catalog() -> dict:
                 f"missing={declared_vals - defined_vals} "
                 f"extra={defined_vals - declared_vals}")
 
-    ctx = load_context()
+    ctx = load_context(results=MemoryResultStore(deterministic=True))
     regs = registries()
 
     tools = []
@@ -343,7 +388,7 @@ def build_catalog() -> dict:
         "jurisdiction_kinds": dict(sorted(kinds.items())),
         "trap_pairs": [list(p) for p in trap_pairs],
         "profiles": profiles,
-        "skills": PLANNED_SKILLS,
+        "skills": skill_roster(),
         "jurisdictions": jurisdictions,
         "capability_coverage": capability_coverage,
         "coverage_definitions": COVERAGE_DEFINITIONS,
@@ -471,6 +516,7 @@ async def run_demo(mode: str) -> dict:
     from commonwealth.adapters.base import TTLCache
     from commonwealth.adapters.replay import ReplayFetcher
     from commonwealth.core.envelope import utc_now_iso
+    from commonwealth.core.results import MemoryResultStore
     from commonwealth.runtime import load_context
     from commonwealth.servers.build import build_server
 
@@ -483,7 +529,14 @@ async def run_demo(mode: str) -> dict:
     else:
         tracker = TrackingFetcher()  # live mode: per-host HttpFetchers
     adapter = ArcGISAdapter(fetcher=tracker, cache=TTLCache())
+    # A memory store, so a docs build leaves nothing in the developer's
+    # cache and mints no machine-local handle. `geo.find_roads` in
+    # DEMO_CALLS returns more records than the inline cap, so the disk
+    # store would write a payload and bake a fresh random
+    # `commonwealth://` id into committed site data on every rebuild —
+    # a handle no reader of the published page could ever resolve.
     ctx = load_context(arcgis=adapter, geocoder=_geocoder(mode, tracker),
+                       results=MemoryResultStore(deterministic=True),
                        virginia_law=_virginia_law_adapter(mode))
 
     server = build_server(ctx, profile="all")
@@ -587,12 +640,14 @@ def main() -> int:
     args = ap.parse_args()
     mode = "fixtures" if args.fixtures else "live"
 
+    from commonwealth.core.results import MemoryResultStore
     from commonwealth.runtime import load_context
 
     DOCS_DATA.mkdir(parents=True, exist_ok=True)
     catalog = build_catalog()
     demo = asyncio.run(run_demo(mode))
-    resolver_demo = build_resolver_demo(load_context())
+    resolver_demo = build_resolver_demo(
+        load_context(results=MemoryResultStore(deterministic=True)))
 
     (DOCS_DATA / "site.json").write_text(json.dumps(catalog, indent=1) + "\n")
     (DOCS_DATA / "audit-demo.json").write_text(

@@ -1,0 +1,17 @@
+# The result-store case (GitHub issue #33). 205 footprints are retrieved
+# and 25 come back inline; the rest are behind a handle. Reading the short
+# list as the answer undercounts by an order of magnitude.
+id: skill-scs-truncated-buildings
+tier: 3
+skill: site-context-screen
+question: "What buildings are within 800 m of -77.4360, 37.5407 in Richmond City?"
+toolset: default
+fixtures: [va-vgin-building-footprints, va-vgin-admin-boundaries]
+expected:
+  inline_records: 25
+  record_count_over: 25
+  resource_handle: true
+  must_say: ["205"]
+  must_not_say: ["25 buildings"]
+score: [{kind: coverage_honesty}, {kind: retrieval_correctness}]
+traps: []

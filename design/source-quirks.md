@@ -361,8 +361,8 @@ governments rather than on the strings the locator returned.
 - **Test:** `tests/test_codex_round_3.py::test_towns_that_cross_a_county_line_name_every_county`
 
 Deriving a town's county from a single interior point finds one county
-and cannot see that the town extends into another. Twenty of Virginia's
-191 towns do: Herndon reaches Fairfax and Loudoun, Farmville reaches
+and cannot see that the town extends into another. Twenty of the 191 town
+polygons VGIN publishes do: Herndon reaches Fairfax and Loudoun, Farmville reaches
 Prince Edward and Cumberland, West Point reaches King and Queen and New
 Kent, and Vinton reaches Roanoke County and Roanoke City.
 

@@ -116,3 +116,61 @@ async def test_boundaries_stay_within_the_data_budget(server):
     print(f"geo.find_boundaries: ~{estimate} data tokens "
           f"(budget {DATA_TOKEN_BUDGET})")
     assert estimate <= DATA_TOKEN_BUDGET
+
+
+# --- the result store (GitHub issue #33) -----------------------------------
+
+async def test_full_detail_returns_generalized_rings_and_a_real_handle(
+        cw_ctx):
+    """0013's first acceptance case. The inline rings are the platform's
+    generalization, and the handle holds what the publisher actually
+    publishes. Both numbers are asserted because the point of the handle
+    is that they differ."""
+    env = await find_boundaries(cw_ctx, jurisdiction="Fairfax County",
+                                detail="full")
+    block = env.data["results"][0]
+    uri = block["full_geometry_ref"]
+    assert uri.startswith("commonwealth://results/")
+    assert [r.uri for r in env.resources] == [uri]
+
+    inline_vertices = block["records"][0]["vertex_count"]
+    stored = cw_ctx.results.get(uri)
+    full_vertices = sum(
+        len(ring)
+        for feature in stored.payload["features"]
+        for ring in (feature["geometry"] or {}).get("rings", []))
+    assert full_vertices > inline_vertices, (
+        "the handle holds no more detail than the inline rings, so it is "
+        "not worth the second request")
+    assert stored.payload["spatial_reference"] == {"wkid": 4326}
+
+
+async def test_the_envelope_states_when_the_handle_stops_resolving(cw_ctx):
+    env = await find_boundaries(cw_ctx, jurisdiction="Fairfax County",
+                                detail="full")
+    stored = cw_ctx.results.get(env.data["results"][0]["full_geometry_ref"])
+    assert stored.expires_at in env.resources[0].description
+    assert stored.expires_at, "an unexpiring handle is a retention policy"
+
+
+async def test_the_generalization_warning_names_the_handle(cw_ctx):
+    """The warning used to end at "do not use it to decide which side of a
+    line an address falls on" and offer nothing further. It can now say
+    where the real geometry is."""
+    env = await find_boundaries(cw_ctx, jurisdiction="Fairfax County",
+                                detail="full")
+    warning = next(w for w in env.warnings
+                   if w.code.value == "boundary_precision")
+    assert env.data["results"][0]["full_geometry_ref"] in warning.message
+
+
+async def test_concise_makes_no_second_request_and_mints_no_handle(cw_ctx):
+    """The extra request is the caller's choice. A concise answer is the
+    common case and must not pay for a payload nobody asked for."""
+    env = await find_boundaries(cw_ctx, jurisdiction="Fairfax County")
+    assert env.resources == []
+    assert "full_geometry_ref" not in env.data["results"][0]
+    warning = next(w for w in env.warnings
+                   if w.code.value == "boundary_precision")
+    assert "detail='full'" in warning.message, (
+        "a concise answer should say the full geometry is obtainable")

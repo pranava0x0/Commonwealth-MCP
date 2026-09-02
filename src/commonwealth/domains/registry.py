@@ -230,10 +230,22 @@ async def resolve_jurisdiction(ctx: RuntimeContext, query: str = "",
             pagination=PaginationCoverage.complete,
             result=ResultCoverage.hit), requires_user_choice=True)
 
+    # The table stopped being a pilot on 2026-08-29 and this message went
+    # on saying it was, which told a caller their place might simply not
+    # have been reached yet. It has been reached: the table is complete,
+    # so a miss means the name is not a Virginia government at all.
+    # Sterling is the everyday case — a Census Designated Place, which is
+    # a postal and statistical name with no government behind it.
     data = {"resolved": None, "candidates": [],
-            "note": f"No Virginia jurisdiction matches {query!r} in the "
-                    "table. The table covers the state, its counties and "
-                    "independent cities in the pilot set, and pilot towns."}
+            "note": f"No Virginia government is named {query!r}. The table "
+                    "holds every one of them: the state, all 133 counties "
+                    "and independent cities, and all 189 incorporated "
+                    "towns. A place name that misses is usually a "
+                    "neighbourhood, a postal city, or a Census Designated "
+                    "Place — Sterling, Tysons and McLean are all of these "
+                    "— which has a name and no government. Resolve an "
+                    "address or a coordinate there instead, and the "
+                    "county or city that governs it comes back."}
     return b.build(data, Coverage(
         registry=RegistryCoverage.covered,
         execution=ExecutionCoverage.complete,

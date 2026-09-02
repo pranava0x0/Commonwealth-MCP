@@ -1,0 +1,14 @@
+# A locality with no registered source for the capability asked about.
+id: skill-scs-registry-gap
+tier: 3
+skill: site-context-screen
+question: "What is on parcel 1 in Craig County?"
+toolset: default
+fixtures: [va-vgin-statewide-parcels, va-vgin-admin-boundaries]
+expected:
+  coverage: {registry: none}
+  next_action: registry.search_sources
+  must_say: ["not covered"]
+  must_not_say: ["there is nothing there", "vacant"]
+score: [{kind: coverage_honesty}]
+traps: [registry_gap]

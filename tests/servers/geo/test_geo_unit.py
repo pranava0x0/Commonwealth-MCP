@@ -89,18 +89,21 @@ async def test_two_sources_conflict_is_surfaced_never_reconciled(sample_pin):
 
 
 async def test_point_query_path(cw_ctx, recording):
-    """The recorded point exchanges came from the sampled parcel's first
-    ring vertex; assert the path works and returns the envelope shape."""
-    point_ex = [ex for ex in recording["exchanges"]
-                if ex["params"].get("geometryType") == "esriGeometryPoint"
-                and "/0/query" in ex["url"]]
-    if not point_ex:
-        pytest.fail("recording lacks the parcel point exchange; re-run "
-                    "`commonwealth sources sample`")
-    import json as _json
-    geom = _json.loads(point_ex[0]["params"]["geometry"])
+    """The recorded point exchange came from the sampled parcel's first
+    ring vertex; assert the path works and returns the envelope shape.
+
+    Read from the summary's `sample_point` rather than by taking the
+    first point exchange in the file. The recording gained a second
+    point — the Sterling walk — and "the first one" silently became a
+    coordinate in another county, which the Fairfax layer answers with
+    nothing.
+    """
+    point = recording["summary"].get("sample_point")
+    if not point:
+        pytest.fail("recording carries no sample_point; re-run "
+                    "`commonwealth sources sample va-fairfax-parcels-zoning`")
     env = await find_parcel(cw_ctx, jurisdiction="Fairfax County",
-                            lon=geom["x"], lat=geom["y"])
+                            lon=point[0], lat=point[1])
     assert env.coverage.execution.value == "complete"
 
 

@@ -103,6 +103,14 @@ class Access(_Strict):
     # caveat only a contributor ever reads.
     terms_gap: str | None = None
     data_classification: DataClassification = DataClassification.open
+    # Whether the result store may hold this publisher's bytes past the
+    # request (decision 0013; core/results.py enforces it at write time).
+    # Defaults to allowed because every source registered so far publishes
+    # open data with no retention condition, and a default of `forbidden`
+    # would silently disable result handles for all of them. A reviewer
+    # who reads a retention condition in the terms sets this and records
+    # the clause in `terms_notes`.
+    retention: str = "allowed"  # allowed | forbidden
     exposure_allowlist: list[str] | None = None
     classification_reviewed_by: str | None = None
     classification_reviewed_at: str | None = None
@@ -311,6 +319,22 @@ class SourceRegistry:
                 f"known: {sorted(self.capability_vocab)}")
         return any(capability in m.capability_ids()
                    for m in self.manifests.values())
+
+    def servable_capabilities(self) -> set[str]:
+        """Capabilities at least one selectable source declares, anywhere.
+
+        The activation rules are `select`'s, minus the jurisdiction filter:
+        a capability is servable when some active, automatable source that
+        is not known to be down answers it. Coverage in a particular
+        locality is a different question, and the tools answer it per
+        query.
+        """
+        return {c
+                for m in self.manifests.values()
+                if m.lifecycle.declared_state == DeclaredState.active
+                and m.access.automation_status in ACTIVATABLE
+                and self.operational(m.id) != OperationalState.unavailable
+                for c in m.capability_ids()}
 
     def select(self, capability: str,
                jurisdiction_ids: list[str]) -> list[SourceManifest]:

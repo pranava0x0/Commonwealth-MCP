@@ -216,3 +216,29 @@ def test_the_license_set_decision_0011_chose_exists():
     assert "Apache License" in (ROOT / "LICENSE").read_text()[:200]
     assert "CC0" in (ROOT / "sources" / "LICENSE").read_text()
     print("license set present: 5 files")
+
+
+def test_the_governance_prerequisites_for_outside_contributions_exist():
+    """design/security-and-data-handling.md § 5 lists what has to exist
+    before the first source manifest arrives from outside the project
+    (#35). Four of the five were missing until 2026-09-01, and a registry
+    listing (#40) is an open invitation, so they are pinned rather than
+    remembered."""
+    missing = [name for name in (
+        "CONTRIBUTING.md",
+        ".github/GOVERNANCE.md",
+        ".github/SECURITY.md",
+        ".github/CODEOWNERS",
+    ) if not (ROOT / name).exists()]
+    assert missing == [], f"missing governance files: {missing}"
+
+    owners = (ROOT / ".github" / "CODEOWNERS").read_text()
+    assert "/sources/" in owners, (
+        "CODEOWNERS does not route sources/**, which is the one path § 5 "
+        "names by name")
+
+    contributing = (ROOT / "CONTRIBUTING.md").read_text()
+    assert "Signed-off-by" in contributing, "the DCO note is gone"
+    for link in (".github/SECURITY.md", ".github/GOVERNANCE.md"):
+        assert link in contributing, (
+            f"{link} exists but CONTRIBUTING does not send anyone to it")

@@ -6,6 +6,7 @@ import pytest
 from mcp.client import Client
 
 from commonwealth.adapters.base import HttpFetcher, egress_policy_for
+from commonwealth.core.egress import DENY_NETWORK_ENV
 from commonwealth.core.errors import EgressRefused
 from commonwealth.servers.build import build_server
 from tests.conftest import ReplayFetcher, _real_manifest, build_ctx
@@ -50,9 +51,15 @@ async def test_injected_source_text_stays_inside_data(sample_pin):
         "adversarial source text leaked outside the data payload")
 
 
-async def test_fetcher_refuses_off_registry_host():
+async def test_fetcher_refuses_off_registry_host(monkeypatch):
     """The wired seam, not just the pure policy function: the real fetcher
-    with the real manifest-derived policy refuses before any I/O."""
+    with the real manifest-derived policy refuses before any I/O.
+
+    The deny switch is cleared because this test is about the host
+    allowlist, and a suite run that exported the switch would otherwise
+    see the request refused for the other reason (#39).
+    """
+    monkeypatch.delenv(DENY_NETWORK_ENV, raising=False)
     m = _real_manifest()
     policy = egress_policy_for(m, m.adapter.model_dump()["service_url"])
     fetcher = HttpFetcher(policy=policy)
