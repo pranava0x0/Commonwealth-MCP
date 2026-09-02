@@ -1,6 +1,6 @@
 {
  "source_id": "va-deq-water-quality-stations",
- "recorded_at": "2026-08-30T03:30:47Z",
+ "recorded_at": "2026-09-02T05:30:46Z",
  "rights": {
   "publisher": "Virginia Department of Environmental Quality (DEQ)",
   "terms_url": "https://apps.deq.virginia.gov/arcgis/rest/services/public",
@@ -9,8 +9,8 @@
  "summary": {
   "health:stations": {
    "layer": "stations",
-   "feature_count": 16298,
-   "min_expected": 12000,
+   "feature_count": 16300,
+   "min_expected": 14000,
    "healthy": true
   },
   "near_the_james_in_richmond": {
@@ -20,11 +20,11 @@
    ],
    "record_count": 17,
    "stations": [
+    "HAXALL",
     "QACO",
-    "2-JMS110.49",
-    "2-JMS110.90",
-    "IRpipeline1",
-    "2BJMS111.04"
+    "CB5.1W",
+    "2BJMS111.04",
+    "IRpipeline1"
    ]
   },
   "open_water_offshore": {
@@ -34,6 +34,13 @@
    ],
    "record_count": 0,
    "stations": []
+  },
+  "sterling_loudoun": {
+   "point": [
+    -77.408014727372,
+    39.025534437083
+   ],
+   "record_count": 1
   }
  },
  "exchanges": [
@@ -45,7 +52,7 @@
     "returnCountOnly": "true"
    },
    "response": {
-    "count": 16298
+    "count": 16300
    }
   },
   {
@@ -189,80 +196,17 @@
       "attributes": {
        "BASIN": "James River Basin",
        "BENTHIC_COUNT": null,
-       "FIRST_SAMPLE_DATE": 1343754000000,
+       "FIRST_SAMPLE_DATE": 1056010500000,
        "HUC6_HUC_12": "020802050607",
        "HUC6_HUC_12_NAME": "James River-Little Westham Creek",
        "LAST_BENTHIC_DATE": null,
-       "LAST_SAMPLE_DATE": 1485340800000,
-       "MAJOR_BASIN_NAME": "Mid Atlantic",
-       "MONITORING_REGION": "CO",
-       "OBJECTID": 2470,
-       "SAMPLE_COUNT": 7,
-       "STATION": "QACO",
-       "STATION_DESCRIPTION": "629 E Main St, Richmond, VA 23219",
-       "STREAM_NAME": "James River-Little Westham Creek",
-       "SUBBASIN": "MIDDLE JAMES-WILLIS",
-       "SURVEY_PROGRAM_CODE": "QA, BN",
-       "VADEQ_ADMIN_REGION": "Piedmont"
-      }
-     },
-     {
-      "attributes": {
-       "BASIN": "James River Basin",
-       "BENTHIC_COUNT": null,
-       "FIRST_SAMPLE_DATE": 810822120000,
-       "HUC6_HUC_12": "020802050607",
-       "HUC6_HUC_12_NAME": "James River-Little Westham Creek",
-       "LAST_BENTHIC_DATE": null,
-       "LAST_SAMPLE_DATE": 998573160000,
+       "LAST_SAMPLE_DATE": 1056010500000,
        "MAJOR_BASIN_NAME": "Mid Atlantic",
        "MONITORING_REGION": "PRO",
-       "OBJECTID": 3159,
-       "SAMPLE_COUNT": 70,
-       "STATION": "2-JMS110.49",
-       "STATION_DESCRIPTION": "JAMES RIVER AT DOWNSTREAM END OF HAXALL",
-       "STREAM_NAME": "James River",
-       "SUBBASIN": "MIDDLE JAMES-WILLIS",
-       "SURVEY_PROGRAM_CODE": "AQ",
-       "VADEQ_ADMIN_REGION": "Piedmont"
-      }
-     },
-     {
-      "attributes": {
-       "BASIN": "James River Basin",
-       "BENTHIC_COUNT": null,
-       "FIRST_SAMPLE_DATE": 772724700000,
-       "HUC6_HUC_12": "020802050607",
-       "HUC6_HUC_12_NAME": "James River-Little Westham Creek",
-       "LAST_BENTHIC_DATE": null,
-       "LAST_SAMPLE_DATE": 1274106300000,
-       "MAJOR_BASIN_NAME": "Mid Atlantic",
-       "MONITORING_REGION": "PRO",
-       "OBJECTID": 3160,
-       "SAMPLE_COUNT": 88,
-       "STATION": "2-JMS110.90",
-       "STATION_DESCRIPTION": "JAMES R, MANCHESTER BR. NEAR SOUTH BANK",
-       "STREAM_NAME": "James River",
-       "SUBBASIN": "MIDDLE JAMES-WILLIS",
-       "SURVEY_PROGRAM_CODE": "AQ, TM",
-       "VADEQ_ADMIN_REGION": "Piedmont"
-      }
-     },
-     {
-      "attributes": {
-       "BASIN": "James River Basin",
-       "BENTHIC_COUNT": null,
-       "FIRST_SAMPLE_DATE": 1721217300000,
-       "HUC6_HUC_12": "020802050607",
-       "HUC6_HUC_12_NAME": "James River-Little Westham Creek",
-       "LAST_BENTHIC_DATE": null,
-       "LAST_SAMPLE_DATE": 1722333900000,
-       "MAJOR_BASIN_NAME": "Mid Atlantic",
-       "MONITORING_REGION": "PRO",
-       "OBJECTID": 5314,
-       "SAMPLE_COUNT": 4,
-       "STATION": "IRpipeline1",
-       "STATION_DESCRIPTION": "at pipeline leak near JMS",
+       "OBJECTID": 841,
+       "SAMPLE_COUNT": 1,
+       "STATION": "HAXALL",
+       "STATION_DESCRIPTION": "Haxall Canal at 7th St. walkbridge",
        "STREAM_NAME": "James River-Little Westham Creek",
        "SUBBASIN": "MIDDLE JAMES-WILLIS",
        "SURVEY_PROGRAM_CODE": "IR",
@@ -273,20 +217,20 @@
       "attributes": {
        "BASIN": "James River Basin",
        "BENTHIC_COUNT": null,
-       "FIRST_SAMPLE_DATE": 1541417400000,
+       "FIRST_SAMPLE_DATE": 1343754000000,
        "HUC6_HUC_12": "020802050607",
        "HUC6_HUC_12_NAME": "James River-Little Westham Creek",
        "LAST_BENTHIC_DATE": null,
-       "LAST_SAMPLE_DATE": 1543833300000,
+       "LAST_SAMPLE_DATE": 1485340800000,
        "MAJOR_BASIN_NAME": "Mid Atlantic",
-       "MONITORING_REGION": "PRO",
-       "OBJECTID": 5338,
-       "SAMPLE_COUNT": 3,
-       "STATION": "2BJMS111.04",
-       "STATION_DESCRIPTION": "James River South Channel",
-       "STREAM_NAME": "James River, Middle",
+       "MONITORING_REGION": "CO",
+       "OBJECTID": 3617,
+       "SAMPLE_COUNT": 7,
+       "STATION": "QACO",
+       "STATION_DESCRIPTION": "629 E Main St, Richmond, VA 23219",
+       "STREAM_NAME": "James River-Little Westham Creek",
        "SUBBASIN": "MIDDLE JAMES-WILLIS",
-       "SURVEY_PROGRAM_CODE": "TM",
+       "SURVEY_PROGRAM_CODE": "QA, BN",
        "VADEQ_ADMIN_REGION": "Piedmont"
       }
      },
@@ -301,13 +245,55 @@
        "LAST_SAMPLE_DATE": 1384850880000,
        "MAJOR_BASIN_NAME": "Mid Atlantic",
        "MONITORING_REGION": "CO",
-       "OBJECTID": 11755,
+       "OBJECTID": 4054,
        "SAMPLE_COUNT": 2,
        "STATION": "CB5.1W",
        "STATION_DESCRIPTION": "Chesapeake Bay",
        "STREAM_NAME": "James River-Little Westham Creek",
        "SUBBASIN": "MIDDLE JAMES-WILLIS",
        "SURVEY_PROGRAM_CODE": "CB",
+       "VADEQ_ADMIN_REGION": "Piedmont"
+      }
+     },
+     {
+      "attributes": {
+       "BASIN": "James River Basin",
+       "BENTHIC_COUNT": null,
+       "FIRST_SAMPLE_DATE": 1541417400000,
+       "HUC6_HUC_12": "020802050607",
+       "HUC6_HUC_12_NAME": "James River-Little Westham Creek",
+       "LAST_BENTHIC_DATE": null,
+       "LAST_SAMPLE_DATE": 1543833300000,
+       "MAJOR_BASIN_NAME": "Mid Atlantic",
+       "MONITORING_REGION": "PRO",
+       "OBJECTID": 4544,
+       "SAMPLE_COUNT": 3,
+       "STATION": "2BJMS111.04",
+       "STATION_DESCRIPTION": "James River South Channel",
+       "STREAM_NAME": "James River, Middle",
+       "SUBBASIN": "MIDDLE JAMES-WILLIS",
+       "SURVEY_PROGRAM_CODE": "TM",
+       "VADEQ_ADMIN_REGION": "Piedmont"
+      }
+     },
+     {
+      "attributes": {
+       "BASIN": "James River Basin",
+       "BENTHIC_COUNT": null,
+       "FIRST_SAMPLE_DATE": 1721217300000,
+       "HUC6_HUC_12": "020802050607",
+       "HUC6_HUC_12_NAME": "James River-Little Westham Creek",
+       "LAST_BENTHIC_DATE": null,
+       "LAST_SAMPLE_DATE": 1722333900000,
+       "MAJOR_BASIN_NAME": "Mid Atlantic",
+       "MONITORING_REGION": "PRO",
+       "OBJECTID": 4558,
+       "SAMPLE_COUNT": 4,
+       "STATION": "IRpipeline1",
+       "STATION_DESCRIPTION": "at pipeline leak near JMS",
+       "STREAM_NAME": "James River-Little Westham Creek",
+       "SUBBASIN": "MIDDLE JAMES-WILLIS",
+       "SURVEY_PROGRAM_CODE": "IR",
        "VADEQ_ADMIN_REGION": "Piedmont"
       }
      },
@@ -322,34 +308,13 @@
        "LAST_SAMPLE_DATE": 1450276200000,
        "MAJOR_BASIN_NAME": "Mid Atlantic",
        "MONITORING_REGION": "PRO",
-       "OBJECTID": 13912,
+       "OBJECTID": 5058,
        "SAMPLE_COUNT": 11,
        "STATION": "2CXCA000.05",
        "STATION_DESCRIPTION": "UTJames R, for Shockoe SSO, DS Dock St.",
        "STREAM_NAME": "UT to James R for CSO006",
        "SUBBASIN": "LOWER JAMES",
        "SURVEY_PROGRAM_CODE": "TM",
-       "VADEQ_ADMIN_REGION": "Piedmont"
-      }
-     },
-     {
-      "attributes": {
-       "BASIN": "James River Basin",
-       "BENTHIC_COUNT": 41,
-       "FIRST_SAMPLE_DATE": 784213200000,
-       "HUC6_HUC_12": "020802050607",
-       "HUC6_HUC_12_NAME": "James River-Little Westham Creek",
-       "LAST_BENTHIC_DATE": 1434456900000,
-       "LAST_SAMPLE_DATE": 1748431800000,
-       "MAJOR_BASIN_NAME": "Mid Atlantic",
-       "MONITORING_REGION": "PRO",
-       "OBJECTID": 14014,
-       "SAMPLE_COUNT": 181,
-       "STATION": "2-JMS110.44",
-       "STATION_DESCRIPTION": "NORTH BANK JAMES RIVER BELOW FALL ZONE R",
-       "STREAM_NAME": "James River",
-       "SUBBASIN": "MIDDLE JAMES-WILLIS",
-       "SURVEY_PROGRAM_CODE": "TM, SS, RB, IM, HF, IR",
        "VADEQ_ADMIN_REGION": "Piedmont"
       }
      },
@@ -364,13 +329,34 @@
        "LAST_SAMPLE_DATE": 1753698600000,
        "MAJOR_BASIN_NAME": "Mid Atlantic",
        "MONITORING_REGION": "PRO",
-       "OBJECTID": 14293,
+       "OBJECTID": 12614,
        "SAMPLE_COUNT": 291,
        "STATION": "2-JMS111.17",
        "STATION_DESCRIPTION": "JAMES RIVER, AT TREDEGAR IRON WORKS",
        "STREAM_NAME": "James River",
        "SUBBASIN": "MIDDLE JAMES-WILLIS",
-       "SURVEY_PROGRAM_CODE": "IM, AW, HF, QA, SS, TM, IR, AQ",
+       "SURVEY_PROGRAM_CODE": "IM, HF, SS, TM, AW, IR, AQ, QA",
+       "VADEQ_ADMIN_REGION": "Piedmont"
+      }
+     },
+     {
+      "attributes": {
+       "BASIN": "James River Basin",
+       "BENTHIC_COUNT": 41,
+       "FIRST_SAMPLE_DATE": 784213200000,
+       "HUC6_HUC_12": "020802050607",
+       "HUC6_HUC_12_NAME": "James River-Little Westham Creek",
+       "LAST_BENTHIC_DATE": 1434456900000,
+       "LAST_SAMPLE_DATE": 1748431800000,
+       "MAJOR_BASIN_NAME": "Mid Atlantic",
+       "MONITORING_REGION": "PRO",
+       "OBJECTID": 12952,
+       "SAMPLE_COUNT": 181,
+       "STATION": "2-JMS110.44",
+       "STATION_DESCRIPTION": "NORTH BANK JAMES RIVER BELOW FALL ZONE R",
+       "STREAM_NAME": "James River",
+       "SUBBASIN": "MIDDLE JAMES-WILLIS",
+       "SURVEY_PROGRAM_CODE": "HF, RB, IM, IR, SS, TM",
        "VADEQ_ADMIN_REGION": "Piedmont"
       }
      },
@@ -385,7 +371,7 @@
        "LAST_SAMPLE_DATE": 434822220000,
        "MAJOR_BASIN_NAME": "Mid Atlantic",
        "MONITORING_REGION": "PRO",
-       "OBJECTID": 15043,
+       "OBJECTID": 13111,
        "SAMPLE_COUNT": 18,
        "STATION": "2-JMS109.98",
        "STATION_DESCRIPTION": "I 95 BRIDGE (CITY OF RICHMOND)",
@@ -406,76 +392,13 @@
        "LAST_SAMPLE_DATE": 1785836700000,
        "MAJOR_BASIN_NAME": "Mid Atlantic",
        "MONITORING_REGION": "PRO",
-       "OBJECTID": 15044,
+       "OBJECTID": 13112,
        "SAMPLE_COUNT": 1216,
        "STATION": "2-JMS110.30",
        "STATION_DESCRIPTION": "JAMES RIVER, RT. 360 MAYOS BRIDGE",
        "STREAM_NAME": "James River",
        "SUBBASIN": "LOWER JAMES",
-       "SURVEY_PROGRAM_CODE": "TR, PC, SS, AQ, CB, QA",
-       "VADEQ_ADMIN_REGION": "Piedmont"
-      }
-     },
-     {
-      "attributes": {
-       "BASIN": "James River Basin",
-       "BENTHIC_COUNT": 20,
-       "FIRST_SAMPLE_DATE": 1253286000000,
-       "HUC6_HUC_12": "020802050607",
-       "HUC6_HUC_12_NAME": "James River-Little Westham Creek",
-       "LAST_BENTHIC_DATE": 1434452400000,
-       "LAST_SAMPLE_DATE": 1434452400000,
-       "MAJOR_BASIN_NAME": "Mid Atlantic",
-       "MONITORING_REGION": "PRO",
-       "OBJECTID": 15322,
-       "SAMPLE_COUNT": 10,
-       "STATION": "2BJMS110.53",
-       "STATION_DESCRIPTION": "S BANK JAMES R. US RR BRIDGE FALL LINE",
-       "STREAM_NAME": "James River, Middle",
-       "SUBBASIN": "LOWER JAMES",
-       "SURVEY_PROGRAM_CODE": "RB, TM",
-       "VADEQ_ADMIN_REGION": "Piedmont"
-      }
-     },
-     {
-      "attributes": {
-       "BASIN": "James River Basin",
-       "BENTHIC_COUNT": null,
-       "FIRST_SAMPLE_DATE": 1056010500000,
-       "HUC6_HUC_12": "020802050607",
-       "HUC6_HUC_12_NAME": "James River-Little Westham Creek",
-       "LAST_BENTHIC_DATE": null,
-       "LAST_SAMPLE_DATE": 1056010500000,
-       "MAJOR_BASIN_NAME": "Mid Atlantic",
-       "MONITORING_REGION": "PRO",
-       "OBJECTID": 15565,
-       "SAMPLE_COUNT": 1,
-       "STATION": "HAXALL",
-       "STATION_DESCRIPTION": "Haxall Canal at 7th St. walkbridge",
-       "STREAM_NAME": "James River-Little Westham Creek",
-       "SUBBASIN": "MIDDLE JAMES-WILLIS",
-       "SURVEY_PROGRAM_CODE": "IR",
-       "VADEQ_ADMIN_REGION": "Piedmont"
-      }
-     },
-     {
-      "attributes": {
-       "BASIN": "James River Basin",
-       "BENTHIC_COUNT": 21,
-       "FIRST_SAMPLE_DATE": 783784800000,
-       "HUC6_HUC_12": "020802050607",
-       "HUC6_HUC_12_NAME": "James River-Little Westham Creek",
-       "LAST_BENTHIC_DATE": 1284378600000,
-       "LAST_SAMPLE_DATE": 1592316300000,
-       "MAJOR_BASIN_NAME": "Mid Atlantic",
-       "MONITORING_REGION": "PRO",
-       "OBJECTID": 15589,
-       "SAMPLE_COUNT": 177,
-       "STATION": "2-JMS110.34",
-       "STATION_DESCRIPTION": "SOUTH BANK OF JAMES RIVER AT LAST RAPID",
-       "STREAM_NAME": "James River",
-       "SUBBASIN": "LOWER JAMES",
-       "SURVEY_PROGRAM_CODE": "RB, IM, TM, SS, QA",
+       "SURVEY_PROGRAM_CODE": "PC, TR, SS, QA, CB, AQ",
        "VADEQ_ADMIN_REGION": "Piedmont"
       }
      },
@@ -490,12 +413,33 @@
        "LAST_SAMPLE_DATE": 998573940000,
        "MAJOR_BASIN_NAME": "Mid Atlantic",
        "MONITORING_REGION": "PRO",
-       "OBJECTID": 15627,
+       "OBJECTID": 13325,
        "SAMPLE_COUNT": 89,
        "STATION": "2-JMS110.07",
        "STATION_DESCRIPTION": "JAMES RIVER,I-95 BR.AT NORTH BANK, DS SH",
        "STREAM_NAME": "James River",
        "SUBBASIN": "LOWER JAMES",
+       "SURVEY_PROGRAM_CODE": "AQ",
+       "VADEQ_ADMIN_REGION": "Piedmont"
+      }
+     },
+     {
+      "attributes": {
+       "BASIN": "James River Basin",
+       "BENTHIC_COUNT": null,
+       "FIRST_SAMPLE_DATE": 810822120000,
+       "HUC6_HUC_12": "020802050607",
+       "HUC6_HUC_12_NAME": "James River-Little Westham Creek",
+       "LAST_BENTHIC_DATE": null,
+       "LAST_SAMPLE_DATE": 998573160000,
+       "MAJOR_BASIN_NAME": "Mid Atlantic",
+       "MONITORING_REGION": "PRO",
+       "OBJECTID": 14254,
+       "SAMPLE_COUNT": 70,
+       "STATION": "2-JMS110.49",
+       "STATION_DESCRIPTION": "JAMES RIVER AT DOWNSTREAM END OF HAXALL",
+       "STREAM_NAME": "James River",
+       "SUBBASIN": "MIDDLE JAMES-WILLIS",
        "SURVEY_PROGRAM_CODE": "AQ",
        "VADEQ_ADMIN_REGION": "Piedmont"
       }
@@ -511,7 +455,7 @@
        "LAST_SAMPLE_DATE": 1352808000000,
        "MAJOR_BASIN_NAME": "Mid Atlantic",
        "MONITORING_REGION": "PRO",
-       "OBJECTID": 15804,
+       "OBJECTID": 14402,
        "SAMPLE_COUNT": 1,
        "STATION": "2-JMS110.00",
        "STATION_DESCRIPTION": "James River near I-95 Bridge",
@@ -532,13 +476,76 @@
        "LAST_SAMPLE_DATE": 1701089400000,
        "MAJOR_BASIN_NAME": "Mid Atlantic",
        "MONITORING_REGION": "PRO",
-       "OBJECTID": 15805,
+       "OBJECTID": 14403,
        "SAMPLE_COUNT": 104,
        "STATION": "2-JMS110.31",
        "STATION_DESCRIPTION": "JAMES RIVER,MAYOS BR., NORTH CHANNEL US",
        "STREAM_NAME": "James River",
        "SUBBASIN": "LOWER JAMES",
-       "SURVEY_PROGRAM_CODE": "IM, AQ",
+       "SURVEY_PROGRAM_CODE": "AQ, IM",
+       "VADEQ_ADMIN_REGION": "Piedmont"
+      }
+     },
+     {
+      "attributes": {
+       "BASIN": "James River Basin",
+       "BENTHIC_COUNT": null,
+       "FIRST_SAMPLE_DATE": 772724700000,
+       "HUC6_HUC_12": "020802050607",
+       "HUC6_HUC_12_NAME": "James River-Little Westham Creek",
+       "LAST_BENTHIC_DATE": null,
+       "LAST_SAMPLE_DATE": 1274106300000,
+       "MAJOR_BASIN_NAME": "Mid Atlantic",
+       "MONITORING_REGION": "PRO",
+       "OBJECTID": 15108,
+       "SAMPLE_COUNT": 88,
+       "STATION": "2-JMS110.90",
+       "STATION_DESCRIPTION": "JAMES R, MANCHESTER BR. NEAR SOUTH BANK",
+       "STREAM_NAME": "James River",
+       "SUBBASIN": "MIDDLE JAMES-WILLIS",
+       "SURVEY_PROGRAM_CODE": "TM, AQ",
+       "VADEQ_ADMIN_REGION": "Piedmont"
+      }
+     },
+     {
+      "attributes": {
+       "BASIN": "James River Basin",
+       "BENTHIC_COUNT": 21,
+       "FIRST_SAMPLE_DATE": 783784800000,
+       "HUC6_HUC_12": "020802050607",
+       "HUC6_HUC_12_NAME": "James River-Little Westham Creek",
+       "LAST_BENTHIC_DATE": 1284378600000,
+       "LAST_SAMPLE_DATE": 1592316300000,
+       "MAJOR_BASIN_NAME": "Mid Atlantic",
+       "MONITORING_REGION": "PRO",
+       "OBJECTID": 15496,
+       "SAMPLE_COUNT": 177,
+       "STATION": "2-JMS110.34",
+       "STATION_DESCRIPTION": "SOUTH BANK OF JAMES RIVER AT LAST RAPID",
+       "STREAM_NAME": "James River",
+       "SUBBASIN": "LOWER JAMES",
+       "SURVEY_PROGRAM_CODE": "RB, QA, IM, TM, SS",
+       "VADEQ_ADMIN_REGION": "Piedmont"
+      }
+     },
+     {
+      "attributes": {
+       "BASIN": "James River Basin",
+       "BENTHIC_COUNT": 20,
+       "FIRST_SAMPLE_DATE": 1253286000000,
+       "HUC6_HUC_12": "020802050607",
+       "HUC6_HUC_12_NAME": "James River-Little Westham Creek",
+       "LAST_BENTHIC_DATE": 1434452400000,
+       "LAST_SAMPLE_DATE": 1434452400000,
+       "MAJOR_BASIN_NAME": "Mid Atlantic",
+       "MONITORING_REGION": "PRO",
+       "OBJECTID": 16150,
+       "SAMPLE_COUNT": 10,
+       "STATION": "2BJMS110.53",
+       "STATION_DESCRIPTION": "S BANK JAMES R. US RR BRIDGE FALL LINE",
+       "STREAM_NAME": "James River, Middle",
+       "SUBBASIN": "LOWER JAMES",
+       "SURVEY_PROGRAM_CODE": "RB, TM",
        "VADEQ_ADMIN_REGION": "Piedmont"
       }
      }
@@ -1178,6 +1185,167 @@
      }
     ],
     "features": []
+   }
+  },
+  {
+   "url": "https://apps.deq.virginia.gov/arcgis/rest/services/public/WQM_STATIONS_ALL/MapServer/0/query",
+   "params": {
+    "f": "json",
+    "outFields": "BASIN,BENTHIC_COUNT,FIRST_SAMPLE_DATE,HUC6_HUC_12,HUC6_HUC_12_NAME,LAST_BENTHIC_DATE,LAST_SAMPLE_DATE,MAJOR_BASIN_NAME,MONITORING_REGION,OBJECTID,SAMPLE_COUNT,STATION,STATION_DESCRIPTION,STREAM_NAME,SUBBASIN,SURVEY_PROGRAM_CODE,VADEQ_ADMIN_REGION",
+    "resultRecordCount": "50",
+    "returnGeometry": "false",
+    "geometry": "{\"x\": -77.408014727372, \"y\": 39.025534437083, \"spatialReference\": {\"wkid\": 4326}}",
+    "geometryType": "esriGeometryPoint",
+    "inSR": "4326",
+    "spatialRel": "esriSpatialRelIntersects",
+    "distance": "1609.0",
+    "units": "esriSRUnit_Meter"
+   },
+   "response": {
+    "displayFieldName": "STREAM_NAME",
+    "fieldAliases": {
+     "BASIN": "BASIN",
+     "BENTHIC_COUNT": "BENTHIC_COUNT",
+     "FIRST_SAMPLE_DATE": "FIRST_SAMPLE_DATE",
+     "HUC6_HUC_12": "HUC6_HUC_12",
+     "HUC6_HUC_12_NAME": "HUC6_HUC_12_NAME",
+     "LAST_BENTHIC_DATE": "LAST_BENTHIC_DATE",
+     "LAST_SAMPLE_DATE": "LAST_SAMPLE_DATE",
+     "MAJOR_BASIN_NAME": "MAJOR_BASIN_NAME",
+     "MONITORING_REGION": "MONITORING_REGION",
+     "OBJECTID": "OBJECTID",
+     "SAMPLE_COUNT": "SAMPLE_COUNT",
+     "STATION": "STATION",
+     "STATION_DESCRIPTION": "STATION_DESCRIPTION",
+     "STREAM_NAME": "STREAM_NAME",
+     "SUBBASIN": "SUBBASIN",
+     "SURVEY_PROGRAM_CODE": "SURVEY_PROGRAM_CODE",
+     "VADEQ_ADMIN_REGION": "VADEQ_ADMIN_REGION"
+    },
+    "fields": [
+     {
+      "name": "BASIN",
+      "type": "esriFieldTypeString",
+      "alias": "BASIN",
+      "length": 255
+     },
+     {
+      "name": "BENTHIC_COUNT",
+      "type": "esriFieldTypeInteger",
+      "alias": "BENTHIC_COUNT"
+     },
+     {
+      "name": "FIRST_SAMPLE_DATE",
+      "type": "esriFieldTypeDate",
+      "alias": "FIRST_SAMPLE_DATE",
+      "length": 8
+     },
+     {
+      "name": "HUC6_HUC_12",
+      "type": "esriFieldTypeString",
+      "alias": "HUC6_HUC_12",
+      "length": 255
+     },
+     {
+      "name": "HUC6_HUC_12_NAME",
+      "type": "esriFieldTypeString",
+      "alias": "HUC6_HUC_12_NAME",
+      "length": 510
+     },
+     {
+      "name": "LAST_BENTHIC_DATE",
+      "type": "esriFieldTypeDate",
+      "alias": "LAST_BENTHIC_DATE",
+      "length": 8
+     },
+     {
+      "name": "LAST_SAMPLE_DATE",
+      "type": "esriFieldTypeDate",
+      "alias": "LAST_SAMPLE_DATE",
+      "length": 8
+     },
+     {
+      "name": "MAJOR_BASIN_NAME",
+      "type": "esriFieldTypeString",
+      "alias": "MAJOR_BASIN_NAME",
+      "length": 255
+     },
+     {
+      "name": "MONITORING_REGION",
+      "type": "esriFieldTypeString",
+      "alias": "MONITORING_REGION",
+      "length": 255
+     },
+     {
+      "name": "OBJECTID",
+      "type": "esriFieldTypeOID",
+      "alias": "OBJECTID"
+     },
+     {
+      "name": "SAMPLE_COUNT",
+      "type": "esriFieldTypeInteger",
+      "alias": "SAMPLE_COUNT"
+     },
+     {
+      "name": "STATION",
+      "type": "esriFieldTypeString",
+      "alias": "STATION",
+      "length": 510
+     },
+     {
+      "name": "STATION_DESCRIPTION",
+      "type": "esriFieldTypeString",
+      "alias": "STATION_DESCRIPTION",
+      "length": 255
+     },
+     {
+      "name": "STREAM_NAME",
+      "type": "esriFieldTypeString",
+      "alias": "STREAM_NAME",
+      "length": 510
+     },
+     {
+      "name": "SUBBASIN",
+      "type": "esriFieldTypeString",
+      "alias": "SUBBASIN",
+      "length": 255
+     },
+     {
+      "name": "SURVEY_PROGRAM_CODE",
+      "type": "esriFieldTypeString",
+      "alias": "SURVEY_PROGRAM_CODE",
+      "length": 8000
+     },
+     {
+      "name": "VADEQ_ADMIN_REGION",
+      "type": "esriFieldTypeString",
+      "alias": "VADEQ_ADMIN_REGION",
+      "length": 30
+     }
+    ],
+    "features": [
+     {
+      "attributes": {
+       "BASIN": "Potomac River Basin",
+       "BENTHIC_COUNT": null,
+       "FIRST_SAMPLE_DATE": 1492690920000,
+       "HUC6_HUC_12": "020700080903",
+       "HUC6_HUC_12_NAME": "Broad Run-Beaverdam Run",
+       "LAST_BENTHIC_DATE": null,
+       "LAST_SAMPLE_DATE": 1492690920000,
+       "MAJOR_BASIN_NAME": "Mid Atlantic",
+       "MONITORING_REGION": null,
+       "OBJECTID": 15455,
+       "SAMPLE_COUNT": 1,
+       "STATION": "VAG250033-001",
+       "STATION_DESCRIPTION": "Dulles Town Center",
+       "STREAM_NAME": "Broad Run-Beaverdam Run",
+       "SUBBASIN": "MIDDLE POTOMAC-CATOCTIN",
+       "SURVEY_PROGRAM_CODE": "FI",
+       "VADEQ_ADMIN_REGION": "Northern"
+      }
+     }
+    ]
    }
   }
  ]

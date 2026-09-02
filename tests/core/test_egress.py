@@ -2,10 +2,19 @@
 egress rule without its refusal test is prose, not policy)."""
 import pytest
 
-from commonwealth.core.egress import EgressPolicy, hosts_from_url
+from commonwealth.core.egress import (DENY_NETWORK_ENV, EgressPolicy,
+                                      hosts_from_url, network_denied)
 from commonwealth.core.errors import EgressRefused
 
 FAIRFAX = frozenset({"www.fairfaxcounty.gov"})
+
+
+@pytest.fixture(autouse=True)
+def _switch_off(monkeypatch):
+    """Every rule below is about a URL the policy judges on its merits, so
+    the deny switch has to be off for all of them — including on a machine
+    or a CI job that exported it for the whole suite."""
+    monkeypatch.delenv(DENY_NETWORK_ENV, raising=False)
 
 
 def _public_resolver(host, _port):
@@ -101,6 +110,56 @@ def test_redirect_same_host_relative_ok():
     assert target == "https://www.fairfaxcounty.gov/b"
 
 
+@pytest.mark.parametrize("value", ["1", "true", "yes", "anything"])
+def test_deny_switch_refuses_every_host(monkeypatch, value):
+    """Rule 8. The switch is checked before the scheme, the allowlist and
+    DNS, so a URL that would otherwise sail through is still refused."""
+    monkeypatch.setenv(DENY_NETWORK_ENV, value)
+    with pytest.raises(EgressRefused, match=DENY_NETWORK_ENV):
+        _policy().validate_url("https://www.fairfaxcounty.gov/x/query")
+
+
+def test_deny_switch_refuses_before_dns_is_resolved(monkeypatch):
+    """The point of the switch is that nothing leaves the process, and a
+    DNS lookup leaves the process. A resolver that fails the test if it is
+    called at all pins that."""
+    def _explode(host, _port):
+        raise AssertionError(f"the resolver was called for {host!r}")
+
+    monkeypatch.setenv(DENY_NETWORK_ENV, "1")
+    with pytest.raises(EgressRefused):
+        _policy(resolver=_explode).validate_url(
+            "https://www.fairfaxcounty.gov/x")
+
+
+def test_deny_switch_also_refuses_redirect_targets(monkeypatch):
+    """Redirects re-enter validate_url, so they inherit the refusal rather
+    than needing their own check."""
+    monkeypatch.setenv(DENY_NETWORK_ENV, "1")
+    with pytest.raises(EgressRefused, match=DENY_NETWORK_ENV):
+        _policy().validate_redirect("https://www.fairfaxcounty.gov/a",
+                                    "/b", 1)
+
+
+@pytest.mark.parametrize("value", ["", "0", "   "])
+def test_the_off_values_leave_the_policy_alone(monkeypatch, value):
+    """An empty variable is the shape a shell exports by accident, and it
+    must not switch the network off for a whole machine."""
+    monkeypatch.setenv(DENY_NETWORK_ENV, value)
+    assert network_denied() is False
+    _policy().validate_url("https://www.fairfaxcounty.gov/x/query")
+
+
+def test_the_switch_is_read_per_call_not_at_import(monkeypatch):
+    """Set the variable inside a running process and the next request is
+    refused, which is what lets one test set it and the next clear it."""
+    assert network_denied() is False
+    monkeypatch.setenv(DENY_NETWORK_ENV, "1")
+    assert network_denied() is True
+    monkeypatch.delenv(DENY_NETWORK_ENV)
+    assert network_denied() is False
+
+
 def test_hosts_from_url():
     assert hosts_from_url("https://Www.FairfaxCounty.gov/x") == FAIRFAX
     with pytest.raises(ValueError):
@@ -181,6 +240,107 @@ def _fetcher_over(handler, monkeypatch) -> HttpFetcher:
     monkeypatch.setattr("commonwealth.adapters.base.httpx.AsyncClient",
                         _client)
     return HttpFetcher(policy=_policy())
+
+
+def _pin_spy(monkeypatch) -> list[httpx.Request]:
+    """Stand in for the real socket at the layer below the pinned
+    transport, and record the request as it was about to go out."""
+    seen: list[httpx.Request] = []
+
+    async def fake_send(self, request):
+        seen.append(httpx.Request(request.method, request.url,
+                                  headers=request.headers,
+                                  extensions=dict(request.extensions)))
+        return httpx.Response(200, content=b'{"ok":true}', request=request)
+
+    monkeypatch.setattr(httpx.AsyncHTTPTransport, "handle_async_request",
+                        fake_send)
+    return seen
+
+
+async def test_the_connection_goes_to_the_address_the_policy_checked(
+        monkeypatch):
+    """Rule 3's second half (#16). The policy approved 93.184.216.34, so
+    that is the address the connection is opened to — with the hostname
+    still carried in the Host header and in the TLS handshake, so the
+    certificate is checked against the name."""
+    seen = _pin_spy(monkeypatch)
+    await HttpFetcher(policy=_policy()).fetch_json(
+        "https://www.fairfaxcounty.gov/x/query", {})
+    assert len(seen) == 1
+    sent = seen[0]
+    assert sent.url.host == "93.184.216.34", (
+        "the request was sent to a host the policy never approved")
+    assert sent.headers["host"] == "www.fairfaxcounty.gov"
+    assert sent.extensions["sni_hostname"] == "www.fairfaxcounty.gov"
+
+
+async def test_a_second_dns_answer_cannot_change_the_address(monkeypatch):
+    """The attack #16 describes: DNS with a very short TTL answers the
+    policy's lookup with a public address and the connection's lookup with
+    an internal one. There is no second lookup now, so the second answer
+    is never reached — the resolver is called once and the connection uses
+    what it returned."""
+    answers = iter([[(2, 1, 6, "", ("93.184.216.34", 0))],
+                    [(2, 1, 6, "", ("169.254.169.254", 0))]])
+    calls = []
+
+    def _flipping_resolver(host, _port):
+        calls.append(host)
+        return next(answers)
+
+    seen = _pin_spy(monkeypatch)
+    await HttpFetcher(policy=_policy(resolver=_flipping_resolver)).fetch_json(
+        "https://www.fairfaxcounty.gov/x/query", {})
+    assert calls == ["www.fairfaxcounty.gov"], (
+        f"the hostname was resolved {len(calls)} times; the second answer "
+        "is the one an attacker controls")
+    assert seen[0].url.host == "93.184.216.34"
+
+
+async def test_the_address_never_reaches_what_callers_read_back(monkeypatch):
+    """The pinned address is a connection detail. `Response.url` reads
+    through to the request, and the Code of Virginia publishes that URL as
+    a section's source_url, so the hostname has to be restored."""
+    _pin_spy(monkeypatch)
+    fetcher = HttpFetcher(policy=_policy())
+    body, _ = await fetcher._fetch("https://www.fairfaxcounty.gov/x", {})
+    assert body.url == "https://www.fairfaxcounty.gov/x", body.url
+
+
+async def test_every_approved_address_is_returned_in_resolution_order():
+    """The resolver has already ordered its answer by preference, so the
+    check keeps that order instead of collapsing it into a set."""
+    def _two(host, _port):
+        return [(2, 1, 6, "", ("93.184.216.34", 0)),
+                (2, 1, 6, "", ("93.184.216.35", 0)),
+                (2, 1, 6, "", ("93.184.216.34", 0))]
+
+    approved = _policy(resolver=_two).validate_url(
+        "https://www.fairfaxcounty.gov/x")
+    assert approved == ("93.184.216.34", "93.184.216.35")
+
+
+async def test_a_retry_moves_to_the_next_approved_address(monkeypatch):
+    """A host behind two addresses can have one of them down, and both
+    were approved by the same check."""
+    def _two(host, _port):
+        return [(2, 1, 6, "", ("93.184.216.34", 0)),
+                (2, 1, 6, "", ("93.184.216.35", 0))]
+
+    seen: list[str] = []
+
+    async def fake_send(self, request):
+        seen.append(request.url.host)
+        return httpx.Response(503, request=request)
+
+    monkeypatch.setattr(httpx.AsyncHTTPTransport, "handle_async_request",
+                        fake_send)
+    monkeypatch.setattr("commonwealth.adapters.base.asyncio.sleep", _no_sleep)
+    with pytest.raises(SourceUnavailable):
+        await HttpFetcher(policy=_policy(resolver=_two)).fetch_json(
+            "https://www.fairfaxcounty.gov/x", {})
+    assert seen == ["93.184.216.34", "93.184.216.35"], seen
 
 
 async def test_rule6_oversized_response_is_refused(monkeypatch):

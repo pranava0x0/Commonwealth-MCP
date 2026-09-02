@@ -9,20 +9,25 @@ empty until the first rename (design/domain-servers.md § 1.6).
 from __future__ import annotations
 
 import inspect
+import logging
 import time
 from typing import Any
 
 from mcp.server import MCPServer
-from mcp.server.mcpserver.exceptions import ToolError
+from mcp.server.mcpserver.exceptions import ResourceError, ToolError
 from mcp.types import ToolAnnotations
 
 from ..core.audit import error_record, record_from_envelope
 from ..core.errors import CommonwealthError
+from ..core.results import KINDS
+from ..core.skills import load_skills, unroutable_capabilities
 from ..core.toolreg import (DEPRECATED_TOOL_ALIASES, ToolSpec, expand_profile)
 from ..domains.civic import CIVIC_TOOLS
 from ..domains.geo import GEO_TOOLS
 from ..domains.registry import REGISTRY_TOOLS
-from ..runtime import RuntimeContext
+from ..runtime import PROJECT_ROOT, RuntimeContext
+
+log = logging.getLogger("commonwealth.servers")
 
 SERVER_INSTRUCTIONS = (
     "Commonwealth-MCP serves Virginia public-data queries with provenance. "
@@ -80,10 +85,94 @@ def registries():
     return {"registry": REGISTRY_TOOLS, "geo": GEO_TOOLS, "civic": CIVIC_TOOLS}
 
 
+def check_skill_capabilities(ctx: RuntimeContext) -> list[str]:
+    """Warn when a skill needs a capability this registry cannot serve.
+
+    design/hub-catalog.md § 2 asks for this and it had nothing to check
+    until the first skill declared its capabilities (#27). It is the
+    routing half of decision 0002 that is buildable today; generating the
+    profiles themselves from the same metadata waits for the amendment on
+    0002 to be lifted.
+
+    A warning rather than a refusal, decided 2026-09-02 for the reason
+    0002's amendment gives about the profile floor: refusing to start
+    punishes the wrong person. A fork that registers one county's parcels
+    and nothing else has a working server and one skill that cannot
+    complete its walk, and refusing to serve the tools that do work is a
+    worse outcome than saying so. Every tool still answers; only the
+    skill's walk stops early, and the warning says which one and why.
+
+    Returns the warnings emitted, so a caller (and a test) can see what it
+    found rather than having to read the log.
+    """
+    skills = load_skills(PROJECT_ROOT / "skills")
+    missing = unroutable_capabilities(skills,
+                                      ctx.sources.servable_capabilities())
+    notes = []
+    for name, caps in sorted(missing.items()):
+        note = (f"skill {name!r} requires {caps}, which no active source "
+                "answers in this registry. Its walk will report a registry "
+                "gap at the step that needs one. The other tools are "
+                "unaffected.")
+        log.warning(note)
+        notes.append(note)
+    return notes
+
+
+def _register_result_resources(server: MCPServer,
+                               ctx: RuntimeContext) -> None:
+    """Make `commonwealth://` handles readable over the protocol.
+
+    design/provenance-envelope.md § 9: a handle appears both as an
+    envelope `resources` entry and as an MCP resource, at the same URI.
+    Two templates because the two kinds mean different things — a stored
+    answer and the raw record behind one claim — and a caller reading the
+    URI should be able to tell which they hold.
+    """
+    def reader(kind: str):
+        # The kind is closed over rather than taken as a parameter: the
+        # SDK matches a template's function arguments against its URI
+        # placeholders, and this one has exactly one.
+        async def read_result(result_id: str) -> dict:
+            try:
+                stored = ctx.results.get(
+                    f"commonwealth://{kind}/{result_id}")
+            except CommonwealthError as err:
+                # ResourceError, not ToolError: the SDK re-raises this one
+                # unchanged and wraps everything else in a generic
+                # "error creating resource" that would throw away the
+                # difference between an expired handle and one that never
+                # existed, which is the whole reason the message exists.
+                raise ResourceError(err.model_message()) from err
+            return {
+                "stored_at": stored.stored_at,
+                "expires_at": stored.expires_at,
+                "classification": stored.classification,
+                "source_ids": list(stored.source_ids),
+                "origin": {"tool": stored.origin_tool,
+                           "arguments": stored.origin_arguments},
+                "payload": stored.payload,
+            }
+        return read_result
+
+    for kind in KINDS:
+        server.resource(
+            f"commonwealth://{kind}/{{result_id}}",
+            name=f"commonwealth-{kind}",
+            description=(
+                "A payload too large to return inline, kept for 24 hours. "
+                "Reading one past its expiry says so and names the call "
+                "that produced it, because an expired result and a result "
+                "that never existed are different facts."),
+            mime_type="application/json")(reader(kind))
+
+
 def build_server(ctx: RuntimeContext, profile: str = "default") -> MCPServer:
+    check_skill_capabilities(ctx)
     specs = expand_profile(profile, registries())
     server = MCPServer(name=ctx.server_name, version=ctx.server_version,
                        instructions=SERVER_INSTRUCTIONS)
+    _register_result_resources(server, ctx)
     annotations = ToolAnnotations(read_only_hint=True, destructive_hint=False,
                                   open_world_hint=True)
     registered: dict[str, ToolSpec] = {}

@@ -1,6 +1,6 @@
 {
  "source_id": "va-vgin-address-points",
- "recorded_at": "2026-08-30T13:33:25Z",
+ "recorded_at": "2026-09-02T05:30:29Z",
  "rights": {
   "publisher": "Virginia Geographic Information Network (VGIN), part of the Virginia Department of Emergency Management",
   "terms_url": "https://vgin.vdem.virginia.gov/datasets/virginia-address-points/about",
@@ -10,7 +10,7 @@
   "health:addresses": {
    "layer": "addresses",
    "feature_count": 3867706,
-   "min_expected": 3000000,
+   "min_expected": 3400000,
    "healthy": true
   },
   "postal_city_trap": {
@@ -61,6 +61,13 @@
   "zip_no_match": {
    "zip": 0,
    "localities": []
+  },
+  "sterling_loudoun": {
+   "point": [
+    -77.408014727372,
+    39.025534437083
+   ],
+   "record_count": 1
   }
  },
  "exchanges": [
@@ -1493,6 +1500,140 @@
      "latestWkid": 3857
     },
     "features": []
+   }
+  },
+  {
+   "url": "https://vginmaps.vdem.virginia.gov/arcgis/rest/services/VA_Base_Layers/VA_Address_Points/FeatureServer/0/query",
+   "params": {
+    "f": "json",
+    "outFields": "ADDPTKEY,ADDRCLASS,CAPTUREMETH,FIPS,FULLADDR,FULLNAME,LASTUPDATE,MUNICIPALITY,OBJECTID,PLACENAME,POINTTYPE,PO_NAME,SITEADDID,STATUS,ZIP_5",
+    "resultRecordCount": "50",
+    "returnGeometry": "false",
+    "where": "FIPS = '51107'",
+    "geometry": "{\"x\": -77.408014727372, \"y\": 39.025534437083, \"spatialReference\": {\"wkid\": 4326}}",
+    "geometryType": "esriGeometryPoint",
+    "inSR": "4326",
+    "spatialRel": "esriSpatialRelIntersects",
+    "distance": "100.0",
+    "units": "esriSRUnit_Meter"
+   },
+   "response": {
+    "objectIdFieldName": "OBJECTID",
+    "globalIdFieldName": "",
+    "geometryType": "esriGeometryPoint",
+    "spatialReference": {
+     "wkid": 102100,
+     "latestWkid": 3857
+    },
+    "fields": [
+     {
+      "name": "ADDPTKEY",
+      "alias": "Address Point ID",
+      "type": "esriFieldTypeString",
+      "length": 20
+     },
+     {
+      "name": "ADDRCLASS",
+      "alias": "Description",
+      "type": "esriFieldTypeInteger"
+     },
+     {
+      "name": "CAPTUREMETH",
+      "alias": "Capture Method",
+      "type": "esriFieldTypeString",
+      "length": 30
+     },
+     {
+      "name": "FIPS",
+      "alias": "Jurisdiction FIPS Code",
+      "type": "esriFieldTypeString",
+      "length": 7
+     },
+     {
+      "name": "FULLADDR",
+      "alias": "Full Address",
+      "type": "esriFieldTypeString",
+      "length": 250
+     },
+     {
+      "name": "FULLNAME",
+      "alias": "Full Street Name",
+      "type": "esriFieldTypeString",
+      "length": 125
+     },
+     {
+      "name": "LASTUPDATE",
+      "alias": "Last Update Date",
+      "type": "esriFieldTypeDate",
+      "length": 8
+     },
+     {
+      "name": "MUNICIPALITY",
+      "alias": "Jurisdiction Name",
+      "type": "esriFieldTypeString",
+      "length": 100
+     },
+     {
+      "name": "OBJECTID",
+      "alias": "OBJECTID",
+      "type": "esriFieldTypeOID"
+     },
+     {
+      "name": "PLACENAME",
+      "alias": "Place Name",
+      "type": "esriFieldTypeString",
+      "length": 250
+     },
+     {
+      "name": "POINTTYPE",
+      "alias": "Location",
+      "type": "esriFieldTypeString",
+      "length": 30
+     },
+     {
+      "name": "PO_NAME",
+      "alias": "Post Office Name",
+      "type": "esriFieldTypeString",
+      "length": 50
+     },
+     {
+      "name": "SITEADDID",
+      "alias": "Site Address ID",
+      "type": "esriFieldTypeDouble"
+     },
+     {
+      "name": "STATUS",
+      "alias": "Status",
+      "type": "esriFieldTypeString",
+      "length": 30
+     },
+     {
+      "name": "ZIP_5",
+      "alias": "Zip Code",
+      "type": "esriFieldTypeInteger"
+     }
+    ],
+    "features": [
+     {
+      "attributes": {
+       "ADDPTKEY": "181114337829",
+       "ADDRCLASS": null,
+       "CAPTUREMETH": null,
+       "FIPS": "51107",
+       "FULLADDR": "21641 RIDGETOP CIR",
+       "FULLNAME": "RIDGETOP CIR",
+       "LASTUPDATE": 1769126400000,
+       "MUNICIPALITY": "Loudoun County",
+       "OBJECTID": 2124600,
+       "PLACENAME": "",
+       "POINTTYPE": null,
+       "PO_NAME": "STERLING",
+       "SITEADDID": 51107000021288.0,
+       "STATUS": null,
+       "ZIP_5": 20166
+      }
+     }
+    ]
    }
   }
  ]

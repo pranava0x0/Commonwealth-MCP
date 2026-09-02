@@ -203,3 +203,81 @@ def test_coverage_and_warning_definitions_cover_every_enum_value(site):
     for dim, enum_cls in dims.items():
         assert set(site["coverage_definitions"][dim]["values"]) == \
             {c.value for c in enum_cls}
+
+
+# --- typed numbers in reader-facing prose ---------------------------------
+
+READER_FACING = ("README.md", "docs/llms.txt", "docs/index.html")
+
+
+def _jurisdiction_counts() -> dict[str, int]:
+    import yaml
+    from collections import Counter
+    kinds = Counter(
+        yaml.safe_load(path.read_text())["kind"]
+        for path in (ROOT / "sources" / "jurisdictions").glob("*.yaml"))
+    return {"towns": kinds["town"],
+            "localities": kinds["county"] + kinds["independent-city"]}
+
+
+def test_no_reader_facing_page_states_a_town_count_the_table_denies():
+    """The 191/189 drift, pinned (2026-09-01).
+
+    VGIN publishes 191 town polygons and two of them are Census
+    Designated Places with no government. Both were removed from the table
+    on 2026-08-30 with a test pinning their absence, and the README, the
+    site, and the jurisdiction spec went on saying 191 for two more days —
+    a coverage claim, in the three places a stranger reads first.
+
+    Derived from the table so the number cannot be typed wrong again. Any
+    other count of towns in these files fails, including a future one that
+    is right today and stale next month.
+    """
+    counts = _jurisdiction_counts()
+    assert counts["towns"] and counts["localities"], "the table vanished"
+    pattern = re.compile(r"(\d[\d,]*)\s+(?:incorporated\s+)?towns?\b")
+    wrong = []
+    for name in READER_FACING:
+        text = (ROOT / name).read_text()
+        for match in pattern.finditer(text):
+            stated = int(match.group(1).replace(",", ""))
+            if stated != counts["towns"]:
+                line = text[:match.start()].count("\n") + 1
+                wrong.append(f"{name}:{line} says {stated}")
+    assert wrong == [], (
+        f"the table holds {counts['towns']} towns; " + "; ".join(wrong))
+
+
+def test_every_shipped_skill_is_named_on_the_reader_facing_pages():
+    """`docs/llms.txt` is hand-written and it is what an assistant reads
+    instead of the page, so it drifts silently. It claimed no geocoder was
+    registered for three days after one was. Derived from disk so a fourth
+    skill has to be mentioned rather than remembered."""
+    from commonwealth.core.skills import load_skills
+
+    text = (ROOT / "docs" / "llms.txt").read_text()
+    missing = [sk.name for sk in load_skills(ROOT / "skills")
+               if sk.name not in text]
+    assert missing == [], (
+        f"docs/llms.txt does not mention {missing}; it is the summary an "
+        "assistant reads, and a skill it omits does not exist as far as "
+        "that reader is concerned")
+
+
+def test_the_site_does_not_call_a_shipped_skill_planned(site):
+    """`parcel-zoning-screen` sat in the page's roster as "planned" for two
+    days after it shipped, because the roster was typed. It is read off
+    disk now, and this asserts the two agree."""
+    from commonwealth.core.skills import load_skills
+
+    on_disk = {sk.name for sk in load_skills(ROOT / "skills")}
+    listed = {sk["name"]: sk["status"] for sk in site["skills"]}
+    for name in on_disk:
+        assert listed.get(name) == "shipped", (
+            f"{name} exists on disk and the page says {listed.get(name)!r}; "
+            + REGEN)
+    for name, status in listed.items():
+        if name not in on_disk:
+            assert status != "shipped", (
+                f"the page calls {name} shipped and there is no "
+                f"skills/{name}/SKILL.md")

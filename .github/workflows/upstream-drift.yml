@@ -1,0 +1,68 @@
+# Replay the committed fixtures against the live government services and
+# record what moved (GitHub issue #31).
+#
+# Weekly, on purpose. No manifest declares a probe cadence of its own, and
+# the fastest `freshness.expected_cadence` among registered sources is
+# daily, so weekly sits under every one of them. The politeness budget
+# applies to audits as much as to queries: one run sends roughly 160
+# requests spread across nine government hosts, at two concurrent per host.
+#
+# Drift never fails this job. Government services rename fields and
+# renumber layers, and the report exists to say when. The job fails only
+# when it could not run at all.
+name: upstream drift
+
+on:
+  schedule:
+    # 07:00 UTC Monday — outside Virginia business hours, so a government
+    # service is answering this rather than a resident.
+    - cron: "0 7 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: upstream-drift
+  cancel-in-progress: false
+
+jobs:
+  replay:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e . --group dev
+
+      - name: Replay the fixtures against the live services
+        run: python tools/upstream_audit.py
+
+      - name: Open a pull request when anything moved
+        uses: peter-evans/create-pull-request@v6
+        with:
+          branch: audit/upstream-drift
+          title: "Upstream drift, ${{ github.run_id }}"
+          commit-message: "Record upstream drift"
+          add-paths: |
+            docs/audits/
+          body: |
+            Written by `tools/upstream_audit.py` on its weekly run.
+
+            Read `docs/audits/upstream-<date>.md`. Drift is the expected
+            output; a source under **Could not be reached** is the one
+            result worth acting on quickly, because it is neither known
+            healthy nor known drifted.
+
+            A confirmed finding graduates to `design/source-quirks.md`
+            once someone has understood it. This pull request only
+            records what changed.
+          delete-branch: true

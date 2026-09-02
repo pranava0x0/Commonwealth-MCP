@@ -125,12 +125,25 @@ authority_notes: >
 health:
   probe: arcgis_layer_count
   expect:
-    # Observed live 2026-08-28: localities 134, towns 191. Floors set
-    # under those; a single locality's resubmission should not flip this
-    # unhealthy, but a layer emptying out must.
+    # Floors reset 2026-09-02 from a range rather than a single reading
+    # (GitHub issue #19). Two observations per layer now sit in
+    # docs/audits/probe-history.json — the registration-day count and a
+    # live re-probe days later — and every layer moved by under 0.05%
+    # between them. The rule: ten per cent under the lowest reading,
+    # rounded down to two significant figures, and never looser than the
+    # floor it replaces. Two readings days apart cannot see an annual
+    # reassessment or a bulk republish, so ten per cent is deliberately
+    # slack; `tools/upstream_audit.py` keeps adding readings and the
+    # floors tighten as the range earns it.
+    #
+    # Localities stay at 130 rather than tightening: the count is 134 and
+    # it enumerates a fixed set of governments, so ten per cent under it
+    # would be looser than what is already here. A single locality's
+    # resubmission must not flip this unhealthy; a layer emptying out
+    # must.
     min_features:
       localities: 130
-      towns: 150
+      towns: 170
 
 lifecycle:
   declared_state: active

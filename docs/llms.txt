@@ -13,25 +13,57 @@ exposes the result through the Model Context Protocol.
 
 ## What it answers today
 
-- Which local government covers a place, by name, FIPS code, or
-  coordinates. Ambiguous names return every match rather than a guess:
-  Fairfax City is not inside Fairfax County, and none of Virginia's 38
-  independent cities sit inside the county they share a name with.
-- What a parcel record says, by parcel ID or by a point. Street addresses
-  do not work yet; no geocoder is registered.
+Fourteen tools, nine of them in the default set.
+
+- Which local government covers a place, by name, FIPS code, street
+  address, ZIP code, or coordinates. Ambiguous names return every match
+  rather than a guess: Fairfax City is not inside Fairfax County, and none
+  of Virginia's 38 independent cities sit inside the county they share a
+  name with. A point inside a town returns the town and its county,
+  because both govern that ground.
+- What a parcel record says, by parcel ID or by a point. Fairfax County,
+  Richmond City, and Charles City County publish their own; VGIN publishes
+  a statewide layer. Where two cover the same ground both are returned,
+  unranked, and a disagreement is reported as a disagreement.
 - How a parcel is zoned, in Fairfax County and Richmond City only. This is
   screening evidence from a county GIS layer. The adopted ordinance
-  governs.
-- The text of a Code of Virginia section, by citation.
+  governs, and the answer says so every time.
+- Where a street address is, from the statewide address points. The city
+  on an envelope is a postal city and often not the government: mail
+  addressed to Alexandria is frequently in Fairfax County.
+- What is on the ground and near it: building footprints, road segments
+  from two sources that model roads differently, named public places, and
+  DEQ's water-quality monitoring stations. Each is one published layer and
+  none is an inventory.
 - Where a jurisdiction's boundary runs, statewide.
+- The text of a Code of Virginia section, by citation.
+
+Three skills package those into workflows — the order to ask in, and what
+an empty answer means at each step:
+
+- `whose-government`: which government covers a place, from a name,
+  address, ZIP, or coordinate.
+- `parcel-zoning-screen`: a parcel's zoning district and what the record
+  does and does not establish.
+- `site-context-screen`: what is on and around one piece of ground.
+
+An answer too large to return inline comes back summarised with a
+`commonwealth://` handle to everything that was retrieved, readable as an
+MCP resource for 24 hours.
 
 ## What it does not do
 
-- Street addresses, until a geocoder is registered.
-- Most localities: 12 of the 133 are in the jurisdiction table. A
-  coordinate anywhere in Virginia resolves, but for the rest the answer
-  says the boundary source knows the government and this project cannot
-  route a query to it.
+- Zoning outside Fairfax County and Richmond City. Everywhere else returns
+  a registry gap, which is not the same as unzoned land.
+- A source of its own for most localities. All 133 counties and
+  independent cities and all 189 incorporated towns are in the
+  jurisdiction table, so a name or a coordinate anywhere in Virginia finds
+  the right government. Three localities publish a parcel layer this
+  project reads; the rest are answered by VGIN's statewide layers or not
+  at all.
+- Full-text search of the Code of Virginia, bills, meetings, permits,
+  finance, or elections. Some are designed and unbuilt; the open issues
+  say which.
 - Any write. It reads published public records and submits nothing.
 
 ## Two kinds of empty
@@ -52,5 +84,5 @@ systems return the same blank for both.
 
 ## Optional
 
-- [Demo site](https://pranava0x0.github.io/Commonwealth-MCP/): fourteen recorded calls with the full answer each returned
+- [Demo site](https://pranava0x0.github.io/Commonwealth-MCP/): one recorded call per tool, with the full answer each returned
 - [Run log](https://github.com/pranava0x0/Commonwealth-MCP/blob/main/docs/RUNLOG.md): what happened when

@@ -478,10 +478,24 @@
  "skills": [
   {
    "name": "parcel-zoning-screen",
-   "status": "planned (developer-product phase)",
+   "status": "shipped",
    "capabilities": [
     "parcel.lookup",
     "zoning.lookup"
+   ]
+  },
+  {
+   "name": "site-context-screen",
+   "status": "shipped",
+   "capabilities": [
+    "building.lookup"
+   ]
+  },
+  {
+   "name": "whose-government",
+   "status": "shipped",
+   "capabilities": [
+    "boundary.lookup"
    ]
   },
   {

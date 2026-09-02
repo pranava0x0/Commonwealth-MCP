@@ -118,3 +118,35 @@ async def test_bad_inputs_are_refused_by_name(cw_ctx, kwargs, fragment):
     with pytest.raises(InvalidQuery) as err:
         await find_buildings(cw_ctx, jurisdiction="Vienna", **kwargs)
     assert fragment in str(err.value)
+
+
+async def test_a_truncated_answer_keeps_the_records_it_retrieved(cw_ctx):
+    """0013's second acceptance case (GitHub issue #33). The request had
+    already been paid for and the records past the inline cap were thrown
+    away; they go to the result store now and the warning names the
+    handle."""
+    env = await find_buildings(cw_ctx, jurisdiction="Richmond City",
+                               lon=-77.4360, lat=37.5407,
+                               radius_meters=800.0)
+    block = env.data["results"][0]
+    uri = block["full_records_ref"]
+    assert len(block["records"]) == 25, "the inline cap still holds"
+
+    warning = next(w for w in env.warnings
+                   if w.code.value == "truncated_inline")
+    assert uri in warning.message, (
+        "a caller reading only the warning cannot find the rest")
+
+    stored = cw_ctx.results.get(uri)
+    assert stored.payload["record_count"] == block["record_count"]
+    assert len(stored.payload["records"]) == block["record_count"]
+    assert stored.origin_tool == "geo.find_buildings"
+    assert stored.origin_arguments["radius_meters"] == 800.0
+
+
+async def test_an_answer_inside_the_cap_mints_no_handle(cw_ctx):
+    env = await find_buildings(cw_ctx, jurisdiction="Vienna",
+                               lon=-77.26436153964, lat=38.90067620715)
+    assert env.resources == []
+    for block in env.data["results"]:
+        assert "full_records_ref" not in block

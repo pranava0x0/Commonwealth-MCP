@@ -92,6 +92,29 @@ both deliberately:
 Both records note what would revive the option that lost. Read that before
 re-arguing the case from scratch.
 
+## Reporting a security problem
+
+Not in an issue. [.github/SECURITY.md](.github/SECURITY.md) has the
+private channel and says what counts as a finding in a tool that reads
+public data and writes nothing.
+
+The short version: a way past the egress policy, source text that reaches
+a model as instruction rather than as data, or anything that makes the
+server write or authenticate. A government service being down is coverage,
+not a vulnerability, and the envelope already reports it.
+
+## Who reviews what
+
+[.github/GOVERNANCE.md](.github/GOVERNANCE.md) names the maintainer behind
+each area — the capability vocabulary, source and terms review, data
+classification, security response — and says how a source is retired or
+moved when a publisher changes it. `.github/CODEOWNERS` routes the review
+requests to the same people.
+
+If you are sending a source manifest, the checklist your reviewer works
+through is in that file, in the order they use it. Reading it first is
+the fastest way to get a manifest merged.
+
 ## Licensing and sign-off
 
 Three licenses apply, to three different kinds of thing:
@@ -126,6 +149,25 @@ If you are registering a government source, that sign-off covers the
 manifest you wrote. It does not and cannot cover the government data
 itself.
 
+## Where documentation lives
+
+The repository root holds `README.md` and `CONTRIBUTING.md`, and nothing
+else. Adding a third needs a reason none of these can hold.
+
+| What | Where |
+|---|---|
+| How it works and why, with one record per decision | `design/architecture.md` |
+| The contract for one feature | the other files in `design/` |
+| The evidence the design was made from | `research/README.md` |
+| What is next, and what is broken | GitHub issues |
+| The published website | `docs/` — not the documentation, despite the name |
+
+Two habits keep the docs from drifting from the code. A page that
+describes behaviour ships in the same pull request as the behaviour;
+"docs to follow" is the drift machine. And any claim that came from
+research carries its as-of date, so a reader can tell a fact from a fact
+that has expired.
+
 ## Before you open a pull request
 
 Two things go stale on their own and both are checked in CI, so it is
@@ -139,15 +181,26 @@ a follow-up.
 .venv/bin/python tools/build_site.py --fixtures
 ```
 
-Run it after anything that touches sources, tools, capabilities, or the
-jurisdiction table. Never hand-edit `docs/data/*.json`; the page embeds
-those files and a test compares the two copies byte for byte.
+Run it after anything that touches sources, tools, capabilities, skills,
+or the jurisdiction table. Never hand-edit `docs/data/*.json`; the page
+embeds those files and a test compares the two copies byte for byte.
 
 If you added a tool, add a `DEMO_CALLS` entry for it in
 `tools/build_site.py`. The page walks one recorded call per tool and a
 test derives that list from the tool registry, so a tool with no demo
-fails the build. Pick a call that shows what the tool gets right, not
-that it runs.
+fails the build. Choose a call that demonstrates what the tool gets
+right rather than one that only proves it runs.
+
+**Then read the page's own sentences.** This is the part no test covers,
+and every drift found so far has been here. The counts are derived and
+cannot go stale; the hand-written prose around them can, and has. The
+page once said "the four questions it can answer today" over a
+fourteen-tool server, and called a skill planned while it sat on disk.
+Anything that states a figure should be computed from the embedded data
+rather than typed.
+
+Check it in a browser before pushing, not only in tests: zero console
+errors, and no horizontal overflow at 375px.
 
 **Run the writing checker**, every time prose changes rather than once at
 the end:
@@ -160,7 +213,11 @@ python3 tools/check_writing.py --issues # open GitHub issues
 
 Prose here means everything with sentences in it: Markdown, code comments
 and docstrings, tool descriptions and error strings, commit messages, PR
-bodies, and issue bodies.
+bodies, and issue bodies. The checker reads more than the Markdown tree
+because copy escaped through every gap it did not — the site's HTML, the
+JavaScript that builds about half of its visible copy, the decoder text
+authored as Python dict literals, `docs/llms.txt`, the skills, and open
+issues. Pipe anything else through `--stdin`.
 
 ## Writing
 

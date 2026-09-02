@@ -402,14 +402,38 @@ async def _sample_boundaries(adapter, m, params, ctx) -> dict:
                       "names": [r.canonical.get("full_name")
                                 for r in q.records]}
 
+    async def full_geometry(layer: str, where: dict[str, str],
+                            label: str) -> None:
+        """The same polygon with no generalization applied.
+
+        `find_boundaries` at detail='full' stores this in the result store
+        and hands back a handle, so the un-generalized rings have to
+        replay too (decision 0013; GitHub issue #33). It is a second
+        request against the same layer, which is why the tool only makes
+        it when a caller asks for full detail.
+        """
+        q = await adapter.query(m, layer, where_equals=where,
+                                return_geometry=True)
+        rings = [(r.geometry or {}).get("rings") or [] for r in q.records]
+        out[label] = {
+            "where": where, "record_count": len(q.records),
+            "vertex_counts": [sum(len(ring) for ring in shape)
+                              for shape in rings]}
+
     state = ctx.jurisdictions.get("va")
     state_fips = state.fips if state else "51"
     await boundary("localities", {"fips": "51059"}, "fairfax_county")
+    await full_geometry("localities", {"fips": "51059"},
+                        "fairfax_county_ungeneralized")
     await boundary("localities", {"fips": "51600"}, "fairfax_city")
     # The publisher ships Prince George as two polygons under one FIPS.
     await boundary("localities", {"fips": "51149"}, "prince_george_split")
     await boundary("towns", {"place_fips": f"{state_fips}81072"}, "vienna_town")
     await boundary("localities", {"fips": "51999"}, "no_such_fips")
+    # Loudoun County, the government behind the Sterling walk. It has no
+    # locality source of its own, and the example exists to show what
+    # that looks like from a caller's side.
+    await boundary("localities", {"fips": "51107"}, "loudoun_county")
 
     from ..domains.containment import BOUNDARY_PROXIMITY_METERS
 
@@ -427,6 +451,9 @@ async def _sample_boundaries(adapter, m, params, ctx) -> dict:
         out[label] = {"point": [lon, lat], "hits": hits, "within_buffer": nearby}
 
     # Fairfax City centre: the canonical trap. Must return the city alone.
+    await at_point(*LOUDOUN_POINT, "point_sterling_loudoun")
+    await at_point(*LOUDOUN_POINT_SECOND,
+                   "point_sterling_loudoun_second_candidate")
     await at_point(-77.3064, 38.8462, "point_fairfax_city")
     # Vienna centre: town AND its parent county, the layered-authority case.
     await at_point(-77.2653, 38.9012, "point_vienna_town")
@@ -476,6 +503,27 @@ async def _sample_boundaries(adapter, m, params, ctx) -> dict:
     return out
 
 
+# One point in Sterling, in Loudoun County, recorded against every
+# point-queried source so the whole walk for a single real place — the
+# government, the parcel, the zoning gap, the address, the buildings, the
+# roads, the landmarks, the monitoring stations — replays offline. Loudoun is the useful case precisely because it is populous,
+# ordinary, and has no locality source of its own: seven tools answer it
+# from statewide layers, zoning is a registry gap, and landmarks is a
+# genuine empty. Three different kinds of answer in one query.
+LOUDOUN_POINT = (-77.408014727372, 39.025534437083)
+
+# The locator returns this address twice at full confidence, once from the
+# address-point layer and once from the road centerline, a few metres
+# apart. `geo.resolve_location` places every confident candidate, so both
+# have to be recorded or the walk stops at the second one.
+LOUDOUN_POINT_SECOND = (-77.408447534508, 39.02597678793)
+
+# Loudoun County. Several tools scope a point query to the resolved
+# jurisdiction's FIPS, so a recording made without it does not match the
+# request the tool sends.
+LOUDOUN_FIPS = "51107"
+
+
 async def _sample_addresses(adapter, m, params, ctx) -> dict:
     """Recording plan for the address-point layer. Records the postal-city
     trap (a Fairfax County address whose mailing city is an independent
@@ -520,6 +568,16 @@ async def _sample_addresses(adapter, m, params, ctx) -> dict:
                       "localities": [(r.canonical.get("fips"),
                                       r.canonical.get("locality"))
                                      for r in q.records]}
+
+    # The Sterling walk (see LOUDOUN_POINT), with the radius and the
+    # jurisdiction scoping geo.find_address itself uses.
+    from ..domains.geo import ADDRESS_POINT_RADIUS_M
+    sterling = await adapter.query(
+        m, "addresses", geometry_point=LOUDOUN_POINT,
+        distance_meters=ADDRESS_POINT_RADIUS_M,
+        where_equals={"fips": LOUDOUN_FIPS})
+    out["sterling_loudoun"] = {"point": list(LOUDOUN_POINT),
+                               "record_count": len(sterling.records)}
     return out
 
 
@@ -641,6 +699,15 @@ async def _sample_environmental(adapter, m, params) -> dict:
             "point": list(point), "record_count": len(q.records),
             "stations": [r.canonical.get("station_id")
                          for r in q.records[:5]]}
+
+    # The Sterling walk (see LOUDOUN_POINT), at the one-mile radius
+    # geo.find_environmental_sites defaults to.
+    from ..domains.geo import ENVIRONMENTAL_RADIUS_M
+    sterling = await adapter.query(m, "stations",
+                                   geometry_point=LOUDOUN_POINT,
+                                   distance_meters=ENVIRONMENTAL_RADIUS_M)
+    out["sterling_loudoun"] = {"point": list(LOUDOUN_POINT),
+                               "record_count": len(sterling.records)}
     return out
 
 
@@ -692,6 +759,31 @@ async def _sample_roads(adapter, m, params, ctx) -> dict:
         where_any_of=_jurisdiction_filter(ctx, m, layer_key,
                                           ["va:fairfax-county", "va"]))
     out["no_match"] = {"record_count": len(miss.records)}
+    # The Sterling walk (see LOUDOUN_POINT), on every layer this source
+    # declares, because the two road sources answer from different ones.
+    for layer in sorted(params.layers):
+        from ..domains.geo import ROAD_RADIUS_M
+        # Each road source scopes a point query its own way: VGIN's
+        # centerlines carry FIPS on each side of the segment, so "in this
+        # locality" is a disjunction, and VDOT keys on its own
+        # jurisdiction names. The scoping comes from the manifest's
+        # declared mode rather than from a guess here.
+        from ..domains.geo import _jurisdiction_scope
+        groups = _jurisdiction_scope(ctx, m, layer,
+                                     ["va:loudoun-county", "va"]).groups
+        # Scoped and unscoped both, because the two road sources differ:
+        # a layer whose scope mode cannot be satisfied from the stack runs
+        # unscoped and the tool says which sources it could not narrow.
+        near_sterling = await adapter.query(m, layer,
+                                            geometry_point=LOUDOUN_POINT,
+                                            distance_meters=ROAD_RADIUS_M,
+                                            where_any_of=groups)
+        await adapter.query(m, layer, geometry_point=LOUDOUN_POINT,
+                            distance_meters=ROAD_RADIUS_M)
+        out[f"sterling_loudoun:{layer}"] = {
+            "point": list(LOUDOUN_POINT),
+            "record_count": len(near_sterling.records)}
+
     return out
 
 
@@ -731,8 +823,15 @@ async def _sample_buildings(adapter, m, params, ctx) -> dict:
             parcel_m, arcgis_mod.ArcGISParams.model_validate(
                 parcel_m.adapter.model_dump(exclude={"type"})).service_url))),
         cache=arcgis_mod.TTLCache())
-    sample = await parcel_adapter.query(parcel_m, "parcels", sample_rows=1,
-                                        return_geometry=True)
+    # The PIN the parcel source declares, not whatever its layer returns
+    # first. Two fixtures have to agree on this polygon — this one and
+    # Richmond's own — and a re-record that picks a different parcel
+    # silently desynchronises them.
+    parcel_pin = parcel_m.health.expect.get("sample_pin")
+    sample = await parcel_adapter.query(
+        parcel_m, "parcels", return_geometry=True,
+        **({"where_equals": {"pin": parcel_pin}} if parcel_pin
+           else {"sample_rows": 1}))
     if sample.records:
         pin = sample.records[0].canonical.get("pin")
         geometry = dict(sample.records[0].geometry or {})
@@ -741,6 +840,16 @@ async def _sample_buildings(adapter, m, params, ctx) -> dict:
                                         intersect_geometry=geometry)
         out["on_parcel"] = {"pin": pin,
                             "record_count": len(on_parcel.records)}
+
+    # The Sterling walk (see LOUDOUN_POINT), at geo.find_buildings' own
+    # default radius.
+    from ..domains.geo import BUILDING_RADIUS_M
+    sterling = await adapter.query(m, "buildings",
+                                   geometry_point=LOUDOUN_POINT,
+                                   distance_meters=BUILDING_RADIUS_M,
+                                   where_equals={"fips": LOUDOUN_FIPS})
+    out["sterling_loudoun"] = {"point": list(LOUDOUN_POINT),
+                               "record_count": len(sterling.records)}
     return out
 
 
@@ -777,6 +886,17 @@ async def _sample_landmarks(adapter, m, params, ctx) -> dict:
         where_equals={"fips": "51059", "place_type": "Public Library Points"})
     out["by_place_type"] = {"place_type": "Public Library Points",
                             "record_count": len(by_type.records)}
+
+    # The Sterling walk (see LOUDOUN_POINT). Records an empty answer from
+    # a covered layer, which is a different fact from a registry gap and
+    # has to replay as faithfully as a hit.
+    from ..domains.geo import LANDMARK_RADIUS_M
+    sterling = await adapter.query(m, "landmarks",
+                                   geometry_point=LOUDOUN_POINT,
+                                   distance_meters=LANDMARK_RADIUS_M,
+                                   where_equals={"fips": LOUDOUN_FIPS})
+    out["sterling_loudoun"] = {"point": list(LOUDOUN_POINT),
+                               "record_count": len(sterling.records)}
     return out
 
 
@@ -811,6 +931,11 @@ def _sample_geocoder(m, ctx) -> int:
                 # places in Vienna. The case where taking the locator's
                 # first result picks a government the caller never chose.
                 ("ambiguous_across_governments", "Cntr Steet Viena VA"),
+                # Sterling is a Census Designated Place: a postal city
+                # with no government of its own. The address resolves to
+                # Loudoun County, and nothing named Sterling governs it.
+                ("cdp_postal_city",
+                 "21641 Ridgetop Cir, Sterling, VA 20166"),
                 ("no_match", "zzzz nowhere at all qqq")):
             result = await adapter.geocode(m, text)
             out[label] = {
@@ -890,11 +1015,34 @@ def cmd_sources_sample(args: argparse.Namespace) -> int:
         out: dict[str, Any] = {}
         for layer in sorted(params.layers):
             out[f"health:{layer}"] = await adapter.health(m, layer)
-        sample = await adapter.query(m, "parcels", sample_rows=2,
-                                     return_geometry=True)
-        if not sample.records:
-            raise CommonwealthError("sample query returned zero parcels — "
-                                    "cannot record a useful fixture")
+        # A declared PIN when the manifest names one, and otherwise
+        # whatever the layer hands back first.
+        #
+        # The declared path exists because the other one is not stable.
+        # Re-recording Richmond on 2026-09-02 changed `sample_pin` from
+        # C0010126019 to C0040423004 purely because the layer's row order
+        # moved, and fifteen places in the tests, examples, and site
+        # generator name the PIN. A fixture refresh must not be able to
+        # rename the thing every test is written against, and #31 makes
+        # refreshes routine.
+        declared = m.health.expect.get("sample_pin")
+        if declared:
+            sample = await adapter.query(m, "parcels",
+                                         where_equals={"pin": declared},
+                                         return_geometry=True)
+            if not sample.records:
+                raise CommonwealthError(
+                    f"the manifest declares sample_pin {declared!r} and the "
+                    "layer has no such parcel. Either the publisher "
+                    "retired it or the field mapping moved; pick another "
+                    "and say so in the manifest.")
+        else:
+            sample = await adapter.query(m, "parcels", sample_rows=2,
+                                         return_geometry=True)
+            if not sample.records:
+                raise CommonwealthError(
+                    "sample query returned zero parcels — cannot record a "
+                    "useful fixture")
         pin = sample.records[0].canonical.get("pin")
         out["sample_pin"] = pin
         await adapter.query(m, "parcels", where_equals={"pin": str(pin)})
@@ -910,6 +1058,18 @@ def cmd_sources_sample(args: argparse.Namespace) -> int:
         await adapter.query(m, "parcels",
                             where_equals={"pin": "NO SUCH PIN"},
                             return_geometry=True)
+        # The Sterling walk (see LOUDOUN_POINT). Only the statewide layer
+        # reaches Loudoun; a locality source scoped elsewhere returns
+        # nothing here, and the empty response has to replay as faithfully
+        # as the hit does.
+        # Both geometry variants: find_parcel asks without the polygon and
+        # find_zoning and find_buildings ask with it.
+        for want_geometry in (False, True):
+            sterling = await adapter.query(m, "parcels",
+                                           geometry_point=LOUDOUN_POINT,
+                                           return_geometry=want_geometry)
+        out["sterling_loudoun"] = {"point": list(LOUDOUN_POINT),
+                                   "record_count": len(sterling.records)}
         pq = await adapter.query(m, "parcels", where_equals={"pin": str(pin)},
                                  return_geometry=True)
         if "zoning" not in params.layers:

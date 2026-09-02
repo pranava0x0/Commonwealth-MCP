@@ -1,0 +1,14 @@
+# A town address. Both the town and its county govern that ground, and an
+# answer naming one of them is half an answer.
+id: skill-wg-town-stack
+tier: 3
+skill: whose-government
+question: "Who governs 127 Center St S, Vienna, VA 22180?"
+toolset: default
+fixtures: [va-vgin-composite-locator, va-vgin-admin-boundaries]
+expected:
+  jurisdiction: va:vienna-town
+  layered: [va:fairfax-county, va]
+  must_say: ["Vienna", "Fairfax County"]
+score: [{kind: retrieval_correctness}, {kind: coverage_honesty}]
+traps: []

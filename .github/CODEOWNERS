@@ -1,0 +1,26 @@
+# Review routing. GOVERNANCE.md holds the roles these lines implement, and
+# the two are meant to name the same people; if they disagree, the one
+# edited last is wrong.
+#
+# Paths are matched last-match-wins, so the specific rules sit below the
+# general one.
+
+*                       @pranava0x0
+
+# Source manifests are reviewed against the publisher's terms rather than
+# read as code (GOVERNANCE.md, "Reviewing a source manifest").
+/sources/               @pranava0x0
+
+# The capability vocabulary is what tools bind to, so a change here can
+# break a tool without touching the tool.
+/sources/capabilities.yaml   @pranava0x0
+
+# Egress, classification, and the reporting channel.
+/src/commonwealth/core/egress.py            @pranava0x0
+/design/security-and-data-handling.md       @pranava0x0
+/.github/SECURITY.md                        @pranava0x0
+
+# Decision records: changing one is a governance act, not an edit.
+/design/architecture.md @pranava0x0
+/.github/GOVERNANCE.md  @pranava0x0
+/.github/CODEOWNERS     @pranava0x0

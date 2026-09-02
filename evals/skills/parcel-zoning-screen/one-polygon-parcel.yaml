@@ -1,0 +1,24 @@
+# The clean baseline: one PIN, one polygon, one district, one source.
+id: skill-pzs-one-polygon
+tier: 3
+skill: parcel-zoning-screen
+question: "What is the zoning for parcel 0102 14  0231 in Fairfax County?"
+toolset: default
+fixtures: [va-fairfax-parcels-zoning, va-vgin-admin-boundaries]
+expected:
+  jurisdiction: va:fairfax-county
+  districts: ["R-3"]
+  coverage:
+    registry: covered
+    result: hit
+  must_say:
+    # The screening caveat is part of the output contract, not a footnote.
+    - screening
+    - ordinance
+score:
+  - kind: tool_choice
+  - kind: argument_match
+  - kind: provenance_present
+  - kind: coverage_honesty
+  - kind: restraint
+traps: []

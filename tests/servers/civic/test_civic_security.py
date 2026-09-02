@@ -6,6 +6,7 @@ import pytest
 
 from commonwealth.adapters.arcgis import ArcGISAdapter
 from commonwealth.adapters.base import HttpFetcher, egress_policy_for
+from commonwealth.core.egress import DENY_NETWORK_ENV
 from commonwealth.core.errors import EgressRefused
 from commonwealth.core.registry import SourceManifest, SourceRegistry
 from commonwealth.domains.civic import get_code_section
@@ -51,7 +52,14 @@ def _real_manifest() -> SourceManifest:
     return SourceManifest.model_validate(yaml.safe_load(path.read_text()))
 
 
-async def test_fetcher_refuses_off_registry_host():
+async def test_fetcher_refuses_off_registry_host(monkeypatch):
+    """The host allowlist refuses before any I/O.
+
+    The deny switch is cleared because this test is about the host
+    allowlist, and a suite run that exported the switch would otherwise
+    see the request refused for the other reason (#39).
+    """
+    monkeypatch.delenv(DENY_NETWORK_ENV, raising=False)
     m = _real_manifest()
     policy = egress_policy_for(m, m.adapter.model_dump()["service_url"])
     fetcher = HttpFetcher(policy=policy)

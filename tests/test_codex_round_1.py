@@ -5,6 +5,7 @@ the bug rather than by the specific value that exposed it — three of the
 four were silent in a green suite.
 """
 import ast
+import os
 import subprocess
 import sys
 from pathlib import Path
@@ -12,6 +13,7 @@ from pathlib import Path
 import pytest
 import yaml
 
+from commonwealth.core.egress import DENY_NETWORK_ENV
 from commonwealth.domains.geo import find_address, find_buildings
 from commonwealth.runtime import PROJECT_ROOT, SOURCES_DIR
 
@@ -151,11 +153,27 @@ def test_the_geocoder_sample_command_calls_its_own_coroutine():
 @pytest.mark.parametrize("source_id", ["va-vgin-composite-locator"])
 def test_every_documented_sample_command_at_least_starts(source_id):
     """The command is documented in CONTRIBUTING and design/source-registry
-    § 4, and this one raised NameError before reaching the network. The
-    run is expected to fail without a network; a NameError is not."""
+    § 4, and this one raised NameError before reaching the network.
+
+    The subprocess sets the egress deny switch, so the run stops at the
+    policy boundary and reaching that refusal is the proof that argument
+    parsing and adapter setup got that far. The test used to assume the
+    absence of a network instead, which meant that on any connected
+    machine it geocoded against the live VGIN service and rewrote the
+    recorded fixture (#39)."""
+    fixture = (PROJECT_ROOT / "tests" / "fixtures" / "sources" / source_id /
+               "recorded.json")
+    before = fixture.read_bytes()
     proc = subprocess.run(
         [sys.executable, "-m", "commonwealth.cli", "sources", "sample",
          source_id],
-        capture_output=True, text=True, cwd=PROJECT_ROOT, timeout=180)
+        capture_output=True, text=True, cwd=PROJECT_ROOT, timeout=180,
+        env={**os.environ, DENY_NETWORK_ENV: "1"})
     assert "NameError" not in proc.stderr, proc.stderr[-600:]
     assert "AttributeError" not in proc.stderr, proc.stderr[-600:]
+    assert "EgressRefused" in proc.stderr, (
+        "the run did not stop at the egress boundary, so it either failed "
+        f"earlier or reached the network: {proc.stderr[-600:]}")
+    assert fixture.read_bytes() == before, (
+        f"the sample command rewrote {fixture.relative_to(PROJECT_ROOT)}; "
+        "a test run must leave the recorded fixtures alone")

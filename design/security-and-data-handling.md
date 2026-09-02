@@ -29,9 +29,10 @@ The enforceable definition of "no arbitrary outbound." Full rule list and ration
 
 1. Outbound requests originate only from adapter code paths parameterized by an active registered manifest. There is no generic fetch anywhere in the tool surface.
 2. HTTPS by default; `insecure_transport: true` is a reviewed manifest flag that surfaces as a provenance warning.
-3. Host allowlist per manifest; IP literals refused; private/loopback/link-local/metadata ranges refused with DNS re-checked at connect; redirects capped at 3, same-host-set only, credentials stripped cross-host.
+3. Host allowlist per manifest; IP literals refused; private/loopback/link-local/metadata ranges refused. The connection is opened to an address the check approved rather than to a freshly resolved one, so a DNS answer that changes between the check and the connection cannot move it — built 2026-09-01 (#16), where this line had described it as a re-check at connect time that no code performed. The hostname still travels in the Host header and the TLS handshake, so the certificate is checked against the name. Redirects capped at 3, same-host-set only, credentials stripped cross-host.
 4. Response-size and decompression caps; per-host concurrency and retry budgets from the manifest.
 5. Every rule ships with a known-bad fixture that must be refused (design/testing-and-demos.md § 1 security tier) — an egress rule without its refusal test is prose, not policy.
+6. Setting `COMMONWEALTH_DENY_NETWORK` refuses every host before the scheme, the allowlist and DNS are looked at, through the same typed `EgressRefused` as any other rule. Empty and `0` mean off. Added 2026-09-01 (#39): a test that assumed no network was available recorded a fresh fixture against a live geocoder on every connected machine, so "the tests run offline" now has a switch that enforces it rather than a habit that describes it. A test run and a CI job both export it; so can an operator running the CLI where it must not reach a government service.
 
 ## 3. Data classification
 
@@ -52,6 +53,8 @@ Display rule: tools serving `sensitive_public` results add a `warnings` entry na
 ## 5. Governance prerequisites for external contributions
 
 Before the first external source-manifest PR is accepted (per review § 3.4): `GOVERNANCE.md` (who maintains the capability vocabulary, who reviews sources/terms/classifications, who owns security response, how a source is deprecated or transferred), `CONTRIBUTING.md`, a project `SECURITY.md` superseding the house template for reporters, CODEOWNERS routing `sources/**` to source reviewers, and DCO sign-off on contributions (architecture.md decision 0011). These are files with named humans in them, so they are written at implementation time, not drafted here.
+
+**Written 2026-09-01 (#35).** `.github/GOVERNANCE.md`, `.github/SECURITY.md`, and `.github/CODEOWNERS` exist, and CONTRIBUTING.md carries the security section and the DCO note. They sit under `.github/` so GitHub surfaces the security policy and honours the review routing while the repository root stays at README and CONTRIBUTING. All five prerequisites are now met; the reporting channel needs private vulnerability reporting turned on in the repository settings, which is a maintainer action rather than a file.
 
 ## 6. What this spec deliberately does not cover
 

@@ -1,0 +1,229 @@
+{
+ "readings": [
+  {
+   "observed_at": "2026-08-30T03:38:42Z",
+   "source_id": "va-charles-city-county-parcels",
+   "layer": "parcels",
+   "feature_count": 6514,
+   "min_expected": 5000,
+   "note": "backfilled from the committed fixture's own recording, 2026-09-02"
+  },
+  {
+   "observed_at": "2026-09-02T05:06:53Z",
+   "source_id": "va-charles-city-county-parcels",
+   "layer": "parcels",
+   "feature_count": 6514,
+   "min_expected": 5000
+  },
+  {
+   "observed_at": "2026-08-30T03:30:47Z",
+   "source_id": "va-deq-water-quality-stations",
+   "layer": "stations",
+   "feature_count": 16298,
+   "min_expected": 12000,
+   "note": "backfilled from the committed fixture's own recording, 2026-09-02"
+  },
+  {
+   "observed_at": "2026-09-02T05:06:53Z",
+   "source_id": "va-deq-water-quality-stations",
+   "layer": "stations",
+   "feature_count": 16300,
+   "min_expected": 12000
+  },
+  {
+   "observed_at": "2026-08-30T03:38:40Z",
+   "source_id": "va-fairfax-parcels-zoning",
+   "layer": "parcels",
+   "feature_count": 369392,
+   "min_expected": 300000,
+   "note": "backfilled from the committed fixture's own recording, 2026-09-02"
+  },
+  {
+   "observed_at": "2026-09-02T05:06:53Z",
+   "source_id": "va-fairfax-parcels-zoning",
+   "layer": "parcels",
+   "feature_count": 369394,
+   "min_expected": 300000
+  },
+  {
+   "observed_at": "2026-08-30T03:38:40Z",
+   "source_id": "va-fairfax-parcels-zoning",
+   "layer": "zoning",
+   "feature_count": 6440,
+   "min_expected": 5000,
+   "note": "backfilled from the committed fixture's own recording, 2026-09-02"
+  },
+  {
+   "observed_at": "2026-09-02T05:06:53Z",
+   "source_id": "va-fairfax-parcels-zoning",
+   "layer": "zoning",
+   "feature_count": 6440,
+   "min_expected": 5000
+  },
+  {
+   "observed_at": "2026-08-30T03:38:06Z",
+   "source_id": "va-richmond-city-parcels-zoning",
+   "layer": "parcels",
+   "feature_count": 76879,
+   "min_expected": 60000,
+   "note": "backfilled from the committed fixture's own recording, 2026-09-02"
+  },
+  {
+   "observed_at": "2026-09-02T05:06:53Z",
+   "source_id": "va-richmond-city-parcels-zoning",
+   "layer": "parcels",
+   "feature_count": 76908,
+   "min_expected": 60000
+  },
+  {
+   "observed_at": "2026-08-30T03:38:06Z",
+   "source_id": "va-richmond-city-parcels-zoning",
+   "layer": "zoning",
+   "feature_count": 679,
+   "min_expected": 500,
+   "note": "backfilled from the committed fixture's own recording, 2026-09-02"
+  },
+  {
+   "observed_at": "2026-09-02T05:06:53Z",
+   "source_id": "va-richmond-city-parcels-zoning",
+   "layer": "zoning",
+   "feature_count": 679,
+   "min_expected": 500
+  },
+  {
+   "observed_at": "2026-08-30T15:01:48Z",
+   "source_id": "va-vdot-lrs-routes",
+   "layer": "routes",
+   "feature_count": 196896,
+   "min_expected": 150000,
+   "note": "backfilled from the committed fixture's own recording, 2026-09-02"
+  },
+  {
+   "observed_at": "2026-09-02T05:06:53Z",
+   "source_id": "va-vdot-lrs-routes",
+   "layer": "routes",
+   "feature_count": 196896,
+   "min_expected": 150000
+  },
+  {
+   "observed_at": "2026-08-30T13:33:25Z",
+   "source_id": "va-vgin-address-points",
+   "layer": "addresses",
+   "feature_count": 3867706,
+   "min_expected": 3000000,
+   "note": "backfilled from the committed fixture's own recording, 2026-09-02"
+  },
+  {
+   "observed_at": "2026-09-02T05:06:53Z",
+   "source_id": "va-vgin-address-points",
+   "layer": "addresses",
+   "feature_count": 3867706,
+   "min_expected": 3000000
+  },
+  {
+   "observed_at": "2026-09-02T04:04:59Z",
+   "source_id": "va-vgin-admin-boundaries",
+   "layer": "localities",
+   "feature_count": 134,
+   "min_expected": 130,
+   "note": "backfilled from the committed fixture's own recording, 2026-09-02"
+  },
+  {
+   "observed_at": "2026-09-02T05:06:53Z",
+   "source_id": "va-vgin-admin-boundaries",
+   "layer": "localities",
+   "feature_count": 134,
+   "min_expected": 130
+  },
+  {
+   "observed_at": "2026-09-02T04:04:59Z",
+   "source_id": "va-vgin-admin-boundaries",
+   "layer": "towns",
+   "feature_count": 191,
+   "min_expected": 150,
+   "note": "backfilled from the committed fixture's own recording, 2026-09-02"
+  },
+  {
+   "observed_at": "2026-09-02T05:06:53Z",
+   "source_id": "va-vgin-admin-boundaries",
+   "layer": "towns",
+   "feature_count": 191,
+   "min_expected": 150
+  },
+  {
+   "observed_at": "2026-08-30T15:01:58Z",
+   "source_id": "va-vgin-building-footprints",
+   "layer": "buildings",
+   "feature_count": 4471131,
+   "min_expected": 3500000,
+   "note": "backfilled from the committed fixture's own recording, 2026-09-02"
+  },
+  {
+   "observed_at": "2026-09-02T05:06:53Z",
+   "source_id": "va-vgin-building-footprints",
+   "layer": "buildings",
+   "feature_count": 4471131,
+   "min_expected": 3500000
+  },
+  {
+   "observed_at": "2026-08-30T03:11:10Z",
+   "source_id": "va-vgin-landmarks",
+   "layer": "landmarks",
+   "feature_count": 9437,
+   "min_expected": 7000,
+   "note": "backfilled from the committed fixture's own recording, 2026-09-02"
+  },
+  {
+   "observed_at": "2026-09-02T05:06:53Z",
+   "source_id": "va-vgin-landmarks",
+   "layer": "landmarks",
+   "feature_count": 9437,
+   "min_expected": 7000
+  },
+  {
+   "observed_at": "2026-08-30T15:01:45Z",
+   "source_id": "va-vgin-road-centerlines",
+   "layer": "centerlines",
+   "feature_count": 659179,
+   "min_expected": 500000,
+   "note": "backfilled from the committed fixture's own recording, 2026-09-02"
+  },
+  {
+   "observed_at": "2026-09-02T05:06:53Z",
+   "source_id": "va-vgin-road-centerlines",
+   "layer": "centerlines",
+   "feature_count": 659179,
+   "min_expected": 500000
+  },
+  {
+   "observed_at": "2026-08-30T15:01:45Z",
+   "source_id": "va-vgin-road-centerlines",
+   "layer": "primaries",
+   "feature_count": 74242,
+   "min_expected": 60000,
+   "note": "backfilled from the committed fixture's own recording, 2026-09-02"
+  },
+  {
+   "observed_at": "2026-09-02T05:06:53Z",
+   "source_id": "va-vgin-road-centerlines",
+   "layer": "primaries",
+   "feature_count": 74242,
+   "min_expected": 60000
+  },
+  {
+   "observed_at": "2026-08-30T03:39:11Z",
+   "source_id": "va-vgin-statewide-parcels",
+   "layer": "parcels",
+   "feature_count": 4170691,
+   "min_expected": 3000000,
+   "note": "backfilled from the committed fixture's own recording, 2026-09-02"
+  },
+  {
+   "observed_at": "2026-09-02T05:06:53Z",
+   "source_id": "va-vgin-statewide-parcels",
+   "layer": "parcels",
+   "feature_count": 4170691,
+   "min_expected": 3000000
+  }
+ ]
+}

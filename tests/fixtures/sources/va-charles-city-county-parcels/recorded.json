@@ -1,6 +1,6 @@
 {
  "source_id": "va-charles-city-county-parcels",
- "recorded_at": "2026-08-30T03:38:42Z",
+ "recorded_at": "2026-09-02T05:29:42Z",
  "rights": {
   "publisher": "Charles City County government (GIS)",
   "terms_url": "https://dataportal-charlescityvagis.hub.arcgis.com/datasets/967223223e134e7b8b4411e9226d2872_0/about",
@@ -10,12 +10,19 @@
   "health:parcels": {
    "layer": "parcels",
    "feature_count": 6514,
-   "min_expected": 5000,
+   "min_expected": 5800,
    "healthy": true
   },
   "sample_pin": "7-4-B-2",
   "no_match_pin": "NO SUCH PIN",
-  "no_match_count": 0
+  "no_match_count": 0,
+  "sterling_loudoun": {
+   "point": [
+    -77.408014727372,
+    39.025534437083
+   ],
+   "record_count": 0
+  }
  },
  "exchanges": [
   {
@@ -34,9 +41,9 @@
    "params": {
     "f": "json",
     "outFields": "MAP_PIN,OBJECTID",
-    "resultRecordCount": "2",
+    "resultRecordCount": "50",
     "returnGeometry": "true",
-    "where": "1=1",
+    "where": "MAP_PIN = '7-4-B-2'",
     "outSR": "4326"
    },
    "response": {
@@ -76,7 +83,6 @@
       "required": true
      }
     ],
-    "exceededTransferLimit": true,
     "features": [
      {
       "attributes": {
@@ -129,70 +135,6 @@
         ]
        ]
       }
-     },
-     {
-      "attributes": {
-       "MAP_PIN": "7-4-A-8",
-       "OBJECTID": 2
-      },
-      "geometry": {
-       "rings": [
-        [
-         [
-          -77.177136199397,
-          37.4367624566206
-         ],
-         [
-          -77.1771497513814,
-          37.4367355351163
-         ],
-         [
-          -77.1776047354964,
-          37.4358317000659
-         ],
-         [
-          -77.1779289437707,
-          37.4351876396836
-         ],
-         [
-          -77.1780129919453,
-          37.4352149904376
-         ],
-         [
-          -77.1780611084068,
-          37.4352306480693
-         ],
-         [
-          -77.1784097688231,
-          37.4353441067754
-         ],
-         [
-          -77.1783946250241,
-          37.4353700430026
-         ],
-         [
-          -77.178296796693,
-          37.4355375986172
-         ],
-         [
-          -77.1775100764217,
-          37.4368850244873
-         ],
-         [
-          -77.1774961175005,
-          37.4369089316032
-         ],
-         [
-          -77.1772669689496,
-          37.4368143951317
-         ],
-         [
-          -77.177136199397,
-          37.4367624566206
-         ]
-        ]
-       ]
-      }
      }
     ]
    }
@@ -217,9 +159,9 @@
     "copyrightText": "",
     "defaultVisibility": true,
     "editingInfo": {
-     "lastEditDate": 1787586367697,
-     "schemaLastEditDate": 1787586367697,
-     "dataLastEditDate": 1787586367697
+     "lastEditDate": 1788283320782,
+     "schemaLastEditDate": 1788283320782,
+     "dataLastEditDate": 1788283320782
     },
     "relationships": [],
     "isDataVersioned": false,
@@ -747,8 +689,33 @@
     "f": "json",
     "outFields": "MAP_PIN,OBJECTID",
     "resultRecordCount": "50",
+    "returnGeometry": "false",
+    "geometry": "{\"x\": -77.408014727372, \"y\": 39.025534437083, \"spatialReference\": {\"wkid\": 4326}}",
+    "geometryType": "esriGeometryPoint",
+    "inSR": "4326",
+    "spatialRel": "esriSpatialRelIntersects"
+   },
+   "response": {
+    "objectIdFieldName": "OBJECTID",
+    "uniqueIdField": {
+     "name": "OBJECTID",
+     "isSystemMaintained": true
+    },
+    "globalIdFieldName": "",
+    "features": []
+   }
+  },
+  {
+   "url": "https://services5.arcgis.com/7ELQsoO4nWXrJNri/arcgis/rest/services/Parcels_with_Sales_Valuation_and_Reports_View/FeatureServer/0/query",
+   "params": {
+    "f": "json",
+    "outFields": "MAP_PIN,OBJECTID",
+    "resultRecordCount": "50",
     "returnGeometry": "true",
-    "where": "MAP_PIN = '7-4-B-2'",
+    "geometry": "{\"x\": -77.408014727372, \"y\": 39.025534437083, \"spatialReference\": {\"wkid\": 4326}}",
+    "geometryType": "esriGeometryPoint",
+    "inSR": "4326",
+    "spatialRel": "esriSpatialRelIntersects",
     "outSR": "4326"
    },
    "response": {
@@ -763,85 +730,7 @@
      "shapeLengthFieldName": "Shape__Length",
      "units": "esriMeters"
     },
-    "geometryType": "esriGeometryPolygon",
-    "spatialReference": {
-     "wkid": 4326,
-     "latestWkid": 4326
-    },
-    "fields": [
-     {
-      "name": "MAP_PIN",
-      "type": "esriFieldTypeString",
-      "alias": "MAP_PIN",
-      "sqlType": "sqlTypeOther",
-      "length": 50,
-      "domain": null,
-      "defaultValue": null
-     },
-     {
-      "name": "OBJECTID",
-      "type": "esriFieldTypeOID",
-      "alias": "OBJECTID",
-      "sqlType": "sqlTypeOther",
-      "domain": null,
-      "defaultValue": null,
-      "required": true
-     }
-    ],
-    "features": [
-     {
-      "attributes": {
-       "MAP_PIN": "7-4-B-2",
-       "OBJECTID": 1
-      },
-      "geometry": {
-       "rings": [
-        [
-         [
-          -77.175754541981,
-          37.4363216597252
-         ],
-         [
-          -77.1764855720946,
-          37.4347460923904
-         ],
-         [
-          -77.1768689919225,
-          37.4348571444344
-         ],
-         [
-          -77.1768779777703,
-          37.4348597465627
-         ],
-         [
-          -77.1769353271164,
-          37.4348763565276
-         ],
-         [
-          -77.1762682813055,
-          37.436266290664
-         ],
-         [
-          -77.1761813890647,
-          37.4364473475203
-         ],
-         [
-          -77.1761383480845,
-          37.4364345140493
-         ],
-         [
-          -77.1758566112586,
-          37.4363505101104
-         ],
-         [
-          -77.175754541981,
-          37.4363216597252
-         ]
-        ]
-       ]
-      }
-     }
-    ]
+    "features": []
    }
   }
  ]

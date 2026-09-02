@@ -107,6 +107,29 @@ def test_flags_honest_standing_in_for_a_precise_word(tmp_path):
     assert "vague-virtue-word" in out, out
 
 
+def test_flags_comprehensive_used_as_register(tmp_path):
+    """The word is still banned everywhere it is doing no work."""
+    target = tmp_path / "sample.md"
+    target.write_text("The registry offers comprehensive coverage of "
+                      "Virginia parcels.\n")
+    _, out = _run("", "--files", str(target))
+    assert "llm-register" in out, out
+
+
+@pytest.mark.parametrize("sentence", [
+    "The layer holds the locality's comprehensive plan designations.",
+    "A comprehensive-plan category is not a zoning district.",
+    "Two comprehensive plans disagree about the same parcel.",
+])
+def test_does_not_flag_virginias_comprehensive_plan(tmp_path, sentence):
+    """Code of Virginia § 15.2-2223 names the document every locality
+    adopts, and planning sources will keep saying it."""
+    target = tmp_path / "sample.md"
+    target.write_text(sentence + "\n")
+    _, out = _run("", "--files", str(target))
+    assert "llm-register" not in out, out
+
+
 def test_does_not_flag_coverage_honesty_the_named_concept(tmp_path):
     """'coverage honesty' names a test category in design/bench.md."""
     target = tmp_path / "sample.md"

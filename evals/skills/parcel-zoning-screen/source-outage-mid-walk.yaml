@@ -1,0 +1,32 @@
+# The parcel step answers and the zoning layer returns HTTP 503. A short
+# answer that reads as complete is the failure; the walk has to say which
+# source failed and what was therefore not read.
+id: skill-pzs-outage
+tier: 3
+skill: parcel-zoning-screen
+question: "What is the zoning for parcel 0102 14  0231 in Fairfax County?"
+toolset: default
+fixtures: [va-fairfax-parcels-zoning, va-vgin-admin-boundaries]
+inject:
+  # The resilience tier already drives this shape; the task form points at
+  # the same injection rather than recording a second copy of it.
+  layer: zoning
+  status: 503
+expected:
+  coverage:
+    # Fairfax has one zoning source, so its outage takes the whole step
+    # down: execution is `failed`, not `partial`. Partial is what a second
+    # source surviving looks like, and there is no second zoning source in
+    # any Virginia locality yet.
+    execution: failed
+    result: empty
+    registry: covered
+  must_say:
+    - "va-fairfax-parcels-zoning"
+  must_not_say:
+    # An outage is not an empty result, and the envelope keeps them apart.
+    - "no zoning district"
+score:
+  - kind: coverage_honesty
+  - kind: restraint
+traps: [outage]

@@ -12,8 +12,8 @@ import uuid
 from .envelope import (AccessPath, AuthorityLevel, Coverage, Envelope,
                        Evidence, ExecutionProvenance, JurisdictionGap,
                        NextAction, RawRecovery, RegistryCoverage,
-                       ResultCoverage, SourceEntry, SourceFailure,
-                       WarningCode, WarningNote)
+                       ResourceRef, ResultCoverage, SourceEntry,
+                       SourceFailure, WarningCode, WarningNote)
 
 
 class EnvelopeBuilder:
@@ -29,6 +29,13 @@ class EnvelopeBuilder:
         self._evidence: list[Evidence] = []
         self._warnings: list[WarningNote] = []
         self._next: list[NextAction] = []
+        self._resources: list[ResourceRef] = []
+
+    @property
+    def tool_name(self) -> str:
+        """The tool this envelope is for. Read by the result store, which
+        records it so an expired handle can say which call to re-run."""
+        return self._execution.tool
 
     def add_source(self, *, source_id: str, publisher: str, system: str,
                   dataset: str, jurisdiction: str,
@@ -76,6 +83,18 @@ class EnvelopeBuilder:
         self._warnings.append(WarningNote(code=code, message=message,
                                           source_id=source_id))
 
+    def add_resource(self, ref: ResourceRef) -> str:
+        """Attach a handle to a payload too large to return inline.
+
+        The envelope's `resources` field existed from the start and had no
+        way to be filled, so it was always empty (decision 0013; GitHub
+        issue #33). Callers build the ref through
+        `core.results.resource_ref()`, which carries the expiry into the
+        description.
+        """
+        self._resources.append(ref)
+        return ref.uri
+
     def next_action(self, finding: str, capability: str, reason: str) -> None:
         if len(self._next) >= 3:  # spec § 6: at most 3
             return
@@ -88,6 +107,7 @@ class EnvelopeBuilder:
         return Envelope(data=data, provenance=self._sources,
                         evidence=self._evidence, coverage=coverage,
                         warnings=self._warnings, next_actions=self._next,
+                        resources=self._resources,
                         requires_user_choice=requires_user_choice,
                         execution=self._execution)
 
@@ -108,16 +128,42 @@ def new_request_id() -> str:
     return uuid.uuid4().hex
 
 
+# The escalation hint a registry gap carries (design/provenance-envelope.md
+# § 10, and the trap #28's Tier-2 suite scores). It names a tool rather
+# than a capability, which is the one exception to § 6's rule: the registry
+# tools read the registry itself rather than a registered source, so
+# `registry.search_sources` has no capability id to name instead. Recorded
+# in § 6 with the same reasoning, 2026-09-01.
+REGISTRY_GAP_ACTION = "registry.search_sources"
+
+
 def selection_coverage(sources, capability: str, stack: list[str],
-                       selected: list) -> tuple[RegistryCoverage, list]:
+                       selected: list, builder=None
+                       ) -> tuple[RegistryCoverage, list]:
     """Shared across domains: the registry-coverage dimension and any
     jurisdiction gaps for a capability/jurisdiction-stack selection.
     `sources` is a SourceRegistry; `selected` is what it already returned
-    from `.select()` for the same (capability, stack)."""
+    from `.select()` for the same (capability, stack).
+
+    Pass `builder` and a total registry gap also emits its escalation
+    hint. It lands here rather than in each tool because every tool that
+    can report `registry: none` reaches this function to decide it, and a
+    hint added per tool is a hint some tool forgets.
+    """
     if selected:
         return RegistryCoverage.covered, []
     gaps = [gap(j, reason) for j, reason
            in sources.unavailable_for(capability, stack)]
     if gaps and all(g.reason == "no_registered_source" for g in gaps):
+        if builder is not None:
+            builder.next_action(
+                finding="registry_gap",
+                capability=REGISTRY_GAP_ACTION,
+                reason=(f"No source is registered for {capability} in "
+                        f"{', '.join(g.jurisdiction for g in gaps)}. The "
+                        "records may well exist; this project has no "
+                        "registered place to read them. Search the "
+                        "registry for what is covered, and treat the gap "
+                        "as unknown rather than as an absence."))
         return RegistryCoverage.none, gaps
     return RegistryCoverage.partial, gaps

@@ -1,0 +1,27 @@
+# GitHub issue #17's real case. Richmond publishes this PIN as two
+# polygons; the answer is the union across both, and saying so is the
+# difference between "the parcel is split" and "the sources disagree".
+id: skill-pzs-split-parcel
+tier: 3
+skill: parcel-zoning-screen
+question: "What is the zoning for parcel E0000720034 in Richmond City?"
+toolset: default
+fixtures: [va-richmond-city-parcels-zoning, va-vgin-admin-boundaries]
+expected:
+  jurisdiction: va:richmond-city
+  parcel_polygons_intersected: 2
+  coverage:
+    registry: covered
+    result: hit
+  must_say:
+    - split
+  must_not_say:
+    # Two districts from two polygons of one parcel is not a conflict
+    # between sources, and calling it one sends the caller to the wrong
+    # question.
+    - "sources disagree"
+score:
+  - kind: provenance_present
+  - kind: coverage_honesty
+  - kind: restraint
+traps: []

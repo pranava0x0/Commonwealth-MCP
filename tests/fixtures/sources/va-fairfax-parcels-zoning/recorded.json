@@ -1,6 +1,6 @@
 {
  "source_id": "va-fairfax-parcels-zoning",
- "recorded_at": "2026-08-30T03:38:40Z",
+ "recorded_at": "2026-09-02T05:29:35Z",
  "rights": {
   "publisher": "Fairfax County government (GIS and Mapping Services, Open Data)",
   "terms_url": "https://www.fairfaxcounty.gov/maps/disclaimer",
@@ -9,19 +9,26 @@
  "summary": {
   "health:parcels": {
    "layer": "parcels",
-   "feature_count": 369392,
-   "min_expected": 300000,
+   "feature_count": 369394,
+   "min_expected": 330000,
    "healthy": true
   },
   "health:zoning": {
    "layer": "zoning",
    "feature_count": 6440,
-   "min_expected": 5000,
+   "min_expected": 5700,
    "healthy": true
   },
   "sample_pin": "0102 14  0231",
   "no_match_pin": "NO SUCH PIN",
   "no_match_count": 0,
+  "sterling_loudoun": {
+   "point": [
+    -77.408014727372,
+    39.025534437083
+   ],
+   "record_count": 0
+  },
   "zoning_districts": [
    "R-3"
   ],
@@ -39,7 +46,7 @@
     "returnCountOnly": "true"
    },
    "response": {
-    "count": 369392
+    "count": 369394
    }
   },
   {
@@ -58,9 +65,9 @@
    "params": {
     "f": "json",
     "outFields": "OBJECTID,PARCEL_TYPE,PIN",
-    "resultRecordCount": "2",
+    "resultRecordCount": "50",
     "returnGeometry": "true",
-    "where": "1=1",
+    "where": "PIN = '0102 14  0231'",
     "outSR": "4326"
    },
    "response": {
@@ -155,122 +162,8 @@
         ]
        ]
       }
-     },
-     {
-      "attributes": {
-       "OBJECTID": 2,
-       "PARCEL_TYPE": "ORDINARY",
-       "PIN": "0102 10  0022"
-      },
-      "geometry": {
-       "rings": [
-        [
-         [
-          -77.37965557547155,
-          38.99873197429147
-         ],
-         [
-          -77.37970013129625,
-          38.999031227267125
-         ],
-         [
-          -77.37935116928647,
-          38.99904391193477
-         ],
-         [
-          -77.37932018674464,
-          38.99883870460556
-         ],
-         [
-          -77.37931906616706,
-          38.99883250751881
-         ],
-         [
-          -77.37931862553302,
-          38.99882625924637
-         ],
-         [
-          -77.37931885716138,
-          38.99882000090293
-         ],
-         [
-          -77.37931977083383,
-          38.998813782007026
-         ],
-         [
-          -77.37932134827129,
-          38.998807646318205
-         ],
-         [
-          -77.37932358531089,
-          38.998801634984645
-         ],
-         [
-          -77.37932646714894,
-          38.998795794544826
-         ],
-         [
-          -77.37932996855557,
-          38.9987901632003
-         ],
-         [
-          -77.37933406773331,
-          38.99878478467709
-         ],
-         [
-          -77.37933873250158,
-          38.99877969161877
-         ],
-         [
-          -77.37934393402628,
-          38.99877492768439
-         ],
-         [
-          -77.37934962961477,
-          38.99877052267152
-         ],
-         [
-          -77.37935578361115,
-          38.99876650644492
-         ],
-         [
-          -77.37936234976148,
-          38.99876291151409
-         ],
-         [
-          -77.37936928194084,
-          38.99875976215236
-         ],
-         [
-          -77.37937653054884,
-          38.99875707985395
-         ],
-         [
-          -77.37938404246681,
-          38.9987548860797
-         ],
-         [
-          -77.37939176474784,
-          38.99875319130864
-         ],
-         [
-          -77.37939964079804,
-          38.998752014222575
-         ],
-         [
-          -77.37940761775637,
-          38.998751359809674
-         ],
-         [
-          -77.37965557547155,
-          38.99873197429147
-         ]
-        ]
-       ]
-      }
      }
-    ],
-    "exceededTransferLimit": true
+    ]
    }
   },
   {
@@ -766,8 +659,34 @@
     "f": "json",
     "outFields": "OBJECTID,PARCEL_TYPE,PIN",
     "resultRecordCount": "50",
+    "returnGeometry": "false",
+    "geometry": "{\"x\": -77.408014727372, \"y\": 39.025534437083, \"spatialReference\": {\"wkid\": 4326}}",
+    "geometryType": "esriGeometryPoint",
+    "inSR": "4326",
+    "spatialRel": "esriSpatialRelIntersects"
+   },
+   "response": {
+    "objectIdFieldName": "OBJECTID",
+    "globalIdFieldName": "GlobalID",
+    "geometryType": "esriGeometryPolygon",
+    "spatialReference": {
+     "wkid": 102746,
+     "latestWkid": 2283
+    },
+    "features": []
+   }
+  },
+  {
+   "url": "https://www.fairfaxcounty.gov/mercator/rest/services/OpenData/OpenData_A9/FeatureServer/0/query",
+   "params": {
+    "f": "json",
+    "outFields": "OBJECTID,PARCEL_TYPE,PIN",
+    "resultRecordCount": "50",
     "returnGeometry": "true",
-    "where": "PIN = '0102 14  0231'",
+    "geometry": "{\"x\": -77.408014727372, \"y\": 39.025534437083, \"spatialReference\": {\"wkid\": 4326}}",
+    "geometryType": "esriGeometryPoint",
+    "inSR": "4326",
+    "spatialRel": "esriSpatialRelIntersects",
     "outSR": "4326"
    },
    "response": {
@@ -778,92 +697,7 @@
      "wkid": 4326,
      "latestWkid": 4326
     },
-    "fields": [
-     {
-      "name": "OBJECTID",
-      "alias": "OBJECTID",
-      "type": "esriFieldTypeOID"
-     },
-     {
-      "name": "PARCEL_TYPE",
-      "alias": "Parcel Type",
-      "type": "esriFieldTypeString",
-      "length": 25
-     },
-     {
-      "name": "PIN",
-      "alias": "Parcel Identification Number",
-      "type": "esriFieldTypeString",
-      "length": 15
-     }
-    ],
-    "features": [
-     {
-      "attributes": {
-       "OBJECTID": 1,
-       "PARCEL_TYPE": "ORDINARY",
-       "PIN": "0102 14  0231"
-      },
-      "geometry": {
-       "rings": [
-        [
-         [
-          -77.38312164379414,
-          38.99932094254951
-         ],
-         [
-          -77.38331833733109,
-          38.99932108261819
-         ],
-         [
-          -77.38344708311362,
-          38.999639623660734
-         ],
-         [
-          -77.38341494588312,
-          38.9996458812302
-         ],
-         [
-          -77.38338317245595,
-          38.99965318017651
-         ],
-         [
-          -77.38335181925362,
-          38.99966151279786
-         ],
-         [
-          -77.38332094282597,
-          38.99967086315634
-         ],
-         [
-          -77.3832905927289,
-          38.99968121250171
-         ],
-         [
-          -77.383260822037,
-          38.99969254211721
-         ],
-         [
-          -77.38323168730037,
-          38.999704836065
-         ],
-         [
-          -77.38303548056861,
-          38.99938996802828
-         ],
-         [
-          -77.38305285667172,
-          38.99937779588575
-         ],
-         [
-          -77.38312164379414,
-          38.99932094254951
-         ]
-        ]
-       ]
-      }
-     }
-    ]
+    "features": []
    }
   },
   {

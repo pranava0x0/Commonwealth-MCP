@@ -75,6 +75,45 @@ class HtmlFetcher(Protocol):
     async def fetch_html(self, url: str) -> tuple[str, str]: ...
 
 
+class PinnedAddressTransport(httpx.AsyncHTTPTransport):
+    """Connect to the address the egress policy approved (#16).
+
+    The policy resolves the hostname and checks what it gets back, and
+    then httpx used to resolve the same name again when it opened the
+    connection. Two lookups a moment apart can return two different
+    answers, so the address that was checked was not necessarily the
+    address that was connected to. Whoever controls the DNS answer for a
+    host chooses which one the connection uses.
+
+    This rewrites the request URL to the approved address. The `Host`
+    header was set from the hostname when the request was built and is
+    left alone, and the hostname is passed to the TLS handshake as
+    `sni_hostname`, so the server still has to present a certificate for
+    the name that was checked. Swapping the address does not weaken the
+    certificate check; it only decides which machine is asked.
+    """
+
+    def __init__(self, address: str, **kwargs) -> None:
+        super().__init__(**kwargs)
+        self._address = address
+
+    async def handle_async_request(self,
+                                   request: httpx.Request) -> httpx.Response:
+        original = request.url
+        request.extensions = {**request.extensions,
+                              "sni_hostname": original.host}
+        request.url = original.copy_with(host=self._address)
+        try:
+            return await super().handle_async_request(request)
+        finally:
+            # The address is a connection detail and must not escape into
+            # what callers read back. `Response.url` reads through to the
+            # request, and for the Code of Virginia that URL is published
+            # as the section's `source_url` — a citation pointing at a raw
+            # address would be wrong on the page and unstable besides.
+            request.url = original
+
+
 @dataclass
 class HttpFetcher:
     """The only network path. Redirects are followed manually so every hop
@@ -100,10 +139,11 @@ class HttpFetcher:
                      params: dict[str, Any]) -> tuple[_Body, str]:
         current = url
         for hop in range(4):  # initial request + MAX_REDIRECTS
-            self.policy.validate_url(current)
+            approved = self.policy.validate_url(current)
             host = urlparse(current).hostname or ""
             async with _semaphore_for(host):
-                response = await self._request_with_retry(current, params)
+                response = await self._request_with_retry(current, params,
+                                                          approved)
             if response.status_code in (301, 302, 303, 307, 308):
                 location = response.headers.get("location")
                 if not location:
@@ -116,12 +156,20 @@ class HttpFetcher:
             return response, host
         raise SourceUnavailable("redirect chain did not settle")
 
-    async def _request_with_retry(self, url: str,
-                                  params: dict[str, Any]) -> _Body:
+    async def _request_with_retry(self, url: str, params: dict[str, Any],
+                                  approved: tuple[str, ...]) -> _Body:
+        """`approved` is every address the policy checked for this URL.
+
+        The retry uses the next one when the host has more than one, which
+        is what a resolver's ordered answer is for: a government service
+        behind several addresses can have one of them down.
+        """
         last: Exception | None = None
         for attempt in range(RETRY_BUDGET + 1):
+            address = approved[attempt % len(approved)]
             try:
                 async with httpx.AsyncClient(
+                        transport=PinnedAddressTransport(address),
                         follow_redirects=False,
                         timeout=REQUEST_TIMEOUT_SECONDS) as client:
                     body = await self._read_capped(client, url, params)

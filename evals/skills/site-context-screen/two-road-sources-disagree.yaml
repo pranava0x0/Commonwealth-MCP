@@ -1,0 +1,14 @@
+# VDOT models routes and VGIN aggregates local centerlines. They are
+# expected to disagree, and reconciling them would invent an answer.
+id: skill-scs-road-disagreement
+tier: 3
+skill: site-context-screen
+question: "What road is at -77.2653, 38.9012 in Vienna?"
+toolset: all
+fixtures: [va-vdot-lrs-routes, va-vgin-road-centerlines, va-vgin-admin-boundaries]
+expected:
+  sources_returned: 2
+  must_say: ["VDOT", "VGIN"]
+  must_not_say: ["right-of-way", "frontage"]
+score: [{kind: source_and_jurisdiction}, {kind: restraint}]
+traps: []

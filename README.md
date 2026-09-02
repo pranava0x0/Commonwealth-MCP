@@ -34,7 +34,9 @@ Check that the registered government services are reachable:
 .venv/bin/commonwealth doctor --live
 ```
 
-Ask a real question:
+Ask a real question. A PIN is the identifier a Virginia locality gives a
+parcel of land, printed on the tax bill and on the county's own map; the
+spacing inside it is the county's, and it matters:
 
 ```bash
 .venv/bin/commonwealth tools call geo.find_zoning \
@@ -61,23 +63,35 @@ The tests replay recorded government responses, so they run offline:
 .venv/bin/pytest
 ```
 
+To hold them to that, set `COMMONWEALTH_DENY_NETWORK=1` and every outbound
+request is refused before it is made:
+
+```bash
+COMMONWEALTH_DENY_NETWORK=1 .venv/bin/pytest
+```
+
 ## What it can answer today
 
 | Question | Coverage |
 |---|---|
-| Which government covers this? | By name, FIPS code, street address, ZIP, or coordinates: all 133 localities and 191 towns |
+| Which government covers this? | By name, FIPS code, street address, ZIP, or coordinates: all 133 localities and 189 towns |
 | What is at this address? | Statewide address points |
 | What is this parcel? | Fairfax County, Richmond City, Charles City County, VGIN statewide |
 | How is it zoned? | Fairfax County and Richmond City |
-| Where does this jurisdiction end? | Statewide: 133 localities, 191 towns |
+| Where does this jurisdiction end? | Statewide: 133 localities, 189 towns |
 | Is this ground built on? | Statewide building footprints |
 | Where is the nearest school or library? | Statewide landmarks |
 | What does § 18.2-57 say? | The full Code of Virginia |
 
+Three skills package those into workflows — the order to ask in, and what
+an empty answer means at each step: `whose-government`,
+`parcel-zoning-screen`, and `site-context-screen`, in
+[skills/](skills/).
+
 Some examples of what that looks like in practice:
 
-**A mailing address is not a government.** "Alexandria, VA 22310" is a
-Fairfax County address. Ask about it and the answer is Fairfax County,
+**The city on an envelope is a postal delivery route.** "Alexandria, VA
+22310" is a Fairfax County address. Ask about it and the answer is Fairfax County,
 with a note saying the mailing city and the government differ. A ZIP that
 spans several localities comes back as all of them, because a ZIP is a
 delivery route and picking one would be a guess.
@@ -96,6 +110,12 @@ publishes its own parcel layer and VGIN publishes a statewide one, both
 are queried. Neither is ranked above the other, and a disagreement is
 reported as a disagreement.
 
+**An answer too big to return comes back with a handle to the rest.** A
+county boundary is a polygon with thousands of vertices and a downtown
+building query finds hundreds of footprints. Both come back summarised,
+with a link to everything that was retrieved, rather than silently
+shortened.
+
 **An empty answer says which kind of empty it is.** Either the records
 were searched and nothing matched, or no source is registered for that
 place at all. Most systems show the same blank screen for both. They are
@@ -108,7 +128,7 @@ so every time.
 ## What it cannot do yet
 
 **Data for most localities.** Every one of the 133 counties and
-independent cities is in the jurisdiction table, along with all 191
+independent cities is in the jurisdiction table, along with all 189
 incorporated towns, so a name or a coordinate anywhere in Virginia finds
 the right government. What most of them do not have is a source of their
 own: three localities publish a parcel layer this project reads, and the
@@ -125,7 +145,7 @@ the list of what comes next, ordered by priority label.
 
 ## Try it in a terminal
 
-Four short scripts in [examples/](examples/), each a real question with a
+Five short scripts in [examples/](examples/), each a real question with a
 printed answer. They run offline against recorded government responses by
 default, so a first run cannot fail on a network or a service being down:
 
@@ -136,10 +156,16 @@ python examples/whose_government.py --live   # the real services
 
 `whose_government.py` asks about a mailing address whose city is not its
 government, `screen_a_parcel.py` walks a property question from PIN to
-zoning to buildings to monitored sites,
-`what_is_covered.py` shows what an empty answer means here, and
-`two_sources_disagree.py` shows two official sources describing one road
-differently. [examples/README.md](examples/README.md) has the table.
+zoning to buildings to monitored sites, `what_is_covered.py` shows what an
+empty answer means here, and `two_sources_disagree.py` shows two official
+sources describing one road differently.
+
+`one_address_every_question.py` is the one to run first. It asks everything
+this project can ask about a single address in Sterling, in Loudoun
+County, and gets three different kinds of answer back: records found,
+records checked and absent, and no source registered. Telling those apart
+is what the whole project is for.
+[examples/README.md](examples/README.md) has the table.
 
 ## The demo site
 
@@ -162,25 +188,39 @@ python3 -m http.server -d docs          # or just open the file
 
 ## Where things are
 
-| You want | Read |
-|---|---|
-| How the system works and why | [design/architecture.md](design/architecture.md) |
-| The contract for one feature | [design/](design/README.md) |
-| Odd things real government data does | [design/source-quirks.md](design/source-quirks.md) |
-| The research the design came from | [research/](research/README.md) |
-| What happened when | [docs/RUNLOG.md](docs/RUNLOG.md) |
-| How to contribute | [CONTRIBUTING.md](CONTRIBUTING.md) |
+**If you are reading the code**, start at
+[design/](design/README.md). It names three files to read first and says
+why, which is a shorter path than the architecture document.
+
+**If you want to add a government source**, that is
+[CONTRIBUTING.md](CONTRIBUTING.md), and it is the most useful thing anyone
+can contribute here.
+
+Everything else, by folder:
 
 ```text
-design/       how it works, why, and the per-feature contracts
+design/       how it works, why, and the contract for each feature.
+              architecture.md holds one record per decision, with the
+              options that lost still written out
 src/          the implementation
-sources/      the source registry: one manifest per government service,
-              plus the jurisdiction table, reviewed like code
+sources/      one manifest per government service, plus the jurisdiction
+              table. Reviewed like code, and mostly not code
+skills/       workflows: what to ask, in what order, and what an empty
+              answer means at each step
+evals/        the tasks those workflows are scored against
 tests/        offline, replaying recorded government responses
-research/     the evidence behind the design
-docs/         the demo site and the run log
+research/     the evidence the design was made from. A reference, not a
+              next step: one long file with its own contents list
+docs/         the published website, the run log, and the audits.
+              Named for GitHub Pages, not for documentation
 tools/        research and site-build scripts, stdlib Python only
+.github/      governance, the security policy, and review routing
 ```
+
+Two files worth knowing about by name:
+[design/source-quirks.md](design/source-quirks.md) collects the things
+real government data does that its schema does not predict, and
+[docs/RUNLOG.md](docs/RUNLOG.md) says what happened when.
 
 ## License
 
