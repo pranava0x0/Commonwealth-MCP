@@ -48,7 +48,8 @@ from commonwealth.adapters import arcgis as arcgis_mod  # noqa: E402
 from commonwealth.adapters.base import (HttpFetcher,  # noqa: E402
                                         egress_policy_for)
 from commonwealth.core.errors import CommonwealthError  # noqa: E402
-from commonwealth.core.registry import SourceManifest  # noqa: E402
+from commonwealth.core.registry import (INVENTORY_ADAPTER,  # noqa: E402
+                                        SourceManifest)
 from commonwealth.runtime import load_context  # noqa: E402
 
 FIXTURES = ROOT / "tests" / "fixtures" / "sources"
@@ -57,8 +58,10 @@ HISTORY = AUDITS / "probe-history.json"
 
 # Adapter types with no endpoint to reach. Not probing them is the correct
 # outcome rather than a gap, and the report says so rather than omitting
-# them.
-NO_ENDPOINT = {"inventory"}
+# them. Imported rather than restated: this held the literal "inventory"
+# and the value is "none", so the skip never fired and four by-design
+# non-probes were reported as missing recordings.
+NO_ENDPOINT = {INVENTORY_ADAPTER}
 
 
 def _now() -> str:
@@ -95,7 +98,7 @@ def _shape(payload: Any) -> dict:
     if isinstance(features, list):
         out["feature_count"] = len(features)
         attrs: Counter = Counter()
-        types: dict[str, str] = {}
+        types: dict[str, set[str]] = {}
         geometry = False
         for feature in features:
             if not isinstance(feature, dict):
@@ -103,15 +106,38 @@ def _shape(payload: Any) -> dict:
             geometry = geometry or bool(feature.get("geometry"))
             for name, value in (feature.get("attributes") or {}).items():
                 attrs[name] += 1
-                types.setdefault(name, type(value).__name__)
+                # Every non-null type this field takes, not the first
+                # one seen. ArcGIS does not order rows without
+                # `orderByFields`, and government layers are full of
+                # nullable columns, so recording the first feature's type
+                # made row order look like a schema change and hid a real
+                # one whenever the first value happened to be null.
+                if value is not None:
+                    types.setdefault(name, set()).add(type(value).__name__)
         out["attribute_fields"] = sorted(attrs)
-        out["attribute_types"] = types
+        out["attribute_types"] = {name: "|".join(sorted(seen))
+                                  for name, seen in sorted(types.items())}
         out["has_geometry"] = geometry
     if "error" in payload:
         out["error"] = (payload["error"] or {}).get("code")
     if "candidates" in payload:  # the geocoder
-        out["candidate_count"] = len(payload.get("candidates") or [])
+        candidates = payload.get("candidates") or []
+        out["candidate_count"] = len(candidates)
         out["spatialReference"] = payload.get("spatialReference")
+        # The fields the geocode adapter reads, compared like any other
+        # schema. Counting candidates alone would let the locator rename
+        # `address`, `score` or `location`, keep returning the same
+        # number of them, and pass as unchanged while address resolution
+        # quietly stopped working.
+        keys: set[str] = set()
+        attrs: set[str] = set()
+        for candidate in candidates:
+            if not isinstance(candidate, dict):
+                continue
+            keys |= set(candidate)
+            attrs |= set(candidate.get("attributes") or {})
+        out["candidate_fields"] = sorted(keys)
+        out["candidate_attribute_fields"] = sorted(attrs)
     return out
 
 
@@ -136,6 +162,13 @@ def _diff(before: dict, after: dict) -> list[str]:
     for key, label in (("id", "layer id"), ("name", "layer name"),
                        ("geometryType", "geometry type"),
                        ("objectIdField", "object id field"),
+                       # The docstring promises this file notices a
+                       # publisher changing projections, and this was the
+                       # one field captured and never compared. A locator
+                       # moving from wkid 4326 to 3857 returns metres, and
+                       # every point-in-polygon lookup downstream lands in
+                       # the Atlantic.
+                       ("spatialReference", "spatial reference"),
                        ("error", "error code")):
         if before.get(key) != after.get(key):
             notes.append(f"{label}: {before.get(key)!r} -> {after.get(key)!r}")
@@ -147,6 +180,18 @@ def _diff(before: dict, after: dict) -> list[str]:
             old, new = before.get(key), after.get(key)
             if old != new:
                 notes.append(f"{label}: {old} -> {new}")
+
+    for key, label in (("candidate_fields", "geocoder candidate fields"),
+                       ("candidate_attribute_fields",
+                        "geocoder candidate attributes")):
+        old_set, new_set = set(before.get(key) or []), set(after.get(key) or [])
+        if old_set != new_set:
+            gone_here = sorted(old_set - new_set)
+            added_here = sorted(new_set - old_set)
+            if gone_here:
+                notes.append(f"{label} gone: {', '.join(gone_here)}")
+            if added_here:
+                notes.append(f"{label} added: {', '.join(added_here)}")
 
     if before.get("has_geometry") != after.get("has_geometry"):
         notes.append(f"geometry present: {before.get('has_geometry')} -> "
@@ -297,9 +342,12 @@ def record_readings(history: dict, when: str,
             for r in history["readings"]}
     for source_id, layers in sorted(probes.items()):
         for entry in layers:
-            # An error is not a count. Recording one would put a zero in
-            # the range and drag every floor derived from it down.
-            if "feature_count" not in entry:
+            # A failed probe reports an error where a count belongs.
+            # Recording it would put a null in the range, drag every floor
+            # derived from it down, and crash the report that formats it. Checked by value, not by key
+            # presence: `health()` tolerates a non-int count, so the key
+            # can be there holding None.
+            if not isinstance(entry.get("feature_count"), int):
                 continue
             if (source_id, entry["layer"], day) in seen:
                 continue
@@ -378,13 +426,19 @@ def observed_range(history: dict, source_id: str, layer: str) -> dict | None:
 
 def render(when: str, results: dict, probes: dict,
            history: dict) -> str:
-    changed = sorted(sid for sid, r in results.items() if r["findings"])
+    # A source that could not be reached is not a source that changed.
+    # `_replay` records a finding per failed request, so counting any
+    # source with findings put a total outage in both lists and reported
+    # thirteen changed when nothing had.
+    unreached = ("unreachable", "partly_unreachable")
+    changed = sorted(sid for sid, r in results.items()
+                     if r["findings"] and r["status"] not in unreached)
     clean = sorted(sid for sid, r in results.items()
                    if r["status"] == "checked" and not r["findings"])
     skipped = sorted(sid for sid, r in results.items()
                      if r["status"] in ("no_fixture", "no_endpoint"))
     broken = sorted(sid for sid, r in results.items()
-                    if r["status"] in ("unreachable", "partly_unreachable"))
+                    if r["status"] in unreached)
 
     lines = [
         f"# Upstream drift, {when[:10]}",
@@ -497,6 +551,14 @@ async def run(source_id: str | None) -> tuple[dict, dict]:
     return results, probes
 
 
+def _short(path: Path) -> Path:
+    """A repo-relative path when it is one, and the path as given
+    otherwise. `relative_to` raises for anything outside the tree, which
+    turned `--out somewhere/else.md` into a traceback and a nonzero exit
+    after the report had already been written."""
+    return path.relative_to(ROOT) if path.is_relative_to(ROOT) else path
+
+
 def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__.split("\n")[0])
     ap.add_argument("--source", default=None,
@@ -516,7 +578,7 @@ def main() -> int:
         added = backfill_from_fixtures(history)
         AUDITS.mkdir(parents=True, exist_ok=True)
         HISTORY.write_text(json.dumps(history, indent=1) + "\n")
-        print(f"{HISTORY.relative_to(ROOT)}: {added} reading(s) backfilled, "
+        print(f"{_short(HISTORY)}: {added} reading(s) backfilled, "
               f"{len(history['readings'])} total")
         return 0
 
@@ -546,12 +608,14 @@ def main() -> int:
     out = args.out or AUDITS / f"upstream-{when[:10]}.md"
     out.write_text(render(when, results, probes, history) + "\n")
 
-    changed = sum(1 for r in results.values() if r["findings"])
+    unreached = ("unreachable", "partly_unreachable")
+    changed = sum(1 for r in results.values()
+                  if r["findings"] and r["status"] not in unreached)
     unreachable = sum(1 for r in results.values()
-                      if r["status"] in ("unreachable", "partly_unreachable"))
-    print(f"{out.relative_to(ROOT)}: {len(results)} sources, "
+                      if r["status"] in unreached)
+    print(f"{_short(out)}: {len(results)} sources, "
           f"{changed} changed, {unreachable} unreachable")
-    print(f"{HISTORY.relative_to(ROOT)}: "
+    print(f"{_short(HISTORY)}: "
           f"{len(history['readings'])} readings recorded")
     return 0
 

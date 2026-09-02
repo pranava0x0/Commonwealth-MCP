@@ -321,26 +321,82 @@ async def test_every_approved_address_is_returned_in_resolution_order():
     assert approved == ("93.184.216.34", "93.184.216.35")
 
 
-async def test_a_retry_moves_to_the_next_approved_address(monkeypatch):
-    """A host behind two addresses can have one of them down, and both
-    were approved by the same check."""
-    def _two(host, _port):
-        return [(2, 1, 6, "", ("93.184.216.34", 0)),
-                (2, 1, 6, "", ("93.184.216.35", 0))]
+def _two_addresses(host, _port):
+    return [(2, 1, 6, "", ("93.184.216.34", 0)),
+            (2, 1, 6, "", ("93.184.216.35", 0))]
 
+
+async def test_an_unreachable_address_falls_through_to_the_next(monkeypatch):
+    """A host behind two addresses can have one of them unreachable, and
+    both were approved by the same check.
+
+    This is what replaces the happy-eyeballs behaviour that pinning took
+    away. `getaddrinfo` returns AAAA records even with no IPv6 route and
+    usually sorts them first, so a host publishing two of them ahead of
+    any A record would otherwise never be reached at all."""
     seen: list[str] = []
 
     async def fake_send(self, request):
         seen.append(request.url.host)
-        return httpx.Response(503, request=request)
+        if request.url.host == "93.184.216.34":
+            raise httpx.ConnectError("no route to host", request=request)
+        return httpx.Response(200, content=b'{"ok":true}', request=request)
 
     monkeypatch.setattr(httpx.AsyncHTTPTransport, "handle_async_request",
                         fake_send)
     monkeypatch.setattr("commonwealth.adapters.base.asyncio.sleep", _no_sleep)
-    with pytest.raises(SourceUnavailable):
-        await HttpFetcher(policy=_policy(resolver=_two)).fetch_json(
-            "https://www.fairfaxcounty.gov/x", {})
+    payload = await HttpFetcher(policy=_policy(resolver=_two_addresses)
+                                ).fetch_json("https://www.fairfaxcounty.gov/x",
+                                             {})
+    assert payload == {"ok": True}
     assert seen == ["93.184.216.34", "93.184.216.35"], seen
+
+
+async def test_walking_the_addresses_does_not_spend_the_retry_budget(
+        monkeypatch):
+    """The bug this closes: `approved[attempt % len(approved)]` gave each
+    address its own attempt, so two unreachable addresses used up
+    RETRY_BUDGET + 1 and a genuinely flaky host got no retry at all."""
+    attempts: list[str] = []
+
+    async def fake_send(self, request):
+        attempts.append(request.url.host)
+        raise httpx.ConnectError("no route to host", request=request)
+
+    monkeypatch.setattr(httpx.AsyncHTTPTransport, "handle_async_request",
+                        fake_send)
+    monkeypatch.setattr("commonwealth.adapters.base.asyncio.sleep", _no_sleep)
+    with pytest.raises(SourceUnavailable, match="after 2 attempts"):
+        await HttpFetcher(policy=_policy(resolver=_two_addresses)).fetch_json(
+            "https://www.fairfaxcounty.gov/x", {})
+    # Two addresses per attempt, RETRY_BUDGET + 1 attempts.
+    assert attempts == ["93.184.216.34", "93.184.216.35"] * 2, attempts
+
+
+async def test_a_redirect_keeps_the_query_the_location_header_gave(
+        monkeypatch):
+    """`params={}` is not "no params" in httpx: it REPLACES the query. A
+    government host redirecting `.../query?where=...` to its canonical
+    name was re-asked for a bare `.../query`, which answers with an HTML
+    form and reads as an outage."""
+    seen: list[str] = []
+
+    async def fake_send(self, request):
+        seen.append(str(request.url))
+        if len(seen) == 1:
+            return httpx.Response(
+                301, headers={"location":
+                              "https://www.fairfaxcounty.gov/moved"
+                              "?where=PIN%3D%27123%27&f=json"},
+                request=request)
+        return httpx.Response(200, content=b'{"ok":true}', request=request)
+
+    monkeypatch.setattr(httpx.AsyncHTTPTransport, "handle_async_request",
+                        fake_send)
+    await HttpFetcher(policy=_policy()).fetch_json(
+        "https://www.fairfaxcounty.gov/x/query", {"f": "json"})
+    assert "where=PIN" in seen[1], seen
+    assert "f=json" in seen[1], seen
 
 
 async def test_rule6_oversized_response_is_refused(monkeypatch):

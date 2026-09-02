@@ -213,7 +213,8 @@ research/     the evidence the design was made from. A reference, not a
               next step: one long file with its own contents list
 docs/         the published website, the run log, and the audits.
               Named for GitHub Pages, not for documentation
-tools/        research and site-build scripts, stdlib Python only
+tools/        the research scripts and the writing checker are stdlib
+              only; build_site.py and upstream_audit.py import the package
 .github/      governance, the security policy, and review routing
 ```
 

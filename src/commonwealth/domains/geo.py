@@ -203,7 +203,12 @@ def _store_full_records(ctx: RuntimeContext, b: EnvelopeBuilder,
                "records, so the ones past the inline cap are not stored. "
                "Narrow the query to see them.", m.id)
         return None
-    except ValueError:
+    except (ValueError, OSError):
+        # ValueError is the size cap; OSError is a store that cannot be
+        # written (a read-only mount, a sandboxed home). Neither is a
+        # reason to fail a call whose inline records were complete, and
+        # `_bind` catches only CommonwealthError, so letting an OSError
+        # through returns an untyped error and writes no audit record.
         return None
     return b.add_resource(resource_ref(
         stored, f"All {len(q.records)} records {m.id} returned for this "
@@ -717,10 +722,18 @@ async def _store_full_geometry(ctx: RuntimeContext, b: EnvelopeBuilder,
     try:
         full = await ctx.arcgis.query(
             m, layer_key, where_equals=where, return_geometry=True)
-    except CommonwealthError as err:
+    except Exception as err:  # noqa: BLE001 — see below
+        # Deliberately every exception, not just CommonwealthError. The
+        # offline replay seam raises a bare AssertionError for an exchange
+        # nobody recorded, and the recording plan only captures this
+        # second request for one jurisdiction — so every other one raised
+        # out of the envelope entirely, which is the opposite of what this
+        # function is for. The inline rings are already good; a missing
+        # handle is a smaller loss than a failed call.
+        code = getattr(err, "code", err.__class__.__name__)
         b.warn(WarningCode.boundary_precision,
                f"The generalized rings are inline; fetching the "
-               f"un-generalized geometry failed ({err.code}), so there is "
+               f"un-generalized geometry failed ({code}), so there is "
                "no handle to the publisher's own vertices this time.", m.id)
         return None
 
@@ -748,7 +761,7 @@ async def _store_full_geometry(ctx: RuntimeContext, b: EnvelopeBuilder,
                "there is no handle. Query the publisher directly for them.",
                m.id)
         return None
-    except ValueError as err:
+    except (ValueError, OSError) as err:
         b.warn(WarningCode.boundary_precision,
                f"The un-generalized geometry was not stored: {err}", m.id)
         return None

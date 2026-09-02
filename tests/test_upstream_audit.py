@@ -139,8 +139,9 @@ def test_two_runs_on_one_day_are_one_observation():
 
 
 def test_a_failed_probe_records_no_reading():
-    """An error is not a count. Recording one would put a zero into the
-    range and drag every floor derived from it down."""
+    """A failed probe reports an error where a count belongs. Recording
+    it would put a zero into the range and drag every floor derived from
+    it down."""
     history = {"readings": []}
     audit.record_readings(history, "2026-09-01T00:00:00Z", {
         "va-x": [{"layer": "parcels", "error": "SourceUnavailable: down"}]})
@@ -207,3 +208,100 @@ def test_no_committed_floor_sits_above_the_lowest_reading():
                 bad.append(f"{doc['id']}/{layer}: floor {floor} > lowest "
                            f"reading {seen['low']}")
     assert bad == [], bad
+
+
+# --- fixes from the 2026-09-02 review -------------------------------------
+
+def test_row_order_alone_is_not_a_type_change():
+    """`setdefault` kept the first feature's type, so a nullable column
+    read as NoneType or str depending on which row arrived first. Eight
+    committed fixtures already mix them."""
+    a = _query([{"X": None}, {"X": "abc"}])
+    b = _query([{"X": "abc"}, {"X": None}])
+    assert audit._diff(audit._shape(a), audit._shape(b)) == []
+
+
+def test_a_real_type_change_is_still_caught_behind_a_null():
+    """The other half: a first value of None used to hide a genuine
+    change for as long as it stayed first."""
+    before = _query([{"X": None}, {"X": "abc"}])
+    after = _query([{"X": None}, {"X": 7}])
+    notes = audit._diff(audit._shape(before), audit._shape(after))
+    assert any("changed type: str -> int" in n for n in notes), notes
+
+
+def test_a_changed_projection_is_drift():
+    """The module docstring names projections as a thing this catches,
+    and `spatialReference` was the one field captured and never
+    compared."""
+    notes = audit._diff(
+        audit._shape({"candidates": [], "spatialReference": {"wkid": 4326}}),
+        audit._shape({"candidates": [], "spatialReference": {"wkid": 3857}}))
+    assert any("spatial reference" in n for n in notes), notes
+
+
+def test_a_renamed_geocoder_field_is_drift():
+    """Candidate count alone would let the locator rename the fields the
+    adapter reads and still pass as unchanged."""
+    before = {"candidates": [{"address": "X", "score": 100,
+                              "location": {"x": 1, "y": 2}}]}
+    after = {"candidates": [{"addr": "X", "score": 100,
+                             "location": {"x": 1, "y": 2}}]}
+    notes = audit._diff(audit._shape(before), audit._shape(after))
+    assert any("candidate fields gone: address" in n for n in notes), notes
+
+
+def test_the_inventory_skip_matches_the_adapter_type_on_disk():
+    """This held the literal "inventory" while every inventory manifest
+    declares `none`, so four by-design non-probes were reported as
+    missing recordings."""
+    from commonwealth.core.registry import INVENTORY_ADAPTER
+
+    assert audit.NO_ENDPOINT == {INVENTORY_ADAPTER}
+    import yaml
+    declared = {
+        yaml.safe_load(path.read_text())["adapter"]["type"]
+        for path in (ROOT / "sources").rglob("*.yaml")
+        if "jurisdictions" not in path.parts
+        and path.name != "capabilities.yaml"
+        and isinstance(yaml.safe_load(path.read_text()), dict)
+        and yaml.safe_load(path.read_text()).get("adapter")}
+    assert audit.NO_ENDPOINT <= declared, (
+        f"no manifest declares {audit.NO_ENDPOINT}; the skip is dead")
+
+
+def test_a_null_count_is_not_recorded_as_a_reading():
+    """`health()` tolerates a non-int count, so the key can be present
+    holding None. Recording it put a null in the range #19's floors are
+    derived from and crashed the report that formats it."""
+    history = {"readings": []}
+    audit.record_readings(history, "2026-09-09T00:00:00Z", {
+        "va-x": [{"layer": "parcels", "feature_count": None,
+                  "min_expected": 100, "healthy": False}]})
+    assert history["readings"] == []
+
+
+def test_an_unreachable_source_is_not_counted_as_changed():
+    """A total outage read as thirteen changed sources, because every
+    failed request appends a finding."""
+    results = {
+        "va-down": {"status": "unreachable", "checked": 0, "unreachable": 3,
+                    "findings": [{"request": "q", "notes": ["failed"]}]},
+        "va-fine": {"status": "checked", "checked": 2, "unreachable": 0,
+                    "findings": []},
+    }
+    report = audit.render("2026-09-09T00:00:00Z", results, {},
+                          {"readings": []})
+    assert "- **0 changed**" in report, report
+    assert "- **1 could not be reached**" in report, report
+    assert "## Changed" not in report, report
+
+
+def test_out_outside_the_repo_does_not_raise():
+    """`relative_to` raised for any path outside the tree, after the
+    report had already been written."""
+    from pathlib import Path
+
+    assert audit._short(Path("/tmp/elsewhere.md")) == Path("/tmp/elsewhere.md")
+    assert audit._short(ROOT / "docs" / "x.md") == Path("docs/x.md")
+

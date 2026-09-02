@@ -271,6 +271,7 @@ def build_catalog() -> dict:
         ExecutionCoverage, PaginationCoverage, RegistryCoverage,
         ResultCoverage, WarningCode,
     )
+    from commonwealth.core.results import MemoryResultStore
     from commonwealth.runtime import SOURCES_DIR, load_context
     from commonwealth.servers.build import registries
 
@@ -292,7 +293,7 @@ def build_catalog() -> dict:
                 f"missing={declared_vals - defined_vals} "
                 f"extra={defined_vals - declared_vals}")
 
-    ctx = load_context()
+    ctx = load_context(results=MemoryResultStore(deterministic=True))
     regs = registries()
 
     tools = []
@@ -515,6 +516,7 @@ async def run_demo(mode: str) -> dict:
     from commonwealth.adapters.base import TTLCache
     from commonwealth.adapters.replay import ReplayFetcher
     from commonwealth.core.envelope import utc_now_iso
+    from commonwealth.core.results import MemoryResultStore
     from commonwealth.runtime import load_context
     from commonwealth.servers.build import build_server
 
@@ -527,7 +529,14 @@ async def run_demo(mode: str) -> dict:
     else:
         tracker = TrackingFetcher()  # live mode: per-host HttpFetchers
     adapter = ArcGISAdapter(fetcher=tracker, cache=TTLCache())
+    # A memory store, so a docs build leaves nothing in the developer's
+    # cache and mints no machine-local handle. `geo.find_roads` in
+    # DEMO_CALLS returns more records than the inline cap, so the disk
+    # store would write a payload and bake a fresh random
+    # `commonwealth://` id into committed site data on every rebuild —
+    # a handle no reader of the published page could ever resolve.
     ctx = load_context(arcgis=adapter, geocoder=_geocoder(mode, tracker),
+                       results=MemoryResultStore(deterministic=True),
                        virginia_law=_virginia_law_adapter(mode))
 
     server = build_server(ctx, profile="all")
@@ -631,12 +640,14 @@ def main() -> int:
     args = ap.parse_args()
     mode = "fixtures" if args.fixtures else "live"
 
+    from commonwealth.core.results import MemoryResultStore
     from commonwealth.runtime import load_context
 
     DOCS_DATA.mkdir(parents=True, exist_ok=True)
     catalog = build_catalog()
     demo = asyncio.run(run_demo(mode))
-    resolver_demo = build_resolver_demo(load_context())
+    resolver_demo = build_resolver_demo(
+        load_context(results=MemoryResultStore(deterministic=True)))
 
     (DOCS_DATA / "site.json").write_text(json.dumps(catalog, indent=1) + "\n")
     (DOCS_DATA / "audit-demo.json").write_text(

@@ -38,7 +38,7 @@ import os
 import secrets
 import shutil
 import sys
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from typing import Any, Protocol
@@ -149,13 +149,24 @@ def _parse_uri(uri: str) -> tuple[str, str]:
 def retention_allowed(manifest: SourceManifest) -> bool:
     """Whether this publisher's bytes may be held past the request.
 
-    Two ways a manifest says no. `access.retention` is the explicit one, a
-    terms fact a reviewer records. `data_classification: restricted` is
-    the structural one — such a source cannot be active at all, and
-    storing its payload would be the wrong answer to a question that
-    should never have been asked.
+    Three ways a manifest says no. `access.retention` is the explicit
+    one, a terms fact a reviewer records. The other two come from the
+    classification, and both are refusals the manifest does not have to
+    restate:
+
+    - `restricted` cannot be active at all, so storing its payload would
+      be the wrong answer to a question that should never have been asked.
+    - `sensitive_public` is barred by design/security-and-data-handling.md
+      § 3, which requires "no `include_raw`, no stored payload beyond the
+      response cache". Reading that off the classification rather than
+      waiting for a reviewer to also set `retention: forbidden` is the
+      difference between a rule and a reminder: the default is `allowed`,
+      so a `sensitive_public` source registered without the extra field
+      would have had its rows written to disk for 24 hours.
     """
-    if manifest.access.data_classification == DataClassification.restricted:
+    classification = manifest.access.data_classification
+    if classification in (DataClassification.restricted,
+                          DataClassification.sensitive_public):
         return False
     return manifest.access.retention != "forbidden"
 
@@ -232,8 +243,15 @@ def _resolve(doc: dict | None, kind: str, uri: str) -> StoredResult:
         raise ResultUnavailable(
             f"{uri} names a {kind} handle and the stored result is a "
             f"{doc['kind']}", "not_found")
-    stored = _from_doc(doc)
-    if _expired(stored):
+    try:
+        stored = _from_doc(doc)
+        expired = _expired(stored)
+    except (KeyError, TypeError, ValueError) as err:
+        raise ResultUnavailable(
+            f"The stored result for {uri} cannot be read: {err}. Treat it "
+            "as gone and re-run the call that produced it.",
+            "not_found") from err
+    if expired:
         raise ResultUnavailable(
             f"The result at {uri} expired at {stored.expires_at}. It "
             "existed and the retention window closed, which is not the "
@@ -283,7 +301,15 @@ class DiskResultStore:
     def get(self, uri: str) -> StoredResult:
         kind, ident = _parse_uri(uri)
         path = self._path(ident)
-        doc = json.loads(path.read_text()) if path.exists() else None
+        try:
+            doc = json.loads(path.read_text())
+        except (OSError, json.JSONDecodeError):
+            # Covers the file being absent, unreadable, or half-written,
+            # and the race against a sweep running in the other process:
+            # `exists()` then `read_text()` is two calls. None of these is
+            # a resolvable handle, and `_resolve` says so in the typed
+            # error every caller already handles.
+            doc = None
         return _resolve(doc, kind, uri)
 
     def sweep(self) -> int:
@@ -301,9 +327,14 @@ class DiskResultStore:
             try:
                 doc = json.loads(path.read_text())
                 expired = _expired(_from_doc(doc))
-            except (OSError, json.JSONDecodeError, KeyError):
+            except Exception:  # noqa: BLE001 — see below
                 # An unreadable file cannot be resolved by any handle, so
-                # keeping it serves nobody.
+                # keeping it serves nobody. Deliberately every exception:
+                # a named tuple missed TypeError from a JSON document that
+                # is not an object and ValueError from a timestamp in
+                # another format, and this runs inside `load_context()`,
+                # so one stray file in a shared cache directory stopped
+                # every CLI command and the server from starting.
                 expired = True
             if expired:
                 path.unlink(missing_ok=True)
@@ -330,11 +361,20 @@ class MemoryResultStore:
     cannot disagree about what is refused or what has expired.
     """
 
-    def __init__(self) -> None:
+    def __init__(self, deterministic: bool = False) -> None:
         self._docs: dict[str, dict] = {}
+        # Numbered ids instead of random ones, for the site build. The
+        # generated page is committed, so a fresh `secrets.token_hex(16)`
+        # per build put an unrelated diff in every pull request and
+        # advertised a different handle to readers each time.
+        self._deterministic = deterministic
 
     def put(self, **kwargs) -> StoredResult:
         stored, doc = build_record(**kwargs)
+        if self._deterministic:
+            ident = f"{len(self._docs) + 1:032x}"
+            stored = replace(stored, id=ident)
+            doc["id"] = ident
         self._docs[stored.id] = doc
         return stored
 
@@ -404,7 +444,9 @@ def prune_on_start(store: ResultStore) -> int:
     """
     try:
         return store.sweep()
-    except OSError:
+    except Exception:  # noqa: BLE001
         # A cache directory that cannot be read is not a reason to refuse
-        # to answer questions.
+        # to answer questions, and this is on the startup path of every
+        # CLI command and the server. Nothing here is worth a traceback
+        # that never names the store.
         return 0

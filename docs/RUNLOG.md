@@ -3,6 +3,86 @@
 One entry per significant work session or delegated research task: why it
 ran, cost where relevant, and whether it was worth it.
 
+## 2026-09-02 — the review of the above, applied
+
+Fifteen findings from a review of PR #42, plus three from the Codex bot.
+Five were bugs the tests did not reach; two were claims this branch made
+that its own code contradicted.
+
+**The fetch path.** Two of these predate the branch and were exposed by
+rewriting `_fetch` around them.
+
+A redirect dropped the query string. `params = {}` is not "no params" in
+httpx — it *sets* the query, so a host redirecting
+`.../query?where=...&f=json` to its canonical name was re-asked for a bare
+`.../query`, answered with its HTML form, and was reported as an outage. A
+test now drives a real 3xx through `_fetch`, which nothing did before.
+
+Pinning the connection to a checked address had quietly given up
+happy-eyeballs. `getaddrinfo` returns AAAA records with no IPv6 route and
+usually sorts them first, and `approved[attempt % len(approved)]` gave
+each address its own attempt — so a host publishing two AAAA before any A
+would spend the whole retry budget on an address family the machine
+cannot reach and report a healthy service as down. `services.arcgis.com`
+resolves that way today, and it is the source that timed out in the first
+audit run. Every approved address is now tried inside one attempt, so the
+retry budget is spent on failures.
+
+A proxy also stopped working the moment an explicit transport was passed,
+because httpx reads `HTTPS_PROXY` only when there is none. Pinning and a
+forward proxy genuinely cannot coexist, so the adapter says so once per
+process rather than failing mutely.
+
+**The result store.** One stray file in the shared cache stopped every
+command from starting: `sweep()` caught three exception types and the two
+it missed came from a JSON document that is not an object and a timestamp
+in another format, and `load_context()` is on the startup path of the CLI
+and the server alike. Reads had the same gap. Both swallow anything now,
+and an unreadable payload reads as `not_found` rather than as a traceback.
+
+An unwritable store failed calls whose inline answers were complete, and
+the second geometry request killed `find_boundaries(detail="full")` for
+every jurisdiction but the one whose un-generalized rings were recorded —
+the offline replay seam raises a bare `AssertionError`, which
+`except CommonwealthError` does not catch. Both degrade to "no handle this
+time" now, which is what the docstrings already claimed.
+
+Codex found the sharper one: `sensitive_public` sources were retainable.
+`retention` defaults to allowed and the store only refused `restricted`,
+while § 3 of the security spec has always required no stored payload
+beyond the response cache for that classification. It is read off the
+classification now — a rule that fires only when someone remembers a
+second field is a reminder.
+
+**The audit tool, one week old and already wrong in five places.**
+Nullable columns reported drift from row order alone, and a real type
+change was invisible while the first value stayed null; types are
+collected across every feature now. `spatialReference` was captured and
+compared nowhere, so the projection change the module docstring promises
+to catch was the one it dropped — as were renamed geocoder fields, which
+Codex caught. The inventory skip tested for `"inventory"` while every such
+manifest declares `none`, so four by-design non-probes were reported as
+missing recordings. A failed probe wrote a null count into the reading
+history and then crashed the report that formats it, committing the poison
+and losing the run. An unreachable source was counted as a changed one, so
+a total outage read as thirteen sources drifting. And `--out` raised after
+writing the report, failing a job whose work had succeeded.
+
+**Two claims this branch made about itself.** `containment.py` was the one
+`selection_coverage()` call site left without a builder, and it is the
+path a coordinate takes — so the registry-gap hint was not emitted
+uniformly, whatever the run log said. And the entry above said the skill
+capability check refuses to start while the spec and the code said it
+warns; the behaviour changed partway through and the log did not follow.
+
+**Also.** The site build wrote payloads into the developer's own cache and
+baked a random handle into published data that no reader could resolve; it
+uses a memory store with numbered ids now, so a rebuild produces the same
+bytes. The README's claim that `tools/` is stdlib-only had been false
+since `build_site.py` first imported the package.
+
+565 tests.
+
 ## 2026-09-02 — drift on a schedule, floors from a range, and every question asked about one address
 
 #31 and #19, and the Sterling walk that turned three latent problems up.
@@ -210,10 +290,14 @@ Decision 0002 says profiles are generated from skill metadata. They still
 are not, and the dated amendment says why: generating `default` from one
 skill's two capabilities would delete the seven tools the 2026-08-29
 amendment chose deliberately, and call that consistency. What is built
-instead is the check — `check_skill_capabilities()` refuses to start when
-no active source answers a capability a skill requires, which is the
+instead is the check — `check_skill_capabilities()` warns when no active
+source answers a capability a skill requires, which is the
 `design/hub-catalog.md` § 2 gate that had nothing to check until a skill
-declared something.
+declared something. It warns rather than refusing for the reason 0002's
+amendment gives about the profile floor: a fork registering one
+locality's sources has a working server and one skill whose walk stops
+early, and refusing to serve the tools that do work punishes the wrong
+person.
 
 Writing the skill turned up one thing worth recording: step 1 of every
 walk, resolving the jurisdiction, is the one step with no capability id

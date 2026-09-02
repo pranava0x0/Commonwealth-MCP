@@ -11,6 +11,7 @@ from __future__ import annotations
 import asyncio
 import json
 import logging
+import os
 import time
 from dataclasses import dataclass
 from typing import Any, Protocol
@@ -93,9 +94,30 @@ class PinnedAddressTransport(httpx.AsyncHTTPTransport):
     certificate check; it only decides which machine is asked.
     """
 
+    # Pinning and a forward proxy cannot both be in charge of where a
+    # request goes: a proxy resolves the name itself, which is the step
+    # this class exists to remove. httpx also stops reading
+    # HTTPS_PROXY/ALL_PROXY the moment an explicit transport is passed
+    # (`allow_env_proxies = trust_env and transport is None`), so an
+    # operator behind one would see every source fail with nothing
+    # pointing at the cause. Saying it once per process is the least that
+    # is owed them.
+    _proxy_warned = False
+
     def __init__(self, address: str, **kwargs) -> None:
         super().__init__(**kwargs)
         self._address = address
+        if not PinnedAddressTransport._proxy_warned and any(
+                os.environ.get(var) for var in
+                ("HTTPS_PROXY", "https_proxy", "ALL_PROXY", "all_proxy")):
+            PinnedAddressTransport._proxy_warned = True
+            log.warning(
+                "a proxy is set in the environment and will not be used: "
+                "requests connect to the address the egress policy checked "
+                "(design/security-and-data-handling.md § 2 rule 3), and a "
+                "proxy would resolve the hostname itself. Unset the proxy "
+                "variables, or run this where the government hosts are "
+                "reachable directly.")
 
     async def handle_async_request(self,
                                    request: httpx.Request) -> httpx.Response:
@@ -136,7 +158,7 @@ class HttpFetcher:
         return self._decode_html(response, host), response.url
 
     async def _fetch(self, url: str,
-                     params: dict[str, Any]) -> tuple[_Body, str]:
+                     params: dict[str, Any] | None) -> tuple[_Body, str]:
         current = url
         for hop in range(4):  # initial request + MAX_REDIRECTS
             approved = self.policy.validate_url(current)
@@ -151,28 +173,59 @@ class HttpFetcher:
                         f"redirect from {host} without a Location header")
                 current = self.policy.validate_redirect(current, location,
                                                         hop + 1)
-                params = {}  # params were consumed by the first URL
+                # None, not {}: httpx treats an empty dict as a query to
+                # SET, so `params={}` strips the query the Location header
+                # just supplied. An ArcGIS host redirecting
+                # `.../query?where=...&f=json` to its canonical name would
+                # be re-asked for a bare `.../query`, answer with its HTML
+                # form, and be reported as an outage.
+                params = None
                 continue
             return response, host
         raise SourceUnavailable("redirect chain did not settle")
 
-    async def _request_with_retry(self, url: str, params: dict[str, Any],
-                                  approved: tuple[str, ...]) -> _Body:
-        """`approved` is every address the policy checked for this URL.
+    async def _send_to_any_approved(self, url: str,
+                                    params: dict[str, Any] | None,
+                                    approved: tuple[str, ...]) -> _Body:
+        """Try each approved address in turn and return the first response.
 
-        The retry uses the next one when the host has more than one, which
-        is what a resolver's ordered answer is for: a government service
-        behind several addresses can have one of them down.
+        Every address here passed the same policy check, so any of them is
+        a legitimate destination. Walking them inside one attempt is what
+        replaces the happy-eyeballs behaviour that pinning took away:
+        `getaddrinfo` is called with no family hint, so AAAA records come
+        back even where there is no IPv6 route and usually sort first. A
+        host publishing two of them ahead of any A record would otherwise
+        consume the whole retry budget on an address family this machine
+        cannot reach, and report a healthy service as an outage.
         """
-        last: Exception | None = None
-        for attempt in range(RETRY_BUDGET + 1):
-            address = approved[attempt % len(approved)]
+        last: httpx.HTTPError | None = None
+        for address in approved:
             try:
                 async with httpx.AsyncClient(
                         transport=PinnedAddressTransport(address),
                         follow_redirects=False,
                         timeout=REQUEST_TIMEOUT_SECONDS) as client:
-                    body = await self._read_capped(client, url, params)
+                    return await self._read_capped(client, url, params)
+            except httpx.HTTPError as err:
+                last = err
+        # `approved` is never empty: validate_url refuses a host that
+        # resolves to nothing.
+        assert last is not None
+        raise last
+
+    async def _request_with_retry(self, url: str,
+                                  params: dict[str, Any] | None,
+                                  approved: tuple[str, ...]) -> _Body:
+        """`approved` is every address the policy checked for this URL.
+
+        Each attempt walks all of them (see `_send_to_any_approved`), so
+        the retry budget is spent on failures rather than on address
+        families.
+        """
+        last: Exception | None = None
+        for attempt in range(RETRY_BUDGET + 1):
+            try:
+                body = await self._send_to_any_approved(url, params, approved)
             except httpx.HTTPError as err:
                 last = err
                 if attempt < RETRY_BUDGET:
@@ -203,7 +256,7 @@ class HttpFetcher:
 
     @staticmethod
     async def _read_capped(client: httpx.AsyncClient, url: str,
-                           params: dict[str, Any]) -> _Body:
+                           params: dict[str, Any] | None) -> _Body:
         """Stream the response, stopping as soon as it breaks a limit.
 
         Egress rule 6 has two halves. The byte cap used to be checked on

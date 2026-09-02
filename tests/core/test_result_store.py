@@ -20,6 +20,7 @@ import pytest
 from commonwealth.core.registry import (DataClassification, SourceManifest,
                                         SourceRegistry)
 from commonwealth.core.results import (DEFAULT_TTL_SECONDS, KINDS,
+                                       _classification_of,
                                        MAX_STORED_BYTES, DiskResultStore,
                                        MemoryResultStore, ResultUnavailable,
                                        RetentionForbidden, resource_ref,
@@ -153,14 +154,17 @@ def test_the_write_time_classification_travels_with_the_bytes(store,
     assert store.get(stored.uri).classification == stored.classification
 
 
-def test_the_strictest_classification_wins_when_sources_are_mixed(
+def test_mixing_an_open_source_with_a_sensitive_one_is_still_refused(
         store, manifest):
+    """The classification helper takes the strictest of the set, and
+    `sensitive_public` may not be stored at all, so mixing cannot launder
+    it into a retainable payload."""
     sensitive = manifest.model_copy(deep=True)
     sensitive.access.data_classification = \
         DataClassification.sensitive_public
-    stored = _put(store, manifest, manifests=[manifest, sensitive])
-    assert stored.classification == "sensitive_public", (
-        "mixing an open source with a sensitive one must not launder it")
+    assert _classification_of([manifest, sensitive]) == "sensitive_public"
+    with pytest.raises(RetentionForbidden):
+        _put(store, manifest, manifests=[manifest, sensitive])
 
 
 def test_a_source_whose_terms_forbid_retention_is_refused_at_write(
@@ -171,6 +175,21 @@ def test_a_source_whose_terms_forbid_retention_is_refused_at_write(
     with pytest.raises(RetentionForbidden) as err:
         _put(store, manifest, manifests=[forbidden])
     assert forbidden.id in str(err.value)
+
+
+def test_a_sensitive_public_source_is_refused_without_the_flag(store,
+                                                               manifest):
+    """design/security-and-data-handling.md § 3 requires of a
+    `sensitive_public` source: "no `include_raw`, no stored payload beyond
+    the response cache". The store read only `retention`, which defaults
+    to allowed, so such a source would have had its rows written to disk
+    for 24 hours unless a reviewer also set the second field."""
+    sensitive = manifest.model_copy(deep=True)
+    sensitive.access.data_classification = \
+        DataClassification.sensitive_public
+    assert retention_allowed(sensitive) is False
+    with pytest.raises(RetentionForbidden):
+        _put(store, manifest, manifests=[sensitive])
 
 
 def test_a_restricted_source_is_refused_even_without_the_flag(store,
