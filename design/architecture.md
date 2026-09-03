@@ -2438,11 +2438,9 @@ nothing to check until a skill declared something). That closes the drift
 this decision was worried about in the direction that matters: a skill can
 no longer claim a capability the registry cannot serve without saying so.
 
-A warning rather than a refusal, for the reason the floor above is a
-warning. A fork that registers one locality's parcels has a working server
-and one skill whose walk stops early, and refusing to serve the tools that
-do work punishes the wrong person. Every tool still answers; only that
-skill's walk stops early.
+This is a warning rather than a refusal. A fork with one locality's parcel
+source still has working tools even when one skill stops early. The server
+keeps serving those tools and identifies the unavailable skill walk.
 
 **What would change this:** three or more skills covering the geo and
 civic walks. At that point the union of their required capabilities is a
@@ -2901,7 +2899,19 @@ Two tools stopped discarding what they had already retrieved. `geo.find_boundari
 
 Handles resolve over the protocol as MCP resource templates at the same URIs the envelope carries. An expired handle reads as expired and names the call that would rebuild it; a handle this server never minted reads as not found. The two are kept apart deliberately, the same way an empty result and an uncovered jurisdiction are.
 
-Retention is enforced at write. `access.retention: forbidden` in a manifest, a `restricted` classification, or a `sensitive_public` one refuses the write and the tool says the full result cannot be kept instead of returning a handle. The `sensitive_public` case is read off the classification rather than waiting for a reviewer to also set the explicit field, because `retention` defaults to allowed and § 3 of the security spec already forbids such a source keeping any stored payload — a rule that only fires when someone remembers a second field is a reminder, not a rule. No source registered today sets it. A test derives that from the registry rather than asserting it, so a source that arrives with a retention condition shows up as a failure instead of quietly disabling handles for itself.
+Sweeps keep a payload-free expiry record, so deleting expired bytes does not
+turn an expired handle into an unknown one. New writes trigger an hourly sweep,
+and small metadata sidecars let that sweep avoid parsing stored payloads.
+
+Retention is enforced at write. `access.retention: forbidden`, a
+`restricted` classification, or a `sensitive_public` classification refuses
+the write. The tool returns its inline answer without a handle.
+
+The classification check does not depend on a reviewer also setting the
+retention field. That field defaults to allowed, while § 3 of the security
+spec already bars stored `sensitive_public` payloads. No registered source
+sets that classification today. A registry-derived test reports any source
+whose retention policy would disable handles.
 
 **Still unbuilt:** signed pagination cursors, which this record specifies alongside the store and which nothing yet needs; and the `include_raw` path that would put a source's raw record behind a `commonwealth://evidence/...` handle. The evidence kind is registered and resolvable, and no tool writes one.
 

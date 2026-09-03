@@ -47,7 +47,9 @@ Display rule: tools serving `sensitive_public` results add a `warnings` entry na
 ## 4. Logging and cache minimization
 
 - Observability records for `sensitive_public` sources carry tool, source ID, timing, counts, and error class — never argument values, never result fields. `open` sources log arguments (they are things like parcel IDs and bill numbers, and they make debugging possible).
-- Caches (adapter TTL cache, result store per architecture.md decision 0013) store `sensitive_public` responses post-allowlist: dropped fields are dropped before storage, not redacted after.
+- The adapter TTL cache may hold `sensitive_public` responses after the
+  field allowlist is applied. The result store refuses that classification
+  outright, so it never retains those responses beyond the request cache.
 - No IP-level user analytics; request IDs are random, not derived from callers. Query privacy is part of the civic offer.
 
 ## 5. Governance prerequisites for external contributions

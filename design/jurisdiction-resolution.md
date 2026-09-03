@@ -169,10 +169,10 @@ are, and Virginia has a great deal of boundary line to be near.
 **An ambiguous name and a near-border point are different situations.**
 "Fairfax" matches two governments and the input cannot distinguish them,
 so there is no answer to give and candidates are the only honest result.
-A coordinate falls in exactly one polygon. The polygon is known; what is
-uncertain is whether the published polygon is where the legal line runs.
-Returning candidates would describe a doubt about the *map* as a doubt
-about the *input*.
+Containment identifies the applicable published polygons; inside a town,
+that means both the town and its county. What remains uncertain is whether
+those published lines are where the legal lines run. Returning candidates
+would describe a doubt about the *map* as a doubt about the *input*.
 
 **One case to know about before reopening this.** A buffered query at
 Fairfax City's centre returns Fairfax County from 40 m outward, for a
