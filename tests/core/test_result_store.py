@@ -107,8 +107,7 @@ def test_the_expiry_is_stamped_and_defaults_to_a_day(store, manifest):
     stored = _put(store, manifest)
     expires = datetime.strptime(stored.expires_at, "%Y-%m-%dT%H:%M:%SZ")
     stored_at = datetime.strptime(stored.stored_at, "%Y-%m-%dT%H:%M:%SZ")
-    assert abs((expires - stored_at).total_seconds()
-               - DEFAULT_TTL_SECONDS) <= 2
+    assert (expires - stored_at).total_seconds() == DEFAULT_TTL_SECONDS
 
 
 def test_an_expired_handle_reads_as_expired_not_as_missing(store, manifest):
@@ -139,9 +138,33 @@ def test_the_sweep_removes_expired_payloads_and_leaves_live_ones(store,
     assert store.sweep() == 3
     assert store.get(live.uri).payload
     for stored in dead:
-        with pytest.raises(ResultUnavailable):
+        with pytest.raises(ResultUnavailable) as err:
             store.get(stored.uri)
+        assert err.value.reason == "expired"
+        assert "geo.find_boundaries" in str(err.value)
     assert store.sweep() == 0, "a second sweep has nothing left to do"
+
+
+def test_disk_sweep_uses_small_metadata_not_the_payload(tmp_path, manifest):
+    store = DiskResultStore(root=tmp_path / "results")
+    stored = _put(store, manifest, ttl_seconds=-1)
+    payload = tmp_path / "results" / f"{stored.id}.json"
+    payload.write_text("not parseable; the metadata is sufficient")
+    assert store.sweep() == 1
+    with pytest.raises(ResultUnavailable) as err:
+        store.get(stored.uri)
+    assert err.value.reason == "expired"
+
+
+def test_a_long_running_disk_store_sweeps_on_later_writes(tmp_path, manifest):
+    store = DiskResultStore(root=tmp_path / "results",
+                            sweep_interval_seconds=0)
+    dead = _put(store, manifest, ttl_seconds=-1)
+    _put(store, manifest)
+    assert not (tmp_path / "results" / f"{dead.id}.json").exists()
+    with pytest.raises(ResultUnavailable) as err:
+        store.get(dead.uri)
+    assert err.value.reason == "expired"
 
 
 # --- terms ----------------------------------------------------------------
