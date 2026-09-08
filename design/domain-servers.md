@@ -165,16 +165,32 @@ Deferred beyond V1 (contracts drafted when their sources onboard): campaign fina
 
 **First slice shipped 2026-08-28, ahead of the LIS bill-tracking surface:**
 `civic.get_code_section` — direct Code of Virginia citation lookup, not
-`search_law`. LIS's own JSON/XML API (bills, members, full-text search)
-needs an API key this project hasn't registered for (the GitHub issues); the
-public HTML pages at law.lis.virginia.gov don't. The tool reads those
-pages directly (a new `virginia_law` adapter type, `html.parser`-based,
-no new dependency) rather than waiting on the key. It is named for what
-it actually does — direct citation lookup — not `search_law`, since
-there is no full-text search behind it; the design sketch's name would
-overclaim. `search_law`, `get_bill`, and the rest of the civic default
-toolset stay on the LIS-key-registration prerequisite named in
-the GitHub issues.
+`search_law`. It reads the public HTML pages at law.lis.virginia.gov (a
+`virginia_law` adapter type, `html.parser`-based, no new dependency). It
+is named for what it does, because there is no full-text search behind
+it and the design sketch's name would overclaim.
+
+**Corrected 2026-09-08.** This section said the law site's JSON/XML API
+needed an API key. It does not. The keyed program is the *legislative*
+API at lis.virginia.gov — bills, members, committees, GitHub issue #11 —
+which is a different service from the same division. The law site's own
+API at `law.lis.virginia.gov/api/` answers unauthenticated, and issue
+#12's first acceptance criterion is what turned that up.
+
+**Second slice shipped 2026-09-08:** `civic.browse_code`, toolset
+`discovery`, over that API. It walks the Code's own table of contents —
+titles, a title's chapters, a chapter's sections — so a caller can reach
+a citation without already having one. Each row carries the arguments
+for the step below it, and a section row carries the citation
+`get_code_section` reads.
+
+`search_law` remains unbuilt and is now blocked on the publisher rather
+than on a credential. There is no full-text operation anywhere in the
+law site's twenty-three JSON services, and the site's own search
+endpoint — public and keyless — answered every query on 2026-09-08 with
+"The Search Appliance is down" (design/source-quirks.md § 18). `get_bill`
+and `search_legislation` still wait on the LIS key registration named in
+issue #11.
 
 ## 5. What deliberately does not exist in V1
 

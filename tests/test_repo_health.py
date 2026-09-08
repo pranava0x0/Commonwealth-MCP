@@ -221,6 +221,116 @@ def test_committed_fixture_carries_rights_metadata():
           f"{multi} of them cross-source")
 
 
+def test_the_wheel_carries_the_data_the_runtime_reads():
+    """A wheel installed outside a checkout has no repo root above it.
+
+    Every command died at startup on a missing capability vocabulary
+    until `sources/` and `skills/` were force-included into the package.
+    The two halves are `runtime._data_root()` and pyproject's
+    `force-include` block, and this asserts they still name the same
+    directories — a data directory added to one and not the other ships a
+    wheel that fails on the machine it was meant for.
+    """
+    import tomllib
+
+    from commonwealth import runtime
+
+    pyproject = tomllib.loads((ROOT / "pyproject.toml").read_text())
+    included = (pyproject["tool"]["hatch"]["build"]["targets"]["wheel"]
+                ["force-include"])
+    for name in ("sources", "skills"):
+        assert included.get(name) == f"commonwealth/_data/{name}", (
+            f"{name}/ is read at runtime and is not force-included into "
+            "the wheel; an installed server would not find it")
+        assert (ROOT / name).is_dir(), f"{name}/ is force-included and gone"
+
+    # And the runtime looks for them under one root, so a checkout and a
+    # wheel differ in that root and in nothing else.
+    assert runtime.SOURCES_DIR == runtime.DATA_ROOT / "sources"
+    assert runtime.SKILLS_DIR == runtime.DATA_ROOT / "skills"
+    assert runtime.DATA_ROOT == ROOT, (
+        "run from a checkout, the data root is the repo root")
+
+    # And it stays the repo root even though `pip install -e .` also
+    # materialises the bundled copy into site-packages. That copy is
+    # frozen at install time, so preferring it would serve a developer
+    # the manifests they had when they last installed.
+    stale = Path(runtime.__file__).resolve().parent / "_data"
+    assert runtime._data_root() == ROOT, (
+        f"a checkout must win over a bundled copy at {stale}")
+
+
+def _semver_of(pep440: str) -> str:
+    """The SemVer spelling of a PEP 440 version.
+
+    Only the forms this project releases: `X.Y.Z`, and a prerelease
+    suffix `devN`, `aN`, `bN` or `rcN`, which SemVer writes after a
+    hyphen with a dot before the number. Anything else raises rather than
+    guessing, because a wrong conversion here publishes a version nobody
+    can install.
+    """
+    import re
+
+    m = re.fullmatch(r"(\d+\.\d+\.\d+)(?:\.?(dev|a|b|rc)(\d+))?", pep440)
+    if m is None:
+        raise AssertionError(
+            f"{pep440!r} is not a version shape this converter knows; "
+            "extend it deliberately rather than publishing a guess")
+    release, kind, number = m.groups()
+    return release if kind is None else f"{release}-{kind}.{number}"
+
+
+def test_the_pep440_to_semver_conversion_is_the_one_the_registry_wants():
+    assert _semver_of("0.1.0") == "0.1.0"
+    assert _semver_of("0.1.0.dev0") == "0.1.0-dev.0"
+    assert _semver_of("1.2.3rc1") == "1.2.3-rc.1"
+    assert _semver_of("2.0.0b2") == "2.0.0-b.2"
+    with pytest.raises(AssertionError):
+        _semver_of("0.1")
+
+
+def test_the_registry_entry_matches_the_package_it_names():
+    """`server.json` is what the MCP registry publishes (issue #40).
+
+    Its name, version and entry point are a second copy of what
+    pyproject declares. A published listing whose install line names a
+    version that was never released, or an executable the package does
+    not install, is worse than no listing.
+    """
+    import json
+    import tomllib
+
+    entry = json.loads((ROOT / "server.json").read_text())
+    pyproject = tomllib.loads((ROOT / "pyproject.toml").read_text())
+    project = pyproject["project"]
+
+    package = entry["packages"][0]
+    assert package["identifier"] == project["name"], (
+        "the registry entry names a different PyPI package")
+    # Two version strings for one release, because the two systems spell
+    # a prerelease differently: the registry's schema wants SemVer and
+    # PyPI wants PEP 440. `0.1.0.dev0` is not a SemVer string and the
+    # registry rejects the entry before it ever reaches the package, so
+    # the top-level version is converted and the package's is verbatim.
+    assert package["version"] == project["version"], (
+        "the package entry must name the version PyPI actually has")
+    assert entry["version"] == _semver_of(project["version"]), (
+        f"server.json says {entry['version']}, and {project['version']} "
+        f"converts to {_semver_of(project['version'])}")
+    assert package["transport"]["type"] == "stdio", (
+        "the server speaks stdio and the listing must say so")
+
+    # `uvx <package>` runs an executable named after the package, so the
+    # package has to install one.
+    assert project["name"] in project["scripts"], (
+        f"the listing runs `uvx {project['name']}` and the package "
+        f"installs no {project['name']!r} executable")
+    argv = [a["value"] for a in package.get("packageArguments", [])]
+    assert argv == ["serve"], (
+        f"the listing would run the CLI with {argv}, which is not the "
+        "server")
+
+
 def test_third_party_data_inventory_is_current():
     """GitHub issue #24 / decision 0011. THIRD_PARTY_DATA.yml records whose
     terms each recorded fixture is under. A stale copy would misstate

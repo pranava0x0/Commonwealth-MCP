@@ -9,6 +9,13 @@ capabilities:
     description: Find the zoning district(s) applying to a parcel or point.
   - id: code_section.lookup
     description: Get the text of a Code of Virginia section by citation.
+  - id: code_structure.browse
+    description: >
+      Walk the Code of Virginia's own table of contents — titles, then a
+      title's chapters, then a chapter's sections. A way to reach a
+      citation without already knowing it. Not a search: the publisher
+      runs no full-text operation, and a browse that matched strings
+      itself would be answering a question the source cannot.
   - id: boundary.lookup
     description: >
       Get a jurisdiction's official boundary polygon and identity

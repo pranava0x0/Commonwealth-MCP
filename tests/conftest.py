@@ -48,7 +48,8 @@ from commonwealth.adapters.replay import (HtmlReplayFetcher,  # noqa: E402,F401
 # here, so the example scripts can reach it without importing a test
 # module (commonwealth/fixtures.py).
 from commonwealth.fixtures import (recorded_exchanges,  # noqa: E402
-                                   recorded_pages)
+                                   recorded_pages,
+                                   recorded_api_exchanges)
 
 
 def load_civic_pages() -> dict[str, tuple[str, str]]:
@@ -111,10 +112,12 @@ def build_ctx(extra_manifests: list[SourceManifest] | None = None,
               extra_exchanges: list[dict] | None = None,
               fetcher: object | None = None,
               civic_fetcher: object | None = None,
+              civic_api_fetcher: object | None = None,
               geocode_fetcher: object | None = None) -> RuntimeContext:
     exchanges = load_all_recordings() + list(extra_exchanges or [])
     replay = fetcher or ReplayFetcher(exchanges)
     civic_replay = civic_fetcher or HtmlReplayFetcher(load_civic_pages())
+    civic_api = civic_api_fetcher or ReplayFetcher(recorded_api_exchanges())
     # The geocoder replays from the same pool: its recorded exchanges are
     # JSON GETs like every other, so one fetcher would do — but the two
     # adapters are given separate instances so a test can swap one for a
@@ -129,7 +132,8 @@ def build_ctx(extra_manifests: list[SourceManifest] | None = None,
         arcgis=ArcGISAdapter(fetcher=replay, cache=TTLCache()),
         geocoder=ArcGISGeocodeAdapter(fetcher=geocode_replay,
                                       cache=TTLCache()),
-        virginia_law=VirginiaLawAdapter(fetcher=civic_replay))
+        virginia_law=VirginiaLawAdapter(fetcher=civic_replay,
+                                        json_fetcher=civic_api))
 
 
 @pytest.fixture()

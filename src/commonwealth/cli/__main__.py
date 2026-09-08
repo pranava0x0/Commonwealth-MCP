@@ -92,16 +92,10 @@ def cmd_doctor(args: argparse.Namespace) -> int:
                         print(f"✗ live {m.id}/{layer}: {err.code}: {err}")
                         problems += 1
             elif m.adapter.type == "virginia_law":
-                known = m.health.expect.get("known_section")
                 try:
-                    section = asyncio.run(
-                        ctx.virginia_law.get_section(m, known))
-                    healthy = section is not None
-                    mark = "✓" if healthy else "✗"
-                    print(f"{mark} live {m.id}: known section {known!r} "
-                          f"{'found' if healthy else 'NOT FOUND'}")
-                    if not healthy:
-                        problems += 1
+                    for line, ok in _law_health_lines(ctx, m):
+                        print(f"{'✓' if ok else '✗'} live {m.id}: {line}")
+                        problems += 0 if ok else 1
                 except CommonwealthError as err:
                     print(f"✗ live {m.id}: {err.code}: {err}")
                     problems += 1
@@ -315,17 +309,12 @@ def cmd_sources_probe(args: argparse.Namespace) -> int:
             # same split the geocoder was in — one dispatch table grew
             # and the other did not.
             checked += 1
-            known = m.health.expect.get("known_section")
             try:
-                section = asyncio.run(ctx.virginia_law.get_section(m, known))
+                for line, ok in _law_health_lines(ctx, m):
+                    print(f"{'✓' if ok else '✗'} {sid}: {line}")
+                    problems += 0 if ok else 1
             except CommonwealthError as err:
                 print(f"✗ {sid}: {err.code}: {err}")
-                problems += 1
-                continue
-            mark = "✓" if section is not None else "✗"
-            print(f"{mark} {sid}: known section {known!r} "
-                  f"{'found' if section is not None else 'NOT FOUND'}")
-            if section is None:
                 problems += 1
             continue
         if m.adapter.type == INVENTORY_ADAPTER:
@@ -1326,6 +1315,60 @@ def _write_fixture(m: SourceManifest, recorder: "_RecordingFetcher",
     return 0
 
 
+def _law_health_lines(ctx: RuntimeContext,
+                      m: SourceManifest) -> list[tuple[str, bool]]:
+    """One line per endpoint the Code of Virginia source actually has.
+
+    It has two, and they fail independently: the section pages are HTML
+    parsed for text, the table of contents is a JSON service on another
+    path. Probing only the pages reported this source healthy while
+    `civic.browse_code` was down for everyone.
+    """
+    known = m.health.expect.get("known_section")
+    title = m.health.expect.get("known_title")
+    result = asyncio.run(ctx.virginia_law.health(m, known, title))
+    lines = []
+    sec = result["section"]
+    lines.append((f"known section {sec['citation']!r} "
+                  f"{'found' if sec['found'] else 'NOT FOUND'}", sec["found"]))
+    browse = result.get("browse")
+    if browse is not None:
+        lines.append((f"title {browse['title']!r} lists "
+                      f"{browse['chapters']} chapter(s)", browse["found"]))
+    return lines
+
+
+# --- skills ----------------------------------------------------------------
+
+def cmd_skills_list(args: argparse.Namespace) -> int:
+    """Where the skills are, and whether this registry can serve them.
+
+    A checkout reads them from `skills/`; an installed wheel carries them
+    inside the package, and a user who installed from PyPI has no other
+    way to find the files. Skills travel as files today — the "Skills
+    over MCP" extension is not shipped and design/skills.md says not to
+    build against it — so pointing at the path is the whole answer.
+    """
+    from ..core.skills import load_skills, unroutable_capabilities
+    from ..runtime import SKILLS_DIR
+
+    del args
+    skills = load_skills(SKILLS_DIR)
+    if not skills:
+        print(f"no skills found under {SKILLS_DIR}", file=sys.stderr)
+        return 1
+    ctx = _load_ctx()
+    missing = unroutable_capabilities(skills, ctx.sources.servable_capabilities())
+    for sk in skills:
+        gap = missing.get(sk.name)
+        state = f"needs {', '.join(gap)}" if gap else "ready"
+        print(f"{sk.name:<28} [{state}]")
+        print(f"  {sk.path}")
+    print(f"\n{len(skills)} skill(s) under {SKILLS_DIR}")
+    print("Copy a directory into your client's skills folder to install it.")
+    return 0
+
+
 # --- serve -----------------------------------------------------------------
 
 def cmd_serve(args: argparse.Namespace) -> int:
@@ -1445,6 +1488,12 @@ def main() -> int:
     cfgp.add_argument("--dry-run", action="store_true",
                       help="print the diff without writing")
     cfgp.set_defaults(fn=cmd_configure)
+
+    sk = sub.add_parser("skills", help="list the bundled skills and "
+                                       "where they are on disk")
+    sksub = sk.add_subparsers(dest="skills_command", required=True)
+    skl = sksub.add_parser("list")
+    skl.set_defaults(fn=cmd_skills_list)
 
     sv2 = sub.add_parser("serve", help="run the MCP server")
     sv2.add_argument("--profile", default="default")

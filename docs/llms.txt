@@ -13,7 +13,7 @@ exposes the result through the Model Context Protocol.
 
 ## What it answers today
 
-Fourteen tools, nine of them in the default set.
+Fifteen tools, nine of them in the default set and thirteen in discovery.
 
 - Which local government covers a place, by name, FIPS code, street
   address, ZIP code, or coordinates. Ambiguous names return every match
@@ -38,7 +38,8 @@ Fourteen tools, nine of them in the default set.
   DEQ's water-quality monitoring stations. Each is one published layer and
   none is an inventory.
 - Where a jurisdiction's boundary runs, statewide.
-- The text of a Code of Virginia section, by citation.
+- The text of a Code of Virginia section, by citation, and the Code's
+  own table of contents to walk to one you do not have.
 
 Three skills package those into workflows — the order to ask in, and what
 an empty answer means at each step:
@@ -63,9 +64,12 @@ MCP resource for 24 hours.
   the right government. Three localities publish a parcel layer this
   project reads; the rest are answered by VGIN's statewide layers or not
   at all.
-- Full-text search of the Code of Virginia, bills, meetings, permits,
-  finance, or elections. Some are designed and unbuilt; the open issues
-  say which.
+- Full-text search of the Code of Virginia. No public endpoint offers it:
+  the publisher's JSON API has no search operation and its own search
+  backend was down on 2026-09-08. You can walk the Code's contents to a
+  section and read it; you cannot ask which sections mention a word.
+- Bills, meetings, permits, finance, or elections. Some are designed and
+  unbuilt; the open issues say which.
 - Any write. It reads published public records and submits nothing.
 
 ## Two kinds of empty
@@ -75,9 +79,14 @@ and nothing matched, or no source is registered for that place. Neither proves t
 
 ## Setup
 
-Clone the repository and follow the README. The current runtime requires
-checkout data; a standalone wheel install is not yet supported. Tools are
-also callable from Python and the CLI without an AI client.
+Two ways. `uv tool install commonwealth-mcp` gets the server on its own:
+the source manifests, the jurisdiction table and the skills ship inside
+the package. The examples, the recorded fixtures and the tests are
+repo-only, so clone the repository and follow the README for those. Tools
+are also callable from Python and the CLI without an AI client.
+
+The package is not on PyPI yet (issue #40), so today the checkout is the
+only path that runs.
 
 ## Docs
 

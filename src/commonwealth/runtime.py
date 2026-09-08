@@ -17,7 +17,39 @@ from .core.registry import SourceRegistry
 from .core.results import DiskResultStore, MemoryResultStore, ResultStore, prune_on_start
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
-SOURCES_DIR = PROJECT_ROOT / "sources"
+
+
+def _data_root() -> Path:
+    """Where the source registry, the jurisdiction table and the skills are.
+
+    Two layouts, because this package is used both ways. In a checkout
+    they sit at the repo root beside `src/`, which is what `PROJECT_ROOT`
+    finds. In an installed wheel there is no repo root above
+    `site-packages/commonwealth/`, and resolving two directories up from
+    the module pointed at the interpreter's own `lib/`, so every command
+    died at startup on `missing capability vocabulary:
+    .../lib/python3.12/sources/capabilities.yaml`. The wheel carries the
+    data inside the package instead, and this prefers that copy.
+
+    The checkout wins where there is one. `pip install -e .` materialises
+    the bundled copy into site-packages as well, and that copy is frozen
+    at install time: preferring it would have served yesterday's
+    manifests to a developer editing today's, silently and with no error
+    to notice. A repo root with a `sources/` directory beside `src/` is
+    the unambiguous sign of a checkout, so it is checked first.
+
+    `pyproject.toml`'s `force-include` block is the other half; a test
+    asserts the two agree.
+    """
+    if (PROJECT_ROOT / "sources").is_dir():
+        return PROJECT_ROOT
+    bundled = Path(__file__).resolve().parent / "_data"
+    return bundled if bundled.is_dir() else PROJECT_ROOT
+
+
+DATA_ROOT = _data_root()
+SOURCES_DIR = DATA_ROOT / "sources"
+SKILLS_DIR = DATA_ROOT / "skills"
 
 # The self-describing entry for the project's own jurisdiction table, used as
 # provenance when a tool answers from project data rather than a government

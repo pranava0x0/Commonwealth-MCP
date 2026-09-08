@@ -48,10 +48,16 @@ def _all_recorded_exchanges() -> list[dict]:
 # shipped, which is the drift a typed roster produces.
 PLANNED_SKILLS = [
     {"name": "legislative-impact-analysis", "status": "milestone 1b (civic)",
-     "capabilities": []},
+     "capabilities": [], "optional": [], "steps": [],
+     "description": "Trace a bill to the Code sections it touches and the "
+                    "localities it reaches. Waits on the legislative API "
+                    "(GitHub issue #11)."},
     {"name": "development-site-due-diligence",
      "status": "deferred until there is coverage to justify it",
-     "capabilities": []},
+     "capabilities": [], "optional": [], "steps": [],
+     "description": "One site, every registered layer, in one walk. Waits "
+                    "on enough local coverage to be worth more than the "
+                    "tools it would chain."},
 ]
 
 
@@ -72,6 +78,39 @@ def tool_parameters(spec) -> list[dict]:
             for name, param in sig.parameters.items() if name != "ctx"]
 
 
+def _frontmatter_of(path: Path) -> dict:
+    import yaml
+
+    text = path.read_text()
+    if not text.startswith("---\n"):
+        return {}
+    return yaml.safe_load(text.split("---\n", 2)[1]) or {}
+
+
+def _first_sentence(path: Path) -> str:
+    """The skill's `description`, cut to its first sentence.
+
+    A skill description is written for a model deciding whether to load
+    the skill, so it opens by saying what the workflow does and then
+    lists when to use it. The card wants the first half.
+    """
+    text = " ".join((_frontmatter_of(path).get("description") or "").split())
+    head, _, _ = text.partition(". ")
+    return (head + ".") if head and not head.endswith(".") else head
+
+
+def _step_headings(path: Path) -> list[str]:
+    """The `**Step N — ...**` headings a SKILL.md walks through.
+
+    The walk is the thing a skill adds over its tools, so the card shows
+    the steps rather than only the capabilities they need. Read off the
+    file, so a re-ordered skill re-orders its card.
+    """
+    body = path.read_text().split("---\n", 2)[-1]
+    steps = re.findall(r"^\*\*Step\s+([^\n*]+?)\.?\*\*", body, re.M)
+    return [" ".join(s.split()) for s in steps]
+
+
 def skill_roster() -> list[dict]:
     """Skills on disk, then the ones still declared as planned.
 
@@ -81,7 +120,13 @@ def skill_roster() -> list[dict]:
     from commonwealth.core.skills import load_skills
 
     shipped = [{"name": sk.name, "status": "shipped",
-                "capabilities": list(sk.required_capabilities)}
+                "capabilities": list(sk.required_capabilities),
+                "optional": list(sk.optional_capabilities),
+                # The skill's own first sentence. Read off the file rather
+                # than written here, so the card and the shipped skill
+                # cannot describe the workflow differently.
+                "description": _first_sentence(sk.path),
+                "steps": _step_headings(sk.path)}
                for sk in load_skills(ROOT / "skills")]
     names = {sk["name"] for sk in shipped}
     return shipped + [sk for sk in PLANNED_SKILLS if sk["name"] not in names]
@@ -225,8 +270,28 @@ DEMO_CALLS = [
      'DEQ monitoring stations include sampling dates and coverage limits.'),
     ("geo.find_boundaries", {"jurisdiction": "Prince George County"},
      'The boundary lookup returns both published polygons for this FIPS code.'),
+    ("civic.browse_code", {},
+     'The Code of Virginia from the top. There is no full-text search '
+     'over it from any public endpoint, so reaching a section you cannot '
+     'cite means walking to it.'),
+    ("civic.browse_code", {"title": "15.2"},
+     'One title\u2019s chapters. Each row carries the arguments for the '
+     'step below it.'),
+    ("civic.browse_code", {"title": "15.2", "chapter": "22"},
+     'The zoning chapter\u2019s sections. Each row carries the citation '
+     'to read next.'),
+    ("civic.browse_code", {"title": "99.9"},
+     'A title the Code does not have. The publisher answers an unknown '
+     'title and an empty one the same way, so the note says which '
+     'question came back empty rather than guessing.'),
+    ("civic.get_code_section", {"citation": "15.2-2200"},
+     "The section the walk above ends at, read by citation \u2014 the two "
+     "civic tools composing"),
     ("civic.get_code_section", {"citation": "1-500"},
      "Code of Virginia section text with its own citation history"),
+    ("civic.get_code_section", {"citation": "1-999999"},
+     'A section that does not exist. The site redirects rather than '
+     '404ing, and the answer is found=False, not an error.'),
 
     # --- a town and its county, one piece of ground ---
     ("geo.find_zoning", {"jurisdiction": "Vienna",
@@ -258,6 +323,13 @@ DEMO_CALLS = [
                                       "lon": -74.5, "lat": 36.5},
      "An empty environmental answer, carrying the same disclaimer as a "
      "hit — 'no station on record here' is not 'nothing here'"),
+
+    # --- large answers, and the handles that carry what does not fit ---
+    ("geo.find_boundaries", {"jurisdiction": "Fairfax County",
+                             "detail": "full"},
+     "A boundary too large to return whole. The generalized rings come "
+     "back inline and a commonwealth:// handle carries the publisher's "
+     "own 16,641 vertices, with the expiry stated"),
 
     # --- what is registered at all? ---
     ("registry.search_sources", {"capability": "zoning.lookup"},
@@ -313,6 +385,20 @@ def build_catalog() -> dict:
                           "contract_version": spec.contract_version,
                           "parameters": tool_parameters(spec),
                           "description": spec.description})
+
+    # The clients `commonwealth configure` knows how to write, read off
+    # that command's own table rather than typed onto the page. The site
+    # told readers to hand-write a config block while the CLI had been
+    # writing it correctly, with the absolute path filled in, all along.
+    from commonwealth.cli import configure as cfg
+
+    clients = [{"id": c.name, "scope": c.scope, "path": c.path,
+                "format": "json", "note": c.note}
+               for c in sorted(cfg.CLIENTS.values(), key=lambda c: c.name)]
+    clients += [{"id": name, "scope": "user", "path": "", "format": "toml",
+                 "note": "Keeps its MCP config in TOML; the command prints "
+                         "the block to paste."}
+                for name in sorted(cfg.TOML_CLIENTS)]
 
     sources = []
     for m in sorted(ctx.sources.manifests.values(), key=lambda m: m.id):
@@ -393,6 +479,7 @@ def build_catalog() -> dict:
             "trap_pairs": len(trap_pairs),
         },
         "tools": tools,
+        "clients": clients,
         "sources": sources,
         "capabilities": sorted(ctx.sources.capability_vocab),
         "jurisdiction_kinds": dict(sorted(kinds.items())),
@@ -602,20 +689,63 @@ def _virginia_law_adapter(mode: str):
     """The civic tool reads HTML pages, not ArcGIS, so it needs its own
     replay seam. Without this the 'fixtures' build would reach
     law.lis.virginia.gov for real and stop being deterministic."""
-    from commonwealth.adapters.replay import HtmlReplayFetcher
+    from commonwealth.adapters.replay import HtmlReplayFetcher, ReplayFetcher
     from commonwealth.adapters.virginia_law import VirginiaLawAdapter
+    from commonwealth.fixtures import (recorded_api_exchanges,
+                                       recorded_pages)
     if mode != "fixtures":
         return VirginiaLawAdapter()
-    base = "https://law.lis.virginia.gov/vacode"
-    fixture_dir = FIXTURES_DIR / "va-code-of-virginia"
-    pages = {
-        f"{base}/1-500/": ((fixture_dir / "section-1-500.html").read_text(),
-                           f"{base}/1-500/"),
-        f"{base}/1-999999/": (
-            (fixture_dir / "no-such-section.html").read_text(),
-            f"{base}/title1/"),
+    # The same two seams the tests replay, from the same two functions.
+    # This built its own copy of the page list, so a page recorded for the
+    # tests was not a page the site build could reach, and adding one to
+    # both was a step nobody would remember twice.
+    return VirginiaLawAdapter(fetcher=HtmlReplayFetcher(recorded_pages()),
+                              json_fetcher=ReplayFetcher(
+                                  recorded_api_exchanges()))
+
+
+SITE_URL = "https://pranava0x0.github.io/Commonwealth-MCP/"
+REPO_URL = "https://github.com/pranava0x0/Commonwealth-MCP"
+
+
+def structured_data(catalog: dict) -> dict:
+    """schema.org JSON-LD, so a crawler reads this as software.
+
+    Issue #40 is about being findable, and the registry listing is only
+    half of that. Every value here is derived from the same catalog the
+    page renders, so the description a search engine reads cannot drift
+    from the one a reader sees.
+    """
+    c = catalog["counts"]
+    return {
+        "@context": "https://schema.org",
+        "@graph": [
+            {"@type": "WebSite", "@id": SITE_URL + "#website",
+             "url": SITE_URL, "name": "Commonwealth-MCP",
+             "about": {"@id": SITE_URL + "#software"}},
+            {"@type": "SoftwareSourceCode", "@id": SITE_URL + "#software",
+             "name": "Commonwealth-MCP", "url": SITE_URL,
+             "codeRepository": REPO_URL,
+             "license": "https://www.apache.org/licenses/LICENSE-2.0",
+             "programmingLanguage": "Python",
+             "softwareVersion": catalog["version"],
+             "applicationCategory": "DeveloperApplication",
+             "description":
+                 f"An MCP server for Virginia state and local public data: "
+                 f"{c['tools']} tools over {c['sources_active']} registered "
+                 f"government systems, covering parcels, zoning, "
+                 f"jurisdiction boundaries, addresses, buildings, roads, "
+                 f"landmarks, monitored environmental sites and the Code of "
+                 f"Virginia. Every answer carries its sources, retrieval "
+                 f"dates and coverage, and every one of Virginia's "
+                 f"{c['jurisdictions']} governments is in its jurisdiction "
+                 f"table.",
+             "keywords": ["mcp", "model-context-protocol", "virginia",
+                          "civic-tech", "gis", "open-data", "public-data",
+                          "arcgis", "parcels", "zoning",
+                          "code-of-virginia"]},
+        ],
     }
-    return VirginiaLawAdapter(fetcher=HtmlReplayFetcher(pages))
 
 
 INDEX_HTML = DOCS_DATA.parent / "index.html"
@@ -631,7 +761,11 @@ def embed_data(html: str, block_id: str, obj: dict) -> str:
     JSON.parse needs no matching change on the JS side.
     """
     text = json.dumps(obj, separators=(",", ":")).replace("</script", "<\\/script")
-    pattern = (rf'(<script type="application/json" id="{block_id}">)'
+    # Either JSON mime type: the catalog blocks are `application/json`
+    # and the structured-data block is `application/ld+json`, and both are
+    # spliced the same way.
+    pattern = (rf'(<script type="application/(?:ld\+)?json" '
+               rf'id="{block_id}">)'
                r'.*?(</script>)')
     new_html, n = re.subn(pattern, lambda m: m.group(1) + text + m.group(2),
                            html, count=1, flags=re.DOTALL)
@@ -666,6 +800,7 @@ def main() -> int:
         json.dumps(resolver_demo, indent=1) + "\n")
 
     html = INDEX_HTML.read_text()
+    html = embed_data(html, "data-jsonld", structured_data(catalog))
     html = embed_data(html, "data-site", catalog)
     html = embed_data(html, "data-audit-demo", demo)
     html = embed_data(html, "data-resolver-demo", resolver_demo)
@@ -674,7 +809,7 @@ def main() -> int:
     print(f"site.json: {catalog['counts']}")
     print(f"audit-demo.json: {demo['call_count']} calls ({mode})")
     print(f"resolver-demo.json: {len(resolver_demo['queries'])} queries")
-    print(f"index.html: embedded 3 data blocks ({len(html)} bytes)")
+    print(f"index.html: embedded 4 data blocks ({len(html)} bytes)")
     return 0
 
 

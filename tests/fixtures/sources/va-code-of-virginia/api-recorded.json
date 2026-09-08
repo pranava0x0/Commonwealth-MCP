@@ -1,0 +1,3196 @@
+{
+ "source_id": "va-code-of-virginia",
+ "recorded_at": "2026-09-08T19:01:54Z",
+ "rights": {
+  "sources": [
+   {
+    "source_id": "va-code-of-virginia",
+    "publisher": "Division of Legislative Automated Systems (DLAS), Virginia General Assembly",
+    "terms_url": "https://law.lis.virginia.gov/vacode/"
+   }
+  ],
+  "note": "Recorded government-published responses; third-party content excluded from the repo's CC0 grant (../../../design/architecture.md decision 0011). Each publisher's own terms govern its own responses."
+ },
+ "summary": {
+  "operations": [
+   "CoVTitlesGetListOfJson",
+   "CoVChaptersGetListOfJson/15.2",
+   "CoVSectionsGetListOfJson/15.2/22",
+   "CoVChaptersGetListOfJson/99.9"
+  ]
+ },
+ "exchanges": [
+  {
+   "url": "https://law.lis.virginia.gov/api/CoVTitlesGetListOfJson",
+   "params": {},
+   "response": [
+    {
+     "TitleNumber": "1",
+     "TitleName": "General Provisions",
+     "ChapterList": null
+    },
+    {
+     "TitleNumber": "2.2",
+     "TitleName": "Administration of Government",
+     "ChapterList": null
+    },
+    {
+     "TitleNumber": "3.2",
+     "TitleName": "Agriculture, Animal Care, and Food",
+     "ChapterList": null
+    },
+    {
+     "TitleNumber": "4.1",
+     "TitleName": "Alcoholic Beverage and Cannabis Control",
+     "ChapterList": null
+    },
+    {
+     "TitleNumber": "5.1",
+     "TitleName": "Aviation",
+     "ChapterList": null
+    },
+    {
+     "TitleNumber": "6.2",
+     "TitleName": "Financial Institutions and Services",
+     "ChapterList": null
+    },
+    {
+     "TitleNumber": "8.01",
+     "TitleName": "Civil Remedies and Procedure",
+     "ChapterList": null
+    },
+    {
+     "TitleNumber": "8.1A",
+     "TitleName": "Uniform Commercial Code \u2014 General Provisions",
+     "ChapterList": null
+    },
+    {
+     "TitleNumber": "8.2",
+     "TitleName": "Commercial Code - Sales",
+     "ChapterList": null
+    },
+    {
+     "TitleNumber": "8.2",
+     "TitleName": "Commercial Code \u2014 Sales",
+     "ChapterList": null
+    },
+    {
+     "TitleNumber": "8.2A",
+     "TitleName": "Commercial Code \u2014 Leases",
+     "ChapterList": null
+    },
+    {
+     "TitleNumber": "8.2A",
+     "TitleName": "Commercial Code\u2014Leases",
+     "ChapterList": null
+    },
+    {
+     "TitleNumber": "8.3A",
+     "TitleName": "Commercial Code \u2014 Negotiable Instruments",
+     "ChapterList": null
+    },
+    {
+     "TitleNumber": "8.4",
+     "TitleName": "Commercial Code \u2014 Bank Deposits and Collections",
+     "ChapterList": null
+    },
+    {
+     "TitleNumber": "8.4A",
+     "TitleName": "Commercial Code \u2014 Funds Transfers",
+     "ChapterList": null
+    },
+    {
+     "TitleNumber": "8.4A",
+     "TitleName": "Commercial Code\u2014Funds Transfers",
+     "ChapterList": null
+    },
+    {
+     "TitleNumber": "8.5A",
+     "TitleName": "Uniform Commercial Code \u2014 Letters of Credit",
+     "ChapterList": null
+    },
+    {
+     "TitleNumber": "8.7",
+     "TitleName": "Commercial Code \u2014 Warehouse Receipts, Bills of Lading and Other Documents of Title",
+     "ChapterList": null
+    },
+    {
+     "TitleNumber": "8.8A",
+     "TitleName": "Commercial Code \u2014 Investment Securities",
+     "ChapterList": null
+    },
+    {
+     "TitleNumber": "8.9A",
+     "TitleName": "Commercial Code \u2014 Secured Transactions",
+     "ChapterList": null
+    },
+    {
+     "TitleNumber": "8.10",
+     "TitleName": "Commercial Code \u2014 Effective Date \u2014 Transitional Provisions",
+     "ChapterList": null
+    },
+    {
+     "TitleNumber": "8.11",
+     "TitleName": "1973 Amendatory Act \u2014 Effective Date and Transition Provisions",
+     "ChapterList": null
+    },
+    {
+     "TitleNumber": "8.12",
+     "TitleName": "Controllable Electronic Records",
+     "ChapterList": null
+    },
+    {
+     "TitleNumber": "8.13",
+     "TitleName": "2022 Amendments \u2013 Effective Date and Transition Provisions",
+     "ChapterList": null
+    },
+    {
+     "TitleNumber": "9.1",
+     "TitleName": "Commonwealth Public Safety",
+     "ChapterList": null
+    },
+    {
+     "TitleNumber": "10.1",
+     "TitleName": "Conservation",
+     "ChapterList": null
+    },
+    {
+     "TitleNumber": "11",
+     "TitleName": "Contracts",
+     "ChapterList": null
+    },
+    {
+     "TitleNumber": "12.1",
+     "TitleName": "State Corporation Commission",
+     "ChapterList": null
+    },
+    {
+     "TitleNumber": "13.1",
+     "TitleName": "Corporations",
+     "ChapterList": null
+    },
+    {
+     "TitleNumber": "15.2",
+     "TitleName": "Counties, Cities and Towns",
+     "ChapterList": null
+    },
+    {
+     "TitleNumber": "16.1",
+     "TitleName": "Courts Not of Record",
+     "ChapterList": null
+    },
+    {
+     "TitleNumber": "17.1",
+     "TitleName": "Courts of Record",
+     "ChapterList": null
+    },
+    {
+     "TitleNumber": "18.2",
+     "TitleName": "Crimes and Offenses Generally",
+     "ChapterList": null
+    },
+    {
+     "TitleNumber": "19.2",
+     "TitleName": "Criminal Procedure",
+     "ChapterList": null
+    },
+    {
+     "TitleNumber": "20",
+     "TitleName": "Domestic Relations",
+     "ChapterList": null
+    },
+    {
+     "TitleNumber": "21",
+     "TitleName": "Drainage, Soil Conservation, Sanitation and Public Facilities Districts",
+     "ChapterList": null
+    },
+    {
+     "TitleNumber": "22.1",
+     "TitleName": "Education",
+     "ChapterList": null
+    },
+    {
+     "TitleNumber": "23.1",
+     "TitleName": "Institutions of Higher Education; Other Educational and Cultural Institutions",
+     "ChapterList": null
+    },
+    {
+     "TitleNumber": "24.2",
+     "TitleName": "Elections",
+     "ChapterList": null
+    },
+    {
+     "TitleNumber": "25.1",
+     "TitleName": "Eminent Domain",
+     "ChapterList": null
+    },
+    {
+     "TitleNumber": "27",
+     "TitleName": "Fire Protection",
+     "ChapterList": null
+    },
+    {
+     "TitleNumber": "28.2",
+     "TitleName": "Fisheries and Habitat of the Tidal Waters",
+     "ChapterList": null
+    },
+    {
+     "TitleNumber": "29.1",
+     "TitleName": "Wildlife, Inland Fisheries and Boating",
+     "ChapterList": null
+    },
+    {
+     "TitleNumber": "30",
+     "TitleName": "General Assembly",
+     "ChapterList": null
+    },
+    {
+     "TitleNumber": "32.1",
+     "TitleName": "Health",
+     "ChapterList": null
+    },
+    {
+     "TitleNumber": "33.2",
+     "TitleName": "Highways and Other Surface Transportation Systems",
+     "ChapterList": null
+    },
+    {
+     "TitleNumber": "34",
+     "TitleName": "Homestead and Other Exemptions",
+     "ChapterList": null
+    },
+    {
+     "TitleNumber": "35.1",
+     "TitleName": "Hotels, Restaurants, Summer Camps, and Campgrounds",
+     "ChapterList": null
+    },
+    {
+     "TitleNumber": "36",
+     "TitleName": "Housing",
+     "ChapterList": null
+    },
+    {
+     "TitleNumber": "37.2",
+     "TitleName": "Behavioral Health and Developmental Services",
+     "ChapterList": null
+    },
+    {
+     "TitleNumber": "38.2",
+     "TitleName": "Insurance",
+     "ChapterList": null
+    },
+    {
+     "TitleNumber": "40.1",
+     "TitleName": "Labor and Employment",
+     "ChapterList": null
+    },
+    {
+     "TitleNumber": "41.1",
+     "TitleName": "Land Office",
+     "ChapterList": null
+    },
+    {
+     "TitleNumber": "42.1",
+     "TitleName": "Libraries",
+     "ChapterList": null
+    },
+    {
+     "TitleNumber": "43",
+     "TitleName": "Mechanics' and Certain Other Liens",
+     "ChapterList": null
+    },
+    {
+     "TitleNumber": "44",
+     "TitleName": "Military and Emergency Laws",
+     "ChapterList": null
+    },
+    {
+     "TitleNumber": "45.2",
+     "TitleName": "Mines, Minerals, and Energy",
+     "ChapterList": null
+    },
+    {
+     "TitleNumber": "46.2",
+     "TitleName": "Motor Vehicles",
+     "ChapterList": null
+    },
+    {
+     "TitleNumber": "47.1",
+     "TitleName": "Notaries and Out-of-State Commissioners",
+     "ChapterList": null
+    },
+    {
+     "TitleNumber": "48",
+     "TitleName": "Nuisances",
+     "ChapterList": null
+    },
+    {
+     "TitleNumber": "49",
+     "TitleName": "Oaths, Affirmations and Bonds",
+     "ChapterList": null
+    },
+    {
+     "TitleNumber": "50",
+     "TitleName": "Partnerships",
+     "ChapterList": null
+    },
+    {
+     "TitleNumber": "51.1",
+     "TitleName": "Pensions, Benefits, and Retirement",
+     "ChapterList": null
+    },
+    {
+     "TitleNumber": "51.5",
+     "TitleName": "Persons with Disabilities",
+     "ChapterList": null
+    },
+    {
+     "TitleNumber": "52",
+     "TitleName": "Police (State)",
+     "ChapterList": null
+    },
+    {
+     "TitleNumber": "53.1",
+     "TitleName": "Prisons and Other Methods of Correction",
+     "ChapterList": null
+    },
+    {
+     "TitleNumber": "54.1",
+     "TitleName": "Professions and Occupations",
+     "ChapterList": null
+    },
+    {
+     "TitleNumber": "55.1",
+     "TitleName": "Property and Conveyances",
+     "ChapterList": null
+    },
+    {
+     "TitleNumber": "56",
+     "TitleName": "Public Service Companies",
+     "ChapterList": null
+    },
+    {
+     "TitleNumber": "57",
+     "TitleName": "Religious and Charitable Matters; Cemeteries",
+     "ChapterList": null
+    },
+    {
+     "TitleNumber": "58.1",
+     "TitleName": "Taxation",
+     "ChapterList": null
+    },
+    {
+     "TitleNumber": "59.1",
+     "TitleName": "Trade and Commerce",
+     "ChapterList": null
+    },
+    {
+     "TitleNumber": "60.2",
+     "TitleName": "Unemployment Compensation",
+     "ChapterList": null
+    },
+    {
+     "TitleNumber": "61.1",
+     "TitleName": "Warehouses, Cold Storage and Refrigerated Locker Plants",
+     "ChapterList": null
+    },
+    {
+     "TitleNumber": "62.1",
+     "TitleName": "Waters of the State, Ports and Harbors",
+     "ChapterList": null
+    },
+    {
+     "TitleNumber": "63.2",
+     "TitleName": "Welfare (Social Services)",
+     "ChapterList": null
+    },
+    {
+     "TitleNumber": "64.2",
+     "TitleName": "Wills, Trusts, and Fiduciaries",
+     "ChapterList": null
+    },
+    {
+     "TitleNumber": "65.2",
+     "TitleName": "Workers' Compensation",
+     "ChapterList": null
+    },
+    {
+     "TitleNumber": "66",
+     "TitleName": "Juvenile Justice",
+     "ChapterList": null
+    }
+   ]
+  },
+  {
+   "url": "https://law.lis.virginia.gov/api/CoVChaptersGetListOfJson/15.2",
+   "params": {},
+   "response": {
+    "TitleNumber": "15.2",
+    "TitleName": "Counties, Cities and Towns",
+    "ChapterList": [
+     {
+      "ChapterNum": "1",
+      "ChapterName": "GENERAL PROVISIONS"
+     },
+     {
+      "ChapterNum": "11",
+      "ChapterName": "Powers of Cities and Towns"
+     },
+     {
+      "ChapterNum": "12",
+      "ChapterName": "GENERAL POWERS AND PROCEDURES OF COUNTIES"
+     },
+     {
+      "ChapterNum": "13",
+      "ChapterName": "Joint Actions by Localities"
+     },
+     {
+      "ChapterNum": "14",
+      "ChapterName": "GOVERNING BODIES OF LOCALITIES"
+     },
+     {
+      "ChapterNum": "15",
+      "ChapterName": "Local Government Personnel, Qualification for Office, Bonds, Dual Office Holding and Certain Local Government Officers"
+     },
+     {
+      "ChapterNum": "16",
+      "ChapterName": "LOCAL CONSTITUTIONAL OFFICERS, COURTHOUSES AND SUPPLIES"
+     },
+     {
+      "ChapterNum": "17",
+      "ChapterName": "Police and Public Order"
+     },
+     {
+      "ChapterNum": "18",
+      "ChapterName": "BUILDINGS, MONUMENTS AND LANDS GENERALLY"
+     },
+     {
+      "ChapterNum": "18.1",
+      "ChapterName": "LOCAL GOVERNMENT FACILITIES PRIVATE CAPITAL LENDING"
+     },
+     {
+      "ChapterNum": "19",
+      "ChapterName": "CONDEMNATION"
+     },
+     {
+      "ChapterNum": "19.1",
+      "ChapterName": "ACQUISITION OF WATERWORKS SYSTEMS"
+     },
+     {
+      "ChapterNum": "2",
+      "ChapterName": "LOCAL GOVERNMENT CHARTERS"
+     },
+     {
+      "ChapterNum": "20",
+      "ChapterName": "STREETS AND ALLEYS"
+     },
+     {
+      "ChapterNum": "21",
+      "ChapterName": "FRANCHISES; SALE AND LEASE OF CERTAIN MUNICIPAL PUBLIC PROPERTY; PUBLIC UTILITIES"
+     },
+     {
+      "ChapterNum": "22",
+      "ChapterName": "PLANNING, SUBDIVISION OF LAND AND ZONING"
+     },
+     {
+      "ChapterNum": "24",
+      "ChapterName": "SERVICE DISTRICTS; TAXES AND ASSESSMENTS FOR LOCAL IMPROVEMENTS"
+     },
+     {
+      "ChapterNum": "24.1",
+      "ChapterName": "Urban Public-Private Partnership Redevelopment Fund"
+     },
+     {
+      "ChapterNum": "24.2",
+      "ChapterName": "Virginia Broadband Infrastructure Loan Fund"
+     },
+     {
+      "ChapterNum": "24.3",
+      "ChapterName": "VIRGINIA INFRASTRUCTURE PROJECT LOAN FUND"
+     },
+     {
+      "ChapterNum": "25",
+      "ChapterName": "BUDGETS, AUDITS AND REPORTS"
+     },
+     {
+      "ChapterNum": "26",
+      "ChapterName": "PUBLIC FINANCE ACT"
+     },
+     {
+      "ChapterNum": "27",
+      "ChapterName": "Local Government Group Self-Insurance Pools"
+     },
+     {
+      "ChapterNum": "28",
+      "ChapterName": "VIRGINIA INDOOR CLEAN AIR ACT"
+     },
+     {
+      "ChapterNum": "28.1",
+      "ChapterName": "PILOT PROGRAMS FOR THE DELIVERY OF HUMAN SERVICES"
+     },
+     {
+      "ChapterNum": "28.2",
+      "ChapterName": "VIRGINIA INDOOR CLEAN AIR ACT"
+     },
+     {
+      "ChapterNum": "29",
+      "ChapterName": "Commission on Local Government"
+     },
+     {
+      "ChapterNum": "3",
+      "ChapterName": "OPTIONAL FORMS OF COUNTY GOVERNMENT; GENERAL PROVISIONS"
+     },
+     {
+      "ChapterNum": "30",
+      "ChapterName": "SPECIAL COURTS"
+     },
+     {
+      "ChapterNum": "31",
+      "ChapterName": "SETTLING BOUNDARIES BETWEEN LOCALITIES"
+     },
+     {
+      "ChapterNum": "32",
+      "ChapterName": "Boundary Changes of Towns and Cities"
+     },
+     {
+      "ChapterNum": "33",
+      "ChapterName": "IMMUNITY OF COUNTIES OR PARTS OF COUNTIES FROM CITY-INITIATED ANNEXATION AND CITY INCORPORATION"
+     },
+     {
+      "ChapterNum": "34",
+      "ChapterName": "Voluntary Settlement of Annexation, Transition or Immunity Issues"
+     },
+     {
+      "ChapterNum": "35",
+      "ChapterName": "Consolidation of Localities"
+     },
+     {
+      "ChapterNum": "36",
+      "ChapterName": "INCORPORATION OF TOWNS BY JUDICIAL PROCEEDING"
+     },
+     {
+      "ChapterNum": "37",
+      "ChapterName": "ANNULMENT OF TOWN CHARTERS"
+     },
+     {
+      "ChapterNum": "38",
+      "ChapterName": "TRANSITION OF TOWNS TO CITIES"
+     },
+     {
+      "ChapterNum": "39",
+      "ChapterName": "Transition of Counties to Cities"
+     },
+     {
+      "ChapterNum": "4",
+      "ChapterName": "COUNTY BOARD FORM OF GOVERNMENT"
+     },
+     {
+      "ChapterNum": "40",
+      "ChapterName": "JUDICIAL DETERMINATION OF CITY STATUS"
+     },
+     {
+      "ChapterNum": "41",
+      "ChapterName": "TRANSITION OF CITY TO TOWN STATUS"
+     },
+     {
+      "ChapterNum": "42",
+      "ChapterName": "REGIONAL COOPERATION ACT"
+     },
+     {
+      "ChapterNum": "43",
+      "ChapterName": "AGRICULTURAL AND FORESTAL DISTRICTS ACT"
+     },
+     {
+      "ChapterNum": "44",
+      "ChapterName": "Local Agricultural and Forestal Districts Act"
+     },
+     {
+      "ChapterNum": "45",
+      "ChapterName": "TRANSPORTATION DISTRICT ACT OF 1964 [Repealed]"
+     },
+     {
+      "ChapterNum": "46",
+      "ChapterName": "Multicounty Transportation Improvement Districts"
+     },
+     {
+      "ChapterNum": "47",
+      "ChapterName": "Transportation Improvement District in Individual Localities"
+     },
+     {
+      "ChapterNum": "48",
+      "ChapterName": "Virginia Transportation Service District Act"
+     },
+     {
+      "ChapterNum": "48.1",
+      "ChapterName": "NORTHERN VIRGINIA TRANSPORTATION AUTHORITY [Repealed]"
+     },
+     {
+      "ChapterNum": "48.2",
+      "ChapterName": "NORTHERN VIRGINIA TRANSPORTATION AUTHORITY [Repealed]"
+     },
+     {
+      "ChapterNum": "49",
+      "ChapterName": "INDUSTRIAL DEVELOPMENT AND REVENUE BOND ACT"
+     },
+     {
+      "ChapterNum": "5",
+      "ChapterName": "COUNTY EXECUTIVE FORM OF GOVERNMENT"
+     },
+     {
+      "ChapterNum": "50",
+      "ChapterName": "Private Activity Bonds"
+     },
+     {
+      "ChapterNum": "51",
+      "ChapterName": "VIRGINIA WATER AND WASTE AUTHORITIES ACT"
+     },
+     {
+      "ChapterNum": "52",
+      "ChapterName": "HOSPITAL OR HEALTH CENTER COMMISSIONS"
+     },
+     {
+      "ChapterNum": "53",
+      "ChapterName": "HOSPITAL AUTHORITIES"
+     },
+     {
+      "ChapterNum": "53.1",
+      "ChapterName": "Southwest Virginia Health Authority"
+     },
+     {
+      "ChapterNum": "54",
+      "ChapterName": "Electric Authorities Act"
+     },
+     {
+      "ChapterNum": "54.1",
+      "ChapterName": "Virginia Wireless Service Authorities Act"
+     },
+     {
+      "ChapterNum": "55",
+      "ChapterName": "Heart of Appalachia Tourism Authority"
+     },
+     {
+      "ChapterNum": "55.1",
+      "ChapterName": "SOUTHSIDE VIRGINIA TOURISM DEVELOPMENT AUTHORITY"
+     },
+     {
+      "ChapterNum": "55.2",
+      "ChapterName": "TOURISM FINANCING DEVELOPMENT AUTHORITY ACT"
+     },
+     {
+      "ChapterNum": "56",
+      "ChapterName": "PUBLIC RECREATIONAL FACILITIES AUTHORITIES ACT"
+     },
+     {
+      "ChapterNum": "57",
+      "ChapterName": "PARK AUTHORITIES ACT"
+     },
+     {
+      "ChapterNum": "58",
+      "ChapterName": "Virginia Baseball Stadium Authority"
+     },
+     {
+      "ChapterNum": "59",
+      "ChapterName": "HAMPTON ROADS SPORTS FACILITY AUTHORITY"
+     },
+     {
+      "ChapterNum": "59.1",
+      "ChapterName": "Virginia Beach Arena"
+     },
+     {
+      "ChapterNum": "59.2",
+      "ChapterName": "Virginia Beach Sports or Entertainment Project"
+     },
+     {
+      "ChapterNum": "59.3",
+      "ChapterName": "Hampton Roads Regional Arena Authority"
+     },
+     {
+      "ChapterNum": "6",
+      "ChapterName": "COUNTY MANAGER FORM OF GOVERNMENT"
+     },
+     {
+      "ChapterNum": "60",
+      "ChapterName": "VIRGINIA COALFIELD ECONOMIC DEVELOPMENT AUTHORITY"
+     },
+     {
+      "ChapterNum": "60.01",
+      "ChapterName": "Virginia Coalfields Expressway Authority"
+     },
+     {
+      "ChapterNum": "60.1",
+      "ChapterName": "SOUTHWEST REGIONAL RECREATION AUTHORITY"
+     },
+     {
+      "ChapterNum": "61",
+      "ChapterName": "SOUTHSIDE VIRGINIA DEVELOPMENT AUTHORITY"
+     },
+     {
+      "ChapterNum": "62",
+      "ChapterName": "ALLEGHANY HIGHLANDS ECONOMIC DEVELOPMENT AUTHORITY"
+     },
+     {
+      "ChapterNum": "63",
+      "ChapterName": "AUTHORITIES FOR DEVELOPMENT OF FORMER FEDERAL AREAS"
+     },
+     {
+      "ChapterNum": "64",
+      "ChapterName": "VIRGINIA REGIONAL INDUSTRIAL FACILITIES ACT"
+     },
+     {
+      "ChapterNum": "65",
+      "ChapterName": "TOURIST TRAIN DEVELOPMENT AUTHORITY"
+     },
+     {
+      "ChapterNum": "65.1",
+      "ChapterName": "TOURIST TRAIN DEVELOPMENT AUTHORITY"
+     },
+     {
+      "ChapterNum": "66",
+      "ChapterName": "Middle Peninsula Chesapeake Bay Public Access Authority Act"
+     },
+     {
+      "ChapterNum": "66.1",
+      "ChapterName": "Northern Neck Chesapeake Bay Public Access Authority Act"
+     },
+     {
+      "ChapterNum": "67",
+      "ChapterName": "BUCHANAN COUNTY TOURIST TRAIN DEVELOPMENT AUTHORITY"
+     },
+     {
+      "ChapterNum": "67.1",
+      "ChapterName": "VIRGINIA COAL TRAIN HERITAGE AUTHORITY"
+     },
+     {
+      "ChapterNum": "68",
+      "ChapterName": "WILLIAMSBURG AREA TRANSIT AUTHORITY [Repealed]"
+     },
+     {
+      "ChapterNum": "7",
+      "ChapterName": "COUNTY MANAGER PLAN OF GOVERNMENT"
+     },
+     {
+      "ChapterNum": "70",
+      "ChapterName": "RICHMOND METROPOLITAN TRANSPORTATION AUTHORITY [Repealed]"
+     },
+     {
+      "ChapterNum": "71",
+      "ChapterName": "CHARLOTTESVILLE-ALBEMARLE REGIONAL TRANSIT AUTHORITY [Repealed]"
+     },
+     {
+      "ChapterNum": "72",
+      "ChapterName": "BVU AUTHORITY ACT"
+     },
+     {
+      "ChapterNum": "73",
+      "ChapterName": "FORT MONROE AUTHORITY ACT"
+     },
+     {
+      "ChapterNum": "74",
+      "ChapterName": "Eastern Shore Water Access Authority"
+     },
+     {
+      "ChapterNum": "75",
+      "ChapterName": "Land Bank Entities Act"
+     },
+     {
+      "ChapterNum": "76",
+      "ChapterName": "RURAL COASTAL VIRGINIA COMMUNITY ENHANCEMENT AUTHORITY"
+     },
+     {
+      "ChapterNum": "8",
+      "ChapterName": "URBAN COUNTY EXECUTIVE FORM OF GOVERNMENT"
+     },
+     {
+      "ChapterNum": "9",
+      "ChapterName": "GENERAL POWERS OF LOCAL GOVERNMENTS"
+     }
+    ]
+   }
+  },
+  {
+   "url": "https://law.lis.virginia.gov/api/CoVSectionsGetListOfJson/15.2/22",
+   "params": {},
+   "response": {
+    "TitleNumber": "15.2",
+    "TitleName": "Counties, Cities and Towns",
+    "SubtitleNum": "II",
+    "SubtitleName": "POWERS OF LOCAL GOVERNMENT",
+    "PartNum": "",
+    "PartName": "",
+    "ChapterNum": "22",
+    "ChapterName": "PLANNING, SUBDIVISION OF LAND AND ZONING",
+    "ArticleList": [
+     {
+      "ArticleNum": "1",
+      "ArticleName": "General Provisions",
+      "SubPartList": [
+       {
+        "SubPartNum": "",
+        "SubPartName": "",
+        "SectionList": [
+         {
+          "SectionRange": "\u00a7 15.2-2200",
+          "SectionNumber": "15.2-2200",
+          "SectionTitle": "Declaration of legislative intent"
+         }
+        ]
+       },
+       {
+        "SubPartNum": "",
+        "SubPartName": "",
+        "SectionList": [
+         {
+          "SectionRange": "\u00a7 15.2-2201",
+          "SectionNumber": "15.2-2201",
+          "SectionTitle": "(Effective January 1, 2027, until January 1, 2031) Definitions"
+         }
+        ]
+       },
+       {
+        "SubPartNum": "",
+        "SubPartName": "",
+        "SectionList": [
+         {
+          "SectionRange": "\u00a7 15.2-2201",
+          "SectionNumber": "15.2-2201",
+          "SectionTitle": "(Effective January 1, 2031) Definitions"
+         }
+        ]
+       },
+       {
+        "SubPartNum": "",
+        "SubPartName": "",
+        "SectionList": [
+         {
+          "SectionRange": "\u00a7 15.2-2201",
+          "SectionNumber": "15.2-2201",
+          "SectionTitle": "(Effective until January 1, 2027) Definitions"
+         }
+        ]
+       },
+       {
+        "SubPartNum": "",
+        "SubPartName": "",
+        "SectionList": [
+         {
+          "SectionRange": "\u00a7 15.2-2202",
+          "SectionNumber": "15.2-2202",
+          "SectionTitle": "Duties of state agencies; electric utilities"
+         }
+        ]
+       },
+       {
+        "SubPartNum": "",
+        "SubPartName": "",
+        "SectionList": [
+         {
+          "SectionRange": "\u00a7 15.2-2203",
+          "SectionNumber": "15.2-2203",
+          "SectionTitle": "Existing planning commissions and boards of zoning appeals; validation of plans previously adopted"
+         }
+        ]
+       },
+       {
+        "SubPartNum": "",
+        "SubPartName": "",
+        "SectionList": [
+         {
+          "SectionRange": "\u00a7 15.2-2204",
+          "SectionNumber": "15.2-2204",
+          "SectionTitle": "Advertisement of plans, ordinances, etc.; joint public hearings; written notice of certain amendments"
+         }
+        ]
+       },
+       {
+        "SubPartNum": "",
+        "SubPartName": "",
+        "SectionList": [
+         {
+          "SectionRange": "\u00a7 15.2-2205",
+          "SectionNumber": "15.2-2205",
+          "SectionTitle": "Additional notice of planning or zoning matters"
+         }
+        ]
+       },
+       {
+        "SubPartNum": "",
+        "SubPartName": "",
+        "SectionList": [
+         {
+          "SectionRange": "\u00a7 15.2-2206",
+          "SectionNumber": "15.2-2206",
+          "SectionTitle": "When locality may require applicant to give notice; how given"
+         }
+        ]
+       },
+       {
+        "SubPartNum": "",
+        "SubPartName": "",
+        "SectionList": [
+         {
+          "SectionRange": "\u00a7 15.2-2207",
+          "SectionNumber": "15.2-2207",
+          "SectionTitle": "Public notice of juvenile residential care facilities in certain localities"
+         }
+        ]
+       },
+       {
+        "SubPartNum": "",
+        "SubPartName": "",
+        "SectionList": [
+         {
+          "SectionRange": "\u00a7 15.2-2208",
+          "SectionNumber": "15.2-2208",
+          "SectionTitle": "Restraining violations of chapter"
+         }
+        ]
+       },
+       {
+        "SubPartNum": "",
+        "SubPartName": "",
+        "SectionList": [
+         {
+          "SectionRange": "\u00a7 15.2-2208.1",
+          "SectionNumber": "15.2-2208.1",
+          "SectionTitle": "Damages for unconstitutional grant or denial by locality of certain permits and approvals"
+         }
+        ]
+       },
+       {
+        "SubPartNum": "",
+        "SubPartName": "",
+        "SectionList": [
+         {
+          "SectionRange": "\u00a7 15.2-2208.2",
+          "SectionNumber": "15.2-2208.2",
+          "SectionTitle": "Damages for an enforcement action undertaken by a locality with willful disregard for applicable law"
+         }
+        ]
+       },
+       {
+        "SubPartNum": "",
+        "SubPartName": "",
+        "SectionList": [
+         {
+          "SectionRange": "\u00a7 15.2-2209",
+          "SectionNumber": "15.2-2209",
+          "SectionTitle": "Civil penalties for violations of zoning ordinance"
+         }
+        ]
+       },
+       {
+        "SubPartNum": "",
+        "SubPartName": "",
+        "SectionList": [
+         {
+          "SectionRange": "\u00a7 15.2-2209.1",
+          "SectionNumber": "15.2-2209.1",
+          "SectionTitle": "Extension of approvals to address housing crisis"
+         }
+        ]
+       },
+       {
+        "SubPartNum": "",
+        "SubPartName": "",
+        "SectionList": [
+         {
+          "SectionRange": "\u00a7 15.2-2209.1:1",
+          "SectionNumber": "15.2-2209.1:1",
+          "SectionTitle": "Extension of approvals to address the COVID-19 pandemic"
+         }
+        ]
+       },
+       {
+        "SubPartNum": "",
+        "SubPartName": "",
+        "SectionList": [
+         {
+          "SectionRange": "\u00a7 15.2-2209.1:2",
+          "SectionNumber": "15.2-2209.1:2",
+          "SectionTitle": "Extension of land use approvals for solar photovoltaic projects"
+         }
+        ]
+       },
+       {
+        "SubPartNum": "",
+        "SubPartName": "",
+        "SectionList": [
+         {
+          "SectionRange": "\u00a7 15.2-2209.2",
+          "SectionNumber": "15.2-2209.2",
+          "SectionTitle": "Public infrastructure maintenance bonds"
+         }
+        ]
+       },
+       {
+        "SubPartNum": "",
+        "SubPartName": "",
+        "SectionList": [
+         {
+          "SectionRange": "\u00a7 15.2-2209.3",
+          "SectionNumber": "15.2-2209.3",
+          "SectionTitle": "Residential land development and construction fee transparency; local housing development; annual report and database"
+         }
+        ]
+       },
+       {
+        "SubPartNum": "",
+        "SubPartName": "",
+        "SectionList": [
+         {
+          "SectionRange": "\u00a7 15.2-2209.4",
+          "SectionNumber": "15.2-2209.4",
+          "SectionTitle": "Minimum off-street parking requirements; designated areas; administrative reductions"
+         }
+        ]
+       },
+       {
+        "SubPartNum": "",
+        "SubPartName": "",
+        "SectionList": [
+         {
+          "SectionRange": "\u00a7 15.2-2209.5",
+          "SectionNumber": "15.2-2209.5",
+          "SectionTitle": "Siting of data centers; site assessment"
+         }
+        ]
+       }
+      ]
+     },
+     {
+      "ArticleNum": "2",
+      "ArticleName": "LOCAL PLANNING COMMISSIONS",
+      "SubPartList": [
+       {
+        "SubPartNum": "",
+        "SubPartName": "",
+        "SectionList": [
+         {
+          "SectionRange": "\u00a7 15.2-2210",
+          "SectionNumber": "15.2-2210",
+          "SectionTitle": "Creation of local planning commissions; participation in planning district commissions or joint local commissions"
+         }
+        ]
+       },
+       {
+        "SubPartNum": "",
+        "SubPartName": "",
+        "SectionList": [
+         {
+          "SectionRange": "\u00a7 15.2-2211",
+          "SectionNumber": "15.2-2211",
+          "SectionTitle": "Cooperation of local planning commissions and other agencies"
+         }
+        ]
+       },
+       {
+        "SubPartNum": "",
+        "SubPartName": "",
+        "SectionList": [
+         {
+          "SectionRange": "\u00a7 15.2-2212",
+          "SectionNumber": "15.2-2212",
+          "SectionTitle": "Qualifications, appointment, removal, terms and compensation of members of local planning commissions"
+         }
+        ]
+       },
+       {
+        "SubPartNum": "",
+        "SubPartName": "",
+        "SectionList": [
+         {
+          "SectionRange": "\u00a7 15.2-2213",
+          "SectionNumber": "15.2-2213",
+          "SectionTitle": "Advisory members"
+         }
+        ]
+       },
+       {
+        "SubPartNum": "",
+        "SubPartName": "",
+        "SectionList": [
+         {
+          "SectionRange": "\u00a7 15.2-2214",
+          "SectionNumber": "15.2-2214",
+          "SectionTitle": "Meetings"
+         }
+        ]
+       },
+       {
+        "SubPartNum": "",
+        "SubPartName": "",
+        "SectionList": [
+         {
+          "SectionRange": "\u00a7 15.2-2215",
+          "SectionNumber": "15.2-2215",
+          "SectionTitle": "Quorum majority vote"
+         }
+        ]
+       },
+       {
+        "SubPartNum": "",
+        "SubPartName": "",
+        "SectionList": [
+         {
+          "SectionRange": "\u00a7 15.2-2216",
+          "SectionNumber": "15.2-2216",
+          "SectionTitle": "Facilities for holding of meetings and preservation of documents; appropriations for expenses"
+         }
+        ]
+       },
+       {
+        "SubPartNum": "",
+        "SubPartName": "",
+        "SectionList": [
+         {
+          "SectionRange": "\u00a7 15.2-2217",
+          "SectionNumber": "15.2-2217",
+          "SectionTitle": "Officers, employees and consultants; expenditures; rules and records; special surveys"
+         }
+        ]
+       },
+       {
+        "SubPartNum": "",
+        "SubPartName": "",
+        "SectionList": [
+         {
+          "SectionRange": "\u00a7 15.2-2218",
+          "SectionNumber": "15.2-2218",
+          "SectionTitle": "County planning commission serving as commission of town"
+         }
+        ]
+       },
+       {
+        "SubPartNum": "",
+        "SubPartName": "",
+        "SectionList": [
+         {
+          "SectionRange": "\u00a7 15.2-2219",
+          "SectionNumber": "15.2-2219",
+          "SectionTitle": "Joint local planning commissions"
+         }
+        ]
+       },
+       {
+        "SubPartNum": "",
+        "SubPartName": "",
+        "SectionList": [
+         {
+          "SectionRange": "\u00a7 15.2-2220",
+          "SectionNumber": "15.2-2220",
+          "SectionTitle": "Duplicate planning commission authorized for certain local governments"
+         }
+        ]
+       },
+       {
+        "SubPartNum": "",
+        "SubPartName": "",
+        "SectionList": [
+         {
+          "SectionRange": "\u00a7 15.2-2221",
+          "SectionNumber": "15.2-2221",
+          "SectionTitle": "Duties of commissions"
+         }
+        ]
+       },
+       {
+        "SubPartNum": "",
+        "SubPartName": "",
+        "SectionList": [
+         {
+          "SectionRange": "\u00a7 15.2-2222",
+          "SectionNumber": "15.2-2222",
+          "SectionTitle": "Expenditures; gifts and donations"
+         }
+        ]
+       },
+       {
+        "SubPartNum": "",
+        "SubPartName": "",
+        "SectionList": [
+         {
+          "SectionRange": "\u00a7 15.2-2222.1",
+          "SectionNumber": "15.2-2222.1",
+          "SectionTitle": "Coordination of state and local transportation planning"
+         }
+        ]
+       }
+      ]
+     },
+     {
+      "ArticleNum": "3",
+      "ArticleName": "The Comprehensive Plan",
+      "SubPartList": [
+       {
+        "SubPartNum": "",
+        "SubPartName": "",
+        "SectionList": [
+         {
+          "SectionRange": "\u00a7 15.2-2223",
+          "SectionNumber": "15.2-2223",
+          "SectionTitle": "Comprehensive plan to be prepared and adopted; scope and purpose"
+         }
+        ]
+       },
+       {
+        "SubPartNum": "",
+        "SubPartName": "",
+        "SectionList": [
+         {
+          "SectionRange": "\u00a7 15.2-2223.1",
+          "SectionNumber": "15.2-2223.1",
+          "SectionTitle": "Comprehensive plan to include urban development areas"
+         }
+        ]
+       },
+       {
+        "SubPartNum": "",
+        "SubPartName": "",
+        "SectionList": [
+         {
+          "SectionRange": "\u00a7 15.2-2223.2",
+          "SectionNumber": "15.2-2223.2",
+          "SectionTitle": "Comprehensive plan to include coastal resource management guidance"
+         }
+        ]
+       },
+       {
+        "SubPartNum": "",
+        "SubPartName": "",
+        "SectionList": [
+         {
+          "SectionRange": "\u00a7 15.2-2223.3",
+          "SectionNumber": "15.2-2223.3",
+          "SectionTitle": "Comprehensive plan shall incorporate strategies to combat projected sea-level rise and recurrent flooding"
+         }
+        ]
+       },
+       {
+        "SubPartNum": "",
+        "SubPartName": "",
+        "SectionList": [
+         {
+          "SectionRange": "\u00a7 15.2-2223.4",
+          "SectionNumber": "15.2-2223.4",
+          "SectionTitle": "Comprehensive plan shall provide for transit-oriented development"
+         }
+        ]
+       },
+       {
+        "SubPartNum": "",
+        "SubPartName": "",
+        "SectionList": [
+         {
+          "SectionRange": "\u00a7 15.2-2223.5",
+          "SectionNumber": "15.2-2223.5",
+          "SectionTitle": "Comprehensive plan shall address manufactured housing"
+         }
+        ]
+       },
+       {
+        "SubPartNum": "",
+        "SubPartName": "",
+        "SectionList": [
+         {
+          "SectionRange": "\u00a7 15.2-2223.6",
+          "SectionNumber": "15.2-2223.6",
+          "SectionTitle": "Comprehensive plan shall consider adopting an environmental justice strategy"
+         }
+        ]
+       },
+       {
+        "SubPartNum": "",
+        "SubPartName": "",
+        "SectionList": [
+         {
+          "SectionRange": "\u00a7 15.2-2224",
+          "SectionNumber": "15.2-2224",
+          "SectionTitle": " Surveys and studies to be made in preparation of plan; implementation of plan"
+         }
+        ]
+       },
+       {
+        "SubPartNum": "",
+        "SubPartName": "",
+        "SectionList": [
+         {
+          "SectionRange": "\u00a7 15.2-2225",
+          "SectionNumber": "15.2-2225",
+          "SectionTitle": "Notice and hearing on plan; recommendation by local planning commission to governing body; posting of plan on website"
+         }
+        ]
+       },
+       {
+        "SubPartNum": "",
+        "SubPartName": "",
+        "SectionList": [
+         {
+          "SectionRange": "\u00a7 15.2-2226",
+          "SectionNumber": "15.2-2226",
+          "SectionTitle": "Adoption or disapproval of plan by governing body"
+         }
+        ]
+       },
+       {
+        "SubPartNum": "",
+        "SubPartName": "",
+        "SectionList": [
+         {
+          "SectionRange": "\u00a7 15.2-2227",
+          "SectionNumber": "15.2-2227",
+          "SectionTitle": "Return of plan to local planning commission; resubmission"
+         }
+        ]
+       },
+       {
+        "SubPartNum": "",
+        "SubPartName": "",
+        "SectionList": [
+         {
+          "SectionRange": "\u00a7 15.2-2228",
+          "SectionNumber": "15.2-2228",
+          "SectionTitle": "Adoption of parts of plan"
+         }
+        ]
+       },
+       {
+        "SubPartNum": "",
+        "SubPartName": "",
+        "SectionList": [
+         {
+          "SectionRange": "\u00a7 15.2-2229",
+          "SectionNumber": "15.2-2229",
+          "SectionTitle": "Amendments"
+         }
+        ]
+       },
+       {
+        "SubPartNum": "",
+        "SubPartName": "",
+        "SectionList": [
+         {
+          "SectionRange": "\u00a7 15.2-2230",
+          "SectionNumber": "15.2-2230",
+          "SectionTitle": "Plan to be reviewed at least once every five years"
+         }
+        ]
+       },
+       {
+        "SubPartNum": "",
+        "SubPartName": "",
+        "SectionList": [
+         {
+          "SectionRange": "\u00a7 15.2-2230.1",
+          "SectionNumber": "15.2-2230.1",
+          "SectionTitle": "Public facilities study"
+         }
+        ]
+       },
+       {
+        "SubPartNum": "",
+        "SubPartName": "",
+        "SectionList": [
+         {
+          "SectionRange": "\u00a7 15.2-2231",
+          "SectionNumber": "15.2-2231",
+          "SectionTitle": "Inclusion of incorporated towns in county plan; inclusion of adjacent unincorporated territory in municipal plan"
+         }
+        ]
+       },
+       {
+        "SubPartNum": "",
+        "SubPartName": "",
+        "SectionList": [
+         {
+          "SectionRange": "\u00a7 15.2-2232",
+          "SectionNumber": "15.2-2232",
+          "SectionTitle": "Legal status of plan"
+         }
+        ]
+       }
+      ]
+     },
+     {
+      "ArticleNum": "4",
+      "ArticleName": "THE OFFICIAL MAP",
+      "SubPartList": [
+       {
+        "SubPartNum": "",
+        "SubPartName": "",
+        "SectionList": [
+         {
+          "SectionRange": "\u00a7 15.2-2233",
+          "SectionNumber": "15.2-2233",
+          "SectionTitle": "Maps to be prepared in localities; what map shall show"
+         }
+        ]
+       },
+       {
+        "SubPartNum": "",
+        "SubPartName": "",
+        "SectionList": [
+         {
+          "SectionRange": "\u00a7 15.2-2234",
+          "SectionNumber": "15.2-2234",
+          "SectionTitle": "Adoption; filing in office of clerk of court"
+         }
+        ]
+       },
+       {
+        "SubPartNum": "",
+        "SubPartName": "",
+        "SectionList": [
+         {
+          "SectionRange": "\u00a7 15.2-2235",
+          "SectionNumber": "15.2-2235",
+          "SectionTitle": "Additions and modifications"
+         }
+        ]
+       },
+       {
+        "SubPartNum": "",
+        "SubPartName": "",
+        "SectionList": [
+         {
+          "SectionRange": "\u00a7 15.2-2236",
+          "SectionNumber": "15.2-2236",
+          "SectionTitle": "Periodic review and readoption"
+         }
+        ]
+       },
+       {
+        "SubPartNum": "",
+        "SubPartName": "",
+        "SectionList": [
+         {
+          "SectionRange": "\u00a7 15.2-2237",
+          "SectionNumber": "15.2-2237",
+          "SectionTitle": "Consultation with Commonwealth Transportation Board; copies of map and ordinance to be sent to Commonwealth Transportation Board"
+         }
+        ]
+       },
+       {
+        "SubPartNum": "",
+        "SubPartName": "",
+        "SectionList": [
+         {
+          "SectionRange": "\u00a7 15.2-2238",
+          "SectionNumber": "15.2-2238",
+          "SectionTitle": "Authority of counties under Article 2 (\u00a7 33.2-705 et seq.) of Chapter 7 not affected"
+         }
+        ]
+       }
+      ]
+     },
+     {
+      "ArticleNum": "5",
+      "ArticleName": "CAPITAL IMPROVEMENT PROGRAMS",
+      "SubPartList": [
+       {
+        "SubPartNum": "",
+        "SubPartName": "",
+        "SectionList": [
+         {
+          "SectionRange": "\u00a7 15.2-2239",
+          "SectionNumber": "15.2-2239",
+          "SectionTitle": "Local planning commissions to prepare and submit annually capital improvement programs to governing body or official charged with preparation of budget"
+         }
+        ]
+       }
+      ]
+     },
+     {
+      "ArticleNum": "6",
+      "ArticleName": "LAND SUBDIVISION AND DEVELOPMENT",
+      "SubPartList": [
+       {
+        "SubPartNum": "",
+        "SubPartName": "",
+        "SectionList": [
+         {
+          "SectionRange": "\u00a7 15.2-2240",
+          "SectionNumber": "15.2-2240",
+          "SectionTitle": "Localities to adopt ordinances regulating subdivision and development of land"
+         }
+        ]
+       },
+       {
+        "SubPartNum": "",
+        "SubPartName": "",
+        "SectionList": [
+         {
+          "SectionRange": "\u00a7 15.2-2241",
+          "SectionNumber": "15.2-2241",
+          "SectionTitle": "Mandatory provisions of a subdivision ordinance"
+         }
+        ]
+       },
+       {
+        "SubPartNum": "",
+        "SubPartName": "",
+        "SectionList": [
+         {
+          "SectionRange": "\u00a7 15.2-2241.1",
+          "SectionNumber": "15.2-2241.1",
+          "SectionTitle": "Bonding requirements for the acceptance of dedication for public use of certain facilities"
+         }
+        ]
+       },
+       {
+        "SubPartNum": "",
+        "SubPartName": "",
+        "SectionList": [
+         {
+          "SectionRange": "\u00a7 15.2-2241.2",
+          "SectionNumber": "15.2-2241.2",
+          "SectionTitle": "Bonding provisions for decommissioning of solar energy equipment, facilities, or devices"
+         }
+        ]
+       },
+       {
+        "SubPartNum": "",
+        "SubPartName": "",
+        "SectionList": [
+         {
+          "SectionRange": "\u00a7 15.2-2242",
+          "SectionNumber": "15.2-2242",
+          "SectionTitle": "(Contingent effective date; see Acts 2026, c. 679; cl. 3) Optional provisions of a subdivision ordinance"
+         }
+        ]
+       },
+       {
+        "SubPartNum": "",
+        "SubPartName": "",
+        "SectionList": [
+         {
+          "SectionRange": "\u00a7 15.2-2242",
+          "SectionNumber": "15.2-2242",
+          "SectionTitle": "(Contingent expiration date; see Acts 2026, c. 679; cl. 3) Optional provisions of a subdivision ordinance"
+         }
+        ]
+       },
+       {
+        "SubPartNum": "",
+        "SubPartName": "",
+        "SectionList": [
+         {
+          "SectionRange": "\u00a7 15.2-2243",
+          "SectionNumber": "15.2-2243",
+          "SectionTitle": "Payment by subdivider of the pro rata share of the cost of certain facilities"
+         }
+        ]
+       },
+       {
+        "SubPartNum": "",
+        "SubPartName": "",
+        "SectionList": [
+         {
+          "SectionRange": "\u00a7 15.2-2243.1",
+          "SectionNumber": "15.2-2243.1",
+          "SectionTitle": "Payment by developer or subdivider"
+         }
+        ]
+       },
+       {
+        "SubPartNum": "",
+        "SubPartName": "",
+        "SectionList": [
+         {
+          "SectionRange": "\u00a7 15.2-2244",
+          "SectionNumber": "15.2-2244",
+          "SectionTitle": "Provisions for subdivision of a lot for conveyance to a family member"
+         }
+        ]
+       },
+       {
+        "SubPartNum": "",
+        "SubPartName": "",
+        "SectionList": [
+         {
+          "SectionRange": "\u00a7 15.2-2244.1",
+          "SectionNumber": "15.2-2244.1",
+          "SectionTitle": "Additional method for subdivision of a lot for conveyance to a family member"
+         }
+        ]
+       },
+       {
+        "SubPartNum": "",
+        "SubPartName": "",
+        "SectionList": [
+         {
+          "SectionRange": "\u00a7 15.2-2244.2",
+          "SectionNumber": "15.2-2244.2",
+          "SectionTitle": "Subdivision of a lot of property held in trust for a family member"
+         }
+        ]
+       },
+       {
+        "SubPartNum": "",
+        "SubPartName": "",
+        "SectionList": [
+         {
+          "SectionRange": "\u00a7 15.2-2245",
+          "SectionNumber": "15.2-2245",
+          "SectionTitle": "Provisions for periodic partial and final release of certain performance guarantees"
+         }
+        ]
+       },
+       {
+        "SubPartNum": "",
+        "SubPartName": "",
+        "SectionList": [
+         {
+          "SectionRange": "\u00a7 15.2-2245.1",
+          "SectionNumber": "15.2-2245.1",
+          "SectionTitle": "Stormwater management ponds; removal of trees"
+         }
+        ]
+       },
+       {
+        "SubPartNum": "",
+        "SubPartName": "",
+        "SectionList": [
+         {
+          "SectionRange": "\u00a7 15.2-2246",
+          "SectionNumber": "15.2-2246",
+          "SectionTitle": "Site plans submitted in accordance with zoning ordinance"
+         }
+        ]
+       },
+       {
+        "SubPartNum": "",
+        "SubPartName": "",
+        "SectionList": [
+         {
+          "SectionRange": "\u00a7 15.2-2247",
+          "SectionNumber": "15.2-2247",
+          "SectionTitle": "Applicability of subdivision ordinance to manufactured home parks"
+         }
+        ]
+       },
+       {
+        "SubPartNum": "",
+        "SubPartName": "",
+        "SectionList": [
+         {
+          "SectionRange": "\u00a7 15.2-2248",
+          "SectionNumber": "15.2-2248",
+          "SectionTitle": "Application of certain municipal subdivision regulations beyond corporate limits of municipality"
+         }
+        ]
+       },
+       {
+        "SubPartNum": "",
+        "SubPartName": "",
+        "SectionList": [
+         {
+          "SectionRange": "\u00a7 15.2-2249",
+          "SectionNumber": "15.2-2249",
+          "SectionTitle": "Application of county subdivision regulations in area subject to municipal jurisdiction"
+         }
+        ]
+       },
+       {
+        "SubPartNum": "",
+        "SubPartName": "",
+        "SectionList": [
+         {
+          "SectionRange": "\u00a7 15.2-2250",
+          "SectionNumber": "15.2-2250",
+          "SectionTitle": "Disagreement between county and municipality as to regulations"
+         }
+        ]
+       },
+       {
+        "SubPartNum": "",
+        "SubPartName": "",
+        "SectionList": [
+         {
+          "SectionRange": "\u00a7 15.2-2251",
+          "SectionNumber": "15.2-2251",
+          "SectionTitle": "Local planning commission shall prepare and recommend ordinance; notice and hearing on ordinance"
+         }
+        ]
+       },
+       {
+        "SubPartNum": "",
+        "SubPartName": "",
+        "SectionList": [
+         {
+          "SectionRange": "\u00a7 15.2-2252",
+          "SectionNumber": "15.2-2252",
+          "SectionTitle": "Filing and recording of ordinance and amendments thereto"
+         }
+        ]
+       },
+       {
+        "SubPartNum": "",
+        "SubPartName": "",
+        "SectionList": [
+         {
+          "SectionRange": "\u00a7 15.2-2253",
+          "SectionNumber": "15.2-2253",
+          "SectionTitle": "Preparation and adoption of amendments to ordinance"
+         }
+        ]
+       },
+       {
+        "SubPartNum": "",
+        "SubPartName": "",
+        "SectionList": [
+         {
+          "SectionRange": "\u00a7 15.2-2254",
+          "SectionNumber": "15.2-2254",
+          "SectionTitle": "Statutory provisions effective after ordinance adopted"
+         }
+        ]
+       },
+       {
+        "SubPartNum": "",
+        "SubPartName": "",
+        "SectionList": [
+         {
+          "SectionRange": "\u00a7 15.2-2255",
+          "SectionNumber": "15.2-2255",
+          "SectionTitle": "Administration and enforcement of regulations"
+         }
+        ]
+       },
+       {
+        "SubPartNum": "",
+        "SubPartName": "",
+        "SectionList": [
+         {
+          "SectionRange": "\u00a7 15.2-2256",
+          "SectionNumber": "15.2-2256",
+          "SectionTitle": "Procedure to account for fees for common improvements"
+         }
+        ]
+       },
+       {
+        "SubPartNum": "",
+        "SubPartName": "",
+        "SectionList": [
+         {
+          "SectionRange": "\u00a7 15.2-2257",
+          "SectionNumber": "15.2-2257",
+          "SectionTitle": "Procedure to modify certain covenants in Shenandoah County"
+         }
+        ]
+       },
+       {
+        "SubPartNum": "",
+        "SubPartName": "",
+        "SectionList": [
+         {
+          "SectionRange": "\u00a7 15.2-2258",
+          "SectionNumber": "15.2-2258",
+          "SectionTitle": "Plat of proposed subdivision and site plans to be submitted for approval"
+         }
+        ]
+       },
+       {
+        "SubPartNum": "",
+        "SubPartName": "",
+        "SectionList": [
+         {
+          "SectionRange": "\u00a7 15.2-2259",
+          "SectionNumber": "15.2-2259",
+          "SectionTitle": "Designated agent to act on proposed final plat"
+         }
+        ]
+       },
+       {
+        "SubPartNum": "",
+        "SubPartName": "",
+        "SectionList": [
+         {
+          "SectionRange": "\u00a7 15.2-2260",
+          "SectionNumber": "15.2-2260",
+          "SectionTitle": "Localities may provide for submission of preliminary subdivision plats; how long valid"
+         }
+        ]
+       },
+       {
+        "SubPartNum": "",
+        "SubPartName": "",
+        "SectionList": [
+         {
+          "SectionRange": "\u00a7 15.2-2261",
+          "SectionNumber": "15.2-2261",
+          "SectionTitle": "Recorded plats or final site plans to be valid for not less than five years"
+         }
+        ]
+       },
+       {
+        "SubPartNum": "",
+        "SubPartName": "",
+        "SectionList": [
+         {
+          "SectionRange": "\u00a7 15.2-2261.1",
+          "SectionNumber": "15.2-2261.1",
+          "SectionTitle": "Recorded plat or final site plans; conflicting zoning conditions"
+         }
+        ]
+       },
+       {
+        "SubPartNum": "",
+        "SubPartName": "",
+        "SectionList": [
+         {
+          "SectionRange": "\u00a7 15.2-2262",
+          "SectionNumber": "15.2-2262",
+          "SectionTitle": "Requisites of plat"
+         }
+        ]
+       },
+       {
+        "SubPartNum": "",
+        "SubPartName": "",
+        "SectionList": [
+         {
+          "SectionRange": "\u00a7 15.2-2263",
+          "SectionNumber": "15.2-2263",
+          "SectionTitle": "Expedited land development review procedure"
+         }
+        ]
+       },
+       {
+        "SubPartNum": "",
+        "SubPartName": "",
+        "SectionList": [
+         {
+          "SectionRange": "\u00a7 15.2-2264",
+          "SectionNumber": "15.2-2264",
+          "SectionTitle": "Statement of consent to subdivision; execution; acknowledgment and recordation; notice to commissioner of the revenue or board of real estate assessors"
+         }
+        ]
+       },
+       {
+        "SubPartNum": "",
+        "SubPartName": "",
+        "SectionList": [
+         {
+          "SectionRange": "\u00a7 15.2-2265",
+          "SectionNumber": "15.2-2265",
+          "SectionTitle": "Recordation of approved plat as transfer of streets, termination of easements and rights-of-way, etc"
+         }
+        ]
+       },
+       {
+        "SubPartNum": "",
+        "SubPartName": "",
+        "SectionList": [
+         {
+          "SectionRange": "\u00a7 15.2-2266",
+          "SectionNumber": "15.2-2266",
+          "SectionTitle": "Validation of certain plats recorded before January 1, 1975"
+         }
+        ]
+       },
+       {
+        "SubPartNum": "",
+        "SubPartName": "",
+        "SectionList": [
+         {
+          "SectionRange": "\u00a7 15.2-2267",
+          "SectionNumber": "15.2-2267",
+          "SectionTitle": "Petition to restrict access to certain public streets"
+         }
+        ]
+       },
+       {
+        "SubPartNum": "",
+        "SubPartName": "",
+        "SectionList": [
+         {
+          "SectionRange": "\u00a7 15.2-2268",
+          "SectionNumber": "15.2-2268",
+          "SectionTitle": "Localities not obligated to pay for grading, paving, etc"
+         }
+        ]
+       },
+       {
+        "SubPartNum": "",
+        "SubPartName": "",
+        "SectionList": [
+         {
+          "SectionRange": "\u00a7 15.2-2269",
+          "SectionNumber": "15.2-2269",
+          "SectionTitle": "Plans and specifications for utility fixtures and systems to be submitted for approval"
+         }
+        ]
+       },
+       {
+        "SubPartNum": "",
+        "SubPartName": "",
+        "SectionList": [
+         {
+          "SectionRange": "\u00a7 15.2-2270",
+          "SectionNumber": "15.2-2270",
+          "SectionTitle": "Vacation of interests granted to a locality as a condition of site plan approval"
+         }
+        ]
+       },
+       {
+        "SubPartNum": "",
+        "SubPartName": "",
+        "SectionList": [
+         {
+          "SectionRange": "\u00a7 15.2-2271",
+          "SectionNumber": "15.2-2271",
+          "SectionTitle": "Vacation of plat before sale of lot therein; ordinance of vacation"
+         }
+        ]
+       },
+       {
+        "SubPartNum": "",
+        "SubPartName": "",
+        "SectionList": [
+         {
+          "SectionRange": "\u00a7 15.2-2272",
+          "SectionNumber": "15.2-2272",
+          "SectionTitle": "Vacation of plat after sale of lot"
+         }
+        ]
+       },
+       {
+        "SubPartNum": "",
+        "SubPartName": "",
+        "SectionList": [
+         {
+          "SectionRange": "\u00a7 15.2-2273",
+          "SectionNumber": "15.2-2273",
+          "SectionTitle": "Fee for processing application under \u00a7 15.2-2271 or \u00a7 15.2-2272"
+         }
+        ]
+       },
+       {
+        "SubPartNum": "",
+        "SubPartName": "",
+        "SectionList": [
+         {
+          "SectionRange": "\u00a7 15.2-2274",
+          "SectionNumber": "15.2-2274",
+          "SectionTitle": "Effect of vacation under \u00a7 15.2-2272"
+         }
+        ]
+       },
+       {
+        "SubPartNum": "",
+        "SubPartName": "",
+        "SectionList": [
+         {
+          "SectionRange": "\u00a7 15.2-2275",
+          "SectionNumber": "15.2-2275",
+          "SectionTitle": "Relocation or vacation of boundary lines"
+         }
+        ]
+       },
+       {
+        "SubPartNum": "",
+        "SubPartName": "",
+        "SectionList": [
+         {
+          "SectionRange": "\u00a7 15.2-2276",
+          "SectionNumber": "15.2-2276",
+          "SectionTitle": "Duty of clerk when plat vacated"
+         }
+        ]
+       },
+       {
+        "SubPartNum": "",
+        "SubPartName": "",
+        "SectionList": [
+         {
+          "SectionRange": "\u00a7 15.2-2277",
+          "SectionNumber": "15.2-2277",
+          "SectionTitle": "Franklin County may require that notice be given to deed grantees of certain disclaimers regarding responsibility for roads; county eligible to have certain streets taken into secondary system"
+         }
+        ]
+       },
+       {
+        "SubPartNum": "",
+        "SubPartName": "",
+        "SectionList": [
+         {
+          "SectionRange": "\u00a7 15.2-2278",
+          "SectionNumber": "15.2-2278",
+          "SectionTitle": "Vacating plat of subdivision"
+         }
+        ]
+       },
+       {
+        "SubPartNum": "",
+        "SubPartName": "",
+        "SectionList": [
+         {
+          "SectionRange": "\u00a7 15.2-2279",
+          "SectionNumber": "15.2-2279",
+          "SectionTitle": "Ordinances regulating the building of houses and establishing setback lines"
+         }
+        ]
+       }
+      ]
+     },
+     {
+      "ArticleNum": "7",
+      "ArticleName": "ZONING",
+      "SubPartList": [
+       {
+        "SubPartNum": "",
+        "SubPartName": "",
+        "SectionList": [
+         {
+          "SectionRange": "\u00a7 15.2-2280",
+          "SectionNumber": "15.2-2280",
+          "SectionTitle": "Zoning ordinances generally"
+         }
+        ]
+       },
+       {
+        "SubPartNum": "",
+        "SubPartName": "",
+        "SectionList": [
+         {
+          "SectionRange": "\u00a7 15.2-2281",
+          "SectionNumber": "15.2-2281",
+          "SectionTitle": "Jurisdiction of localities"
+         }
+        ]
+       },
+       {
+        "SubPartNum": "",
+        "SubPartName": "",
+        "SectionList": [
+         {
+          "SectionRange": "\u00a7 15.2-2282",
+          "SectionNumber": "15.2-2282",
+          "SectionTitle": "Regulations to be uniform"
+         }
+        ]
+       },
+       {
+        "SubPartNum": "",
+        "SubPartName": "",
+        "SectionList": [
+         {
+          "SectionRange": "\u00a7 15.2-2283",
+          "SectionNumber": "15.2-2283",
+          "SectionTitle": "Purpose of zoning ordinances"
+         }
+        ]
+       },
+       {
+        "SubPartNum": "",
+        "SubPartName": "",
+        "SectionList": [
+         {
+          "SectionRange": "\u00a7 15.2-2283.1",
+          "SectionNumber": "15.2-2283.1",
+          "SectionTitle": "Prohibition of sexual offender treatment office in residentially zoned subdivision"
+         }
+        ]
+       },
+       {
+        "SubPartNum": "",
+        "SubPartName": "",
+        "SectionList": [
+         {
+          "SectionRange": "\u00a7 15.2-2284",
+          "SectionNumber": "15.2-2284",
+          "SectionTitle": "Matters to be considered in drawing and applying zoning ordinances and districts"
+         }
+        ]
+       },
+       {
+        "SubPartNum": "",
+        "SubPartName": "",
+        "SectionList": [
+         {
+          "SectionRange": "\u00a7 15.2-2285",
+          "SectionNumber": "15.2-2285",
+          "SectionTitle": "Preparation and adoption of zoning ordinance and map and amendments thereto; appeal"
+         }
+        ]
+       },
+       {
+        "SubPartNum": "",
+        "SubPartName": "",
+        "SectionList": [
+         {
+          "SectionRange": "\u00a7 15.2-2286",
+          "SectionNumber": "15.2-2286",
+          "SectionTitle": "(Effective January 1, 2027; Effective until January 1, 2031) Permitted provisions in zoning ordinances; amendments; applicant to pay delinquent taxes; penalties"
+         }
+        ]
+       },
+       {
+        "SubPartNum": "",
+        "SubPartName": "",
+        "SectionList": [
+         {
+          "SectionRange": "\u00a7 15.2-2286",
+          "SectionNumber": "15.2-2286",
+          "SectionTitle": "(Effective until January 1, 2027) Permitted provisions in zoning ordinances; amendments; applicant to pay delinquent taxes; penalties"
+         }
+        ]
+       },
+       {
+        "SubPartNum": "",
+        "SubPartName": "",
+        "SectionList": [
+         {
+          "SectionRange": "\u00a7 15.2-2286.1",
+          "SectionNumber": "15.2-2286.1",
+          "SectionTitle": "Provisions for clustering of single-family dwellings so as to preserve open space"
+         }
+        ]
+       },
+       {
+        "SubPartNum": "",
+        "SubPartName": "",
+        "SectionList": [
+         {
+          "SectionRange": "\u00a7 15.2-2286.2",
+          "SectionNumber": "15.2-2286.2",
+          "SectionTitle": "Small lot residential zoning district required"
+         }
+        ]
+       },
+       {
+        "SubPartNum": "",
+        "SubPartName": "",
+        "SectionList": [
+         {
+          "SectionRange": "\u00a7 15.2-2287",
+          "SectionNumber": "15.2-2287",
+          "SectionTitle": "Localities may require oath regarding property interest of local officials"
+         }
+        ]
+       },
+       {
+        "SubPartNum": "",
+        "SubPartName": "",
+        "SectionList": [
+         {
+          "SectionRange": "\u00a7 15.2-2287.1",
+          "SectionNumber": "15.2-2287.1",
+          "SectionTitle": "Disclosures in land use proceedings"
+         }
+        ]
+       },
+       {
+        "SubPartNum": "",
+        "SubPartName": "",
+        "SectionList": [
+         {
+          "SectionRange": "\u00a7 15.2-2288",
+          "SectionNumber": "15.2-2288",
+          "SectionTitle": "Localities may not require a special use permit for certain agricultural activities"
+         }
+        ]
+       },
+       {
+        "SubPartNum": "",
+        "SubPartName": "",
+        "SectionList": [
+         {
+          "SectionRange": "\u00a7 15.2-2288.01",
+          "SectionNumber": "15.2-2288.01",
+          "SectionTitle": "Localities shall not require a special use permit for certain small-scale conversion of biomass to alternative fuel"
+         }
+        ]
+       },
+       {
+        "SubPartNum": "",
+        "SubPartName": "",
+        "SectionList": [
+         {
+          "SectionRange": "\u00a7 15.2-2288.1",
+          "SectionNumber": "15.2-2288.1",
+          "SectionTitle": "Localities may not require a special use permit for certain residential uses"
+         }
+        ]
+       },
+       {
+        "SubPartNum": "",
+        "SubPartName": "",
+        "SectionList": [
+         {
+          "SectionRange": "\u00a7 15.2-2288.2",
+          "SectionNumber": "15.2-2288.2",
+          "SectionTitle": "Localities may not require special use permit for certain temporary structures"
+         }
+        ]
+       },
+       {
+        "SubPartNum": "",
+        "SubPartName": "",
+        "SectionList": [
+         {
+          "SectionRange": "\u00a7 15.2-2288.3",
+          "SectionNumber": "15.2-2288.3",
+          "SectionTitle": "Licensed farm wineries; local regulation of certain activities"
+         }
+        ]
+       },
+       {
+        "SubPartNum": "",
+        "SubPartName": "",
+        "SectionList": [
+         {
+          "SectionRange": "\u00a7 15.2-2288.3:1",
+          "SectionNumber": "15.2-2288.3:1",
+          "SectionTitle": "Limited brewery license; local regulation of certain activities"
+         }
+        ]
+       },
+       {
+        "SubPartNum": "",
+        "SubPartName": "",
+        "SectionList": [
+         {
+          "SectionRange": "\u00a7 15.2-2288.3:2",
+          "SectionNumber": "15.2-2288.3:2",
+          "SectionTitle": "Limited distiller's license; local regulation of certain activities"
+         }
+        ]
+       },
+       {
+        "SubPartNum": "",
+        "SubPartName": "",
+        "SectionList": [
+         {
+          "SectionRange": "\u00a7 15.2-2288.4",
+          "SectionNumber": "15.2-2288.4",
+          "SectionTitle": "Extension of expiration dates for special use permits"
+         }
+        ]
+       },
+       {
+        "SubPartNum": "",
+        "SubPartName": "",
+        "SectionList": [
+         {
+          "SectionRange": "\u00a7 15.2-2288.5",
+          "SectionNumber": "15.2-2288.5",
+          "SectionTitle": "Meaning of \"cemetery\" for purposes of zoning"
+         }
+        ]
+       },
+       {
+        "SubPartNum": "",
+        "SubPartName": "",
+        "SectionList": [
+         {
+          "SectionRange": "\u00a7 15.2-2288.6",
+          "SectionNumber": "15.2-2288.6",
+          "SectionTitle": "Agricultural operations; local regulation of certain activities"
+         }
+        ]
+       },
+       {
+        "SubPartNum": "",
+        "SubPartName": "",
+        "SectionList": [
+         {
+          "SectionRange": "\u00a7 15.2-2288.7",
+          "SectionNumber": "15.2-2288.7",
+          "SectionTitle": "(Effective January 1, 2027) Local regulation of solar facilities and small portable solar generation devices"
+         }
+        ]
+       },
+       {
+        "SubPartNum": "",
+        "SubPartName": "",
+        "SectionList": [
+         {
+          "SectionRange": "\u00a7 15.2-2288.7",
+          "SectionNumber": "15.2-2288.7",
+          "SectionTitle": "(Effective until January 1, 2027) Local regulation of solar facilities"
+         }
+        ]
+       },
+       {
+        "SubPartNum": "",
+        "SubPartName": "",
+        "SectionList": [
+         {
+          "SectionRange": "\u00a7 15.2-2288.8",
+          "SectionNumber": "15.2-2288.8",
+          "SectionTitle": "Special exceptions for solar photovoltaic projects"
+         }
+        ]
+       },
+       {
+        "SubPartNum": "",
+        "SubPartName": "",
+        "SectionList": [
+         {
+          "SectionRange": "\u00a7 15.2-2288.9",
+          "SectionNumber": "15.2-2288.9",
+          "SectionTitle": "(Effective January 1, 2027, until January 1, 2031) Affordable housing; religious organizations and other tax-exempt properties"
+         }
+        ]
+       },
+       {
+        "SubPartNum": "",
+        "SubPartName": "",
+        "SectionList": [
+         {
+          "SectionRange": "\u00a7 15.2-2289",
+          "SectionNumber": "15.2-2289",
+          "SectionTitle": "Localities may provide by ordinance for disclosure of real parties in interest"
+         }
+        ]
+       },
+       {
+        "SubPartNum": "",
+        "SubPartName": "",
+        "SectionList": [
+         {
+          "SectionRange": "\u00a7 15.2-2290",
+          "SectionNumber": "15.2-2290",
+          "SectionTitle": "Uniform regulations for manufactured housing"
+         }
+        ]
+       },
+       {
+        "SubPartNum": "",
+        "SubPartName": "",
+        "SectionList": [
+         {
+          "SectionRange": "\u00a7 15.2-2291",
+          "SectionNumber": "15.2-2291",
+          "SectionTitle": "Assisted living facilities and group homes of eight or fewer; single-family residence"
+         }
+        ]
+       },
+       {
+        "SubPartNum": "",
+        "SubPartName": "",
+        "SectionList": [
+         {
+          "SectionRange": "\u00a7 15.2-2292",
+          "SectionNumber": "15.2-2292",
+          "SectionTitle": "Zoning provisions for home-based child care"
+         }
+        ]
+       },
+       {
+        "SubPartNum": "",
+        "SubPartName": "",
+        "SectionList": [
+         {
+          "SectionRange": "\u00a7 15.2-2292.1",
+          "SectionNumber": "15.2-2292.1",
+          "SectionTitle": "Zoning provisions for temporary family health care structures"
+         }
+        ]
+       },
+       {
+        "SubPartNum": "",
+        "SubPartName": "",
+        "SectionList": [
+         {
+          "SectionRange": "\u00a7 15.2-2292.2",
+          "SectionNumber": "15.2-2292.2",
+          "SectionTitle": "Waiver of zoning permit requirements; child day programs"
+         }
+        ]
+       },
+       {
+        "SubPartNum": "",
+        "SubPartName": "",
+        "SectionList": [
+         {
+          "SectionRange": "\u00a7 15.2-2292.3",
+          "SectionNumber": "15.2-2292.3",
+          "SectionTitle": "Expedited approval for increased density for certain affordable housing developments"
+         }
+        ]
+       },
+       {
+        "SubPartNum": "",
+        "SubPartName": "",
+        "SectionList": [
+         {
+          "SectionRange": "\u00a7 15.2-2292.4",
+          "SectionNumber": "15.2-2292.4",
+          "SectionTitle": "(Effective July 1, 2027) Development and use of accessory dwelling units"
+         }
+        ]
+       },
+       {
+        "SubPartNum": "",
+        "SubPartName": "",
+        "SectionList": [
+         {
+          "SectionRange": "\u00a7 15.2-2293",
+          "SectionNumber": "15.2-2293",
+          "SectionTitle": "Airspace subject to zoning ordinances"
+         }
+        ]
+       },
+       {
+        "SubPartNum": "",
+        "SubPartName": "",
+        "SectionList": [
+         {
+          "SectionRange": "\u00a7 15.2-2293.1",
+          "SectionNumber": "15.2-2293.1",
+          "SectionTitle": "Placement of amateur radio antennas"
+         }
+        ]
+       },
+       {
+        "SubPartNum": "",
+        "SubPartName": "",
+        "SectionList": [
+         {
+          "SectionRange": "\u00a7 15.2-2293.2",
+          "SectionNumber": "15.2-2293.2",
+          "SectionTitle": "Regulation of helicopter use"
+         }
+        ]
+       },
+       {
+        "SubPartNum": "",
+        "SubPartName": "",
+        "SectionList": [
+         {
+          "SectionRange": "\u00a7 15.2-2294",
+          "SectionNumber": "15.2-2294",
+          "SectionTitle": "Airport safety zoning"
+         }
+        ]
+       },
+       {
+        "SubPartNum": "",
+        "SubPartName": "",
+        "SectionList": [
+         {
+          "SectionRange": "\u00a7 15.2-2295",
+          "SectionNumber": "15.2-2295",
+          "SectionTitle": "Aircraft noise attenuation features in buildings and structures within airport noise zones"
+         }
+        ]
+       },
+       {
+        "SubPartNum": "",
+        "SubPartName": "",
+        "SectionList": [
+         {
+          "SectionRange": "\u00a7 15.2-2295.1",
+          "SectionNumber": "15.2-2295.1",
+          "SectionTitle": "Regulation of mountain ridge construction"
+         }
+        ]
+       },
+       {
+        "SubPartNum": "",
+        "SubPartName": "",
+        "SectionList": [
+         {
+          "SectionRange": "\u00a7 15.2-2295.2",
+          "SectionNumber": "15.2-2295.2",
+          "SectionTitle": "Dam break inundation zones"
+         }
+        ]
+       },
+       {
+        "SubPartNum": "",
+        "SubPartName": "",
+        "SectionList": [
+         {
+          "SectionRange": "\u00a7 15.2-2296",
+          "SectionNumber": "15.2-2296",
+          "SectionTitle": "Conditional zoning; declaration of legislative policy and findings; purpose"
+         }
+        ]
+       },
+       {
+        "SubPartNum": "",
+        "SubPartName": "",
+        "SectionList": [
+         {
+          "SectionRange": "\u00a7 15.2-2297",
+          "SectionNumber": "15.2-2297",
+          "SectionTitle": "Same; conditions as part of a rezoning or amendment to zoning map"
+         }
+        ]
+       },
+       {
+        "SubPartNum": "",
+        "SubPartName": "",
+        "SectionList": [
+         {
+          "SectionRange": "\u00a7 15.2-2298",
+          "SectionNumber": "15.2-2298",
+          "SectionTitle": "Same; additional conditions as a part of rezoning or zoning map amendment in certain high-growth localities"
+         }
+        ]
+       },
+       {
+        "SubPartNum": "",
+        "SubPartName": "",
+        "SectionList": [
+         {
+          "SectionRange": "\u00a7 15.2-2299",
+          "SectionNumber": "15.2-2299",
+          "SectionTitle": "Same; enforcement and guarantees"
+         }
+        ]
+       },
+       {
+        "SubPartNum": "",
+        "SubPartName": "",
+        "SectionList": [
+         {
+          "SectionRange": "\u00a7 15.2-2300",
+          "SectionNumber": "15.2-2300",
+          "SectionTitle": "Same; records"
+         }
+        ]
+       },
+       {
+        "SubPartNum": "",
+        "SubPartName": "",
+        "SectionList": [
+         {
+          "SectionRange": "\u00a7 15.2-2301",
+          "SectionNumber": "15.2-2301",
+          "SectionTitle": "Same; petition for review of decision"
+         }
+        ]
+       },
+       {
+        "SubPartNum": "",
+        "SubPartName": "",
+        "SectionList": [
+         {
+          "SectionRange": "\u00a7 15.2-2302",
+          "SectionNumber": "15.2-2302",
+          "SectionTitle": "Same; amendments and variations of conditions"
+         }
+        ]
+       },
+       {
+        "SubPartNum": "",
+        "SubPartName": "",
+        "SectionList": [
+         {
+          "SectionRange": "\u00a7 15.2-2303",
+          "SectionNumber": "15.2-2303",
+          "SectionTitle": "Conditional zoning in certain localities"
+         }
+        ]
+       },
+       {
+        "SubPartNum": "",
+        "SubPartName": "",
+        "SectionList": [
+         {
+          "SectionRange": "\u00a7 15.2-2303.1",
+          "SectionNumber": "15.2-2303.1",
+          "SectionTitle": "Development agreements in certain localities"
+         }
+        ]
+       },
+       {
+        "SubPartNum": "",
+        "SubPartName": "",
+        "SectionList": [
+         {
+          "SectionRange": "\u00a7 15.2-2303.1:1",
+          "SectionNumber": "15.2-2303.1:1",
+          "SectionTitle": "When certain cash proffers collected or accepted"
+         }
+        ]
+       },
+       {
+        "SubPartNum": "",
+        "SubPartName": "",
+        "SectionList": [
+         {
+          "SectionRange": "\u00a7 15.2-2303.2",
+          "SectionNumber": "15.2-2303.2",
+          "SectionTitle": "Proffered cash payments and expenditures"
+         }
+        ]
+       },
+       {
+        "SubPartNum": "",
+        "SubPartName": "",
+        "SectionList": [
+         {
+          "SectionRange": "\u00a7 15.2-2303.3",
+          "SectionNumber": "15.2-2303.3",
+          "SectionTitle": "Cash proffers requested or accepted by a locality"
+         }
+        ]
+       },
+       {
+        "SubPartNum": "",
+        "SubPartName": "",
+        "SectionList": [
+         {
+          "SectionRange": "\u00a7 15.2-2303.4",
+          "SectionNumber": "15.2-2303.4",
+          "SectionTitle": "Provisions applicable to certain conditional rezoning proffers"
+         }
+        ]
+       },
+       {
+        "SubPartNum": "",
+        "SubPartName": "",
+        "SectionList": [
+         {
+          "SectionRange": "\u00a7 15.2-2304",
+          "SectionNumber": "15.2-2304",
+          "SectionTitle": "(Effective July 1, 2027) Affordable dwelling unit ordinances in certain localities"
+         }
+        ]
+       },
+       {
+        "SubPartNum": "",
+        "SubPartName": "",
+        "SectionList": [
+         {
+          "SectionRange": "\u00a7 15.2-2304",
+          "SectionNumber": "15.2-2304",
+          "SectionTitle": "(Effective until July 1, 2027) Affordable dwelling unit ordinances in certain localities"
+         }
+        ]
+       },
+       {
+        "SubPartNum": "",
+        "SubPartName": "",
+        "SectionList": [
+         {
+          "SectionRange": "\u00a7 15.2-2305",
+          "SectionNumber": "15.2-2305",
+          "SectionTitle": "Affordable dwelling unit ordinances"
+         }
+        ]
+       },
+       {
+        "SubPartNum": "",
+        "SubPartName": "",
+        "SectionList": [
+         {
+          "SectionRange": "\u00a7 15.2-2305.1",
+          "SectionNumber": "15.2-2305.1",
+          "SectionTitle": "Affordable housing dwelling unit ordinances"
+         }
+        ]
+       },
+       {
+        "SubPartNum": "",
+        "SubPartName": "",
+        "SectionList": [
+         {
+          "SectionRange": "\u00a7 15.2-2306",
+          "SectionNumber": "15.2-2306",
+          "SectionTitle": "Preservation of historical sites and architectural areas; civil penalty"
+         }
+        ]
+       },
+       {
+        "SubPartNum": "",
+        "SubPartName": "",
+        "SectionList": [
+         {
+          "SectionRange": "\u00a7 15.2-2306.1",
+          "SectionNumber": "15.2-2306.1",
+          "SectionTitle": "Creation of working waterfront development areas"
+         }
+        ]
+       },
+       {
+        "SubPartNum": "",
+        "SubPartName": "",
+        "SectionList": [
+         {
+          "SectionRange": "\u00a7 15.2-2307",
+          "SectionNumber": "15.2-2307",
+          "SectionTitle": "Vested rights not impaired; nonconforming uses"
+         }
+        ]
+       },
+       {
+        "SubPartNum": "",
+        "SubPartName": "",
+        "SectionList": [
+         {
+          "SectionRange": "\u00a7 15.2-2307.1",
+          "SectionNumber": "15.2-2307.1",
+          "SectionTitle": "Protection of established commercial fishing operations"
+         }
+        ]
+       },
+       {
+        "SubPartNum": "",
+        "SubPartName": "",
+        "SectionList": [
+         {
+          "SectionRange": "\u00a7 15.2-2308",
+          "SectionNumber": "15.2-2308",
+          "SectionTitle": "Boards of zoning appeals to be created; membership, organization, etc"
+         }
+        ]
+       },
+       {
+        "SubPartNum": "",
+        "SubPartName": "",
+        "SectionList": [
+         {
+          "SectionRange": "\u00a7 15.2-2308.1",
+          "SectionNumber": "15.2-2308.1",
+          "SectionTitle": "Boards of zoning appeals, ex parte communications, proceedings"
+         }
+        ]
+       },
+       {
+        "SubPartNum": "",
+        "SubPartName": "",
+        "SectionList": [
+         {
+          "SectionRange": "\u00a7 15.2-2309",
+          "SectionNumber": "15.2-2309",
+          "SectionTitle": "Powers and duties of boards of zoning appeals"
+         }
+        ]
+       },
+       {
+        "SubPartNum": "",
+        "SubPartName": "",
+        "SectionList": [
+         {
+          "SectionRange": "\u00a7 15.2-2310",
+          "SectionNumber": "15.2-2310",
+          "SectionTitle": "Applications for special exceptions and variances"
+         }
+        ]
+       },
+       {
+        "SubPartNum": "",
+        "SubPartName": "",
+        "SectionList": [
+         {
+          "SectionRange": "\u00a7 15.2-2311",
+          "SectionNumber": "15.2-2311",
+          "SectionTitle": "Appeals to board"
+         }
+        ]
+       },
+       {
+        "SubPartNum": "",
+        "SubPartName": "",
+        "SectionList": [
+         {
+          "SectionRange": "\u00a7 15.2-2312",
+          "SectionNumber": "15.2-2312",
+          "SectionTitle": "Procedure on appeal"
+         }
+        ]
+       },
+       {
+        "SubPartNum": "",
+        "SubPartName": "",
+        "SectionList": [
+         {
+          "SectionRange": "\u00a7 15.2-2313",
+          "SectionNumber": "15.2-2313",
+          "SectionTitle": "Proceedings to prevent construction of building in violation of zoning ordinance"
+         }
+        ]
+       },
+       {
+        "SubPartNum": "",
+        "SubPartName": "",
+        "SectionList": [
+         {
+          "SectionRange": "\u00a7 15.2-2314",
+          "SectionNumber": "15.2-2314",
+          "SectionTitle": "Review of decision of board"
+         }
+        ]
+       },
+       {
+        "SubPartNum": "",
+        "SubPartName": "",
+        "SectionList": [
+         {
+          "SectionRange": "\u00a7 15.2-2315",
+          "SectionNumber": "15.2-2315",
+          "SectionTitle": "Conflict with statutes, local ordinances or regulations"
+         }
+        ]
+       },
+       {
+        "SubPartNum": "",
+        "SubPartName": "",
+        "SectionList": [
+         {
+          "SectionRange": "\u00a7 15.2-2316",
+          "SectionNumber": "15.2-2316",
+          "SectionTitle": "Validation of zoning ordinances prior to 1971"
+         }
+        ]
+       }
+      ]
+     },
+     {
+      "ArticleNum": "7.1",
+      "ArticleName": "TRANSFER OF DEVELOPMENT RIGHTS",
+      "SubPartList": [
+       {
+        "SubPartNum": "",
+        "SubPartName": "",
+        "SectionList": [
+         {
+          "SectionRange": "\u00a7 15.2-2316.1",
+          "SectionNumber": "15.2-2316.1",
+          "SectionTitle": "Definitions"
+         }
+        ]
+       },
+       {
+        "SubPartNum": "",
+        "SubPartName": "",
+        "SectionList": [
+         {
+          "SectionRange": "\u00a7 15.2-2316.2",
+          "SectionNumber": "15.2-2316.2",
+          "SectionTitle": "Localities may provide for transfer of development rights"
+         }
+        ]
+       }
+      ]
+     },
+     {
+      "ArticleNum": "7.2",
+      "ArticleName": "Zoning for Wireless Communications Infrastructure",
+      "SubPartList": [
+       {
+        "SubPartNum": "",
+        "SubPartName": "",
+        "SectionList": [
+         {
+          "SectionRange": "\u00a7 15.2-2316.3",
+          "SectionNumber": "15.2-2316.3",
+          "SectionTitle": "Definitions"
+         }
+        ]
+       },
+       {
+        "SubPartNum": "",
+        "SubPartName": "",
+        "SectionList": [
+         {
+          "SectionRange": "\u00a7 15.2-2316.4",
+          "SectionNumber": "15.2-2316.4",
+          "SectionTitle": "Zoning; small cell facilities"
+         }
+        ]
+       },
+       {
+        "SubPartNum": "",
+        "SubPartName": "",
+        "SectionList": [
+         {
+          "SectionRange": "\u00a7 15.2-2316.4:1",
+          "SectionNumber": "15.2-2316.4:1",
+          "SectionTitle": "Zoning; other wireless facilities and wireless support structures"
+         }
+        ]
+       },
+       {
+        "SubPartNum": "",
+        "SubPartName": "",
+        "SectionList": [
+         {
+          "SectionRange": "\u00a7 15.2-2316.4:2",
+          "SectionNumber": "15.2-2316.4:2",
+          "SectionTitle": "Application reviews"
+         }
+        ]
+       },
+       {
+        "SubPartNum": "",
+        "SubPartName": "",
+        "SectionList": [
+         {
+          "SectionRange": "\u00a7 15.2-2316.4:3",
+          "SectionNumber": "15.2-2316.4:3",
+          "SectionTitle": "Additional provisions"
+         }
+        ]
+       },
+       {
+        "SubPartNum": "",
+        "SubPartName": "",
+        "SectionList": [
+         {
+          "SectionRange": "\u00a7 15.2-2316.4:4",
+          "SectionNumber": "15.2-2316.4:4",
+          "SectionTitle": "Wireless facility modifications"
+         }
+        ]
+       },
+       {
+        "SubPartNum": "",
+        "SubPartName": "",
+        "SectionList": [
+         {
+          "SectionRange": "\u00a7 15.2-2316.4:5",
+          "SectionNumber": "15.2-2316.4:5",
+          "SectionTitle": "Temporary support structures"
+         }
+        ]
+       },
+       {
+        "SubPartNum": "",
+        "SubPartName": "",
+        "SectionList": [
+         {
+          "SectionRange": "\u00a7 15.2-2316.5",
+          "SectionNumber": "15.2-2316.5",
+          "SectionTitle": "Moratorium prohibited"
+         }
+        ]
+       }
+      ]
+     },
+     {
+      "ArticleNum": "7.3",
+      "ArticleName": "Siting of Solar Projects and Energy Storage Projects",
+      "SubPartList": [
+       {
+        "SubPartNum": "",
+        "SubPartName": "",
+        "SectionList": [
+         {
+          "SectionRange": "\u00a7 15.2-2316.10",
+          "SectionNumber": "15.2-2316.10",
+          "SectionTitle": "Battery energy storage projects as permitted accessory use to approved solar projects"
+         }
+        ]
+       },
+       {
+        "SubPartNum": "",
+        "SubPartName": "",
+        "SectionList": [
+         {
+          "SectionRange": "\u00a7 15.2-2316.6",
+          "SectionNumber": "15.2-2316.6",
+          "SectionTitle": "Definitions"
+         }
+        ]
+       },
+       {
+        "SubPartNum": "",
+        "SubPartName": "",
+        "SectionList": [
+         {
+          "SectionRange": "\u00a7 15.2-2316.7",
+          "SectionNumber": "15.2-2316.7",
+          "SectionTitle": "Negotiations; siting agreement"
+         }
+        ]
+       },
+       {
+        "SubPartNum": "",
+        "SubPartName": "",
+        "SectionList": [
+         {
+          "SectionRange": "\u00a7 15.2-2316.8",
+          "SectionNumber": "15.2-2316.8",
+          "SectionTitle": "Powers of host localities"
+         }
+        ]
+       },
+       {
+        "SubPartNum": "",
+        "SubPartName": "",
+        "SectionList": [
+         {
+          "SectionRange": "\u00a7 15.2-2316.9",
+          "SectionNumber": "15.2-2316.9",
+          "SectionTitle": "Effect of executed siting agreement; land use approval"
+         }
+        ]
+       }
+      ]
+     },
+     {
+      "ArticleNum": "8",
+      "ArticleName": "ROAD IMPACT FEES",
+      "SubPartList": [
+       {
+        "SubPartNum": "",
+        "SubPartName": "",
+        "SectionList": [
+         {
+          "SectionRange": "\u00a7 15.2-2317",
+          "SectionNumber": "15.2-2317",
+          "SectionTitle": "Applicability of article"
+         }
+        ]
+       },
+       {
+        "SubPartNum": "",
+        "SubPartName": "",
+        "SectionList": [
+         {
+          "SectionRange": "\u00a7 15.2-2318",
+          "SectionNumber": "15.2-2318",
+          "SectionTitle": "Definitions"
+         }
+        ]
+       },
+       {
+        "SubPartNum": "",
+        "SubPartName": "",
+        "SectionList": [
+         {
+          "SectionRange": "\u00a7 15.2-2319",
+          "SectionNumber": "15.2-2319",
+          "SectionTitle": "Authority to assess and impose impact fees"
+         }
+        ]
+       },
+       {
+        "SubPartNum": "",
+        "SubPartName": "",
+        "SectionList": [
+         {
+          "SectionRange": "\u00a7 15.2-2320",
+          "SectionNumber": "15.2-2320",
+          "SectionTitle": "Impact fee service areas to be established"
+         }
+        ]
+       },
+       {
+        "SubPartNum": "",
+        "SubPartName": "",
+        "SectionList": [
+         {
+          "SectionRange": "\u00a7 15.2-2321",
+          "SectionNumber": "15.2-2321",
+          "SectionTitle": "Adoption of road improvements program"
+         }
+        ]
+       },
+       {
+        "SubPartNum": "",
+        "SubPartName": "",
+        "SectionList": [
+         {
+          "SectionRange": "\u00a7 15.2-2322",
+          "SectionNumber": "15.2-2322",
+          "SectionTitle": "Adoption of impact fee and schedule"
+         }
+        ]
+       },
+       {
+        "SubPartNum": "",
+        "SubPartName": "",
+        "SectionList": [
+         {
+          "SectionRange": "\u00a7 15.2-2323",
+          "SectionNumber": "15.2-2323",
+          "SectionTitle": "When impact fees assessed and imposed"
+         }
+        ]
+       },
+       {
+        "SubPartNum": "",
+        "SubPartName": "",
+        "SectionList": [
+         {
+          "SectionRange": "\u00a7 15.2-2324",
+          "SectionNumber": "15.2-2324",
+          "SectionTitle": "Credits against impact fee"
+         }
+        ]
+       },
+       {
+        "SubPartNum": "",
+        "SubPartName": "",
+        "SectionList": [
+         {
+          "SectionRange": "\u00a7 15.2-2325",
+          "SectionNumber": "15.2-2325",
+          "SectionTitle": "Updating plan and amending impact fee"
+         }
+        ]
+       },
+       {
+        "SubPartNum": "",
+        "SubPartName": "",
+        "SectionList": [
+         {
+          "SectionRange": "\u00a7 15.2-2326",
+          "SectionNumber": "15.2-2326",
+          "SectionTitle": "Use of proceeds"
+         }
+        ]
+       },
+       {
+        "SubPartNum": "",
+        "SubPartName": "",
+        "SectionList": [
+         {
+          "SectionRange": "\u00a7 15.2-2327",
+          "SectionNumber": "15.2-2327",
+          "SectionTitle": "Refund of impact fees"
+         }
+        ]
+       }
+      ]
+     },
+     {
+      "ArticleNum": "9",
+      "ArticleName": "IMPACT FEES",
+      "SubPartList": [
+       {
+        "SubPartNum": "",
+        "SubPartName": "",
+        "SectionList": [
+         {
+          "SectionRange": "\u00a7 15.2-2328",
+          "SectionNumber": "15.2-2328",
+          "SectionTitle": "Applicability of article"
+         }
+        ]
+       },
+       {
+        "SubPartNum": "",
+        "SubPartName": "",
+        "SectionList": [
+         {
+          "SectionRange": "\u00a7 15.2-2329",
+          "SectionNumber": "15.2-2329",
+          "SectionTitle": "Imposition of impact fees"
+         }
+        ]
+       }
+      ]
+     }
+    ]
+   }
+  },
+  {
+   "url": "https://law.lis.virginia.gov/api/CoVChaptersGetListOfJson/99.9",
+   "params": {},
+   "response": {
+    "TitleNumber": null,
+    "TitleName": null,
+    "ChapterList": []
+   }
+  }
+ ]
+}

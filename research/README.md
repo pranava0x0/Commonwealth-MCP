@@ -38,7 +38,7 @@ Verified 2026-08-26 against live spec pages. These are the facts about MCP itsel
 <sub>Was `research/protocol-current-state.md` — “MCP Protocol: Current State and What It Changes for Commonwealth”.</sub>
 
 **Purpose:** The protocol facts the architecture must be built against, verified 2026-08-26 against live spec pages. Supersedes the protocol assumptions embedded in the original reference-architecture evaluation, which predate the 2026-07-28 spec revision.
-**Evidence:** research/notes/protocol-notes.md (agent research, per-claim URLs and unverified flags); the 2026-07-28 changelog was independently re-fetched and confirmed in the main session.
+**Evidence:** the protocol research pass (per-claim URLs and unverified flags; untracked, see the collection notes); the 2026-07-28 changelog was independently re-fetched and confirmed in the main session.
 
 ---
 
@@ -1331,7 +1331,7 @@ A later sweep that updates part 2, adds exemplars it missed, and corrects it whe
 <sub>Was `research/mcp-ecosystem-survey.md` — “MCP Ecosystem Survey — 2026-08-26”.</sub>
 
 **Purpose:** What the exemplar MCP projects look like now, what changed since the reference-architecture evaluation's snapshot, which new exemplars matter, and the test/demo patterns worth adopting. This document updates and extends `../research/README.md part 2`; corrections to that document are listed in § 8.
-**Evidence:** research/notes/ecosystem-notes.md (per-claim URLs, unverified flags; gathered via `gh api`/raw fetches plus 10 web searches), research/raw/github/ (script sweeps), plus main-session verification of contested claims.
+**Evidence:** the ecosystem research pass (per-claim URLs, unverified flags; gathered via `gh api`/raw fetches plus 10 web searches; untracked, see the collection notes), research/raw/github/ (script sweeps), plus main-session verification of contested claims.
 
 ---
 
@@ -1398,7 +1398,7 @@ Nothing occupies the state/county/municipal layer: no state government publishes
 
 ### 7. Test/demo patterns worth copying (ranked)
 
-Full detail in research/notes/ecosystem-notes.md; the eight patterns with sources:
+The eight patterns, with sources:
 
 1. **Uniform per-server test taxonomy** (pnnl/nepa-mcp): every server gets the same five files — unit, integration, security, resilience, performance — plus repo-wide contract tests keeping the generated tool catalog honest against registrations.
 2. **Three-tier testing with LLM-graded evals** (sentry-mcp): unit (mocked upstream via MSW) → `vitest-evals` driving a real model through the tools in CI → documented manual CLI testing. The eval tier catches "schema is right but a model can't use it."
@@ -1985,8 +1985,11 @@ python3 tools/search_reddit.py             # blocked here; fails loud, see docst
 python3 tools/check_writing.py             # the register lint every doc passes
 ```
 
-`research/notes/` holds the incremental output of the two research agents,
-kept for provenance; the parts above supersede them.
+`research/notes/` held the incremental output of the two research agents.
+The parts above supersede them, and they were untracked on 2026-09-08 for
+the same reason `research/raw/` is: evidence, not source. They remain in
+git history, so a claim can still be traced to the pass that produced it,
+and every finding worth keeping is in the parts above.
 
 ### Known collection limits, verified 2026-08-26
 

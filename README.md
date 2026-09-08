@@ -40,9 +40,35 @@ within the query radius. It runs offline by default. Add `--live` to query
 the government services. See [examples/](examples/README.md) for five other
 workflows.
 
-Keep this checkout: the current runtime loads source manifests and skills
-from it. A standalone wheel install is not yet supported. On Windows,
-virtual-environment executables live under `.venv\Scripts\`.
+On Windows, virtual-environment executables live under `.venv\Scripts\`.
+
+To point an AI client at the server, let the CLI write the config:
+
+```bash
+.venv/bin/commonwealth configure claude-code   # or claude, cursor, vscode, codex
+```
+
+It fills in the absolute path to this checkout. Add `--dry-run` to see the
+change without making it.
+
+### Without a checkout
+
+The source manifests, the jurisdiction table and the skills ship inside the
+package, so a wheel works on its own:
+
+```bash
+uv tool install commonwealth-mcp       # once it is published; see issue #40
+commonwealth doctor
+commonwealth skills list               # where the bundled skills are on disk
+```
+
+`uv tool install` puts the command on your PATH with its own environment.
+`uv pip install` would refuse here, because it installs into a virtual
+environment and this path has none.
+
+The examples, the recorded fixtures and the tests are repo-only. Skills
+travel as files: copy a directory from `commonwealth skills list` into your
+client's skills folder.
 
 ## What works
 
@@ -55,6 +81,7 @@ virtual-environment executables live under `.venv\Scripts\`.
 | Which water-quality stations are nearby? | DEQ monitoring stations, including historical stations |
 | Where is a government boundary? | VGIN locality and town polygons |
 | What does a Code of Virginia section say? | Section lookup by citation |
+| Which part of the Code covers this subject? | The Code's own table of contents: titles, chapters, sections. A walk to a citation, not a full-text search — no public endpoint offers one |
 
 A registered statewide layer does not guarantee complete or current records
 for every place. Read each result's sources, dates, coverage and warnings.
@@ -130,10 +157,10 @@ Leesburg and Vienna. Adding another locality's parcel or zoning layer is the
 most useful contribution and the best-documented path
 ([CONTRIBUTING.md](CONTRIBUTING.md)).
 
-The next priority in the project's own order is packaging: the runtime finds
-source manifests, the jurisdiction table and skills relative to the checkout,
-so a wheel installed anywhere else has the Python and none of the data. That
-is what has to be true before the server is published
+Packaging landed on 2026-09-08: the source manifests, the jurisdiction
+table and the skills ship inside the wheel, so an install works without a
+checkout. What remains before the server is published is a release version
+and the upload itself
 ([issue #40](https://github.com/pranava0x0/Commonwealth-MCP/issues/40)).
 State legislation search, local meetings and full-text Code search are
 tracked in

@@ -52,12 +52,29 @@ def recorded_pages() -> dict[str, tuple[str, str]]:
     a section the site does not have."""
     found = (CIVIC_FIXTURE_DIR / "section-1-500.html").read_text()
     missing = (CIVIC_FIXTURE_DIR / "no-such-section.html").read_text()
+    # The section a browse walk reaches in the recorded table of contents
+    # (title 15.2, chapter 22), so walking to a citation and reading it
+    # replays as one path rather than two halves that only look joined.
+    walked = (CIVIC_FIXTURE_DIR / "section-15.2-2200.html").read_text()
     return {
         f"{CIVIC_SERVICE_URL}/1-500/": (found,
                                         f"{CIVIC_SERVICE_URL}/1-500/"),
         f"{CIVIC_SERVICE_URL}/1-999999/": (missing,
                                            f"{CIVIC_SERVICE_URL}/title1/"),
+        f"{CIVIC_SERVICE_URL}/15.2-2200/": (
+            walked, f"{CIVIC_SERVICE_URL}/15.2-2200/"),
     }
+
+
+def recorded_api_exchanges() -> list[dict]:
+    """The Code of Virginia's JSON API recordings.
+
+    Kept in `api-recorded.json` rather than `recorded.json` so the ArcGIS
+    replay pool, which merges every `recorded.json` in the tree, does not
+    also carry a different publisher's JSON-API shapes.
+    """
+    path = CIVIC_FIXTURE_DIR / "api-recorded.json"
+    return json.loads(path.read_text())["exchanges"]
 
 
 def replay_context(sources_dir: Path | None = None) -> RuntimeContext:
@@ -74,4 +91,5 @@ def replay_context(sources_dir: Path | None = None) -> RuntimeContext:
         geocoder=ArcGISGeocodeAdapter(fetcher=ReplayFetcher(exchanges),
                                       cache=TTLCache()),
         virginia_law=VirginiaLawAdapter(
-            fetcher=HtmlReplayFetcher(recorded_pages())))
+            fetcher=HtmlReplayFetcher(recorded_pages()),
+            json_fetcher=ReplayFetcher(recorded_api_exchanges())))
