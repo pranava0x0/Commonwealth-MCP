@@ -99,6 +99,20 @@ sources audited with two of them judged on a fraction of their own
 fixtures and none of their layer probes. The merge is limited to the
 sources the run actually selected.
 
+**A fifth round, two more, both about kinds of empty.** A zoning-only
+town whose PIN is missing from one parcel source while another is down
+was told no parcel source has it — a fact about a source that was never
+read. The note names the unreachable source now and says the miss is not
+definitive, which is the fourth case a note written for three had been
+folding into the wrong one.
+
+And `parcel-zoning-screen` told the agent that two answering sources
+differ, full stop, in the same change that adds an eval task where Vienna
+and Fairfax both return `AC` and the comparison agrees. An assistant
+following the shipped skill would have contradicted the fixture. The
+instruction reads `comparison.agreement` now, and the finding table has a
+row for each answer.
+
 ## 2026-09-07 — two towns close the forcing set, and a tool learns to borrow a polygon
 
 Issue #10, the last open slot of the source-registry forcing set

@@ -152,6 +152,22 @@ async def test_a_parcel_number_no_source_has_leaves_the_town_layer_unqueried(
         "a source that was never queried has no answer to compare")
 
 
+async def test_a_miss_taken_while_another_parcel_source_is_down_says_so():
+    """Fairfax answers and does not have the PIN; VGIN is down. Saying no
+    parcel source has it states a fact about a source that was never
+    read, and the note exists precisely because a miss and an outage are
+    different answers."""
+    ctx = build_ctx(fetcher=_HostOutage("vgin"))
+    env = await find_zoning(ctx, jurisdiction="Vienna", pin="NO SUCH PIN")
+    note = _by_source(env)[VIENNA]["note"]
+    assert "not a definitive miss" in note, note
+    assert VGIN in note, ("the note names the source that could not be "
+                          f"reached: {note}")
+    assert "no parcel source for this jurisdiction has PIN" not in note, note
+    assert env.coverage.execution.value == "partial", (
+        "a source failed, so the call was not complete")
+
+
 def _town_sorted_first(ctx):
     """A copy of Vienna's manifest under an id that sorts before the
     county's, so selection hands the town to find_zoning first. Same

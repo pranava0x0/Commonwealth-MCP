@@ -78,7 +78,11 @@ finding sends you to the escalation table.
   the parcel is split. Two districts here are not two sources disagreeing.
 - *Two sources answering* means two governments or two publishers both
   cover this ground, and both answers are returned unranked. Report both
-  and say they differ. Do not pick one, and do not average them.
+  with each source named, and read `comparison.agreement` rather than
+  assuming: `true` means they gave the same district and you say so,
+  `false` means they disagree and the disagreement is the finding.
+  A point in the Town of Vienna returns the town's layer and Fairfax
+  County's, and they agree. Do not pick one, and do not average them.
 - *Empty with `coverage.registry: covered`* means the zoning layer has no
   polygon on this parcel. That is a real gap in the publisher's data, not
   an absence of zoning.
@@ -97,7 +101,8 @@ Each row is a finding, not a step.
 | Finding | Next | Why |
 |---|---|---|
 | The parcel is split across polygons with different districts | Report each district with the polygon count | The parcel has two zonings, and which part is which needs the map |
-| Two sources return different districts | Report both, with each source named | Decision 0005: no ranking, disagreement is the finding |
+| Two sources return the same district (`comparison.agreement: true`) | Report both, with each source named, and say they agree | Two governments agreeing is a stronger answer than either alone, and calling it a disagreement is false |
+| Two sources return different districts (`comparison.agreement: false`) | Report both, with each source named | Decision 0005: no ranking, disagreement is the finding |
 | Zoning came back `registry: none` | Name the locality's own planning or zoning office as where the answer lives | A registry gap has an address in the real world |
 | The parcel record carries a `proffered` flag or an ordinance number | Report it verbatim and say proffers are conditions attached to a rezoning, not part of the district | A proffered district's rules are not the district's rules |
 | A source failed mid-walk (`coverage.execution: partial`) | Report what was read and what was not, and name the source that failed | A short answer that looks complete is the failure this prevents |

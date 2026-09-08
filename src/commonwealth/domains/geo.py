@@ -501,15 +501,18 @@ class _BorrowedParcel:
     """The parcel polygons a zoning source with no parcel layer of its own
     reads its districts over, and where they came from. `found` is None
     when no parcel source had the PIN. `selectable` says whether any
-    parcel source could be asked at all, and `answered` whether one was
-    reached, so no parcel source, every source down, and no such parcel
-    are reported as the three different facts they are."""
+    parcel source could be asked at all, `answered` whether one was
+    reached, and `failed` names the ones that were not, so no parcel
+    source, every source down, no such parcel, and a miss taken while
+    another source was down are reported as the four different facts
+    they are."""
 
     found: ArcGISQueryResult | None = None
     source_ref: str | None = None
     source_id: str | None = None
     selectable: bool = False
     answered: bool = False
+    failed: tuple[str, ...] = ()
 
 
 async def _borrow_parcel_polygons(ctx: RuntimeContext, b: EnvelopeBuilder,
@@ -532,6 +535,7 @@ async def _borrow_parcel_polygons(ctx: RuntimeContext, b: EnvelopeBuilder,
             pq, ref = await _parcel_by_pin(ctx, b, pm, stack, pin, queries)
         except CommonwealthError as err:
             _note_failure(failures, pm.id, err)
+            out.failed += (pm.id,)
             continue
         out.answered = True
         if pq.records:
@@ -552,6 +556,16 @@ def _not_queried_note(m: SourceManifest, pin: str,
         return (head + "every parcel source that could supply a polygon "
                 f"for PIN {pin!r} failed, so it was not queried. That is "
                 "an outage, not a statement about the parcel.")
+    if borrowed.failed:
+        # One source answered and did not have it while another was down.
+        # Reporting that as "no parcel source has this PIN" states a fact
+        # about a source that was never read, and the whole point of this
+        # note is that a miss and an outage are different answers.
+        return (head + f"no parcel source that answered has PIN {pin!r}, "
+                f"and {', '.join(borrowed.failed)} could not be reached, "
+                "so whether it holds the parcel is unknown. There was no "
+                "polygon to read the districts over and it was not "
+                "queried; this is not a definitive miss.")
     return (head + f"no parcel source for this jurisdiction has PIN "
             f"{pin!r}, so there was no polygon to read its districts over. "
             "It was not queried.")
