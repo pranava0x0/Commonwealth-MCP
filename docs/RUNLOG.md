@@ -60,6 +60,28 @@ an incorporated town's own source was a priority, in the same change that
 registers two of them; it names the packaging work before #40 instead,
 and links #11-13 rather than a range that starts on a closed issue.
 
+**A third round, two findings, both about the cross-source fixture.** The
+first is a licensing one. The fixture's `rights` block named one
+publisher, and Vienna's file holds Fairfax County's and VGIN's responses
+as well, so two publishers' content was recorded under terms that are not
+theirs — which is the one thing decision 0011's rights block exists to
+prevent. `rights` is a list of contributors now, derived from the URLs the
+file actually contains, and `THIRD_PARTY_DATA.yml` lists Vienna's fixture
+under Fairfax and VGIN too.
+
+Matching by host was tried first and was wrong: VGIN's seven sources and
+every ArcGIS Online tenant share a hostname, so it put eleven publishers
+on Vienna's fixture and seven on each of VGIN's. Matching on the longest
+service URL gives the three that are actually there.
+
+The second is the drift audit, which scored every exchange in a fixture
+under the source the directory is named for. A Fairfax outage therefore
+marked Vienna `partly_unreachable`, and `render()` keeps unreachable
+sources out of the Changed section, so an auxiliary outage could hide a
+real Vienna drift in the same run. Each exchange is tallied under the
+source that published it now, and a borrowed share merges into that
+source's own result after every source has been audited.
+
 ## 2026-09-07 — two towns close the forcing set, and a tool learns to borrow a polygon
 
 Issue #10, the last open slot of the source-registry forcing set

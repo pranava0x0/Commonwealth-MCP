@@ -407,9 +407,75 @@ async def test_another_publishers_exchange_replays_under_its_own_policy(
     ]}
     result = await audit._replay(vienna, recorded,
                                  others=list(registry.manifests.values()))
-    assert result["checked"] == 3, result
+    # Vienna's own exchange, and the one no manifest claims — an exchange
+    # that should not be in any fixture is the fixture owner's problem.
+    assert result["checked"] == 2, result
+    assert result["borrowed"] == {
+        "va-fairfax-parcels-zoning": {"status": "checked", "checked": 1,
+                                      "unreachable": 0, "findings": []}}, result
     hosts = {frozenset(p.allowed_hosts) for p in policies}
     assert frozenset({"www.fairfaxcounty.gov"}) in hosts, (
         "Fairfax's exchange was not sent under Fairfax's policy")
     assert frozenset({"services1.arcgis.com"}) in hosts
+
+
+async def test_a_borrowed_publishers_outage_is_not_the_fixture_owners(
+        monkeypatch):
+    """Scoring every exchange under the file it sits in made a Fairfax
+    outage read as a Vienna outage — and `render` keeps unreachable
+    sources out of the Changed section, so it also hid the real Vienna
+    drift in the same run."""
+    from commonwealth.core.errors import SourceUnavailable
+    from commonwealth.core.registry import SourceRegistry
+    from commonwealth.runtime import SOURCES_DIR
+
+    class Fetcher:
+        def __init__(self, policy, **_kwargs):
+            self.policy = policy
+
+        async def fetch_json(self, url, _params):
+            if "fairfaxcounty.gov" in url:
+                raise SourceUnavailable("simulated outage (HTTP 503)")
+            return _query([{"PARCEL_ID": "1"}])
+
+    monkeypatch.setattr(audit, "HttpFetcher", Fetcher)
+    registry = SourceRegistry.load(SOURCES_DIR)
+    vienna = registry.get("va-vienna-town-zoning")
+    fairfax = registry.get("va-fairfax-parcels-zoning")
+    recorded = {"exchanges": [
+        {"url": vienna.adapter.service_url + "/0/query", "params": {"n": 1},
+         "response": _query([{"PIN": "1"}])},
+        {"url": fairfax.adapter.service_url + "/1/query", "params": {"n": 2},
+         "response": _query([{"PIN": "1"}])},
+    ]}
+    result = await audit._replay(vienna, recorded,
+                                 others=list(registry.manifests.values()))
+    assert result["status"] == "checked", (
+        "Vienna's own service answered; the county's outage is not hers")
+    assert result["findings"], "Vienna's own drift is still reported"
+    assert result["borrowed"]["va-fairfax-parcels-zoning"]["status"] == \
+        "unreachable"
+
+    results = {"va-vienna-town-zoning": {k: v for k, v in result.items()
+                                         if k != "borrowed"}}
+    report = audit.render("2026-09-09T00:00:00Z", results, {},
+                          {"readings": []})
+    assert "- **1 changed**" in report, report
+    assert "va-vienna-town-zoning" in report.split("## Changed")[1], report
+
+
+def test_a_borrowed_share_merges_into_the_owners_own_result():
+    own = {"status": "checked", "checked": 4, "unreachable": 0,
+           "findings": [{"request": "a", "notes": ["n"]}]}
+    share = {"status": "unreachable", "checked": 0, "unreachable": 2,
+             "findings": [{"request": "b", "notes": ["failed"]}]}
+    merged = audit._merge(own, share)
+    assert merged == {"status": "partly_unreachable", "checked": 4,
+                      "unreachable": 2, "findings": own["findings"]
+                      + share["findings"]}
+    assert audit._merge(None, share) == share, (
+        "a source with no fixture of its own is still checked by one that "
+        "recorded it")
+    assert audit._merge({"status": "no_fixture", "checked": 0,
+                         "unreachable": 0, "findings": []}, share) == share
 

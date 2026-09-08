@@ -2,9 +2,14 @@
  "source_id": "va-vgin-admin-boundaries",
  "recorded_at": "2026-09-02T05:28:36Z",
  "rights": {
-  "publisher": "Virginia Geographic Information Network (VGIN), part of the Virginia Department of Emergency Management",
-  "terms_url": "https://vgin.vdem.virginia.gov/datasets/VGIN::virginia-administrative-boundaries/about",
-  "note": "Recorded government-published responses; third-party content excluded from the repo's CC0 grant (../../../design/architecture.md decision 0011)."
+  "sources": [
+   {
+    "source_id": "va-vgin-admin-boundaries",
+    "publisher": "Virginia Geographic Information Network (VGIN), part of the Virginia Department of Emergency Management",
+    "terms_url": "https://vgin.vdem.virginia.gov/datasets/VGIN::virginia-administrative-boundaries/about"
+   }
+  ],
+  "note": "Recorded government-published responses; third-party content excluded from the repo's CC0 grant (../../../design/architecture.md decision 0011). Each publisher's own terms govern its own responses."
  },
  "summary": {
   "health:localities": {

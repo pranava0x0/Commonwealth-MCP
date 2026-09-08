@@ -11,6 +11,7 @@ import json
 import sys
 from pathlib import Path
 from typing import Any
+from urllib.parse import urlparse
 
 import yaml
 
@@ -1036,7 +1037,6 @@ def _sample_geocoder(m, ctx) -> int:
     operation. The recorded set is § 3's postal-city traps, plus a
     deliberate no-match, because 'the locator found nothing' has to replay
     as faithfully as a hit."""
-    del ctx
     from ..adapters import arcgis_geocode as geo_mod
     p = geo_mod.ArcGISGeocodeParams.model_validate(
         m.adapter.model_dump(exclude={"type"}))
@@ -1080,7 +1080,7 @@ def _sample_geocoder(m, ctx) -> int:
         summary = asyncio.run(run())
     except CommonwealthError as err:
         return _fail(f"{err.code}: {err}")
-    return _write_fixture(m, recorder, summary)
+    return _write_fixture(m, recorder, summary, ctx)
 
 
 def cmd_sources_sample(args: argparse.Namespace) -> int:
@@ -1102,42 +1102,42 @@ def cmd_sources_sample(args: argparse.Namespace) -> int:
             summary = asyncio.run(_sample_environmental(adapter, m, params))
         except CommonwealthError as err:
             return _fail(f"{err.code}: {err}")
-        return _write_fixture(m, recorder, summary)
+        return _write_fixture(m, recorder, summary, ctx)
 
     if "road.lookup" in m.capability_ids():
         try:
             summary = asyncio.run(_sample_roads(adapter, m, params, ctx))
         except CommonwealthError as err:
             return _fail(f"{err.code}: {err}")
-        return _write_fixture(m, recorder, summary)
+        return _write_fixture(m, recorder, summary, ctx)
 
     if "building.lookup" in m.capability_ids():
         try:
             summary = asyncio.run(_sample_buildings(adapter, m, params, ctx))
         except CommonwealthError as err:
             return _fail(f"{err.code}: {err}")
-        return _write_fixture(m, recorder, summary)
+        return _write_fixture(m, recorder, summary, ctx)
 
     if "landmark.lookup" in m.capability_ids():
         try:
             summary = asyncio.run(_sample_landmarks(adapter, m, params, ctx))
         except CommonwealthError as err:
             return _fail(f"{err.code}: {err}")
-        return _write_fixture(m, recorder, summary)
+        return _write_fixture(m, recorder, summary, ctx)
 
     if "address.lookup" in m.capability_ids():
         try:
             summary = asyncio.run(_sample_addresses(adapter, m, params, ctx))
         except CommonwealthError as err:
             return _fail(f"{err.code}: {err}")
-        return _write_fixture(m, recorder, summary)
+        return _write_fixture(m, recorder, summary, ctx)
 
     if "boundary.lookup" in m.capability_ids():
         try:
             summary = asyncio.run(_sample_boundaries(adapter, m, params, ctx))
         except CommonwealthError as err:
             return _fail(f"{err.code}: {err}")
-        return _write_fixture(m, recorder, summary)
+        return _write_fixture(m, recorder, summary, ctx)
 
     if "zoning" in params.layers and "parcels" not in params.layers:
         try:
@@ -1145,7 +1145,7 @@ def cmd_sources_sample(args: argparse.Namespace) -> int:
                 _sample_zoning_only(adapter, m, params, ctx, recorder))
         except CommonwealthError as err:
             return _fail(f"{err.code}: {err}")
-        return _write_fixture(m, recorder, summary)
+        return _write_fixture(m, recorder, summary, ctx)
 
     async def run() -> dict:
         out: dict[str, Any] = {}
@@ -1251,22 +1251,69 @@ def cmd_sources_sample(args: argparse.Namespace) -> int:
         summary = asyncio.run(run_with_crosschecks())
     except CommonwealthError as err:
         return _fail(f"{err.code}: {err}")
-    return _write_fixture(m, recorder, summary)
+    return _write_fixture(m, recorder, summary, ctx)
+
+
+def service_url_of(m: SourceManifest) -> str | None:
+    url = m.adapter.model_dump().get("service_url")
+    return url.rstrip("/") if url else None
+
+
+def owning_source(url: str, ctx: RuntimeContext) -> SourceManifest | None:
+    """The registered source whose service answered `url`.
+
+    Matched on the service URL rather than the host, because a publisher
+    runs many services from one: VGIN's seven sources and every ArcGIS
+    Online tenant share a hostname, and attributing by host put all seven
+    on any fixture that touched one of them. The longest matching prefix
+    wins, so a layer under a nested service is not claimed by its parent.
+    """
+    best = None
+    for m in ctx.sources.manifests.values():
+        base = service_url_of(m)
+        if base and url.startswith(base) and (
+                best is None or len(base) > len(service_url_of(best))):
+            best = m
+    return best
+
+
+def contributing_sources(m: SourceManifest, exchanges: list[dict],
+                         ctx: RuntimeContext) -> list[SourceManifest]:
+    """Every registered source whose service actually answered into this
+    fixture, the recording source first.
+
+    A zoning-only source records its county's and the state's answers for
+    the same point and parcel, so one file can hold three publishers'
+    responses. Naming only the recording source would put the other two
+    publishers' content under terms that are not theirs, which is the one
+    thing decision 0011's rights block exists to prevent. Derived from
+    what the file actually contains rather than declared, so a recording
+    that stops reaching a publisher stops claiming it.
+    """
+    found = {m.id: m}
+    for ex in exchanges:
+        owner = owning_source(ex["url"], ctx)
+        if owner is not None:
+            found.setdefault(owner.id, owner)
+    return [m] + [found[sid] for sid in sorted(found) if sid != m.id]
 
 
 def _write_fixture(m: SourceManifest, recorder: "_RecordingFetcher",
-                   summary: dict) -> int:
+                   summary: dict, ctx: RuntimeContext) -> int:
     out_dir = FIXTURES_DIR / m.id
     out_dir.mkdir(parents=True, exist_ok=True)
     fixture = {
         "source_id": m.id,
         "recorded_at": utc_now_iso(),
         "rights": {
-            "publisher": m.publisher.agency,
-            "terms_url": m.access.terms_url,
+            "sources": [{"source_id": c.id, "publisher": c.publisher.agency,
+                         "terms_url": c.access.terms_url}
+                        for c in contributing_sources(
+                            m, recorder.exchanges, ctx)],
             "note": "Recorded government-published responses; third-party "
                     "content excluded from the repo's CC0 grant "
-                    "(../../../design/architecture.md decision 0011).",
+                    "(../../../design/architecture.md decision 0011). Each "
+                    "publisher's own terms govern its own responses.",
         },
         "summary": summary,
         "exchanges": recorder.exchanges,

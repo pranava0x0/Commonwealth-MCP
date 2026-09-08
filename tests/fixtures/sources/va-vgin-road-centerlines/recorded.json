@@ -2,9 +2,14 @@
  "source_id": "va-vgin-road-centerlines",
  "recorded_at": "2026-09-02T05:31:52Z",
  "rights": {
-  "publisher": "Virginia Geographic Information Network (VGIN), part of the Virginia Department of Emergency Management",
-  "terms_url": "https://vgin.vdem.virginia.gov/datasets/virginia-road-centerlines/about",
-  "note": "Recorded government-published responses; third-party content excluded from the repo's CC0 grant (../../../design/architecture.md decision 0011)."
+  "sources": [
+   {
+    "source_id": "va-vgin-road-centerlines",
+    "publisher": "Virginia Geographic Information Network (VGIN), part of the Virginia Department of Emergency Management",
+    "terms_url": "https://vgin.vdem.virginia.gov/datasets/virginia-road-centerlines/about"
+   }
+  ],
+  "note": "Recorded government-published responses; third-party content excluded from the repo's CC0 grant (../../../design/architecture.md decision 0011). Each publisher's own terms govern its own responses."
  },
  "summary": {
   "health:centerlines": {

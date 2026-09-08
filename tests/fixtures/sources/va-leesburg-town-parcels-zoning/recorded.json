@@ -2,9 +2,14 @@
  "source_id": "va-leesburg-town-parcels-zoning",
  "recorded_at": "2026-09-08T00:56:46Z",
  "rights": {
-  "publisher": "Town of Leesburg government (Information Technology, GIS Program)",
-  "terms_url": "https://tol-va.maps.arcgis.com/home/index.html",
-  "note": "Recorded government-published responses; third-party content excluded from the repo's CC0 grant (../../../design/architecture.md decision 0011)."
+  "sources": [
+   {
+    "source_id": "va-leesburg-town-parcels-zoning",
+    "publisher": "Town of Leesburg government (Information Technology, GIS Program)",
+    "terms_url": "https://tol-va.maps.arcgis.com/home/index.html"
+   }
+  ],
+  "note": "Recorded government-published responses; third-party content excluded from the repo's CC0 grant (../../../design/architecture.md decision 0011). Each publisher's own terms govern its own responses."
  },
  "summary": {
   "health:parcels": {

@@ -2,9 +2,14 @@
  "source_id": "va-vgin-address-points",
  "recorded_at": "2026-09-02T05:30:29Z",
  "rights": {
-  "publisher": "Virginia Geographic Information Network (VGIN), part of the Virginia Department of Emergency Management",
-  "terms_url": "https://vgin.vdem.virginia.gov/datasets/virginia-address-points/about",
-  "note": "Recorded government-published responses; third-party content excluded from the repo's CC0 grant (../../../design/architecture.md decision 0011)."
+  "sources": [
+   {
+    "source_id": "va-vgin-address-points",
+    "publisher": "Virginia Geographic Information Network (VGIN), part of the Virginia Department of Emergency Management",
+    "terms_url": "https://vgin.vdem.virginia.gov/datasets/virginia-address-points/about"
+   }
+  ],
+  "note": "Recorded government-published responses; third-party content excluded from the repo's CC0 grant (../../../design/architecture.md decision 0011). Each publisher's own terms govern its own responses."
  },
  "summary": {
   "health:addresses": {

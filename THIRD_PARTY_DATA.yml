@@ -33,6 +33,7 @@ sources:
   data_classification: open
   recorded_fixtures:
   - tests/fixtures/sources/va-fairfax-parcels-zoning/recorded.json
+  - tests/fixtures/sources/va-vienna-town-zoning/recorded.json
 - id: va-leesburg-town-parcels-zoning
   name: Town of Leesburg Parcels and Zoning (ArcGIS Online)
   publisher: Town of Leesburg government (Information Technology, GIS Program)
@@ -177,6 +178,7 @@ sources:
   data_classification: open
   recorded_fixtures:
   - tests/fixtures/sources/va-vgin-statewide-parcels/recorded.json
+  - tests/fixtures/sources/va-vienna-town-zoning/recorded.json
 - id: va-vgin-road-centerlines
   name: Virginia Road Centerlines (VGIN VBMP RCL)
   publisher: Virginia Geographic Information Network (VGIN), part of the Virginia

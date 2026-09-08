@@ -2,9 +2,14 @@
  "source_id": "va-richmond-city-parcels-zoning",
  "recorded_at": "2026-09-02T05:29:39Z",
  "rights": {
-  "publisher": "City of Richmond (Information Technology / Assessor of Real Estate)",
-  "terms_url": "https://www.arcgis.com/home/termsofuse.html",
-  "note": "Recorded government-published responses; third-party content excluded from the repo's CC0 grant (../../../design/architecture.md decision 0011)."
+  "sources": [
+   {
+    "source_id": "va-richmond-city-parcels-zoning",
+    "publisher": "City of Richmond (Information Technology / Assessor of Real Estate)",
+    "terms_url": "https://www.arcgis.com/home/termsofuse.html"
+   }
+  ],
+  "note": "Recorded government-published responses; third-party content excluded from the repo's CC0 grant (../../../design/architecture.md decision 0011). Each publisher's own terms govern its own responses."
  },
  "summary": {
   "health:parcels": {

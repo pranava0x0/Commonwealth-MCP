@@ -2,9 +2,14 @@
  "source_id": "va-fairfax-parcels-zoning",
  "recorded_at": "2026-09-02T05:29:35Z",
  "rights": {
-  "publisher": "Fairfax County government (GIS and Mapping Services, Open Data)",
-  "terms_url": "https://www.fairfaxcounty.gov/maps/disclaimer",
-  "note": "Recorded government-published responses; third-party content excluded from the repo's CC0 grant (../../../design/architecture.md decision 0011)."
+  "sources": [
+   {
+    "source_id": "va-fairfax-parcels-zoning",
+    "publisher": "Fairfax County government (GIS and Mapping Services, Open Data)",
+    "terms_url": "https://www.fairfaxcounty.gov/maps/disclaimer"
+   }
+  ],
+  "note": "Recorded government-published responses; third-party content excluded from the repo's CC0 grant (../../../design/architecture.md decision 0011). Each publisher's own terms govern its own responses."
  },
  "summary": {
   "health:parcels": {
