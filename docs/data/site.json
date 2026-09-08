@@ -786,6 +786,15 @@
    "capabilities": [
     "parcel.lookup",
     "zoning.lookup"
+   ],
+   "optional": [
+    "geocode.address",
+    "boundary.lookup"
+   ],
+   "description": "Screen one Virginia parcel for its zoning district.",
+   "steps": [
+    "1 \u2014 `parcel.lookup`",
+    "2 \u2014 `zoning.lookup`"
    ]
   },
   {
@@ -793,6 +802,18 @@
    "status": "shipped",
    "capabilities": [
     "building.lookup"
+   ],
+   "optional": [
+    "road.lookup",
+    "landmark.lookup",
+    "environmental_site.lookup",
+    "parcel.lookup"
+   ],
+   "description": "Screen what is on and around one piece of Virginia ground: buildings, the roads serving it, nearby public places, and any state water-quality monitoring station near it.",
+   "steps": [
+    "1 \u2014 `parcel.lookup`, when there is a parcel ID",
+    "2 \u2014 `building.lookup`",
+    "3 \u2014 `road.lookup`, when access or frontage is the question"
    ]
   },
   {
@@ -800,17 +821,29 @@
    "status": "shipped",
    "capabilities": [
     "boundary.lookup"
-   ]
+   ],
+   "optional": [
+    "geocode.address",
+    "address.lookup"
+   ],
+   "description": "Work out which Virginia government covers a place, from a name, a street address, a ZIP code, or a coordinate.",
+   "steps": []
   },
   {
    "name": "legislative-impact-analysis",
    "status": "milestone 1b (civic)",
-   "capabilities": []
+   "capabilities": [],
+   "optional": [],
+   "steps": [],
+   "description": "Trace a bill to the Code sections it touches and the localities it reaches. Waits on the legislative API (GitHub issue #11)."
   },
   {
    "name": "development-site-due-diligence",
    "status": "deferred until there is coverage to justify it",
-   "capabilities": []
+   "capabilities": [],
+   "optional": [],
+   "steps": [],
+   "description": "One site, every registered layer, in one walk. Waits on enough local coverage to be worth more than the tools it would chain."
   }
  ],
  "jurisdictions": [

@@ -78,6 +78,19 @@ from a directory with no checkout. And the Code manifest kept its old
 envelope would have reported a revision indistinguishable from the
 registry before the endpoint existed.
 
+**The site took three more of nepa-mcp's patterns.** Sources are a
+searchable card grid with capability filter chips rather than nineteen
+entries in a collapsed fold. Skills became a Workflows section, each card
+carrying the skill's own first sentence and its own step sequence, both
+read off the `SKILL.md` at build time so a card cannot describe a
+workflow differently from the shipped skill. And the footer carries a
+governance row — contributing, design, security, the run log, whose terms
+apply — which was reachable only by going to the repo.
+
+Nine more demo calls, thirty-nine now, and schema.org JSON-LD derived
+from the same catalog the page renders, since #40 is about being findable
+and the registry listing is only half of that.
+
 **A self-review found four more, all in code written this session.** The
 new security test assumed the suite exports `COMMONWEALTH_DENY_NETWORK`;
 only CI does, and a sibling test in the same file unsets it — so a plain

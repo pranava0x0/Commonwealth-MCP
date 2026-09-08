@@ -48,10 +48,16 @@ def _all_recorded_exchanges() -> list[dict]:
 # shipped, which is the drift a typed roster produces.
 PLANNED_SKILLS = [
     {"name": "legislative-impact-analysis", "status": "milestone 1b (civic)",
-     "capabilities": []},
+     "capabilities": [], "optional": [], "steps": [],
+     "description": "Trace a bill to the Code sections it touches and the "
+                    "localities it reaches. Waits on the legislative API "
+                    "(GitHub issue #11)."},
     {"name": "development-site-due-diligence",
      "status": "deferred until there is coverage to justify it",
-     "capabilities": []},
+     "capabilities": [], "optional": [], "steps": [],
+     "description": "One site, every registered layer, in one walk. Waits "
+                    "on enough local coverage to be worth more than the "
+                    "tools it would chain."},
 ]
 
 
@@ -72,6 +78,39 @@ def tool_parameters(spec) -> list[dict]:
             for name, param in sig.parameters.items() if name != "ctx"]
 
 
+def _frontmatter_of(path: Path) -> dict:
+    import yaml
+
+    text = path.read_text()
+    if not text.startswith("---\n"):
+        return {}
+    return yaml.safe_load(text.split("---\n", 2)[1]) or {}
+
+
+def _first_sentence(path: Path) -> str:
+    """The skill's `description`, cut to its first sentence.
+
+    A skill description is written for a model deciding whether to load
+    the skill, so it opens by saying what the workflow does and then
+    lists when to use it. The card wants the first half.
+    """
+    text = " ".join((_frontmatter_of(path).get("description") or "").split())
+    head, _, _ = text.partition(". ")
+    return (head + ".") if head and not head.endswith(".") else head
+
+
+def _step_headings(path: Path) -> list[str]:
+    """The `**Step N — ...**` headings a SKILL.md walks through.
+
+    The walk is the thing a skill adds over its tools, so the card shows
+    the steps rather than only the capabilities they need. Read off the
+    file, so a re-ordered skill re-orders its card.
+    """
+    body = path.read_text().split("---\n", 2)[-1]
+    steps = re.findall(r"^\*\*Step\s+([^\n*]+?)\.?\*\*", body, re.M)
+    return [" ".join(s.split()) for s in steps]
+
+
 def skill_roster() -> list[dict]:
     """Skills on disk, then the ones still declared as planned.
 
@@ -81,7 +120,13 @@ def skill_roster() -> list[dict]:
     from commonwealth.core.skills import load_skills
 
     shipped = [{"name": sk.name, "status": "shipped",
-                "capabilities": list(sk.required_capabilities)}
+                "capabilities": list(sk.required_capabilities),
+                "optional": list(sk.optional_capabilities),
+                # The skill's own first sentence. Read off the file rather
+                # than written here, so the card and the shipped skill
+                # cannot describe the workflow differently.
+                "description": _first_sentence(sk.path),
+                "steps": _step_headings(sk.path)}
                for sk in load_skills(ROOT / "skills")]
     names = {sk["name"] for sk in shipped}
     return shipped + [sk for sk in PLANNED_SKILLS if sk["name"] not in names]
