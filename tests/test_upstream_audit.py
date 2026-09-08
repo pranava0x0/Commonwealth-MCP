@@ -199,8 +199,31 @@ def test_the_committed_history_gives_every_probed_layer_a_range():
                           / "probe-history.json").read_text())
     pairs = {(r["source_id"], r["layer"]) for r in history["readings"]}
     assert pairs, "the history is empty"
+    # A source registered today has one day of readings, and the audit
+    # records one per layer per day, so a second cannot exist yet. The
+    # weekly run adds it. Anything older resting on one reading is the
+    # failure #19 named.
+    from commonwealth.core.registry import SourceRegistry
+    from commonwealth.runtime import SOURCES_DIR
+    added = {sid: m.lifecycle.added
+             for sid, m in SourceRegistry.load(SOURCES_DIR).manifests.items()}
+
+    def registration_day_only(source_id: str, layer: str) -> bool:
+        from datetime import date
+
+        days = {r["observed_at"][:10] for r in history["readings"]
+                if r["source_id"] == source_id and r["layer"] == layer}
+        if len(days) != 1 or not added.get(source_id):
+            return False
+        # Manifests carry the local date and readings carry UTC, so a
+        # source registered on an American evening reads as the next day.
+        gap = date.fromisoformat(days.pop()) - date.fromisoformat(
+            added[source_id])
+        return 0 <= gap.days <= 1
+
     thin = [p for p in sorted(pairs)
-            if audit.observed_range(history, *p)["observations"] < 2]
+            if audit.observed_range(history, *p)["observations"] < 2
+            and not registration_day_only(*p)]
     assert thin == [], (
         f"{thin} still rest on one reading; run tools/upstream_audit.py")
 
@@ -357,3 +380,45 @@ def test_out_outside_the_repo_does_not_raise():
 
     assert audit._short(Path("/tmp/elsewhere.md")) == Path("/tmp/elsewhere.md")
     assert audit._short(ROOT / "docs" / "x.md") == Path("docs/x.md")
+
+
+async def test_another_publishers_exchange_replays_under_its_own_policy(
+        monkeypatch):
+    """The Town of Vienna's fixture carries Fairfax County's answers for
+    the same point, recorded so a two-government answer replays whole.
+    The audit used to send every exchange under the fixture's own host
+    policy, so thirteen of Vienna's eighteen were refused and the source
+    was reported unreachable. Each exchange goes under the policy of the
+    registered source whose host it belongs to now."""
+    policies = []
+
+    class Fetcher:
+        def __init__(self, policy, **_kwargs):
+            self.policy = policy
+            policies.append(policy)
+
+        async def fetch_json(self, _url, _params):
+            return {"features": []}
+
+    monkeypatch.setattr(audit, "HttpFetcher", Fetcher)
+    from commonwealth.core.registry import SourceRegistry
+    from commonwealth.runtime import SOURCES_DIR
+    registry = SourceRegistry.load(SOURCES_DIR)
+    vienna = registry.get("va-vienna-town-zoning")
+    fairfax = registry.get("va-fairfax-parcels-zoning")
+    recorded = {"exchanges": [
+        {"url": vienna.adapter.service_url + "/0/query", "params": {"n": 1},
+         "response": {"features": []}},
+        {"url": fairfax.adapter.service_url + "/1/query", "params": {"n": 2},
+         "response": {"features": []}},
+        {"url": "https://nobody-registered.example.gov/q", "params": {},
+         "response": {"features": []}},
+    ]}
+    result = await audit._replay(vienna, recorded,
+                                 others=list(registry.manifests.values()))
+    assert result["checked"] == 3, result
+    hosts = {frozenset(p.allowed_hosts) for p in policies}
+    assert frozenset({"www.fairfaxcounty.gov"}) in hosts, (
+        "Fairfax's exchange was not sent under Fairfax's policy")
+    assert frozenset({"services1.arcgis.com"}) in hosts
+

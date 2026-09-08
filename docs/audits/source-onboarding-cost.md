@@ -17,6 +17,8 @@ test.
 
 | Source | Registered | Code change | What it was |
 |---|---|---|---|
+| `va-vienna-town-zoning` | 2026-09-07 | Yes | The first zoning-only source. `geo.find_zoning` answered a parcel number by reading the source's own parcel layer, and a town with no parcel layer has none to read; it now borrows the polygon from a parcel source above the town in the stack and names whose it was. The sampler got a zoning-only recording plan that records the county's answers alongside the town's. This is the change the town slot of the forcing set existed to find. |
+| `va-leesburg-town-parcels-zoning` | 2026-09-07 | Yes | Two changes, neither in the adapter's model of a layer. ArcGIS Online refused a 478-vertex parcel polygon in a GET with HTTP 414, so the fetcher sends a query whose URL would pass 4,000 characters as a form POST (design/source-quirks.md § 16). And the statewide cross-check plan skipped every town, because a town has no FIPS of its own; it walks up to the county's now, as the tools already did. The manifest itself is Fairfax's shape and needed nothing new. |
 | `va-deq-water-quality-stations` | 2026-08-29 | **No** | First MapServer and first non-VGIN, non-locality publisher. The adapter, written against FeatureServer, needed nothing. `Access.terms_gap` was added, but for the disclosure rule rather than for this source's shape. |
 | `va-vdot-lrs-routes` | 2026-08-29 | Yes | `LayerDecl.jurisdiction_scope` mode `jurisdiction_names`: the layer's jurisdiction key is VDOT's own numbering, not FIPS, so scoping by name was the only correct option. |
 | `va-vgin-road-centerlines` | 2026-08-29 | Yes | `where_any_of` in the adapter, and `jurisdiction_scope` mode `fips_any_of`: a segment carries FIPS on each side, so "in this locality" is a disjunction the adapter could not express. |
@@ -39,9 +41,18 @@ they were written once for the shape rather than per row.
 
 ## What the count says so far
 
-Eleven onboardings, two of which were new adapter types where a code
-change was the point. Of the other nine, seven needed code and two did
+Thirteen onboardings, two of which were new adapter types where a code
+change was the point. Of the other eleven, nine needed code and two did
 not.
+
+The two town rows, from 2026-09-07, are the first in which the change
+was not to the adapter's model of a layer. Leesburg's manifest is
+Fairfax's shape and validated first time; what moved was the transport
+(a request too long for a URL) and a recording plan (a town has no FIPS).
+Vienna's change was to a tool: a zoning source with no parcel layer had
+no way to answer a parcel number, and the forcing set's town slot was
+kept open for exactly that kind of finding. The layer model held for both,
+which is the trend the count is meant to show.
 
 Both of the two are from 2026-08-29 and both are informative. DEQ is the
 stronger signal: a different agency, a different host, a different service

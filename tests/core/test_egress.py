@@ -511,3 +511,32 @@ async def test_rule7_per_host_concurrency_is_capped(monkeypatch):
 
 async def _no_sleep(_seconds):
     return None
+
+
+def test_a_query_too_long_for_a_url_is_sent_as_a_form_post():
+    """ArcGIS Online answered HTTP 414 to a GET carrying Leesburg's
+    478-vertex parcel polygon, 18 KB of geometry once encoded, while
+    Fairfax County's own server had accepted longer (design/source-quirks.md
+    § 16). Every ArcGIS query operation takes the same parameters as a
+    form POST, so the fetcher switches on the encoded length and nothing
+    else: an ordinary query is still a GET, and a recording, keyed on the
+    URL and the parameters rather than the method, replays either way."""
+    import httpx
+
+    from commonwealth.adapters.base import (MAX_GET_URL_CHARS,
+                                            _build_query_request)
+
+    client = httpx.AsyncClient()
+    short = _build_query_request(client, "https://example.gov/q",
+                                 {"f": "json", "where": "1=1"})
+    assert short.method == "GET"
+    assert short.url.params["where"] == "1=1"
+
+    big = {"f": "json", "geometry": "x" * (MAX_GET_URL_CHARS + 1)}
+    long = _build_query_request(client, "https://example.gov/q", big)
+    assert long.method == "POST"
+    assert str(long.url) == "https://example.gov/q", (
+        "the parameters moved into the body, so the URL carries none")
+    assert long.headers["content-type"] == "application/x-www-form-urlencoded"
+    assert b"f=json" in long.content
+    assert b"geometry=" + b"x" * (MAX_GET_URL_CHARS + 1) in long.content

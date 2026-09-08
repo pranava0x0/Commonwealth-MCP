@@ -16,7 +16,10 @@ of Virginia.
 
 MCP (Model Context Protocol) lets an AI client call functions supplied by a
 server. Here, those functions query government records and return structured
-results. You can also call the Python functions or CLI without an AI model.
+results. The same functions are callable from Python and from the CLI
+without an AI model; they are not yet a supported public API (decision
+0015 in [design/architecture.md](design/architecture.md)), so a release
+may rename them.
 
 The browser demos use recorded responses and require no installation.
 To run the tools locally, install [uv](https://docs.astral.sh/uv/getting-started/installation/)
@@ -33,7 +36,7 @@ uv pip install --python .venv/bin/python -e . --group dev
 The example prints results for an address in Sterling: a parcel found in
 statewide records, a zoning coverage gap, and no matching landmark records
 within the query radius. It runs offline by default. Add `--live` to query
-the government services. See [examples/](examples/README.md) for four other
+the government services. See [examples/](examples/README.md) for five other
 workflows.
 
 Keep this checkout: the current runtime loads source manifests and skills
@@ -45,8 +48,8 @@ virtual-environment executables live under `.venv\Scripts\`.
 | Question | Registered sources |
 |---|---|
 | Which government covers a place? | Names, FIPS codes, addresses, ZIP codes and coordinates; the table contains 133 counties and independent cities and 189 towns |
-| What parcel is here? | Fairfax County, Richmond City, Charles City County, and VGIN statewide parcels |
-| How is a parcel zoned? | Fairfax County and Richmond City GIS layers; town zoning authority needs separate verification |
+| What parcel is here? | Fairfax County, Richmond City, Charles City County, the Town of Leesburg, and VGIN statewide parcels |
+| How is a parcel zoned? | Fairfax County, Richmond City, and the Towns of Leesburg and Vienna. A point in Vienna returns the town's layer and the county's, both unranked |
 | Which address points, buildings, roads or public places are nearby? | VGIN statewide layers; VDOT road routes |
 | Which water-quality stations are nearby? | DEQ monitoring stations, including historical stations |
 | Where is a government boundary? | VGIN locality and town polygons |

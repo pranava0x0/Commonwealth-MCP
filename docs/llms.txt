@@ -25,7 +25,9 @@ Fourteen tools, nine of them in the default set.
   Richmond City, and Charles City County publish their own; VGIN publishes
   a statewide layer. Where two cover the same ground both are returned,
   unranked, and a disagreement is reported as a disagreement.
-- How a parcel is zoned, in Fairfax County and Richmond City only. This is
+- How a parcel is zoned, in Fairfax County, Richmond City, and the Towns
+  of Leesburg and Vienna. A point in Vienna returns the town's layer and
+  the county's, both unranked. This is
   screening evidence from a county GIS layer. The adopted ordinance
   governs, and the answer says so every time.
 - Where a street address is, from the statewide address points. The city
@@ -53,7 +55,7 @@ MCP resource for 24 hours.
 
 ## What it does not do
 
-- Zoning outside Fairfax County and Richmond City. Everywhere else returns
+- Zoning outside those four localities. Everywhere else returns
   a registry gap, which is not the same as unzoned land.
 - A source of its own for most localities. All 133 counties and
   independent cities and all 189 incorporated towns are in the

@@ -33,6 +33,16 @@ sources:
   data_classification: open
   recorded_fixtures:
   - tests/fixtures/sources/va-fairfax-parcels-zoning/recorded.json
+- id: va-leesburg-town-parcels-zoning
+  name: Town of Leesburg Parcels and Zoning (ArcGIS Online)
+  publisher: Town of Leesburg government (Information Technology, GIS Program)
+  manifest: sources/local/leesburg-town/parcels-zoning.yaml
+  terms_url: https://tol-va.maps.arcgis.com/home/index.html
+  terms_reviewed_at: '2026-09-07'
+  automation_status: public_api
+  data_classification: open
+  recorded_fixtures:
+  - tests/fixtures/sources/va-leesburg-town-parcels-zoning/recorded.json
 - id: va-richmond-city-parcels-zoning
   name: Richmond City Parcels and Zoning (GIS Open Data)
   publisher: City of Richmond (Information Technology / Assessor of Real Estate)
@@ -43,6 +53,16 @@ sources:
   data_classification: open
   recorded_fixtures:
   - tests/fixtures/sources/va-richmond-city-parcels-zoning/recorded.json
+- id: va-vienna-town-zoning
+  name: Town of Vienna Zoning Districts (ArcGIS Online)
+  publisher: Town of Vienna government (Department of Planning and Zoning)
+  manifest: sources/local/vienna-town/zoning.yaml
+  terms_url: https://vienna-va.maps.arcgis.com/home/index.html
+  terms_reviewed_at: '2026-09-07'
+  automation_status: public_api
+  data_classification: open
+  recorded_fixtures:
+  - tests/fixtures/sources/va-vienna-town-zoning/recorded.json
 - id: va-deq-water-quality-stations
   name: DEQ Water Quality Monitoring Stations
   publisher: Virginia Department of Environmental Quality (DEQ)

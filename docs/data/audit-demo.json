@@ -1,7 +1,7 @@
 {
- "generated_at": "2026-09-07T16:05:44Z",
+ "generated_at": "2026-09-08T01:05:40Z",
  "mode": "fixtures",
- "call_count": 28,
+ "call_count": 32,
  "fixture_recorded_at": "2026-09-02T05:29:35Z",
  "calls": [
   {
@@ -24,7 +24,7 @@
       "authority_level": "official_derived",
       "access_path": "index",
       "source_updated_at": null,
-      "retrieved_at": "2026-09-07T16:05:43Z",
+      "retrieved_at": "2026-09-08T01:05:40Z",
       "cache_age_seconds": 0
      }
     ],
@@ -48,19 +48,19 @@
       "arcgis_geocode": "0.1.0",
       "virginia_law": "0.1.0"
      },
-     "registry_revision": "2026-08-29",
-     "request_id": "005e47c572b6447e94ce330c13b127ac"
+     "registry_revision": "2026-09-07",
+     "request_id": "36c643b15b01447db28d4ad35bf1a9ac"
     }
    },
    "error_text": null,
    "http_calls": [],
    "audit": {
-    "ts": "2026-09-07T16:05:43Z",
-    "request_id": "005e47c572b6447e94ce330c13b127ac",
+    "ts": "2026-09-08T01:05:40Z",
+    "request_id": "36c643b15b01447db28d4ad35bf1a9ac",
     "tool": "registry.resolve_jurisdiction",
     "server": "commonwealth",
     "server_version": "0.1.0.dev0",
-    "duration_ms": 1,
+    "duration_ms": 0,
     "args": {
      "query": "Sterling"
     },
@@ -87,7 +87,7 @@
     "warning_codes": [],
     "requires_user_choice": false,
     "error": null,
-    "registry_revision": "2026-08-29"
+    "registry_revision": "2026-09-07"
    }
   },
   {
@@ -144,7 +144,7 @@
       "authority_level": "official_secondary",
       "access_path": "live",
       "source_updated_at": null,
-      "retrieved_at": "2026-09-07T16:05:44Z",
+      "retrieved_at": "2026-09-08T01:05:40Z",
       "cache_age_seconds": 0
      },
      {
@@ -157,7 +157,7 @@
       "authority_level": "official_secondary",
       "access_path": "live",
       "source_updated_at": null,
-      "retrieved_at": "2026-09-07T16:05:44Z",
+      "retrieved_at": "2026-09-08T01:05:40Z",
       "cache_age_seconds": 0
      }
     ],
@@ -167,7 +167,7 @@
       "source_ref": "source_02",
       "record_id": "OBJECTID:53",
       "locator": null,
-      "retrieved_at": "2026-09-07T16:05:44Z",
+      "retrieved_at": "2026-09-08T01:05:40Z",
       "effective_at": null,
       "transformations": [
        "field_mapping:v1"
@@ -180,7 +180,7 @@
       "source_ref": "source_02",
       "record_id": "OBJECTID:53",
       "locator": null,
-      "retrieved_at": "2026-09-07T16:05:44Z",
+      "retrieved_at": "2026-09-08T01:05:40Z",
       "effective_at": null,
       "transformations": [
        "field_mapping:v1"
@@ -193,7 +193,7 @@
       "source_ref": "source_01",
       "record_id": "candidate:f8775952d5a8b036",
       "locator": null,
-      "retrieved_at": "2026-09-07T16:05:44Z",
+      "retrieved_at": "2026-09-08T01:05:40Z",
       "effective_at": null,
       "transformations": [
        "geocode:findAddressCandidates",
@@ -248,8 +248,8 @@
       "arcgis_geocode": "0.1.0",
       "virginia_law": "0.1.0"
      },
-     "registry_revision": "2026-08-29",
-     "request_id": "91bbf06d640b4b7eb475ba42ce55cfb8"
+     "registry_revision": "2026-09-07",
+     "request_id": "70021730954d4123917e5fa9ffc15ccb"
     }
    },
    "error_text": null,
@@ -444,12 +444,12 @@
     }
    ],
    "audit": {
-    "ts": "2026-09-07T16:05:44Z",
-    "request_id": "91bbf06d640b4b7eb475ba42ce55cfb8",
+    "ts": "2026-09-08T01:05:40Z",
+    "request_id": "70021730954d4123917e5fa9ffc15ccb",
     "tool": "geo.resolve_location",
     "server": "commonwealth",
     "server_version": "0.1.0.dev0",
-    "duration_ms": 8,
+    "duration_ms": 1,
     "args": {
      "address": "21641 Ridgetop Cir, Sterling, VA 20166",
      "zip_code": ""
@@ -484,7 +484,7 @@
     ],
     "requires_user_choice": false,
     "error": null,
-    "registry_revision": "2026-08-29"
+    "registry_revision": "2026-09-07"
    }
   },
   {
@@ -522,7 +522,7 @@
       "authority_level": "official_secondary",
       "access_path": "live",
       "source_updated_at": null,
-      "retrieved_at": "2026-09-07T16:05:44Z",
+      "retrieved_at": "2026-09-08T01:05:40Z",
       "cache_age_seconds": 0
      }
     ],
@@ -532,7 +532,7 @@
       "source_ref": "source_01",
       "record_id": "OBJECTID:1207872",
       "locator": null,
-      "retrieved_at": "2026-09-07T16:05:44Z",
+      "retrieved_at": "2026-09-08T01:05:40Z",
       "effective_at": null,
       "transformations": [
        "field_mapping:v1"
@@ -577,8 +577,8 @@
       "arcgis_geocode": "0.1.0",
       "virginia_law": "0.1.0"
      },
-     "registry_revision": "2026-08-29",
-     "request_id": "b3ce8c84b76a45909ef69f8b3793474d"
+     "registry_revision": "2026-09-07",
+     "request_id": "ffc0d43bd05347ce80bc6cebbf029252"
     }
    },
    "error_text": null,
@@ -619,12 +619,12 @@
     }
    ],
    "audit": {
-    "ts": "2026-09-07T16:05:44Z",
-    "request_id": "b3ce8c84b76a45909ef69f8b3793474d",
+    "ts": "2026-09-08T01:05:40Z",
+    "request_id": "ffc0d43bd05347ce80bc6cebbf029252",
     "tool": "geo.find_parcel",
     "server": "commonwealth",
     "server_version": "0.1.0.dev0",
-    "duration_ms": 1,
+    "duration_ms": 0,
     "args": {
      "jurisdiction": "Loudoun County",
      "pin": "",
@@ -657,7 +657,7 @@
     ],
     "requires_user_choice": false,
     "error": null,
-    "registry_revision": "2026-08-29"
+    "registry_revision": "2026-09-07"
    }
   },
   {
@@ -705,15 +705,15 @@
       "arcgis_geocode": "0.1.0",
       "virginia_law": "0.1.0"
      },
-     "registry_revision": "2026-08-29",
-     "request_id": "60edc901cbd942c697e8f79e6e6583ac"
+     "registry_revision": "2026-09-07",
+     "request_id": "c957303bee1f4f98b914b12885ce1cbb"
     }
    },
    "error_text": null,
    "http_calls": [],
    "audit": {
-    "ts": "2026-09-07T16:05:44Z",
-    "request_id": "60edc901cbd942c697e8f79e6e6583ac",
+    "ts": "2026-09-08T01:05:40Z",
+    "request_id": "c957303bee1f4f98b914b12885ce1cbb",
     "tool": "geo.find_zoning",
     "server": "commonwealth",
     "server_version": "0.1.0.dev0",
@@ -741,7 +741,7 @@
     "warning_codes": [],
     "requires_user_choice": false,
     "error": null,
-    "registry_revision": "2026-08-29"
+    "registry_revision": "2026-09-07"
    }
   },
   {
@@ -769,7 +769,7 @@
       "authority_level": "official_derived",
       "access_path": "live",
       "source_updated_at": null,
-      "retrieved_at": "2026-09-07T16:05:44Z",
+      "retrieved_at": "2026-09-08T01:05:40Z",
       "cache_age_seconds": 0
      }
     ],
@@ -811,8 +811,8 @@
       "arcgis_geocode": "0.1.0",
       "virginia_law": "0.1.0"
      },
-     "registry_revision": "2026-08-29",
-     "request_id": "234b710e466949419e78038a69b8199d"
+     "registry_revision": "2026-09-07",
+     "request_id": "98afc16b0c2c4551b4fda49f768ef74e"
     }
    },
    "error_text": null,
@@ -856,12 +856,12 @@
     }
    ],
    "audit": {
-    "ts": "2026-09-07T16:05:44Z",
-    "request_id": "234b710e466949419e78038a69b8199d",
+    "ts": "2026-09-08T01:05:40Z",
+    "request_id": "98afc16b0c2c4551b4fda49f768ef74e",
     "tool": "geo.find_landmarks",
     "server": "commonwealth",
     "server_version": "0.1.0.dev0",
-    "duration_ms": 2,
+    "duration_ms": 0,
     "args": {
      "jurisdiction": "Loudoun County",
      "name": "",
@@ -898,7 +898,7 @@
     ],
     "requires_user_choice": false,
     "error": null,
-    "registry_revision": "2026-08-29"
+    "registry_revision": "2026-09-07"
    }
   },
   {
@@ -934,7 +934,7 @@
       "authority_level": "official_derived",
       "access_path": "index",
       "source_updated_at": null,
-      "retrieved_at": "2026-09-07T16:05:44Z",
+      "retrieved_at": "2026-09-08T01:05:40Z",
       "cache_age_seconds": 0
      }
     ],
@@ -959,19 +959,19 @@
       "arcgis_geocode": "0.1.0",
       "virginia_law": "0.1.0"
      },
-     "registry_revision": "2026-08-29",
-     "request_id": "6dba4de66b6441518659b0b802d55c6d"
+     "registry_revision": "2026-09-07",
+     "request_id": "bd4f7258e3094b8984e56ed385a738d9"
     }
    },
    "error_text": null,
    "http_calls": [],
    "audit": {
-    "ts": "2026-09-07T16:05:44Z",
-    "request_id": "6dba4de66b6441518659b0b802d55c6d",
+    "ts": "2026-09-08T01:05:40Z",
+    "request_id": "bd4f7258e3094b8984e56ed385a738d9",
     "tool": "registry.resolve_jurisdiction",
     "server": "commonwealth",
     "server_version": "0.1.0.dev0",
-    "duration_ms": 1,
+    "duration_ms": 0,
     "args": {
      "query": "fairfax"
     },
@@ -998,7 +998,7 @@
     "warning_codes": [],
     "requires_user_choice": true,
     "error": null,
-    "registry_revision": "2026-08-29"
+    "registry_revision": "2026-09-07"
    }
   },
   {
@@ -1035,7 +1035,7 @@
       "authority_level": "official_derived",
       "access_path": "index",
       "source_updated_at": null,
-      "retrieved_at": "2026-09-07T16:05:44Z",
+      "retrieved_at": "2026-09-08T01:05:40Z",
       "cache_age_seconds": 0
      }
     ],
@@ -1045,7 +1045,7 @@
       "source_ref": "source_01",
       "record_id": "va:fairfax-county",
       "locator": null,
-      "retrieved_at": "2026-09-07T16:05:44Z",
+      "retrieved_at": "2026-09-08T01:05:40Z",
       "effective_at": null,
       "transformations": [],
       "payload_hash": null,
@@ -1071,19 +1071,19 @@
       "arcgis_geocode": "0.1.0",
       "virginia_law": "0.1.0"
      },
-     "registry_revision": "2026-08-29",
-     "request_id": "ac1c934b1ab54f37a6ab14d919072382"
+     "registry_revision": "2026-09-07",
+     "request_id": "8cdbb5c01e504608a9402c4c88a17992"
     }
    },
    "error_text": null,
    "http_calls": [],
    "audit": {
-    "ts": "2026-09-07T16:05:44Z",
-    "request_id": "ac1c934b1ab54f37a6ab14d919072382",
+    "ts": "2026-09-08T01:05:40Z",
+    "request_id": "8cdbb5c01e504608a9402c4c88a17992",
     "tool": "registry.resolve_jurisdiction",
     "server": "commonwealth",
     "server_version": "0.1.0.dev0",
-    "duration_ms": 1,
+    "duration_ms": 0,
     "args": {
      "query": "Fairfax County"
     },
@@ -1110,7 +1110,7 @@
     "warning_codes": [],
     "requires_user_choice": false,
     "error": null,
-    "registry_revision": "2026-08-29"
+    "registry_revision": "2026-09-07"
    }
   },
   {
@@ -1152,7 +1152,7 @@
       "authority_level": "official_derived",
       "access_path": "index",
       "source_updated_at": null,
-      "retrieved_at": "2026-09-07T16:05:44Z",
+      "retrieved_at": "2026-09-08T01:05:40Z",
       "cache_age_seconds": 0
      }
     ],
@@ -1162,7 +1162,7 @@
       "source_ref": "source_01",
       "record_id": "va:bedford-town",
       "locator": null,
-      "retrieved_at": "2026-09-07T16:05:44Z",
+      "retrieved_at": "2026-09-08T01:05:40Z",
       "effective_at": null,
       "transformations": [],
       "payload_hash": null,
@@ -1194,19 +1194,19 @@
       "arcgis_geocode": "0.1.0",
       "virginia_law": "0.1.0"
      },
-     "registry_revision": "2026-08-29",
-     "request_id": "fba8e416ff4a4b26b40f714d2f359a85"
+     "registry_revision": "2026-09-07",
+     "request_id": "95d9b8f997f8498a8381cda0dcab1e35"
     }
    },
    "error_text": null,
    "http_calls": [],
    "audit": {
-    "ts": "2026-09-07T16:05:44Z",
-    "request_id": "fba8e416ff4a4b26b40f714d2f359a85",
+    "ts": "2026-09-08T01:05:40Z",
+    "request_id": "95d9b8f997f8498a8381cda0dcab1e35",
     "tool": "registry.resolve_jurisdiction",
     "server": "commonwealth",
     "server_version": "0.1.0.dev0",
-    "duration_ms": 2,
+    "duration_ms": 0,
     "args": {
      "query": "Bedford City"
     },
@@ -1235,7 +1235,7 @@
     ],
     "requires_user_choice": false,
     "error": null,
-    "registry_revision": "2026-08-29"
+    "registry_revision": "2026-09-07"
    }
   },
   {
@@ -1280,7 +1280,7 @@
       "authority_level": "official_secondary",
       "access_path": "live",
       "source_updated_at": null,
-      "retrieved_at": "2026-09-07T16:05:44Z",
+      "retrieved_at": "2026-09-08T01:05:40Z",
       "cache_age_seconds": 0
      }
     ],
@@ -1290,7 +1290,7 @@
       "source_ref": "source_01",
       "record_id": "OBJECTID:106",
       "locator": null,
-      "retrieved_at": "2026-09-07T16:05:44Z",
+      "retrieved_at": "2026-09-08T01:05:40Z",
       "effective_at": null,
       "transformations": [
        "field_mapping:v1"
@@ -1339,8 +1339,8 @@
       "arcgis_geocode": "0.1.0",
       "virginia_law": "0.1.0"
      },
-     "registry_revision": "2026-08-29",
-     "request_id": "55272866790648febb8453959b9e15b1"
+     "registry_revision": "2026-09-07",
+     "request_id": "9d37627365234f859a658d95091daa1b"
     }
    },
    "error_text": null,
@@ -1415,12 +1415,12 @@
     }
    ],
    "audit": {
-    "ts": "2026-09-07T16:05:44Z",
-    "request_id": "55272866790648febb8453959b9e15b1",
+    "ts": "2026-09-08T01:05:40Z",
+    "request_id": "9d37627365234f859a658d95091daa1b",
     "tool": "registry.resolve_jurisdiction",
     "server": "commonwealth",
     "server_version": "0.1.0.dev0",
-    "duration_ms": 5,
+    "duration_ms": 0,
     "args": {
      "query": "",
      "lon": -77.3064,
@@ -1452,7 +1452,7 @@
     ],
     "requires_user_choice": false,
     "error": null,
-    "registry_revision": "2026-08-29"
+    "registry_revision": "2026-09-07"
    }
   },
   {
@@ -1500,7 +1500,7 @@
       "authority_level": "official_secondary",
       "access_path": "live",
       "source_updated_at": null,
-      "retrieved_at": "2026-09-07T16:05:44Z",
+      "retrieved_at": "2026-09-08T01:05:40Z",
       "cache_age_seconds": 0
      }
     ],
@@ -1510,7 +1510,7 @@
       "source_ref": "source_01",
       "record_id": "OBJECTID:29",
       "locator": null,
-      "retrieved_at": "2026-09-07T16:05:44Z",
+      "retrieved_at": "2026-09-08T01:05:40Z",
       "effective_at": null,
       "transformations": [
        "field_mapping:v1"
@@ -1523,7 +1523,7 @@
       "source_ref": "source_01",
       "record_id": "OBJECTID:106",
       "locator": null,
-      "retrieved_at": "2026-09-07T16:05:44Z",
+      "retrieved_at": "2026-09-08T01:05:40Z",
       "effective_at": null,
       "transformations": [
        "field_mapping:v1"
@@ -1567,8 +1567,8 @@
       "arcgis_geocode": "0.1.0",
       "virginia_law": "0.1.0"
      },
-     "registry_revision": "2026-08-29",
-     "request_id": "9fbb3f94be4a4162993c967d5438d888"
+     "registry_revision": "2026-09-07",
+     "request_id": "4e5c78e5aa5d44139dac4d485828d2c5"
     }
    },
    "error_text": null,
@@ -1643,12 +1643,12 @@
     }
    ],
    "audit": {
-    "ts": "2026-09-07T16:05:44Z",
-    "request_id": "9fbb3f94be4a4162993c967d5438d888",
+    "ts": "2026-09-08T01:05:40Z",
+    "request_id": "4e5c78e5aa5d44139dac4d485828d2c5",
     "tool": "registry.resolve_jurisdiction",
     "server": "commonwealth",
     "server_version": "0.1.0.dev0",
-    "duration_ms": 7,
+    "duration_ms": 0,
     "args": {
      "query": "",
      "lon": -77.2653,
@@ -1679,7 +1679,7 @@
     ],
     "requires_user_choice": false,
     "error": null,
-    "registry_revision": "2026-08-29"
+    "registry_revision": "2026-09-07"
    }
   },
   {
@@ -1736,7 +1736,7 @@
       "authority_level": "official_secondary",
       "access_path": "live",
       "source_updated_at": null,
-      "retrieved_at": "2026-09-07T16:05:44Z",
+      "retrieved_at": "2026-09-08T01:05:40Z",
       "cache_age_seconds": 0
      },
      {
@@ -1749,7 +1749,7 @@
       "authority_level": "official_secondary",
       "access_path": "live",
       "source_updated_at": null,
-      "retrieved_at": "2026-09-07T16:05:44Z",
+      "retrieved_at": "2026-09-08T01:05:40Z",
       "cache_age_seconds": 0
      }
     ],
@@ -1759,7 +1759,7 @@
       "source_ref": "source_01",
       "record_id": "candidate:f1de77562df86b91",
       "locator": null,
-      "retrieved_at": "2026-09-07T16:05:44Z",
+      "retrieved_at": "2026-09-08T01:05:40Z",
       "effective_at": null,
       "transformations": [
        "geocode:findAddressCandidates",
@@ -1773,7 +1773,7 @@
       "source_ref": "source_02",
       "record_id": "OBJECTID:29",
       "locator": null,
-      "retrieved_at": "2026-09-07T16:05:44Z",
+      "retrieved_at": "2026-09-08T01:05:40Z",
       "effective_at": null,
       "transformations": [
        "field_mapping:v1"
@@ -1827,8 +1827,8 @@
       "arcgis_geocode": "0.1.0",
       "virginia_law": "0.1.0"
      },
-     "registry_revision": "2026-08-29",
-     "request_id": "c0cff2cffa5045f3b91dd3fadf881c17"
+     "registry_revision": "2026-09-07",
+     "request_id": "afc5771dff1548f0ad0d1b65577f3b86"
     }
    },
    "error_text": null,
@@ -1919,12 +1919,12 @@
     }
    ],
    "audit": {
-    "ts": "2026-09-07T16:05:44Z",
-    "request_id": "c0cff2cffa5045f3b91dd3fadf881c17",
+    "ts": "2026-09-08T01:05:40Z",
+    "request_id": "afc5771dff1548f0ad0d1b65577f3b86",
     "tool": "geo.resolve_location",
     "server": "commonwealth",
     "server_version": "0.1.0.dev0",
-    "duration_ms": 1,
+    "duration_ms": 0,
     "args": {
      "address": "6800 Beulah St, Alexandria, VA 22310",
      "zip_code": ""
@@ -1959,7 +1959,7 @@
     ],
     "requires_user_choice": false,
     "error": null,
-    "registry_revision": "2026-08-29"
+    "registry_revision": "2026-09-07"
    }
   },
   {
@@ -2044,7 +2044,7 @@
       "authority_level": "official_secondary",
       "access_path": "live",
       "source_updated_at": null,
-      "retrieved_at": "2026-09-07T16:05:44Z",
+      "retrieved_at": "2026-09-08T01:05:40Z",
       "cache_age_seconds": 0
      }
     ],
@@ -2054,7 +2054,7 @@
       "source_ref": "source_01",
       "record_id": "distinct:fips=51023|locality=Botetourt County",
       "locator": null,
-      "retrieved_at": "2026-09-07T16:05:44Z",
+      "retrieved_at": "2026-09-08T01:05:40Z",
       "effective_at": null,
       "transformations": [
        "field_mapping:v1",
@@ -2068,7 +2068,7 @@
       "source_ref": "source_01",
       "record_id": "distinct:fips=51678|locality=Lexington City",
       "locator": null,
-      "retrieved_at": "2026-09-07T16:05:44Z",
+      "retrieved_at": "2026-09-08T01:05:40Z",
       "effective_at": null,
       "transformations": [
        "field_mapping:v1",
@@ -2082,7 +2082,7 @@
       "source_ref": "source_01",
       "record_id": "distinct:fips=51163|locality=Rockbridge County",
       "locator": null,
-      "retrieved_at": "2026-09-07T16:05:44Z",
+      "retrieved_at": "2026-09-08T01:05:40Z",
       "effective_at": null,
       "transformations": [
        "field_mapping:v1",
@@ -2129,8 +2129,8 @@
       "arcgis_geocode": "0.1.0",
       "virginia_law": "0.1.0"
      },
-     "registry_revision": "2026-08-29",
-     "request_id": "5d02342cd8f04b73bb930180bb1a4024"
+     "registry_revision": "2026-09-07",
+     "request_id": "c5556a697fce4152bd7d81103aea831d"
     }
    },
    "error_text": null,
@@ -2168,12 +2168,12 @@
     }
    ],
    "audit": {
-    "ts": "2026-09-07T16:05:44Z",
-    "request_id": "5d02342cd8f04b73bb930180bb1a4024",
+    "ts": "2026-09-08T01:05:40Z",
+    "request_id": "c5556a697fce4152bd7d81103aea831d",
     "tool": "geo.resolve_location",
     "server": "commonwealth",
     "server_version": "0.1.0.dev0",
-    "duration_ms": 1,
+    "duration_ms": 0,
     "args": {
      "address": "",
      "zip_code": "24450"
@@ -2202,7 +2202,7 @@
     ],
     "requires_user_choice": true,
     "error": null,
-    "registry_revision": "2026-08-29"
+    "registry_revision": "2026-09-07"
    }
   },
   {
@@ -2273,7 +2273,7 @@
       "authority_level": "primary",
       "access_path": "live",
       "source_updated_at": null,
-      "retrieved_at": "2026-09-07T16:05:44Z",
+      "retrieved_at": "2026-09-08T01:05:40Z",
       "cache_age_seconds": 0
      },
      {
@@ -2286,7 +2286,7 @@
       "authority_level": "official_secondary",
       "access_path": "live",
       "source_updated_at": null,
-      "retrieved_at": "2026-09-07T16:05:44Z",
+      "retrieved_at": "2026-09-08T01:05:40Z",
       "cache_age_seconds": 0
      }
     ],
@@ -2296,7 +2296,7 @@
       "source_ref": "source_01",
       "record_id": "OBJECTID:1",
       "locator": null,
-      "retrieved_at": "2026-09-07T16:05:44Z",
+      "retrieved_at": "2026-09-08T01:05:40Z",
       "effective_at": null,
       "transformations": [
        "field_mapping:v1"
@@ -2309,7 +2309,7 @@
       "source_ref": "source_02",
       "record_id": "OBJECTID:1511920",
       "locator": null,
-      "retrieved_at": "2026-09-07T16:05:44Z",
+      "retrieved_at": "2026-09-08T01:05:40Z",
       "effective_at": null,
       "transformations": [
        "field_mapping:v1"
@@ -2361,8 +2361,8 @@
       "arcgis_geocode": "0.1.0",
       "virginia_law": "0.1.0"
      },
-     "registry_revision": "2026-08-29",
-     "request_id": "18c37561ca8f41498edb748391b4ce5d"
+     "registry_revision": "2026-09-07",
+     "request_id": "a4180bd074f1463aa186745eabce8d75"
     }
    },
    "error_text": null,
@@ -2413,12 +2413,12 @@
     }
    ],
    "audit": {
-    "ts": "2026-09-07T16:05:44Z",
-    "request_id": "18c37561ca8f41498edb748391b4ce5d",
+    "ts": "2026-09-08T01:05:40Z",
+    "request_id": "a4180bd074f1463aa186745eabce8d75",
     "tool": "geo.find_parcel",
     "server": "commonwealth",
     "server_version": "0.1.0.dev0",
-    "duration_ms": 3,
+    "duration_ms": 0,
     "args": {
      "jurisdiction": "Fairfax County",
      "pin": "0102 14  0231"
@@ -2455,7 +2455,7 @@
     ],
     "requires_user_choice": false,
     "error": null,
-    "registry_revision": "2026-08-29"
+    "registry_revision": "2026-09-07"
    }
   },
   {
@@ -2499,7 +2499,7 @@
       "authority_level": "primary",
       "access_path": "live",
       "source_updated_at": null,
-      "retrieved_at": "2026-09-07T16:05:44Z",
+      "retrieved_at": "2026-09-08T01:05:40Z",
       "cache_age_seconds": 0
      },
      {
@@ -2512,7 +2512,7 @@
       "authority_level": "primary",
       "access_path": "live",
       "source_updated_at": null,
-      "retrieved_at": "2026-09-07T16:05:44Z",
+      "retrieved_at": "2026-09-08T01:05:40Z",
       "cache_age_seconds": 0
      }
     ],
@@ -2522,7 +2522,7 @@
       "source_ref": "source_01",
       "record_id": "OBJECTID:1",
       "locator": null,
-      "retrieved_at": "2026-09-07T16:05:44Z",
+      "retrieved_at": "2026-09-08T01:05:40Z",
       "effective_at": null,
       "transformations": [
        "field_mapping:v1",
@@ -2536,7 +2536,7 @@
       "source_ref": "source_02",
       "record_id": "OBJECTID:46202",
       "locator": null,
-      "retrieved_at": "2026-09-07T16:05:44Z",
+      "retrieved_at": "2026-09-08T01:05:40Z",
       "effective_at": null,
       "transformations": [
        "field_mapping:v1",
@@ -2589,8 +2589,8 @@
       "arcgis_geocode": "0.1.0",
       "virginia_law": "0.1.0"
      },
-     "registry_revision": "2026-08-29",
-     "request_id": "fadbc525af494d7c9ee0f1af1ff45a97"
+     "registry_revision": "2026-09-07",
+     "request_id": "1d45449d0bde46d99ac3b44cdc54e19e"
     }
    },
    "error_text": null,
@@ -2645,12 +2645,12 @@
     }
    ],
    "audit": {
-    "ts": "2026-09-07T16:05:44Z",
-    "request_id": "fadbc525af494d7c9ee0f1af1ff45a97",
+    "ts": "2026-09-08T01:05:40Z",
+    "request_id": "1d45449d0bde46d99ac3b44cdc54e19e",
     "tool": "geo.find_zoning",
     "server": "commonwealth",
     "server_version": "0.1.0.dev0",
-    "duration_ms": 9,
+    "duration_ms": 2,
     "args": {
      "jurisdiction": "Fairfax County",
      "pin": "0102 14  0231"
@@ -2688,7 +2688,7 @@
     ],
     "requires_user_choice": false,
     "error": null,
-    "registry_revision": "2026-08-29"
+    "registry_revision": "2026-09-07"
    }
   },
   {
@@ -2738,7 +2738,7 @@
       "authority_level": "official_secondary",
       "access_path": "live",
       "source_updated_at": null,
-      "retrieved_at": "2026-09-07T16:05:44Z",
+      "retrieved_at": "2026-09-08T01:05:40Z",
       "cache_age_seconds": 0
      }
     ],
@@ -2748,7 +2748,7 @@
       "source_ref": "source_01",
       "record_id": "OBJECTID:3429779",
       "locator": null,
-      "retrieved_at": "2026-09-07T16:05:44Z",
+      "retrieved_at": "2026-09-08T01:05:40Z",
       "effective_at": null,
       "transformations": [
        "field_mapping:v1"
@@ -2799,8 +2799,8 @@
       "arcgis_geocode": "0.1.0",
       "virginia_law": "0.1.0"
      },
-     "registry_revision": "2026-08-29",
-     "request_id": "84a805f26014448488b5566c1f2b7ef9"
+     "registry_revision": "2026-09-07",
+     "request_id": "00b1c36004b241c58fbff8ad661ff554"
     }
    },
    "error_text": null,
@@ -2820,12 +2820,12 @@
     }
    ],
    "audit": {
-    "ts": "2026-09-07T16:05:44Z",
-    "request_id": "84a805f26014448488b5566c1f2b7ef9",
+    "ts": "2026-09-08T01:05:40Z",
+    "request_id": "00b1c36004b241c58fbff8ad661ff554",
     "tool": "geo.find_address",
     "server": "commonwealth",
     "server_version": "0.1.0.dev0",
-    "duration_ms": 1,
+    "duration_ms": 0,
     "args": {
      "jurisdiction": "Fairfax County",
      "address": "4501 Carlby Ln"
@@ -2857,7 +2857,7 @@
     ],
     "requires_user_choice": false,
     "error": null,
-    "registry_revision": "2026-08-29"
+    "registry_revision": "2026-09-07"
    }
   },
   {
@@ -2929,7 +2929,7 @@
       "authority_level": "primary",
       "access_path": "live",
       "source_updated_at": "2026-08-31T14:22:47Z",
-      "retrieved_at": "2026-09-07T16:05:44Z",
+      "retrieved_at": "2026-09-08T01:05:40Z",
       "cache_age_seconds": 0
      },
      {
@@ -2942,7 +2942,7 @@
       "authority_level": "primary",
       "access_path": "live",
       "source_updated_at": "2026-08-31T14:22:47Z",
-      "retrieved_at": "2026-09-07T16:05:44Z",
+      "retrieved_at": "2026-09-08T01:05:40Z",
       "cache_age_seconds": 0
      },
      {
@@ -2955,7 +2955,7 @@
       "authority_level": "official_secondary",
       "access_path": "live",
       "source_updated_at": null,
-      "retrieved_at": "2026-09-07T16:05:44Z",
+      "retrieved_at": "2026-09-08T01:05:40Z",
       "cache_age_seconds": 0
      }
     ],
@@ -2965,7 +2965,7 @@
       "source_ref": "source_02",
       "record_id": "OBJECTID:1116",
       "locator": null,
-      "retrieved_at": "2026-09-07T16:05:44Z",
+      "retrieved_at": "2026-09-08T01:05:40Z",
       "effective_at": null,
       "transformations": [
        "field_mapping:v1",
@@ -2979,7 +2979,7 @@
       "source_ref": "source_03",
       "record_id": "OBJECTID:1358632",
       "locator": null,
-      "retrieved_at": "2026-09-07T16:05:44Z",
+      "retrieved_at": "2026-09-08T01:05:40Z",
       "effective_at": null,
       "transformations": [
        "field_mapping:v1",
@@ -2995,7 +2995,7 @@
       "source_ref": "source_03",
       "record_id": "OBJECTID:1358633",
       "locator": null,
-      "retrieved_at": "2026-09-07T16:05:44Z",
+      "retrieved_at": "2026-09-08T01:05:40Z",
       "effective_at": null,
       "transformations": [
        "field_mapping:v1",
@@ -3049,8 +3049,8 @@
       "arcgis_geocode": "0.1.0",
       "virginia_law": "0.1.0"
      },
-     "registry_revision": "2026-08-29",
-     "request_id": "b8c194d765dd49938a156e85f3f723cd"
+     "registry_revision": "2026-09-07",
+     "request_id": "c34ee4ae2e6e4372a4c85df86b78d18f"
     }
    },
    "error_text": null,
@@ -3123,12 +3123,12 @@
     }
    ],
    "audit": {
-    "ts": "2026-09-07T16:05:44Z",
-    "request_id": "b8c194d765dd49938a156e85f3f723cd",
+    "ts": "2026-09-08T01:05:40Z",
+    "request_id": "c34ee4ae2e6e4372a4c85df86b78d18f",
     "tool": "geo.find_buildings",
     "server": "commonwealth",
     "server_version": "0.1.0.dev0",
-    "duration_ms": 2,
+    "duration_ms": 1,
     "args": {
      "jurisdiction": "Richmond City",
      "pin": "C0010126019",
@@ -3174,7 +3174,7 @@
     ],
     "requires_user_choice": false,
     "error": null,
-    "registry_revision": "2026-08-29"
+    "registry_revision": "2026-09-07"
    }
   },
   {
@@ -3922,7 +3922,7 @@
       "authority_level": "primary",
       "access_path": "live",
       "source_updated_at": "2026-08-20T16:28:34Z",
-      "retrieved_at": "2026-09-07T16:05:44Z",
+      "retrieved_at": "2026-09-08T01:05:40Z",
       "cache_age_seconds": 0
      },
      {
@@ -3935,7 +3935,7 @@
       "authority_level": "official_secondary",
       "access_path": "live",
       "source_updated_at": null,
-      "retrieved_at": "2026-09-07T16:05:44Z",
+      "retrieved_at": "2026-09-08T01:05:40Z",
       "cache_age_seconds": 0
      }
     ],
@@ -3945,7 +3945,7 @@
       "source_ref": "source_01",
       "record_id": "OBJECTID:192395",
       "locator": null,
-      "retrieved_at": "2026-09-07T16:05:44Z",
+      "retrieved_at": "2026-09-08T01:05:40Z",
       "effective_at": null,
       "transformations": [
        "field_mapping:v1"
@@ -3958,7 +3958,7 @@
       "source_ref": "source_01",
       "record_id": "OBJECTID:192558",
       "locator": null,
-      "retrieved_at": "2026-09-07T16:05:44Z",
+      "retrieved_at": "2026-09-08T01:05:40Z",
       "effective_at": null,
       "transformations": [
        "field_mapping:v1"
@@ -3971,7 +3971,7 @@
       "source_ref": "source_02",
       "record_id": "OBJECTID:419337",
       "locator": null,
-      "retrieved_at": "2026-09-07T16:05:44Z",
+      "retrieved_at": "2026-09-08T01:05:40Z",
       "effective_at": null,
       "transformations": [
        "field_mapping:v1"
@@ -3984,7 +3984,7 @@
       "source_ref": "source_02",
       "record_id": "OBJECTID:419482",
       "locator": null,
-      "retrieved_at": "2026-09-07T16:05:44Z",
+      "retrieved_at": "2026-09-08T01:05:40Z",
       "effective_at": null,
       "transformations": [
        "field_mapping:v1"
@@ -3997,7 +3997,7 @@
       "source_ref": "source_02",
       "record_id": "OBJECTID:419711",
       "locator": null,
-      "retrieved_at": "2026-09-07T16:05:44Z",
+      "retrieved_at": "2026-09-08T01:05:40Z",
       "effective_at": null,
       "transformations": [
        "field_mapping:v1"
@@ -4010,7 +4010,7 @@
       "source_ref": "source_02",
       "record_id": "OBJECTID:419830",
       "locator": null,
-      "retrieved_at": "2026-09-07T16:05:44Z",
+      "retrieved_at": "2026-09-08T01:05:40Z",
       "effective_at": null,
       "transformations": [
        "field_mapping:v1"
@@ -4023,7 +4023,7 @@
       "source_ref": "source_02",
       "record_id": "OBJECTID:419870",
       "locator": null,
-      "retrieved_at": "2026-09-07T16:05:44Z",
+      "retrieved_at": "2026-09-08T01:05:40Z",
       "effective_at": null,
       "transformations": [
        "field_mapping:v1"
@@ -4036,7 +4036,7 @@
       "source_ref": "source_02",
       "record_id": "OBJECTID:419874",
       "locator": null,
-      "retrieved_at": "2026-09-07T16:05:44Z",
+      "retrieved_at": "2026-09-08T01:05:40Z",
       "effective_at": null,
       "transformations": [
        "field_mapping:v1"
@@ -4049,7 +4049,7 @@
       "source_ref": "source_02",
       "record_id": "OBJECTID:419894",
       "locator": null,
-      "retrieved_at": "2026-09-07T16:05:44Z",
+      "retrieved_at": "2026-09-08T01:05:40Z",
       "effective_at": null,
       "transformations": [
        "field_mapping:v1"
@@ -4062,7 +4062,7 @@
       "source_ref": "source_02",
       "record_id": "OBJECTID:419926",
       "locator": null,
-      "retrieved_at": "2026-09-07T16:05:44Z",
+      "retrieved_at": "2026-09-08T01:05:40Z",
       "effective_at": null,
       "transformations": [
        "field_mapping:v1"
@@ -4075,7 +4075,7 @@
       "source_ref": "source_02",
       "record_id": "OBJECTID:419959",
       "locator": null,
-      "retrieved_at": "2026-09-07T16:05:44Z",
+      "retrieved_at": "2026-09-08T01:05:40Z",
       "effective_at": null,
       "transformations": [
        "field_mapping:v1"
@@ -4088,7 +4088,7 @@
       "source_ref": "source_02",
       "record_id": "OBJECTID:419968",
       "locator": null,
-      "retrieved_at": "2026-09-07T16:05:44Z",
+      "retrieved_at": "2026-09-08T01:05:40Z",
       "effective_at": null,
       "transformations": [
        "field_mapping:v1"
@@ -4101,7 +4101,7 @@
       "source_ref": "source_02",
       "record_id": "OBJECTID:419972",
       "locator": null,
-      "retrieved_at": "2026-09-07T16:05:44Z",
+      "retrieved_at": "2026-09-08T01:05:40Z",
       "effective_at": null,
       "transformations": [
        "field_mapping:v1"
@@ -4114,7 +4114,7 @@
       "source_ref": "source_02",
       "record_id": "OBJECTID:423128",
       "locator": null,
-      "retrieved_at": "2026-09-07T16:05:44Z",
+      "retrieved_at": "2026-09-08T01:05:40Z",
       "effective_at": null,
       "transformations": [
        "field_mapping:v1"
@@ -4127,7 +4127,7 @@
       "source_ref": "source_02",
       "record_id": "OBJECTID:423164",
       "locator": null,
-      "retrieved_at": "2026-09-07T16:05:44Z",
+      "retrieved_at": "2026-09-08T01:05:40Z",
       "effective_at": null,
       "transformations": [
        "field_mapping:v1"
@@ -4140,7 +4140,7 @@
       "source_ref": "source_02",
       "record_id": "OBJECTID:423251",
       "locator": null,
-      "retrieved_at": "2026-09-07T16:05:44Z",
+      "retrieved_at": "2026-09-08T01:05:40Z",
       "effective_at": null,
       "transformations": [
        "field_mapping:v1"
@@ -4153,7 +4153,7 @@
       "source_ref": "source_02",
       "record_id": "OBJECTID:423257",
       "locator": null,
-      "retrieved_at": "2026-09-07T16:05:44Z",
+      "retrieved_at": "2026-09-08T01:05:40Z",
       "effective_at": null,
       "transformations": [
        "field_mapping:v1"
@@ -4166,7 +4166,7 @@
       "source_ref": "source_02",
       "record_id": "OBJECTID:423279",
       "locator": null,
-      "retrieved_at": "2026-09-07T16:05:44Z",
+      "retrieved_at": "2026-09-08T01:05:40Z",
       "effective_at": null,
       "transformations": [
        "field_mapping:v1"
@@ -4179,7 +4179,7 @@
       "source_ref": "source_02",
       "record_id": "OBJECTID:423317",
       "locator": null,
-      "retrieved_at": "2026-09-07T16:05:44Z",
+      "retrieved_at": "2026-09-08T01:05:40Z",
       "effective_at": null,
       "transformations": [
        "field_mapping:v1"
@@ -4192,7 +4192,7 @@
       "source_ref": "source_02",
       "record_id": "OBJECTID:423333",
       "locator": null,
-      "retrieved_at": "2026-09-07T16:05:44Z",
+      "retrieved_at": "2026-09-08T01:05:40Z",
       "effective_at": null,
       "transformations": [
        "field_mapping:v1"
@@ -4205,7 +4205,7 @@
       "source_ref": "source_02",
       "record_id": "OBJECTID:423378",
       "locator": null,
-      "retrieved_at": "2026-09-07T16:05:44Z",
+      "retrieved_at": "2026-09-08T01:05:40Z",
       "effective_at": null,
       "transformations": [
        "field_mapping:v1"
@@ -4218,7 +4218,7 @@
       "source_ref": "source_02",
       "record_id": "OBJECTID:424050",
       "locator": null,
-      "retrieved_at": "2026-09-07T16:05:44Z",
+      "retrieved_at": "2026-09-08T01:05:40Z",
       "effective_at": null,
       "transformations": [
        "field_mapping:v1"
@@ -4231,7 +4231,7 @@
       "source_ref": "source_02",
       "record_id": "OBJECTID:424279",
       "locator": null,
-      "retrieved_at": "2026-09-07T16:05:44Z",
+      "retrieved_at": "2026-09-08T01:05:40Z",
       "effective_at": null,
       "transformations": [
        "field_mapping:v1"
@@ -4244,7 +4244,7 @@
       "source_ref": "source_02",
       "record_id": "OBJECTID:424477",
       "locator": null,
-      "retrieved_at": "2026-09-07T16:05:44Z",
+      "retrieved_at": "2026-09-08T01:05:40Z",
       "effective_at": null,
       "transformations": [
        "field_mapping:v1"
@@ -4257,7 +4257,7 @@
       "source_ref": "source_02",
       "record_id": "OBJECTID:424548",
       "locator": null,
-      "retrieved_at": "2026-09-07T16:05:44Z",
+      "retrieved_at": "2026-09-08T01:05:40Z",
       "effective_at": null,
       "transformations": [
        "field_mapping:v1"
@@ -4270,7 +4270,7 @@
       "source_ref": "source_02",
       "record_id": "OBJECTID:424628",
       "locator": null,
-      "retrieved_at": "2026-09-07T16:05:44Z",
+      "retrieved_at": "2026-09-08T01:05:40Z",
       "effective_at": null,
       "transformations": [
        "field_mapping:v1"
@@ -4283,7 +4283,7 @@
       "source_ref": "source_02",
       "record_id": "OBJECTID:424646",
       "locator": null,
-      "retrieved_at": "2026-09-07T16:05:44Z",
+      "retrieved_at": "2026-09-08T01:05:40Z",
       "effective_at": null,
       "transformations": [
        "field_mapping:v1"
@@ -4336,7 +4336,7 @@
      {
       "uri": "commonwealth://results/00000000000000000000000000000001",
       "media_type": "application/json",
-      "description": "All 39 records va-vgin-road-centerlines returned for this query, including the ones past the inline cap. Expires 2026-09-08T16:05:44Z; re-run geo.find_roads to regenerate it."
+      "description": "All 39 records va-vgin-road-centerlines returned for this query, including the ones past the inline cap. Expires 2026-09-09T01:05:40Z; re-run geo.find_roads to regenerate it."
      }
     ],
     "_execution": {
@@ -4350,8 +4350,8 @@
       "arcgis_geocode": "0.1.0",
       "virginia_law": "0.1.0"
      },
-     "registry_revision": "2026-08-29",
-     "request_id": "5f097ef31f69412c961f32aa662a6069"
+     "registry_revision": "2026-09-07",
+     "request_id": "553c1e1d796045c497c706f80fc062f2"
     }
    },
    "error_text": null,
@@ -4420,12 +4420,12 @@
     }
    ],
    "audit": {
-    "ts": "2026-09-07T16:05:44Z",
-    "request_id": "5f097ef31f69412c961f32aa662a6069",
+    "ts": "2026-09-08T01:05:40Z",
+    "request_id": "553c1e1d796045c497c706f80fc062f2",
     "tool": "geo.find_roads",
     "server": "commonwealth",
     "server_version": "0.1.0.dev0",
-    "duration_ms": 9,
+    "duration_ms": 5,
     "args": {
      "jurisdiction": "Vienna",
      "street_name": "Center St",
@@ -4466,7 +4466,7 @@
     ],
     "requires_user_choice": false,
     "error": null,
-    "registry_revision": "2026-08-29"
+    "registry_revision": "2026-09-07"
    }
   },
   {
@@ -4585,7 +4585,7 @@
       "authority_level": "official_derived",
       "access_path": "live",
       "source_updated_at": null,
-      "retrieved_at": "2026-09-07T16:05:44Z",
+      "retrieved_at": "2026-09-08T01:05:40Z",
       "cache_age_seconds": 0
      }
     ],
@@ -4595,7 +4595,7 @@
       "source_ref": "source_01",
       "record_id": "OBJECTID:805",
       "locator": null,
-      "retrieved_at": "2026-09-07T16:05:44Z",
+      "retrieved_at": "2026-09-08T01:05:40Z",
       "effective_at": null,
       "transformations": [
        "field_mapping:v1",
@@ -4609,7 +4609,7 @@
       "source_ref": "source_01",
       "record_id": "OBJECTID:1625",
       "locator": null,
-      "retrieved_at": "2026-09-07T16:05:44Z",
+      "retrieved_at": "2026-09-08T01:05:40Z",
       "effective_at": null,
       "transformations": [
        "field_mapping:v1",
@@ -4623,7 +4623,7 @@
       "source_ref": "source_01",
       "record_id": "OBJECTID:3188",
       "locator": null,
-      "retrieved_at": "2026-09-07T16:05:44Z",
+      "retrieved_at": "2026-09-08T01:05:40Z",
       "effective_at": null,
       "transformations": [
        "field_mapping:v1",
@@ -4637,7 +4637,7 @@
       "source_ref": "source_01",
       "record_id": "OBJECTID:5754",
       "locator": null,
-      "retrieved_at": "2026-09-07T16:05:44Z",
+      "retrieved_at": "2026-09-08T01:05:40Z",
       "effective_at": null,
       "transformations": [
        "field_mapping:v1",
@@ -4690,8 +4690,8 @@
       "arcgis_geocode": "0.1.0",
       "virginia_law": "0.1.0"
      },
-     "registry_revision": "2026-08-29",
-     "request_id": "e63f31cef9e94079a06a8abd423b8a72"
+     "registry_revision": "2026-09-07",
+     "request_id": "6ad811efac31469ea31df1bbf53f4ed5"
     }
    },
    "error_text": null,
@@ -4717,12 +4717,12 @@
     }
    ],
    "audit": {
-    "ts": "2026-09-07T16:05:44Z",
-    "request_id": "e63f31cef9e94079a06a8abd423b8a72",
+    "ts": "2026-09-08T01:05:40Z",
+    "request_id": "6ad811efac31469ea31df1bbf53f4ed5",
     "tool": "geo.find_landmarks",
     "server": "commonwealth",
     "server_version": "0.1.0.dev0",
-    "duration_ms": 2,
+    "duration_ms": 0,
     "args": {
      "jurisdiction": "Vienna",
      "name": "",
@@ -4760,7 +4760,7 @@
     ],
     "requires_user_choice": false,
     "error": null,
-    "registry_revision": "2026-08-29"
+    "registry_revision": "2026-09-07"
    }
   },
   {
@@ -5185,7 +5185,7 @@
       "authority_level": "primary",
       "access_path": "live",
       "source_updated_at": null,
-      "retrieved_at": "2026-09-07T16:05:44Z",
+      "retrieved_at": "2026-09-08T01:05:40Z",
       "cache_age_seconds": 0
      }
     ],
@@ -5195,7 +5195,7 @@
       "source_ref": "source_01",
       "record_id": "OBJECTID:841",
       "locator": null,
-      "retrieved_at": "2026-09-07T16:05:44Z",
+      "retrieved_at": "2026-09-08T01:05:40Z",
       "effective_at": null,
       "transformations": [
        "field_mapping:v1",
@@ -5209,7 +5209,7 @@
       "source_ref": "source_01",
       "record_id": "OBJECTID:3617",
       "locator": null,
-      "retrieved_at": "2026-09-07T16:05:44Z",
+      "retrieved_at": "2026-09-08T01:05:40Z",
       "effective_at": null,
       "transformations": [
        "field_mapping:v1",
@@ -5223,7 +5223,7 @@
       "source_ref": "source_01",
       "record_id": "OBJECTID:4054",
       "locator": null,
-      "retrieved_at": "2026-09-07T16:05:44Z",
+      "retrieved_at": "2026-09-08T01:05:40Z",
       "effective_at": null,
       "transformations": [
        "field_mapping:v1",
@@ -5237,7 +5237,7 @@
       "source_ref": "source_01",
       "record_id": "OBJECTID:4544",
       "locator": null,
-      "retrieved_at": "2026-09-07T16:05:44Z",
+      "retrieved_at": "2026-09-08T01:05:40Z",
       "effective_at": null,
       "transformations": [
        "field_mapping:v1",
@@ -5251,7 +5251,7 @@
       "source_ref": "source_01",
       "record_id": "OBJECTID:4558",
       "locator": null,
-      "retrieved_at": "2026-09-07T16:05:44Z",
+      "retrieved_at": "2026-09-08T01:05:40Z",
       "effective_at": null,
       "transformations": [
        "field_mapping:v1",
@@ -5265,7 +5265,7 @@
       "source_ref": "source_01",
       "record_id": "OBJECTID:5058",
       "locator": null,
-      "retrieved_at": "2026-09-07T16:05:44Z",
+      "retrieved_at": "2026-09-08T01:05:40Z",
       "effective_at": null,
       "transformations": [
        "field_mapping:v1",
@@ -5279,7 +5279,7 @@
       "source_ref": "source_01",
       "record_id": "OBJECTID:12614",
       "locator": null,
-      "retrieved_at": "2026-09-07T16:05:44Z",
+      "retrieved_at": "2026-09-08T01:05:40Z",
       "effective_at": null,
       "transformations": [
        "field_mapping:v1",
@@ -5293,7 +5293,7 @@
       "source_ref": "source_01",
       "record_id": "OBJECTID:12952",
       "locator": null,
-      "retrieved_at": "2026-09-07T16:05:44Z",
+      "retrieved_at": "2026-09-08T01:05:40Z",
       "effective_at": null,
       "transformations": [
        "field_mapping:v1",
@@ -5307,7 +5307,7 @@
       "source_ref": "source_01",
       "record_id": "OBJECTID:13111",
       "locator": null,
-      "retrieved_at": "2026-09-07T16:05:44Z",
+      "retrieved_at": "2026-09-08T01:05:40Z",
       "effective_at": null,
       "transformations": [
        "field_mapping:v1",
@@ -5321,7 +5321,7 @@
       "source_ref": "source_01",
       "record_id": "OBJECTID:13112",
       "locator": null,
-      "retrieved_at": "2026-09-07T16:05:44Z",
+      "retrieved_at": "2026-09-08T01:05:40Z",
       "effective_at": null,
       "transformations": [
        "field_mapping:v1",
@@ -5335,7 +5335,7 @@
       "source_ref": "source_01",
       "record_id": "OBJECTID:13325",
       "locator": null,
-      "retrieved_at": "2026-09-07T16:05:44Z",
+      "retrieved_at": "2026-09-08T01:05:40Z",
       "effective_at": null,
       "transformations": [
        "field_mapping:v1",
@@ -5349,7 +5349,7 @@
       "source_ref": "source_01",
       "record_id": "OBJECTID:14254",
       "locator": null,
-      "retrieved_at": "2026-09-07T16:05:44Z",
+      "retrieved_at": "2026-09-08T01:05:40Z",
       "effective_at": null,
       "transformations": [
        "field_mapping:v1",
@@ -5363,7 +5363,7 @@
       "source_ref": "source_01",
       "record_id": "OBJECTID:14402",
       "locator": null,
-      "retrieved_at": "2026-09-07T16:05:44Z",
+      "retrieved_at": "2026-09-08T01:05:40Z",
       "effective_at": null,
       "transformations": [
        "field_mapping:v1",
@@ -5377,7 +5377,7 @@
       "source_ref": "source_01",
       "record_id": "OBJECTID:14403",
       "locator": null,
-      "retrieved_at": "2026-09-07T16:05:44Z",
+      "retrieved_at": "2026-09-08T01:05:40Z",
       "effective_at": null,
       "transformations": [
        "field_mapping:v1",
@@ -5391,7 +5391,7 @@
       "source_ref": "source_01",
       "record_id": "OBJECTID:15108",
       "locator": null,
-      "retrieved_at": "2026-09-07T16:05:44Z",
+      "retrieved_at": "2026-09-08T01:05:40Z",
       "effective_at": null,
       "transformations": [
        "field_mapping:v1",
@@ -5405,7 +5405,7 @@
       "source_ref": "source_01",
       "record_id": "OBJECTID:15496",
       "locator": null,
-      "retrieved_at": "2026-09-07T16:05:44Z",
+      "retrieved_at": "2026-09-08T01:05:40Z",
       "effective_at": null,
       "transformations": [
        "field_mapping:v1",
@@ -5419,7 +5419,7 @@
       "source_ref": "source_01",
       "record_id": "OBJECTID:16150",
       "locator": null,
-      "retrieved_at": "2026-09-07T16:05:44Z",
+      "retrieved_at": "2026-09-08T01:05:40Z",
       "effective_at": null,
       "transformations": [
        "field_mapping:v1",
@@ -5475,8 +5475,8 @@
       "arcgis_geocode": "0.1.0",
       "virginia_law": "0.1.0"
      },
-     "registry_revision": "2026-08-29",
-     "request_id": "182d4fb164764c7990be71dafab945ca"
+     "registry_revision": "2026-09-07",
+     "request_id": "e6c462534c6645938ef4819702b80adc"
     }
    },
    "error_text": null,
@@ -5519,12 +5519,12 @@
     }
    ],
    "audit": {
-    "ts": "2026-09-07T16:05:44Z",
-    "request_id": "182d4fb164764c7990be71dafab945ca",
+    "ts": "2026-09-08T01:05:40Z",
+    "request_id": "e6c462534c6645938ef4819702b80adc",
     "tool": "geo.find_environmental_sites",
     "server": "commonwealth",
     "server_version": "0.1.0.dev0",
-    "duration_ms": 7,
+    "duration_ms": 1,
     "args": {
      "jurisdiction": "Richmond City",
      "lon": -77.436,
@@ -5559,7 +5559,7 @@
     ],
     "requires_user_choice": false,
     "error": null,
-    "registry_revision": "2026-08-29"
+    "registry_revision": "2026-09-07"
    }
   },
   {
@@ -5658,7 +5658,7 @@
       "authority_level": "official_secondary",
       "access_path": "live",
       "source_updated_at": null,
-      "retrieved_at": "2026-09-07T16:05:44Z",
+      "retrieved_at": "2026-09-08T01:05:40Z",
       "cache_age_seconds": 0
      }
     ],
@@ -5668,7 +5668,7 @@
       "source_ref": "source_01",
       "record_id": "OBJECTID:72",
       "locator": null,
-      "retrieved_at": "2026-09-07T16:05:44Z",
+      "retrieved_at": "2026-09-08T01:05:40Z",
       "effective_at": null,
       "transformations": [
        "field_mapping:v1",
@@ -5683,7 +5683,7 @@
       "source_ref": "source_01",
       "record_id": "OBJECTID:73",
       "locator": null,
-      "retrieved_at": "2026-09-07T16:05:44Z",
+      "retrieved_at": "2026-09-08T01:05:40Z",
       "effective_at": null,
       "transformations": [
        "field_mapping:v1",
@@ -5735,8 +5735,8 @@
       "arcgis_geocode": "0.1.0",
       "virginia_law": "0.1.0"
      },
-     "registry_revision": "2026-08-29",
-     "request_id": "e9f6cf9547b64cfb8e86eb54572485f5"
+     "registry_revision": "2026-09-07",
+     "request_id": "c71a7cb98e164e1ca1b3cae37d7995fb"
     }
    },
    "error_text": null,
@@ -5759,12 +5759,12 @@
     }
    ],
    "audit": {
-    "ts": "2026-09-07T16:05:44Z",
-    "request_id": "e9f6cf9547b64cfb8e86eb54572485f5",
+    "ts": "2026-09-08T01:05:40Z",
+    "request_id": "c71a7cb98e164e1ca1b3cae37d7995fb",
     "tool": "geo.find_boundaries",
     "server": "commonwealth",
     "server_version": "0.1.0.dev0",
-    "duration_ms": 2,
+    "duration_ms": 0,
     "args": {
      "jurisdiction": "Prince George County",
      "detail": "concise"
@@ -5794,7 +5794,7 @@
     ],
     "requires_user_choice": false,
     "error": null,
-    "registry_revision": "2026-08-29"
+    "registry_revision": "2026-09-07"
    }
   },
   {
@@ -5831,7 +5831,7 @@
       "authority_level": "primary",
       "access_path": "live",
       "source_updated_at": null,
-      "retrieved_at": "2026-09-07T16:05:44Z",
+      "retrieved_at": "2026-09-08T01:05:40Z",
       "cache_age_seconds": 0
      }
     ],
@@ -5841,7 +5841,7 @@
       "source_ref": "source_01",
       "record_id": "1-500",
       "locator": "https://law.lis.virginia.gov/vacode/1-500/",
-      "retrieved_at": "2026-09-07T16:05:44Z",
+      "retrieved_at": "2026-09-08T01:05:40Z",
       "effective_at": null,
       "transformations": [],
       "payload_hash": null,
@@ -5881,19 +5881,19 @@
       "arcgis_geocode": "0.1.0",
       "virginia_law": "0.1.0"
      },
-     "registry_revision": "2026-08-29",
-     "request_id": "de292ad444cd4d6583d5053ce711e43c"
+     "registry_revision": "2026-09-07",
+     "request_id": "a36bf96d382242e69ad2c1d1e68886ef"
     }
    },
    "error_text": null,
    "http_calls": [],
    "audit": {
-    "ts": "2026-09-07T16:05:44Z",
-    "request_id": "de292ad444cd4d6583d5053ce711e43c",
+    "ts": "2026-09-08T01:05:40Z",
+    "request_id": "a36bf96d382242e69ad2c1d1e68886ef",
     "tool": "civic.get_code_section",
     "server": "commonwealth",
     "server_version": "0.1.0.dev0",
-    "duration_ms": 10,
+    "duration_ms": 1,
     "args": {
      "citation": "1-500"
     },
@@ -5920,7 +5920,1092 @@
     ],
     "requires_user_choice": false,
     "error": null,
-    "registry_revision": "2026-08-29"
+    "registry_revision": "2026-09-07"
+   }
+  },
+  {
+   "note": "A point in a town. The town's zoning layer and the county's both cover this ground, so both answer, and the comparison block says whether they agree",
+   "is_error": false,
+   "envelope": {
+    "data": {
+     "results": [
+      {
+       "source_ref": "source_01",
+       "source_id": "va-fairfax-parcels-zoning",
+       "records": [
+        {
+         "district": "AC",
+         "zone_type": "COMMERCIAL",
+         "proffered": "NO",
+         "overlay_jurisdiction": "TOWN OF VIENNA",
+         "record_id": "OBJECTID:35432",
+         "evidence_refs": [
+          "evidence_01"
+         ]
+        }
+       ],
+       "record_count": 1
+      },
+      {
+       "source_ref": "source_02",
+       "source_id": "va-vienna-town-zoning",
+       "records": [
+        {
+         "district": "AC",
+         "district_description": "Avenue Center District",
+         "record_id": "FID:2",
+         "evidence_refs": [
+          "evidence_02"
+         ]
+        }
+       ],
+       "record_count": 1
+      }
+     ],
+     "comparison": {
+      "compared_field": "district",
+      "agreement": true,
+      "per_source": [
+       {
+        "source_ref": "source_01",
+        "values": [
+         "AC"
+        ]
+       },
+       {
+        "source_ref": "source_02",
+        "values": [
+         "AC"
+        ]
+       }
+      ]
+     }
+    },
+    "provenance": [
+     {
+      "id": "source_01",
+      "source_id": "va-fairfax-parcels-zoning",
+      "publisher": "Fairfax County government (GIS and Mapping Services, Open Data)",
+      "system": "arcgis",
+      "dataset": "Fairfax County Parcels and Zoning (Open Data)",
+      "jurisdiction": "va:fairfax-county",
+      "authority_level": "primary",
+      "access_path": "live",
+      "source_updated_at": null,
+      "retrieved_at": "2026-09-08T01:05:40Z",
+      "cache_age_seconds": 0
+     },
+     {
+      "id": "source_02",
+      "source_id": "va-vienna-town-zoning",
+      "publisher": "Town of Vienna government (Department of Planning and Zoning)",
+      "system": "arcgis",
+      "dataset": "Town of Vienna Zoning Districts (ArcGIS Online)",
+      "jurisdiction": "va:vienna-town",
+      "authority_level": "primary",
+      "access_path": "live",
+      "source_updated_at": "2026-02-26T20:41:15Z",
+      "retrieved_at": "2026-09-08T01:05:40Z",
+      "cache_age_seconds": 0
+     }
+    ],
+    "evidence": [
+     {
+      "id": "evidence_01",
+      "source_ref": "source_01",
+      "record_id": "OBJECTID:35432",
+      "locator": null,
+      "retrieved_at": "2026-09-08T01:05:40Z",
+      "effective_at": null,
+      "transformations": [
+       "field_mapping:v1"
+      ],
+      "payload_hash": "sha256:60c1535923fbcac4e90bd50385f1a987966e04ada21276ebb9528399ce234518",
+      "raw_recovery": "available"
+     },
+     {
+      "id": "evidence_02",
+      "source_ref": "source_02",
+      "record_id": "FID:2",
+      "locator": null,
+      "retrieved_at": "2026-09-08T01:05:40Z",
+      "effective_at": null,
+      "transformations": [
+       "field_mapping:v1"
+      ],
+      "payload_hash": "sha256:a7ddf29ce9c6607da47e8752befd86913b1c03034cee2af57203624191c4f60a",
+      "raw_recovery": "available"
+     }
+    ],
+    "coverage": {
+     "registry": "covered",
+     "execution": "complete",
+     "pagination": "complete",
+     "source_claim": "unknown",
+     "result": "hit",
+     "jurisdictions_searched": [
+      "va:vienna-town",
+      "va:fairfax-county",
+      "va"
+     ],
+     "known_limitations": [
+      "GIS zoning is a screening representation; the adopted zoning ordinance and official zoning map govern.",
+      "Neither layer publishes a machine-readable last-edit date.",
+      "The layer carries the district code and its description and nothing else; proffers, overlays, and dates are not in it.",
+      "The service behind this layer is named Proposed_Districts. It is the layer the town's current zoning map displays (checked 2026-09-07); the name is left over from the ordinance rewrite it was drawn for.",
+      "Zoning only. The town publishes no parcel layer; a parcel-number query borrows the parcel polygon from Fairfax County's or VGIN's layer and intersects it with this one."
+     ]
+    },
+    "warnings": [
+     {
+      "code": "freshness_unavailable",
+      "message": "The publisher exposes no machine-readable update date for this layer; retrieval time is known, data vintage is not.",
+      "source_id": "va-fairfax-parcels-zoning"
+     },
+     {
+      "code": "terms_note",
+      "message": "The town's own website (viennava.gov) refuses automated requests, so any data terms published there could not be read. The review rests on the ArcGIS Online organization page and the item page alone.\n",
+      "source_id": "va-vienna-town-zoning"
+     },
+     {
+      "code": "screening_only",
+      "message": "GIS zoning is a screening layer. The adopted zoning ordinance and official zoning map govern; confirm before any legal reliance.",
+      "source_id": null
+     }
+    ],
+    "_execution": {
+     "server": "commonwealth",
+     "server_version": "0.1.0.dev0",
+     "tool": "geo.find_zoning",
+     "tool_contract_version": "1",
+     "envelope_version": "1",
+     "adapters": {
+      "arcgis": "0.1.0",
+      "arcgis_geocode": "0.1.0",
+      "virginia_law": "0.1.0"
+     },
+     "registry_revision": "2026-09-07",
+     "request_id": "18b8737c1c6145eaa7c13d9bd90879af"
+    }
+   },
+   "error_text": null,
+   "http_calls": [
+    {
+     "url": "https://www.fairfaxcounty.gov/mercator/rest/services/OpenData/OpenData_A9/FeatureServer/1/query",
+     "params": {
+      "f": "json",
+      "outFields": "JURISDICTION,OBJECTID,PROFFER,ZONECODE,ZONETYPE",
+      "resultRecordCount": 50,
+      "returnGeometry": "false",
+      "geometry": "{\"x\": -77.2653, \"y\": 38.9012, \"spatialReference\": {\"wkid\": 4326}}",
+      "geometryType": "esriGeometryPoint",
+      "inSR": "4326",
+      "spatialRel": "esriSpatialRelIntersects"
+     },
+     "response": {
+      "features": 1
+     }
+    },
+    {
+     "url": "https://services1.arcgis.com/OiQmCBznWDfkLRp1/arcgis/rest/services/Proposed_Districts/FeatureServer/0/query",
+     "params": {
+      "f": "json",
+      "outFields": "Dist_Desc,FID,Prop_Distr",
+      "resultRecordCount": 50,
+      "returnGeometry": "false",
+      "geometry": "{\"x\": -77.2653, \"y\": 38.9012, \"spatialReference\": {\"wkid\": 4326}}",
+      "geometryType": "esriGeometryPoint",
+      "inSR": "4326",
+      "spatialRel": "esriSpatialRelIntersects"
+     },
+     "response": {
+      "features": 1
+     }
+    },
+    {
+     "url": "https://services1.arcgis.com/OiQmCBznWDfkLRp1/arcgis/rest/services/Proposed_Districts/FeatureServer/0",
+     "params": {
+      "f": "json"
+     },
+     "response": {
+      "keys": [
+       "advancedEditingCapabilities",
+       "advancedQueryAnalyticCapabilities",
+       "advancedQueryCapabilities",
+       "allowGeometryUpdates",
+       "allowTrueCurvesUpdates",
+       "cacheMaxAge",
+       "capabilities",
+       "collation"
+      ]
+     }
+    }
+   ],
+   "audit": {
+    "ts": "2026-09-08T01:05:40Z",
+    "request_id": "18b8737c1c6145eaa7c13d9bd90879af",
+    "tool": "geo.find_zoning",
+    "server": "commonwealth",
+    "server_version": "0.1.0.dev0",
+    "duration_ms": 0,
+    "args": {
+     "jurisdiction": "Vienna",
+     "pin": "",
+     "lon": -77.2653,
+     "lat": 38.9012
+    },
+    "arg_names": [
+     "jurisdiction",
+     "lat",
+     "lon",
+     "pin"
+    ],
+    "coverage": {
+     "registry": "covered",
+     "execution": "complete",
+     "pagination": "complete",
+     "result": "hit"
+    },
+    "sources": [
+     {
+      "source_id": "va-fairfax-parcels-zoning",
+      "access_path": "live",
+      "cache_age_seconds": 0,
+      "authority_level": "primary"
+     },
+     {
+      "source_id": "va-vienna-town-zoning",
+      "access_path": "live",
+      "cache_age_seconds": 0,
+      "authority_level": "primary"
+     }
+    ],
+    "evidence_count": 2,
+    "warning_codes": [
+     "freshness_unavailable",
+     "screening_only",
+     "terms_note"
+    ],
+    "requires_user_choice": false,
+    "error": null,
+    "registry_revision": "2026-09-07"
+   }
+  },
+  {
+   "note": "The same ground by parcel number. The town publishes no parcel layer, so its districts are read over the county's parcel polygon, and the evidence names whose polygon that was",
+   "is_error": false,
+   "envelope": {
+    "data": {
+     "results": [
+      {
+       "source_ref": "source_02",
+       "source_id": "va-fairfax-parcels-zoning",
+       "records": [
+        {
+         "district": "AC",
+         "zone_type": "COMMERCIAL",
+         "proffered": "NO",
+         "overlay_jurisdiction": "TOWN OF VIENNA",
+         "record_id": "OBJECTID:35432",
+         "evidence_refs": [
+          "evidence_02",
+          "evidence_01"
+         ]
+        }
+       ],
+       "record_count": 1,
+       "parcel_evidence_refs": [
+        "evidence_01"
+       ],
+       "parcel_polygons_intersected": 1
+      },
+      {
+       "source_ref": "source_03",
+       "source_id": "va-vienna-town-zoning",
+       "records": [
+        {
+         "district": "AC",
+         "district_description": "Avenue Center District",
+         "record_id": "FID:2",
+         "evidence_refs": [
+          "evidence_04",
+          "evidence_03"
+         ]
+        }
+       ],
+       "record_count": 1,
+       "parcel_evidence_refs": [
+        "evidence_03"
+       ],
+       "parcel_polygons_intersected": 1,
+       "parcel_source_id": "va-fairfax-parcels-zoning"
+      }
+     ],
+     "comparison": {
+      "compared_field": "district",
+      "agreement": true,
+      "per_source": [
+       {
+        "source_ref": "source_02",
+        "values": [
+         "AC"
+        ]
+       },
+       {
+        "source_ref": "source_03",
+        "values": [
+         "AC"
+        ]
+       }
+      ]
+     }
+    },
+    "provenance": [
+     {
+      "id": "source_01",
+      "source_id": "va-fairfax-parcels-zoning",
+      "publisher": "Fairfax County government (GIS and Mapping Services, Open Data)",
+      "system": "arcgis",
+      "dataset": "Fairfax County Parcels and Zoning (Open Data)",
+      "jurisdiction": "va:fairfax-county",
+      "authority_level": "primary",
+      "access_path": "live",
+      "source_updated_at": null,
+      "retrieved_at": "2026-09-08T01:05:40Z",
+      "cache_age_seconds": 0
+     },
+     {
+      "id": "source_02",
+      "source_id": "va-fairfax-parcels-zoning",
+      "publisher": "Fairfax County government (GIS and Mapping Services, Open Data)",
+      "system": "arcgis",
+      "dataset": "Fairfax County Parcels and Zoning (Open Data)",
+      "jurisdiction": "va:fairfax-county",
+      "authority_level": "primary",
+      "access_path": "live",
+      "source_updated_at": null,
+      "retrieved_at": "2026-09-08T01:05:40Z",
+      "cache_age_seconds": 0
+     },
+     {
+      "id": "source_03",
+      "source_id": "va-vienna-town-zoning",
+      "publisher": "Town of Vienna government (Department of Planning and Zoning)",
+      "system": "arcgis",
+      "dataset": "Town of Vienna Zoning Districts (ArcGIS Online)",
+      "jurisdiction": "va:vienna-town",
+      "authority_level": "primary",
+      "access_path": "live",
+      "source_updated_at": "2026-02-26T20:41:15Z",
+      "retrieved_at": "2026-09-08T01:05:40Z",
+      "cache_age_seconds": 0
+     }
+    ],
+    "evidence": [
+     {
+      "id": "evidence_01",
+      "source_ref": "source_01",
+      "record_id": "OBJECTID:102097",
+      "locator": null,
+      "retrieved_at": "2026-09-08T01:05:40Z",
+      "effective_at": null,
+      "transformations": [
+       "field_mapping:v1",
+       "crs:source->EPSG4326"
+      ],
+      "payload_hash": "sha256:297c4b02ecb1641818be7fcff9180d8361bd5e6817cbf31387d0515d016c1476",
+      "raw_recovery": "available"
+     },
+     {
+      "id": "evidence_02",
+      "source_ref": "source_02",
+      "record_id": "OBJECTID:35432",
+      "locator": null,
+      "retrieved_at": "2026-09-08T01:05:40Z",
+      "effective_at": null,
+      "transformations": [
+       "field_mapping:v1",
+       "parcel_geometry_intersection"
+      ],
+      "payload_hash": "sha256:60c1535923fbcac4e90bd50385f1a987966e04ada21276ebb9528399ce234518",
+      "raw_recovery": "available"
+     },
+     {
+      "id": "evidence_03",
+      "source_ref": "source_01",
+      "record_id": "OBJECTID:102097",
+      "locator": null,
+      "retrieved_at": "2026-09-08T01:05:40Z",
+      "effective_at": null,
+      "transformations": [
+       "field_mapping:v1",
+       "crs:source->EPSG4326"
+      ],
+      "payload_hash": "sha256:297c4b02ecb1641818be7fcff9180d8361bd5e6817cbf31387d0515d016c1476",
+      "raw_recovery": "available"
+     },
+     {
+      "id": "evidence_04",
+      "source_ref": "source_03",
+      "record_id": "FID:2",
+      "locator": null,
+      "retrieved_at": "2026-09-08T01:05:40Z",
+      "effective_at": null,
+      "transformations": [
+       "field_mapping:v1",
+       "parcel_geometry_intersection",
+       "parcel_geometry_from:va-fairfax-parcels-zoning"
+      ],
+      "payload_hash": "sha256:a7ddf29ce9c6607da47e8752befd86913b1c03034cee2af57203624191c4f60a",
+      "raw_recovery": "available"
+     }
+    ],
+    "coverage": {
+     "registry": "covered",
+     "execution": "complete",
+     "pagination": "complete",
+     "source_claim": "unknown",
+     "result": "hit",
+     "jurisdictions_searched": [
+      "va:vienna-town",
+      "va:fairfax-county",
+      "va"
+     ],
+     "known_limitations": [
+      "GIS zoning is a screening representation; the adopted zoning ordinance and official zoning map govern.",
+      "Neither layer publishes a machine-readable last-edit date.",
+      "The layer carries the district code and its description and nothing else; proffers, overlays, and dates are not in it.",
+      "The service behind this layer is named Proposed_Districts. It is the layer the town's current zoning map displays (checked 2026-09-07); the name is left over from the ordinance rewrite it was drawn for.",
+      "Zoning only. The town publishes no parcel layer; a parcel-number query borrows the parcel polygon from Fairfax County's or VGIN's layer and intersects it with this one."
+     ]
+    },
+    "warnings": [
+     {
+      "code": "freshness_unavailable",
+      "message": "The publisher exposes no machine-readable update date for this layer; retrieval time is known, data vintage is not.",
+      "source_id": "va-fairfax-parcels-zoning"
+     },
+     {
+      "code": "freshness_unavailable",
+      "message": "The publisher exposes no machine-readable update date for this layer; retrieval time is known, data vintage is not.",
+      "source_id": "va-fairfax-parcels-zoning"
+     },
+     {
+      "code": "terms_note",
+      "message": "The town's own website (viennava.gov) refuses automated requests, so any data terms published there could not be read. The review rests on the ArcGIS Online organization page and the item page alone.\n",
+      "source_id": "va-vienna-town-zoning"
+     },
+     {
+      "code": "screening_only",
+      "message": "GIS zoning is a screening layer. The adopted zoning ordinance and official zoning map govern; confirm before any legal reliance.",
+      "source_id": null
+     }
+    ],
+    "_execution": {
+     "server": "commonwealth",
+     "server_version": "0.1.0.dev0",
+     "tool": "geo.find_zoning",
+     "tool_contract_version": "1",
+     "envelope_version": "1",
+     "adapters": {
+      "arcgis": "0.1.0",
+      "arcgis_geocode": "0.1.0",
+      "virginia_law": "0.1.0"
+     },
+     "registry_revision": "2026-09-07",
+     "request_id": "99b97863ee514a73925d705ae93d9658"
+    }
+   },
+   "error_text": null,
+   "http_calls": [
+    {
+     "url": "https://www.fairfaxcounty.gov/mercator/rest/services/OpenData/OpenData_A9/FeatureServer/0/query",
+     "params": {
+      "f": "json",
+      "outFields": "OBJECTID,PARCEL_TYPE,PIN",
+      "resultRecordCount": 50,
+      "returnGeometry": "true",
+      "where": "PIN = '0384 02  0143'",
+      "outSR": "4326"
+     },
+     "response": {
+      "features": 1
+     }
+    },
+    {
+     "url": "https://www.fairfaxcounty.gov/mercator/rest/services/OpenData/OpenData_A9/FeatureServer/1/query",
+     "params": {
+      "f": "json",
+      "outFields": "JURISDICTION,OBJECTID,PROFFER,ZONECODE,ZONETYPE",
+      "resultRecordCount": 50,
+      "returnGeometry": "false",
+      "geometry": "<polygon geometry, 5 vertices>",
+      "geometryType": "esriGeometryPolygon",
+      "inSR": "4326",
+      "spatialRel": "esriSpatialRelIntersects"
+     },
+     "response": {
+      "features": 1
+     }
+    },
+    {
+     "url": "https://services1.arcgis.com/OiQmCBznWDfkLRp1/arcgis/rest/services/Proposed_Districts/FeatureServer/0/query",
+     "params": {
+      "f": "json",
+      "outFields": "Dist_Desc,FID,Prop_Distr",
+      "resultRecordCount": 50,
+      "returnGeometry": "false",
+      "geometry": "<polygon geometry, 5 vertices>",
+      "geometryType": "esriGeometryPolygon",
+      "inSR": "4326",
+      "spatialRel": "esriSpatialRelIntersects"
+     },
+     "response": {
+      "features": 1
+     }
+    }
+   ],
+   "audit": {
+    "ts": "2026-09-08T01:05:40Z",
+    "request_id": "99b97863ee514a73925d705ae93d9658",
+    "tool": "geo.find_zoning",
+    "server": "commonwealth",
+    "server_version": "0.1.0.dev0",
+    "duration_ms": 0,
+    "args": {
+     "jurisdiction": "Vienna",
+     "pin": "0384 02  0143"
+    },
+    "arg_names": [
+     "jurisdiction",
+     "lat",
+     "lon",
+     "pin"
+    ],
+    "coverage": {
+     "registry": "covered",
+     "execution": "complete",
+     "pagination": "complete",
+     "result": "hit"
+    },
+    "sources": [
+     {
+      "source_id": "va-fairfax-parcels-zoning",
+      "access_path": "live",
+      "cache_age_seconds": 0,
+      "authority_level": "primary"
+     },
+     {
+      "source_id": "va-fairfax-parcels-zoning",
+      "access_path": "live",
+      "cache_age_seconds": 0,
+      "authority_level": "primary"
+     },
+     {
+      "source_id": "va-vienna-town-zoning",
+      "access_path": "live",
+      "cache_age_seconds": 0,
+      "authority_level": "primary"
+     }
+    ],
+    "evidence_count": 4,
+    "warning_codes": [
+     "freshness_unavailable",
+     "screening_only",
+     "terms_note"
+    ],
+    "requires_user_choice": false,
+    "error": null,
+    "registry_revision": "2026-09-07"
+   }
+  },
+  {
+   "note": "A town that publishes its own parcel layer, queried beside the statewide one",
+   "is_error": false,
+   "envelope": {
+    "data": {
+     "results": [
+      {
+       "source_ref": "source_01",
+       "source_id": "va-leesburg-town-parcels-zoning",
+       "records": [
+        {
+         "pin": "231154488000",
+         "address": "310 CATOCTIN CIR SW",
+         "acres": 0.28,
+         "subdivision": "PROSPECT HILLS",
+         "record_id": "OBJECTID:1880238",
+         "evidence_refs": [
+          "evidence_01"
+         ]
+        }
+       ],
+       "record_count": 1
+      },
+      {
+       "source_ref": "source_02",
+       "source_id": "va-vgin-statewide-parcels",
+       "records": [
+        {
+         "pin": "231154488000",
+         "locality": "Loudoun County",
+         "fips": "51107",
+         "record_id": "OBJECTID:1195622",
+         "evidence_refs": [
+          "evidence_02"
+         ]
+        }
+       ],
+       "record_count": 1
+      }
+     ],
+     "comparison": {
+      "compared_field": "pin",
+      "agreement": true,
+      "per_source": [
+       {
+        "source_ref": "source_01",
+        "values": [
+         "231154488000"
+        ]
+       },
+       {
+        "source_ref": "source_02",
+        "values": [
+         "231154488000"
+        ]
+       }
+      ]
+     }
+    },
+    "provenance": [
+     {
+      "id": "source_01",
+      "source_id": "va-leesburg-town-parcels-zoning",
+      "publisher": "Town of Leesburg government (Information Technology, GIS Program)",
+      "system": "arcgis",
+      "dataset": "Town of Leesburg Parcels and Zoning (ArcGIS Online)",
+      "jurisdiction": "va:leesburg-town",
+      "authority_level": "primary",
+      "access_path": "live",
+      "source_updated_at": "2026-03-25T14:20:47Z",
+      "retrieved_at": "2026-09-08T01:05:40Z",
+      "cache_age_seconds": 0
+     },
+     {
+      "id": "source_02",
+      "source_id": "va-vgin-statewide-parcels",
+      "publisher": "Virginia Geographic Information Network (VGIN), part of the Virginia Department of Emergency Management",
+      "system": "arcgis",
+      "dataset": "Virginia Statewide Parcels (VGIN)",
+      "jurisdiction": "va",
+      "authority_level": "official_secondary",
+      "access_path": "live",
+      "source_updated_at": null,
+      "retrieved_at": "2026-09-08T01:05:40Z",
+      "cache_age_seconds": 0
+     }
+    ],
+    "evidence": [
+     {
+      "id": "evidence_01",
+      "source_ref": "source_01",
+      "record_id": "OBJECTID:1880238",
+      "locator": null,
+      "retrieved_at": "2026-09-08T01:05:40Z",
+      "effective_at": null,
+      "transformations": [
+       "field_mapping:v1"
+      ],
+      "payload_hash": "sha256:a091dc3b627770cfa1e83b24bc05d3276d8b0593585d9e560f0bab658d3e8707",
+      "raw_recovery": "available"
+     },
+     {
+      "id": "evidence_02",
+      "source_ref": "source_02",
+      "record_id": "OBJECTID:1195622",
+      "locator": null,
+      "retrieved_at": "2026-09-08T01:05:40Z",
+      "effective_at": null,
+      "transformations": [
+       "field_mapping:v1"
+      ],
+      "payload_hash": "sha256:3542aeed23c7950824a08faf787806cb5d45264169612b11fa9db59b034ab4ef",
+      "raw_recovery": "available"
+     }
+    ],
+    "coverage": {
+     "registry": "covered",
+     "execution": "complete",
+     "pagination": "complete",
+     "source_claim": "unknown",
+     "result": "hit",
+     "jurisdictions_searched": [
+      "va:leesburg-town",
+      "va:loudoun-county",
+      "va"
+     ],
+     "known_limitations": [
+      "Cartographic/analysis use only per the publisher's own disclaimer; not a legal description or survey.",
+      "Currency varies by locality and lags the locality's own live system; this is the statewide fallback, not the fast path, for any jurisdiction that also has a local manifest.",
+      "GIS zoning is a screening representation; the adopted zoning ordinance and official zoning map govern.",
+      "Layer publishes no machine-readable last-edit date at the layer level (a per-record LASTUPDATE field exists but is not exposed through this adapter's freshness path).",
+      "No zoning equivalent published statewide; parcel.lookup only.",
+      "Parcel boundaries are not edge-matched across municipal boundaries.",
+      "Parcel identifiers are Loudoun County's MCPI numbers, republished by the town; VGIN's statewide layer uses the same numbers for Loudoun.",
+      "The parcel layer exposes an address, acreage, and subdivision name and nothing else; no owner, assessment, or land-use fields.",
+      "The zoning layer carries per-polygon dates that this manifest does not expose, because one of them holds a 1900 placeholder on some rows."
+     ]
+    },
+    "warnings": [
+     {
+      "code": "terms_note",
+      "message": "The town's own website (leesburgva.gov) refuses automated requests, so any data terms published there could not be read. The review rests on the ArcGIS Online organization page and the item pages alone.\n",
+      "source_id": "va-leesburg-town-parcels-zoning"
+     },
+     {
+      "code": "freshness_unavailable",
+      "message": "The publisher exposes no machine-readable update date for this layer; retrieval time is known, data vintage is not.",
+      "source_id": "va-vgin-statewide-parcels"
+     }
+    ],
+    "_execution": {
+     "server": "commonwealth",
+     "server_version": "0.1.0.dev0",
+     "tool": "geo.find_parcel",
+     "tool_contract_version": "1",
+     "envelope_version": "1",
+     "adapters": {
+      "arcgis": "0.1.0",
+      "arcgis_geocode": "0.1.0",
+      "virginia_law": "0.1.0"
+     },
+     "registry_revision": "2026-09-07",
+     "request_id": "cc085238d8dc4e2f9e97eb61439d9830"
+    }
+   },
+   "error_text": null,
+   "http_calls": [
+    {
+     "url": "https://services1.arcgis.com/7owdfh5mgjEgbCSM/arcgis/rest/services/PARCELS_TOWN/FeatureServer/0/query",
+     "params": {
+      "f": "json",
+      "outFields": "ACRES,AX_ADDR,OBJECTID,PA_MCPI,PA_SUBD_NAME",
+      "resultRecordCount": 50,
+      "returnGeometry": "false",
+      "where": "PA_MCPI = '231154488000'"
+     },
+     "response": {
+      "features": 1
+     }
+    },
+    {
+     "url": "https://services1.arcgis.com/7owdfh5mgjEgbCSM/arcgis/rest/services/PARCELS_TOWN/FeatureServer/0",
+     "params": {
+      "f": "json"
+     },
+     "response": {
+      "keys": [
+       "advancedEditingCapabilities",
+       "advancedQueryAnalyticCapabilities",
+       "advancedQueryCapabilities",
+       "allowGeometryUpdates",
+       "allowTrueCurvesUpdates",
+       "cacheMaxAge",
+       "capabilities",
+       "collation"
+      ]
+     }
+    },
+    {
+     "url": "https://vginmaps.vdem.virginia.gov/arcgis/rest/services/VA_Base_Layers/VA_Parcels/FeatureServer/0/query",
+     "params": {
+      "f": "json",
+      "outFields": "FIPS,LOCALITY,OBJECTID,PTM_ID",
+      "resultRecordCount": 50,
+      "returnGeometry": "false",
+      "where": "FIPS = '51107' AND PTM_ID = '231154488000'"
+     },
+     "response": {
+      "features": 1
+     }
+    }
+   ],
+   "audit": {
+    "ts": "2026-09-08T01:05:40Z",
+    "request_id": "cc085238d8dc4e2f9e97eb61439d9830",
+    "tool": "geo.find_parcel",
+    "server": "commonwealth",
+    "server_version": "0.1.0.dev0",
+    "duration_ms": 0,
+    "args": {
+     "jurisdiction": "Leesburg",
+     "pin": "231154488000"
+    },
+    "arg_names": [
+     "jurisdiction",
+     "lat",
+     "lon",
+     "pin"
+    ],
+    "coverage": {
+     "registry": "covered",
+     "execution": "complete",
+     "pagination": "complete",
+     "result": "hit"
+    },
+    "sources": [
+     {
+      "source_id": "va-leesburg-town-parcels-zoning",
+      "access_path": "live",
+      "cache_age_seconds": 0,
+      "authority_level": "primary"
+     },
+     {
+      "source_id": "va-vgin-statewide-parcels",
+      "access_path": "live",
+      "cache_age_seconds": 0,
+      "authority_level": "official_secondary"
+     }
+    ],
+    "evidence_count": 2,
+    "warning_codes": [
+     "freshness_unavailable",
+     "terms_note"
+    ],
+    "requires_user_choice": false,
+    "error": null,
+    "registry_revision": "2026-09-07"
+   }
+  },
+  {
+   "note": "The town's own zoning map layer, with a link to the ordinance section returned as data",
+   "is_error": false,
+   "envelope": {
+    "data": {
+     "results": [
+      {
+       "source_ref": "source_02",
+       "source_id": "va-leesburg-town-parcels-zoning",
+       "records": [
+        {
+         "district": "R-4",
+         "district_description": "Single Family Residential",
+         "ordinance_link": "https://www.leesburgva.gov/Home/ShowDocument?id=19674",
+         "record_id": "OBJECTID_12:2281",
+         "evidence_refs": [
+          "evidence_02",
+          "evidence_01"
+         ]
+        }
+       ],
+       "record_count": 1,
+       "parcel_evidence_refs": [
+        "evidence_01"
+       ],
+       "parcel_polygons_intersected": 1
+      }
+     ]
+    },
+    "provenance": [
+     {
+      "id": "source_01",
+      "source_id": "va-leesburg-town-parcels-zoning",
+      "publisher": "Town of Leesburg government (Information Technology, GIS Program)",
+      "system": "arcgis",
+      "dataset": "Town of Leesburg Parcels and Zoning (ArcGIS Online)",
+      "jurisdiction": "va:leesburg-town",
+      "authority_level": "primary",
+      "access_path": "live",
+      "source_updated_at": "2026-03-25T14:20:47Z",
+      "retrieved_at": "2026-09-08T01:05:40Z",
+      "cache_age_seconds": 0
+     },
+     {
+      "id": "source_02",
+      "source_id": "va-leesburg-town-parcels-zoning",
+      "publisher": "Town of Leesburg government (Information Technology, GIS Program)",
+      "system": "arcgis",
+      "dataset": "Town of Leesburg Parcels and Zoning (ArcGIS Online)",
+      "jurisdiction": "va:leesburg-town",
+      "authority_level": "primary",
+      "access_path": "live",
+      "source_updated_at": "2025-02-24T17:37:24Z",
+      "retrieved_at": "2026-09-08T01:05:40Z",
+      "cache_age_seconds": 0
+     }
+    ],
+    "evidence": [
+     {
+      "id": "evidence_01",
+      "source_ref": "source_01",
+      "record_id": "OBJECTID:1880238",
+      "locator": null,
+      "retrieved_at": "2026-09-08T01:05:40Z",
+      "effective_at": null,
+      "transformations": [
+       "field_mapping:v1",
+       "crs:source->EPSG4326"
+      ],
+      "payload_hash": "sha256:a091dc3b627770cfa1e83b24bc05d3276d8b0593585d9e560f0bab658d3e8707",
+      "raw_recovery": "available"
+     },
+     {
+      "id": "evidence_02",
+      "source_ref": "source_02",
+      "record_id": "OBJECTID_12:2281",
+      "locator": null,
+      "retrieved_at": "2026-09-08T01:05:40Z",
+      "effective_at": null,
+      "transformations": [
+       "field_mapping:v1",
+       "parcel_geometry_intersection"
+      ],
+      "payload_hash": "sha256:aafeadee70e6ef7da6111733555698c8a5c65b6411fe1156d274a787b2090a66",
+      "raw_recovery": "available"
+     }
+    ],
+    "coverage": {
+     "registry": "covered",
+     "execution": "complete",
+     "pagination": "complete",
+     "source_claim": "unknown",
+     "result": "hit",
+     "jurisdictions_searched": [
+      "va:leesburg-town",
+      "va:loudoun-county",
+      "va"
+     ],
+     "known_limitations": [
+      "GIS zoning is a screening representation; the adopted zoning ordinance and official zoning map govern.",
+      "Parcel identifiers are Loudoun County's MCPI numbers, republished by the town; VGIN's statewide layer uses the same numbers for Loudoun.",
+      "The parcel layer exposes an address, acreage, and subdivision name and nothing else; no owner, assessment, or land-use fields.",
+      "The zoning layer carries per-polygon dates that this manifest does not expose, because one of them holds a 1900 placeholder on some rows."
+     ]
+    },
+    "warnings": [
+     {
+      "code": "terms_note",
+      "message": "The town's own website (leesburgva.gov) refuses automated requests, so any data terms published there could not be read. The review rests on the ArcGIS Online organization page and the item pages alone.\n",
+      "source_id": "va-leesburg-town-parcels-zoning"
+     },
+     {
+      "code": "screening_only",
+      "message": "GIS zoning is a screening layer. The adopted zoning ordinance and official zoning map govern; confirm before any legal reliance.",
+      "source_id": null
+     }
+    ],
+    "_execution": {
+     "server": "commonwealth",
+     "server_version": "0.1.0.dev0",
+     "tool": "geo.find_zoning",
+     "tool_contract_version": "1",
+     "envelope_version": "1",
+     "adapters": {
+      "arcgis": "0.1.0",
+      "arcgis_geocode": "0.1.0",
+      "virginia_law": "0.1.0"
+     },
+     "registry_revision": "2026-09-07",
+     "request_id": "da7305f6d3264fdf8280efe85270c869"
+    }
+   },
+   "error_text": null,
+   "http_calls": [
+    {
+     "url": "https://services1.arcgis.com/7owdfh5mgjEgbCSM/arcgis/rest/services/PARCELS_TOWN/FeatureServer/0/query",
+     "params": {
+      "f": "json",
+      "outFields": "ACRES,AX_ADDR,OBJECTID,PA_MCPI,PA_SUBD_NAME",
+      "resultRecordCount": 50,
+      "returnGeometry": "true",
+      "where": "PA_MCPI = '231154488000'",
+      "outSR": "4326"
+     },
+     "response": {
+      "features": 1
+     }
+    },
+    {
+     "url": "https://services1.arcgis.com/7owdfh5mgjEgbCSM/arcgis/rest/services/TOL_ZONING/FeatureServer/117/query",
+     "params": {
+      "f": "json",
+      "outFields": "DESCRIPTION,LB_ZONE,OBJECTID_12,WEB_LINK",
+      "resultRecordCount": 50,
+      "returnGeometry": "false",
+      "geometry": "<polygon geometry, 8 vertices>",
+      "geometryType": "esriGeometryPolygon",
+      "inSR": "4326",
+      "spatialRel": "esriSpatialRelIntersects"
+     },
+     "response": {
+      "features": 1
+     }
+    },
+    {
+     "url": "https://services1.arcgis.com/7owdfh5mgjEgbCSM/arcgis/rest/services/TOL_ZONING/FeatureServer/117",
+     "params": {
+      "f": "json"
+     },
+     "response": {
+      "keys": [
+       "advancedEditingCapabilities",
+       "advancedQueryAnalyticCapabilities",
+       "advancedQueryCapabilities",
+       "allowGeometryUpdates",
+       "allowTrueCurvesUpdates",
+       "cacheMaxAge",
+       "capabilities",
+       "collation"
+      ]
+     }
+    }
+   ],
+   "audit": {
+    "ts": "2026-09-08T01:05:40Z",
+    "request_id": "da7305f6d3264fdf8280efe85270c869",
+    "tool": "geo.find_zoning",
+    "server": "commonwealth",
+    "server_version": "0.1.0.dev0",
+    "duration_ms": 1,
+    "args": {
+     "jurisdiction": "Leesburg",
+     "pin": "231154488000"
+    },
+    "arg_names": [
+     "jurisdiction",
+     "lat",
+     "lon",
+     "pin"
+    ],
+    "coverage": {
+     "registry": "covered",
+     "execution": "complete",
+     "pagination": "complete",
+     "result": "hit"
+    },
+    "sources": [
+     {
+      "source_id": "va-leesburg-town-parcels-zoning",
+      "access_path": "live",
+      "cache_age_seconds": 0,
+      "authority_level": "primary"
+     },
+     {
+      "source_id": "va-leesburg-town-parcels-zoning",
+      "access_path": "live",
+      "cache_age_seconds": 0,
+      "authority_level": "primary"
+     }
+    ],
+    "evidence_count": 2,
+    "warning_codes": [
+     "screening_only",
+     "terms_note"
+    ],
+    "requires_user_choice": false,
+    "error": null,
+    "registry_revision": "2026-09-07"
    }
   },
   {
@@ -5969,7 +7054,7 @@
       "authority_level": "primary",
       "access_path": "live",
       "source_updated_at": null,
-      "retrieved_at": "2026-09-07T16:05:44Z",
+      "retrieved_at": "2026-09-08T01:05:40Z",
       "cache_age_seconds": 0
      },
      {
@@ -5982,7 +7067,7 @@
       "authority_level": "official_secondary",
       "access_path": "live",
       "source_updated_at": null,
-      "retrieved_at": "2026-09-07T16:05:44Z",
+      "retrieved_at": "2026-09-08T01:05:40Z",
       "cache_age_seconds": 0
      }
     ],
@@ -6030,8 +7115,8 @@
       "arcgis_geocode": "0.1.0",
       "virginia_law": "0.1.0"
      },
-     "registry_revision": "2026-08-29",
-     "request_id": "28a09259a92a4cdc986d0a9932113d50"
+     "registry_revision": "2026-09-07",
+     "request_id": "a0457e5435ea48f6b095158de70a62f4"
     }
    },
    "error_text": null,
@@ -6064,12 +7149,12 @@
     }
    ],
    "audit": {
-    "ts": "2026-09-07T16:05:44Z",
-    "request_id": "28a09259a92a4cdc986d0a9932113d50",
+    "ts": "2026-09-08T01:05:40Z",
+    "request_id": "a0457e5435ea48f6b095158de70a62f4",
     "tool": "geo.find_parcel",
     "server": "commonwealth",
     "server_version": "0.1.0.dev0",
-    "duration_ms": 4,
+    "duration_ms": 0,
     "args": {
      "jurisdiction": "Fairfax County",
      "pin": "NO SUCH PIN"
@@ -6106,7 +7191,7 @@
     ],
     "requires_user_choice": false,
     "error": null,
-    "registry_revision": "2026-08-29"
+    "registry_revision": "2026-09-07"
    }
   },
   {
@@ -6154,19 +7239,19 @@
       "arcgis_geocode": "0.1.0",
       "virginia_law": "0.1.0"
      },
-     "registry_revision": "2026-08-29",
-     "request_id": "843f3e8277714b42a05239cfb598be8f"
+     "registry_revision": "2026-09-07",
+     "request_id": "d6bfe3dccebe4b83ae701325dfae0eb9"
     }
    },
    "error_text": null,
    "http_calls": [],
    "audit": {
-    "ts": "2026-09-07T16:05:44Z",
-    "request_id": "843f3e8277714b42a05239cfb598be8f",
+    "ts": "2026-09-08T01:05:40Z",
+    "request_id": "d6bfe3dccebe4b83ae701325dfae0eb9",
     "tool": "geo.find_zoning",
     "server": "commonwealth",
     "server_version": "0.1.0.dev0",
-    "duration_ms": 1,
+    "duration_ms": 0,
     "args": {
      "jurisdiction": "Craig County",
      "pin": "123"
@@ -6188,7 +7273,7 @@
     "warning_codes": [],
     "requires_user_choice": false,
     "error": null,
-    "registry_revision": "2026-08-29"
+    "registry_revision": "2026-09-07"
    }
   },
   {
@@ -6221,7 +7306,7 @@
       "authority_level": "primary",
       "access_path": "live",
       "source_updated_at": null,
-      "retrieved_at": "2026-09-07T16:05:44Z",
+      "retrieved_at": "2026-09-08T01:05:40Z",
       "cache_age_seconds": 0
      }
     ],
@@ -6271,8 +7356,8 @@
       "arcgis_geocode": "0.1.0",
       "virginia_law": "0.1.0"
      },
-     "registry_revision": "2026-08-29",
-     "request_id": "6093cb078bad43fca42c4b3c15dbf176"
+     "registry_revision": "2026-09-07",
+     "request_id": "5a593ba2aa5443daa917a889b8aea937"
     }
    },
    "error_text": null,
@@ -6297,12 +7382,12 @@
     }
    ],
    "audit": {
-    "ts": "2026-09-07T16:05:44Z",
-    "request_id": "6093cb078bad43fca42c4b3c15dbf176",
+    "ts": "2026-09-08T01:05:40Z",
+    "request_id": "5a593ba2aa5443daa917a889b8aea937",
     "tool": "geo.find_environmental_sites",
     "server": "commonwealth",
     "server_version": "0.1.0.dev0",
-    "duration_ms": 3,
+    "duration_ms": 0,
     "args": {
      "jurisdiction": "Virginia",
      "lon": -74.5,
@@ -6337,7 +7422,7 @@
     ],
     "requires_user_choice": false,
     "error": null,
-    "registry_revision": "2026-08-29"
+    "registry_revision": "2026-09-07"
    }
   },
   {
@@ -6359,6 +7444,18 @@
        "operational_state": "unknown"
       },
       {
+       "id": "va-leesburg-town-parcels-zoning",
+       "name": "Town of Leesburg Parcels and Zoning (ArcGIS Online)",
+       "jurisdiction": "va:leesburg-town",
+       "capabilities": [
+        "parcel.lookup",
+        "zoning.lookup"
+       ],
+       "authority_level": "primary",
+       "declared_state": "active",
+       "operational_state": "unknown"
+      },
+      {
        "id": "va-richmond-city-parcels-zoning",
        "name": "Richmond City Parcels and Zoning (GIS Open Data)",
        "jurisdiction": "va:richmond-city",
@@ -6369,9 +7466,20 @@
        "authority_level": "primary",
        "declared_state": "active",
        "operational_state": "unknown"
+      },
+      {
+       "id": "va-vienna-town-zoning",
+       "name": "Town of Vienna Zoning Districts (ArcGIS Online)",
+       "jurisdiction": "va:vienna-town",
+       "capabilities": [
+        "zoning.lookup"
+       ],
+       "authority_level": "primary",
+       "declared_state": "active",
+       "operational_state": "unknown"
       }
      ],
-     "record_count": 2
+     "record_count": 4
     },
     "provenance": [
      {
@@ -6384,7 +7492,7 @@
       "authority_level": "official_derived",
       "access_path": "index",
       "source_updated_at": null,
-      "retrieved_at": "2026-09-07T16:05:44Z",
+      "retrieved_at": "2026-09-08T01:05:40Z",
       "cache_age_seconds": 0
      }
     ],
@@ -6394,7 +7502,7 @@
       "source_ref": "source_01",
       "record_id": "va-fairfax-parcels-zoning",
       "locator": null,
-      "retrieved_at": "2026-09-07T16:05:44Z",
+      "retrieved_at": "2026-09-08T01:05:40Z",
       "effective_at": null,
       "transformations": [],
       "payload_hash": null,
@@ -6403,9 +7511,31 @@
      {
       "id": "evidence_02",
       "source_ref": "source_01",
+      "record_id": "va-leesburg-town-parcels-zoning",
+      "locator": null,
+      "retrieved_at": "2026-09-08T01:05:40Z",
+      "effective_at": null,
+      "transformations": [],
+      "payload_hash": null,
+      "raw_recovery": "available"
+     },
+     {
+      "id": "evidence_03",
+      "source_ref": "source_01",
       "record_id": "va-richmond-city-parcels-zoning",
       "locator": null,
-      "retrieved_at": "2026-09-07T16:05:44Z",
+      "retrieved_at": "2026-09-08T01:05:40Z",
+      "effective_at": null,
+      "transformations": [],
+      "payload_hash": null,
+      "raw_recovery": "available"
+     },
+     {
+      "id": "evidence_04",
+      "source_ref": "source_01",
+      "record_id": "va-vienna-town-zoning",
+      "locator": null,
+      "retrieved_at": "2026-09-08T01:05:40Z",
       "effective_at": null,
       "transformations": [],
       "payload_hash": null,
@@ -6431,19 +7561,19 @@
       "arcgis_geocode": "0.1.0",
       "virginia_law": "0.1.0"
      },
-     "registry_revision": "2026-08-29",
-     "request_id": "8534309391f94e2d9f1ef74f7cad2220"
+     "registry_revision": "2026-09-07",
+     "request_id": "d2315f39191a4ff4900d3ff2fab65f4e"
     }
    },
    "error_text": null,
    "http_calls": [],
    "audit": {
-    "ts": "2026-09-07T16:05:44Z",
-    "request_id": "8534309391f94e2d9f1ef74f7cad2220",
+    "ts": "2026-09-08T01:05:40Z",
+    "request_id": "d2315f39191a4ff4900d3ff2fab65f4e",
     "tool": "registry.search_sources",
     "server": "commonwealth",
     "server_version": "0.1.0.dev0",
-    "duration_ms": 1,
+    "duration_ms": 0,
     "args": {
      "text": "",
      "jurisdiction": "",
@@ -6468,11 +7598,11 @@
       "authority_level": "official_derived"
      }
     ],
-    "evidence_count": 2,
+    "evidence_count": 4,
     "warning_codes": [],
     "requires_user_choice": false,
     "error": null,
-    "registry_revision": "2026-08-29"
+    "registry_revision": "2026-09-07"
    }
   },
   {
@@ -6516,7 +7646,7 @@
       "authority_level": "official_derived",
       "access_path": "index",
       "source_updated_at": null,
-      "retrieved_at": "2026-09-07T16:05:44Z",
+      "retrieved_at": "2026-09-08T01:05:40Z",
       "cache_age_seconds": 0
      }
     ],
@@ -6526,7 +7656,7 @@
       "source_ref": "source_01",
       "record_id": "va-deq-water-quality-stations",
       "locator": null,
-      "retrieved_at": "2026-09-07T16:05:44Z",
+      "retrieved_at": "2026-09-08T01:05:40Z",
       "effective_at": null,
       "transformations": [],
       "payload_hash": null,
@@ -6552,15 +7682,15 @@
       "arcgis_geocode": "0.1.0",
       "virginia_law": "0.1.0"
      },
-     "registry_revision": "2026-08-29",
-     "request_id": "f8906576dbbd47998ced7cceacdae1e2"
+     "registry_revision": "2026-09-07",
+     "request_id": "c36c71cdfa0f422eac0d52d72165cf8d"
     }
    },
    "error_text": null,
    "http_calls": [],
    "audit": {
-    "ts": "2026-09-07T16:05:44Z",
-    "request_id": "f8906576dbbd47998ced7cceacdae1e2",
+    "ts": "2026-09-08T01:05:40Z",
+    "request_id": "c36c71cdfa0f422eac0d52d72165cf8d",
     "tool": "registry.describe_source",
     "server": "commonwealth",
     "server_version": "0.1.0.dev0",
@@ -6589,7 +7719,7 @@
     "warning_codes": [],
     "requires_user_choice": false,
     "error": null,
-    "registry_revision": "2026-08-29"
+    "registry_revision": "2026-09-07"
    }
   },
   {
@@ -6627,6 +7757,12 @@
        "declared_state": "active",
        "operational_state": "unknown",
        "last_verified": "2026-08-27"
+      },
+      {
+       "id": "va-leesburg-town-parcels-zoning",
+       "declared_state": "active",
+       "operational_state": "unknown",
+       "last_verified": "2026-09-07"
       },
       {
        "id": "va-open-data-portal",
@@ -6699,9 +7835,15 @@
        "declared_state": "active",
        "operational_state": "unknown",
        "last_verified": "2026-08-28"
+      },
+      {
+       "id": "va-vienna-town-zoning",
+       "declared_state": "active",
+       "operational_state": "unknown",
+       "last_verified": "2026-09-07"
       }
      ],
-     "record_count": 17,
+     "record_count": 19,
      "note": "operational_state comes from runtime probes; 'unknown' means no probe has run in this process."
     },
     "provenance": [
@@ -6715,7 +7857,7 @@
       "authority_level": "official_derived",
       "access_path": "index",
       "source_updated_at": null,
-      "retrieved_at": "2026-09-07T16:05:44Z",
+      "retrieved_at": "2026-09-08T01:05:40Z",
       "cache_age_seconds": 0
      }
     ],
@@ -6725,7 +7867,7 @@
       "source_ref": "source_01",
       "record_id": "va-charles-city-county-parcels",
       "locator": null,
-      "retrieved_at": "2026-09-07T16:05:44Z",
+      "retrieved_at": "2026-09-08T01:05:40Z",
       "effective_at": null,
       "transformations": [],
       "payload_hash": null,
@@ -6736,7 +7878,7 @@
       "source_ref": "source_01",
       "record_id": "va-code-of-virginia",
       "locator": null,
-      "retrieved_at": "2026-09-07T16:05:44Z",
+      "retrieved_at": "2026-09-08T01:05:40Z",
       "effective_at": null,
       "transformations": [],
       "payload_hash": null,
@@ -6747,7 +7889,7 @@
       "source_ref": "source_01",
       "record_id": "va-deq-water-quality-stations",
       "locator": null,
-      "retrieved_at": "2026-09-07T16:05:44Z",
+      "retrieved_at": "2026-09-08T01:05:40Z",
       "effective_at": null,
       "transformations": [],
       "payload_hash": null,
@@ -6758,7 +7900,7 @@
       "source_ref": "source_01",
       "record_id": "va-eva-procurement",
       "locator": null,
-      "retrieved_at": "2026-09-07T16:05:44Z",
+      "retrieved_at": "2026-09-08T01:05:40Z",
       "effective_at": null,
       "transformations": [],
       "payload_hash": null,
@@ -6769,7 +7911,7 @@
       "source_ref": "source_01",
       "record_id": "va-fairfax-parcels-zoning",
       "locator": null,
-      "retrieved_at": "2026-09-07T16:05:44Z",
+      "retrieved_at": "2026-09-08T01:05:40Z",
       "effective_at": null,
       "transformations": [],
       "payload_hash": null,
@@ -6778,9 +7920,9 @@
      {
       "id": "evidence_06",
       "source_ref": "source_01",
-      "record_id": "va-open-data-portal",
+      "record_id": "va-leesburg-town-parcels-zoning",
       "locator": null,
-      "retrieved_at": "2026-09-07T16:05:44Z",
+      "retrieved_at": "2026-09-08T01:05:40Z",
       "effective_at": null,
       "transformations": [],
       "payload_hash": null,
@@ -6789,9 +7931,9 @@
      {
       "id": "evidence_07",
       "source_ref": "source_01",
-      "record_id": "va-richmond-city-parcels-zoning",
+      "record_id": "va-open-data-portal",
       "locator": null,
-      "retrieved_at": "2026-09-07T16:05:44Z",
+      "retrieved_at": "2026-09-08T01:05:40Z",
       "effective_at": null,
       "transformations": [],
       "payload_hash": null,
@@ -6800,9 +7942,9 @@
      {
       "id": "evidence_08",
       "source_ref": "source_01",
-      "record_id": "va-scc",
+      "record_id": "va-richmond-city-parcels-zoning",
       "locator": null,
-      "retrieved_at": "2026-09-07T16:05:44Z",
+      "retrieved_at": "2026-09-08T01:05:40Z",
       "effective_at": null,
       "transformations": [],
       "payload_hash": null,
@@ -6811,9 +7953,9 @@
      {
       "id": "evidence_09",
       "source_ref": "source_01",
-      "record_id": "va-vdh",
+      "record_id": "va-scc",
       "locator": null,
-      "retrieved_at": "2026-09-07T16:05:44Z",
+      "retrieved_at": "2026-09-08T01:05:40Z",
       "effective_at": null,
       "transformations": [],
       "payload_hash": null,
@@ -6822,9 +7964,9 @@
      {
       "id": "evidence_10",
       "source_ref": "source_01",
-      "record_id": "va-vdot-lrs-routes",
+      "record_id": "va-vdh",
       "locator": null,
-      "retrieved_at": "2026-09-07T16:05:44Z",
+      "retrieved_at": "2026-09-08T01:05:40Z",
       "effective_at": null,
       "transformations": [],
       "payload_hash": null,
@@ -6833,9 +7975,9 @@
      {
       "id": "evidence_11",
       "source_ref": "source_01",
-      "record_id": "va-vgin-address-points",
+      "record_id": "va-vdot-lrs-routes",
       "locator": null,
-      "retrieved_at": "2026-09-07T16:05:44Z",
+      "retrieved_at": "2026-09-08T01:05:40Z",
       "effective_at": null,
       "transformations": [],
       "payload_hash": null,
@@ -6844,9 +7986,9 @@
      {
       "id": "evidence_12",
       "source_ref": "source_01",
-      "record_id": "va-vgin-admin-boundaries",
+      "record_id": "va-vgin-address-points",
       "locator": null,
-      "retrieved_at": "2026-09-07T16:05:44Z",
+      "retrieved_at": "2026-09-08T01:05:40Z",
       "effective_at": null,
       "transformations": [],
       "payload_hash": null,
@@ -6855,9 +7997,9 @@
      {
       "id": "evidence_13",
       "source_ref": "source_01",
-      "record_id": "va-vgin-building-footprints",
+      "record_id": "va-vgin-admin-boundaries",
       "locator": null,
-      "retrieved_at": "2026-09-07T16:05:44Z",
+      "retrieved_at": "2026-09-08T01:05:40Z",
       "effective_at": null,
       "transformations": [],
       "payload_hash": null,
@@ -6866,9 +8008,9 @@
      {
       "id": "evidence_14",
       "source_ref": "source_01",
-      "record_id": "va-vgin-composite-locator",
+      "record_id": "va-vgin-building-footprints",
       "locator": null,
-      "retrieved_at": "2026-09-07T16:05:44Z",
+      "retrieved_at": "2026-09-08T01:05:40Z",
       "effective_at": null,
       "transformations": [],
       "payload_hash": null,
@@ -6877,9 +8019,9 @@
      {
       "id": "evidence_15",
       "source_ref": "source_01",
-      "record_id": "va-vgin-landmarks",
+      "record_id": "va-vgin-composite-locator",
       "locator": null,
-      "retrieved_at": "2026-09-07T16:05:44Z",
+      "retrieved_at": "2026-09-08T01:05:40Z",
       "effective_at": null,
       "transformations": [],
       "payload_hash": null,
@@ -6888,9 +8030,9 @@
      {
       "id": "evidence_16",
       "source_ref": "source_01",
-      "record_id": "va-vgin-road-centerlines",
+      "record_id": "va-vgin-landmarks",
       "locator": null,
-      "retrieved_at": "2026-09-07T16:05:44Z",
+      "retrieved_at": "2026-09-08T01:05:40Z",
       "effective_at": null,
       "transformations": [],
       "payload_hash": null,
@@ -6899,9 +8041,31 @@
      {
       "id": "evidence_17",
       "source_ref": "source_01",
+      "record_id": "va-vgin-road-centerlines",
+      "locator": null,
+      "retrieved_at": "2026-09-08T01:05:40Z",
+      "effective_at": null,
+      "transformations": [],
+      "payload_hash": null,
+      "raw_recovery": "available"
+     },
+     {
+      "id": "evidence_18",
+      "source_ref": "source_01",
       "record_id": "va-vgin-statewide-parcels",
       "locator": null,
-      "retrieved_at": "2026-09-07T16:05:44Z",
+      "retrieved_at": "2026-09-08T01:05:40Z",
+      "effective_at": null,
+      "transformations": [],
+      "payload_hash": null,
+      "raw_recovery": "available"
+     },
+     {
+      "id": "evidence_19",
+      "source_ref": "source_01",
+      "record_id": "va-vienna-town-zoning",
+      "locator": null,
+      "retrieved_at": "2026-09-08T01:05:40Z",
       "effective_at": null,
       "transformations": [],
       "payload_hash": null,
@@ -6927,15 +8091,15 @@
       "arcgis_geocode": "0.1.0",
       "virginia_law": "0.1.0"
      },
-     "registry_revision": "2026-08-29",
-     "request_id": "8ca5b1d53bdd4e819a2669cb9f9af3c5"
+     "registry_revision": "2026-09-07",
+     "request_id": "1204a9dad4834ce5b228398934912afe"
     }
    },
    "error_text": null,
    "http_calls": [],
    "audit": {
-    "ts": "2026-09-07T16:05:44Z",
-    "request_id": "8ca5b1d53bdd4e819a2669cb9f9af3c5",
+    "ts": "2026-09-08T01:05:40Z",
+    "request_id": "1204a9dad4834ce5b228398934912afe",
     "tool": "registry.source_status",
     "server": "commonwealth",
     "server_version": "0.1.0.dev0",
@@ -6960,11 +8124,11 @@
       "authority_level": "official_derived"
      }
     ],
-    "evidence_count": 17,
+    "evidence_count": 19,
     "warning_codes": [],
     "requires_user_choice": false,
     "error": null,
-    "registry_revision": "2026-08-29"
+    "registry_revision": "2026-09-07"
    }
   },
   {
@@ -6974,7 +8138,7 @@
    "error_text": "Error executing tool registry.search_sources: InvalidQuery: capability 'unicorns.lookup' is not in the vocabulary; known: ['address.lookup', 'boundary.lookup', 'building.lookup', 'code_section.lookup', 'environmental_site.lookup', 'geocode.address', 'landmark.lookup', 'parcel.lookup', 'road.lookup', 'zoning.lookup']",
    "http_calls": [],
    "audit": {
-    "ts": "2026-09-07T16:05:44Z",
+    "ts": "2026-09-08T01:05:40Z",
     "request_id": "",
     "tool": "registry.search_sources",
     "server": "commonwealth",
@@ -6996,7 +8160,7 @@
     "warning_codes": [],
     "requires_user_choice": false,
     "error": "InvalidQuery",
-    "registry_revision": "2026-08-29"
+    "registry_revision": "2026-09-07"
    }
   }
  ]

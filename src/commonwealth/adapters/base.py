@@ -136,6 +136,23 @@ class PinnedAddressTransport(httpx.AsyncHTTPTransport):
             request.url = original
 
 
+# ArcGIS Online answers HTTP 414 to a GET whose query string carries a
+# large polygon: a 478-vertex Leesburg parcel is 18 KB of geometry once
+# encoded, and the town's zoning layer refused it. Every ArcGIS query
+# operation accepts the same parameters as a form POST, so a request over
+# this length is sent that way instead. Ordinary queries stay GETs, and a
+# recording replays by URL and parameters rather than by method, so the
+# switch changes no fixture (design/source-quirks.md § 16).
+MAX_GET_URL_CHARS = 4000
+
+
+def _build_query_request(client: httpx.AsyncClient, url: str,
+                         params: dict[str, Any] | None) -> httpx.Request:
+    if params and len(str(httpx.URL(url, params=params))) > MAX_GET_URL_CHARS:
+        return client.build_request("POST", url, data=params)
+    return client.build_request("GET", url, params=params)
+
+
 @dataclass
 class HttpFetcher:
     """The only network path. Redirects are followed manually so every hop
@@ -272,7 +289,7 @@ class HttpFetcher:
         point of the attack is to be small on the wire.
         """
         host = urlparse(url).hostname or ""
-        request = client.build_request("GET", url, params=params)
+        request = _build_query_request(client, url, params)
         response = await client.send(request, stream=True)
         chunks: list[bytes] = []
         decoded = 0

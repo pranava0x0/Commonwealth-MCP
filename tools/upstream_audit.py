@@ -36,6 +36,7 @@ import argparse
 import asyncio
 import json
 import sys
+from urllib.parse import urlparse
 from collections import Counter
 from pathlib import Path
 from typing import Any
@@ -200,8 +201,22 @@ def _diff(before: dict, after: dict) -> list[str]:
 
 # --- replaying one source --------------------------------------------------
 
-async def _replay(manifest: SourceManifest, recorded: dict) -> dict:
-    """Send every recorded request again and compare the shapes."""
+def _host_of(manifest: SourceManifest) -> str | None:
+    url = manifest.adapter.model_dump().get("service_url")
+    return urlparse(url).hostname if url else None
+
+
+async def _replay(manifest: SourceManifest, recorded: dict,
+                  others: list[SourceManifest] = ()) -> dict:
+    """Send every recorded request again and compare the shapes.
+
+    A fixture can carry another registered publisher's exchanges: the
+    Town of Vienna's holds Fairfax County's and VGIN's answers for the
+    same point and parcel, recorded so a two-government answer replays
+    whole. Each exchange is sent under the policy of the registered
+    source whose host it belongs to (`others`), so those replay too. A
+    host no manifest declares stays refused, which is the right report
+    for an exchange that should not be in any fixture."""
     exchanges = recorded.get("exchanges") or []
     if not exchanges:
         return {"status": "no_fixture", "checked": 0, "findings": []}
@@ -210,11 +225,18 @@ async def _replay(manifest: SourceManifest, recorded: dict) -> dict:
     if not service_url:
         return {"status": "no_endpoint", "checked": 0, "findings": []}
     fetcher = HttpFetcher(policy=egress_policy_for(manifest, service_url))
+    by_host = {_host_of(manifest): fetcher}
+    for other in others:
+        host = _host_of(other)
+        if host and host not in by_host:
+            by_host[host] = HttpFetcher(policy=egress_policy_for(
+                other, other.adapter.model_dump()["service_url"]))
 
     async def check(exchange: dict) -> tuple[bool, dict | None]:
         url, params = exchange["url"], exchange["params"]
         try:
-            live = await fetcher.fetch_json(url, params)
+            live = await by_host.get(urlparse(url).hostname,
+                                     fetcher).fetch_json(url, params)
         except CommonwealthError as err:
             return False, {"request": _label(url, params),
                            "notes": [f"request failed: {err.code}: {err}"]}
@@ -542,7 +564,8 @@ async def run(source_id: str | None) -> tuple[dict, dict]:
             result = {"status": "no_fixture", "checked": 0,
                       "findings": []}
         else:
-            result = await _replay(manifest, json.loads(fixture.read_text()))
+            result = await _replay(manifest, json.loads(fixture.read_text()),
+                                   others=list(ctx.sources.manifests.values()))
         layers = await _probe(ctx, manifest)
         return result, layers
 

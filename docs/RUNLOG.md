@@ -3,6 +3,103 @@
 One entry per significant work session or delegated research task: why it
 ran, cost where relevant, and whether it was worth it.
 
+## 2026-09-07 — two towns close the forcing set, and a tool learns to borrow a polygon
+
+Issue #10, the last open slot of the source-registry forcing set
+(design/source-registry.md § 6): an incorporated town with a source of
+its own, registered so that a town and its county both answer for one
+piece of ground.
+
+**The search.** ArcGIS Online's search API, filtered to feature
+services, then each candidate item's owning organization checked rather
+than its title. Herndon's only zoning services belong to a consultant and
+to Fairfax County. Vienna's organization ("Town of Vienna",
+`vienna-va`) publishes four zoning services; the one its own current
+zoning map draws is named `Proposed_Districts`, which a title search
+would never have picked (design/source-quirks.md § 15).
+
+Leesburg's
+organization ("Town of Leesburg, Virginia", `TOL-VA`) publishes parcels,
+zoning, and about a hundred other layers, and its zoning item describes
+itself as the official zoning map under Code of Virginia § 15.2-2285.
+Blacksburg and Montgomery County both publish zoning too; neither is
+registered, and they are the next town-and-county pair if one is wanted.
+Both towns' own websites refuse automated requests, so each manifest
+carries a `terms_gap` saying the review rests on the ArcGIS Online
+organization and item pages.
+
+**Two sources, two shapes.** Leesburg's manifest is Fairfax's shape:
+parcels and zoning, two services on one host. It validated first time.
+Vienna publishes zoning and no parcels, which is the first zoning-only
+source and the case the slot was kept open for.
+
+**What Vienna changed.** `geo.find_zoning` answered a parcel number by
+reading the source's own parcel layer for the polygon, and a source with
+no parcel layer had nothing to read. It now borrows the polygon from the
+first parcel source above the town in the stack that has the number,
+which for Vienna is Fairfax County's, and the zoning evidence carries a
+`parcel_geometry_from:<source>` transformation and the block a
+`parcel_source_id`, so a reader can see whose polygon the district was
+read over.
+
+A missing parcel leaves the town's layer unqueried, and the
+note says so; every parcel source down leaves it unqueried too, and the
+note says outage rather than missing. The sampler got a zoning-only
+recording plan that also records the county's answers for the same
+point and the same parcel, so a two-government answer replays from one
+fixture. That fixture then tripped the drift audit, which sent every
+exchange under the fixture's own host policy and refused the thirteen
+that belong to Fairfax and VGIN; it sends each under the policy of the
+registered source whose host it is now, and a host no manifest declares
+stays refused.
+
+**What Leesburg changed.** Nothing in the layer model, and two things
+elsewhere. The recording plan looks for a parcel number published as
+several polygons and intersects each with the zoning layer; Leesburg's
+is two polygons of 478 vertices, 18 KB of geometry once encoded, and
+ArcGIS Online answered the GET with HTTP 414. Fairfax County's own server
+had accepted larger. The fetcher now sends a query whose URL would pass
+4,000 characters as a form POST, which every ArcGIS query operation
+accepts with the same parameters; recordings key on URL and parameters,
+so none changed (design/source-quirks.md § 16).
+
+The statewide
+cross-check plan skipped every town, because it read the town's own FIPS
+and a town has none; it walks up to the county's now, as the tools did
+already. Re-recording VGIN's fixture afterwards dropped no exchange and
+added four, all Leesburg's. The readings history holds one reading per
+layer per day, so a source registered today cannot have the two the
+range test asks for until the weekly audit runs; the test now allows a
+layer whose only readings are from its registration day, and nothing
+older.
+
+**What the data said.** At the Vienna point both governments say AC, the
+Avenue Center district, and Fairfax's layer labels the polygon "TOWN OF
+VIENNA" in its own jurisdiction field. VGIN carries Loudoun's parcel
+numbers as its PTM_ID, so Leesburg's number reaches the town's layer and
+the statewide one and both agree. The first Leesburg parcel chosen as the
+sample touched two districts along its edge (design/source-quirks.md
+§ 17); the sample moved to a parcel in one district, and the case is
+recorded.
+
+**On the page.** Four new recorded calls: the Vienna point with both
+governments' districts and the comparison, the Vienna parcel number read
+over the county's polygon, and Leesburg's parcel and zoning by number
+with the ordinance link returned as data. The coverage table derives the
+two towns' rows on its own. Two eval tasks for `parcel-zoning-screen`,
+the two-source cases its step 2 described and had no fixture for, each
+replayed in `tests/test_skills.py`.
+
+**Also.** This branch carries PR #43 and the editorial pass that was
+sitting uncommitted in the main checkout on 2026-09-07: the README's
+"Start here" rewrite, the architecture summary and § 39 rewritten to the
+built state, and the site's hero and intro. One claim in it is changed
+here: the README said the Python functions are callable directly, which
+they are, and decision 0015 says they are not a supported API, which
+they are not; the README now says both.
+
+587 tests.
+
 ## 2026-09-02 — the review of the above, applied
 
 Fifteen findings from a review of PR #42, plus three from the Codex bot.

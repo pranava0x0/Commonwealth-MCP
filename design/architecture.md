@@ -67,7 +67,7 @@ source selection → adapter → government service
 ```
 
 The current adapters read ArcGIS feature services, an ArcGIS geocoder and
-Code of Virginia pages. The registry has 13 active sources and four proposed
+Code of Virginia pages. The registry has 15 active sources and four proposed
 entries. The MCP profiles expose 9, 12 or 14 tools. These counts describe
 the 2026-09-07 checkout; the generated site derives them from the registry.
 

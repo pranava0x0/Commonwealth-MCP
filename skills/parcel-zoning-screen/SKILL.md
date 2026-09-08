@@ -84,10 +84,10 @@ finding sends you to the escalation table.
   an absence of zoning.
 - *Empty with `coverage.registry: none`* means no zoning source is
   registered for this locality. **Say "not covered", never "unzoned".**
-  Fairfax County and Richmond City are the only governments with registered
-  zoning sources. Elsewhere, this project has not registered where to read
-  zoning. Reporting that gap as unzoned land is the worst answer this skill
-  can give.
+  A handful of Virginia governments have registered zoning sources: two
+  counties, one city, and two towns as of 2026-09-07. Elsewhere, this
+  project has not registered where to read zoning. Reporting that gap as
+  unzoned land is the worst answer this skill can give.
 
 ## 3. Escalation table
 

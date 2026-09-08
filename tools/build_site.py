@@ -211,6 +211,23 @@ DEMO_CALLS = [
     ("civic.get_code_section", {"citation": "1-500"},
      "Code of Virginia section text with its own citation history"),
 
+    # --- a town and its county, one piece of ground ---
+    ("geo.find_zoning", {"jurisdiction": "Vienna",
+                         "lon": -77.2653, "lat": 38.9012},
+     "A point in a town. The town's zoning layer and the county's both "
+     "cover this ground, so both answer, and the comparison block says "
+     "whether they agree"),
+    ("geo.find_zoning", {"jurisdiction": "Vienna", "pin": "0384 02  0143"},
+     "The same ground by parcel number. The town publishes no parcel "
+     "layer, so its districts are read over the county's parcel polygon, "
+     "and the evidence names whose polygon that was"),
+    ("geo.find_parcel", {"jurisdiction": "Leesburg", "pin": "231154488000"},
+     "A town that publishes its own parcel layer, queried beside the "
+     "statewide one"),
+    ("geo.find_zoning", {"jurisdiction": "Leesburg", "pin": "231154488000"},
+     "The town's own zoning map layer, with a link to the ordinance "
+     "section returned as data"),
+
     # --- the four ways an answer comes back with no data ---
     ("geo.find_parcel", {"jurisdiction": "Fairfax County",
                          "pin": "__NO_MATCH_PIN__"},

@@ -365,6 +365,19 @@ def cmd_sources_probe(args: argparse.Namespace) -> int:
     return 1 if problems or (checked == 0 and inventory == 0) else 0
 
 
+def _recording_adapter_for(m: SourceManifest) -> tuple[
+        "arcgis_mod.ArcGISAdapter", "_RecordingFetcher"]:
+    """An adapter over a recording fetcher under `m`'s own egress policy,
+    for a plan that has to record another source's answers alongside its
+    own. The recorder's exchanges are the caller's to merge."""
+    params = arcgis_mod.ArcGISParams.model_validate(
+        m.adapter.model_dump(exclude={"type"}))
+    rec = _RecordingFetcher(
+        HttpFetcher(policy=egress_policy_for(m, params.service_url)))
+    return arcgis_mod.ArcGISAdapter(fetcher=rec,
+                                    cache=arcgis_mod.TTLCache()), rec
+
+
 class _RecordingFetcher:
     """Wraps the real fetcher and records every exchange for replay."""
 
@@ -602,7 +615,13 @@ async def _statewide_crosschecks(adapter, m, ctx) -> dict:
         summary = json.loads(fixture.read_text()).get("summary") or {}
         pin = summary.get("sample_pin")
         j = ctx.jurisdictions.get(other.jurisdiction)
-        fips = j.fips if j else None
+        # A town has no FIPS of its own, so a query for its PIN is scoped
+        # to its county's, which is what `_scoped_where` sends at query
+        # time (design/source-quirks.md § 11). Leesburg was the first
+        # town source, and without the walk its cross-checks were
+        # silently skipped.
+        chain = ([j] + ctx.jurisdictions.parents_of(j)) if j else []
+        fips = next((x.fips for x in chain if x.fips), None)
         if not (pin and fips):
             continue
         q = await adapter.query(m, "parcels",
@@ -900,6 +919,110 @@ async def _sample_landmarks(adapter, m, params, ctx) -> dict:
     return out
 
 
+async def _sample_zoning_only(adapter, m, params, ctx, recorder) -> dict:
+    """Recording plan for a source that publishes zoning and no parcels
+    (Vienna, the first). The point path is the source's own. The
+    parcel-number path borrows the polygon from the parcel sources above
+    the town, and the other zoning sources the same query reaches are
+    recorded alongside, so a two-government answer replays whole from
+    this one fixture."""
+    from ..domains.geo import MAX_PARCEL_POLYGONS, _scoped_where
+
+    out: dict[str, Any] = {}
+    for layer in sorted(params.layers):
+        out[f"health:{layer}"] = await adapter.health(m, layer)
+    declared_point = m.health.expect.get("sample_point")
+    pin = m.health.expect.get("sample_pin")
+    if not declared_point:
+        raise CommonwealthError(
+            "a zoning-only manifest must declare health.expect.sample_point;"
+            " there is no parcel layer to take one from")
+    point = (float(declared_point[0]), float(declared_point[1]))
+    j = ctx.jurisdictions.get(m.jurisdiction)
+    stack = [j.id] + [p.id for p in ctx.jurisdictions.parents_of(j)]
+
+    def districts(q) -> list[str]:
+        return sorted({r.canonical.get("district") for r in q.records}
+                      - {None})
+
+    zq = await adapter.query(m, "zoning", geometry_point=point)
+    out["sample_point"] = list(point)
+    out["point_districts"] = districts(zq)
+    # A point outside the town, so the empty answer replays too.
+    outside = await adapter.query(m, "zoning", geometry_point=LOUDOUN_POINT)
+    out["sterling_loudoun"] = {"point": list(LOUDOUN_POINT),
+                               "record_count": len(outside.records)}
+
+    # Every other source the same query reaches, under its own egress
+    # policy, so their exchanges land in this fixture too.
+    others: dict[str, tuple] = {}
+
+    def adapter_for(o):
+        if o.id not in others:
+            others[o.id] = _recording_adapter_for(o)
+        return others[o.id][0]
+
+    alongside = [o for o in ctx.sources.select("zoning.lookup", stack)
+                 if o.id != m.id]
+    out["alongside"] = []
+    for o in alongside:
+        oq = await adapter_for(o).query(o, "zoning", geometry_point=point)
+        out["alongside"].append({"source": o.id,
+                                 "point_districts": districts(oq)})
+
+    if pin:
+        # geo.find_zoning borrows the polygon from the first parcel source
+        # in the stack that has the PIN, and records a miss for the ones
+        # asked before it; the miss replays too.
+        borrowed = None
+        for pm in ctx.sources.select("parcel.lookup", stack):
+            pa = adapter_for(pm)
+            scoped = _scoped_where(ctx, pm, "parcels", stack, {"pin": pin})
+            pq = await pa.query(pm, "parcels", where_equals=scoped,
+                                return_geometry=True)
+            # A skill's walk asks geo.find_parcel first, by number and
+            # by point, and neither asks for geometry; both replay too.
+            await pa.query(pm, "parcels", where_equals=scoped)
+            await pa.query(pm, "parcels", geometry_point=point)
+            await pa.query(pm, "parcels", return_geometry=True,
+                           where_equals=_scoped_where(
+                               ctx, pm, "parcels", stack,
+                               {"pin": "NO SUCH PIN"}))
+            if pq.records and borrowed is None:
+                borrowed = (pm, pq)
+        if borrowed is None:
+            raise CommonwealthError(
+                f"no parcel source in {stack} has sample_pin {pin!r}; "
+                "update the manifest")
+        pm, pq = borrowed
+        out["sample_pin"] = pin
+        out["parcel_source"] = pm.id
+        out["parcel_polygons"] = len(pq.records)
+        found: set[str] = set()
+        for parcel in pq.records[:MAX_PARCEL_POLYGONS]:
+            geometry = dict(parcel.geometry or {})
+            geometry.setdefault("spatialReference", {"wkid": 4326})
+            found |= set(districts(await adapter.query(
+                m, "zoning", intersect_geometry=geometry)))
+        out["pin_districts"] = sorted(found)
+        # A county source answers the same PIN over its own parcel layer,
+        # which is what geo.find_zoning does for it; both halves replay.
+        for o in alongside:
+            oa = adapter_for(o)
+            if "parcels" not in oa.layer_keys(o):
+                continue
+            opq = await oa.query(o, "parcels", where_equals={"pin": pin},
+                                 return_geometry=True)
+            for parcel in opq.records[:MAX_PARCEL_POLYGONS]:
+                geometry = dict(parcel.geometry or {})
+                geometry.setdefault("spatialReference", {"wkid": 4326})
+                await oa.query(o, "zoning", intersect_geometry=geometry)
+
+    for _, rec in others.values():
+        recorder.exchanges.extend(rec.exchanges)
+    return out
+
+
 def _sample_geocoder(m, ctx) -> int:
     """A locator records differently: no layers, no field mappings, one
     operation. The recorded set is § 3's postal-city traps, plus a
@@ -1007,6 +1130,14 @@ def cmd_sources_sample(args: argparse.Namespace) -> int:
     if "boundary.lookup" in m.capability_ids():
         try:
             summary = asyncio.run(_sample_boundaries(adapter, m, params, ctx))
+        except CommonwealthError as err:
+            return _fail(f"{err.code}: {err}")
+        return _write_fixture(m, recorder, summary)
+
+    if "zoning" in params.layers and "parcels" not in params.layers:
+        try:
+            summary = asyncio.run(
+                _sample_zoning_only(adapter, m, params, ctx, recorder))
         except CommonwealthError as err:
             return _fail(f"{err.code}: {err}")
         return _write_fixture(m, recorder, summary)

@@ -1,0 +1,21 @@
+# A parcel number in a town whose zoning source publishes no parcel layer.
+# The district is read over the county's parcel polygon, and the answer
+# has to say whose polygon that was: a district with no parcel named
+# under it is a claim about ground nobody drew.
+id: skill-pzs-borrowed-parcel
+tier: 3
+skill: parcel-zoning-screen
+question: "How is parcel 0384 02  0143 in Vienna, Virginia zoned?"
+toolset: default
+fixtures: [va-vienna-town-zoning, va-fairfax-parcels-zoning, va-vgin-statewide-parcels]
+expected:
+  jurisdiction: va:vienna-town
+  sources_returned: 2
+  parcel_source_for_the_town_answer: va-fairfax-parcels-zoning
+  districts:
+    va-vienna-town-zoning: [AC]
+    va-fairfax-parcels-zoning: [AC]
+  must_say: ["Vienna", "Fairfax County", "AC", "screening"]
+  must_not_say: ["permitted", "unzoned"]
+score: [{kind: retrieval_correctness}, {kind: provenance_present}, {kind: coverage_honesty}]
+traps: []
