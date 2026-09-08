@@ -2196,14 +2196,29 @@ remain in force; new domain and authority contracts need review before code.
 
 ### Stage 1 — make a fresh installation useful
 
-[PR #43](https://github.com/pranava0x0/Commonwealth-MCP/pull/43) merged on
-2026-09-08. Next, verify a fresh checkout and a real MCP client. Before
-publishing through
-[issue #40](https://github.com/pranava0x0/Commonwealth-MCP/issues/40), package
-the source manifests, jurisdiction table and skills: the current runtime
-finds them relative to the checkout, while the wheel includes Python only.
-Test the wheel outside the repo with no editable install. Validate a source,
-list tools, resolve a locality, and read a skill through MCP.
+[PR #43](https://github.com/pranava0x0/Commonwealth-MCP/pull/43) and
+[#44](https://github.com/pranava0x0/Commonwealth-MCP/pull/44) merged on
+2026-09-08.
+
+**Packaging: done 2026-09-08.** The source manifests, the jurisdiction table
+and the skills ship inside the wheel (`commonwealth/_data/`), and the runtime
+prefers that copy over the repo layout. Verified by building a wheel,
+installing it into a fresh environment, and running from a directory with no
+checkout in it: `sources validate` reads all 19 manifests, `tools list` lists
+14, and `registry.resolve_jurisdiction` resolves Vienna to the town with
+Fairfax County and the state layered above it. Before the change every
+command died at startup on a missing capability vocabulary.
+
+Reading a skill *through MCP* is not part of this: skills travel as files,
+and skills.md § 1 says the "Skills over MCP" extension is unshipped and not
+to be built against. `commonwealth skills list` prints where the bundled
+copies are, which is what an installed user needs in order to find them.
+
+Still open before [issue #40](https://github.com/pranava0x0/Commonwealth-MCP/issues/40)
+can publish: a real release version (the wheel is `0.1.0.dev0`), the PyPI
+upload the registry listing points at, and the namespace decision the
+issue asks to make deliberately. `server.json` is written and kept honest by
+a repo-health test that compares it against `pyproject.toml`.
 
 Keep one quickstart in the root README. Examples must use its environment
 and return useful results without network access. Record which operating

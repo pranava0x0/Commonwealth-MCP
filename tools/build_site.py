@@ -314,6 +314,20 @@ def build_catalog() -> dict:
                           "parameters": tool_parameters(spec),
                           "description": spec.description})
 
+    # The clients `commonwealth configure` knows how to write, read off
+    # that command's own table rather than typed onto the page. The site
+    # told readers to hand-write a config block while the CLI had been
+    # writing it correctly, with the absolute path filled in, all along.
+    from commonwealth.cli import configure as cfg
+
+    clients = [{"id": c.name, "scope": c.scope, "path": c.path,
+                "format": "json", "note": c.note}
+               for c in sorted(cfg.CLIENTS.values(), key=lambda c: c.name)]
+    clients += [{"id": name, "scope": "user", "path": "", "format": "toml",
+                 "note": "Keeps its MCP config in TOML; the command prints "
+                         "the block to paste."}
+                for name in sorted(cfg.TOML_CLIENTS)]
+
     sources = []
     for m in sorted(ctx.sources.manifests.values(), key=lambda m: m.id):
         sources.append({
@@ -393,6 +407,7 @@ def build_catalog() -> dict:
             "trap_pairs": len(trap_pairs),
         },
         "tools": tools,
+        "clients": clients,
         "sources": sources,
         "capabilities": sorted(ctx.sources.capability_vocab),
         "jurisdiction_kinds": dict(sorted(kinds.items())),

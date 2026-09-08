@@ -1,0 +1,46 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.pranava0x0/commonwealth-mcp",
+  "title": "Commonwealth-MCP",
+  "description": "Virginia state and local public data \u2014 parcels, zoning, jurisdictions, addresses, landmarks, roads, monitored environmental sites, and the Code of Virginia. Every answer carries its sources, retrieval dates, and coverage.",
+  "version": "0.1.0.dev0",
+  "repository": {
+    "url": "https://github.com/pranava0x0/Commonwealth-MCP",
+    "source": "github"
+  },
+  "websiteUrl": "https://pranava0x0.github.io/Commonwealth-MCP/",
+  "packages": [
+    {
+      "registryType": "pypi",
+      "registryBaseUrl": "https://pypi.org",
+      "identifier": "commonwealth-mcp",
+      "version": "0.1.0.dev0",
+      "runtimeHint": "uvx",
+      "transport": {
+        "type": "stdio"
+      },
+      "environmentVariables": [
+        {
+          "name": "COMMONWEALTH_RESULT_STORE",
+          "description": "Directory for payloads too large to return inline. Defaults to the OS cache directory; handles expire after 24 hours either way.",
+          "isRequired": false,
+          "isSecret": false
+        },
+        {
+          "name": "COMMONWEALTH_DENY_NETWORK",
+          "description": "Set to 1 to refuse every outbound request. The server starts and answers registry questions; anything needing a government service reports the refusal rather than an empty result.",
+          "isRequired": false,
+          "isSecret": false
+        }
+      ],
+      "packageArguments": [
+        {
+          "type": "positional",
+          "value": "serve",
+          "description": "Run the MCP server over stdio.",
+          "isRequired": true
+        }
+      ]
+    }
+  ]
+}

@@ -24,6 +24,10 @@ dev = [
 
 [project.scripts]
 commonwealth = "commonwealth.cli.__main__:main"
+# The registry runs a PyPI server as `uvx <package-name>`, which looks for
+# an executable named after the package. Without this alias that lookup
+# fails and the published listing's install line does not work.
+commonwealth-mcp = "commonwealth.cli.__main__:main"
 
 [build-system]
 requires = ["hatchling"]
@@ -31,6 +35,17 @@ build-backend = "hatchling.build"
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/commonwealth"]
+
+# The registry, the jurisdiction table and the skills are data the runtime
+# reads at start, not code, and a wheel installed outside a checkout has no
+# repo root to find them in. They ship inside the package instead;
+# `runtime._data_root()` prefers that copy and a test asserts the two lists
+# agree. `sources/` carries its own CC0 licence and NOTICE explains the
+# split, so both travel with the data rather than only with the repo.
+[tool.hatch.build.targets.wheel.force-include]
+"sources" = "commonwealth/_data/sources"
+"skills" = "commonwealth/_data/skills"
+"NOTICE" = "commonwealth/_data/NOTICE"
 
 [tool.pytest.ini_options]
 asyncio_mode = "auto"

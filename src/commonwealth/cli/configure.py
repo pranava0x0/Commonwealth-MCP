@@ -57,8 +57,8 @@ CLIENTS: dict[str, Client] = {
         note="VS Code names the block `servers`, not `mcpServers`."),
     "claude": Client(
         "claude", "mcpServers", "user", "",
-        note="Claude Desktop. The path differs per platform; see "
-             "`desktop_config_path`."),
+        note="Claude Desktop, whose config file is in a different place "
+             "on each platform. Pass --path if yours is somewhere else."),
 }
 
 TOML_CLIENTS = {"codex"}

@@ -25,7 +25,7 @@ from ..core.toolreg import (DEPRECATED_TOOL_ALIASES, ToolSpec, expand_profile)
 from ..domains.civic import CIVIC_TOOLS
 from ..domains.geo import GEO_TOOLS
 from ..domains.registry import REGISTRY_TOOLS
-from ..runtime import PROJECT_ROOT, RuntimeContext
+from ..runtime import SKILLS_DIR, RuntimeContext
 
 log = logging.getLogger("commonwealth.servers")
 
@@ -105,7 +105,7 @@ def check_skill_capabilities(ctx: RuntimeContext) -> list[str]:
     Returns the warnings emitted, so a caller (and a test) can see what it
     found rather than having to read the log.
     """
-    skills = load_skills(PROJECT_ROOT / "skills")
+    skills = load_skills(SKILLS_DIR)
     missing = unroutable_capabilities(skills,
                                       ctx.sources.servable_capabilities())
     notes = []

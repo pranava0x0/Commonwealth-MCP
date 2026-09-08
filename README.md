@@ -40,9 +40,31 @@ within the query radius. It runs offline by default. Add `--live` to query
 the government services. See [examples/](examples/README.md) for five other
 workflows.
 
-Keep this checkout: the current runtime loads source manifests and skills
-from it. A standalone wheel install is not yet supported. On Windows,
-virtual-environment executables live under `.venv\Scripts\`.
+On Windows, virtual-environment executables live under `.venv\Scripts\`.
+
+To point an AI client at the server, let the CLI write the config:
+
+```bash
+.venv/bin/commonwealth configure claude-code   # or claude, cursor, vscode, codex
+```
+
+It fills in the absolute path to this checkout. Add `--dry-run` to see the
+change without making it.
+
+### Without a checkout
+
+The source manifests, the jurisdiction table and the skills ship inside the
+package, so a wheel works on its own:
+
+```bash
+uv pip install commonwealth-mcp        # once it is published; see issue #40
+commonwealth doctor
+commonwealth skills list               # where the bundled skills are on disk
+```
+
+The examples, the recorded fixtures and the tests are repo-only. Skills
+travel as files: copy a directory from `commonwealth skills list` into your
+client's skills folder.
 
 ## What works
 

@@ -454,3 +454,50 @@ The skill already covers it: `parcel-zoning-screen` step 2 tells the
 model to report every district and say the parcel touches more than one,
 and that holds whichever geometry is true.
 
+
+## 18. The Code of Virginia has a keyless JSON API and no full-text search
+
+- **Source:** `va-code-of-virginia`
+- **Observed:** 2026-09-08, answering issue #12's first acceptance criterion
+- **Test:** none yet; recorded before any code is written against it
+
+Issue #12 asks whether the site's own search is public or keyed before
+anything is built. Both halves of the answer turned out to matter.
+
+**The search is public, keyless, and currently down.**
+`/Scripts/searchCoV.js` sends the browser to
+`https://law.lis.virginia.gov/search_cov?query=<TERMS>+url:/vacode/<title>/<chapter>/<part>/<section>/`.
+No key, no token, no session — a plain GET anyone can issue. It answered
+three different queries on 2026-09-08 with the same page: "The Search
+Appliance is down. Please try again later." A fixture recorded against it
+today would record an outage, so `civic.search_law` cannot be built and
+verified from this path while that holds.
+
+**There is a JSON API, and it has no search operation.** The developers
+page advertises RESTful services in JSON and XML. Its links point at
+`/jsonapi/` and `/xmlapi/`, which both serve only the operations page;
+the real base is `/api/`, which the operations page gives in each row's
+`title` attribute and `href`. Verified working on 2026-09-08, keyless,
+`application/json`:
+
+| Operation | Returns |
+|---|---|
+| `CoVTitlesGetListOfJson` | every title in the Code |
+| `CoVChaptersGetListOfJson/{title}` | the chapters in a title |
+| `CoVSectionsGetListOfJson/{title}/{chapter}` | the sections in a chapter |
+| `CoVSectionsGetSectionDetailsJson/{section}` | one section's full detail |
+
+There is no full-text operation among the twenty-three. A section that
+does not exist returns `{"TitleNumber":null,"TitleName":null,"ChapterList":[]}`
+with HTTP 200, which is the same "found nothing" shape
+`civic.get_code_section` already reports as `found=False` rather than an
+error.
+
+That leaves two consequences, neither of them decided here. Full-text search over the
+Code has no working public path today, so #12 cannot be closed as
+written. And the structural operations answer the need behind it — a
+caller who does not already know the citation — without claiming to be a
+search, which is the same naming discipline that made the existing tool
+`get_code_section` and not `search_law`. The JSON API would also replace
+the HTML parsing behind that tool, which is the fragility #12 lists as
+its own caveat.

@@ -320,6 +320,43 @@
    "description": "Declared and operational state for registered sources. Use when a query reported a source failure and you need to say whether the source is known-down."
   }
  ],
+ "clients": [
+  {
+   "id": "claude",
+   "scope": "user",
+   "path": "",
+   "format": "json",
+   "note": "Claude Desktop, whose config file is in a different place on each platform. Pass --path if yours is somewhere else."
+  },
+  {
+   "id": "claude-code",
+   "scope": "project",
+   "path": ".mcp.json",
+   "format": "json",
+   "note": "Project-scoped, so it is shared with anyone who clones the repo. Commit it or do not, as you prefer."
+  },
+  {
+   "id": "cursor",
+   "scope": "project",
+   "path": ".cursor/mcp.json",
+   "format": "json",
+   "note": ""
+  },
+  {
+   "id": "vscode",
+   "scope": "project",
+   "path": ".vscode/mcp.json",
+   "format": "json",
+   "note": "VS Code names the block `servers`, not `mcpServers`."
+  },
+  {
+   "id": "codex",
+   "scope": "user",
+   "path": "",
+   "format": "toml",
+   "note": "Keeps its MCP config in TOML; the command prints the block to paste."
+  }
+ ],
  "sources": [
   {
    "id": "va-charles-city-county-parcels",

@@ -221,6 +221,73 @@ def test_committed_fixture_carries_rights_metadata():
           f"{multi} of them cross-source")
 
 
+def test_the_wheel_carries_the_data_the_runtime_reads():
+    """A wheel installed outside a checkout has no repo root above it.
+
+    Every command died at startup on a missing capability vocabulary
+    until `sources/` and `skills/` were force-included into the package.
+    The two halves are `runtime._data_root()` and pyproject's
+    `force-include` block, and this asserts they still name the same
+    directories — a data directory added to one and not the other ships a
+    wheel that fails on the machine it was meant for.
+    """
+    import tomllib
+
+    from commonwealth import runtime
+
+    pyproject = tomllib.loads((ROOT / "pyproject.toml").read_text())
+    included = (pyproject["tool"]["hatch"]["build"]["targets"]["wheel"]
+                ["force-include"])
+    for name in ("sources", "skills"):
+        assert included.get(name) == f"commonwealth/_data/{name}", (
+            f"{name}/ is read at runtime and is not force-included into "
+            "the wheel; an installed server would not find it")
+        assert (ROOT / name).is_dir(), f"{name}/ is force-included and gone"
+
+    # And the runtime looks for them under one root, so a checkout and a
+    # wheel differ in that root and in nothing else.
+    assert runtime.SOURCES_DIR == runtime.DATA_ROOT / "sources"
+    assert runtime.SKILLS_DIR == runtime.DATA_ROOT / "skills"
+    assert runtime.DATA_ROOT == ROOT, (
+        "run from a checkout, the data root is the repo root")
+
+
+def test_the_registry_entry_matches_the_package_it_names():
+    """`server.json` is what the MCP registry publishes (issue #40).
+
+    Its name, version and entry point are a second copy of what
+    pyproject declares. A published listing whose install line names a
+    version that was never released, or an executable the package does
+    not install, is worse than no listing.
+    """
+    import json
+    import tomllib
+
+    entry = json.loads((ROOT / "server.json").read_text())
+    pyproject = tomllib.loads((ROOT / "pyproject.toml").read_text())
+    project = pyproject["project"]
+
+    package = entry["packages"][0]
+    assert package["identifier"] == project["name"], (
+        "the registry entry names a different PyPI package")
+    assert entry["version"] == project["version"], (
+        f"server.json says {entry['version']}, pyproject says "
+        f"{project['version']}")
+    assert package["version"] == project["version"]
+    assert package["transport"]["type"] == "stdio", (
+        "the server speaks stdio and the listing must say so")
+
+    # `uvx <package>` runs an executable named after the package, so the
+    # package has to install one.
+    assert project["name"] in project["scripts"], (
+        f"the listing runs `uvx {project['name']}` and the package "
+        f"installs no {project['name']!r} executable")
+    argv = [a["value"] for a in package.get("packageArguments", [])]
+    assert argv == ["serve"], (
+        f"the listing would run the CLI with {argv}, which is not the "
+        "server")
+
+
 def test_third_party_data_inventory_is_current():
     """GitHub issue #24 / decision 0011. THIRD_PARTY_DATA.yml records whose
     terms each recorded fixture is under. A stale copy would misstate
