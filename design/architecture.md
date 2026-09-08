@@ -2196,8 +2196,9 @@ remain in force; new domain and authority contracts need review before code.
 
 ### Stage 1 — make a fresh installation useful
 
-Finish [PR #43](https://github.com/pranava0x0/Commonwealth-MCP/pull/43), then
-verify a fresh checkout and a real MCP client. Before publishing through
+[PR #43](https://github.com/pranava0x0/Commonwealth-MCP/pull/43) merged on
+2026-09-08. Next, verify a fresh checkout and a real MCP client. Before
+publishing through
 [issue #40](https://github.com/pranava0x0/Commonwealth-MCP/issues/40), package
 the source manifests, jurisdiction table and skills: the current runtime
 finds them relative to the checkout, while the wheel includes Python only.

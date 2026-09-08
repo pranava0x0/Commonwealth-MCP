@@ -124,10 +124,20 @@ retrieved; it does not remove upstream query limits.
 
 ## What remains
 
-Most directly integrated local sources are concentrated in three localities.
-An incorporated town's own source remains a priority. State legislation
-search, local meetings and full-text Code search are tracked in
-[issues #10–13](https://github.com/pranava0x0/Commonwealth-MCP/issues?q=is%3Aissue+is%3Aopen).
+Most directly integrated local sources are concentrated in five localities:
+Fairfax County, Richmond City, Charles City County, and the Towns of
+Leesburg and Vienna. Adding another locality's parcel or zoning layer is the
+most useful contribution and the best-documented path
+([CONTRIBUTING.md](CONTRIBUTING.md)).
+
+The next priority in the project's own order is packaging: the runtime finds
+source manifests, the jurisdiction table and skills relative to the checkout,
+so a wheel installed anywhere else has the Python and none of the data. That
+is what has to be true before the server is published
+([issue #40](https://github.com/pranava0x0/Commonwealth-MCP/issues/40)).
+State legislation search, local meetings and full-text Code search are
+tracked in
+[issues #11–13](https://github.com/pranava0x0/Commonwealth-MCP/issues?q=is%3Aissue+is%3Aopen).
 
 Budgets, procurement, school statistics, transit, permits and service
 requests need source discovery and adapters. They are proposed areas of

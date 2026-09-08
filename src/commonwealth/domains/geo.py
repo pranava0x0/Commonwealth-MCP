@@ -624,6 +624,12 @@ async def find_zoning(ctx: RuntimeContext, jurisdiction: str,
                     pq = borrowed.found
                     parcel_ref = borrowed.source_ref
                     parcel_source_id = borrowed.source_id
+                # The parcel query bounds the zoning answer as much as the
+                # zoning query does: a PIN whose polygons hit the page cap
+                # leaves ground unintersected, and districts on that ground
+                # unfound. Counting only the zoning queries let a truncated
+                # parcel lookup report `pagination: complete`.
+                queries.append(pq)
                 # Every polygon the PIN matched, up to a bound. Taking the
                 # first was right for the count and wrong for the answer:
                 # a parcel split across polygons can carry more than one

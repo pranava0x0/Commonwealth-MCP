@@ -47,6 +47,19 @@ refuses to make anyone hunt for.
 Browser-verified at the built page: search, package filter, the
 no-match state, both client snippets, and the copy buttons.
 
+**A second Codex round on the push, two findings, both taken.** A parcel
+query that hit its page cap was dropped from the pagination aggregation,
+so `geo.find_zoning` could report `pagination: complete` on an answer
+that had left part of a parcel unintersected and the districts on that
+ground unfound. The parcel query is appended to `queries` now, on the
+county's own path as well as the borrowed one — Codex named the borrowed
+case and the gap was in both.
+
+The README still told contributors that
+an incorporated town's own source was a priority, in the same change that
+registers two of them; it names the packaging work before #40 instead,
+and links #11-13 rather than a range that starts on a closed issue.
+
 ## 2026-09-07 — two towns close the forcing set, and a tool learns to borrow a polygon
 
 Issue #10, the last open slot of the source-registry forcing set

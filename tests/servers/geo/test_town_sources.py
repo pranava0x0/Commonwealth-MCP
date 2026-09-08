@@ -52,6 +52,30 @@ class _HostOutage:
         return await self.replay.fetch_json(url, params)
 
 
+class _TruncatedParcelLayer:
+    """Replays everything, but the Fairfax parcel layer reports that it
+    capped its response and cannot page.
+
+    Both halves are needed together: `exceededTransferLimit` alone would
+    send the adapter after four more pages the recording does not have,
+    and services that cap without supporting `resultOffset` are real.
+    """
+
+    PARCELS = "OpenData_A9/FeatureServer/0"
+
+    def __init__(self) -> None:
+        self.replay = ReplayFetcher(load_all_recordings())
+
+    async def fetch_json(self, url: str, params: dict) -> dict:
+        payload = await self.replay.fetch_json(url, params)
+        if url.endswith(self.PARCELS + "/query") and "features" in payload:
+            payload["exceededTransferLimit"] = True
+        elif url.endswith(self.PARCELS):
+            payload.setdefault("advancedQueryCapabilities", {})[
+                "supportsPagination"] = False
+        return payload
+
+
 @pytest.fixture
 def ctx():
     return build_ctx()
@@ -310,3 +334,23 @@ async def test_the_town_layer_down_leaves_leesburg_zoning_failed():
     assert env.coverage.registry.value == "covered", (
         "an outage is not a registry gap")
     assert [f.source_id for f in env.coverage.source_failures] == [LEESBURG]
+
+
+async def test_a_truncated_borrowed_parcel_query_truncates_the_zoning_answer(
+        ctx):
+    """The parcel query bounds the zoning answer as much as the zoning
+    query does. Vienna reads its districts over Fairfax's polygon, so a
+    capped Fairfax parcel response leaves ground unintersected and
+    districts on that ground unfound — reporting `complete` there would
+    claim the whole parcel was considered."""
+    s = _summary(VIENNA)
+    truncating = build_ctx(fetcher=_TruncatedParcelLayer())
+    env = await find_zoning(truncating, jurisdiction="Vienna",
+                            pin=s["sample_pin"])
+    assert env.coverage.pagination.value == "truncated"
+
+    clean = await find_zoning(ctx, jurisdiction="Vienna",
+                              pin=s["sample_pin"])
+    assert clean.coverage.pagination.value == "complete", (
+        "the same call over an untruncated parcel layer is complete, so "
+        "the assertion above is about the cap and not about this PIN")
