@@ -20,6 +20,7 @@ import pytest
 from commonwealth.core.registry import (DataClassification, SourceManifest,
                                         SourceRegistry)
 from commonwealth.core.results import (DEFAULT_TTL_SECONDS, KINDS,
+                                       TOMBSTONE_TTL_SECONDS,
                                        _classification_of,
                                        MAX_STORED_BYTES, DiskResultStore,
                                        MemoryResultStore, ResultUnavailable,
@@ -107,8 +108,7 @@ def test_the_expiry_is_stamped_and_defaults_to_a_day(store, manifest):
     stored = _put(store, manifest)
     expires = datetime.strptime(stored.expires_at, "%Y-%m-%dT%H:%M:%SZ")
     stored_at = datetime.strptime(stored.stored_at, "%Y-%m-%dT%H:%M:%SZ")
-    assert abs((expires - stored_at).total_seconds()
-               - DEFAULT_TTL_SECONDS) <= 2
+    assert (expires - stored_at).total_seconds() == DEFAULT_TTL_SECONDS
 
 
 def test_an_expired_handle_reads_as_expired_not_as_missing(store, manifest):
@@ -139,9 +139,64 @@ def test_the_sweep_removes_expired_payloads_and_leaves_live_ones(store,
     assert store.sweep() == 3
     assert store.get(live.uri).payload
     for stored in dead:
-        with pytest.raises(ResultUnavailable):
+        with pytest.raises(ResultUnavailable) as err:
             store.get(stored.uri)
+        assert err.value.reason == "expired"
+        assert "geo.find_boundaries" in str(err.value)
     assert store.sweep() == 0, "a second sweep has nothing left to do"
+
+
+def test_the_record_of_an_expired_handle_does_not_outlive_its_own_window(
+        store, manifest):
+    """The tombstone holds the arguments the call was made with — an
+    address, a parcel PIN, a coordinate. Telling a late caller "this
+    expired" is worth another day; keeping their question after that is
+    not, so the record dies too and the handle reads as missing."""
+    stored = _put(store, manifest,
+                  ttl_seconds=-(TOMBSTONE_TTL_SECONDS + 60))
+    store.sweep()
+    with pytest.raises(ResultUnavailable) as err:
+        store.get(stored.uri)
+    assert err.value.reason == "not_found"
+    assert "Fairfax County" not in str(err.value)
+
+
+def test_the_sweep_deletes_the_stale_tombstones_it_wrote(tmp_path, manifest):
+    """The count a sweep returns is payloads, so the check is the
+    directory: a store swept twice keeps no file for a handle whose
+    tombstone window has closed."""
+    store = DiskResultStore(root=tmp_path / "results")
+    stale = _put(store, manifest,
+                 ttl_seconds=-(TOMBSTONE_TTL_SECONDS + 60))
+    recent = _put(store, manifest, ttl_seconds=-1)
+    store.sweep()
+    root = tmp_path / "results"
+    assert not list(root.glob(f"{stale.id}.*")), \
+        "nothing about a handle survives its tombstone window"
+    assert (root / f"{recent.id}.expired").exists(), \
+        "a handle that expired an hour ago still says so"
+
+
+def test_disk_sweep_uses_small_metadata_not_the_payload(tmp_path, manifest):
+    store = DiskResultStore(root=tmp_path / "results")
+    stored = _put(store, manifest, ttl_seconds=-1)
+    payload = tmp_path / "results" / f"{stored.id}.json"
+    payload.write_text("not parseable; the metadata is sufficient")
+    assert store.sweep() == 1
+    with pytest.raises(ResultUnavailable) as err:
+        store.get(stored.uri)
+    assert err.value.reason == "expired"
+
+
+def test_a_long_running_disk_store_sweeps_on_later_writes(tmp_path, manifest):
+    store = DiskResultStore(root=tmp_path / "results",
+                            sweep_interval_seconds=0)
+    dead = _put(store, manifest, ttl_seconds=-1)
+    _put(store, manifest)
+    assert not (tmp_path / "results" / f"{dead.id}.json").exists()
+    with pytest.raises(ResultUnavailable) as err:
+        store.get(dead.uri)
+    assert err.value.reason == "expired"
 
 
 # --- terms ----------------------------------------------------------------

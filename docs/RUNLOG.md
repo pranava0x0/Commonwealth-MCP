@@ -57,15 +57,16 @@ second field is a reminder.
 **The audit tool, one week old and already wrong in five places.**
 Nullable columns reported drift from row order alone, and a real type
 change was invisible while the first value stayed null; types are
-collected across every feature now. `spatialReference` was captured and
-compared nowhere, so the projection change the module docstring promises
-to catch was the one it dropped — as were renamed geocoder fields, which
-Codex caught. The inventory skip tested for `"inventory"` while every such
-manifest declares `none`, so four by-design non-probes were reported as
-missing recordings. A failed probe wrote a null count into the reading
-history and then crashed the report that formats it, committing the poison
-and losing the run. An unreachable source was counted as a changed one, so
-a total outage read as thirteen sources drifting. And `--out` raised after
+collected across every feature now. `spatialReference` was captured but
+never compared, so a projection change passed as unchanged. Renamed
+geocoder fields did too.
+
+The inventory skip tested for `"inventory"` while every such manifest
+declares `none`, so four by-design non-probes were reported as missing
+recordings. A failed probe wrote a null count into the reading history and
+then crashed the report, committing the bad reading and losing the run. An
+unreachable source was counted as changed, so a total outage read as
+thirteen sources drifting. And `--out` raised after
 writing the report, failing a job whose work had succeeded.
 
 **Two claims this branch made about itself.** `containment.py` was the one
@@ -219,11 +220,10 @@ being the published site; its tool-description template moved into
 went to CONTRIBUTING.md, where the people it addresses already look. That
 takes `design/` from fifteen files to fourteen and leaves the root at two.
 
-`design/README.md` opens with three files to read first and says
-`architecture.md` is a reference rather than a next step. The README's two
-navigation blocks became one, ordered as a path.
+`design/README.md` opens with three files to read first and treats
+`architecture.md` as a reference. It now has one ordered navigation path.
 
-534 tests, passing offline and with the network denied.
+The full suite passed offline with the network denied.
 
 ## 2026-09-01 — the first skill, and four gaps between the docs and the code
 

@@ -7,10 +7,10 @@ profiles are still the hand-written dict in `toolreg.PROFILES`, and the
 2026-09-01 amendment on 0002 records why.
 
 What this module does is the half that is buildable with one skill: read
-what the skills declare, and refuse to start a server whose registry
-cannot answer a declared capability (design/hub-catalog.md § 2). A skill
-that lists a capability nothing serves is a walk that dead-ends at step
-two, and it should say so at startup rather than at the query.
+what the skills declare, and warn at startup when the registry cannot
+answer a declared capability (design/hub-catalog.md § 2). A skill that
+lists a capability nothing serves is a walk that dead-ends at step two,
+so the server log names it before the first query.
 """
 from __future__ import annotations
 

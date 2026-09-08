@@ -4,7 +4,7 @@
 # Weekly, on purpose. No manifest declares a probe cadence of its own, and
 # the fastest `freshness.expected_cadence` among registered sources is
 # daily, so weekly sits under every one of them. The politeness budget
-# applies to audits as much as to queries: one run sends roughly 160
+# applies to audits as much as to queries: one run sends roughly 200
 # requests spread across nine government hosts, at two concurrent per host.
 #
 # Drift never fails this job. Government services rename fields and

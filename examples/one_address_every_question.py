@@ -6,7 +6,7 @@ a statistical area with no government of its own. Loudoun has no parcel or
 zoning layer registered here either, so it is an ordinary, populous place
 that this project covers entirely through statewide sources.
 
-That makes it the honest demonstration. One walk produces three different
+That makes it the useful demonstration. One walk produces three different
 kinds of answer — records found, records checked and absent, and no source
 registered at all — and telling those apart is the thing this project is
 built to do.
@@ -67,9 +67,7 @@ async def body(ctx) -> None:
     )
     for label, tool, extra in walk:
         args = {"jurisdiction": "Loudoun County", **extra}
-        if "jurisdiction" in extra and tool is find_boundaries:
-            pass
-        else:
+        if tool is not find_boundaries:
             args |= {"lon": lon, "lat": lat}
         env = await tool(ctx, **args)
         records = sum(block.get("record_count", 0)

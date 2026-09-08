@@ -1026,23 +1026,15 @@ def cmd_sources_sample(args: argparse.Namespace) -> int:
         # rename the thing every test is written against, and #31 makes
         # refreshes routine.
         declared = m.health.expect.get("sample_pin")
-        if declared:
-            sample = await adapter.query(m, "parcels",
-                                         where_equals={"pin": declared},
-                                         return_geometry=True)
-            if not sample.records:
-                raise CommonwealthError(
-                    f"the manifest declares sample_pin {declared!r} and the "
-                    "layer has no such parcel. Either the publisher "
-                    "retired it or the field mapping moved; pick another "
-                    "and say so in the manifest.")
-        else:
-            sample = await adapter.query(m, "parcels", sample_rows=2,
-                                         return_geometry=True)
-            if not sample.records:
-                raise CommonwealthError(
-                    "sample query returned zero parcels — cannot record a "
-                    "useful fixture")
+        sample = await adapter.query(
+            m, "parcels", return_geometry=True,
+            **({"where_equals": {"pin": declared}} if declared
+               else {"sample_rows": 2}))
+        if not sample.records:
+            detail = (f"the manifest declares sample_pin {declared!r} and "
+                      "the layer has no such parcel; update the manifest"
+                      if declared else "the sample query returned no parcels")
+            raise CommonwealthError(f"{detail}; cannot record a useful fixture")
         pin = sample.records[0].canonical.get("pin")
         out["sample_pin"] = pin
         await adapter.query(m, "parcels", where_equals={"pin": str(pin)})

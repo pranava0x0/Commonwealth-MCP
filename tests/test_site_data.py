@@ -207,7 +207,8 @@ def test_coverage_and_warning_definitions_cover_every_enum_value(site):
 
 # --- typed numbers in reader-facing prose ---------------------------------
 
-READER_FACING = ("README.md", "docs/llms.txt", "docs/index.html")
+READER_FACING = ("README.md", "docs/llms.txt", "docs/index.html",
+                 "src/commonwealth/domains/registry.py")
 
 
 def _jurisdiction_counts() -> dict[str, int]:

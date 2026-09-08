@@ -37,7 +37,6 @@ import asyncio
 import json
 import sys
 from collections import Counter
-from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
@@ -47,6 +46,7 @@ sys.path.insert(0, str(ROOT / "src"))
 from commonwealth.adapters import arcgis as arcgis_mod  # noqa: E402
 from commonwealth.adapters.base import (HttpFetcher,  # noqa: E402
                                         egress_policy_for)
+from commonwealth.core.envelope import utc_now_iso  # noqa: E402
 from commonwealth.core.errors import CommonwealthError  # noqa: E402
 from commonwealth.core.registry import (INVENTORY_ADAPTER,  # noqa: E402
                                         SourceManifest)
@@ -64,8 +64,7 @@ HISTORY = AUDITS / "probe-history.json"
 NO_ENDPOINT = {INVENTORY_ADAPTER}
 
 
-def _now() -> str:
-    return datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+_now = utc_now_iso
 
 
 # --- structural comparison -------------------------------------------------
@@ -212,22 +211,23 @@ async def _replay(manifest: SourceManifest, recorded: dict) -> dict:
         return {"status": "no_endpoint", "checked": 0, "findings": []}
     fetcher = HttpFetcher(policy=egress_policy_for(manifest, service_url))
 
-    findings: list[dict] = []
-    checked = 0
-    unreachable = 0
-    for exchange in exchanges:
+    async def check(exchange: dict) -> tuple[bool, dict | None]:
         url, params = exchange["url"], exchange["params"]
         try:
             live = await fetcher.fetch_json(url, params)
         except CommonwealthError as err:
-            unreachable += 1
-            findings.append({"request": _label(url, params),
-                             "notes": [f"request failed: {err.code}: {err}"]})
-            continue
-        checked += 1
+            return False, {"request": _label(url, params),
+                           "notes": [f"request failed: {err.code}: {err}"]}
         notes = _diff(_shape(exchange["response"]), _shape(live))
         if notes:
-            findings.append({"request": _label(url, params), "notes": notes})
+            return True, {"request": _label(url, params), "notes": notes}
+        return True, None
+
+    outcomes = await asyncio.gather(*(check(exchange)
+                                      for exchange in exchanges))
+    checked = sum(ok for ok, _ in outcomes)
+    unreachable = len(outcomes) - checked
+    findings = [finding for _, finding in outcomes if finding is not None]
 
     status = "checked"
     if unreachable and not checked:
@@ -247,7 +247,7 @@ def _label(url: str, params: dict) -> str:
     return f"{tail}{' where ' + where if where else ''}"[:150]
 
 
-async def _replay_pages(ctx, manifest: SourceManifest, sid: str) -> dict:
+async def _replay_pages(ctx, manifest: SourceManifest) -> dict:
     """The HTML source, which records pages rather than JSON exchanges.
 
     Compared on what the parser actually reads — whether the section was
@@ -257,32 +257,33 @@ async def _replay_pages(ctx, manifest: SourceManifest, sid: str) -> dict:
     """
     known = manifest.health.expect.get("known_section")
     absent = manifest.health.expect.get("absent_section", "1-99999999")
-    findings: list[dict] = []
-    checked = 0
-    unreachable = 0
-    for citation, should_exist in ((known, True), (absent, False)):
-        if not citation:
-            continue
+    async def check(citation: str, should_exist: bool
+                    ) -> tuple[bool, dict | None]:
         try:
             section = await ctx.virginia_law.get_section(manifest, citation)
         except CommonwealthError as err:
-            unreachable += 1
-            findings.append({"request": f"section {citation}",
-                             "notes": [f"request failed: {err.code}: {err}"]})
-            continue
-        checked += 1
+            return False, {"request": f"section {citation}",
+                           "notes": [f"request failed: {err.code}: {err}"]}
         found = section is not None
         if found is not should_exist:
-            findings.append({
+            return True, {
                 "request": f"section {citation}",
                 "notes": [f"expected {'a section' if should_exist else 'no section'}, "
-                          f"got {'a section' if found else 'none'}"]})
-        elif found and not section.paragraphs:
-            findings.append({
+                          f"got {'a section' if found else 'none'}"]}
+        if found and not section.paragraphs:
+            return True, {
                 "request": f"section {citation}",
                 "notes": ["the page was found and parsed to zero "
                           "paragraphs, which is what a markup redesign "
-                          "looks like from here"]})
+                          "looks like from here"]}
+        return True, None
+
+    requests = [(citation, exists) for citation, exists
+                in ((known, True), (absent, False)) if citation]
+    outcomes = await asyncio.gather(*(check(*request) for request in requests))
+    checked = sum(ok for ok, _ in outcomes)
+    unreachable = len(outcomes) - checked
+    findings = [finding for _, finding in outcomes if finding is not None]
     status = "checked"
     if unreachable and not checked:
         status = "unreachable"
@@ -302,18 +303,17 @@ async def _probe(ctx, manifest: SourceManifest) -> list[dict]:
         return []
     params = arcgis_mod.ArcGISParams.model_validate(
         manifest.adapter.model_dump(exclude={"type"}))
-    out = []
-    for layer in sorted(params.layers):
+    async def check(layer: str) -> dict:
         try:
             health = await ctx.arcgis.health(manifest, layer)
         except CommonwealthError as err:
-            out.append({"layer": layer, "error": f"{err.code}: {err}"})
-            continue
-        out.append({"layer": layer,
-                    "feature_count": health["feature_count"],
-                    "min_expected": health["min_expected"],
-                    "healthy": health["healthy"]})
-    return out
+            return {"layer": layer, "error": f"{err.code}: {err}"}
+        return {"layer": layer,
+                "feature_count": health["feature_count"],
+                "min_expected": health["min_expected"],
+                "healthy": health["healthy"]}
+    return list(await asyncio.gather(*(check(layer)
+                                      for layer in sorted(params.layers))))
 
 
 # --- the accumulated readings ---------------------------------------------
@@ -375,7 +375,7 @@ def backfill_from_fixtures(history: dict) -> int:
     Run once. Re-running adds nothing, because a reading is keyed by
     (source, layer, date) and duplicates are skipped.
     """
-    seen = {(r["source_id"], r["layer"], r["observed_at"])
+    seen = {(r["source_id"], r["layer"], r["observed_at"][:10])
             for r in history["readings"]}
     added = 0
     for fixture in sorted(FIXTURES.glob("*/recorded.json")):
@@ -391,7 +391,8 @@ def backfill_from_fixtures(history: dict) -> int:
             if not isinstance(count, int):
                 continue
             layer = value.get("layer") or key.split(":", 1)[1]
-            if (source_id, layer, when) in seen:
+            day = when[:10]
+            if (source_id, layer, day) in seen:
                 continue
             history["readings"].append({
                 "observed_at": when,
@@ -402,7 +403,7 @@ def backfill_from_fixtures(history: dict) -> int:
                 "note": "backfilled from the committed fixture's own "
                         "recording, 2026-09-02",
             })
-            seen.add((source_id, layer, when))
+            seen.add((source_id, layer, day))
             added += 1
     history["readings"].sort(key=lambda r: (r["source_id"], r["layer"],
                                             r["observed_at"]))
@@ -527,25 +528,27 @@ async def run(source_id: str | None) -> tuple[dict, dict]:
     probes: dict[str, list[dict]] = {}
 
     ids = [source_id] if source_id else sorted(ctx.sources.manifests)
-    for sid in ids:
+    async def audit(sid: str) -> tuple[dict, list[dict]]:
         manifest = ctx.sources.get(sid)
         if manifest is None:
             raise SystemExit(f"unknown source {sid!r}")
         if manifest.adapter.type in NO_ENDPOINT:
-            results[sid] = {"status": "no_endpoint", "checked": 0,
-                            "findings": []}
-            continue
+            return {"status": "no_endpoint", "checked": 0,
+                    "findings": []}, []
         if manifest.adapter.type == "virginia_law":
-            results[sid] = await _replay_pages(ctx, manifest, sid)
-            continue
+            return await _replay_pages(ctx, manifest), []
         fixture = FIXTURES / sid / "recorded.json"
         if not fixture.exists():
-            results[sid] = {"status": "no_fixture", "checked": 0,
-                            "findings": []}
+            result = {"status": "no_fixture", "checked": 0,
+                      "findings": []}
         else:
-            results[sid] = await _replay(manifest,
-                                         json.loads(fixture.read_text()))
+            result = await _replay(manifest, json.loads(fixture.read_text()))
         layers = await _probe(ctx, manifest)
+        return result, layers
+
+    outcomes = await asyncio.gather(*(audit(sid) for sid in ids))
+    for sid, (result, layers) in zip(ids, outcomes, strict=True):
+        results[sid] = result
         if layers:
             probes[sid] = layers
     return results, probes

@@ -8,6 +8,7 @@ unchanged" apart from "never visited" (GitHub issue #31).
 """
 from __future__ import annotations
 
+import asyncio
 import json
 import sys
 from pathlib import Path
@@ -160,6 +161,26 @@ def test_the_backfill_is_idempotent(monkeypatch, tmp_path):
     assert len(history["readings"]) == first
 
 
+def test_backfill_does_not_duplicate_an_existing_day(monkeypatch, tmp_path):
+    fixture_dir = tmp_path / "va-x"
+    fixture_dir.mkdir()
+    (fixture_dir / "recorded.json").write_text(json.dumps({
+        "source_id": "va-x",
+        "recorded_at": "2026-09-01T19:00:00Z",
+        "summary": {"health:parcels": {
+            "layer": "parcels", "feature_count": 101,
+            "min_expected": 80}},
+    }))
+    monkeypatch.setattr(audit, "FIXTURES", tmp_path)
+    history = {"readings": [{
+        "source_id": "va-x", "layer": "parcels",
+        "observed_at": "2026-09-01T07:00:00Z",
+        "feature_count": 100, "min_expected": 80,
+    }]}
+    assert audit.backfill_from_fixtures(history) == 0
+    assert len(history["readings"]) == 1
+
+
 def test_every_backfilled_reading_names_its_source_and_date():
     history = {"readings": []}
     audit.backfill_from_fixtures(history)
@@ -240,6 +261,38 @@ def test_a_changed_projection_is_drift():
     assert any("spatial reference" in n for n in notes), notes
 
 
+async def test_fixture_exchanges_replay_concurrently(monkeypatch):
+    """The production fetcher still caps each host at two. This proves the
+    audit submits work concurrently instead of waiting on every exchange."""
+    class Fetcher:
+        active = 0
+        peak = 0
+
+        def __init__(self, **_kwargs):
+            pass
+
+        async def fetch_json(self, _url, _params):
+            self.active += 1
+            self.peak = max(self.peak, self.active)
+            await asyncio.sleep(0.01)
+            self.active -= 1
+            return {"features": []}
+
+    fetcher = Fetcher()
+    monkeypatch.setattr(audit, "HttpFetcher", lambda **_kwargs: fetcher)
+    from commonwealth.core.registry import SourceRegistry
+    from commonwealth.runtime import SOURCES_DIR
+    manifest = SourceRegistry.load(SOURCES_DIR).get(
+        "va-vgin-building-footprints")
+    recorded = {"exchanges": [
+        {"url": manifest.adapter.service_url, "params": {"n": n},
+         "response": {"features": []}}
+        for n in range(4)]}
+    result = await audit._replay(manifest, recorded)
+    assert result["checked"] == 4
+    assert fetcher.peak > 1
+
+
 def test_a_renamed_geocoder_field_is_drift():
     """Candidate count alone would let the locator rename the fields the
     adapter reads and still pass as unchanged."""
@@ -304,4 +357,3 @@ def test_out_outside_the_repo_does_not_raise():
 
     assert audit._short(Path("/tmp/elsewhere.md")) == Path("/tmp/elsewhere.md")
     assert audit._short(ROOT / "docs" / "x.md") == Path("docs/x.md")
-

@@ -133,21 +133,20 @@ def _source_entry(b: EnvelopeBuilder, m: SourceManifest,
 
 
 def _records_block(b: EnvelopeBuilder, src_ref: str, q: ArcGISQueryResult,
-                   m: SourceManifest, ctx: RuntimeContext | None = None,
-                   arguments: dict | None = None) -> dict:
+                   m: SourceManifest, ctx: RuntimeContext,
+                   arguments: dict) -> dict:
     """One source's records, capped at what fits inline.
 
     Above the cap the retrieved records used to be dropped and the caller
     told to narrow the query, which meant the request had been paid for
-    and the answer thrown away. Pass `ctx` and the call's own arguments
-    and the full set goes to the result store instead, with the handle
-    named in the truncation warning (decision 0013; GitHub issue #33).
+    and the answer thrown away. The full set goes to the result store,
+    with the handle named in the truncation warning (decision 0013;
+    GitHub issue #33).
     """
     inline = q.records[:INLINE_RECORD_CAP]
     handle = None
     if len(q.records) > len(inline):
-        if ctx is not None:
-            handle = _store_full_records(ctx, b, m, q, arguments or {})
+        handle = _store_full_records(ctx, b, m, q, arguments)
         b.warn(WarningCode.truncated_inline,
                f"{len(q.records)} records retrieved; {len(inline)} shown "
                "inline. " + (f"All {len(q.records)} are at {handle}. "

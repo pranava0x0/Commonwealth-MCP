@@ -38,13 +38,14 @@ import os
 import secrets
 import shutil
 import sys
-from dataclasses import dataclass, replace
+import time
+from dataclasses import dataclass, field, replace
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from typing import Any, Protocol
 from urllib.parse import urlparse
 
-from .envelope import ResourceRef, utc_now_iso
+from .envelope import ResourceRef
 from .errors import CommonwealthError
 from .registry import DataClassification, SourceManifest
 
@@ -56,6 +57,18 @@ URI_SCHEME = "commonwealth"
 MAX_STORED_BYTES = 50_000_000
 
 DEFAULT_TTL_SECONDS = 24 * 60 * 60
+SWEEP_INTERVAL_SECONDS = 60 * 60
+
+# How long the payload-free record of an expired handle outlives the
+# payload. It exists so a caller who kept a handle is told the window
+# closed rather than that the handle never existed, and that is worth
+# knowing for about as long again as the result itself lived. It is not
+# worth keeping the call's arguments — an address, a parcel PIN, a
+# coordinate — on disk forever, and an unbounded set of these would also
+# grow the store without a payload in it. So the tombstone expires too,
+# and after that a read is an ordinary `not_found`.
+TOMBSTONE_TTL_SECONDS = DEFAULT_TTL_SECONDS
+TIME_FORMAT = "%Y-%m-%dT%H:%M:%SZ"
 
 # The two handle kinds the provenance spec names. `results` holds a tool's
 # full answer; `evidence` holds the raw record behind one claim
@@ -72,7 +85,7 @@ class ResultUnavailable(CommonwealthError):
 
     def __init__(self, msg: str, reason: str) -> None:
         super().__init__(msg)
-        self.reason = reason  # expired | not_found | swept
+        self.reason = reason  # expired | not_found
 
 
 class RetentionForbidden(CommonwealthError):
@@ -207,9 +220,9 @@ def build_record(*, kind: str, payload: Any, media_type: str,
         kind=kind, payload=payload, media_type=media_type,
         classification=_classification_of(manifests),
         source_ids=tuple(sorted(m.id for m in manifests)),
-        stored_at=utc_now_iso(),
+        stored_at=now.strftime(TIME_FORMAT),
         expires_at=(now + timedelta(seconds=ttl_seconds)
-                    ).strftime("%Y-%m-%dT%H:%M:%SZ"),
+                    ).strftime(TIME_FORMAT),
         origin_tool=origin_tool, origin_arguments=origin_arguments)
     doc = {
         "id": stored.id, "kind": stored.kind,
@@ -233,12 +246,10 @@ def _resolve(doc: dict | None, kind: str, uri: str) -> StoredResult:
     """
     if doc is None:
         raise ResultUnavailable(
-            f"No stored result for {uri}. A handle this server never "
-            "minted and one already swept after expiry look the same "
-            "here; if it came from an answer more than "
-            f"{DEFAULT_TTL_SECONDS // 3600} hours old, it has expired and "
-            "re-running the original call will produce it again.",
-            "not_found")
+            f"No stored result for {uri}. This server did not mint that "
+            "handle, or its expiry record is no longer readable. If the "
+            "handle came from an earlier answer, re-running the original "
+            "call will produce a new one.", "not_found")
     if doc["kind"] != kind:
         raise ResultUnavailable(
             f"{uri} names a {kind} handle and the stored result is a "
@@ -252,13 +263,62 @@ def _resolve(doc: dict | None, kind: str, uri: str) -> StoredResult:
             "as gone and re-run the call that produced it.",
             "not_found") from err
     if expired:
-        raise ResultUnavailable(
-            f"The result at {uri} expired at {stored.expires_at}. It "
-            "existed and the retention window closed, which is not the "
-            f"same as a missing result. Re-run {stored.origin_tool} with "
-            f"{json.dumps(stored.origin_arguments, default=str)} to "
-            "produce it again.", "expired")
+        _raise_expired(stored, uri)
     return stored
+
+
+def _raise_expired(stored: StoredResult, uri: str) -> None:
+    raise ResultUnavailable(
+        f"The result at {uri} expired at {stored.expires_at}. It existed "
+        "and the retention window closed, which is not the same as a "
+        f"missing result. Re-run {stored.origin_tool} with "
+        f"{json.dumps(stored.origin_arguments, default=str)} to produce "
+        "it again.", "expired")
+
+
+def _expired_record(doc: dict, kind: str, uri: str) -> None:
+    """Raise the typed expiry error from a payload-free tombstone."""
+    try:
+        stored = StoredResult(
+            id=doc["id"], kind=doc["kind"], payload=None,
+            media_type="application/octet-stream",
+            classification="expired", source_ids=(), stored_at=doc["expires_at"],
+            expires_at=doc["expires_at"], origin_tool=doc["origin_tool"],
+            origin_arguments=doc["origin_arguments"])
+    except (KeyError, TypeError) as err:
+        raise ResultUnavailable(
+            f"The expiry record for {uri} cannot be read.", "not_found") from err
+    if stored.kind != kind:
+        raise ResultUnavailable(
+            f"{uri} names a {kind} handle and the expired result was a "
+            f"{stored.kind}", "not_found")
+    _raise_expired(stored, uri)
+
+
+def _metadata(doc: dict) -> dict:
+    """The small record a sweep can inspect without loading the payload."""
+    return {key: doc[key] for key in (
+        "id", "kind", "expires_at", "origin_tool", "origin_arguments")}
+
+
+def _tombstone(meta: dict) -> dict:
+    """The metadata record plus the date it is itself deleted on."""
+    return dict(meta, tombstone_expires_at=_plus(
+        meta["expires_at"], TOMBSTONE_TTL_SECONDS))
+
+
+def _tombstone_expired(doc: dict) -> bool:
+    """True once a tombstone has outlived its own window.
+
+    A record written before this field existed is read as one whose
+    window closed the moment the payload's did, so an old store sheds
+    them on its next sweep rather than keeping them for another day.
+    """
+    try:
+        return _expired_at(doc.get("tombstone_expires_at")
+                           or doc["expires_at"])
+    except (KeyError, TypeError, ValueError):
+        return True
 
 
 class ResultStore(Protocol):
@@ -283,11 +343,15 @@ class DiskResultStore:
     """
 
     root: Path | None = None
+    sweep_interval_seconds: int = SWEEP_INTERVAL_SECONDS
+    _next_sweep_at: float = field(init=False, repr=False)
 
     def __post_init__(self) -> None:
         self.root = Path(self.root) if self.root is not None else store_root()
+        self._next_sweep_at = time.monotonic() + self.sweep_interval_seconds
 
     def put(self, **kwargs) -> StoredResult:
+        self._maybe_sweep()
         stored, doc = build_record(**kwargs)
         path = self._path(stored.id)
         path.parent.mkdir(parents=True, exist_ok=True)
@@ -296,6 +360,11 @@ class DiskResultStore:
         tmp = path.with_suffix(".partial")
         tmp.write_text(json.dumps(doc, separators=(",", ":"), default=str))
         tmp.replace(path)
+        try:
+            self._write_atomic(self._meta_path(stored.id), _metadata(doc))
+        except OSError:
+            path.unlink(missing_ok=True)
+            raise
         return stored
 
     def get(self, uri: str) -> StoredResult:
@@ -310,6 +379,13 @@ class DiskResultStore:
             # a resolvable handle, and `_resolve` says so in the typed
             # error every caller already handles.
             doc = None
+        if doc is None:
+            try:
+                expired = json.loads(self._expired_path(ident).read_text())
+            except (OSError, json.JSONDecodeError):
+                expired = None
+            if expired is not None and not _tombstone_expired(expired):
+                _expired_record(expired, kind, uri)
         return _resolve(doc, kind, uri)
 
     def sweep(self) -> int:
@@ -323,22 +399,64 @@ class DiskResultStore:
         if not self.root.is_dir():
             return 0
         gone = 0
+        indexed: set[str] = set()
+        for meta_path in self.root.glob("*.meta"):
+            ident = meta_path.stem
+            if not ident.isalnum():
+                meta_path.unlink(missing_ok=True)
+                continue
+            try:
+                meta = json.loads(meta_path.read_text())
+                if meta["id"] != ident:
+                    raise ValueError("metadata id does not match its filename")
+                expired = _expired_at(meta["expires_at"])
+            except Exception:  # noqa: BLE001 — disposable cache metadata
+                meta_path.unlink(missing_ok=True)
+                continue
+            if expired:
+                self._write_atomic(self._expired_path(ident), _tombstone(meta))
+                payload_path = self._path(ident)
+                if payload_path.exists():
+                    payload_path.unlink(missing_ok=True)
+                    gone += 1
+                meta_path.unlink(missing_ok=True)
+            else:
+                indexed.add(ident)
+
+        # Old stores have no metadata sidecar. Read each once, then write
+        # the sidecar so every later sweep stays independent of payload size.
         for path in self.root.glob("*.json"):
+            if path.stem in indexed:
+                continue
             try:
                 doc = json.loads(path.read_text())
-                expired = _expired(_from_doc(doc))
-            except Exception:  # noqa: BLE001 — see below
-                # An unreadable file cannot be resolved by any handle, so
-                # keeping it serves nobody. Deliberately every exception:
-                # a named tuple missed TypeError from a JSON document that
-                # is not an object and ValueError from a timestamp in
-                # another format, and this runs inside `load_context()`,
-                # so one stray file in a shared cache directory stopped
-                # every CLI command and the server from starting.
-                expired = True
-            if expired:
+                stored = _from_doc(doc)
+                expired = _expired(stored)
+            except Exception:  # noqa: BLE001 — disposable cache file
                 path.unlink(missing_ok=True)
                 gone += 1
+                continue
+            meta = _metadata(doc)
+            if expired:
+                self._write_atomic(self._expired_path(stored.id),
+                                   _tombstone(meta))
+                path.unlink(missing_ok=True)
+                self._meta_path(stored.id).unlink(missing_ok=True)
+                gone += 1
+            else:
+                self._write_atomic(self._meta_path(stored.id), meta)
+
+        # The tombstones themselves. Each one holds the arguments the call
+        # was made with, so the sweep that clears payloads has to clear
+        # these too or the store keeps the questions after it has dropped
+        # the answers.
+        for path in self.root.glob("*.expired"):
+            try:
+                stale = _tombstone_expired(json.loads(path.read_text()))
+            except (OSError, json.JSONDecodeError):
+                stale = True
+            if stale:
+                path.unlink(missing_ok=True)
         return gone
 
     def clear(self) -> None:
@@ -350,6 +468,28 @@ class DiskResultStore:
                                     "not_found")
         assert self.root is not None
         return self.root / f"{ident}.json"
+
+    def _meta_path(self, ident: str) -> Path:
+        assert self.root is not None
+        return self.root / f"{ident}.meta"
+
+    def _expired_path(self, ident: str) -> Path:
+        assert self.root is not None
+        return self.root / f"{ident}.expired"
+
+    def _write_atomic(self, path: Path, doc: dict) -> None:
+        tmp = path.with_name(f"{path.name}.{secrets.token_hex(4)}.partial")
+        try:
+            tmp.write_text(json.dumps(doc, separators=(",", ":"), default=str))
+            tmp.replace(path)
+        finally:
+            tmp.unlink(missing_ok=True)
+
+    def _maybe_sweep(self) -> None:
+        if time.monotonic() < self._next_sweep_at:
+            return
+        self.sweep()
+        self._next_sweep_at = time.monotonic() + self.sweep_interval_seconds
 
 
 class MemoryResultStore:
@@ -363,6 +503,8 @@ class MemoryResultStore:
 
     def __init__(self, deterministic: bool = False) -> None:
         self._docs: dict[str, dict] = {}
+        self._expired_docs: dict[str, dict] = {}
+        self._next_id = 1
         # Numbered ids instead of random ones, for the site build. The
         # generated page is committed, so a fresh `secrets.token_hex(16)`
         # per build put an unrelated diff in every pull request and
@@ -372,7 +514,8 @@ class MemoryResultStore:
     def put(self, **kwargs) -> StoredResult:
         stored, doc = build_record(**kwargs)
         if self._deterministic:
-            ident = f"{len(self._docs) + 1:032x}"
+            ident = f"{self._next_id:032x}"
+            self._next_id += 1
             stored = replace(stored, id=ident)
             doc["id"] = ident
         self._docs[stored.id] = doc
@@ -380,17 +523,26 @@ class MemoryResultStore:
 
     def get(self, uri: str) -> StoredResult:
         kind, ident = _parse_uri(uri)
+        tomb = self._expired_docs.get(ident)
+        if tomb is not None and not _tombstone_expired(tomb):
+            _expired_record(tomb, kind, uri)
         return _resolve(self._docs.get(ident), kind, uri)
 
     def sweep(self) -> int:
         gone = [k for k, doc in self._docs.items()
                 if _expired(_from_doc(doc))]
         for key in gone:
+            self._expired_docs[key] = _tombstone(_metadata(self._docs[key]))
             del self._docs[key]
+        for key in [k for k, tomb in self._expired_docs.items()
+                    if _tombstone_expired(tomb)]:
+            del self._expired_docs[key]
         return len(gone)
 
     def clear(self) -> None:
         self._docs.clear()
+        self._expired_docs.clear()
+        self._next_id = 1
 
 
 def _classification_of(manifests: list[SourceManifest]) -> str:
@@ -418,9 +570,19 @@ def _from_doc(doc: dict) -> StoredResult:
 
 
 def _expired(stored: StoredResult) -> bool:
-    return datetime.strptime(
-        stored.expires_at, "%Y-%m-%dT%H:%M:%SZ").replace(
-            tzinfo=timezone.utc) <= datetime.now(timezone.utc)
+    return _expired_at(stored.expires_at)
+
+
+def _plus(timestamp: str, seconds: int) -> str:
+    """`timestamp` moved forward, in the format the store writes."""
+    moment = datetime.strptime(timestamp, TIME_FORMAT).replace(
+        tzinfo=timezone.utc)
+    return (moment + timedelta(seconds=seconds)).strftime(TIME_FORMAT)
+
+
+def _expired_at(expires_at: str) -> bool:
+    return datetime.strptime(expires_at, TIME_FORMAT).replace(
+        tzinfo=timezone.utc) <= datetime.now(timezone.utc)
 
 
 def resource_ref(stored: StoredResult, description: str) -> ResourceRef:

@@ -9,9 +9,9 @@ description: >
   means that layer holds no record.
 license: Apache-2.0
 compatibility: >
-  Requires Commonwealth-MCP v0.x under a profile routing building.lookup
-  and environmental_site.lookup; road and landmark answers need the
-  `spatial` toolset.
+  Requires Commonwealth-MCP v0.x under a profile routing building.lookup.
+  Environmental, road, landmark, and parcel answers require their optional
+  capabilities; road and landmark queries also need the `spatial` toolset.
 metadata:
   commonwealth:
     required_capabilities:
