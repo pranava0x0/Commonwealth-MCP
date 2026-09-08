@@ -3,6 +3,67 @@
 One entry per significant work session or delegated research task: why it
 ran, cost where relevant, and whether it was worth it.
 
+## 2026-09-08 — a wheel that works anywhere, and a way into the Code
+
+**The wheel carried no data.** `runtime.PROJECT_ROOT` resolved two
+directories above the module, which is the repo root in a checkout and
+the interpreter's `lib/` in an installed wheel, so every command from a
+wheel died at startup on `missing capability vocabulary:
+.../lib/python3.12/sources/capabilities.yaml`. `sources/`, `skills/` and
+`NOTICE` ship inside the package now and `_data_root()` prefers that
+copy. Verified the way § 39 asks — a wheel built, installed into a fresh
+environment, and run from a directory with no checkout in it: 19
+manifests validate, 14 tools list, and Vienna resolves to the town with
+Fairfax County and the state above it.
+
+§ 39 also asked to "read a skill through MCP", which skills.md § 1 says
+not to build against, since that extension is unshipped. Skills travel as
+files, so `commonwealth skills list` prints where the bundled copies are
+and whether this registry can serve each one.
+
+`server.json` is written for #40, with a repo-health test comparing it to
+`pyproject.toml`. The registry runs a PyPI server as `uvx <package>`,
+which looks for an executable named after the package, so
+`commonwealth-mcp` is a second console script beside `commonwealth`.
+Publishing waits on the maintainer: the version is still `0.1.0.dev0` and
+nothing is on PyPI. The repo description, homepage and eight topics are
+set, which was the half of #40 that needed no release.
+
+**The site was telling people to hand-write a config.** `commonwealth
+configure` had been writing it correctly, with the absolute path filled
+in, since before the site existed. Step 4 runs the real command now,
+across the five clients that command knows, read off its own table at
+build time.
+
+**Issue #12 asked a question before building, and the answer was worth
+having.** The Code of Virginia's own search endpoint is public and
+keyless — no key, no session, a plain GET — and its backend answered
+three different queries with "The Search Appliance is down". The
+developers page advertises JSON and XML services; its links point at
+`/jsonapi/`, which serves only a help page, and the real base is `/api/`,
+which each row of that page gives in a `title` attribute. Four Code
+operations work there, keyless.
+
+None of them is a search. That killed `civic.search_law` as written and
+opened something better: `civic.browse_code` walks the Code's own table
+of contents, so a caller reaches a citation without already having one.
+Each row carries the arguments for the step below it, and a section row
+carries the citation `get_code_section` reads — a contract test walks
+title 15.2 to chapter 22 to § 15.2-2200 and reads it back, and the live
+run finds 208 sections in the zoning chapter.
+
+It went into `discovery`, not `default`. `default` sits at nine against a
+ceiling of twelve and issue #11's two legislative tools have first claim
+on the room; a contract test asserts that headroom rather than leaving it
+to whoever files next, which is the question #11 asks to be settled.
+
+**A claim this repo had been making since 2026-08-28 was wrong.** The
+manifest, the adapter docstring and domain-servers.md all said the law
+site's JSON API was key-gated. The gated program is the *legislative* API
+at lis.virginia.gov — a different service from the same division. All
+three are corrected, the terms review is re-dated, and source-quirks
+§ 18 records the endpoints and what each one does and does not have.
+
 ## 2026-09-08 — one branch instead of two, and the site learns to be searched
 
 **Two open pull requests, which should have been none.** #43 existed

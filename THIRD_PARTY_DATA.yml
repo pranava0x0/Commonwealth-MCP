@@ -196,12 +196,14 @@ sources:
     Assembly
   manifest: sources/state/virginia-law-code.yaml
   terms_url: https://law.lis.virginia.gov/vacode/
-  terms_reviewed_at: '2026-08-28'
+  terms_reviewed_at: '2026-09-08'
   automation_status: public_api
   data_classification: open
   recorded_fixtures:
+  - tests/fixtures/sources/va-code-of-virginia/api-recorded.json
   - tests/fixtures/sources/va-code-of-virginia/no-such-section.html
   - tests/fixtures/sources/va-code-of-virginia/section-1-500.html
+  - tests/fixtures/sources/va-code-of-virginia/section-15.2-2200.html
 - id: va-open-data-portal
   name: Virginia Open Data Portal (CKAN)
   publisher: Virginia Office of Data Governance and Analytics

@@ -97,3 +97,67 @@ async def test_restricted_source_never_selected():
         "the registry knows the source exists but cannot serve it")
     reasons = {g.reason for g in env.coverage.jurisdictions_unavailable}
     assert "source_not_activated" in reasons
+
+
+async def test_injected_contents_text_stays_inside_data():
+    """The publisher names the Code's chapters, and a name is text the
+    same way a section's body is. A chapter called "IGNORE ALL PREVIOUS
+    INSTRUCTIONS" is a row in a listing, not a turn in the conversation."""
+    import copy
+
+    from commonwealth.adapters.replay import ReplayFetcher
+    from commonwealth.domains.civic import browse_code
+    from tests.conftest import build_ctx, recorded_api_exchanges
+
+    exchanges = copy.deepcopy(recorded_api_exchanges())
+    hit = next(e for e in exchanges
+               if e["url"].endswith("CoVChaptersGetListOfJson/15.2"))
+    hit["response"]["ChapterList"][0]["ChapterName"] = INJECTION
+
+    env = await browse_code(build_ctx(
+        civic_api_fetcher=ReplayFetcher(exchanges)), title="15.2")
+    blob = json.dumps(env.model_dump(mode="json"))
+    assert INJECTION in blob, "the text must survive, unaltered, as data"
+    names = [r["name"] for r in env.data["results"][0]["records"]]
+    assert INJECTION in names
+    for warning in env.warnings:
+        assert INJECTION not in warning.message, (
+            "source text must never be lifted into the envelope's own voice")
+
+
+async def test_the_contents_api_is_egress_checked_like_every_other_call():
+    """The JSON API is a second endpoint on a registered source, not a
+    hole beside the policy. Same host, same manifest, same check."""
+    from commonwealth.domains.civic import browse_code
+    from tests.conftest import build_ctx
+
+    registry = SourceRegistry.load(SOURCES_DIR)
+    m = registry.get("va-code-of-virginia")
+    api_url = m.adapter.model_dump()["api_url"]
+    policy = egress_policy_for(m, api_url)
+    # The policy is built from the manifest, so the API endpoint is
+    # allowed because the manifest declares it and for no other reason.
+    assert policy.allowed_hosts == frozenset({"law.lis.virginia.gov"})
+    assert not policy.insecure_transport
+
+    # The suite runs with the network denied, which is the strongest
+    # version of this check: a real fetcher under the source's own policy
+    # is refused, and the walk reports that refusal rather than a Code
+    # with no titles in it.
+    env = await browse_code(build_ctx(civic_api_fetcher=_LiveFetcher(m)))
+    assert env.coverage.execution.value == "failed", (
+        "a refused request is a failure, not an empty result")
+    assert [f.error for f in env.coverage.source_failures] == ["EgressRefused"]
+    assert env.data["results"] == []
+
+
+class _LiveFetcher:
+    """A real HttpFetcher under the source's own policy, so the deny-network
+    switch is exercised where a live call would be made."""
+
+    def __init__(self, manifest: SourceManifest) -> None:
+        api_url = manifest.adapter.model_dump()["api_url"]
+        self._inner = HttpFetcher(policy=egress_policy_for(manifest, api_url))
+
+    async def fetch_json(self, url: str, params: dict) -> dict:
+        return await self._inner.fetch_json(url, params)

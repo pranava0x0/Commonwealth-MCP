@@ -66,8 +66,14 @@ class ToolRegistry:
 PROFILES: dict[str, list[tuple[str, str]]] = {
     "default": [("registry", "discovery-min"), ("geo", "default"),
                 ("civic", "default")],
+    # Civic's discovery toolset joins this one because walking the Code's
+    # table of contents is a discovery act: it is how a caller reaches a
+    # citation they do not have. It stays out of `default` deliberately —
+    # that profile sits at nine against a ceiling of twelve, and issue
+    # #11's two legislative tools have first claim on the room.
     "discovery": [("registry", "discovery-min"), ("registry", "discovery"),
-                  ("geo", "default"), ("civic", "default")],
+                  ("geo", "default"), ("civic", "default"),
+                  ("civic", "discovery")],
     "all": [("registry", "*"), ("geo", "*"), ("civic", "*")],
 }
 

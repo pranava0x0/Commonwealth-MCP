@@ -225,6 +225,9 @@ DEMO_CALLS = [
      'DEQ monitoring stations include sampling dates and coverage limits.'),
     ("geo.find_boundaries", {"jurisdiction": "Prince George County"},
      'The boundary lookup returns both published polygons for this FIPS code.'),
+    ("civic.browse_code", {"title": "15.2", "chapter": "22"},
+     'Walking the Code to the zoning chapter, because there is no '
+     'full-text search over it from any public endpoint.'),
     ("civic.get_code_section", {"citation": "1-500"},
      "Code of Virginia section text with its own citation history"),
 
@@ -617,7 +620,9 @@ def _virginia_law_adapter(mode: str):
     """The civic tool reads HTML pages, not ArcGIS, so it needs its own
     replay seam. Without this the 'fixtures' build would reach
     law.lis.virginia.gov for real and stop being deterministic."""
-    from commonwealth.adapters.replay import HtmlReplayFetcher
+    import json as _json
+
+    from commonwealth.adapters.replay import HtmlReplayFetcher, ReplayFetcher
     from commonwealth.adapters.virginia_law import VirginiaLawAdapter
     if mode != "fixtures":
         return VirginiaLawAdapter()
@@ -630,7 +635,12 @@ def _virginia_law_adapter(mode: str):
             (fixture_dir / "no-such-section.html").read_text(),
             f"{base}/title1/"),
     }
-    return VirginiaLawAdapter(fetcher=HtmlReplayFetcher(pages))
+    # Two seams for one publisher: section text is HTML, the table of
+    # contents is the publisher's JSON API.
+    api = _json.loads(
+        (fixture_dir / "api-recorded.json").read_text())["exchanges"]
+    return VirginiaLawAdapter(fetcher=HtmlReplayFetcher(pages),
+                              json_fetcher=ReplayFetcher(api))
 
 
 INDEX_HTML = DOCS_DATA.parent / "index.html"

@@ -16,7 +16,7 @@ from ..core.assemble import (EnvelopeBuilder, failure, result_dim,
                              selection_coverage)
 from ..core.envelope import AccessPath, Coverage, Envelope, \
     ExecutionCoverage, PaginationCoverage
-from ..core.errors import CommonwealthError
+from ..core.errors import CommonwealthError, InvalidQuery
 from ..core.registry import SourceManifest
 from ..core.toolreg import ToolRegistry, ToolSpec
 from ..runtime import RuntimeContext
@@ -108,3 +108,95 @@ CIVIC_TOOLS.register(ToolSpec(
         "A missing section (repealed, renumbered, or never existed) "
         "returns found=False, not an error."),
     toolset="default", contract_version="1", fn=get_code_section))
+
+
+async def browse_code(ctx: RuntimeContext, title: str = "",
+                      chapter: str = "") -> Envelope:
+    b = _builder(ctx, "civic.browse_code")
+    selected = ctx.sources.select("code_structure.browse", _STATEWIDE_STACK)
+    registry_dim, gaps = selection_coverage(
+        ctx.sources, "code_structure.browse", _STATEWIDE_STACK, selected,
+        builder=b)
+    if chapter and not title:
+        raise InvalidQuery(
+            "a chapter number only identifies a chapter within a title; "
+            "pass `title` as well, or pass neither to list the titles")
+
+    blocks: list[dict] = []
+    failures = []
+    total = 0
+    for m in selected:
+        try:
+            entries, url = await ctx.virginia_law.browse(m, title, chapter)
+        except CommonwealthError as err:
+            failures.append(failure(m.id, err.code, str(err)))
+            continue
+        blocks.append(_browse_block(b, m, entries, url, title, chapter))
+        total += len(entries)
+
+    execution = (ExecutionCoverage.complete if not failures
+                 else ExecutionCoverage.failed if not blocks
+                 else ExecutionCoverage.partial)
+    coverage = Coverage(
+        registry=registry_dim, execution=execution,
+        pagination=PaginationCoverage.complete,
+        result=result_dim(total),
+        jurisdictions_searched=_STATEWIDE_STACK if selected else [],
+        jurisdictions_unavailable=gaps,
+        source_failures=failures,
+        known_limitations=sorted({lim for m in selected
+                                  for lim in m.coverage.known_limitations}))
+    return b.build({"results": blocks}, coverage)
+
+
+def _browse_block(b: EnvelopeBuilder, m: SourceManifest,
+                  entries: list, url: str, title: str, chapter: str) -> dict:
+    src_ref = b.add_source(
+        source_id=m.id, publisher=m.publisher.agency, system=m.adapter.type,
+        dataset="code-of-virginia-contents", jurisdiction=m.jurisdiction,
+        authority_level=m.publisher.authority_level,
+        access_path=AccessPath.live,
+        source_updated_at=None, retrieved_at=_now(), cache_age_seconds=0)
+    level = "section" if chapter else "chapter" if title else "title"
+    rows = [{"kind": e.kind, "number": e.number, "name": e.name,
+             # What to pass back to reach the next level down, so a model
+             # walking the Code does not have to infer the argument shape
+             # from the numbering.
+             "next": ({"title": e.number} if e.kind == "title" else
+                      {"title": title, "chapter": e.number}
+                      if e.kind == "chapter" else None),
+             "cite_with": ({"citation": e.number} if e.kind == "section"
+                           else None)}
+            for e in entries]
+    block = {"source_ref": src_ref, "source_id": m.id, "level": level,
+             "records": rows, "record_count": len(rows), "source_url": url}
+    if not rows:
+        # The publisher answers an unknown title with an empty list and
+        # HTTP 200, the same shape as a title that exists and has no
+        # chapters. Neither is an error and the caller is told which
+        # question came back empty rather than being left to guess.
+        block["note"] = (
+            f"no {level}s under "
+            + (f"title {title!r} chapter {chapter!r}" if chapter
+               else f"title {title!r}" if title else "the Code")
+            + ". The publisher returns an empty list for a title or "
+              "chapter it does not have, so this is either an empty "
+              "branch or a number that is not in the Code.")
+    return block
+
+
+CIVIC_TOOLS.register(ToolSpec(
+    name="civic.browse_code",
+    description=(
+        "Walk the Code of Virginia's table of contents. No arguments "
+        "lists the titles; `title` lists that title's chapters; `title` "
+        "and `chapter` list that chapter's sections. Each row carries "
+        "the arguments for the next step down, and a section row carries "
+        "the citation to pass to civic.get_code_section for its text. "
+        "This is the publisher's own contents listing, not a search: "
+        "there is no full-text search over the Code of Virginia from any "
+        "public endpoint, so a question about what the law SAYS has to "
+        "become a walk to a section and then a read of it. Headings are "
+        "headings — a chapter named for zoning is not a promise about "
+        "what its sections contain."),
+    toolset="discovery", contract_version="1", fn=browse_code))

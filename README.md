@@ -77,6 +77,7 @@ client's skills folder.
 | Which water-quality stations are nearby? | DEQ monitoring stations, including historical stations |
 | Where is a government boundary? | VGIN locality and town polygons |
 | What does a Code of Virginia section say? | Section lookup by citation |
+| Which part of the Code covers this subject? | The Code's own table of contents: titles, chapters, sections. A walk to a citation, not a full-text search — no public endpoint offers one |
 
 A registered statewide layer does not guarantee complete or current records
 for every place. Read each result's sources, dates, coverage and warnings.

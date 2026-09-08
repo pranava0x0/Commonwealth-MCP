@@ -1,10 +1,14 @@
 # The Code of Virginia is publicly readable at law.lis.virginia.gov with
-# no key or registration; the JSON/XML API the developer portal advertises
-# is a separate, key-gated program (the GitHub issues's civic-vertical note) that
-# this manifest does not use. The site itself is the primary published
-# text of the statute, so reading it directly is still reading the
-# authoritative source, not a lesser mirror of one. Endpoint structure and
-# the "not found" redirect behavior verified live 2026-08-28.
+# no key or registration. This manifest said until 2026-09-08 that the
+# JSON/XML API the developer portal advertises was a separate key-gated
+# program; that was wrong. The gated program is the LEGISLATIVE API at
+# lis.virginia.gov (bills and members, GitHub issue #11). The law site's
+# own API at /api/ answers unauthenticated, and is registered here as a
+# second capability. It carries the Code's table of contents and no
+# full-text search operation at all (design/source-quirks.md § 18).
+# Section text still comes from the HTML pages, which are the primary
+# published text. Endpoint structure and the "not found" redirect
+# behavior verified live 2026-08-28; the API verified live 2026-09-08.
 id: va-code-of-virginia
 name: Code of Virginia (law.lis.virginia.gov)
 jurisdiction: va
@@ -18,10 +22,13 @@ domains: [civic]
 capabilities:
   - id: code_section.lookup
     tool_hint: civic.get_code_section
+  - id: code_structure.browse
+    tool_hint: civic.browse_code
 
 adapter:
   type: virginia_law
   service_url: https://law.lis.virginia.gov/vacode
+  api_url: https://law.lis.virginia.gov/api
 
 access:
   mode: anonymous
@@ -30,12 +37,13 @@ access:
   terms_notes: >
     Publicly served, anonymous, no rate-limit or robots restriction found
     on the section pages themselves as of the review date. The site's own
-    developer portal (law.lis.virginia.gov/developers/) advertises a
-    separate keyed JSON/XML API program for bulk/structured access; this
-    manifest reads the public HTML pages directly instead, since bulk
-    access needs a registration step this project doesn't automate
-    around (the GitHub issues). Re-review with the standard 12-month cadence.
-  terms_reviewed_at: "2026-08-28"
+    developer portal (law.lis.virginia.gov/developers/) advertises
+    RESTful JSON and XML services; re-checked 2026-09-08, they are
+    anonymous and keyless, served from the same host under the same
+    terms, and both endpoints are read here. The keyed program is the
+    separate legislative API at lis.virginia.gov (GitHub issue #11).
+    Re-review with the standard 12-month cadence.
+  terms_reviewed_at: "2026-09-08"
   data_classification: open
 
 freshness:
@@ -49,11 +57,18 @@ coverage:
   geography: va
   temporal: current
   known_limitations:
-    - Direct citation lookup only — this reads one section page per call;
-      there is no full-text search against this adapter (the site's own
-      search feature was not reverse-engineered).
-    - HTML-page scraping, not a structured API — a redesign of the site's
-      markup would break parsing before it broke any published contract.
+    - No full-text search. The publisher's own search endpoint is public
+      and keyless and its backend answered every query with "The Search
+      Appliance is down" on 2026-09-08; its JSON API has no search
+      operation among the twenty-three it serves. Reaching a section
+      means knowing the citation or walking the table of contents to it.
+    - Browsing returns the publisher's own table of contents and nothing
+      about what a section says. A chapter's title is a heading, not a
+      summary of the law under it.
+    - Section text is parsed from the site's HTML, not read from a
+      structured API — a redesign of the markup would break parsing
+      before it broke any published contract. The table of contents does
+      come from the publisher's JSON, and is not exposed to that.
     - No machine-readable last-edit date per section; retrieval time is
       known, the underlying text's amendment date is only what the
       section's own citation-history paragraph states in prose.
