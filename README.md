@@ -5,6 +5,7 @@ MCP server for AI assistants. For policy researchers and developers building
 applications for Virginia residents.
 
 [Try the browser demos](https://pranava0x0.github.io/Commonwealth-MCP/#try)
+· [Search the tools](https://pranava0x0.github.io/Commonwealth-MCP/#tools)
 · [Run examples](examples/README.md)
 · [Add a data source](CONTRIBUTING.md)
 · [Design and remaining work](design/README.md)

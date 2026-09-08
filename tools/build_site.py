@@ -55,6 +55,23 @@ PLANNED_SKILLS = [
 ]
 
 
+def tool_parameters(spec) -> list[dict]:
+    """The arguments a tool takes, read off the function the server binds.
+
+    Read rather than declared, for the reason every other roster on this
+    page is derived: a hand-typed argument list is a second place for the
+    signature to live, and the second place is the one that goes stale.
+    `ctx` is the runtime handle the server supplies, not something a
+    caller passes, so it is not an argument of the tool.
+    """
+    import inspect
+
+    sig = inspect.signature(spec.fn, eval_str=True)
+    return [{"name": name,
+             "required": param.default is inspect.Parameter.empty}
+            for name, param in sig.parameters.items() if name != "ctx"]
+
+
 def skill_roster() -> list[dict]:
     """Skills on disk, then the ones still declared as planned.
 
@@ -294,6 +311,7 @@ def build_catalog() -> dict:
             tools.append({"name": spec.name, "package": package,
                           "toolset": spec.toolset,
                           "contract_version": spec.contract_version,
+                          "parameters": tool_parameters(spec),
                           "description": spec.description})
 
     sources = []

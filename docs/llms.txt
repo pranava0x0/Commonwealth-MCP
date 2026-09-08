@@ -92,4 +92,5 @@ also callable from Python and the CLI without an AI client.
 ## Optional
 
 - [Demo site](https://pranava0x0.github.io/Commonwealth-MCP/): one recorded call per tool, with the full answer each returned
+- [Tool search](https://pranava0x0.github.io/Commonwealth-MCP/#tools): every tool with the arguments it takes, searchable by name, package, or description
 - [Run log](https://github.com/pranava0x0/Commonwealth-MCP/blob/main/docs/RUNLOG.md): what happened when

@@ -3,6 +3,50 @@
 One entry per significant work session or delegated research task: why it
 ran, cost where relevant, and whether it was worth it.
 
+## 2026-09-08 — one branch instead of two, and the site learns to be searched
+
+**Two open pull requests, which should have been none.** #43 existed
+because #42 was merged before its review findings were applied, so the
+fixes needed a branch of their own. #44 was then started from #43's head
+rather than from `main`, which stacked them: every commit in #43 was also
+in #44, and #43 sat open for five days while the branch that contained it
+grew. Nothing conflicted, but the diff on #44 claimed 18,000 lines of
+which a third were #43's, and either could have been reviewed against the
+wrong base. The rule this session settles on: apply a review to the branch
+under review before merging it, and start the next branch from `main`.
+
+#43's last open finding was fixed and it was merged: the sweep replaced
+each expired result payload with a payload-free tombstone and then never
+deleted the tombstone, because it only ever globbed `*.meta` and `*.json`.
+Each one carries the arguments of the call that made it, which for these
+tools is an address, a parcel PIN, or a coordinate — so a store with a
+24-hour retention window kept the questions indefinitely, and grew by one
+file per result forever. Tombstones now expire a day after the payload
+does and the sweep deletes them at it; a read past that window is an
+ordinary `not_found`. #44 was rebased onto the merged `main`, which
+dropped the duplicated commit and left it five commits of its own work.
+
+**The site.** PNNL's nepa-mcp was read again, this time for how it is
+organised rather than for whether it has a live demo (the August answer,
+research/README.md part 6 § 4). Two of its patterns were adopted. The
+tool list is a search now rather than a four-column table: its own
+section, a search box over name, package, toolset and description,
+package filter chips, a live count, and one card per tool showing the
+arguments it takes. Those argument lists are read off the bound function
+at build time by `tool_parameters()`, so the page cannot advertise a
+parameter the server does not accept — the same rule every other roster on
+the page follows.
+
+Installation became four numbered steps with copy
+buttons, the one step that goes out to a live service labelled as such,
+and a picker between `claude mcp add` and the JSON config shape most other
+clients take. Its flippable server cards were not adopted: they hide
+coverage behind an interaction, and coverage is the thing this project
+refuses to make anyone hunt for.
+
+Browser-verified at the built page: search, package filter, the
+no-match state, both client snippets, and the copy buttons.
+
 ## 2026-09-07 — two towns close the forcing set, and a tool learns to borrow a polygon
 
 Issue #10, the last open slot of the source-registry forcing set
