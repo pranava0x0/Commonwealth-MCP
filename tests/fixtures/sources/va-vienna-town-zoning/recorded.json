@@ -1,6 +1,6 @@
 {
  "source_id": "va-vienna-town-zoning",
- "recorded_at": "2026-09-08T01:02:04Z",
+ "recorded_at": "2026-09-08T04:45:13Z",
  "rights": {
   "publisher": "Town of Vienna government (Department of Planning and Zoning)",
   "terms_url": "https://vienna-va.maps.arcgis.com/home/index.html",
@@ -599,6 +599,69 @@
     "resultRecordCount": "50",
     "returnGeometry": "false",
     "geometry": "{\"rings\": [[[-77.26476898010533, 38.90114074014225], [-77.2651695405384, 38.90082363262805], [-77.26557370683271, 38.90112176242914], [-77.26516556698066, 38.9014440995909], [-77.26476898010533, 38.90114074014225]]], \"spatialReference\": {\"wkid\": 4326}}",
+    "geometryType": "esriGeometryPolygon",
+    "inSR": "4326",
+    "spatialRel": "esriSpatialRelIntersects"
+   },
+   "response": {
+    "objectIdFieldName": "FID",
+    "uniqueIdField": {
+     "name": "FID",
+     "isSystemMaintained": true
+    },
+    "globalIdFieldName": "",
+    "geometryType": "esriGeometryPolygon",
+    "spatialReference": {
+     "wkid": 102100,
+     "latestWkid": 3857
+    },
+    "fields": [
+     {
+      "name": "Dist_Desc",
+      "type": "esriFieldTypeString",
+      "alias": "Dist_Desc",
+      "sqlType": "sqlTypeNVarchar",
+      "length": 50,
+      "domain": null,
+      "defaultValue": null
+     },
+     {
+      "name": "FID",
+      "type": "esriFieldTypeOID",
+      "alias": "FID",
+      "sqlType": "sqlTypeInteger",
+      "domain": null,
+      "defaultValue": null
+     },
+     {
+      "name": "Prop_Distr",
+      "type": "esriFieldTypeString",
+      "alias": "Prop_Distr",
+      "sqlType": "sqlTypeNVarchar",
+      "length": 10,
+      "domain": null,
+      "defaultValue": null
+     }
+    ],
+    "features": [
+     {
+      "attributes": {
+       "Dist_Desc": "Avenue Center District",
+       "FID": 2,
+       "Prop_Distr": "AC"
+      }
+     }
+    ]
+   }
+  },
+  {
+   "url": "https://services1.arcgis.com/OiQmCBznWDfkLRp1/arcgis/rest/services/Proposed_Districts/FeatureServer/0/query",
+   "params": {
+    "f": "json",
+    "outFields": "Dist_Desc,FID,Prop_Distr",
+    "resultRecordCount": "50",
+    "returnGeometry": "false",
+    "geometry": "{\"rings\": [[[-77.26476897987855, 38.90114073980103], [-77.26516954046036, 38.900823633122464], [-77.26557370687975, 38.901121762125314], [-77.26516556721187, 38.90144409948833], [-77.26476897987855, 38.90114073980103]]], \"spatialReference\": {\"wkid\": 4326}}",
     "geometryType": "esriGeometryPolygon",
     "inSR": "4326",
     "spatialRel": "esriSpatialRelIntersects"

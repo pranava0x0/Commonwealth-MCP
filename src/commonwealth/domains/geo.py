@@ -467,7 +467,7 @@ def _note_failure(failures: list, source_id: str,
 # same request (`_scoped_where`, which is a no-op for a source at its own
 # level), so the order sources come out of selection cannot change what is
 # cited.
-_ParcelQueries = dict[str, tuple[ArcGISQueryResult, str]]
+_ParcelQueries = dict[str, "tuple[ArcGISQueryResult, str] | CommonwealthError"]
 
 
 async def _parcel_by_pin(ctx: RuntimeContext, b: EnvelopeBuilder,
@@ -476,15 +476,24 @@ async def _parcel_by_pin(ctx: RuntimeContext, b: EnvelopeBuilder,
                          ) -> tuple[ArcGISQueryResult, str]:
     """One source's parcel polygons for `pin`, with its provenance entry,
     fetched once per call. A miss is a real answer: the source was
-    contacted and lands in provenance with nothing under it."""
+    contacted and lands in provenance with nothing under it. A failure is
+    remembered too and raised again on reuse, so a source that is down
+    costs one retry cycle per call rather than one per government."""
     if pm.id not in queries:
-        pq = await ctx.arcgis.query(
-            pm, "parcels",
-            where_equals=_scoped_where(ctx, pm, "parcels", stack,
-                                       {"pin": pin}),
-            return_geometry=True)
+        try:
+            pq = await ctx.arcgis.query(
+                pm, "parcels",
+                where_equals=_scoped_where(ctx, pm, "parcels", stack,
+                                           {"pin": pin}),
+                return_geometry=True)
+        except CommonwealthError as err:
+            queries[pm.id] = err
+            raise
         queries[pm.id] = (pq, _source_entry(b, pm, pq))
-    return queries[pm.id]
+    outcome = queries[pm.id]
+    if isinstance(outcome, CommonwealthError):
+        raise outcome
+    return outcome
 
 
 @dataclass
@@ -713,8 +722,13 @@ async def find_zoning(ctx: RuntimeContext, jurisdiction: str,
                "ordinance and official zoning map govern; confirm before "
                "any legal reliance.")
 
+    # A block with no source entry was never queried, so it does not
+    # count as an answer: every parcel source down leaves a town's block
+    # in `blocks` and nothing succeeded, which is a failed execution,
+    # not a partial one.
+    queried = [blk for blk in blocks if blk.get("source_ref")]
     execution = (ExecutionCoverage.complete if not failures
-                 else ExecutionCoverage.failed if not blocks
+                 else ExecutionCoverage.failed if not queried
                  else ExecutionCoverage.partial)
     total = sum(blk["record_count"] for blk in blocks)
     data = {"results": blocks}

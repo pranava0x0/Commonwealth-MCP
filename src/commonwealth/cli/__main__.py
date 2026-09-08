@@ -975,7 +975,7 @@ async def _sample_zoning_only(adapter, m, params, ctx, recorder) -> dict:
         # geo.find_zoning borrows the polygon from the first parcel source
         # in the stack that has the PIN, and records a miss for the ones
         # asked before it; the miss replays too.
-        borrowed = None
+        hits: list[tuple] = []
         for pm in ctx.sources.select("parcel.lookup", stack):
             pa = adapter_for(pm)
             scoped = _scoped_where(ctx, pm, "parcels", stack, {"pin": pin})
@@ -989,20 +989,27 @@ async def _sample_zoning_only(adapter, m, params, ctx, recorder) -> dict:
                            where_equals=_scoped_where(
                                ctx, pm, "parcels", stack,
                                {"pin": "NO SUCH PIN"}))
-            if pq.records and borrowed is None:
-                borrowed = (pm, pq)
-        if borrowed is None:
+            if pq.records:
+                hits.append((pm, pq))
+        if not hits:
             raise CommonwealthError(
                 f"no parcel source in {stack} has sample_pin {pin!r}; "
                 "update the manifest")
-        pm, pq = borrowed
+        pm, pq = hits[0]
         out["sample_pin"] = pin
         out["parcel_source"] = pm.id
         out["parcel_polygons"] = len(pq.records)
+        # The districts are read over the first source's polygon, and
+        # over every other source's too: with the first one down,
+        # geo.find_zoning reads them over the next, and that replays
+        # only if it was recorded.
         found: set[str] = set()
-        for parcel in pq.records[:MAX_PARCEL_POLYGONS]:
-            found |= set(districts(await adapter.query(
-                m, "zoning", intersect_geometry=_parcel_geometry(parcel))))
+        for i, (_, hit) in enumerate(hits):
+            for parcel in hit.records[:MAX_PARCEL_POLYGONS]:
+                got = districts(await adapter.query(
+                    m, "zoning", intersect_geometry=_parcel_geometry(parcel)))
+                if i == 0:
+                    found |= set(got)
         out["pin_districts"] = sorted(found)
         # A county source answers the same PIN over its own parcel layer,
         # with the same scoped request geo.find_zoning sends for it, so

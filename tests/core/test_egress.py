@@ -570,3 +570,29 @@ async def test_a_redirected_form_post_carries_its_body_to_the_new_host(
     assert seen[1][1].endswith("/moved"), seen[1][1]
     assert b"geometry=" + b"x" * 5000 in seen[1][2], (
         "the second hop lost the polygon")
+
+
+async def test_a_303_turns_a_posted_query_into_a_get_of_the_location(
+        monkeypatch):
+    """A 303 asks for a GET of the Location; only 307 and 308 keep the
+    method, and only they carry the form body on."""
+    seen: list[tuple[str, str, bytes]] = []
+    big = {"f": "json", "geometry": "x" * 5000}
+
+    async def fake_send(self, request):
+        seen.append((request.method, str(request.url), request.content))
+        if len(seen) == 1:
+            return httpx.Response(
+                303, headers={"location":
+                              "https://www.fairfaxcounty.gov/result?f=json"},
+                request=request)
+        return httpx.Response(200, content=b'{"ok":true}', request=request)
+
+    monkeypatch.setattr(httpx.AsyncHTTPTransport, "handle_async_request",
+                        fake_send)
+    await HttpFetcher(policy=_policy()).fetch_json(
+        "https://www.fairfaxcounty.gov/x/query", big)
+    assert [m for m, _, _ in seen] == ["POST", "GET"], seen
+    assert seen[1][1].endswith("/result?f=json"), seen[1][1]
+    assert seen[1][2] == b"", "a GET of the Location carries no body"
+

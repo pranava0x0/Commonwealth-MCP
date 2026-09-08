@@ -182,9 +182,10 @@ class HttpFetcher:
                      params: dict[str, Any] | None) -> tuple[_Body, str]:
         current = url
         # A query too long for a URL travels as a form body, which no
-        # Location header carries, so it is sent again on every hop. A
-        # GET's query is already in the Location and its params are
-        # dropped below.
+        # Location header carries, so it is sent again on a 307 or 308,
+        # the redirects that keep the method. A 301, 302, or 303 asks for
+        # a GET of the Location, and a GET's query is already in the
+        # Location, so params are dropped for those.
         posted = _would_post(url, params)
         for hop in range(4):  # initial request + MAX_REDIRECTS
             approved = self.policy.validate_url(current)
@@ -205,7 +206,8 @@ class HttpFetcher:
                 # `.../query?where=...&f=json` to its canonical name would
                 # be re-asked for a bare `.../query`, answer with its HTML
                 # form, and be reported as an outage.
-                params = params if posted else None
+                params = (params if posted
+                          and response.status_code in (307, 308) else None)
                 continue
             return response, host
         raise SourceUnavailable("redirect chain did not settle")

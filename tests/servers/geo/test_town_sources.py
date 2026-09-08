@@ -214,6 +214,34 @@ async def test_every_parcel_source_down_is_an_outage_not_a_missing_parcel():
         f"one entry per source, not one per attempt: {failed}")
     assert env.coverage.result.value == "empty"
     assert env.coverage.registry.value == "covered"
+    assert env.coverage.execution.value == "failed", (
+        "nothing was read; a block that says 'not queried' is not a "
+        "partial answer")
+
+
+async def test_a_parcel_source_that_is_down_is_asked_once_per_call():
+    """The county's own path and the town's borrowed step both want the
+    county's parcel. When that source is down, the second path reuses the
+    remembered failure rather than spending another retry cycle on it."""
+    s = _summary(VIENNA)
+    outage = _HostOutage("fairfaxcounty.gov")
+    calls: list[str] = []
+    real = outage.fetch_json
+
+    async def counting(url, params):
+        if "fairfaxcounty.gov" in url and "/0/query" in url:
+            calls.append(params.get("where", ""))
+        return await real(url, params)
+
+    outage.fetch_json = counting
+    ctx = build_ctx(fetcher=outage)
+    env = await find_zoning(ctx, jurisdiction="Vienna", pin=s["sample_pin"])
+    assert len(calls) == 1, calls
+    assert [f.source_id for f in env.coverage.source_failures] == [FAIRFAX]
+    by = _by_source(env)
+    assert by[VIENNA]["parcel_source_id"] == VGIN, (
+        "with the county down the town's districts are read over VGIN's "
+        "polygon")
 
 
 # --- Leesburg: a town with its own parcels beside the statewide layer ---

@@ -113,7 +113,19 @@ counties where there is one, a broken line in llms.txt, a stale replay
 path in the evals README, one score kind spelled two ways, and cost-log
 counts that did not match the table above them.
 
-591 tests.
+**The Codex round, applied.** Three findings, all taken. A town's
+block that says "not queried" kept the results list non-empty, so a
+call in which every parcel source failed reported partial execution
+rather than failed; execution now counts the sources that were
+queried. A parcel source that failed for the county's own path was
+asked again by the town's borrowed step, two retry cycles for one
+outage; the failure is remembered for the call. And a POSTed query
+kept its body across every redirect, where a 303 asks for a GET of
+the Location; only 307 and 308 carry the body on now. The Vienna
+fixture also records the town's districts over VGIN's polygon, so the
+county-down path replays.
+
+593 tests.
 
 ## 2026-09-02 — the review of the above, applied
 
