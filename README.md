@@ -157,10 +157,10 @@ Leesburg and Vienna. Adding another locality's parcel or zoning layer is the
 most useful contribution and the best-documented path
 ([CONTRIBUTING.md](CONTRIBUTING.md)).
 
-The next priority in the project's own order is packaging: the runtime finds
-source manifests, the jurisdiction table and skills relative to the checkout,
-so a wheel installed anywhere else has the Python and none of the data. That
-is what has to be true before the server is published
+Packaging landed on 2026-09-08: the source manifests, the jurisdiction
+table and the skills ship inside the wheel, so an install works without a
+checkout. What remains before the server is published is a release version
+and the upload itself
 ([issue #40](https://github.com/pranava0x0/Commonwealth-MCP/issues/40)).
 State legislation search, local meetings and full-text Code search are
 tracked in

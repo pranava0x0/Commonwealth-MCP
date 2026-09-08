@@ -28,6 +28,14 @@ uv.lock
 # collection" section rebuilds it. Kept out of the tree so a clone is small.
 research/raw/
 
+# The two research agents' incremental output, ~130 KB of raw notes.
+# research/README.md is the synthesis and says in its own words that it
+# supersedes them; keeping both invited the reader to guess which one was
+# current. Untracked 2026-09-08, so it stays in git history where a claim
+# can still be traced to the pass that produced it, without sitting in the
+# tree as a second, staler account of the same findings.
+research/notes/
+
 # Local working backlog. Maintainer-facing notes — which spec ruling is
 # owed, which one-line fixes to make next time a file is open — that would
 # be noise in the public issue tracker. It points at GitHub issue numbers

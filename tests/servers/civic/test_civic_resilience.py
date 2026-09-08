@@ -48,6 +48,46 @@ async def test_a_browse_outage_is_failed_execution_not_an_empty_code():
     assert env.data["results"] == []
 
 
+async def test_a_payload_without_its_listing_key_is_an_outage():
+    """The publisher sends `ChapterList` even for a title it does not
+    have — an unknown title is `{"TitleNumber": null, "ChapterList": []}`.
+    So a document without the key is one this parser does not recognise,
+    and calling it an empty branch of the Code would report a complete
+    execution over a payload nobody understood."""
+    from commonwealth.adapters.replay import ReplayFetcher
+
+    exchanges = [{"url": "https://law.lis.virginia.gov/api/"
+                         "CoVChaptersGetListOfJson/15.2",
+                  "params": {},
+                  # An HTTP 200 error object, which is how this service
+                  # reports at least one of its failures.
+                  "response": {"Message": "An error has occurred."}}]
+    ctx = build_ctx(civic_api_fetcher=ReplayFetcher(exchanges))
+    env = await browse_code(ctx, title="15.2")
+    assert env.coverage.execution.value == "failed"
+    assert env.coverage.result.value == "empty"
+    assert [f.error for f in env.coverage.source_failures] == [
+        "SourceUnavailable"]
+    assert env.data["results"] == []
+
+
+async def test_an_explicit_empty_listing_is_still_a_clean_empty():
+    """The other side of it: the publisher's own way of saying a branch
+    has nothing under it must not be read as an outage."""
+    from commonwealth.adapters.replay import ReplayFetcher
+
+    exchanges = [{"url": "https://law.lis.virginia.gov/api/"
+                         "CoVChaptersGetListOfJson/99.9",
+                  "params": {},
+                  "response": {"TitleNumber": None, "TitleName": None,
+                               "ChapterList": []}}]
+    ctx = build_ctx(civic_api_fetcher=ReplayFetcher(exchanges))
+    env = await browse_code(ctx, title="99.9")
+    assert env.coverage.execution.value == "complete"
+    assert env.coverage.result.value == "empty"
+    assert env.coverage.source_failures == []
+
+
 async def test_the_two_civic_paths_fail_independently():
     """Section text is HTML and the contents listing is JSON, from one
     publisher over two endpoints. A redesign of the site's markup should

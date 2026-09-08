@@ -205,7 +205,25 @@ def _rows(payload: Any, want: type, described: str) -> Any:
 
 
 def _listing(doc: dict, key: str) -> list:
-    value = doc.get(key)
+    """The list under `key`, refusing a document that does not have one.
+
+    The publisher always sends the key. A title it does not have comes
+    back as `{"TitleNumber": null, ..., "ChapterList": []}`, and an
+    unknown chapter the same way with `ArticleList` — verified against
+    the live service on 2026-09-08. So an absent key is not the
+    publisher's way of saying "empty", it is a document this parser does
+    not recognise, and reading it as an empty branch of the Code would
+    report `execution=complete` over a payload nobody understood. An
+    explicit `null` is still treated as empty, because that is the
+    publisher's own vocabulary for a branch with nothing under it.
+    """
+    if key not in doc:
+        raise SourceUnavailable(
+            f"the Code of Virginia API answered without {key!r}. The "
+            "publisher sends that key even for a title or chapter it "
+            "does not have, so this is a changed or failed service, not "
+            "an empty branch of the Code.")
+    value = doc[key]
     if value is None:
         return []
     return _rows(value, list, f"a list under {key!r}")

@@ -79,9 +79,14 @@ and nothing matched, or no source is registered for that place. Neither proves t
 
 ## Setup
 
-Clone the repository and follow the README. The current runtime requires
-checkout data; a standalone wheel install is not yet supported. Tools are
-also callable from Python and the CLI without an AI client.
+Two ways. `uv tool install commonwealth-mcp` gets the server on its own:
+the source manifests, the jurisdiction table and the skills ship inside
+the package. The examples, the recorded fixtures and the tests are
+repo-only, so clone the repository and follow the README for those. Tools
+are also callable from Python and the CLI without an AI client.
+
+The package is not on PyPI yet (issue #40), so today the checkout is the
+only path that runs.
 
 ## Docs
 
