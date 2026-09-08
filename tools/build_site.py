@@ -225,11 +225,28 @@ DEMO_CALLS = [
      'DEQ monitoring stations include sampling dates and coverage limits.'),
     ("geo.find_boundaries", {"jurisdiction": "Prince George County"},
      'The boundary lookup returns both published polygons for this FIPS code.'),
+    ("civic.browse_code", {},
+     'The Code of Virginia from the top. There is no full-text search '
+     'over it from any public endpoint, so reaching a section you cannot '
+     'cite means walking to it.'),
+    ("civic.browse_code", {"title": "15.2"},
+     'One title\u2019s chapters. Each row carries the arguments for the '
+     'step below it.'),
     ("civic.browse_code", {"title": "15.2", "chapter": "22"},
-     'Walking the Code to the zoning chapter, because there is no '
-     'full-text search over it from any public endpoint.'),
+     'The zoning chapter\u2019s sections. Each row carries the citation '
+     'to read next.'),
+    ("civic.browse_code", {"title": "99.9"},
+     'A title the Code does not have. The publisher answers an unknown '
+     'title and an empty one the same way, so the note says which '
+     'question came back empty rather than guessing.'),
+    ("civic.get_code_section", {"citation": "15.2-2200"},
+     "The section the walk above ends at, read by citation \u2014 the two "
+     "civic tools composing"),
     ("civic.get_code_section", {"citation": "1-500"},
      "Code of Virginia section text with its own citation history"),
+    ("civic.get_code_section", {"citation": "1-999999"},
+     'A section that does not exist. The site redirects rather than '
+     '404ing, and the answer is found=False, not an error.'),
 
     # --- a town and its county, one piece of ground ---
     ("geo.find_zoning", {"jurisdiction": "Vienna",
@@ -261,6 +278,13 @@ DEMO_CALLS = [
                                       "lon": -74.5, "lat": 36.5},
      "An empty environmental answer, carrying the same disclaimer as a "
      "hit — 'no station on record here' is not 'nothing here'"),
+
+    # --- large answers, and the handles that carry what does not fit ---
+    ("geo.find_boundaries", {"jurisdiction": "Fairfax County",
+                             "detail": "full"},
+     "A boundary too large to return whole. The generalized rings come "
+     "back inline and a commonwealth:// handle carries the publisher's "
+     "own 16,641 vertices, with the expiry stated"),
 
     # --- what is registered at all? ---
     ("registry.search_sources", {"capability": "zoning.lookup"},
@@ -620,27 +644,63 @@ def _virginia_law_adapter(mode: str):
     """The civic tool reads HTML pages, not ArcGIS, so it needs its own
     replay seam. Without this the 'fixtures' build would reach
     law.lis.virginia.gov for real and stop being deterministic."""
-    import json as _json
-
     from commonwealth.adapters.replay import HtmlReplayFetcher, ReplayFetcher
     from commonwealth.adapters.virginia_law import VirginiaLawAdapter
+    from commonwealth.fixtures import (recorded_api_exchanges,
+                                       recorded_pages)
     if mode != "fixtures":
         return VirginiaLawAdapter()
-    base = "https://law.lis.virginia.gov/vacode"
-    fixture_dir = FIXTURES_DIR / "va-code-of-virginia"
-    pages = {
-        f"{base}/1-500/": ((fixture_dir / "section-1-500.html").read_text(),
-                           f"{base}/1-500/"),
-        f"{base}/1-999999/": (
-            (fixture_dir / "no-such-section.html").read_text(),
-            f"{base}/title1/"),
+    # The same two seams the tests replay, from the same two functions.
+    # This built its own copy of the page list, so a page recorded for the
+    # tests was not a page the site build could reach, and adding one to
+    # both was a step nobody would remember twice.
+    return VirginiaLawAdapter(fetcher=HtmlReplayFetcher(recorded_pages()),
+                              json_fetcher=ReplayFetcher(
+                                  recorded_api_exchanges()))
+
+
+SITE_URL = "https://pranava0x0.github.io/Commonwealth-MCP/"
+REPO_URL = "https://github.com/pranava0x0/Commonwealth-MCP"
+
+
+def structured_data(catalog: dict) -> dict:
+    """schema.org JSON-LD, so a crawler reads this as software.
+
+    Issue #40 is about being findable, and the registry listing is only
+    half of that. Every value here is derived from the same catalog the
+    page renders, so the description a search engine reads cannot drift
+    from the one a reader sees.
+    """
+    c = catalog["counts"]
+    return {
+        "@context": "https://schema.org",
+        "@graph": [
+            {"@type": "WebSite", "@id": SITE_URL + "#website",
+             "url": SITE_URL, "name": "Commonwealth-MCP",
+             "about": {"@id": SITE_URL + "#software"}},
+            {"@type": "SoftwareSourceCode", "@id": SITE_URL + "#software",
+             "name": "Commonwealth-MCP", "url": SITE_URL,
+             "codeRepository": REPO_URL,
+             "license": "https://www.apache.org/licenses/LICENSE-2.0",
+             "programmingLanguage": "Python",
+             "softwareVersion": catalog["version"],
+             "applicationCategory": "DeveloperApplication",
+             "description":
+                 f"An MCP server for Virginia state and local public data: "
+                 f"{c['tools']} tools over {c['sources_active']} registered "
+                 f"government systems, covering parcels, zoning, "
+                 f"jurisdiction boundaries, addresses, buildings, roads, "
+                 f"landmarks, monitored environmental sites and the Code of "
+                 f"Virginia. Every answer carries its sources, retrieval "
+                 f"dates and coverage, and every one of Virginia's "
+                 f"{c['jurisdictions']} governments is in its jurisdiction "
+                 f"table.",
+             "keywords": ["mcp", "model-context-protocol", "virginia",
+                          "civic-tech", "gis", "open-data", "public-data",
+                          "arcgis", "parcels", "zoning",
+                          "code-of-virginia"]},
+        ],
     }
-    # Two seams for one publisher: section text is HTML, the table of
-    # contents is the publisher's JSON API.
-    api = _json.loads(
-        (fixture_dir / "api-recorded.json").read_text())["exchanges"]
-    return VirginiaLawAdapter(fetcher=HtmlReplayFetcher(pages),
-                              json_fetcher=ReplayFetcher(api))
 
 
 INDEX_HTML = DOCS_DATA.parent / "index.html"
@@ -656,7 +716,11 @@ def embed_data(html: str, block_id: str, obj: dict) -> str:
     JSON.parse needs no matching change on the JS side.
     """
     text = json.dumps(obj, separators=(",", ":")).replace("</script", "<\\/script")
-    pattern = (rf'(<script type="application/json" id="{block_id}">)'
+    # Either JSON mime type: the catalog blocks are `application/json`
+    # and the structured-data block is `application/ld+json`, and both are
+    # spliced the same way.
+    pattern = (rf'(<script type="application/(?:ld\+)?json" '
+               rf'id="{block_id}">)'
                r'.*?(</script>)')
     new_html, n = re.subn(pattern, lambda m: m.group(1) + text + m.group(2),
                            html, count=1, flags=re.DOTALL)
@@ -691,6 +755,7 @@ def main() -> int:
         json.dumps(resolver_demo, indent=1) + "\n")
 
     html = INDEX_HTML.read_text()
+    html = embed_data(html, "data-jsonld", structured_data(catalog))
     html = embed_data(html, "data-site", catalog)
     html = embed_data(html, "data-audit-demo", demo)
     html = embed_data(html, "data-resolver-demo", resolver_demo)
@@ -699,7 +764,7 @@ def main() -> int:
     print(f"site.json: {catalog['counts']}")
     print(f"audit-demo.json: {demo['call_count']} calls ({mode})")
     print(f"resolver-demo.json: {len(resolver_demo['queries'])} queries")
-    print(f"index.html: embedded 3 data blocks ({len(html)} bytes)")
+    print(f"index.html: embedded 4 data blocks ({len(html)} bytes)")
     return 0
 
 
