@@ -11,7 +11,7 @@ from __future__ import annotations
 import re
 from dataclasses import dataclass
 
-from ..adapters.arcgis import ArcGISQueryResult
+from ..adapters.arcgis import ArcGISQueryResult, ArcGISRecord
 from ..adapters.arcgis_geocode import (GeocodeCandidate,
                                        GeocodeResult)
 from ..core.assemble import (EnvelopeBuilder, failure, result_dim,
@@ -228,6 +228,9 @@ def _compare(blocks: list[dict], field_name: str) -> dict | None:
     matching record is not a disagreement — it has nothing to compare, which
     is a different and accurate shape (e.g. VGIN's statewide data-call lag on a
     parcel the locality's own system already has)."""
+    # A block with no source entry was never queried (a town's zoning
+    # with no parcel polygon to read over); it has no answer to compare.
+    blocks = [blk for blk in blocks if blk.get("source_ref")]
     if len(blocks) < 2:
         return None
     sets = [sorted({r.get(field_name) for r in blk["records"]
@@ -440,25 +443,69 @@ async def find_parcel(ctx: RuntimeContext, jurisdiction: str,
     return b.build(data, coverage)
 
 
+def _parcel_geometry(record: ArcGISRecord) -> dict:
+    """A parcel polygon as the platform wants it back: the adapter asks
+    for 4326 and the record carries no spatial reference of its own."""
+    geometry = dict(record.geometry or {})
+    geometry.setdefault("spatialReference", {"wkid": 4326})
+    return geometry
+
+
+def _note_failure(failures: list, source_id: str,
+                  err: CommonwealthError) -> None:
+    """One `source_failures` entry per source. The county's own zoning
+    path and a town's borrowed parcel step can both reach the same parcel
+    source on one request, and a source that is down is down once."""
+    if not any(f.source_id == source_id for f in failures):
+        failures.append(failure(source_id, err.code, str(err)))
+
+
+# Parcel queries made during one find_zoning call, by source id. The
+# county's own zoning path and a town's borrowed step read the same
+# parcel layer, and whichever runs first fetches and cites it; the other
+# reuses the query. Keyed on the source alone because both paths send the
+# same request (`_scoped_where`, which is a no-op for a source at its own
+# level), so the order sources come out of selection cannot change what is
+# cited.
+_ParcelQueries = dict[str, tuple[ArcGISQueryResult, str]]
+
+
+async def _parcel_by_pin(ctx: RuntimeContext, b: EnvelopeBuilder,
+                         pm: SourceManifest, stack: list[str], pin: str,
+                         queries: _ParcelQueries
+                         ) -> tuple[ArcGISQueryResult, str]:
+    """One source's parcel polygons for `pin`, with its provenance entry,
+    fetched once per call. A miss is a real answer: the source was
+    contacted and lands in provenance with nothing under it."""
+    if pm.id not in queries:
+        pq = await ctx.arcgis.query(
+            pm, "parcels",
+            where_equals=_scoped_where(ctx, pm, "parcels", stack,
+                                       {"pin": pin}),
+            return_geometry=True)
+        queries[pm.id] = (pq, _source_entry(b, pm, pq))
+    return queries[pm.id]
+
+
 @dataclass
 class _BorrowedParcel:
     """The parcel polygons a zoning source with no parcel layer of its own
     reads its districts over, and where they came from. `found` is None
-    when no parcel source had the PIN; `answered` says whether any parcel
-    source was reached at all, so a total outage in the parcel step is
-    reported as one rather than as a missing parcel."""
+    when no parcel source had the PIN. `selectable` says whether any
+    parcel source could be asked at all, and `answered` whether one was
+    reached, so no parcel source, every source down, and no such parcel
+    are reported as the three different facts they are."""
 
     found: ArcGISQueryResult | None = None
     source_ref: str | None = None
     source_id: str | None = None
+    selectable: bool = False
     answered: bool = False
 
 
 async def _borrow_parcel_polygons(ctx: RuntimeContext, b: EnvelopeBuilder,
                                   stack: list[str], pin: str,
-                                  failures: list,
-                                  already: dict[str, tuple[ArcGISQueryResult,
-                                                           str]]
+                                  failures: list, queries: _ParcelQueries
                                   ) -> _BorrowedParcel:
     """The polygons for `pin` from the first parcel source in the stack
     that has them, on behalf of a zoning source that publishes none.
@@ -468,32 +515,16 @@ async def _borrow_parcel_polygons(ctx: RuntimeContext, b: EnvelopeBuilder,
     as the parcel step of geo.find_buildings. Selection is the parcel
     capability's own (decision 0005), so a town's zoning is read over the
     county's parcel where the county publishes one and over VGIN's where
-    it does not. `already` holds the parcel queries this call has made
-    for zoning sources that read their own layer, so the county's parcel
-    is fetched and cited once rather than once per government."""
+    it does not."""
     out = _BorrowedParcel()
     for pm in ctx.sources.select("parcel.lookup", stack):
-        if pm.id in already:
-            pq, ref = already[pm.id]
-            out.answered = True
-            if pq.records:
-                out.found, out.source_ref, out.source_id = pq, ref, pm.id
-                return out
-            continue
+        out.selectable = True
         try:
-            pq = await ctx.arcgis.query(
-                pm, "parcels",
-                where_equals=_scoped_where(ctx, pm, "parcels", stack,
-                                           {"pin": pin}),
-                return_geometry=True)
+            pq, ref = await _parcel_by_pin(ctx, b, pm, stack, pin, queries)
         except CommonwealthError as err:
-            # The county's own zoning path may already have recorded this
-            # source failing on the same request; one entry per source.
-            if not any(f.source_id == pm.id for f in failures):
-                failures.append(failure(pm.id, err.code, str(err)))
+            _note_failure(failures, pm.id, err)
             continue
         out.answered = True
-        ref = _source_entry(b, pm, pq)
         if pq.records:
             out.found, out.source_ref, out.source_id = pq, ref, pm.id
             return out
@@ -502,14 +533,19 @@ async def _borrow_parcel_polygons(ctx: RuntimeContext, b: EnvelopeBuilder,
 
 def _not_queried_note(m: SourceManifest, pin: str,
                       borrowed: _BorrowedParcel) -> str:
+    head = f"{m.id} publishes zoning and no parcels, and "
+    if not borrowed.selectable:
+        return (head + "no parcel source is registered or available for "
+                "this jurisdiction, so there was no polygon to read its "
+                f"districts over for PIN {pin!r}. It was not queried; a "
+                "point query needs no parcel.")
     if not borrowed.answered:
-        return (f"{m.id} publishes zoning and no parcels, and every parcel "
-                f"source that could supply a polygon for PIN {pin!r} "
-                "failed, so it was not queried. That is an outage, not a "
-                "statement about the parcel.")
-    return (f"{m.id} publishes zoning and no parcels, and no parcel source "
-            f"for this jurisdiction has PIN {pin!r}, so there was no "
-            "polygon to read its districts over. It was not queried.")
+        return (head + "every parcel source that could supply a polygon "
+                f"for PIN {pin!r} failed, so it was not queried. That is "
+                "an outage, not a statement about the parcel.")
+    return (head + f"no parcel source for this jurisdiction has PIN "
+            f"{pin!r}, so there was no polygon to read its districts over. "
+            "It was not queried.")
 
 
 async def find_zoning(ctx: RuntimeContext, jurisdiction: str,
@@ -540,10 +576,9 @@ async def find_zoning(ctx: RuntimeContext, jurisdiction: str,
     # A zoning source that publishes no parcel layer answers a parcel
     # number by borrowing the polygon from a parcel source above it in
     # the stack: Vienna's districts are read over Fairfax County's
-    # parcel. Fetched once per call and shared by every such source.
+    # parcel. Borrowed once per call and shared by every such source.
     borrowed: _BorrowedParcel | None = None
-    borrowed_tried = False
-    own_parcel_queries: dict[str, tuple[ArcGISQueryResult, str]] = {}
+    parcel_queries: _ParcelQueries = {}
 
     for m in selected:
         parcel_evidence_refs: list[str] = []
@@ -551,23 +586,26 @@ async def find_zoning(ctx: RuntimeContext, jurisdiction: str,
         try:
             if pin:
                 if "parcels" in ctx.arcgis.layer_keys(m):
-                    pq = await ctx.arcgis.query(m, "parcels",
-                                                where_equals={"pin": pin},
-                                                return_geometry=True)
-                    # The parcel query is a real consulted source too —
+                    # The parcel query is a real consulted source too:
                     # its geometry is what determines the zoning answer,
                     # and a no-match here means the source WAS contacted
                     # even though zoning never gets queried, not that
                     # nothing happened.
-                    parcel_ref = _source_entry(b, m, pq)
+                    pq, parcel_ref = await _parcel_by_pin(
+                        ctx, b, m, stack, pin, parcel_queries)
                     parcel_source_id = m.id
-                    own_parcel_queries[m.id] = (pq, parcel_ref)
+                    if not pq.records:
+                        blocks.append({"source_ref": parcel_ref,
+                                       "source_id": m.id,
+                                       "records": [], "record_count": 0,
+                                       "note": f"no parcel with PIN {pin!r} "
+                                               f"in {m.id}"})
+                        queries.append(pq)
+                        continue
                 else:
-                    if not borrowed_tried:
-                        borrowed_tried = True
+                    if borrowed is None:
                         borrowed = await _borrow_parcel_polygons(
-                            ctx, b, stack, pin, failures,
-                            own_parcel_queries)
+                            ctx, b, stack, pin, failures, parcel_queries)
                     if borrowed.found is None:
                         blocks.append({
                             "source_ref": None, "source_id": m.id,
@@ -577,14 +615,6 @@ async def find_zoning(ctx: RuntimeContext, jurisdiction: str,
                     pq = borrowed.found
                     parcel_ref = borrowed.source_ref
                     parcel_source_id = borrowed.source_id
-                if not pq.records:
-                    blocks.append({"source_ref": parcel_ref,
-                                   "source_id": m.id,
-                                   "records": [], "record_count": 0,
-                                   "note": f"no parcel with PIN {pin!r} in "
-                                           f"{m.id}"})
-                    queries.append(pq)
-                    continue
                 # Every polygon the PIN matched, up to a bound. Taking the
                 # first was right for the count and wrong for the answer:
                 # a parcel split across polygons can carry more than one
@@ -621,10 +651,9 @@ async def find_zoning(ctx: RuntimeContext, jurisdiction: str,
                         transformations=pq.transformations,
                         payload_hash=pq.payload_hash())
                     parcel_evidence_refs.append(this_ref)
-                    geometry = dict(parcel.geometry or {})
-                    geometry.setdefault("spatialReference", {"wkid": 4326})
-                    zq = await ctx.arcgis.query(m, "zoning",
-                                                intersect_geometry=geometry)
+                    zq = await ctx.arcgis.query(
+                        m, "zoning",
+                        intersect_geometry=_parcel_geometry(parcel))
                     zq.transformations.append("parcel_geometry_intersection")
                     if parcel_source_id != m.id:
                         # The polygon is another publisher's. A reader of
@@ -656,7 +685,7 @@ async def find_zoning(ctx: RuntimeContext, jurisdiction: str,
                 q = await ctx.arcgis.query(m, "zoning",
                                            geometry_point=(lon, lat))
         except CommonwealthError as err:
-            failures.append(failure(m.id, err.code, str(err)))
+            _note_failure(failures, m.id, err)
             continue
         queries.append(q)
         block = _records_block(

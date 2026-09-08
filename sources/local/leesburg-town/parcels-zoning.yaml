@@ -117,8 +117,8 @@ health:
     # 2026-09-07: 22,258 parcels and 140 zoning polygons.
     # The PIN the fixture is recorded against: one polygon, one address,
     # one district (R-4). The first candidate tried, at 209 Old Waterford
-    # Rd NW, touched two districts along its edge; a real case, but not
-    # the one to write every example against.
+    # Rd NW, intersected two districts (design/source-quirks.md § 17); a
+    # real case, but not the one to write every example against.
     sample_pin: "231154488000"
     min_features:
       parcels: 20000

@@ -616,12 +616,14 @@ async def _statewide_crosschecks(adapter, m, ctx) -> dict:
         pin = summary.get("sample_pin")
         j = ctx.jurisdictions.get(other.jurisdiction)
         # A town has no FIPS of its own, so a query for its PIN is scoped
-        # to its county's, which is what `_scoped_where` sends at query
-        # time (design/source-quirks.md § 11). Leesburg was the first
-        # town source, and without the walk its cross-checks were
-        # silently skipped.
-        chain = ([j] + ctx.jurisdictions.parents_of(j)) if j else []
-        fips = next((x.fips for x in chain if x.fips), None)
+        # to its county's. `_fips_scope` is what the tools use to decide
+        # that at query time (design/source-quirks.md § 11); Leesburg was
+        # the first town source, and reading the town's own FIPS here
+        # silently skipped its cross-checks.
+        from ..domains.geo import _fips_scope
+        chain = ([j.id] + [p.id for p in ctx.jurisdictions.parents_of(j)]
+                 if j else [])
+        fips = _fips_scope(ctx, chain)[0]
         if not (pin and fips):
             continue
         q = await adapter.query(m, "parcels",
@@ -835,13 +837,11 @@ async def _sample_buildings(adapter, m, params, ctx) -> dict:
     out["dense_urban_point"] = {"record_count": len(dense.records),
                                 "truncated": dense.exceeded_transfer_limit}
 
-    # A Richmond parcel, then the buildings on it.
+    # A Richmond parcel, then the buildings on it. Richmond's own fixture
+    # holds the same parcel exchange, so this recorder's copy is not
+    # merged into the buildings fixture.
     parcel_m = ctx.sources.get("va-richmond-city-parcels-zoning")
-    parcel_adapter = arcgis_mod.ArcGISAdapter(
-        fetcher=_RecordingFetcher(HttpFetcher(policy=egress_policy_for(
-            parcel_m, arcgis_mod.ArcGISParams.model_validate(
-                parcel_m.adapter.model_dump(exclude={"type"})).service_url))),
-        cache=arcgis_mod.TTLCache())
+    parcel_adapter, _ = _recording_adapter_for(parcel_m)
     # The PIN the parcel source declares, not whatever its layer returns
     # first. Two fixtures have to agree on this polygon — this one and
     # Richmond's own — and a re-record that picks a different parcel
@@ -926,7 +926,8 @@ async def _sample_zoning_only(adapter, m, params, ctx, recorder) -> dict:
     the town, and the other zoning sources the same query reaches are
     recorded alongside, so a two-government answer replays whole from
     this one fixture."""
-    from ..domains.geo import MAX_PARCEL_POLYGONS, _scoped_where
+    from ..domains.geo import (MAX_PARCEL_POLYGONS, _parcel_geometry,
+                               _scoped_where)
 
     out: dict[str, Any] = {}
     for layer in sorted(params.layers):
@@ -1000,23 +1001,23 @@ async def _sample_zoning_only(adapter, m, params, ctx, recorder) -> dict:
         out["parcel_polygons"] = len(pq.records)
         found: set[str] = set()
         for parcel in pq.records[:MAX_PARCEL_POLYGONS]:
-            geometry = dict(parcel.geometry or {})
-            geometry.setdefault("spatialReference", {"wkid": 4326})
             found |= set(districts(await adapter.query(
-                m, "zoning", intersect_geometry=geometry)))
+                m, "zoning", intersect_geometry=_parcel_geometry(parcel))))
         out["pin_districts"] = sorted(found)
         # A county source answers the same PIN over its own parcel layer,
-        # which is what geo.find_zoning does for it; both halves replay.
+        # with the same scoped request geo.find_zoning sends for it, so
+        # both halves replay from one recording.
         for o in alongside:
             oa = adapter_for(o)
             if "parcels" not in oa.layer_keys(o):
                 continue
-            opq = await oa.query(o, "parcels", where_equals={"pin": pin},
-                                 return_geometry=True)
+            opq = await oa.query(
+                o, "parcels", return_geometry=True,
+                where_equals=_scoped_where(ctx, o, "parcels", stack,
+                                           {"pin": pin}))
             for parcel in opq.records[:MAX_PARCEL_POLYGONS]:
-                geometry = dict(parcel.geometry or {})
-                geometry.setdefault("spatialReference", {"wkid": 4326})
-                await oa.query(o, "zoning", intersect_geometry=geometry)
+                await oa.query(o, "zoning",
+                               intersect_geometry=_parcel_geometry(parcel))
 
     for _, rec in others.values():
         recorder.exchanges.extend(rec.exchanges)
@@ -1087,10 +1088,7 @@ def cmd_sources_sample(args: argparse.Namespace) -> int:
                      f"not {m.adapter.type!r}")
     params = arcgis_mod.ArcGISParams.model_validate(
         m.adapter.model_dump(exclude={"type"}))
-    recorder = _RecordingFetcher(
-        HttpFetcher(policy=egress_policy_for(m, params.service_url)))
-    adapter = arcgis_mod.ArcGISAdapter(fetcher=recorder,
-                                       cache=arcgis_mod.TTLCache())
+    adapter, recorder = _recording_adapter_for(m)
 
     if "environmental_site.lookup" in m.capability_ids():
         try:

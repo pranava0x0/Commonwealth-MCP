@@ -41,23 +41,15 @@ they were written once for the shape rather than per row.
 
 ## What the count says so far
 
-Thirteen onboardings, two of which were new adapter types where a code
-change was the point. Of the other eleven, nine needed code and two did
-not.
+Fifteen rows. Set aside the first source, which had nothing to be a
+change to, and the two new adapter types, where a code change was the
+point, and twelve onboardings remain: eleven changed code and one did
+not. A twelfth, `va-vgin-landmarks`, needed only a one-field declaration
+and is counted as a change all the same.
 
-The two town rows, from 2026-09-07, are the first in which the change
-was not to the adapter's model of a layer. Leesburg's manifest is
-Fairfax's shape and validated first time; what moved was the transport
-(a request too long for a URL) and a recording plan (a town has no FIPS).
-Vienna's change was to a tool: a zoning source with no parcel layer had
-no way to answer a parcel number, and the forcing set's town slot was
-kept open for exactly that kind of finding. The layer model held for both,
-which is the trend the count is meant to show.
-
-Both of the two are from 2026-08-29 and both are informative. DEQ is the
+Both of those are from 2026-08-29 and both are informative. DEQ is the
 stronger signal: a different agency, a different host, a different service
-type, and the adapter did not move. The other, `va-vgin-landmarks`,
-needed only a one-field declaration.
+type, and the adapter did not move.
 
 The 2026-08-29 changes also differ in kind from the earlier ones. The
 2026-08-28 changes were bugs — code that assumed one source and broke on
@@ -71,6 +63,15 @@ So the count is not yet falling, and the reason it has not is visible in
 the rows: the adapter's model of "a layer" was built from one publisher's
 layers and has been growing to fit real ones. The next few sources are
 the test of whether it has stopped growing.
+
+The two town rows, from 2026-09-07, are the first in which the change
+was not to the adapter's model of a layer. Leesburg's manifest is
+Fairfax's shape and validated first time; what moved was the transport
+(a request too long for a URL) and a recording plan (a town has no FIPS).
+Vienna's change was to a tool: a zoning source with no parcel layer had
+no way to answer a parcel number, and the forcing set's town slot was
+kept open for exactly that kind of finding. The layer model held for both,
+which is the trend the count is meant to show.
 
 ## How to add a row
 

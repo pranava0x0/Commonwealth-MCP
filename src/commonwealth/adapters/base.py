@@ -146,9 +146,13 @@ class PinnedAddressTransport(httpx.AsyncHTTPTransport):
 MAX_GET_URL_CHARS = 4000
 
 
+def _would_post(url: str, params: dict[str, Any] | None) -> bool:
+    return bool(params) and len(str(httpx.URL(url, params=params))) > MAX_GET_URL_CHARS
+
+
 def _build_query_request(client: httpx.AsyncClient, url: str,
                          params: dict[str, Any] | None) -> httpx.Request:
-    if params and len(str(httpx.URL(url, params=params))) > MAX_GET_URL_CHARS:
+    if _would_post(url, params):
         return client.build_request("POST", url, data=params)
     return client.build_request("GET", url, params=params)
 
@@ -177,6 +181,11 @@ class HttpFetcher:
     async def _fetch(self, url: str,
                      params: dict[str, Any] | None) -> tuple[_Body, str]:
         current = url
+        # A query too long for a URL travels as a form body, which no
+        # Location header carries, so it is sent again on every hop. A
+        # GET's query is already in the Location and its params are
+        # dropped below.
+        posted = _would_post(url, params)
         for hop in range(4):  # initial request + MAX_REDIRECTS
             approved = self.policy.validate_url(current)
             host = urlparse(current).hostname or ""
@@ -196,7 +205,7 @@ class HttpFetcher:
                 # `.../query?where=...&f=json` to its canonical name would
                 # be re-asked for a bare `.../query`, answer with its HTML
                 # form, and be reported as an outage.
-                params = None
+                params = params if posted else None
                 continue
             return response, host
         raise SourceUnavailable("redirect chain did not settle")

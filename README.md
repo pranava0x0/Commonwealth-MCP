@@ -93,7 +93,8 @@ public hosted endpoint in this project.
 
 ## Use the CLI or Python
 
-A live CLI query:
+A live CLI query. A PIN is the number a locality gives a parcel; the
+spacing inside it is the county's and matters:
 
 ```bash
 .venv/bin/commonwealth tools call geo.find_parcel \

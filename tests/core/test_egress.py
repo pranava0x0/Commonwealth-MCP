@@ -540,3 +540,33 @@ def test_a_query_too_long_for_a_url_is_sent_as_a_form_post():
     assert long.headers["content-type"] == "application/x-www-form-urlencoded"
     assert b"f=json" in long.content
     assert b"geometry=" + b"x" * (MAX_GET_URL_CHARS + 1) in long.content
+
+
+async def test_a_redirected_form_post_carries_its_body_to_the_new_host(
+        monkeypatch):
+    """The redirect loop drops the parameters on a hop because a GET's
+    query is already in the Location header. A query too long for a URL
+    travels as a form body, which no Location header carries, so it has
+    to be sent again or the canonical host is asked a bare `.../query`
+    and answers with its HTML form."""
+    seen: list[tuple[str, str, bytes]] = []
+    big = {"f": "json", "geometry": "x" * 5000}
+
+    async def fake_send(self, request):
+        seen.append((request.method, str(request.url), request.content))
+        if len(seen) == 1:
+            return httpx.Response(
+                307, headers={"location": "https://www.fairfaxcounty.gov/moved"},
+                request=request)
+        return httpx.Response(200, content=b'{"ok":true}', request=request)
+
+    monkeypatch.setattr(httpx.AsyncHTTPTransport, "handle_async_request",
+                        fake_send)
+    await HttpFetcher(policy=_policy()).fetch_json(
+        "https://www.fairfaxcounty.gov/x/query", big)
+    assert [m for m, _, _ in seen] == ["POST", "POST"], seen
+    # The pinned transport rewrites the host to the checked address, so
+    # the path is what identifies the hop.
+    assert seen[1][1].endswith("/moved"), seen[1][1]
+    assert b"geometry=" + b"x" * 5000 in seen[1][2], (
+        "the second hop lost the polygon")

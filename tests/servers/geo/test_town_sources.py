@@ -124,6 +124,69 @@ async def test_a_parcel_number_no_source_has_leaves_the_town_layer_unqueried(
     assert {FAIRFAX, VGIN} <= consulted, (
         "every parcel source asked for the polygon belongs in provenance, "
         f"matched or not: {sorted(consulted)}")
+    assert "comparison" not in env.data, (
+        "a source that was never queried has no answer to compare")
+
+
+def _town_sorted_first(ctx):
+    """A copy of Vienna's manifest under an id that sorts before the
+    county's, so selection hands the town to find_zoning first. Same
+    service, so the recordings replay."""
+    import yaml
+
+    from commonwealth.core.registry import SourceManifest
+    from commonwealth.runtime import SOURCES_DIR
+
+    doc = yaml.safe_load((SOURCES_DIR / "local" / "vienna-town"
+                          / "zoning.yaml").read_text())
+    doc["id"] = "va-a-town-zoning"
+    return SourceManifest.model_validate(doc)
+
+
+async def test_the_order_sources_are_selected_in_does_not_change_the_answer():
+    """Fairfax sorts before Vienna by id, so the county's own parcel
+    query runs first and the town reuses it. A town whose id sorts first
+    borrows first, and the county must then reuse the borrow rather than
+    fetch and cite its parcel a second time."""
+    s = _summary(VIENNA)
+    ctx = build_ctx(extra_manifests=[_town_sorted_first(build_ctx())])
+    env = await find_zoning(ctx, jurisdiction="Vienna", pin=s["sample_pin"])
+    by = _by_source(env)
+    assert list(by) == ["va-a-town-zoning", FAIRFAX], list(by)
+    assert by["va-a-town-zoning"]["parcel_source_id"] == FAIRFAX
+    fairfax_entries = [p for p in env.provenance if p.source_id == FAIRFAX]
+    assert len(fairfax_entries) == 2, (
+        "one parcel query and one zoning query, whichever government "
+        f"asked first: {[(p.id, p.access_path) for p in fairfax_entries]}")
+    assert [r["district"] for r in by[FAIRFAX]["records"]] == \
+        [r["district"] for r in by["va-a-town-zoning"]["records"]]
+
+
+async def test_a_town_sorted_first_still_reports_one_failure_per_source():
+    s = _summary(VIENNA)
+    ctx = build_ctx(extra_manifests=[_town_sorted_first(build_ctx())],
+                    fetcher=_HostOutage("fairfaxcounty.gov", "vginmaps"))
+    env = await find_zoning(ctx, jurisdiction="Vienna", pin=s["sample_pin"])
+    failed = sorted(f.source_id for f in env.coverage.source_failures)
+    assert failed == [FAIRFAX, VGIN], failed
+
+
+async def test_no_parcel_source_at_all_is_neither_an_outage_nor_a_miss(ctx):
+    """With every parcel source marked unavailable nothing is queried and
+    nothing fails; the town's note has to say that rather than call it an
+    outage or a missing parcel."""
+    from commonwealth.core.registry import OperationalState
+
+    for sid in (FAIRFAX, VGIN):
+        ctx.sources.set_operational(sid, OperationalState.unavailable)
+    env = await find_zoning(ctx, jurisdiction="Vienna", pin="0384 02  0143")
+    by = _by_source(env)
+    assert list(by) == [VIENNA], list(by)
+    note = by[VIENNA]["note"]
+    assert "registered or available" in note, note
+    assert "outage" not in note
+    assert env.coverage.source_failures == []
+    assert env.coverage.execution.value == "complete"
 
 
 async def test_the_town_layer_down_is_partial_with_the_county_answer():

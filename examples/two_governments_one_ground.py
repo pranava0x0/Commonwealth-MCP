@@ -33,8 +33,10 @@ async def body(ctx) -> None:
                             lat=POINT[1])
     for block in env.data["results"]:
         print(f"  {block['source_id']}: {_districts(block)}")
-    comparison = env.data["comparison"]
-    print(f"\n  districts agree: {comparison['agreement']}")
+    comparison = env.data.get("comparison")
+    print("\n  districts agree: "
+          + (str(comparison["agreement"]) if comparison else
+             "no comparison; only one source answered"))
     show_envelope(env)
 
     heading("The same ground by parcel number")

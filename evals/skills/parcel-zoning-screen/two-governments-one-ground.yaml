@@ -18,5 +18,5 @@ expected:
   agreement: true
   must_say: ["Vienna", "Fairfax County", "AC"]
   must_not_say: ["unzoned"]
-score: [{kind: source_jurisdiction}, {kind: retrieval_correctness}, {kind: provenance_present}, {kind: restraint}]
+score: [{kind: source_and_jurisdiction}, {kind: retrieval_correctness}, {kind: provenance_present}, {kind: restraint}]
 traps: []

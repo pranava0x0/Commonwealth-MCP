@@ -199,31 +199,22 @@ def test_the_committed_history_gives_every_probed_layer_a_range():
                           / "probe-history.json").read_text())
     pairs = {(r["source_id"], r["layer"]) for r in history["readings"]}
     assert pairs, "the history is empty"
-    # A source registered today has one day of readings, and the audit
-    # records one per layer per day, so a second cannot exist yet. The
-    # weekly run adds it. Anything older resting on one reading is the
-    # failure #19 named.
-    from commonwealth.core.registry import SourceRegistry
-    from commonwealth.runtime import SOURCES_DIR
-    added = {sid: m.lifecycle.added
-             for sid, m in SourceRegistry.load(SOURCES_DIR).manifests.items()}
+    # The audit records one reading per layer per day, so a layer first
+    # seen on the newest run in the file cannot have two yet; the next
+    # run adds the second. A layer whose only reading is older than the
+    # newest run has been skipped by a run since, which is the failure
+    # #19 named. Decided from the history alone: no manifest date, no
+    # timezone.
+    newest = max(r["observed_at"][:10] for r in history["readings"])
 
-    def registration_day_only(source_id: str, layer: str) -> bool:
-        from datetime import date
-
+    def first_seen_on_the_newest_run(source_id: str, layer: str) -> bool:
         days = {r["observed_at"][:10] for r in history["readings"]
                 if r["source_id"] == source_id and r["layer"] == layer}
-        if len(days) != 1 or not added.get(source_id):
-            return False
-        # Manifests carry the local date and readings carry UTC, so a
-        # source registered on an American evening reads as the next day.
-        gap = date.fromisoformat(days.pop()) - date.fromisoformat(
-            added[source_id])
-        return 0 <= gap.days <= 1
+        return days == {newest}
 
     thin = [p for p in sorted(pairs)
             if audit.observed_range(history, *p)["observations"] < 2
-            and not registration_day_only(*p)]
+            and not first_seen_on_the_newest_run(*p)]
     assert thin == [], (
         f"{thin} still rest on one reading; run tools/upstream_audit.py")
 

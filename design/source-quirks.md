@@ -435,7 +435,7 @@ the parameters rather than the method, so no fixture changed. The egress
 policy applies to the POST exactly as to the GET; only the request's
 shape differs.
 
-## 17. A one-polygon parcel can intersect two zoning districts
+## 17. A one-polygon parcel can intersect two zoning districts (a note)
 
 - **Source:** `va-leesburg-town-parcels-zoning`
 - **Observed:** 2026-09-07, choosing the sample parcel

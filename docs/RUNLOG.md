@@ -70,7 +70,7 @@ already. Re-recording VGIN's fixture afterwards dropped no exchange and
 added four, all Leesburg's. The readings history holds one reading per
 layer per day, so a source registered today cannot have the two the
 range test asks for until the weekly audit runs; the test now allows a
-layer whose only readings are from its registration day, and nothing
+layer whose only reading is from the newest run in the file, and nothing
 older.
 
 **What the data said.** At the Vienna point both governments say AC, the
@@ -78,8 +78,7 @@ Avenue Center district, and Fairfax's layer labels the polygon "TOWN OF
 VIENNA" in its own jurisdiction field. VGIN carries Loudoun's parcel
 numbers as its PTM_ID, so Leesburg's number reaches the town's layer and
 the statewide one and both agree. The first Leesburg parcel chosen as the
-sample touched two districts along its edge (design/source-quirks.md
-§ 17); the sample moved to a parcel in one district, and the case is
+sample intersected two districts (design/source-quirks.md § 17); the sample moved to a parcel in one district, and the case is
 recorded.
 
 **On the page.** Four new recorded calls: the Vienna point with both
@@ -100,7 +99,21 @@ they are not; the README now says both. The next phase, and the candidate demos 
 skills, are written into architecture.md § 39, skills.md § 3, and
 testing-and-demos.md § 3 rather than left in a review page.
 
-587 tests.
+**The review round, applied.** Eight reading passes over the branch
+found ten things worth fixing. The two that mattered: a query sent as a
+form POST lost its body on a redirect, because the hop logic assumed the
+query lived in the Location header; and the county's parcel was fetched
+and cited once only because Fairfax's id sorts before Vienna's, so a
+town whose id sorted first would have cited it twice. Both paths share
+one parcel memo now and one failure entry per source, a source that was
+never queried has no comparison, and the note for an unqueried town
+layer distinguishes no parcel source at all from every source down from
+no such parcel. The rest were prose: a skill sentence that counted two
+counties where there is one, a broken line in llms.txt, a stale replay
+path in the evals README, one score kind spelled two ways, and cost-log
+counts that did not match the table above them.
+
+591 tests.
 
 ## 2026-09-02 — the review of the above, applied
 
