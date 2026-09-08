@@ -2,27 +2,21 @@
 
 Everything about how Commonwealth-MCP works and why.
 
-## New here? Read three files, in this order
+## Choose a starting point
 
-1. **[provenance-envelope.md](provenance-envelope.md)** — what comes back
-   from every single tool. Nothing else makes sense before this one.
-2. **[jurisdiction-resolution.md](jurisdiction-resolution.md)** — how a
-   place becomes a government, and why Virginia makes that hard.
-3. **[source-registry.md](source-registry.md)** — what a government source
-   is here, and what it takes to add one.
+| You want to | Read |
+|---|---|
+| Understand MCP or run a first query | [Project README](../README.md), then [examples](../examples/README.md) |
+| Build an application | [Result format](provenance-envelope.md), then the relevant [tool contract](domain-servers.md) |
+| Add a government source | [Contributing](../CONTRIBUTING.md), then [source registry](source-registry.md) |
+| Change the implementation | [Architecture](architecture.md), then the affected contract below |
+| Pick the next feature | [Delivery sequence](architecture.md#39-delivery-sequence) and [open issues](https://github.com/pranava0x0/Commonwealth-MCP/issues) |
 
-That is enough to read the code. Come back for the rest when you need it.
-
-**[architecture.md](architecture.md)** is the long one, and it is a
-reference rather than a next step. Two parts: how the system is put
-together (§ 1–33 and § 37–39), and one record per architectural choice
-with the options that lost still written out (decisions 0001–0015). Read a
-decision record when you want to disagree with a choice.
-
-The other files here are per-feature contracts. Each is written to be read
-on its own, and the source code cites them by filename, so a comment in
-`core/envelope.py` pointing at `provenance-envelope.md § 2` resolves to
-something specific.
+The contracts below are references. Read the ones needed for your task.
+`architecture.md` keeps stable section and decision numbers because code
+comments cite them. Its dated proposals are not a list of available tools.
+`hub-catalog.md` and `explorer.md` describe deferred work. Research and run
+logs are historical records, outside the getting-started path.
 
 ## The specs
 

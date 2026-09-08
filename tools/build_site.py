@@ -55,6 +55,23 @@ PLANNED_SKILLS = [
 ]
 
 
+def tool_parameters(spec) -> list[dict]:
+    """The arguments a tool takes, read off the function the server binds.
+
+    Read rather than declared, for the reason every other roster on this
+    page is derived: a hand-typed argument list is a second place for the
+    signature to live, and the second place is the one that goes stale.
+    `ctx` is the runtime handle the server supplies, not something a
+    caller passes, so it is not an argument of the tool.
+    """
+    import inspect
+
+    sig = inspect.signature(spec.fn, eval_str=True)
+    return [{"name": name,
+             "required": param.default is inspect.Parameter.empty}
+            for name, param in sig.parameters.items() if name != "ctx"]
+
+
 def skill_roster() -> list[dict]:
     """Skills on disk, then the ones still declared as planned.
 
@@ -156,25 +173,16 @@ LOUDOUN = {"jurisdiction": "Loudoun County",
 DEMO_CALLS = [
     # --- one place, every question (examples/one_address_every_question.py) ---
     ("registry.resolve_jurisdiction", {"query": "Sterling"},
-     "Sterling is a postal city with no government behind it. The table "
-     "holds every Virginia government and none is named Sterling, so the "
-     "answer says so and says what to ask instead"),
+     'Sterling does not resolve as a government name; use an address or coordinate.'),
     ("geo.resolve_location",
      {"address": "21641 Ridgetop Cir, Sterling, VA 20166"},
-     "The same address resolves: the envelope says Sterling and the "
-     "government is Loudoun County"),
+     'The Sterling mailing address resolves to Loudoun County.'),
     ("geo.find_parcel", dict(LOUDOUN),
-     "Loudoun publishes no parcel layer here, so VGIN's statewide one "
-     "answers. FOUND"),
+     'No local parcel source is registered for Loudoun; VGIN returns a parcel.'),
     ("geo.find_zoning", dict(LOUDOUN),
-     "The same point, one question over: no zoning source is registered "
-     "for Loudoun. NOT COVERED — the county has a zoning ordinance and "
-     "this project has nowhere to read it, which is not the same as "
-     "unzoned"),
+     'No zoning source is registered for Loudoun County.'),
     ("geo.find_landmarks", dict(LOUDOUN),
-     "And a third kind of answer: the statewide landmarks layer was "
-     "queried and holds nothing within a kilometre. CHECKED, NOTHING "
-     "FOUND — a fact about the layer, not about Sterling"),
+     'The landmarks query returned no records within one kilometre.'),
 
     # --- whose government is this? ---
     ("registry.resolve_jurisdiction", {"query": "fairfax"},
@@ -182,22 +190,16 @@ DEMO_CALLS = [
     ("registry.resolve_jurisdiction", {"query": "Fairfax County"},
      "Exact resolution with the authority stack"),
     ("registry.resolve_jurisdiction", {"query": "Bedford City"},
-     "A government that no longer exists: Bedford gave up its city "
-     "charter in 2013, so the name resolves to the town that replaced "
-     "it, labelled historical"),
+     'The former Bedford City name resolves to Bedford town with a historical-name warning.'),
     ("registry.resolve_jurisdiction", {"lon": -77.3064, "lat": 38.8462},
-     "A coordinate inside Fairfax City resolves to the CITY, never the "
-     "county that surrounds it"),
+     'This coordinate resolves to Fairfax City.'),
     ("registry.resolve_jurisdiction", {"lon": -77.2653, "lat": 38.9012},
-     "A coordinate in Vienna returns the town AND its county: both "
-     "govern that ground"),
+     'This Vienna coordinate returns both town and county authorities.'),
     ("geo.resolve_location",
      {"address": "6800 Beulah St, Alexandria, VA 22310"},
-     "A mailing address is not a government: this Alexandria address is "
-     "in Fairfax County, and the answer says both"),
+     'The Alexandria mailing address resolves to Fairfax County.'),
     ("geo.resolve_location", {"zip_code": "24450"},
-     "A ZIP is a delivery route, not a boundary: 24450 covers three "
-     "localities and all three come back unchosen"),
+     'ZIP 24450 returns three locality candidates.'),
 
     # --- what is here? ---
     ("geo.find_parcel", {"jurisdiction": "Fairfax County",
@@ -208,32 +210,40 @@ DEMO_CALLS = [
      "Zoning via parcel-geometry intersection; screening warnings"),
     ("geo.find_address", {"jurisdiction": "Fairfax County",
                           "address": "4501 Carlby Ln"},
-     "The postal city on this Fairfax County address reads ALEXANDRIA, "
-     "which is a different government entirely"),
+     'The address record has postal city ALEXANDRIA and locality Fairfax County.'),
     ("geo.find_buildings", {"jurisdiction": "Richmond City",
                             "pin": "C0010126019"},
-     "What is built on a parcel, with the publisher's area figure and a "
-     "converted one — the raw number is in a projection that inflates "
-     "area by about 1.6x here"),
+     'Building footprints include the publisher area and an approximate projection correction.'),
     ("geo.find_roads", {"jurisdiction": "Vienna",
                         "street_name": "Center St"},
-     "Two official sources describing one street differently, neither "
-     "reconciled away — and a note that one of them can only narrow to "
-     "the county"),
+     'VDOT and VGIN return separate road records; one query is scoped to the county.'),
     ("geo.find_landmarks", {"jurisdiction": "Vienna",
                             "lon": -77.2653, "lat": 38.9012},
-     "Named public places, each carrying the agency whose record it "
-     "actually is — a school is the Department of Education's, not the "
-     "map publisher's"),
+     'Landmark records identify their contributing agencies.'),
     ("geo.find_environmental_sites", {"jurisdiction": "Richmond City",
                                       "lon": -77.4360, "lat": 37.5407},
-     "Monitored sites near a point, under the registry's strongest "
-     "disclaimer: a station on record is not a finding about the ground"),
+     'DEQ monitoring stations include sampling dates and coverage limits.'),
     ("geo.find_boundaries", {"jurisdiction": "Prince George County"},
-     "One jurisdiction, two official polygons under one FIPS — both "
-     "returned, neither picked"),
+     'The boundary lookup returns both published polygons for this FIPS code.'),
     ("civic.get_code_section", {"citation": "1-500"},
      "Code of Virginia section text with its own citation history"),
+
+    # --- a town and its county, one piece of ground ---
+    ("geo.find_zoning", {"jurisdiction": "Vienna",
+                         "lon": -77.2653, "lat": 38.9012},
+     "A point in a town. The town's zoning layer and the county's both "
+     "cover this ground, so both answer, and the comparison block says "
+     "whether they agree"),
+    ("geo.find_zoning", {"jurisdiction": "Vienna", "pin": "0384 02  0143"},
+     "The same ground by parcel number. The town publishes no parcel "
+     "layer, so its districts are read over the county's parcel polygon, "
+     "and the evidence names whose polygon that was"),
+    ("geo.find_parcel", {"jurisdiction": "Leesburg", "pin": "231154488000"},
+     "A town that publishes its own parcel layer, queried beside the "
+     "statewide one"),
+    ("geo.find_zoning", {"jurisdiction": "Leesburg", "pin": "231154488000"},
+     "The town's own zoning map layer, with a link to the ordinance "
+     "section returned as data"),
 
     # --- the four ways an answer comes back with no data ---
     ("geo.find_parcel", {"jurisdiction": "Fairfax County",
@@ -254,12 +264,11 @@ DEMO_CALLS = [
      "What covers zoning.lookup, with authority levels"),
     ("registry.describe_source",
      {"source_id": "va-deq-water-quality-stations"},
-     "Terms, limitations, and authority notes — including a terms review "
-     "that came back incomplete and says so"),
+     'The source description includes access terms and an incomplete terms review.'),
     ("registry.source_status", {},
      "Declared vs operational state for every registered source"),
     ("registry.search_sources", {"capability": "unicorns.lookup"},
-     "A typed error: unknown capability, said plainly"),
+     'An unknown capability returns an InvalidQuery error.'),
 ]
 
 
@@ -302,6 +311,7 @@ def build_catalog() -> dict:
             tools.append({"name": spec.name, "package": package,
                           "toolset": spec.toolset,
                           "contract_version": spec.contract_version,
+                          "parameters": tool_parameters(spec),
                           "description": spec.description})
 
     sources = []

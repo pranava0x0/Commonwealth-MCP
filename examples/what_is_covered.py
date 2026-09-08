@@ -1,10 +1,7 @@
 #!/usr/bin/env python3
-"""Ask what this project actually covers before assuming it covers you.
+"""Inspect registered zoning sources and compare empty-result cases.
 
-An empty answer means one of two different things: the records were
-searched and nothing matched, or no source is registered for that place
-at all. Most systems show the same blank screen for both.
-"""
+A query with no matching records differs from a place with no registered source."""
 from _common import heading, run, show_envelope
 
 from commonwealth.domains.geo import find_zoning

@@ -58,7 +58,7 @@ address path ship without the regression this case exists to force, so it
 stays in the geocoder-blocked group with 1 and 5 until an address fixture
 exists.
 
-**Why this exists:** Every Commonwealth query starts by answering "whose government?" Virginia makes this genuinely hard: 95 counties and 38 independent cities that are *not* inside counties (Fairfax City is not in Fairfax County), towns inside counties, overlapping authorities (regional bodies, school divisions, service districts), and addresses whose postal city names a place that is not their jurisdiction (a "Alexandria, VA" mailing address can sit in Fairfax County). Getting this wrong silently returns the wrong government's records, which is worse than failing.
+**Why this exists:** Every Commonwealth query starts by answering "whose government?" Virginia makes this hard: 95 counties and 38 independent cities that are *not* inside counties (Fairfax City is not in Fairfax County), towns inside counties, overlapping authorities (regional bodies, school divisions, service districts), and addresses whose postal city names a place that is not their jurisdiction (a "Alexandria, VA" mailing address can sit in Fairfax County). Getting this wrong silently returns the wrong government's records, which is worse than failing.
 
 ---
 

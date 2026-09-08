@@ -179,16 +179,46 @@ def test_capability_vocab_is_the_single_source_of_truth():
 
 
 def test_committed_fixture_carries_rights_metadata():
-    """../design/architecture.md decision 0011: recorded third-party payloads carry source+rights."""
+    """../design/architecture.md decision 0011: recorded third-party payloads carry source+rights.
+
+    Every publisher whose responses are in the file, not only the one the
+    directory is named for: a zoning-only source records its county's and
+    the state's answers for the same point, and naming one publisher would
+    put the other two under terms that are not theirs.
+    """
+    import sys as _sys
+    _sys.path.insert(0, str(ROOT / "src"))
+    from commonwealth.cli.__main__ import contributing_sources
+    from commonwealth.runtime import load_context
+
+    ctx = load_context()
     fixture_files = sorted((ROOT / "tests" / "fixtures" / "sources")
                            .rglob("recorded.json"))
     assert fixture_files, "no recorded fixtures found"
+    multi = 0
     for f in fixture_files:
         doc = json.loads(f.read_text())
-        assert doc["rights"]["terms_url"], f
-        assert doc["rights"]["publisher"], f
         assert doc["recorded_at"], f
-    print(f"rights metadata checked on {len(fixture_files)} fixture file(s)")
+        listed = doc["rights"]["sources"]
+        assert listed, f
+        for entry in listed:
+            assert entry["source_id"], f
+            assert entry["publisher"], f
+            assert entry["terms_url"], f
+        assert listed[0]["source_id"] == doc["source_id"], (
+            f"{f}: the recording source is listed first")
+        manifest = ctx.sources.get(doc["source_id"])
+        assert manifest is not None, f
+        expected = [c.id for c in contributing_sources(
+            manifest, doc["exchanges"], ctx)]
+        assert [e["source_id"] for e in listed] == expected, (
+            f"{f}: the rights block does not match the publishers whose "
+            f"services actually answered into it")
+        multi += len(listed) > 1
+    assert multi, ("no committed fixture is cross-source any more; this "
+                   "test would pass vacuously on the case it exists for")
+    print(f"rights metadata checked on {len(fixture_files)} fixture file(s), "
+          f"{multi} of them cross-source")
 
 
 def test_third_party_data_inventory_is_current():

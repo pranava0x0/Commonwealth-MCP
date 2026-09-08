@@ -75,6 +75,41 @@ The second: **the offline seam moved into the package** (`commonwealth/fixtures.
 - The walkthrough transcript is a maintained artifact with a date, refreshed by the release process, because a stale demo transcript is anti-marketing.
 - MCP Inspector configs (`examples/inspector/`) ship for each server: the survey's universal baseline, and the first thing an evaluating developer reaches for.
 
+**Demos not yet built, listed 2026-09-07.** Every interactive piece on
+the site is a map question, and the project's most unusual material is
+elsewhere. Each of these builds from data already committed unless it says
+otherwise.
+
+- *What changed upstream this week.* Per-layer feature counts over time
+  from `docs/audits/probe-history.json`, the floors beside them, and the
+  sources that could not be reached. The audits are the most unusual
+  thing the project does, and the page does not mention them.
+- *What each source cost to add.* The cost log as a timeline: whether each
+  onboarding changed code, and whether the change was to the layer model
+  or to transport and recording plans.
+- *Read a statute.* A citation box over the Code section tool, showing a
+  recorded section with its history line and the missing-section case.
+  Needs two or three more recorded pages and a `virginia_law` branch in
+  `sources sample`; the two pages on disk were saved by hand.
+- *The assistant's-eye view.* What a connected model receives: the nine
+  `default` tool descriptions, one envelope annotated field by field, and
+  one skill's text.
+- *Registry explorer.* One `registry.search_sources` call per capability,
+  precomputed, with authority level, terms status, and proposed against
+  active.
+- *A recorded skill walkthrough* and *an eval scoreboard*, both of which
+  fall out of the runner #28 builds.
+- *A coverage map* of the 133 localities and 189 towns, per capability.
+  Needs one live pull of generalized boundary geometry, about a megabyte
+  committed.
+
+Three changes to the page's own copy go with them. The Skills fold shows
+each skill's walk and its eval tasks rather than names alone. One sentence
+says a provenance entry is per query, so a two-government answer that
+cites the county twice is not a duplicate. And the hero's promise of a
+Python surface follows decision 0015 (architecture.md, the 2026-09-07 note
+on that record).
+
 ## 4. The structural rule underneath all of it
 
 Every enumerating check derives its list from the registry it checks (servers from the server registry, manifests from the sources directory, tools from tool registration, fixtures from the fixtures tree) and prints the count it examined. The surveyed repos' best patterns all reduce to this; the base files' hard-won rule ("a gate that says 0 failures over 12% of the corpus is indistinguishable from one that says it over all of it") is the same lesson from the other direction.

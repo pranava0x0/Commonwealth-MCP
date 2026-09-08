@@ -2,9 +2,14 @@
  "source_id": "va-charles-city-county-parcels",
  "recorded_at": "2026-09-02T05:29:42Z",
  "rights": {
-  "publisher": "Charles City County government (GIS)",
-  "terms_url": "https://dataportal-charlescityvagis.hub.arcgis.com/datasets/967223223e134e7b8b4411e9226d2872_0/about",
-  "note": "Recorded government-published responses; third-party content excluded from the repo's CC0 grant (../../../design/architecture.md decision 0011)."
+  "sources": [
+   {
+    "source_id": "va-charles-city-county-parcels",
+    "publisher": "Charles City County government (GIS)",
+    "terms_url": "https://dataportal-charlescityvagis.hub.arcgis.com/datasets/967223223e134e7b8b4411e9226d2872_0/about"
+   }
+  ],
+  "note": "Recorded government-published responses; third-party content excluded from the repo's CC0 grant (../../../design/architecture.md decision 0011). Each publisher's own terms govern its own responses."
  },
  "summary": {
   "health:parcels": {

@@ -40,6 +40,25 @@ Step 1 is the exception, noticed 2026-09-01 while writing the first skill. It is
 
 Resolving a *point* uses `boundary.lookup` and resolving an *address* uses `geocode.address`, and a skill can declare those two. So step 1 is written as "resolve the jurisdiction", which names neither a tool nor a capability that does not exist.
 
+### Candidate skills, listed 2026-09-07
+
+Written here rather than filed as issues, so that § 4 is applied before
+anything is built. Each row names the capabilities its walk would declare
+and the eval tasks that could ship from fixtures already on disk.
+
+| Skill | What it packages | Required capabilities | Evals available today |
+|---|---|---|---|
+| `code-section-check` | Read one Code of Virginia section from a citation in any common form, report the text and the section's own history line, and say what the lookup cannot establish: pending amendments, local ordinances, legal effect. | `code_section.lookup` | The recorded section; the missing-section page; a title-only citation, refused because there is no full-text search; a local-ordinance citation, which is not the Code; an overreach question. |
+| `coverage-check` | Before answering about a place or a topic, establish what the registry can answer there, and name where the real-world answer lives where it cannot. | `boundary.lookup`, with the registry tools | Craig County (registry gap); VDH (inventory only); DEQ (terms gap); an unknown capability (typed error); a degraded source. |
+| `source-onboarding` | Register a government source the way CONTRIBUTING.md and GOVERNANCE.md describe: probe, sample, validate, terms review, classification, cost-log row, quirk entry. | None; it drives the CLI | Given a service URL, produce a manifest that passes `sources validate`; given a fixture, list what a reviewer must classify. |
+| `drift-triage` | Read a weekly audit report and the readings history, classify each finding as churn, schema drift, outage, or quirk, and propose the floor change or the quirks entry. | None; it reads committed reports | The 2026-09-02 and 2026-09-07 reports. |
+
+`code-section-check` would be the first skill outside the geo vertical and
+the seed of `legislative-impact-analysis`. `source-onboarding` is the
+nearest of the four to the source-manual anti-pattern, so it stays a
+workflow over the CLI and never a guide to one publisher. The two
+flagship skills cannot start until the civic sources land (#11, #13).
+
 ## 4. Anti-patterns (reviewers reject these)
 
 - **Source manuals.** "How to use the Fairfax GIS portal" is registry/manifest content, not a skill.

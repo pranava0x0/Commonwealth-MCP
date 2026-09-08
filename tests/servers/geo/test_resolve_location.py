@@ -57,7 +57,7 @@ async def test_case_5_a_multi_locality_zip_returns_candidates(cw_ctx):
 
 async def test_a_single_locality_zip_resolves(cw_ctx):
     """The discipline has to cut both ways: refusing to answer a ZIP that
-    genuinely covers one locality would make the tool useless."""
+    covers one locality would make the tool useless."""
     env = await resolve_location(cw_ctx, zip_code="22180")
     assert env.data["resolved"]["id"] == "va:fairfax-county"
     assert env.data["resolved"]["basis"] == "zip_unique"

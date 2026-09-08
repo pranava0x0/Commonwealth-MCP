@@ -1,0 +1,131 @@
+# Town of Leesburg, in Loudoun County: the incorporated town in
+# design/source-registry.md § 6's forcing set. The town publishes its own
+# parcel and zoning layers from its ArcGIS Online organization ("Town of
+# Leesburg, Virginia", TOL-VA). Two services on one host, so the zoning
+# layer carries its own service_url the way Richmond's does. Endpoint, layer
+# ids, field names, and the organization behind the items verified live
+# 2026-09-07.
+#
+# Loudoun County itself has no registered source, so a Leesburg parcel
+# query reaches this layer and VGIN's statewide one; a Leesburg zoning
+# query reaches this layer alone.
+id: va-leesburg-town-parcels-zoning
+name: Town of Leesburg Parcels and Zoning (ArcGIS Online)
+jurisdiction: va:leesburg-town
+
+publisher:
+  agency: Town of Leesburg government (Information Technology, GIS Program)
+  authority_level: primary
+
+domains: [geo, planning]
+
+capabilities:
+  - id: parcel.lookup
+    tool_hint: geo.find_parcel
+  - id: zoning.lookup
+    tool_hint: geo.find_zoning
+
+adapter:
+  type: arcgis
+  service_url: https://services1.arcgis.com/7owdfh5mgjEgbCSM/arcgis/rest/services/PARCELS_TOWN/FeatureServer
+  field_mapping_version: "1"
+  layers:
+    parcels:
+      layer_id: 0
+      id_field: OBJECTID
+      geometry: polygon
+      field_mapping:
+        # PA_MCPI is Loudoun County's parcel number (the county calls it
+        # the MCPI), which the town republishes unchanged and which VGIN's
+        # statewide layer carries as PTM_ID, so one number reaches both.
+        pin: PA_MCPI
+        address: AX_ADDR
+        acres: ACRES
+        subdivision: PA_SUBD_NAME
+    zoning:
+      layer_id: 117
+      id_field: OBJECTID_12
+      geometry: polygon
+      service_url: https://services1.arcgis.com/7owdfh5mgjEgbCSM/arcgis/rest/services/TOL_ZONING/FeatureServer
+      field_mapping:
+        district: LB_ZONE
+        district_description: DESCRIPTION
+        # A link to the ordinance section for the district, returned as
+        # data and never fetched: the egress allowlist is per manifest.
+        ordinance_link: WEB_LINK
+
+access:
+  mode: anonymous
+  automation_status: public_api
+  terms_url: https://tol-va.maps.arcgis.com/home/index.html
+  terms_notes: >
+    The town's ArcGIS Online organization page carries its disclaimer
+    (read 2026-09-07): "Reasonable effort has been made to ensure the
+    accuracy of Leesburg's GIS data. The Town of Leesburg does not assume
+    any liability arising from the use of this data. The following
+    information on this site is a graphical representation and is provided
+    without warranty of any kind." The zoning item (arcgis.com item
+    86eba458b3fc4864bba1a9c6a4e62da9) describes the layer as the official
+    zoning map under Code of Virginia § 15.2-2285 and repeats Loudoun
+    County's own no-warranty text, which is where the parcel base comes
+    from. The parcel item carries no license text of its own. Both items
+    are shared publicly with anonymous query enabled, and no
+    redistribution restriction was found. Re-review with the standard
+    12-month cadence.
+  terms_reviewed_at: "2026-09-07"
+  terms_gap: >
+    The town's own website (leesburgva.gov) refuses automated requests, so
+    any data terms published there could not be read. The review rests on
+    the ArcGIS Online organization page and the item pages alone.
+  data_classification: open
+
+freshness:
+  expected_cadence: unknown
+  cadence_source: >
+    Both layers publish editingInfo; on 2026-09-07 the parcel layer's last
+    data edit was 2026-03-25 and the zoning layer's was 2025-02-24. No
+    stated schedule.
+  ttl_hint_seconds: 86400
+
+coverage:
+  geography: va:leesburg-town
+  temporal: current
+  known_limitations:
+    - GIS zoning is a screening representation; the adopted zoning
+      ordinance and official zoning map govern.
+    - Parcel identifiers are Loudoun County's MCPI numbers, republished by
+      the town; VGIN's statewide layer uses the same numbers for Loudoun.
+    - The parcel layer exposes an address, acreage, and subdivision name
+      and nothing else; no owner, assessment, or land-use fields.
+    - The zoning layer carries per-polygon dates that this manifest does
+      not expose, because one of them holds a 1900 placeholder on some
+      rows.
+
+authority_notes: >
+  Town-published layers are the primary GIS representation of Leesburg's
+  parcels and zoning; the town describes the zoning layer as its official
+  zoning map. Screening evidence here all the same; confirm controlling
+  adopted records where a legal determination is required. The town sits
+  inside Loudoun County, which has no registered source, so the statewide
+  VGIN layer is the only other parcel source a Leesburg query reaches.
+
+health:
+  probe: arcgis_layer_count
+  expect:
+    # Floors: ten per cent under the registration-day count, rounded down
+    # to two significant figures (GitHub issue #19's rule). Counted live
+    # 2026-09-07: 22,258 parcels and 140 zoning polygons.
+    # The PIN the fixture is recorded against: one polygon, one address,
+    # one district (R-4). The first candidate tried, at 209 Old Waterford
+    # Rd NW, intersected two districts (design/source-quirks.md § 17); a
+    # real case, but not the one to write every example against.
+    sample_pin: "231154488000"
+    min_features:
+      parcels: 20000
+      zoning: 120
+
+lifecycle:
+  declared_state: active
+  added: "2026-09-07"
+  last_verified: "2026-09-07"
+  verified_by: pranava0x0

@@ -439,3 +439,54 @@ def test_a_checkout_with_no_skills_still_starts(tmp_path):
     """The normal state of this repository until 2026-09-01, and of any
     fork that removes the directory."""
     assert load_skills(tmp_path / "nothing-here") == []
+
+
+# --- parcel-zoning-screen, the two-source cases (added 2026-09-07) ---------
+
+async def test_two_governments_answer_one_point_and_neither_is_picked(ctx):
+    """Step 2's "two sources answering" line had no fixture-backed case
+    until the Town of Vienna's zoning layer was registered beside Fairfax
+    County's. The walk reports both, with each source named, and says
+    whether they agree."""
+    task = _task("parcel-zoning-screen", "two-governments-one-ground")
+    lon, lat = -77.2653, 38.9012
+    assert str(lon) in task["question"] and str(lat) in task["question"]
+
+    frame = await resolve_jurisdiction(ctx, lon=lon, lat=lat)
+    assert frame.data["resolved"]["id"] == task["expected"]["jurisdiction"]
+    layered = {a["id"] for a in frame.data["layered_authorities"]}
+    assert set(task["expected"]["layered_above"]) <= layered, (
+        "the county governs this ground too, and a walk that reads only "
+        f"the resolved leaf misses its zoning layer: {layered}")
+
+    env = await find_zoning(ctx, jurisdiction="Vienna", lon=lon, lat=lat)
+    districts = {blk["source_id"]: [r["district"] for r in blk["records"]]
+                 for blk in env.data["results"]}
+    assert len(districts) == task["expected"]["sources_returned"]
+    assert districts == task["expected"]["districts"], districts
+    assert env.data["comparison"]["agreement"] is task["expected"]["agreement"]
+    for blk in env.data["results"]:
+        assert blk["source_ref"], "a district with no source named"
+
+
+async def test_a_town_district_is_read_over_the_county_parcel(ctx):
+    """The town publishes no parcel layer. The walk's parcel step still
+    answers, from the county, and the zoning step names whose polygon the
+    town's district was read over."""
+    task = _task("parcel-zoning-screen", "borrowed-parcel-polygon")
+    pin = "0384 02  0143"
+    assert pin in task["question"]
+
+    parcel = await find_parcel(ctx, jurisdiction="Vienna", pin=pin)
+    assert parcel.coverage.result.value == "hit"
+
+    env = await find_zoning(ctx, jurisdiction="Vienna", pin=pin)
+    by = {blk["source_id"]: blk for blk in env.data["results"]}
+    assert len(by) == task["expected"]["sources_returned"]
+    town = by["va-vienna-town-zoning"]
+    assert town["parcel_source_id"] == \
+        task["expected"]["parcel_source_for_the_town_answer"]
+    districts = {sid: [r["district"] for r in blk["records"]]
+                 for sid, blk in by.items()}
+    assert districts == task["expected"]["districts"], districts
+    assert "screening_only" in {w.code for w in env.warnings}

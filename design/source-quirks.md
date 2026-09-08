@@ -366,7 +366,7 @@ polygons VGIN publishes do: Herndon reaches Fairfax and Loudoun, Farmville reach
 Prince Edward and Cumberland, West Point reaches King and Queen and New
 Kent, and Vinton reaches Roanoke County and Roanoke City.
 
-Two governments genuinely apply across that ground, which is the thing
+Two governments apply across that ground, which is the thing
 this project's jurisdiction model exists to represent, and the table said
 one did.
 
@@ -387,3 +387,70 @@ would name a county that does not contain the point as an authority over
 it. Point resolution takes the containing locality from the polygon that
 actually holds the coordinate and drops a county parent that contradicts
 it; the state above still applies wherever the point is.
+
+## 15. Vienna's current zoning districts are served under a service named "Proposed_Districts"
+
+- **Source:** `va-vienna-town-zoning`
+- **Observed:** 2026-09-07, while registering the source
+- **Test:** `tests/servers/geo/test_town_sources.py::test_a_point_in_vienna_returns_the_town_and_the_county`
+
+The Town of Vienna's ArcGIS Online organization publishes several zoning
+feature services: "TOV Zoning Districts" and "Zoning Districts" from
+2019, "Zoning Districts July 2019 Update", and a service named
+`Proposed_Districts` whose item is titled "TOV 2024 Zoning". The town's
+current zoning map draws the last of these and no other. That web map is
+the one the town titles for the districts in effect from 1 January 2024. The name records the ordinance rewrite
+the districts were drawn for; the districts were adopted and the service
+was never renamed. The older services are still public and still answer
+queries, with 2019 districts.
+
+A search that trusts names picks the wrong layer here. The 2026-08-28
+search for a Vienna source found the viewer application and stopped; the
+service behind it was found by reading the web map's own layer list.
+
+**What the code does:** the manifest names the service the current map
+displays and says why in a comment, and the same fact is in its
+`known_limitations`, so every envelope that cites the source carries it.
+Nothing rewrites the service name.
+
+## 16. ArcGIS Online refuses a long GET with HTTP 414, and answers the same query as a POST
+
+- **Source:** `va-leesburg-town-parcels-zoning`, first; any hosted `services*.arcgis.com` service
+- **Observed:** 2026-09-07, recording the Leesburg fixture
+- **Test:** `tests/core/test_egress.py::test_a_query_too_long_for_a_url_is_sent_as_a_form_post`
+
+The recording plan looks for a parcel number that the layer publishes as
+more than one polygon, and intersects each polygon with the zoning layer.
+Leesburg's is `079156879000`, two polygons of 478 vertices each, which is
+18 KB of geometry once encoded into a query string. `services1.arcgis.com`
+answered the GET with HTTP 414. Fairfax County's own on-premises server had
+accepted every polygon sent to it, including larger ones, so nothing had
+tripped this before.
+
+**What the code does:** every ArcGIS query operation accepts the same
+parameters as a form POST, so `HttpFetcher` sends a query whose encoded
+URL would pass 4,000 characters as one. The switch is on length alone:
+an ordinary query is still a GET, and a recording is keyed on the URL and
+the parameters rather than the method, so no fixture changed. The egress
+policy applies to the POST exactly as to the GET; only the request's
+shape differs.
+
+## 17. A one-polygon parcel can intersect two zoning districts (a note)
+
+- **Source:** `va-leesburg-town-parcels-zoning`
+- **Observed:** 2026-09-07, choosing the sample parcel
+- **Test:** none; a note
+
+Parcel `230177709000`, one polygon of 0.24 acres at 209 Old Waterford Rd
+NW, intersects two of the town's zoning polygons: MC and R-6. Whether the
+parcel straddles the district line or only touches it along an edge was
+not determined; an intersection query cannot say, and this project does
+not compute overlaps of its own. The sample parcel was changed to one at
+310 Catoctin Cir SW that intersects a single district, so the examples
+read plainly, and this entry records that the two-district case is real
+and near the town centre.
+
+The skill already covers it: `parcel-zoning-screen` step 2 tells the
+model to report every district and say the parcel touches more than one,
+and that holds whichever geometry is true.
+

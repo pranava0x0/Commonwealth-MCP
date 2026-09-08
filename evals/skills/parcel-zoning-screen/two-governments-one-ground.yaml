@@ -1,0 +1,22 @@
+# A point inside an incorporated town. The town's zoning layer and the
+# county's both cover the ground, both answer, and the skill reports both
+# with their sources named and says whether they agree. Picking one, or
+# averaging them, is the failure.
+id: skill-pzs-two-governments
+tier: 3
+skill: parcel-zoning-screen
+question: "What is the zoning at longitude -77.2653, latitude 38.9012, in Vienna, Virginia?"
+toolset: default
+fixtures: [va-vienna-town-zoning, va-fairfax-parcels-zoning, va-vgin-admin-boundaries]
+expected:
+  jurisdiction: va:vienna-town
+  layered_above: [va:fairfax-county, va]
+  sources_returned: 2
+  districts:
+    va-vienna-town-zoning: [AC]
+    va-fairfax-parcels-zoning: [AC]
+  agreement: true
+  must_say: ["Vienna", "Fairfax County", "AC"]
+  must_not_say: ["unzoned"]
+score: [{kind: source_and_jurisdiction}, {kind: retrieval_correctness}, {kind: provenance_present}, {kind: restraint}]
+traps: []

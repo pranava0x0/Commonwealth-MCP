@@ -2,9 +2,14 @@
  "source_id": "va-vdot-lrs-routes",
  "recorded_at": "2026-09-02T05:31:57Z",
  "rights": {
-  "publisher": "Virginia Department of Transportation (VDOT)",
-  "terms_url": "https://www.virginiaroads.org/",
-  "note": "Recorded government-published responses; third-party content excluded from the repo's CC0 grant (../../../design/architecture.md decision 0011)."
+  "sources": [
+   {
+    "source_id": "va-vdot-lrs-routes",
+    "publisher": "Virginia Department of Transportation (VDOT)",
+    "terms_url": "https://www.virginiaroads.org/"
+   }
+  ],
+  "note": "Recorded government-published responses; third-party content excluded from the repo's CC0 grant (../../../design/architecture.md decision 0011). Each publisher's own terms govern its own responses."
  },
  "summary": {
   "health:routes": {

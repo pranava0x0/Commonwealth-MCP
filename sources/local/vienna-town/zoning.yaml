@@ -1,0 +1,111 @@
+# Town of Vienna, in Fairfax County: the seeded town of design/
+# source-registry.md § 6's forcing set. A 2026-08-28 search found only a
+# zoning-map viewer application; the application's own web map, read on
+# 2026-09-07, names the feature service behind it. The town publishes no
+# parcel layer of its own (its zoning map draws parcels from Fairfax
+# County), so this manifest carries zoning.lookup alone, and it is the
+# first zoning-only source in the registry.
+#
+# Fairfax County's zoning layer also covers Vienna, labelled with the
+# town's name in its JURISDICTION field, so a Vienna zoning query reaches
+# both governments' layers and returns both unranked.
+id: va-vienna-town-zoning
+name: Town of Vienna Zoning Districts (ArcGIS Online)
+jurisdiction: va:vienna-town
+
+publisher:
+  agency: Town of Vienna government (Department of Planning and Zoning)
+  authority_level: primary
+
+domains: [geo, planning]
+
+capabilities:
+  - id: zoning.lookup
+    tool_hint: geo.find_zoning
+
+adapter:
+  type: arcgis
+  # The service is named Proposed_Districts. It is the layer the town's
+  # "Current Zoning Map (effective January 1, 2024)" application displays
+  # (design/source-quirks.md § 15), and its item is titled "TOV 2024
+  # Zoning". The name records the ordinance rewrite it was drawn for and
+  # was never changed when the districts were adopted.
+  service_url: https://services1.arcgis.com/OiQmCBznWDfkLRp1/arcgis/rest/services/Proposed_Districts/FeatureServer
+  field_mapping_version: "1"
+  layers:
+    zoning:
+      layer_id: 0
+      id_field: FID
+      geometry: polygon
+      field_mapping:
+        district: Prop_Distr
+        district_description: Dist_Desc
+
+access:
+  mode: anonymous
+  automation_status: public_api
+  terms_url: https://vienna-va.maps.arcgis.com/home/index.html
+  terms_notes: >
+    The town's ArcGIS Online organization page carries "The Town of Vienna
+    Disclaimer" (read 2026-09-07): the maps are "for informational purposes
+    only", data layers "are NOT to be construed or used as a legal
+    description", accuracy "is not guaranteed", and the town "expressly
+    disclaims all warranties of any type". The feature service item
+    (arcgis.com item ce997ff5da9543e9932a4c26f7df39e6) carries no license
+    text of its own. Shared publicly with anonymous query enabled; no
+    redistribution restriction found. Re-review with the standard 12-month
+    cadence.
+  terms_reviewed_at: "2026-09-07"
+  terms_gap: >
+    The town's own website (viennava.gov) refuses automated requests, so
+    any data terms published there could not be read. The review rests on
+    the ArcGIS Online organization page and the item page alone.
+  data_classification: open
+
+freshness:
+  expected_cadence: unknown
+  cadence_source: >
+    The layer publishes editingInfo; on 2026-09-07 its last data edit was
+    2026-02-26. No stated schedule.
+  ttl_hint_seconds: 86400
+
+coverage:
+  geography: va:vienna-town
+  temporal: current
+  known_limitations:
+    - GIS zoning is a screening representation; the adopted zoning
+      ordinance and official zoning map govern.
+    - Zoning only. The town publishes no parcel layer; a parcel-number
+      query borrows the parcel polygon from Fairfax County's or VGIN's
+      layer and intersects it with this one.
+    - The layer carries the district code and its description and nothing
+      else; proffers, overlays, and dates are not in it.
+    - The service behind this layer is named Proposed_Districts. It is the
+      layer the town's current zoning map displays (checked 2026-09-07);
+      the name is left over from the ordinance rewrite it was drawn for.
+
+authority_notes: >
+  The town's own zoning districts, as drawn for the zoning ordinance that
+  took effect on 1 January 2024. Fairfax County's zoning layer carries the
+  same ground under the town's name, and the two are queried side by side
+  and shown unranked. Screening evidence; the town's zoning administrator
+  confirms a district.
+
+health:
+  probe: arcgis_layer_count
+  expect:
+    # Floor: ten per cent under the registration-day count of 338, rounded
+    # down to two significant figures (GitHub issue #19's rule).
+    # A point inside the town, on Maple Avenue, that the road, landmark,
+    # and boundary recordings already use; and the Fairfax County parcel
+    # under it, whose polygon the parcel-number path borrows.
+    sample_point: [-77.2653, 38.9012]
+    sample_pin: "0384 02  0143"
+    min_features:
+      zoning: 300
+
+lifecycle:
+  declared_state: active
+  added: "2026-09-07"
+  last_verified: "2026-09-07"
+  verified_by: pranava0x0

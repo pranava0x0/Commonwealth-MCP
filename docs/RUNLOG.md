@@ -3,6 +3,240 @@
 One entry per significant work session or delegated research task: why it
 ran, cost where relevant, and whether it was worth it.
 
+## 2026-09-08 — one branch instead of two, and the site learns to be searched
+
+**Two open pull requests, which should have been none.** #43 existed
+because #42 was merged before its review findings were applied, so the
+fixes needed a branch of their own. #44 was then started from #43's head
+rather than from `main`, which stacked them: every commit in #43 was also
+in #44, and #43 sat open for five days while the branch that contained it
+grew. Nothing conflicted, but the diff on #44 claimed 18,000 lines of
+which a third were #43's, and either could have been reviewed against the
+wrong base. The rule this session settles on: apply a review to the branch
+under review before merging it, and start the next branch from `main`.
+
+#43's last open finding was fixed and it was merged: the sweep replaced
+each expired result payload with a payload-free tombstone and then never
+deleted the tombstone, because it only ever globbed `*.meta` and `*.json`.
+Each one carries the arguments of the call that made it, which for these
+tools is an address, a parcel PIN, or a coordinate — so a store with a
+24-hour retention window kept the questions indefinitely, and grew by one
+file per result forever. Tombstones now expire a day after the payload
+does and the sweep deletes them at it; a read past that window is an
+ordinary `not_found`. #44 was rebased onto the merged `main`, which
+dropped the duplicated commit and left it five commits of its own work.
+
+**The site.** PNNL's nepa-mcp was read again, this time for how it is
+organised rather than for whether it has a live demo (the August answer,
+research/README.md part 6 § 4). Two of its patterns were adopted. The
+tool list is a search now rather than a four-column table: its own
+section, a search box over name, package, toolset and description,
+package filter chips, a live count, and one card per tool showing the
+arguments it takes. Those argument lists are read off the bound function
+at build time by `tool_parameters()`, so the page cannot advertise a
+parameter the server does not accept — the same rule every other roster on
+the page follows.
+
+Installation became four numbered steps with copy
+buttons, the one step that goes out to a live service labelled as such,
+and a picker between `claude mcp add` and the JSON config shape most other
+clients take. Its flippable server cards were not adopted: they hide
+coverage behind an interaction, and coverage is the thing this project
+refuses to make anyone hunt for.
+
+Browser-verified at the built page: search, package filter, the
+no-match state, both client snippets, and the copy buttons.
+
+**A second Codex round on the push, two findings, both taken.** A parcel
+query that hit its page cap was dropped from the pagination aggregation,
+so `geo.find_zoning` could report `pagination: complete` on an answer
+that had left part of a parcel unintersected and the districts on that
+ground unfound. The parcel query is appended to `queries` now, on the
+county's own path as well as the borrowed one — Codex named the borrowed
+case and the gap was in both.
+
+The README still told contributors that
+an incorporated town's own source was a priority, in the same change that
+registers two of them; it names the packaging work before #40 instead,
+and links #11-13 rather than a range that starts on a closed issue.
+
+**A third round, two findings, both about the cross-source fixture.** The
+first is a licensing one. The fixture's `rights` block named one
+publisher, and Vienna's file holds Fairfax County's and VGIN's responses
+as well, so two publishers' content was recorded under terms that are not
+theirs — which is the one thing decision 0011's rights block exists to
+prevent. `rights` is a list of contributors now, derived from the URLs the
+file actually contains, and `THIRD_PARTY_DATA.yml` lists Vienna's fixture
+under Fairfax and VGIN too.
+
+Matching by host was tried first and was wrong: VGIN's seven sources and
+every ArcGIS Online tenant share a hostname, so it put eleven publishers
+on Vienna's fixture and seven on each of VGIN's. Matching on the longest
+service URL gives the three that are actually there.
+
+The second is the drift audit, which scored every exchange in a fixture
+under the source the directory is named for. A Fairfax outage therefore
+marked Vienna `partly_unreachable`, and `render()` keeps unreachable
+sources out of the Changed section, so an auxiliary outage could hide a
+real Vienna drift in the same run. Each exchange is tallied under the
+source that published it now, and a borrowed share merges into that
+source's own result after every source has been audited.
+
+**A fourth round, two more, one of them against the third round's own
+code.** The redirect fix from the Codex round decided the method once and
+then let `_build_query_request` decide it again per hop. A query ten
+characters over the URL limit, redirected to a shorter URL, therefore
+fell back under it and went out as a GET — with the parameters back in
+the URL the first hop had just been told was too long to hold them. A
+307 and a 308
+preserve the method by definition, so the method is carried through the
+chain now, and cleared where a 301, 302, or 303 drops the body.
+
+The other is the scoping of the borrowed-share merge written an hour
+earlier. `--source va-vienna-town-zoning` audits one source, and folding
+her fixture's Fairfax and VGIN exchanges into their owners reported three
+sources audited with two of them judged on a fraction of their own
+fixtures and none of their layer probes. The merge is limited to the
+sources the run actually selected.
+
+**A fifth round, two more, both about kinds of empty.** A zoning-only
+town whose PIN is missing from one parcel source while another is down
+was told no parcel source has it — a fact about a source that was never
+read. The note names the unreachable source now and says the miss is not
+definitive, which is the fourth case a note written for three had been
+folding into the wrong one.
+
+And `parcel-zoning-screen` told the agent that two answering sources
+differ, full stop, in the same change that adds an eval task where Vienna
+and Fairfax both return `AC` and the comparison agrees. An assistant
+following the shipped skill would have contradicted the fixture. The
+instruction reads `comparison.agreement` now, and the finding table has a
+row for each answer.
+
+## 2026-09-07 — two towns close the forcing set, and a tool learns to borrow a polygon
+
+Issue #10, the last open slot of the source-registry forcing set
+(design/source-registry.md § 6): an incorporated town with a source of
+its own, registered so that a town and its county both answer for one
+piece of ground.
+
+**The search.** ArcGIS Online's search API, filtered to feature
+services, then each candidate item's owning organization checked rather
+than its title. Herndon's only zoning services belong to a consultant and
+to Fairfax County. Vienna's organization ("Town of Vienna",
+`vienna-va`) publishes four zoning services; the one its own current
+zoning map draws is named `Proposed_Districts`, which a title search
+would never have picked (design/source-quirks.md § 15).
+
+Leesburg's
+organization ("Town of Leesburg, Virginia", `TOL-VA`) publishes parcels,
+zoning, and about a hundred other layers, and its zoning item describes
+itself as the official zoning map under Code of Virginia § 15.2-2285.
+Blacksburg and Montgomery County both publish zoning too; neither is
+registered, and they are the next town-and-county pair if one is wanted.
+Both towns' own websites refuse automated requests, so each manifest
+carries a `terms_gap` saying the review rests on the ArcGIS Online
+organization and item pages.
+
+**Two sources, two shapes.** Leesburg's manifest is Fairfax's shape:
+parcels and zoning, two services on one host. It validated first time.
+Vienna publishes zoning and no parcels, which is the first zoning-only
+source and the case the slot was kept open for.
+
+**What Vienna changed.** `geo.find_zoning` answered a parcel number by
+reading the source's own parcel layer for the polygon, and a source with
+no parcel layer had nothing to read. It now borrows the polygon from the
+first parcel source above the town in the stack that has the number,
+which for Vienna is Fairfax County's, and the zoning evidence carries a
+`parcel_geometry_from:<source>` transformation and the block a
+`parcel_source_id`, so a reader can see whose polygon the district was
+read over.
+
+A missing parcel leaves the town's layer unqueried, and the
+note says so; every parcel source down leaves it unqueried too, and the
+note says outage rather than missing. The sampler got a zoning-only
+recording plan that also records the county's answers for the same
+point and the same parcel, so a two-government answer replays from one
+fixture. That fixture then tripped the drift audit, which sent every
+exchange under the fixture's own host policy and refused the thirteen
+that belong to Fairfax and VGIN; it sends each under the policy of the
+registered source whose host it is now, and a host no manifest declares
+stays refused.
+
+**What Leesburg changed.** Nothing in the layer model, and two things
+elsewhere. The recording plan looks for a parcel number published as
+several polygons and intersects each with the zoning layer; Leesburg's
+is two polygons of 478 vertices, 18 KB of geometry once encoded, and
+ArcGIS Online answered the GET with HTTP 414. Fairfax County's own server
+had accepted larger. The fetcher now sends a query whose URL would pass
+4,000 characters as a form POST, which every ArcGIS query operation
+accepts with the same parameters; recordings key on URL and parameters,
+so none changed (design/source-quirks.md § 16).
+
+The statewide
+cross-check plan skipped every town, because it read the town's own FIPS
+and a town has none; it walks up to the county's now, as the tools did
+already. Re-recording VGIN's fixture afterwards dropped no exchange and
+added four, all Leesburg's. The readings history holds one reading per
+layer per day, so a source registered today cannot have the two the
+range test asks for until the weekly audit runs; the test now allows a
+layer whose only reading is from the newest run in the file, and nothing
+older.
+
+**What the data said.** At the Vienna point both governments say AC, the
+Avenue Center district, and Fairfax's layer labels the polygon "TOWN OF
+VIENNA" in its own jurisdiction field. VGIN carries Loudoun's parcel
+numbers as its PTM_ID, so Leesburg's number reaches the town's layer and
+the statewide one and both agree. The first Leesburg parcel chosen as the
+sample intersected two districts (design/source-quirks.md § 17); the sample moved to a parcel in one district, and the case is
+recorded.
+
+**On the page.** Four new recorded calls: the Vienna point with both
+governments' districts and the comparison, the Vienna parcel number read
+over the county's polygon, and Leesburg's parcel and zoning by number
+with the ordinance link returned as data. The coverage table derives the
+two towns' rows on its own. Two eval tasks for `parcel-zoning-screen`,
+the two-source cases its step 2 described and had no fixture for, each
+replayed in `tests/test_skills.py`.
+
+**Also.** This branch carries PR #43 and the editorial pass that was
+sitting uncommitted in the main checkout on 2026-09-07: the README's
+"Start here" rewrite, the architecture summary and § 39 rewritten to the
+built state, and the site's hero and intro. One claim in it is changed
+here: the README said the Python functions are callable directly, which
+they are, and decision 0015 says they are not a supported API, which
+they are not; the README now says both. The next phase, and the candidate demos and
+skills, are written into architecture.md § 39, skills.md § 3, and
+testing-and-demos.md § 3 rather than left in a review page.
+
+**The review round, applied.** Eight reading passes over the branch
+found ten things worth fixing. The two that mattered: a query sent as a
+form POST lost its body on a redirect, because the hop logic assumed the
+query lived in the Location header; and the county's parcel was fetched
+and cited once only because Fairfax's id sorts before Vienna's, so a
+town whose id sorted first would have cited it twice. Both paths share
+one parcel memo now and one failure entry per source, a source that was
+never queried has no comparison, and the note for an unqueried town
+layer distinguishes no parcel source at all from every source down from
+no such parcel. The rest were prose: a skill sentence that counted two
+counties where there is one, a broken line in llms.txt, a stale replay
+path in the evals README, one score kind spelled two ways, and cost-log
+counts that did not match the table above them.
+
+**The Codex round, applied.** Three findings, all taken. A town's
+block that says "not queried" kept the results list non-empty, so a
+call in which every parcel source failed reported partial execution
+rather than failed; execution now counts the sources that were
+queried. A parcel source that failed for the county's own path was
+asked again by the town's borrowed step, two retry cycles for one
+outage; the failure is remembered for the call. And a POSTed query
+kept its body across every redirect, where a 303 asks for a GET of
+the Location; only 307 and 308 carry the body on now. The Vienna
+fixture also records the town's districts over VGIN's polygon, so the
+county-down path replays.
+
+593 tests.
+
 ## 2026-09-02 — the review of the above, applied
 
 Fifteen findings from a review of PR #42, plus three from the Codex bot.
@@ -30,7 +264,7 @@ retry budget is spent on failures.
 
 A proxy also stopped working the moment an explicit transport was passed,
 because httpx reads `HTTPS_PROXY` only when there is none. Pinning and a
-forward proxy genuinely cannot coexist, so the adapter says so once per
+forward proxy cannot coexist, so the adapter says so once per
 process rather than failing mutely.
 
 **The result store.** One stray file in the shared cache stopped every
@@ -647,12 +881,12 @@ A checker with no test quietly stops catching things.
 
 ## 2026-08-28 — Charles City County, and civic's first real tool
 
-Two more geo sources: Charles City County (a genuinely small rural
+Two more geo sources: Charles City County (a small rural
 county — 6,514 parcels behind a deliberately minimal 2-field public
 view, no zoning layer) closes the "rural county" half of design/
 source-registry.md § 6's forcing set; a live search for Vienna's own GIS
 (the "incorporated town" half) found only a zoning-map viewer app, no
-queryable endpoint — likely genuinely thin, logged in the GitHub issues rather
+queryable endpoint — likely thin, logged in the GitHub issues rather
 than forced.
 
 Bigger: `civic.get_code_section`, the first civic-vertical tool, and a
@@ -710,7 +944,7 @@ merged, feature branch deleted, zero PRs left open.
 The repo's first commit went to GitHub twice. The first attempt pushed
 directly to `main` — a mistake against the user's own explicit prior
 instruction to open a PR first for Codex bot review. Fixed by rebuilding
-history so `main` carries a genuinely empty root commit that is a real
+history so `main` carries a empty root commit that is a real
 ancestor of the content commit (`git commit-tree` twice, chained by
 `-p`), rather than two unrelated commits on differently-named branches —
 `gh pr create` refuses branches with no shared history, and an orphan
@@ -801,7 +1035,7 @@ One background research pass: compare docs/index.html against PNNL's
 nepa-mcp, Power-Agent (confirmed Harvard SEAS-affiliated), civic-ai-tools,
 github-mcp-server, fastmcp, and modelcontextprotocol.io — live pages
 fetched, not guessed from repo names. Found civic-ai-tools is the only
-checked project with a genuinely live in-browser demo; findings and what
+checked project with a live in-browser demo; findings and what
 was/wasn't adopted are in ../research/README.md part 6. Worth it:
 yes — it caught that Power-Agent's tool→skill→benchmark layering (cited in
 the reference evaluation) has no public visual demonstration anywhere,

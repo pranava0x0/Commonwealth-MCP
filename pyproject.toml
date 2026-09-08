@@ -8,7 +8,7 @@ license = "Apache-2.0"
 # CC-BY-4.0; see NOTICE for the split and THIRD_PARTY_DATA.yml for
 # the government content this repo redistributes.
 dependencies = [
-    # Exact-pin per DECISIONS.md 0003: this is an application/deployment tree, not
+    # Exact-pin per design/architecture.md decision 0003: this is an application/deployment tree, not
     # a published library. Bump deliberately, with the compat spike re-run.
     "mcp==2.1.1",
     "httpx==0.28.1",

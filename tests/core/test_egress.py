@@ -356,7 +356,7 @@ async def test_walking_the_addresses_does_not_spend_the_retry_budget(
         monkeypatch):
     """The bug this closes: `approved[attempt % len(approved)]` gave each
     address its own attempt, so two unreachable addresses used up
-    RETRY_BUDGET + 1 and a genuinely flaky host got no retry at all."""
+    RETRY_BUDGET + 1 and a flaky host got no retry at all."""
     attempts: list[str] = []
 
     async def fake_send(self, request):
@@ -511,3 +511,135 @@ async def test_rule7_per_host_concurrency_is_capped(monkeypatch):
 
 async def _no_sleep(_seconds):
     return None
+
+
+def test_a_query_too_long_for_a_url_is_sent_as_a_form_post():
+    """ArcGIS Online answered HTTP 414 to a GET carrying Leesburg's
+    478-vertex parcel polygon, 18 KB of geometry once encoded, while
+    Fairfax County's own server had accepted longer (design/source-quirks.md
+    § 16). Every ArcGIS query operation takes the same parameters as a
+    form POST, so the fetcher switches on the encoded length and nothing
+    else: an ordinary query is still a GET, and a recording, keyed on the
+    URL and the parameters rather than the method, replays either way."""
+    import httpx
+
+    from commonwealth.adapters.base import (MAX_GET_URL_CHARS,
+                                            _build_query_request)
+
+    client = httpx.AsyncClient()
+    short = _build_query_request(client, "https://example.gov/q",
+                                 {"f": "json", "where": "1=1"})
+    assert short.method == "GET"
+    assert short.url.params["where"] == "1=1"
+
+    big = {"f": "json", "geometry": "x" * (MAX_GET_URL_CHARS + 1)}
+    long = _build_query_request(client, "https://example.gov/q", big)
+    assert long.method == "POST"
+    assert str(long.url) == "https://example.gov/q", (
+        "the parameters moved into the body, so the URL carries none")
+    assert long.headers["content-type"] == "application/x-www-form-urlencoded"
+    assert b"f=json" in long.content
+    assert b"geometry=" + b"x" * (MAX_GET_URL_CHARS + 1) in long.content
+
+
+async def test_a_redirected_form_post_carries_its_body_to_the_new_host(
+        monkeypatch):
+    """The redirect loop drops the parameters on a hop because a GET's
+    query is already in the Location header. A query too long for a URL
+    travels as a form body, which no Location header carries, so it has
+    to be sent again or the canonical host is asked a bare `.../query`
+    and answers with its HTML form."""
+    seen: list[tuple[str, str, bytes]] = []
+    big = {"f": "json", "geometry": "x" * 5000}
+
+    async def fake_send(self, request):
+        seen.append((request.method, str(request.url), request.content))
+        if len(seen) == 1:
+            return httpx.Response(
+                307, headers={"location": "https://www.fairfaxcounty.gov/moved"},
+                request=request)
+        return httpx.Response(200, content=b'{"ok":true}', request=request)
+
+    monkeypatch.setattr(httpx.AsyncHTTPTransport, "handle_async_request",
+                        fake_send)
+    await HttpFetcher(policy=_policy()).fetch_json(
+        "https://www.fairfaxcounty.gov/x/query", big)
+    assert [m for m, _, _ in seen] == ["POST", "POST"], seen
+    # The pinned transport rewrites the host to the checked address, so
+    # the path is what identifies the hop.
+    assert seen[1][1].endswith("/moved"), seen[1][1]
+    assert b"geometry=" + b"x" * 5000 in seen[1][2], (
+        "the second hop lost the polygon")
+
+
+async def test_a_307_to_a_shorter_url_is_still_a_post(monkeypatch):
+    """307 and 308 preserve the method by definition. The length test was
+    re-run per hop, so a query just over the limit that was redirected to
+    a shorter URL fell back under it and went out as a GET — with the
+    parameters back in the URL the first hop had just been told was too
+    long to hold them."""
+    import httpx as _httpx
+
+    from commonwealth.adapters.base import MAX_GET_URL_CHARS
+
+    long_path = "https://www.fairfaxcounty.gov/" + "p" * 300 + "/query"
+    short = "https://www.fairfaxcounty.gov/q"
+    # Ten characters over the limit on the first URL, and comfortably
+    # under it on the second: the case where re-deciding changes the
+    # answer.
+    overhead = len(str(_httpx.URL(long_path, params={"f": "json",
+                                                     "geometry": ""})))
+    big = {"f": "json",
+           "geometry": "x" * (MAX_GET_URL_CHARS + 10 - overhead)}
+    assert len(str(_httpx.URL(long_path, params=big))) > MAX_GET_URL_CHARS
+    assert len(str(_httpx.URL(short, params=big))) < MAX_GET_URL_CHARS, (
+        "the redirect target must fall under the limit or this test "
+        "cannot see the bug")
+
+    seen: list[tuple[str, str, bytes]] = []
+
+    async def fake_send(self, request):
+        seen.append((request.method, str(request.url), request.content))
+        if len(seen) == 1:
+            return httpx.Response(307, headers={"location": short},
+                                  request=request)
+        return httpx.Response(200, content=b'{"ok":true}', request=request)
+
+    monkeypatch.setattr(httpx.AsyncHTTPTransport, "handle_async_request",
+                        fake_send)
+    await HttpFetcher(policy=_policy()).fetch_json(long_path, big)
+    assert [m for m, _, _ in seen] == ["POST", "POST"], seen
+    assert seen[1][2] == request_body_of(big), (
+        "the second hop dropped the form body a 307 asked it to keep")
+
+
+def request_body_of(params: dict) -> bytes:
+    import httpx as _httpx
+
+    return _httpx.Request("POST", "https://x/", data=params).content
+
+
+async def test_a_303_turns_a_posted_query_into_a_get_of_the_location(
+        monkeypatch):
+    """A 303 asks for a GET of the Location; only 307 and 308 keep the
+    method, and only they carry the form body on."""
+    seen: list[tuple[str, str, bytes]] = []
+    big = {"f": "json", "geometry": "x" * 5000}
+
+    async def fake_send(self, request):
+        seen.append((request.method, str(request.url), request.content))
+        if len(seen) == 1:
+            return httpx.Response(
+                303, headers={"location":
+                              "https://www.fairfaxcounty.gov/result?f=json"},
+                request=request)
+        return httpx.Response(200, content=b'{"ok":true}', request=request)
+
+    monkeypatch.setattr(httpx.AsyncHTTPTransport, "handle_async_request",
+                        fake_send)
+    await HttpFetcher(policy=_policy()).fetch_json(
+        "https://www.fairfaxcounty.gov/x/query", big)
+    assert [m for m, _, _ in seen] == ["POST", "GET"], seen
+    assert seen[1][1].endswith("/result?f=json"), seen[1][1]
+    assert seen[1][2] == b"", "a GET of the Location carries no body"
+

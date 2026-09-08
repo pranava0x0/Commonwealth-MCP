@@ -1,16 +1,8 @@
 #!/usr/bin/env python3
-"""Everything this project knows about one address in Sterling.
+"""Query government records for one address in Sterling, Loudoun County.
 
-Sterling is a Census Designated Place in Loudoun County: a postal city and
-a statistical area with no government of its own. Loudoun has no parcel or
-zoning layer registered here either, so it is an ordinary, populous place
-that this project covers entirely through statewide sources.
-
-That makes it the useful demonstration. One walk produces three different
-kinds of answer — records found, records checked and absent, and no source
-registered at all — and telling those apart is the thing this project is
-built to do.
-"""
+The example shows records found, no matches within a query radius, and a
+zoning registry gap. It uses statewide sources for this address."""
 from _common import heading, run, show_envelope
 
 from commonwealth.domains.geo import (find_address, find_boundaries,
@@ -84,7 +76,7 @@ async def body(ctx) -> None:
           "  them. Reporting that as unzoned land would be the worst\n"
           "  answer available.\n")
     print("  Public places came back CHECKED, NOTHING FOUND. The statewide\n"
-          "  landmarks layer was queried and holds nothing within a\n"
+          "  landmarks layer was queried and returned no matching records within a\n"
           "  kilometre. That is a fact about the layer, not about\n"
           "  Sterling, which has schools and a library.\n")
     print("  Everything else was FOUND, from statewide layers, because\n"

@@ -1924,6 +1924,49 @@ unified tool→skill→benchmark flow diagram in Power-Agent's style — nothing
 in Commonwealth yet has three layers to show (skills are still planned, per
 docs/index.html's Skills section).
 
+### 4. Re-check 2026-09-08: nepa-mcp's site, and what it is worth copying
+
+The August pass read nepa-mcp's site for whether it had a live demo, found
+it static, and moved on. Read again for its *organisation*, it has three
+patterns this project did not have, and they are all about the same thing:
+a reader who arrives knowing nothing needs a path, and a reader who arrives
+knowing what they want needs a way to skip to it.
+
+The page is now `14 Federal Agencies → 23 Servers → 88 Research
+Capabilities → One Protocol`, with a sticky nav over eight in-page
+sections (Overview, Demo, Quick Start, Sources, Servers, Tools, Layers,
+Docs). Three things it does that were adopted here:
+
+1. **The tool list is a search, not a table.** Its Tools section is a
+   search box over all 56 tools — "search by name, purpose, or server" —
+   with agency and credential filter chips, a live count, and a stated
+   no-JavaScript fallback to a Markdown catalog. Commonwealth had a
+   four-column table that a reader scrolled. Fourteen tools is small
+   enough to scroll and too many to scan, and the argument list was
+   nowhere on the page at all. Adopted: `#tools` is now its own section
+   with a search box, package filters, a live count, and one card per
+   tool showing the arguments it takes — read off the bound function by
+   `tool_parameters()` at build time, the same derived-not-declared rule
+   every other roster on the page follows.
+2. **Installation is a numbered walk, not a block of shell.** Its Quick
+   Start is four titled steps, each with its own copy button, and a client
+   picker that swaps the config snippet. Commonwealth had one `<pre>` of
+   seven lines with a live network call in the middle of it and no way to
+   tell which lines needed one. Adopted: four steps, the live one labelled
+   as such, copy buttons, and a picker between `claude mcp add` and the
+   JSON config shape.
+3. **The flippable server cards were not adopted.** They hide coverage
+   behind an interaction, and coverage is the thing this project refuses
+   to make anyone hunt for. Its per-layer status indicators
+   (ok/empty/partial/failed) are a good idea already served here by the
+   coverage decoder, which cross-links each value to the recorded call
+   that produced it.
+
+Its scale is worth stating plainly: 23 servers and 56 tools against one
+server and 14. The presentation patterns transfer; the counts are not a
+target, and a search box over fourteen tools earns its place because the
+descriptions are long, not because the list is.
+
 ---
 
 ## Reproducing the collection
@@ -1975,3 +2018,4 @@ They are entries here instead.
 | 2026-08-27 | Site and demo comparison added (part 6), before publishing `docs/index.html`. |
 | 2026-08-28 | Six documents merged into this one. No findings were rewritten or dropped; headings were demoted and each part notes the file it came from. `research/raw/` untracked at the same time — it is 25 MB of regenerable API snapshots, and the scripts above rebuild it. |
 | 2026-08-28 | Re-check pass added as part 3 § 9: protocol/SDK facts unchanged, GSA catalog 27 → 37, Regrid and ArcGIS Location Platform MCP betas noted in the parcels/geocoding lane, civic gap re-confirmed, LIS API is JSON (not XML), VGIN geocoder publishes no automated-use restriction. |
+| 2026-09-08 | Part 6 § 4: nepa-mcp's site re-read for organisation rather than for a live demo. Its searchable tool explorer and numbered install walk adopted; its flippable server cards not. |

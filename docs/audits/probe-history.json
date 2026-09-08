@@ -61,6 +61,22 @@
    "min_expected": 5000
   },
   {
+   "observed_at": "2026-09-08T00:56:46Z",
+   "source_id": "va-leesburg-town-parcels-zoning",
+   "layer": "parcels",
+   "feature_count": 22258,
+   "min_expected": 20000,
+   "note": "backfilled from the committed fixture's own recording, 2026-09-02"
+  },
+  {
+   "observed_at": "2026-09-08T00:56:46Z",
+   "source_id": "va-leesburg-town-parcels-zoning",
+   "layer": "zoning",
+   "feature_count": 140,
+   "min_expected": 120,
+   "note": "backfilled from the committed fixture's own recording, 2026-09-02"
+  },
+  {
    "observed_at": "2026-08-30T03:38:06Z",
    "source_id": "va-richmond-city-parcels-zoning",
    "layer": "parcels",
@@ -224,6 +240,22 @@
    "layer": "parcels",
    "feature_count": 4170691,
    "min_expected": 3000000
+  },
+  {
+   "observed_at": "2026-09-08T00:57:36Z",
+   "source_id": "va-vgin-statewide-parcels",
+   "layer": "parcels",
+   "feature_count": 4170691,
+   "min_expected": 3700000,
+   "note": "backfilled from the committed fixture's own recording, 2026-09-02"
+  },
+  {
+   "observed_at": "2026-09-08T00:52:29Z",
+   "source_id": "va-vienna-town-zoning",
+   "layer": "zoning",
+   "feature_count": 338,
+   "min_expected": 300,
+   "note": "backfilled from the committed fixture's own recording, 2026-09-02"
   }
  ]
 }

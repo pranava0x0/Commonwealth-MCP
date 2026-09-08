@@ -34,3 +34,6 @@ research/raw/
 # rather than copying them, so the issues stay the record and this stays
 # the reading order.
 backlog.md
+
+# Local editorial audit; kept outside the published toolkit.
+/tools/check_prose_local.py

@@ -1,12 +1,12 @@
 {
  "version": "0.1.0.dev0",
- "registry_revision": "2026-08-29",
+ "registry_revision": "2026-09-07",
  "counts": {
   "servers": 1,
   "tools": 14,
   "packages": 3,
-  "sources": 17,
-  "sources_active": 13,
+  "sources": 19,
+  "sources_active": 15,
   "sources_proposed": 4,
   "capabilities": 10,
   "jurisdictions": 323,
@@ -18,6 +18,12 @@
    "package": "civic",
    "toolset": "default",
    "contract_version": "1",
+   "parameters": [
+    {
+     "name": "citation",
+     "required": true
+    }
+   ],
    "description": "Get the text of a Code of Virginia section by its citation (e.g. '1-500', '18.2-57'). Direct lookup only \u2014 this is not a full-text search; the caller must already know or have found the section number. Results carry the section's own citation history exactly as published, with a link to the live page. A missing section (repealed, renumbered, or never existed) returns found=False, not an error."
   },
   {
@@ -25,6 +31,24 @@
    "package": "geo",
    "toolset": "default",
    "contract_version": "1",
+   "parameters": [
+    {
+     "name": "jurisdiction",
+     "required": true
+    },
+    {
+     "name": "pin",
+     "required": false
+    },
+    {
+     "name": "lon",
+     "required": false
+    },
+    {
+     "name": "lat",
+     "required": false
+    }
+   ],
    "description": "Find parcel records in a Virginia jurisdiction by parcel PIN or by a lon/lat point. Pass the user's jurisdiction string as given \u2014 resolution and its ambiguities are handled here, and candidate lists must go back to the user unchosen. Results carry provenance and coverage; an empty result with coverage.registry='none' means Commonwealth has no source there, not that no parcel exists. For a street address, call geo.resolve_location first to get the jurisdiction and a coordinate."
   },
   {
@@ -32,6 +56,24 @@
    "package": "geo",
    "toolset": "default",
    "contract_version": "1",
+   "parameters": [
+    {
+     "name": "jurisdiction",
+     "required": true
+    },
+    {
+     "name": "pin",
+     "required": false
+    },
+    {
+     "name": "lon",
+     "required": false
+    },
+    {
+     "name": "lat",
+     "required": false
+    }
+   ],
    "description": "Find the zoning district(s) for a parcel PIN or lon/lat point in a Virginia jurisdiction. Screening only: results state the GIS layer's answer, never a legal determination \u2014 repeat the screening_only warning to the user. When two official sources are registered, both are queried and any disagreement is shown, not reconciled. Use geo.find_parcel first when you need the parcel record itself."
   },
   {
@@ -39,6 +81,16 @@
    "package": "geo",
    "toolset": "default",
    "contract_version": "1",
+   "parameters": [
+    {
+     "name": "jurisdiction",
+     "required": true
+    },
+    {
+     "name": "detail",
+     "required": false
+    }
+   ],
    "description": "Get a Virginia jurisdiction's official boundary: FIPS, GNIS, area, jurisdiction type, bounding box, and the publisher's own centroid. Use to confirm WHICH government's territory is meant and how big it is. Independent cities are returned as their own territory, never as part of the county sharing their name. Screening geometry only \u2014 it is generalized and the publisher disclaims survey use, so never decide from it which side of a boundary an address sits on. Pass detail='full' for vertices. Not a containment test: to find which jurisdiction covers a point, use registry.resolve_jurisdiction with lon/lat."
   },
   {
@@ -46,6 +98,24 @@
    "package": "geo",
    "toolset": "default",
    "contract_version": "1",
+   "parameters": [
+    {
+     "name": "jurisdiction",
+     "required": true
+    },
+    {
+     "name": "address",
+     "required": false
+    },
+    {
+     "name": "lon",
+     "required": false
+    },
+    {
+     "name": "lat",
+     "required": false
+    }
+   ],
    "description": "Find address-point records in a Virginia jurisdiction, by address string or by a lon/lat point. The string path is a PREFIX match on the publisher's own spelling (\"6800 BEULAH ST\"), not a fuzzy search \u2014 use geo.resolve_location when the input is a typed address that needs interpreting. A record's `po_name` is a POSTAL city and is never the government: a Fairfax County address reads \"ALEXANDRIA\". Read `locality` and `fips` for the jurisdiction. An empty result means this publisher has no record, which is not the same as no such address existing."
   },
   {
@@ -53,6 +123,16 @@
    "package": "geo",
    "toolset": "default",
    "contract_version": "1",
+   "parameters": [
+    {
+     "name": "address",
+     "required": false
+    },
+    {
+     "name": "zip_code",
+     "required": false
+    }
+   ],
    "description": "Turn a Virginia street address or a 5-digit ZIP into the government that covers it. Use this FIRST when the user gives an address \u2014 the other tools take a jurisdiction name or a coordinate, not an address. An address is geocoded and the resulting point is placed by point-in-polygon; the geocoder's own city field is a POSTAL city and is never the answer (a Fairfax County address reads 'Alexandria'). A ZIP returns every locality it touches: ZIPs are delivery routes and cross government boundaries constantly, so a multi-locality ZIP comes back as candidates with requires_user_choice and must go to the user unchosen. Pass exactly one of `address` or `zip_code`."
   },
   {
@@ -60,6 +140,28 @@
    "package": "geo",
    "toolset": "default",
    "contract_version": "1",
+   "parameters": [
+    {
+     "name": "jurisdiction",
+     "required": true
+    },
+    {
+     "name": "lon",
+     "required": false
+    },
+    {
+     "name": "lat",
+     "required": false
+    },
+    {
+     "name": "pin",
+     "required": false
+    },
+    {
+     "name": "radius_meters",
+     "required": false
+    }
+   ],
    "description": "Find building footprints at a lon/lat point (with a radius) or on a parcel PIN in a Virginia jurisdiction. Answers 'is this ground built on, and how much of it'. An empty result is NOT evidence of vacant land \u2014 this is a derived layer whose coverage varies by locality. Height, storey, and class fields are frequently null, which means the publisher has no value. Footprint area is published in Web Mercator, where area is inflated about 1.6x at Virginia's latitudes; both the publisher's number and a converted approximation are returned, each labelled. A dense urban query truncates \u2014 narrow the radius rather than reading a short list as the whole answer."
   },
   {
@@ -67,6 +169,32 @@
    "package": "geo",
    "toolset": "spatial",
    "contract_version": "1",
+   "parameters": [
+    {
+     "name": "jurisdiction",
+     "required": true
+    },
+    {
+     "name": "name",
+     "required": false
+    },
+    {
+     "name": "place_type",
+     "required": false
+    },
+    {
+     "name": "lon",
+     "required": false
+    },
+    {
+     "name": "lat",
+     "required": false
+    },
+    {
+     "name": "radius_meters",
+     "required": false
+    }
+   ],
    "description": "Find named public places in a Virginia jurisdiction \u2014 schools, libraries, fire stations, DMV offices, state parks \u2014 by name prefix, by the publisher's own place_type vocabulary, or near a lon/lat point. NOT an inventory: a place missing from this layer may simply never have been added, so an empty result never means there is no school there. Each record names the organisation it came from, and that organisation is its authority, not the map publisher. Record URLs are returned as data and are never fetched. Pass at least one filter."
   },
   {
@@ -74,6 +202,28 @@
    "package": "geo",
    "toolset": "spatial",
    "contract_version": "1",
+   "parameters": [
+    {
+     "name": "jurisdiction",
+     "required": true
+    },
+    {
+     "name": "street_name",
+     "required": false
+    },
+    {
+     "name": "lon",
+     "required": false
+    },
+    {
+     "name": "lat",
+     "required": false
+    },
+    {
+     "name": "radius_meters",
+     "required": false
+    }
+   ],
    "description": "Find road segments and routes in a Virginia jurisdiction, by street-name prefix or near a lon/lat point. TWO official sources answer this and they are expected to disagree: VDOT's route inventory is a linear-referencing model with its own route names and measures, VGIN's centerlines are an aggregation of local submissions with segment-level detail. Both are returned unreconciled and the comparison block says whether their names agree \u2014 a difference is usually a difference in how the road is modelled, not an error. Centerlines are not right-of-way boundaries. A road along a locality line belongs to both localities in the results."
   },
   {
@@ -81,6 +231,24 @@
    "package": "geo",
    "toolset": "default",
    "contract_version": "1",
+   "parameters": [
+    {
+     "name": "jurisdiction",
+     "required": true
+    },
+    {
+     "name": "lon",
+     "required": false
+    },
+    {
+     "name": "lat",
+     "required": false
+    },
+    {
+     "name": "radius_meters",
+     "required": false
+    }
+   ],
    "description": "Find the environmental monitoring stations a Virginia agency has on record near a lon/lat point. READ THE LIMITS BEFORE USING THIS: it is NOT a complete inventory of environmental sites, and it is NOT a determination that any site is safe, contaminated, or suitable for a given use. What is registered today is DEQ's water-quality monitoring network \u2014 air, waste, and land programmes are not in it. A station on record means that spot is or was sampled and nothing more; historic stations are included, so read last_sample_date. An empty result means no station of that kind is on record near the point, never that the ground is clean. Say all of this to the user; do not summarise it away. A point is required \u2014 this source has no locality field."
   },
   {
@@ -88,6 +256,20 @@
    "package": "registry",
    "toolset": "discovery-min",
    "contract_version": "2",
+   "parameters": [
+    {
+     "name": "query",
+     "required": false
+    },
+    {
+     "name": "lon",
+     "required": false
+    },
+    {
+     "name": "lat",
+     "required": false
+    }
+   ],
    "description": "Resolve a Virginia jurisdiction from a name, alias, or FIPS code, or from a lon/lat point by point-in-polygon against official boundaries. Use FIRST whenever a place is named or a coordinate is given: Virginia has independent cities that are not inside the counties sharing their names (Fairfax City is not in Fairfax County), and towns that sit inside a county so BOTH governments apply \u2014 read layered_authorities, do not assume the resolved leaf answers everything. Pass `query` OR lon/lat, never both. If the result carries candidates with requires_user_choice, present them to the user and never pick one yourself. For a street address or a ZIP, use geo.resolve_location instead."
   },
   {
@@ -95,6 +277,20 @@
    "package": "registry",
    "toolset": "discovery",
    "contract_version": "1",
+   "parameters": [
+    {
+     "name": "text",
+     "required": false
+    },
+    {
+     "name": "jurisdiction",
+     "required": false
+    },
+    {
+     "name": "capability",
+     "required": false
+    }
+   ],
    "description": "Search the Government Source Registry: which registered public systems cover a capability or jurisdiction, with authority level and current state. Use to answer 'what does Commonwealth cover?' before assuming coverage. Not a data query tool \u2014 use the geo.* tools for actual records."
   },
   {
@@ -102,6 +298,12 @@
    "package": "registry",
    "toolset": "discovery",
    "contract_version": "1",
+   "parameters": [
+    {
+     "name": "source_id",
+     "required": true
+    }
+   ],
    "description": "Full registry entry for one source id: publisher, authority, terms, limitations. Use when the user asks where an answer came from or what a source's caveats are."
   },
   {
@@ -109,6 +311,12 @@
    "package": "registry",
    "toolset": "discovery",
    "contract_version": "1",
+   "parameters": [
+    {
+     "name": "source_id",
+     "required": false
+    }
+   ],
    "description": "Declared and operational state for registered sources. Use when a query reported a source failure and you need to say whether the source is known-down."
   }
  ],
@@ -199,6 +407,26 @@
    "known_limitations": [
     "GIS zoning is a screening representation; the adopted zoning ordinance and official zoning map govern.",
     "Neither layer publishes a machine-readable last-edit date."
+   ]
+  },
+  {
+   "id": "va-leesburg-town-parcels-zoning",
+   "name": "Town of Leesburg Parcels and Zoning (ArcGIS Online)",
+   "jurisdiction": "va:leesburg-town",
+   "publisher": "Town of Leesburg government (Information Technology, GIS Program)",
+   "authority_level": "primary",
+   "capabilities": [
+    "parcel.lookup",
+    "zoning.lookup"
+   ],
+   "data_classification": "open",
+   "declared_state": "active",
+   "terms_url": "https://tol-va.maps.arcgis.com/home/index.html",
+   "known_limitations": [
+    "GIS zoning is a screening representation; the adopted zoning ordinance and official zoning map govern.",
+    "Parcel identifiers are Loudoun County's MCPI numbers, republished by the town; VGIN's statewide layer uses the same numbers for Loudoun.",
+    "The parcel layer exposes an address, acreage, and subdivision name and nothing else; no owner, assessment, or land-use fields.",
+    "The zoning layer carries per-polygon dates that this manifest does not expose, because one of them holds a 1900 placeholder on some rows."
    ]
   },
   {
@@ -427,6 +655,25 @@
     "Currency varies by locality and lags the locality's own live system; this is the statewide fallback, not the fast path, for any jurisdiction that also has a local manifest.",
     "No zoning equivalent published statewide; parcel.lookup only.",
     "Layer publishes no machine-readable last-edit date at the layer level (a per-record LASTUPDATE field exists but is not exposed through this adapter's freshness path)."
+   ]
+  },
+  {
+   "id": "va-vienna-town-zoning",
+   "name": "Town of Vienna Zoning Districts (ArcGIS Online)",
+   "jurisdiction": "va:vienna-town",
+   "publisher": "Town of Vienna government (Department of Planning and Zoning)",
+   "authority_level": "primary",
+   "capabilities": [
+    "zoning.lookup"
+   ],
+   "data_classification": "open",
+   "declared_state": "active",
+   "terms_url": "https://vienna-va.maps.arcgis.com/home/index.html",
+   "known_limitations": [
+    "GIS zoning is a screening representation; the adopted zoning ordinance and official zoning map govern.",
+    "Zoning only. The town publishes no parcel layer; a parcel-number query borrows the parcel polygon from Fairfax County's or VGIN's layer and intersects it with this one.",
+    "The layer carries the district code and its description and nothing else; proffers, overlays, and dates are not in it.",
+    "The service behind this layer is named Proposed_Districts. It is the layer the town's current zoning map displays (checked 2026-09-07); the name is left over from the ordinance rewrite it was drawn for."
    ]
   }
  ],
@@ -19053,6 +19300,7 @@
     {
      "jurisdiction": "va:leesburg-town",
      "sources": [
+      "va-leesburg-town-parcels-zoning",
       "va-vgin-statewide-parcels"
      ]
     },
@@ -22248,6 +22496,12 @@
      ]
     },
     {
+     "jurisdiction": "va:leesburg-town",
+     "sources": [
+      "va-leesburg-town-parcels-zoning"
+     ]
+    },
+    {
      "jurisdiction": "va:richmond-city",
      "sources": [
       "va-richmond-city-parcels-zoning"
@@ -22256,7 +22510,8 @@
     {
      "jurisdiction": "va:vienna-town",
      "sources": [
-      "va-fairfax-parcels-zoning"
+      "va-fairfax-parcels-zoning",
+      "va-vienna-town-zoning"
      ]
     }
    ],
@@ -22430,7 +22685,6 @@
     "va:lawrenceville-town",
     "va:lebanon-town",
     "va:lee-county",
-    "va:leesburg-town",
     "va:lexington-city",
     "va:loudoun-county",
     "va:louisa-county",

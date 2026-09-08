@@ -16,6 +16,7 @@ list here would misstate somebody's licensing terms.
 from __future__ import annotations
 
 import argparse
+import json
 import sys
 from pathlib import Path
 
@@ -59,18 +60,51 @@ def orphaned_fixtures(known_ids: set[str]) -> list[str]:
                   if d.is_dir() and d.name not in known_ids)
 
 
+def fixtures_by_source() -> dict[str, set[str]]:
+    """Which recorded files carry which publisher's content.
+
+    A fixture usually holds one publisher's responses and sits in a
+    directory named for it. A zoning-only source records its county's and
+    the state's answers for the same point and parcel, so one file can
+    hold three, and listing it only under the directory's name would put
+    two publishers' content under terms that are not theirs. Each fixture
+    names its own contributors in the `rights` block its recording wrote,
+    and this reads them.
+    """
+    out: dict[str, set[str]] = {}
+    if not FIXTURE_ROOT.exists():
+        return out
+    for path in sorted(FIXTURE_ROOT.rglob("*")):
+        if not path.is_file():
+            continue
+        rel = str(path.relative_to(ROOT))
+        out.setdefault(path.relative_to(FIXTURE_ROOT).parts[0],
+                       set()).add(rel)
+        if path.name != "recorded.json":
+            continue
+        try:
+            rights = json.loads(path.read_text()).get("rights") or {}
+        except (OSError, json.JSONDecodeError):
+            # A fixture that cannot be read is a problem for the tests,
+            # not a reason to drop a licensing row: its own directory
+            # still lists it above.
+            continue
+        for entry in rights.get("sources") or []:
+            sid = entry.get("source_id")
+            if sid:
+                out.setdefault(sid, set()).add(rel)
+    return out
+
+
 def manifests() -> list[dict]:
     out = []
+    by_source = fixtures_by_source()
     for path in sorted((ROOT / "sources").rglob("*.yaml")):
         doc = yaml.safe_load(path.read_text())
         if not isinstance(doc, dict) or "id" not in doc or "access" not in doc:
             continue
         access = doc.get("access") or {}
-        fixtures = sorted(
-            str(p.relative_to(ROOT))
-            for p in (ROOT / "tests" / "fixtures" / "sources" / doc["id"]).rglob("*")
-            if p.is_file()
-        )
+        fixtures = sorted(by_source.get(doc["id"], ()))
         out.append({
             "id": doc["id"],
             "name": doc.get("name"),

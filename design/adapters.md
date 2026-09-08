@@ -53,7 +53,7 @@ Design notes banked from the 2026-08-26 tools research (../research/README.md pa
 
 Per testing-and-demos.md: unit + contract per adapter, recorded fixtures from real Virginia endpoints, resilience tests simulating the platform's actual failure modes (ArcGIS's 200-with-error-body habit is a named fixture, not a surprise), and the reconciliation audit replaying fixtures against live services on schedule. The known-quirks register (`source-quirks.md`, repo root) is expected to fill up with ArcGIS locality variance first; that accumulation is the adapter layer doing its job in the open. The register held four entries as of 2026-08-28.
 
-## 5. Traps this layer has already sprung
+## 5. Known adapter failure cases
 
 Learned from live defects, not anticipated. Each has a regression test.
 

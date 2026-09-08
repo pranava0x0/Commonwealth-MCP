@@ -36,6 +36,7 @@ import argparse
 import asyncio
 import json
 import sys
+from urllib.parse import urlparse
 from collections import Counter
 from pathlib import Path
 from typing import Any
@@ -200,8 +201,44 @@ def _diff(before: dict, after: dict) -> list[str]:
 
 # --- replaying one source --------------------------------------------------
 
-async def _replay(manifest: SourceManifest, recorded: dict) -> dict:
-    """Send every recorded request again and compare the shapes."""
+def _host_of(manifest: SourceManifest) -> str | None:
+    url = manifest.adapter.model_dump().get("service_url")
+    return urlparse(url).hostname if url else None
+
+
+def _service_url_of(manifest: SourceManifest) -> str | None:
+    url = manifest.adapter.model_dump().get("service_url")
+    return url.rstrip("/") if url else None
+
+
+def _owner_of(url: str, manifests: list[SourceManifest]) -> str | None:
+    """The registered source whose service answered `url`, by longest
+    matching service URL.
+
+    Not by host: VGIN's seven sources and every ArcGIS Online tenant share
+    a hostname, so a host match would hand one source's exchanges to
+    whichever sibling was checked first.
+    """
+    best = None
+    for m in manifests:
+        base = _service_url_of(m)
+        if base and url.startswith(base) and (
+                best is None or len(base) > len(_service_url_of(best))):
+            best = m
+    return best.id if best else None
+
+
+async def _replay(manifest: SourceManifest, recorded: dict,
+                  others: list[SourceManifest] = ()) -> dict:
+    """Send every recorded request again and compare the shapes.
+
+    A fixture can carry another registered publisher's exchanges: the
+    Town of Vienna's holds Fairfax County's and VGIN's answers for the
+    same point and parcel, recorded so a two-government answer replays
+    whole. Each exchange is sent under the policy of the registered
+    source whose host it belongs to (`others`), so those replay too. A
+    host no manifest declares stays refused, which is the right report
+    for an exchange that should not be in any fixture."""
     exchanges = recorded.get("exchanges") or []
     if not exchanges:
         return {"status": "no_fixture", "checked": 0, "findings": []}
@@ -210,25 +247,59 @@ async def _replay(manifest: SourceManifest, recorded: dict) -> dict:
     if not service_url:
         return {"status": "no_endpoint", "checked": 0, "findings": []}
     fetcher = HttpFetcher(policy=egress_policy_for(manifest, service_url))
+    by_host = {_host_of(manifest): fetcher}
+    for other in others:
+        host = _host_of(other)
+        if host and host not in by_host:
+            by_host[host] = HttpFetcher(policy=egress_policy_for(
+                other, other.adapter.model_dump()["service_url"]))
 
-    async def check(exchange: dict) -> tuple[bool, dict | None]:
+    owners = list(others) or [manifest]
+
+    async def check(exchange: dict) -> tuple[str, bool, dict | None]:
         url, params = exchange["url"], exchange["params"]
+        owner = _owner_of(url, owners) or manifest.id
         try:
-            live = await fetcher.fetch_json(url, params)
+            live = await by_host.get(urlparse(url).hostname,
+                                     fetcher).fetch_json(url, params)
         except CommonwealthError as err:
-            return False, {"request": _label(url, params),
-                           "notes": [f"request failed: {err.code}: {err}"]}
+            return owner, False, {"request": _label(url, params),
+                                  "notes": [f"request failed: {err.code}: "
+                                            f"{err}"]}
         notes = _diff(_shape(exchange["response"]), _shape(live))
         if notes:
-            return True, {"request": _label(url, params), "notes": notes}
-        return True, None
+            return owner, True, {"request": _label(url, params),
+                                 "notes": notes}
+        return owner, True, None
 
     outcomes = await asyncio.gather(*(check(exchange)
                                       for exchange in exchanges))
+    # Each exchange counts for the source that published it, not for the
+    # file it happens to sit in. Vienna's fixture holds Fairfax's and
+    # VGIN's answers for the same point, and scoring them as Vienna's made
+    # a Fairfax outage read as a Vienna outage — which also hid a real
+    # Vienna change, because `render` keeps unreachable sources out of the
+    # Changed section.
+    mine = [(ok, f) for owner, ok, f in outcomes if owner == manifest.id]
+    result = _tally(mine)
+    borrowed: dict[str, dict] = {}
+    for sid in sorted({owner for owner, _, _ in outcomes}
+                      - {manifest.id}):
+        borrowed[sid] = _tally([(ok, f) for owner, ok, f in outcomes
+                                if owner == sid])
+    if borrowed:
+        result["borrowed"] = borrowed
+    return result
+
+
+def _tally(outcomes: list[tuple[bool, dict | None]]) -> dict:
+    """One source's share of a fixture's replay."""
+    if not outcomes:
+        return {"status": "no_fixture", "checked": 0, "unreachable": 0,
+                "findings": []}
     checked = sum(ok for ok, _ in outcomes)
     unreachable = len(outcomes) - checked
     findings = [finding for _, finding in outcomes if finding is not None]
-
     status = "checked"
     if unreachable and not checked:
         status = "unreachable"
@@ -542,7 +613,8 @@ async def run(source_id: str | None) -> tuple[dict, dict]:
             result = {"status": "no_fixture", "checked": 0,
                       "findings": []}
         else:
-            result = await _replay(manifest, json.loads(fixture.read_text()))
+            result = await _replay(manifest, json.loads(fixture.read_text()),
+                                   others=list(ctx.sources.manifests.values()))
         layers = await _probe(ctx, manifest)
         return result, layers
 
@@ -551,7 +623,42 @@ async def run(source_id: str | None) -> tuple[dict, dict]:
         results[sid] = result
         if layers:
             probes[sid] = layers
+
+    # A fixture can hold another publisher's exchanges. Those were scored
+    # under their own source in `_replay`; merging happens here, after
+    # every source has finished, because the owner is audited by a task of
+    # its own and two tasks must not write one result.
+    #
+    # Only into a source this run actually audited. `--source vienna`
+    # checks one source, and promoting Fairfax and VGIN on the strength of
+    # two borrowed exchanges would report three sources audited, with two
+    # of them judged changed or unreachable on a fraction of their
+    # fixtures and none of their layer probes.
+    selected = set(ids)
+    for sid in list(results):
+        for owner, share in (results[sid].pop("borrowed", {})).items():
+            if owner in selected:
+                results[owner] = _merge(results.get(owner), share)
     return results, probes
+
+
+def _merge(into: dict | None, share: dict) -> dict:
+    """Add one fixture's share of a source's exchanges to its result.
+
+    A source with no fixture of its own can still be checked this way, and
+    saying so is more accurate than reporting it as unchecked.
+    """
+    if into is None or into["status"] in ("no_fixture", "no_endpoint"):
+        return dict(share)
+    checked = into["checked"] + share["checked"]
+    unreachable = into.get("unreachable", 0) + share["unreachable"]
+    status = "checked"
+    if unreachable and not checked:
+        status = "unreachable"
+    elif unreachable:
+        status = "partly_unreachable"
+    return {"status": status, "checked": checked, "unreachable": unreachable,
+            "findings": into["findings"] + share["findings"]}
 
 
 def _short(path: Path) -> Path:

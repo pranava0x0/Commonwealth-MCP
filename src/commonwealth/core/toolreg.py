@@ -106,7 +106,7 @@ def expand_profile(profile: str,
             f"the 'default' profile expands to {len(out)} tools, over "
             f"decision 0002's ceiling of {PROFILE_DEFAULT_CEILING} for it. "
             "A task profile may go to 20; the default one may not — the "
-            "measured selection cliffs are what the number is for.")
+            "measured selection cliffs define the budget.")
     if len(out) < PROFILE_FLOOR:
         log.warning(
             "profile %r expands to %d tools, under decision 0002's floor "
