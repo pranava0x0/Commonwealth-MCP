@@ -2211,18 +2211,27 @@ does not establish client compatibility.
 
 ### Stage 2 — prove local coverage and model behavior
 
-[Issue #10](https://github.com/pranava0x0/Commonwealth-MCP/issues/10) adds a
-town's own source. The state, county, independent-city and town paths should
-each have an evaluated example. Include a rural locality and a town that
-spans counties. Geographic containment does not establish zoning authority;
-source selection needs capability-specific scope before claiming a county
-source covers town zoning. School divisions, utility districts and transit
-service areas need explicit relationships rather than county-parent inference.
+[Issue #10](https://github.com/pranava0x0/Commonwealth-MCP/issues/10) closed
+on 2026-09-07 with two towns: Leesburg publishes parcels and zoning, Vienna
+publishes zoning alone, and a Vienna point returns the town's layer and
+Fairfax County's, unranked. Blacksburg and Montgomery County both publish
+zoning from official ArcGIS Online organizations and are the next
+town-and-county pair. The state, county, independent-city and town paths
+should each have an evaluated example. Include a rural locality and a town
+that spans counties. Geographic containment does not establish zoning
+authority; source selection needs capability-specific scope before claiming
+a county source covers town zoning. School divisions, utility districts and
+transit service areas need explicit relationships rather than county-parent
+inference.
 
 [Issue #28](https://github.com/pranava0x0/Commonwealth-MCP/issues/28) measures
 model tool selection at the actual 9/12/14-tool profiles. Existing deterministic
-skill tests are not model evaluations. Report tasks attempted, failures,
-coverage errors, model/version, cost and date. Keep mutated holdout tasks.
+skill tests are not model evaluations. Build the runner's offline mode first:
+load the task files, run the expected calls against the fixture-backed
+server, and check each task's `expected` block mechanically, which is what
+`tests/test_skills.py` does by hand today. Put the model mode behind an API
+key. Report tasks attempted, failures, coverage errors, model/version, cost
+and date. Keep mutated holdout tasks.
 
 ### Stage 3 — support a second resident workflow
 
@@ -3043,6 +3052,8 @@ Stand up a hosted REST API as the primary surface, MCP as a wrapper.
 **Backlogged, not dropped** — the architect explicitly wants B tracked as future expansion:
 - **B (shared core exposed as a first-class Python library, + REST later)** — the Imaging Data Commons precedent ([research part 5](../research/README.md) § 8) is the reference shape if this gets built: `commonwealth.core` import-clean of MCP/CLI dependencies, public functions returning typed envelope objects, CLI and MCP as thin bindings over it, REST/OpenAPI arriving with the hosted phase. Because core logic is already framework-free (0003), promoting it to a public library later is additive — no rewrite required, only documentation, semver commitments, and packaging.
 - **Trigger to revisit:** evidence of real non-agent demand (a researcher/notebook user asking for direct library access instead of going through MCP or scraping CLI output), or a hosted partner wanting REST early.
+
+**Note (2026-09-07):** the README now shows a Python call and says the functions are not a supported API, which is this record as chosen. If the audience the README names, policy researchers and developers, is meant to import the functions, that is the trigger above being met, and the change is a dated entry here naming the semver promise, not a README edit alone.
 ---
 
 ## Review round 2 (2026-08-26)

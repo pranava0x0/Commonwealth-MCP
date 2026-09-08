@@ -96,7 +96,9 @@ sitting uncommitted in the main checkout on 2026-09-07: the README's
 built state, and the site's hero and intro. One claim in it is changed
 here: the README said the Python functions are callable directly, which
 they are, and decision 0015 says they are not a supported API, which
-they are not; the README now says both.
+they are not; the README now says both. The next phase, and the candidate demos and
+skills, are written into architecture.md § 39, skills.md § 3, and
+testing-and-demos.md § 3 rather than left in a review page.
 
 587 tests.
 
