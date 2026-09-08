@@ -230,7 +230,7 @@ def _listing(doc: dict, key: str) -> list:
 
 
 class VirginiaLawAdapter:
-    version = "0.1.0"
+    version = "0.1.1"
 
     def __init__(self, fetcher: HtmlFetcher | None = None,
                  json_fetcher: Any = None) -> None:
@@ -272,6 +272,27 @@ class VirginiaLawAdapter:
         return CodeSection(citation=citation, heading=heading,
                            paragraphs=parser.paragraphs,
                            source_url=final_url)
+
+    async def health(self, manifest: SourceManifest, known_section: str,
+                     known_title: str | None) -> dict:
+        """Both endpoints, because this source has two.
+
+        The section pages and the JSON API fail independently — one is
+        HTML parsed for text, the other a service answering a different
+        host path — and a probe that read only the pages reported the
+        source healthy while `civic.browse_code` was entirely down.
+        A manifest that declares no `known_title` is not browsed, so a
+        fork that removes `api_url` still probes cleanly.
+        """
+        out: dict[str, Any] = {}
+        section = await self.get_section(manifest, known_section)
+        out["section"] = {"citation": known_section,
+                          "found": section is not None}
+        if known_title:
+            entries, _ = await self.browse(manifest, title=known_title)
+            out["browse"] = {"title": known_title, "chapters": len(entries),
+                             "found": bool(entries)}
+        return out
 
     async def browse(self, manifest: SourceManifest, title: str = "",
                      chapter: str = "") -> tuple[list[CodeEntry], str]:

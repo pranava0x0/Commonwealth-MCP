@@ -114,6 +114,15 @@ A seventh: `_data_root()` preferred the bundled copy, and `pip install -e
 The checkout wins now, so a developer editing manifests is never served
 the ones they had when they last installed.
 
+**And a third Codex round caught the health probe.** The Code of Virginia
+source has two endpoints now and they fail independently, but both
+`doctor --live` and `sources probe` still read only the section pages —
+so a total outage of the JSON API would have reported the source healthy
+while `civic.browse_code` was down for everyone. The probe covers both,
+the manifest declares the title whose chapters the API must still list,
+and a manifest without one is not browsed, so a fork that drops `api_url`
+still probes cleanly.
+
 ## 2026-09-08 — one branch instead of two, and the site learns to be searched
 
 **Two open pull requests, which should have been none.** #43 existed

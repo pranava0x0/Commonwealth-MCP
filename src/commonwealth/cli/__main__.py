@@ -92,16 +92,10 @@ def cmd_doctor(args: argparse.Namespace) -> int:
                         print(f"✗ live {m.id}/{layer}: {err.code}: {err}")
                         problems += 1
             elif m.adapter.type == "virginia_law":
-                known = m.health.expect.get("known_section")
                 try:
-                    section = asyncio.run(
-                        ctx.virginia_law.get_section(m, known))
-                    healthy = section is not None
-                    mark = "✓" if healthy else "✗"
-                    print(f"{mark} live {m.id}: known section {known!r} "
-                          f"{'found' if healthy else 'NOT FOUND'}")
-                    if not healthy:
-                        problems += 1
+                    for line, ok in _law_health_lines(ctx, m):
+                        print(f"{'✓' if ok else '✗'} live {m.id}: {line}")
+                        problems += 0 if ok else 1
                 except CommonwealthError as err:
                     print(f"✗ live {m.id}: {err.code}: {err}")
                     problems += 1
@@ -315,17 +309,12 @@ def cmd_sources_probe(args: argparse.Namespace) -> int:
             # same split the geocoder was in — one dispatch table grew
             # and the other did not.
             checked += 1
-            known = m.health.expect.get("known_section")
             try:
-                section = asyncio.run(ctx.virginia_law.get_section(m, known))
+                for line, ok in _law_health_lines(ctx, m):
+                    print(f"{'✓' if ok else '✗'} {sid}: {line}")
+                    problems += 0 if ok else 1
             except CommonwealthError as err:
                 print(f"✗ {sid}: {err.code}: {err}")
-                problems += 1
-                continue
-            mark = "✓" if section is not None else "✗"
-            print(f"{mark} {sid}: known section {known!r} "
-                  f"{'found' if section is not None else 'NOT FOUND'}")
-            if section is None:
                 problems += 1
             continue
         if m.adapter.type == INVENTORY_ADAPTER:
@@ -1324,6 +1313,29 @@ def _write_fixture(m: SourceManifest, recorder: "_RecordingFetcher",
           f"{path.relative_to(PROJECT_ROOT)}")
     print(f"sample summary: {json.dumps(summary, default=str)}")
     return 0
+
+
+def _law_health_lines(ctx: RuntimeContext,
+                      m: SourceManifest) -> list[tuple[str, bool]]:
+    """One line per endpoint the Code of Virginia source actually has.
+
+    It has two, and they fail independently: the section pages are HTML
+    parsed for text, the table of contents is a JSON service on another
+    path. Probing only the pages reported this source healthy while
+    `civic.browse_code` was down for everyone.
+    """
+    known = m.health.expect.get("known_section")
+    title = m.health.expect.get("known_title")
+    result = asyncio.run(ctx.virginia_law.health(m, known, title))
+    lines = []
+    sec = result["section"]
+    lines.append((f"known section {sec['citation']!r} "
+                  f"{'found' if sec['found'] else 'NOT FOUND'}", sec["found"]))
+    browse = result.get("browse")
+    if browse is not None:
+        lines.append((f"title {browse['title']!r} lists "
+                      f"{browse['chapters']} chapter(s)", browse["found"]))
+    return lines
 
 
 # --- skills ----------------------------------------------------------------

@@ -1,4 +1,6 @@
 """Civic resilience tier: an outage is an outage, never an empty result."""
+import pytest
+
 from commonwealth.core.errors import SourceUnavailable
 from commonwealth.domains.civic import browse_code, get_code_section
 from tests.conftest import build_ctx
@@ -102,3 +104,39 @@ async def test_the_two_civic_paths_fail_independently():
     assert env.coverage.execution.value == "complete", (
         "a citation lookup does not read the JSON API")
     assert env.data["results"][0]["found"] is True
+
+
+async def test_the_health_probe_covers_both_endpoints():
+    """The source has two endpoints that fail independently, and a probe
+    that read only the section pages called it healthy while
+    `civic.browse_code` was down for everyone. `doctor --live` and
+    `sources probe` both dispatch through this."""
+    from commonwealth.core.registry import SourceRegistry
+    from commonwealth.runtime import SOURCES_DIR
+
+    m = SourceRegistry.load(SOURCES_DIR).get("va-code-of-virginia")
+    assert m.health.expect.get("known_title"), (
+        "the manifest must declare a title for the browse half of the probe")
+
+    ctx = build_ctx()
+    result = await ctx.virginia_law.health(
+        m, m.health.expect["known_section"], m.health.expect["known_title"])
+    assert result["section"]["found"] is True
+    assert result["browse"]["found"] is True
+    assert result["browse"]["chapters"] > 0
+
+
+async def test_the_probe_fails_when_only_the_json_api_is_down():
+    """The case the probe existed to miss: the pages answer, the API does
+    not, and the source is not healthy."""
+    ctx = build_ctx(civic_api_fetcher=ApiOutageFetcher())
+    m = ctx.sources.get("va-code-of-virginia")
+    with pytest.raises(SourceUnavailable):
+        await ctx.virginia_law.health(m, m.health.expect["known_section"],
+                                      m.health.expect["known_title"])
+
+    # And the other way round, so the two halves are really independent.
+    ctx = build_ctx(civic_fetcher=OutageFetcher())
+    with pytest.raises(SourceUnavailable):
+        await ctx.virginia_law.health(m, m.health.expect["known_section"],
+                                      m.health.expect["known_title"])

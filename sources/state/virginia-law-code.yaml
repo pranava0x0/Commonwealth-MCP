@@ -84,6 +84,12 @@ health:
     # A known, stable section (unlikely to be repealed/renumbered) used
     # as a liveness check: found=True and non-empty body text.
     known_section: "1-500"
+    # And a title whose chapters the JSON API must still list. The two
+    # endpoints fail independently, so a probe that read only the
+    # section pages called this source healthy while the browse tool was
+    # entirely down. 15.2 is Counties, Cities and Towns — the title this
+    # project reads most and the least likely to be renumbered.
+    known_title: "15.2"
 
 lifecycle:
   declared_state: active
