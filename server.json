@@ -3,7 +3,7 @@
   "name": "io.github.pranava0x0/commonwealth-mcp",
   "title": "Commonwealth-MCP",
   "description": "Virginia state and local public data \u2014 parcels, zoning, jurisdictions, addresses, landmarks, roads, monitored environmental sites, and the Code of Virginia. Every answer carries its sources, retrieval dates, and coverage.",
-  "version": "0.1.0.dev0",
+  "version": "0.1.0-dev.0",
   "repository": {
     "url": "https://github.com/pranava0x0/Commonwealth-MCP",
     "source": "github"

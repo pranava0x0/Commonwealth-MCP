@@ -64,6 +64,19 @@ at lis.virginia.gov — a different service from the same division. All
 three are corrected, the terms review is re-dated, and source-quirks
 § 18 records the endpoints and what each one does and does not have.
 
+**The Codex round found three, all real.** The registry's schema wants
+SemVer and PyPI wants PEP 440, and `0.1.0.dev0` is not a SemVer string —
+the registry would have rejected the entry before reaching the package.
+The two version fields are now what each system spells, with a converter
+and its own test rather than a hand-written pair. The README's standalone
+install said `uv pip install`, which refuses without a virtual
+environment, so the advertised path did not run; it is `uv tool install`,
+verified by installing the wheel that way and calling the Code walk live
+from a directory with no checkout. And the Code manifest kept its old
+`last_verified`, from which `registry_revision` derives, so every browse
+envelope would have reported a revision indistinguishable from the
+registry before the endpoint existed.
+
 ## 2026-09-08 — one branch instead of two, and the site learns to be searched
 
 **Two open pull requests, which should have been none.** #43 existed

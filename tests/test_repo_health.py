@@ -252,6 +252,35 @@ def test_the_wheel_carries_the_data_the_runtime_reads():
         "run from a checkout, the data root is the repo root")
 
 
+def _semver_of(pep440: str) -> str:
+    """The SemVer spelling of a PEP 440 version.
+
+    Only the forms this project releases: `X.Y.Z`, and a prerelease
+    suffix `devN`, `aN`, `bN` or `rcN`, which SemVer writes after a
+    hyphen with a dot before the number. Anything else raises rather than
+    guessing, because a wrong conversion here publishes a version nobody
+    can install.
+    """
+    import re
+
+    m = re.fullmatch(r"(\d+\.\d+\.\d+)(?:\.?(dev|a|b|rc)(\d+))?", pep440)
+    if m is None:
+        raise AssertionError(
+            f"{pep440!r} is not a version shape this converter knows; "
+            "extend it deliberately rather than publishing a guess")
+    release, kind, number = m.groups()
+    return release if kind is None else f"{release}-{kind}.{number}"
+
+
+def test_the_pep440_to_semver_conversion_is_the_one_the_registry_wants():
+    assert _semver_of("0.1.0") == "0.1.0"
+    assert _semver_of("0.1.0.dev0") == "0.1.0-dev.0"
+    assert _semver_of("1.2.3rc1") == "1.2.3-rc.1"
+    assert _semver_of("2.0.0b2") == "2.0.0-b.2"
+    with pytest.raises(AssertionError):
+        _semver_of("0.1")
+
+
 def test_the_registry_entry_matches_the_package_it_names():
     """`server.json` is what the MCP registry publishes (issue #40).
 
@@ -270,10 +299,16 @@ def test_the_registry_entry_matches_the_package_it_names():
     package = entry["packages"][0]
     assert package["identifier"] == project["name"], (
         "the registry entry names a different PyPI package")
-    assert entry["version"] == project["version"], (
-        f"server.json says {entry['version']}, pyproject says "
-        f"{project['version']}")
-    assert package["version"] == project["version"]
+    # Two version strings for one release, because the two systems spell
+    # a prerelease differently: the registry's schema wants SemVer and
+    # PyPI wants PEP 440. `0.1.0.dev0` is not a SemVer string and the
+    # registry rejects the entry before it ever reaches the package, so
+    # the top-level version is converted and the package's is verbatim.
+    assert package["version"] == project["version"], (
+        "the package entry must name the version PyPI actually has")
+    assert entry["version"] == _semver_of(project["version"]), (
+        f"server.json says {entry['version']}, and {project['version']} "
+        f"converts to {_semver_of(project['version'])}")
     assert package["transport"]["type"] == "stdio", (
         "the server speaks stdio and the listing must say so")
 

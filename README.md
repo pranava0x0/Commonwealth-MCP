@@ -57,10 +57,14 @@ The source manifests, the jurisdiction table and the skills ship inside the
 package, so a wheel works on its own:
 
 ```bash
-uv pip install commonwealth-mcp        # once it is published; see issue #40
+uv tool install commonwealth-mcp       # once it is published; see issue #40
 commonwealth doctor
 commonwealth skills list               # where the bundled skills are on disk
 ```
+
+`uv tool install` puts the command on your PATH with its own environment.
+`uv pip install` would refuse here, because it installs into a virtual
+environment and this path has none.
 
 The examples, the recorded fixtures and the tests are repo-only. Skills
 travel as files: copy a directory from `commonwealth skills list` into your
