@@ -82,6 +82,23 @@ real Vienna drift in the same run. Each exchange is tallied under the
 source that published it now, and a borrowed share merges into that
 source's own result after every source has been audited.
 
+**A fourth round, two more, one of them against the third round's own
+code.** The redirect fix from the Codex round decided the method once and
+then let `_build_query_request` decide it again per hop. A query ten
+characters over the URL limit, redirected to a shorter URL, therefore
+fell back under it and went out as a GET — with the parameters back in
+the URL the first hop had just been told was too long to hold them. A
+307 and a 308
+preserve the method by definition, so the method is carried through the
+chain now, and cleared where a 301, 302, or 303 drops the body.
+
+The other is the scoping of the borrowed-share merge written an hour
+earlier. `--source va-vienna-town-zoning` audits one source, and folding
+her fixture's Fairfax and VGIN exchanges into their owners reported three
+sources audited with two of them judged on a fraction of their own
+fixtures and none of their layer probes. The merge is limited to the
+sources the run actually selected.
+
 ## 2026-09-07 — two towns close the forcing set, and a tool learns to borrow a polygon
 
 Issue #10, the last open slot of the source-registry forcing set

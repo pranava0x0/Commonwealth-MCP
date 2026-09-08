@@ -464,6 +464,32 @@ async def test_a_borrowed_publishers_outage_is_not_the_fixture_owners(
     assert "va-vienna-town-zoning" in report.split("## Changed")[1], report
 
 
+async def test_a_source_scoped_audit_reports_only_that_source(monkeypatch):
+    """`--source vienna` checks one source. Promoting Fairfax and VGIN on
+    the strength of the two exchanges her fixture borrowed would report
+    three sources audited, two of them judged on a fraction of their own
+    fixtures and none of their layer probes."""
+    async def fake_replay(manifest, recorded, others=()):
+        return {"status": "checked", "checked": 1, "unreachable": 0,
+                "findings": [],
+                "borrowed": {"va-fairfax-parcels-zoning": {
+                    "status": "unreachable", "checked": 0, "unreachable": 1,
+                    "findings": [{"request": "q", "notes": ["failed"]}]}}}
+
+    async def no_probe(_ctx, _manifest):
+        return []
+
+    monkeypatch.setattr(audit, "_replay", fake_replay)
+    monkeypatch.setattr(audit, "_probe", no_probe)
+
+    scoped, _ = await audit.run("va-vienna-town-zoning")
+    assert list(scoped) == ["va-vienna-town-zoning"], scoped
+
+    whole, _ = await audit.run(None)
+    assert whole["va-fairfax-parcels-zoning"]["unreachable"] >= 1, (
+        "a full audit still folds a borrowed share into its owner")
+
+
 def test_a_borrowed_share_merges_into_the_owners_own_result():
     own = {"status": "checked", "checked": 4, "unreachable": 0,
            "findings": [{"request": "a", "notes": ["n"]}]}

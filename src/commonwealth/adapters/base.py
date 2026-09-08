@@ -151,8 +151,19 @@ def _would_post(url: str, params: dict[str, Any] | None) -> bool:
 
 
 def _build_query_request(client: httpx.AsyncClient, url: str,
-                         params: dict[str, Any] | None) -> httpx.Request:
-    if _would_post(url, params):
+                         params: dict[str, Any] | None,
+                         post: bool | None = None) -> httpx.Request:
+    """`post` is the method already decided for this request.
+
+    It is decided once per call, before the first hop, because a 307 or
+    308 preserves the method by definition. Recomputing the length test
+    per hop meant a redirect to a shorter URL could turn a POSTed query
+    back into a GET, which is the opposite of what those two codes ask
+    for. Left to the length test only when nothing has decided yet.
+    """
+    if post is None:
+        post = _would_post(url, params)
+    if post:
         return client.build_request("POST", url, data=params)
     return client.build_request("GET", url, params=params)
 
@@ -192,7 +203,7 @@ class HttpFetcher:
             host = urlparse(current).hostname or ""
             async with _semaphore_for(host):
                 response = await self._request_with_retry(current, params,
-                                                          approved)
+                                                          approved, posted)
             if response.status_code in (301, 302, 303, 307, 308):
                 location = response.headers.get("location")
                 if not location:
@@ -206,15 +217,20 @@ class HttpFetcher:
                 # `.../query?where=...&f=json` to its canonical name would
                 # be re-asked for a bare `.../query`, answer with its HTML
                 # form, and be reported as an outage.
-                params = (params if posted
-                          and response.status_code in (307, 308) else None)
+                keeps_method = (posted
+                                and response.status_code in (307, 308))
+                params = params if keeps_method else None
+                # And the method travels with the body. Leaving `posted`
+                # set after a 303 sent an empty POST to the Location.
+                posted = keeps_method
                 continue
             return response, host
         raise SourceUnavailable("redirect chain did not settle")
 
     async def _send_to_any_approved(self, url: str,
                                     params: dict[str, Any] | None,
-                                    approved: tuple[str, ...]) -> _Body:
+                                    approved: tuple[str, ...],
+                                    post: bool | None = None) -> _Body:
         """Try each approved address in turn and return the first response.
 
         Every address here passed the same policy check, so any of them is
@@ -233,7 +249,8 @@ class HttpFetcher:
                         transport=PinnedAddressTransport(address),
                         follow_redirects=False,
                         timeout=REQUEST_TIMEOUT_SECONDS) as client:
-                    return await self._read_capped(client, url, params)
+                    return await self._read_capped(client, url, params,
+                                                   post)
             except httpx.HTTPError as err:
                 last = err
         # `approved` is never empty: validate_url refuses a host that
@@ -243,7 +260,8 @@ class HttpFetcher:
 
     async def _request_with_retry(self, url: str,
                                   params: dict[str, Any] | None,
-                                  approved: tuple[str, ...]) -> _Body:
+                                  approved: tuple[str, ...],
+                                  post: bool | None = None) -> _Body:
         """`approved` is every address the policy checked for this URL.
 
         Each attempt walks all of them (see `_send_to_any_approved`), so
@@ -253,7 +271,8 @@ class HttpFetcher:
         last: Exception | None = None
         for attempt in range(RETRY_BUDGET + 1):
             try:
-                body = await self._send_to_any_approved(url, params, approved)
+                body = await self._send_to_any_approved(url, params,
+                                                        approved, post)
             except httpx.HTTPError as err:
                 last = err
                 if attempt < RETRY_BUDGET:
@@ -284,7 +303,8 @@ class HttpFetcher:
 
     @staticmethod
     async def _read_capped(client: httpx.AsyncClient, url: str,
-                           params: dict[str, Any] | None) -> _Body:
+                           params: dict[str, Any] | None,
+                           post: bool | None = None) -> _Body:
         """Stream the response, stopping as soon as it breaks a limit.
 
         Egress rule 6 has two halves. The byte cap used to be checked on
@@ -300,7 +320,7 @@ class HttpFetcher:
         point of the attack is to be small on the wire.
         """
         host = urlparse(url).hostname or ""
-        request = _build_query_request(client, url, params)
+        request = _build_query_request(client, url, params, post)
         response = await client.send(request, stream=True)
         chunks: list[bytes] = []
         decoded = 0

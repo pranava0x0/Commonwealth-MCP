@@ -572,6 +572,53 @@ async def test_a_redirected_form_post_carries_its_body_to_the_new_host(
         "the second hop lost the polygon")
 
 
+async def test_a_307_to_a_shorter_url_is_still_a_post(monkeypatch):
+    """307 and 308 preserve the method by definition. The length test was
+    re-run per hop, so a query just over the limit that was redirected to
+    a shorter URL fell back under it and went out as a GET — with the
+    parameters back in the URL the first hop had just been told was too
+    long to hold them."""
+    import httpx as _httpx
+
+    from commonwealth.adapters.base import MAX_GET_URL_CHARS
+
+    long_path = "https://www.fairfaxcounty.gov/" + "p" * 300 + "/query"
+    short = "https://www.fairfaxcounty.gov/q"
+    # Ten characters over the limit on the first URL, and comfortably
+    # under it on the second: the case where re-deciding changes the
+    # answer.
+    overhead = len(str(_httpx.URL(long_path, params={"f": "json",
+                                                     "geometry": ""})))
+    big = {"f": "json",
+           "geometry": "x" * (MAX_GET_URL_CHARS + 10 - overhead)}
+    assert len(str(_httpx.URL(long_path, params=big))) > MAX_GET_URL_CHARS
+    assert len(str(_httpx.URL(short, params=big))) < MAX_GET_URL_CHARS, (
+        "the redirect target must fall under the limit or this test "
+        "cannot see the bug")
+
+    seen: list[tuple[str, str, bytes]] = []
+
+    async def fake_send(self, request):
+        seen.append((request.method, str(request.url), request.content))
+        if len(seen) == 1:
+            return httpx.Response(307, headers={"location": short},
+                                  request=request)
+        return httpx.Response(200, content=b'{"ok":true}', request=request)
+
+    monkeypatch.setattr(httpx.AsyncHTTPTransport, "handle_async_request",
+                        fake_send)
+    await HttpFetcher(policy=_policy()).fetch_json(long_path, big)
+    assert [m for m, _, _ in seen] == ["POST", "POST"], seen
+    assert seen[1][2] == request_body_of(big), (
+        "the second hop dropped the form body a 307 asked it to keep")
+
+
+def request_body_of(params: dict) -> bytes:
+    import httpx as _httpx
+
+    return _httpx.Request("POST", "https://x/", data=params).content
+
+
 async def test_a_303_turns_a_posted_query_into_a_get_of_the_location(
         monkeypatch):
     """A 303 asks for a GET of the Location; only 307 and 308 keep the

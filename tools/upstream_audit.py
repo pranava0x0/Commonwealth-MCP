@@ -628,9 +628,17 @@ async def run(source_id: str | None) -> tuple[dict, dict]:
     # under their own source in `_replay`; merging happens here, after
     # every source has finished, because the owner is audited by a task of
     # its own and two tasks must not write one result.
+    #
+    # Only into a source this run actually audited. `--source vienna`
+    # checks one source, and promoting Fairfax and VGIN on the strength of
+    # two borrowed exchanges would report three sources audited, with two
+    # of them judged changed or unreachable on a fraction of their
+    # fixtures and none of their layer probes.
+    selected = set(ids)
     for sid in list(results):
         for owner, share in (results[sid].pop("borrowed", {})).items():
-            results[owner] = _merge(results.get(owner), share)
+            if owner in selected:
+                results[owner] = _merge(results.get(owner), share)
     return results, probes
 
 
