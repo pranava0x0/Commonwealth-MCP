@@ -125,7 +125,8 @@ async def test_injected_contents_text_stays_inside_data():
             "source text must never be lifted into the envelope's own voice")
 
 
-async def test_the_contents_api_is_egress_checked_like_every_other_call():
+async def test_the_contents_api_is_egress_checked_like_every_other_call(
+        monkeypatch):
     """The JSON API is a second endpoint on a registered source, not a
     hole beside the policy. Same host, same manifest, same check."""
     from commonwealth.domains.civic import browse_code
@@ -140,10 +141,11 @@ async def test_the_contents_api_is_egress_checked_like_every_other_call():
     assert policy.allowed_hosts == frozenset({"law.lis.virginia.gov"})
     assert not policy.insecure_transport
 
-    # The suite runs with the network denied, which is the strongest
-    # version of this check: a real fetcher under the source's own policy
-    # is refused, and the walk reports that refusal rather than a Code
-    # with no titles in it.
+    # Set here, not assumed from the runner: only CI exports it, and a
+    # sibling test in this file unsets it, so relying on the environment
+    # made a plain local `pytest` send a real request to
+    # law.lis.virginia.gov and then fail on the wrong error code.
+    monkeypatch.setenv(DENY_NETWORK_ENV, "1")
     env = await browse_code(build_ctx(civic_api_fetcher=_LiveFetcher(m)))
     assert env.coverage.execution.value == "failed", (
         "a refused request is a failure, not an empty result")

@@ -13,7 +13,7 @@ exposes the result through the Model Context Protocol.
 
 ## What it answers today
 
-Fourteen tools, nine of them in the default set.
+Fifteen tools, nine of them in the default set and thirteen in discovery.
 
 - Which local government covers a place, by name, FIPS code, street
   address, ZIP code, or coordinates. Ambiguous names return every match

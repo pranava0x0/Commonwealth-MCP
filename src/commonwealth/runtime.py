@@ -31,9 +31,18 @@ def _data_root() -> Path:
     .../lib/python3.12/sources/capabilities.yaml`. The wheel carries the
     data inside the package instead, and this prefers that copy.
 
+    The checkout wins where there is one. `pip install -e .` materialises
+    the bundled copy into site-packages as well, and that copy is frozen
+    at install time: preferring it would have served yesterday's
+    manifests to a developer editing today's, silently and with no error
+    to notice. A repo root with a `sources/` directory beside `src/` is
+    the unambiguous sign of a checkout, so it is checked first.
+
     `pyproject.toml`'s `force-include` block is the other half; a test
     asserts the two agree.
     """
+    if (PROJECT_ROOT / "sources").is_dir():
+        return PROJECT_ROOT
     bundled = Path(__file__).resolve().parent / "_data"
     return bundled if bundled.is_dir() else PROJECT_ROOT
 

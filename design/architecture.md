@@ -66,10 +66,11 @@ source selection → adapter → government service
   data + evidence + coverage + warnings
 ```
 
-The current adapters read ArcGIS feature services, an ArcGIS geocoder and
-Code of Virginia pages. The registry has 15 active sources and four proposed
-entries. The MCP profiles expose 9, 12 or 14 tools. These counts describe
-the 2026-09-07 checkout; the generated site derives them from the registry.
+The current adapters read ArcGIS feature services, an ArcGIS geocoder, and
+the Code of Virginia's pages and its JSON API. The registry has 15 active
+sources and four proposed entries. The MCP profiles expose 9, 13 or 15
+tools. These counts describe the 2026-09-08 checkout; the generated site
+derives them from the registry.
 
 Keep four responsibilities separate: a manifest describes a source; an
 adapter reads its format; a domain function answers a defined question;
@@ -2204,8 +2205,9 @@ remain in force; new domain and authority contracts need review before code.
 and the skills ship inside the wheel (`commonwealth/_data/`), and the runtime
 prefers that copy over the repo layout. Verified by building a wheel,
 installing it into a fresh environment, and running from a directory with no
-checkout in it: `sources validate` reads all 19 manifests, `tools list` lists
-14, and `registry.resolve_jurisdiction` resolves Vienna to the town with
+checkout in it: `sources validate` reads all 19 manifests, `tools list`
+prints the default profile's nine, and `registry.resolve_jurisdiction`
+resolves Vienna to the town with
 Fairfax County and the state layered above it. Before the change every
 command died at startup on a missing capability vocabulary.
 

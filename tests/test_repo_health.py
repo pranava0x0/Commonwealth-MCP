@@ -251,6 +251,14 @@ def test_the_wheel_carries_the_data_the_runtime_reads():
     assert runtime.DATA_ROOT == ROOT, (
         "run from a checkout, the data root is the repo root")
 
+    # And it stays the repo root even though `pip install -e .` also
+    # materialises the bundled copy into site-packages. That copy is
+    # frozen at install time, so preferring it would serve a developer
+    # the manifests they had when they last installed.
+    stale = Path(runtime.__file__).resolve().parent / "_data"
+    assert runtime._data_root() == ROOT, (
+        f"a checkout must win over a bundled copy at {stale}")
+
 
 def _semver_of(pep440: str) -> str:
     """The SemVer spelling of a PEP 440 version.

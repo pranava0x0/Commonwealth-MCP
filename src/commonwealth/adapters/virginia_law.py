@@ -20,13 +20,14 @@ full-text search operation anywhere in it.
 """
 from __future__ import annotations
 
+import re
 from dataclasses import dataclass
 from html.parser import HTMLParser
 from typing import Any
 
 from pydantic import BaseModel, ConfigDict
 
-from ..core.errors import SourceUnavailable
+from ..core.errors import InvalidQuery, SourceUnavailable
 from ..core.registry import SourceManifest, register_adapter_params
 from .base import HtmlFetcher, HttpFetcher, egress_policy_for, log_source_call
 
@@ -126,6 +127,30 @@ class _SectionPageParser(HTMLParser):
             self._current_p.append(data)
 
 
+# The Code's own numbering: a digit first, then digits, dots, colons,
+# letters and hyphens (title "15.2", chapter "22", section "18.2-57").
+_NUMBER = re.compile(r"^[0-9][0-9.:A-Za-z-]*$")
+
+
+def _segment(value: str, field: str) -> str:
+    """One caller-supplied number, checked before it becomes a URL path.
+
+    These reach `httpx.URL` as path segments, and httpx resolves what it
+    is given: `title="1#x"` fetches title 1 and the answer then reports
+    it as the contents of "1#x", including in the arguments each row
+    hands back — a wrong answer wearing a correct one's clothes.
+    `title="../../vacode/1-500/"` walks to a different endpoint on the
+    same host. The egress policy pins the host, so neither leaves the
+    publisher, and neither is an answer to the question asked.
+    """
+    if not _NUMBER.fullmatch(value):
+        raise InvalidQuery(
+            f"{field} {value!r} is not a Code of Virginia number. They "
+            "start with a digit and carry digits, dots, colons, letters "
+            "and hyphens — '15.2', '22', '18.2-57'.")
+    return value
+
+
 def _entries(payload: Any, kind: str) -> list[CodeEntry]:
     """The publisher's three list shapes, flattened to one.
 
@@ -136,21 +161,54 @@ def _entries(payload: Any, kind: str) -> list[CodeEntry]:
     groups them in.
     """
     if kind == "title":
-        rows = payload if isinstance(payload, list) else []
-        return [CodeEntry("title", r.get("TitleNumber") or "",
-                          r.get("TitleName") or "") for r in rows]
-    if kind == "chapter":
-        rows = (payload or {}).get("ChapterList") or []
-        return [CodeEntry("chapter", r.get("ChapterNum") or "",
-                          r.get("ChapterName") or "") for r in rows]
+        rows = _rows(payload, list, "a list of titles")
+    elif kind == "chapter":
+        rows = _listing(_rows(payload, dict, "a title"), "ChapterList")
+    else:
+        rows = []
+        for article in _listing(_rows(payload, dict, "a chapter"),
+                                "ArticleList"):
+            for subpart in _listing(_rows(article, dict, "an article"),
+                                    "SubPartList"):
+                rows += _listing(_rows(subpart, dict, "a sub-part"),
+                                 "SectionList")
+    fields = {"title": ("TitleNumber", "TitleName"),
+              "chapter": ("ChapterNum", "ChapterName"),
+              "section": ("SectionNumber", "SectionTitle")}[kind]
     out = []
-    for article in (payload or {}).get("ArticleList") or []:
-        for subpart in article.get("SubPartList") or []:
-            for row in subpart.get("SectionList") or []:
-                out.append(CodeEntry("section",
-                                     row.get("SectionNumber") or "",
-                                     row.get("SectionTitle") or ""))
+    for row in rows:
+        row = _rows(row, dict, f"a {kind}")
+        out.append(CodeEntry(kind, row.get(fields[0]) or "",
+                             row.get(fields[1]) or ""))
     return out
+
+
+def _rows(payload: Any, want: type, described: str) -> Any:
+    """`payload`, if it is the shape the publisher documents.
+
+    An unexpected shape is an outage, not an empty Code. The publisher
+    answering HTTP 200 with an error object, an interstitial, or a
+    redesigned envelope would otherwise read as a title with no chapters
+    in it — the exact confusion between "nothing there" and "could not
+    look" that this project refuses everywhere else. A dict where a list
+    belongs also raised `AttributeError` out of the tool, past the
+    `CommonwealthError` the caller catches, so the whole call errored
+    instead of recording one source's failure.
+    """
+    if not isinstance(payload, want):
+        raise SourceUnavailable(
+            f"the Code of Virginia API answered with "
+            f"{type(payload).__name__}, not {described}. Treat this as "
+            "the service having changed or failed, not as an empty "
+            "branch of the Code.")
+    return payload
+
+
+def _listing(doc: dict, key: str) -> list:
+    value = doc.get(key)
+    if value is None:
+        return []
+    return _rows(value, list, f"a list under {key!r}")
 
 
 class VirginiaLawAdapter:
@@ -222,10 +280,12 @@ class VirginiaLawAdapter:
         if not title:
             op, kind = "CoVTitlesGetListOfJson", "title"
         elif not chapter:
-            op, kind = f"CoVChaptersGetListOfJson/{title}", "chapter"
+            op, kind = (f"CoVChaptersGetListOfJson/"
+                        f"{_segment(title, 'title')}", "chapter")
         else:
-            op, kind = (f"CoVSectionsGetListOfJson/{title}/{chapter}",
-                        "section")
+            op, kind = (f"CoVSectionsGetListOfJson/"
+                        f"{_segment(title, 'title')}/"
+                        f"{_segment(chapter, 'chapter')}", "section")
         url = f"{base}/{op}"
         fetcher = self._json_fetcher_for(manifest, p.api_url)
         payload = await fetcher.fetch_json(url, {})

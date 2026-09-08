@@ -13,7 +13,8 @@ wheel died at startup on `missing capability vocabulary:
 `NOTICE` ship inside the package now and `_data_root()` prefers that
 copy. Verified the way § 39 asks — a wheel built, installed into a fresh
 environment, and run from a directory with no checkout in it: 19
-manifests validate, 14 tools list, and Vienna resolves to the town with
+manifests validate, `tools list` prints the default profile's nine, and
+Vienna resolves to the town with
 Fairfax County and the state above it.
 
 § 39 also asked to "read a skill through MCP", which skills.md § 1 says
@@ -76,6 +77,29 @@ from a directory with no checkout. And the Code manifest kept its old
 `last_verified`, from which `registry_revision` derives, so every browse
 envelope would have reported a revision indistinguishable from the
 registry before the endpoint existed.
+
+**A self-review found four more, all in code written this session.** The
+new security test assumed the suite exports `COMMONWEALTH_DENY_NETWORK`;
+only CI does, and a sibling test in the same file unsets it — so a plain
+local `pytest` sent a real request to law.lis.virginia.gov and failed.
+The whole suite now passes with no environment set at all, which is what
+CONTRIBUTING tells a contributor to expect.
+
+The other three are the Code walk's parser and its arguments. A payload
+that is not the shape the publisher documents was read as an empty branch
+of the Code, which is the one confusion this project refuses everywhere
+else; a non-dict where a dict belonged raised `AttributeError` past the
+`CommonwealthError` the tool catches, so the whole call errored instead
+of recording one source's failure; and `title` and `chapter` went into
+the URL path unvalidated, so `title="1#x"` fetched title 1 and reported
+it as the contents of "1#x" — a wrong answer wearing a correct one's
+clothes — while `"../../vacode/1-500/"` walked to a different endpoint on
+the same host. Segments are checked against the Code's own numbering now.
+
+A seventh: `_data_root()` preferred the bundled copy, and `pip install -e
+.` materialises one into site-packages that is frozen at install time.
+The checkout wins now, so a developer editing manifests is never served
+the ones they had when they last installed.
 
 ## 2026-09-08 — one branch instead of two, and the site learns to be searched
 
