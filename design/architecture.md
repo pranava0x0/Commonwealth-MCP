@@ -2903,6 +2903,12 @@ Sweeps keep a payload-free expiry record, so deleting expired bytes does not
 turn an expired handle into an unknown one. New writes trigger an hourly sweep,
 and small metadata sidecars let that sweep avoid parsing stored payloads.
 
+That record holds the arguments the call was made with, which for these
+tools means an address, a parcel PIN or a coordinate, so it expires too: a
+day after the payload's own window closes the sweep deletes it and the
+handle reads as not found. The question does not outlive the answer by
+more than the answer lived.
+
 Retention is enforced at write. `access.retention: forbidden`, a
 `restricted` classification, or a `sensitive_public` classification refuses
 the write. The tool returns its inline answer without a handle.
