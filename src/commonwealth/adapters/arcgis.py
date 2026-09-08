@@ -78,7 +78,7 @@ class LayerDecl(BaseModel):
     # manifests omit this and every layer shares the top-level service_url.
     # The egress policy is still derived from the top-level service_url
     # (host-allowlist only), so an override must resolve to the same host —
-    # a genuinely cross-host split needs a manifest-level egress change too,
+    # a cross-host split needs a manifest-level egress change too,
     # not just this field.
     service_url: str | None = None
 
@@ -106,7 +106,7 @@ class ArcGISParams(BaseModel):
                     f"layer {key!r} service_url host {layer_host!r} does "
                     f"not match the manifest's top-level host {top_host!r} "
                     "— the egress policy is derived from the top-level "
-                    "service_url only, so a genuinely cross-host layer "
+                    "service_url only, so a cross-host layer "
                     "needs a manifest-level egress change, not just this "
                     "override")
         return self
@@ -360,7 +360,7 @@ class ArcGISAdapter:
             # A disjunction ANDed with the rest. Real layers split one
             # concept across several fields — VGIN's road centerlines
             # carry FIPS_L and FIPS_R for the two sides of a segment, so
-            # "in this locality" is genuinely an OR and an AND of
+            # "in this locality" is an OR and an AND of
             # equalities cannot express it.
             groups = []
             for group in where_any_of:

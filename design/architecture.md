@@ -35,7 +35,7 @@ renumbering breaks those references.
 
 The evidence behind the decisions is in [research/](../research/README.md).
 The per-feature contracts the code is written against are the other files
-in this folder, listed in [README.md](../README.md).
+in this folder, listed in [README.md](README.md).
 
 **Status:** adopted, being implemented. Fourteen of the fifteen decisions
 are settled. 0009, on a hosted gateway, is left open until Phase 3 on
@@ -52,57 +52,32 @@ public entities.
 
 ## 1. Executive Summary
 
-Commonwealth-MCP should not be implemented as a collection of one-off MCP servers for every Virginia agency, locality, portal, or API.
-
-The recommended architecture is a **federated domain-MCP ecosystem** with five distinct layers:
-
-1. **Government Source Registry**  
-   A declarative, machine-readable inventory of authoritative Virginia public systems, datasets, APIs, GIS services, portals, access requirements, update cadence, provenance, jurisdiction, and adapter mappings.
-
-2. **Adapter and Commonwealth Core Layer**  
-   Reusable protocol adapters (ArcGIS REST, Socrata, OGC API, OpenAPI, GTFS, Open311, Municode, Legistar, HTML/CSV/JSON) plus canonical civic data models, jurisdiction resolution, provenance, temporal semantics, pagination, caching, and evidence handling.
-
-3. **Domain MCP Servers**  
-   A small number of coherent, independently deployable MCP servers exposing semantic tools such as `geo.find_zoning`, `civic.search_legislation`, and `finance.search_procurements`. These servers should hide platform-specific schemas from agents.
-
-4. **Commonwealth Skills**  
-   Agent Skills that encode expert workflows: development-site due diligence, legislative impact analysis, project tracing, locality briefs, procurement scans, environmental permitting screens, and similar multi-source tasks.
-
-5. **MCP Hub / Control Plane + Benchmarks**  
-   A catalog/gateway for discovery, deployment, tenancy, credentials, versioning, health, policy, and selective tool exposure; plus an evaluation suite that measures whether agents use the tools correctly.
-
-The recommended design synthesizes the strongest ideas observed across:
-- PNNL `nepa-mcp`
-- Power-Agent `PowerMCP`, `PowerSkills`, and `PowerAgentBench`
-- GSA-TTS `mcp-server-hub-catalog`
-- GitHub MCP Server
-- Cloudflare domain-specific MCP servers and Code Mode MCP
-- AWS MCP / Agent Toolkit patterns
-- Context7
-- Playwright MCP / CLI+Skills
-- Official MCP reference servers
-
-The core architectural principle is:
-
-> **Separate the government source, the protocol adapter, the agent capability, and the expert workflow.**
-
-Example:
+Commonwealth-MCP exposes Virginia public data through Python functions,
+a CLI and one local MCP server. Domain packages share the source registry,
+request adapters and result format.
 
 ```text
-Government source:
-  Fairfax County zoning ArcGIS layer
-
-Adapter:
-  ArcGIS REST
-
-Agent capability:
-  geo.find_zoning(location)
-
-Expert workflow:
-  development-site-due-diligence
+Python caller / CLI / MCP client
+              ↓
+       domain functions
+              ↓
+source selection → adapter → government service
+              ↓
+  data + evidence + coverage + warnings
 ```
 
-Those four objects must evolve independently.
+The current adapters read ArcGIS feature services, an ArcGIS geocoder and
+Code of Virginia pages. The registry has 13 active sources and four proposed
+entries. The MCP profiles expose 9, 12 or 14 tools. These counts describe
+the 2026-09-07 checkout; the generated site derives them from the registry.
+
+Keep four responsibilities separate: a manifest describes a source; an
+adapter reads its format; a domain function answers a defined question;
+a skill sequences those functions for a task. Each has its own tests.
+
+Hosted access, the Hub, Explorer, new adapters and most domain models below
+remain proposals. Section 39 lists the next work. The per-feature contracts
+record implementation details and known differences from the original plan.
 
 ---
 
@@ -406,7 +381,7 @@ mcp-richmond
 
 #### Recommended use
 
-Only for sources with genuinely unique:
+Only for sources with unique:
 - authentication,
 - runtime dependencies,
 - stateful workflows,
@@ -2215,21 +2190,77 @@ Performance budgets start as hypotheses, are measured during the contract spike,
 
 ## 39. Delivery Sequence
 
-Superseded 2026-08-26 by the revised plan in Part 2 review round 2 § 6, adopted as the working sequence. (Retitled from "Suggested First 90 Days" with its week-numbered stage labels dropped, 2026-08-28: development here is not paced in calendar weeks; the ordering and the exit criteria are the content.) Its shape, for this document's record:
+Updated 2026-09-07. This is the recommended work order for a toolkit used
+by policy researchers and independent developers. Existing decision records
+remain in force; new domain and authority contracts need review before code.
 
-### Stage 1 — contract spike
-Blocking decisions chosen; official-SDK server path proven; one ArcGIS source registered; envelope wire schema + coverage dimensions defined; exact jurisdiction lookup; egress policy; Tier-1 contract tests. Exit: one address/parcel query returns valid evidence and honest coverage.
+### Stage 1 — make a fresh installation useful
 
-### Stage 2 — geo vertical
-Registry + geo packages in one process; `geo.find_parcel` and `geo.find_zoning`; Fairfax County, Richmond City, one rural county, one nested town; recorded fixtures; `doctor`, direct tool calls, source validation, profile activation. Exit: a new ArcGIS locality lands through a manifest with no server-code change.
+Finish [PR #43](https://github.com/pranava0x0/Commonwealth-MCP/pull/43), then
+verify a fresh checkout and a real MCP client. Before publishing through
+[issue #40](https://github.com/pranava0x0/Commonwealth-MCP/issues/40), package
+the source manifests, jurisdiction table and skills: the current runtime
+finds them relative to the checkout, while the wheel includes Python only.
+Test the wheel outside the repo with no editable install. Validate a source,
+list tools, resolve a locality, and read a skill through MCP.
 
-### Stage 3 — developer product
-Source-authoring and capability-extension contracts published; idempotent `configure` with `--dry-run`; terms and sensitive-data review flow complete; Tier-2 tool-selection evals; ship `parcel-zoning-screen`. Exit: an outside developer adds a source and builds a working tool without maintainer help.
+Keep one quickstart in the root README. Examples must use its environment
+and return useful results without network access. Record which operating
+systems and clients were actually tested. Configuration generation alone
+does not establish client compatibility.
 
-### Stage 4 — hardening and beta
-Result-resource storage (per decision 0013); runtime health overlay; injection and source-failure fixtures; privacy and logging rules enforced; four representative MCP clients tested; benchmark baseline, limits, and coverage published; public beta.
+### Stage 2 — prove local coverage and model behavior
 
-The civic/LIS vertical (milestone 1b) starts after this exit. Hub, Explorer, finance, infrastructure, environment, authenticated sources, and writes all stay out of the first milestone.
+[Issue #10](https://github.com/pranava0x0/Commonwealth-MCP/issues/10) adds a
+town's own source. The state, county, independent-city and town paths should
+each have an evaluated example. Include a rural locality and a town that
+spans counties. Geographic containment does not establish zoning authority;
+source selection needs capability-specific scope before claiming a county
+source covers town zoning. School divisions, utility districts and transit
+service areas need explicit relationships rather than county-parent inference.
+
+[Issue #28](https://github.com/pranava0x0/Commonwealth-MCP/issues/28) measures
+model tool selection at the actual 9/12/14-tool profiles. Existing deterministic
+skill tests are not model evaluations. Report tasks attempted, failures,
+coverage errors, model/version, cost and date. Keep mutated holdout tasks.
+
+### Stage 3 — support a second resident workflow
+
+Start with local meeting discovery
+([#13](https://github.com/pranava0x0/Commonwealth-MCP/issues/13)), then state
+legislation ([#11](https://github.com/pranava0x0/Commonwealth-MCP/issues/11))
+and Code search ([#12](https://github.com/pranava0x0/Commonwealth-MCP/issues/12)).
+For meetings, prove the same adapter works for two governments; include a
+town or school board rather than only county governing bodies. Preserve
+cancellations, timezones, agenda versions and the publisher's links.
+
+Candidate areas after that, subject to source and terms review:
+
+| Resident application | Starting source | Required distinctions |
+|---|---|---|
+| Follow public spending | [eVA open data](https://eva.virginia.gov/eva-open-data.html), state budget and local budget publications | Solicitation, award, contract and payment; fiscal year, fund and amended/adopted version |
+| Compare school services | [VDOE statistics and reports](https://www.doe.virginia.gov/data-policy-funding/data-reports/statistics-reports) | School versus division; school year, denominator and suppressed cells |
+| Explore transit and capital projects | [DRPT open data](https://drpt.virginia.gov/data/) and local operators | Planned investment versus operating service; operator, service date and timezone |
+| Track local development or service requests | Local permit, planning and service portals | Application versus approval; inspection versus completion; published personal data |
+
+These publisher pages were checked on 2026-09-07. They are discovery leads,
+not verified API integrations or permission to automate. For each area,
+record the endpoint, publisher, geographic and temporal scope, access terms,
+update cadence and limitations before activating a manifest.
+
+Each new workflow needs a Python example, an offline fixture, an evidence
+result that a resident can understand, and a demo showing both a match and
+a coverage gap. Measure source-onboarding code changes and whether an outside
+developer completes the example without help.
+
+### Stage 4 — prepare hosted use only when needed
+
+Keep the Hub and Explorer deferred. Hosted operation needs shared outbound
+request budgets ([#20](https://github.com/pranava0x0/Commonwealth-MCP/issues/20)),
+tenant isolation, result retention limits and trace propagation
+([#36](https://github.com/pranava0x0/Commonwealth-MCP/issues/36)). The existing
+per-process limits and local disk store do not settle those requirements.
+Writes and authenticated portals need separate design review.
 
 ---
 
@@ -2551,7 +2582,7 @@ Authority follows proximity to the record's originator: the locality's own syste
 
 A maintained table in the registry: for each (capability, jurisdiction-kind) pair, which source class is primary (parcels: locality-first; statewide road network: VDOT-first; addresses: VGIN composite first, because localities feed it on contract).
 
-- For: encodes real knowledge instead of a heuristic; VGIN genuinely is the better first stop for some layers (its address program is the state's system of record in practice); reviewable, testable, citable.
+- For: encodes real knowledge instead of a heuristic; VGIN is the better first stop for some layers (its address program is the state's system of record in practice); reviewable, testable, citable.
 - Against: a table to maintain and re-litigate; it would bake expert judgment about which source wins into central infrastructure — the same mistake adapters.md § 1 forbids inside adapters, moved up a layer (that cross-reference read "design-spec § 17.6" until the consolidation dropped the subsection; repointed 2026-08-28, argument unchanged); needs an owner.
 
 ### Option C: No central ranking; always query both, always surface both
@@ -2600,7 +2631,7 @@ Response cache keyed by (source, query) honoring manifest `ttl_hint_seconds`; re
 
 B, plus scheduled snapshots for a reviewed list of sources where history is the value (planning-case lists, procurement postings — things that disappear when decided/awarded), stored as dated raw payloads with manifest-linked provenance.
 
-- For: enables chronology and change-detection workflows nothing else can; government data genuinely vanishes (award postings especially), and researchers need the record.
+- For: enables chronology and change-detection workflows nothing else can; government data vanishes (award postings especially), and researchers need the record.
 - Against: this is where terms risk actually lives (retention and re-serving of a publisher's data); storage and pipeline ops; staleness presentation gets harder (serving a snapshot must never masquerade as current); Gate E exists precisely for this.
 
 ### Recommendation
@@ -2673,7 +2704,7 @@ Code monorepo plus a data repo holding `sources/` and jurisdiction YAML, on the 
 
 A constrained runtime (per-call sandbox: no network except adapter calls, no filesystem, CPU/memory/time limits) where the model writes code against typed adapter clients; only stdout/return value re-enters context.
 
-- For: the measured token wins are real for chained work; long-tail exploration is genuinely faster when the model can loop/filter server-side; Cloudflare demonstrated the shape at production scale on isolates.
+- For: the measured token wins are real for chained work; long-tail exploration is faster when the model can loop/filter server-side; Cloudflare demonstrated the shape at production scale on isolates.
 - Against: Commonwealth's V1 runtime is "pipx install on a laptop" — a laptop sandbox strong enough to trust is a project in itself (containers/jails per call), and a weak one is worse than none; the injection surface compounds (model-written code processing untrusted source payloads); auditability drops (reviewing generated code per call vs. a query object); the operational bar (limits, monitoring) is Anthropic's own stated trade-off.
 
 ### Option C: No Explorer in V1; CLI-based exploration for developers
@@ -2681,7 +2712,7 @@ A constrained runtime (per-call sandbox: no network except adapter calls, no fil
 Developers explore with `commonwealth sources probe/sample` and ordinary scripting; Explorer-as-MCP waits until demand is demonstrated.
 
 - For: zero new surface; the promotion pipeline's real users in year one are contributors, who have the CLI; avoids building ahead of a user.
-- Against: gives up the agent-assisted source-mapping flywheel (an agent drafting manifests from exploration is a genuinely good fit); "no long-tail story" weakens the coverage pitch; the registry-bound design makes A cheap enough that deferring saves little.
+- Against: gives up the agent-assisted source-mapping flywheel (an agent drafting manifests from exploration is a good fit); "no long-tail story" weakens the coverage pitch; the registry-bound design makes A cheap enough that deferring saves little.
 
 ### Recommendation
 
@@ -2746,7 +2777,7 @@ Matches only on exact keys: SCC entity ID, parcel ID, case number, bill ID, FEIN
 A, plus a small set of *reviewable, deterministic* normalizations that count as matches when they produce exact equality: case/punctuation folding, legal-suffix normalization (LLC/L.L.C./Limited Liability Co.), whitespace, ampersand/and. Each normalized match carries `match_basis: ["normalized_name_exact"]` and the pre-normalization strings as evidence.
 
 - For: captures the large fraction of real-world variance that is formatting, not identity; still rule-based, fixture-testable, no scores; the match basis says exactly what happened.
-- Against: normalization rules accrete (is "The" stripping in? "Inc" vs "Incorporated"?); two genuinely different entities can normalize together ("Main Street Properties LLC" of two different counties), so jurisdiction/context guards are needed; the rule list is a mini authority table needing an owner.
+- Against: normalization rules accrete (is "The" stripping in? "Inc" vs "Incorporated"?); two different entities can normalize together ("Main Street Properties LLC" of two different counties), so jurisdiction/context guards are needed; the rule list is a mini authority table needing an owner.
 
 ### Option C: B + scored fuzzy suggestions, never auto-merged
 

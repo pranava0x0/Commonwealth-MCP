@@ -356,7 +356,7 @@ async def test_walking_the_addresses_does_not_spend_the_retry_budget(
         monkeypatch):
     """The bug this closes: `approved[attempt % len(approved)]` gave each
     address its own attempt, so two unreachable addresses used up
-    RETRY_BUDGET + 1 and a genuinely flaky host got no retry at all."""
+    RETRY_BUDGET + 1 and a flaky host got no retry at all."""
     attempts: list[str] = []
 
     async def fake_send(self, request):

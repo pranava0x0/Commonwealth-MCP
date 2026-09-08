@@ -30,7 +30,7 @@ retry budget is spent on failures.
 
 A proxy also stopped working the moment an explicit transport was passed,
 because httpx reads `HTTPS_PROXY` only when there is none. Pinning and a
-forward proxy genuinely cannot coexist, so the adapter says so once per
+forward proxy cannot coexist, so the adapter says so once per
 process rather than failing mutely.
 
 **The result store.** One stray file in the shared cache stopped every
@@ -647,12 +647,12 @@ A checker with no test quietly stops catching things.
 
 ## 2026-08-28 — Charles City County, and civic's first real tool
 
-Two more geo sources: Charles City County (a genuinely small rural
+Two more geo sources: Charles City County (a small rural
 county — 6,514 parcels behind a deliberately minimal 2-field public
 view, no zoning layer) closes the "rural county" half of design/
 source-registry.md § 6's forcing set; a live search for Vienna's own GIS
 (the "incorporated town" half) found only a zoning-map viewer app, no
-queryable endpoint — likely genuinely thin, logged in the GitHub issues rather
+queryable endpoint — likely thin, logged in the GitHub issues rather
 than forced.
 
 Bigger: `civic.get_code_section`, the first civic-vertical tool, and a
@@ -710,7 +710,7 @@ merged, feature branch deleted, zero PRs left open.
 The repo's first commit went to GitHub twice. The first attempt pushed
 directly to `main` — a mistake against the user's own explicit prior
 instruction to open a PR first for Codex bot review. Fixed by rebuilding
-history so `main` carries a genuinely empty root commit that is a real
+history so `main` carries a empty root commit that is a real
 ancestor of the content commit (`git commit-tree` twice, chained by
 `-p`), rather than two unrelated commits on differently-named branches —
 `gh pr create` refuses branches with no shared history, and an orphan
@@ -801,7 +801,7 @@ One background research pass: compare docs/index.html against PNNL's
 nepa-mcp, Power-Agent (confirmed Harvard SEAS-affiliated), civic-ai-tools,
 github-mcp-server, fastmcp, and modelcontextprotocol.io — live pages
 fetched, not guessed from repo names. Found civic-ai-tools is the only
-checked project with a genuinely live in-browser demo; findings and what
+checked project with a live in-browser demo; findings and what
 was/wasn't adopted are in ../research/README.md part 6. Worth it:
 yes — it caught that Power-Agent's tool→skill→benchmark layering (cited in
 the reference evaluation) has no public visual demonstration anywhere,

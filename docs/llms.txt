@@ -20,7 +20,7 @@ Fourteen tools, nine of them in the default set.
   rather than a guess: Fairfax City is not inside Fairfax County, and none
   of Virginia's 38 independent cities sit inside the county they share a
   name with. A point inside a town returns the town and its county,
-  because both govern that ground.
+  The relevant authority can differ by topic.
 - What a parcel record says, by parcel ID or by a point. Fairfax County,
   Richmond City, and Charles City County publish their own; VGIN publishes
   a statewide layer. Where two cover the same ground both are returned,
@@ -69,8 +69,13 @@ MCP resource for 24 hours.
 ## Two kinds of empty
 
 An empty result says which kind it is. Either the records were searched
-and nothing matched, or no source is registered for that place. Most
-systems return the same blank for both.
+and nothing matched, or no source is registered for that place. Neither proves that a feature does not exist.
+
+## Setup
+
+Clone the repository and follow the README. The current runtime requires
+checkout data; a standalone wheel install is not yet supported. Tools are
+also callable from Python and the CLI without an AI client.
 
 ## Docs
 

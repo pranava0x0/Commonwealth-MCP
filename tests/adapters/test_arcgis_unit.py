@@ -147,7 +147,7 @@ async def test_layer_service_url_override_wins_over_top_level(sample_pin):
     # Same host as the top-level service_url, different path — a layer
     # override must stay on-host (ArcGISParams validates this; the egress
     # policy's host allowlist is derived from the top-level service_url
-    # only, so a genuinely cross-host split needs a manifest-level egress
+    # only, so a cross-host split needs a manifest-level egress
     # change too, not just this field).
     override_url = ("https://www.fairfaxcounty.gov/mercator/rest/services/"
                     "OpenData/ZoningOnly/FeatureServer")

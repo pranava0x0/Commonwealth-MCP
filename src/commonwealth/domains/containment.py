@@ -5,7 +5,7 @@ with a coordinate, and `geo.resolve_location` with an address it has just
 geocoded. ../../../design/architecture.md decision 0001 keeps the domain packages from importing each
 other, so the shared half lives here rather than one domain reaching into
 the other — and the split is worth having on its own, because the querying
-and the envelope assembly are genuinely different jobs.
+and the envelope assembly are different jobs.
 
 Nothing here builds an envelope. It registers provenance and evidence on
 the caller's builder, and returns what was found; each tool says what that

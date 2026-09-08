@@ -366,7 +366,7 @@ polygons VGIN publishes do: Herndon reaches Fairfax and Loudoun, Farmville reach
 Prince Edward and Cumberland, West Point reaches King and Queen and New
 Kent, and Vinton reaches Roanoke County and Roanoke City.
 
-Two governments genuinely apply across that ground, which is the thing
+Two governments apply across that ground, which is the thing
 this project's jurisdiction model exists to represent, and the table said
 one did.
 

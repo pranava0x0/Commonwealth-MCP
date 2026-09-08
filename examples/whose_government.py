@@ -1,11 +1,7 @@
 #!/usr/bin/env python3
-"""A mailing address is not a government.
+"""Resolve a mailing address, an ambiguous locality name and a ZIP.
 
-"6800 Beulah St, Alexandria, VA 22310" is a Fairfax County address. Every
-system that reads the mailing city as the jurisdiction gets an entirely
-plausible wrong government's records, which is the trap Virginia's
-independent cities set for anyone handling its data.
-"""
+The recorded Alexandria mailing address resolves to Fairfax County."""
 from _common import heading, run, show_envelope
 
 from commonwealth.domains.geo import resolve_location

@@ -227,7 +227,7 @@ instead of a fact, paragraphs with no verb in them, and cross-references
 welded onto the end of a sentence with a dash.
 
 Every rule in it exists because prose that shipped here tripped it. If a
-rule fires on something that is genuinely load-bearing, that is worth
+rule fires on something that is load-bearing, that is worth
 arguing about in the PR. The rules are not sacred; they are a record of
 what went wrong before.
 
