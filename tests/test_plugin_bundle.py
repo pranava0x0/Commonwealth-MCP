@@ -119,14 +119,23 @@ def test_the_server_entry_matches_what_configure_writes():
 
 
 def test_both_marketplaces_list_the_plugin_at_its_real_path(claude):
-    for market, key in ((CLAUDE_MARKET, "source"), (CODEX_MARKET, "path")):
+    for market in (CLAUDE_MARKET, CODEX_MARKET):
         data = _load(market)
         listed = [p for p in data["plugins"] if p["name"] == claude["name"]]
         assert listed, (
             f"{market.relative_to(ROOT)} does not list {claude['name']}")
-        rel = listed[0][key]
+        p = listed[0]
+        if market == CODEX_MARKET:
+            assert isinstance(p["source"], dict) and p["source"].get("source") == "local", (
+                "Codex marketplace entry requires a source object with source='local'")
+            assert "policy" in p and "installation" in p["policy"] and "authentication" in p["policy"], (
+                "Codex marketplace entry requires a policy object with installation and authentication")
+            assert "category" in p, "Codex marketplace entry requires a category"
+            rel = p["source"]["path"]
+        else:
+            rel = p["source"] if isinstance(p["source"], str) else p["source"]["path"]
         assert (ROOT / rel).resolve() == PLUGIN.resolve(), (
-            f"{market.relative_to(ROOT)} points {key} at {rel}, and the "
+            f"{market.relative_to(ROOT)} points at {rel}, and the "
             f"plugin is at {PLUGIN.relative_to(ROOT)}")
 
 
@@ -136,6 +145,8 @@ def test_the_manifests_agree_with_each_other_and_with_the_package(claude,
 
     assert claude["name"] == codex["name"]
     assert claude["homepage"] == codex["homepage"]
+    assert "author" in codex and codex["author"].get("name")
+    assert "interface" in codex and codex["interface"].get("displayName")
     pyproject = tomllib.loads((ROOT / "pyproject.toml").read_text())
     release = pyproject["project"]["version"].partition(".dev")[0]
     for manifest, path in ((claude, CLAUDE_MANIFEST), (codex, CODEX_MANIFEST)):
@@ -153,9 +164,44 @@ def test_the_codex_prompts_are_the_ones_the_quick_start_shows():
     """
     site = json.loads((ROOT / "docs" / "data" / "core.json").read_text())
     shown = [p["text"] for p in site["starter_prompts"]]
-    assert _load(CODEX_MANIFEST)["prompts"] == shown, (
-        "the Codex manifest's prompts and the site's quick start have "
+    manifest = _load(CODEX_MANIFEST)
+    assert "prompts" not in manifest, (
+        "Codex manifest must not carry a top-level prompts field; "
+        "starter prompts belong under interface.defaultPrompt")
+    assert manifest.get("interface", {}).get("defaultPrompt") == shown, (
+        "the Codex manifest's defaultPrompt and the site's quick start have "
         "drifted; regenerate the site and copy them across")
+
+
+def test_server_entry_profile_covers_all_bundled_skills():
+    """The profile configured in .mcp.json must expose the tools that
+    the bundled workflow skills require.
+
+    Issue #55 / Codex review: if .mcp.json uses 'default', coverage-check
+    and code-topic-walk fail because registry search/status and civic browse
+    are not exposed.
+    """
+    from commonwealth.servers.build import registries
+    from commonwealth.core.toolreg import expand_profile, PROFILES
+
+    entry = _load(MCP_JSON)["mcpServers"]["commonwealth"]
+    args = entry["args"]
+    profile = args[args.index("--profile") + 1]
+    assert profile in PROFILES, f"unknown profile {profile!r} in .mcp.json"
+    exposed = {t.name for t in expand_profile(profile, registries())}
+
+    mandatory_tools = {
+        "civic.browse_code",
+        "civic.get_code_section",
+        "registry.resolve_jurisdiction",
+        "registry.search_sources",
+        "registry.describe_source",
+        "registry.source_status",
+    }
+    missing = mandatory_tools - exposed
+    assert not missing, (
+        f"profile {profile!r} configured in .mcp.json is missing tools "
+        f"required by bundled skills: {sorted(missing)}")
 
 
 def test_the_site_names_the_marketplace_a_reader_would_type():

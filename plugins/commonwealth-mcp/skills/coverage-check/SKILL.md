@@ -10,8 +10,7 @@ description: >
   answer a locality has no source behind.
 license: Apache-2.0
 compatibility: >
-  Requires Commonwealth-MCP v0.x. The registry tools are in every profile
-  from `discovery-min` up, so no profile change is needed.
+  Requires Commonwealth-MCP v0.x with the `discovery` or `all` profile.
 metadata:
   commonwealth:
     required_capabilities:

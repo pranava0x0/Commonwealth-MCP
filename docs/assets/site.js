@@ -1139,6 +1139,7 @@ function followMovedAnchor(){
     loadData("coverage").then(c => renderCoverage(core, c),
                               err => dataError("counts-note", err));
     followMovedAnchor();
+    window.addEventListener("hashchange", followMovedAnchor);
   } else if (page === "tools"){
     renderTools(core);
   } else if (page === "sources"){
@@ -1151,8 +1152,12 @@ function followMovedAnchor(){
       renderJumpIndex(demo);
       renderDecoder(core, demo);
       // A shared #call-7 link lands on a collapsed row otherwise.
-      const m = location.hash.match(/^#call-(\d+)$/);
-      if (m) openCall(Number(m[1]));
+      const syncHashCall = () => {
+        const m = location.hash.match(/^#call-(\d+)$/);
+        if (m) openCall(Number(m[1]));
+      };
+      syncHashCall();
+      window.addEventListener("hashchange", syncHashCall);
     }, err => dataError("calls", err));
   }
 })();

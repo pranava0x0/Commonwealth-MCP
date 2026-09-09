@@ -1,8 +1,15 @@
 {
   "mcpServers": {
     "commonwealth": {
-      "command": "commonwealth",
-      "args": ["serve", "--profile", "default"]
+      "command": "sh",
+      "args": [
+        "-c",
+        "SCRIPT_DIR=\"$(cd \"$(dirname \"$0\")\" && pwd)\"; if [ -x \"$SCRIPT_DIR/plugins/commonwealth-mcp/run-server.sh\" ]; then exec \"$SCRIPT_DIR/plugins/commonwealth-mcp/run-server.sh\" \"$@\"; elif [ -x \"$SCRIPT_DIR/run-server.sh\" ]; then exec \"$SCRIPT_DIR/run-server.sh\" \"$@\"; elif [ -x \"$PWD/.venv/bin/commonwealth\" ]; then exec \"$PWD/.venv/bin/commonwealth\" \"$@\"; elif command -v commonwealth >/dev/null 2>&1; then exec commonwealth \"$@\"; elif command -v uv >/dev/null 2>&1; then exec uv run commonwealth \"$@\"; else exec python3 -m commonwealth.cli \"$@\"; fi",
+        "--",
+        "serve",
+        "--profile",
+        "discovery"
+      ]
     }
   }
 }
