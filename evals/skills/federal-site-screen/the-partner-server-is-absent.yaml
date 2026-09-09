@@ -1,0 +1,24 @@
+# The failure this walk is built to avoid. With no partner server
+# connected, the federal half was not checked, and a site reported as
+# clear when nothing federal ran is the most dangerous output here.
+id: skill-fss-no-partner
+tier: 3
+skill: federal-site-screen
+question: "Screen 21641 Ridgetop Cir, Sterling, VA 20166 for flood, wetlands and cleanup sites."
+toolset: default
+partner: none
+fixtures: [va-vgin-composite-locator, va-vgin-admin-boundaries, va-vgin-statewide-parcels]
+expected:
+  jurisdiction: va:loudoun-county
+  halves_reported: [virginia]
+  must_say:
+    - "not checked"
+    - "flood"
+  must_not_say:
+    - "no flood hazard"
+    - "no wetlands"
+    - "clear"
+score:
+  - kind: coverage_honesty
+  - kind: restraint
+traps: [outage]

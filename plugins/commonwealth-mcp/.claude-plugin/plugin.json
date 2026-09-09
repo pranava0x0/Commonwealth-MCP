@@ -1,0 +1,14 @@
+{
+  "name": "commonwealth-mcp",
+  "description": "Look things up in Virginia's government records: parcels, zoning, addresses, jurisdiction boundaries, buildings, roads, public places, DEQ monitoring stations, and the Code of Virginia. Every answer names the government system it came from and when it was fetched. Ships the server and its workflow skills together.",
+  "version": "0.1.0",
+  "author": {
+    "name": "pranava0x0",
+    "url": "https://github.com/pranava0x0"
+  },
+  "homepage": "https://pranava0x0.github.io/Commonwealth-MCP/",
+  "repository": "https://github.com/pranava0x0/Commonwealth-MCP",
+  "license": "Apache-2.0",
+  "keywords": ["virginia", "civic-tech", "gis", "open-data", "public-data",
+               "parcels", "zoning", "code-of-virginia"]
+}

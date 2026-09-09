@@ -1,0 +1,26 @@
+# The walk this skill exists for: a subject, no citation, and a descent
+# to one. Title 15.2 is local government, chapter 22 is planning and
+# zoning, and 15.2-2200 is where the chapter opens. Passing means showing
+# the path; failing means arriving at the citation with no account of how.
+id: skill-ctw-topic-to-citation
+tier: 3
+skill: code-topic-walk
+question: "What does Virginia law say about a locality's authority to adopt a zoning ordinance?"
+toolset: discovery
+fixtures: [va-code-of-virginia]
+expected:
+  title: "15.2"
+  chapter: "22"
+  citation: "15.2-2200"
+  must_say:
+    - "15.2"
+    - "15.2-2200"
+  must_not_say:
+    # There is no search endpoint; a sentence implying one is false about
+    # the method whatever citation it lands on.
+    - "searched the Code"
+    - "search results"
+score:
+  - kind: retrieval_correctness
+  - kind: provenance_present
+traps: []

@@ -1,0 +1,26 @@
+# Loudoun has no local parcel source registered; the statewide layer
+# answers. The screen still runs on the coordinate, and the answer says
+# whose parcel record it is rather than implying the county's.
+id: skill-fss-statewide-parcel
+tier: 3
+skill: federal-site-screen
+question: "What do I need to know about the ground at 21641 Ridgetop Cir, Sterling, VA 20166?"
+toolset: default
+partner: nepa-mcp
+fixtures: [va-vgin-composite-locator, va-vgin-admin-boundaries, va-vgin-statewide-parcels]
+expected:
+  jurisdiction: va:loudoun-county
+  parcel_source: va-vgin-statewide-parcels
+  zoning:
+    coverage: {registry: none}
+  halves_reported: [virginia, federal]
+  must_say:
+    - "Loudoun County"
+    - "screening"
+  must_not_say:
+    - unzoned
+score:
+  - kind: retrieval_correctness
+  - kind: provenance_present
+  - kind: coverage_honesty
+traps: [registry_gap]

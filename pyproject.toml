@@ -44,7 +44,7 @@ packages = ["src/commonwealth"]
 # split, so both travel with the data rather than only with the repo.
 [tool.hatch.build.targets.wheel.force-include]
 "sources" = "commonwealth/_data/sources"
-"skills" = "commonwealth/_data/skills"
+"plugins/commonwealth-mcp/skills" = "commonwealth/_data/skills"
 "NOTICE" = "commonwealth/_data/NOTICE"
 
 [tool.pytest.ini_options]

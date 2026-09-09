@@ -53,7 +53,7 @@ DOC_GLOBS = (
     # skills.md § 4 says this checker covers skill prose. It did not until
     # 2026-09-01, when the first skill was written (#27) and the claim
     # became checkable.
-    "skills/**/SKILL.md",
+    "plugins/*/skills/**/SKILL.md",
     "evals/**/*.md",
     "docs/**/*.md",
     "design/**/*.md",
@@ -61,15 +61,18 @@ DOC_GLOBS = (
     "research/notes/*.md",
     # The site is the copy most people read first, and it was drifting the
     # same way the docs were. Scanned as prose with tags stripped, so class
-    # names, URLs, and the embedded JSON blocks never reach a rule.
-    "docs/index.html",
+    # names, URLs, and the embedded JSON blocks never reach a rule. All four
+    # pages, since issue #46 split the one page into a landing page and
+    # three reference pages.
+    "docs/*.html",
     # The decoder text — what each coverage value and warning code means —
     # is authored in tools/build_site.py as dict literals and rendered into
     # the page at load time. It reached neither the HTML scan (it lives in
     # a JSON block, which that scan has to skip) nor --code (which reads
     # comments and docstrings, not string constants). Scanning the built
-    # JSON catches it wherever it was authored.
-    "docs/data/site.json",
+    # JSON catches it wherever it was authored. `coverage.json` is not
+    # scanned: it holds jurisdiction ids and source ids, no prose.
+    "docs/data/core.json",
     # What an agent reads instead of the rendered page. Same copy, same
     # standards; markdown rules apply since that is its format.
     "docs/llms.txt",
@@ -80,7 +83,8 @@ EXCLUDE_PARTS = {"raw", "base-files", "node_modules", ".git"}
 # The surfaces a stranger reads: the landing page, the copy rendered into
 # it, and the README. Everything else in the tree is written for people who
 # already work on the project.
-COPY_PATHS = ("docs/index.html", "docs/data/site.json", "docs/llms.txt",
+COPY_PATHS = ("docs/index.html", "docs/tools.html", "docs/sources.html",
+              "docs/examples.html", "docs/data/core.json", "docs/llms.txt",
               "README.md")
 
 

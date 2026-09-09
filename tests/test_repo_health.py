@@ -238,16 +238,21 @@ def test_the_wheel_carries_the_data_the_runtime_reads():
     pyproject = tomllib.loads((ROOT / "pyproject.toml").read_text())
     included = (pyproject["tool"]["hatch"]["build"]["targets"]["wheel"]
                 ["force-include"])
-    for name in ("sources", "skills"):
-        assert included.get(name) == f"commonwealth/_data/{name}", (
-            f"{name}/ is read at runtime and is not force-included into "
+    # Source path in the checkout, destination inside the package. The two
+    # differ for skills: they live inside the plugin bundle that installs
+    # them alongside the server (GitHub issue #53) and the wheel flattens
+    # that away, because an installed server has no plugin around it.
+    for src, dest in (("sources", "sources"),
+                      ("plugins/commonwealth-mcp/skills", "skills")):
+        assert included.get(src) == f"commonwealth/_data/{dest}", (
+            f"{src}/ is read at runtime and is not force-included into "
             "the wheel; an installed server would not find it")
-        assert (ROOT / name).is_dir(), f"{name}/ is force-included and gone"
+        assert (ROOT / src).is_dir(), f"{src}/ is force-included and gone"
 
     # And the runtime looks for them under one root, so a checkout and a
     # wheel differ in that root and in nothing else.
     assert runtime.SOURCES_DIR == runtime.DATA_ROOT / "sources"
-    assert runtime.SKILLS_DIR == runtime.DATA_ROOT / "skills"
+    assert runtime.SKILLS_DIR == ROOT / "plugins" / "commonwealth-mcp" / "skills"
     assert runtime.DATA_ROOT == ROOT, (
         "run from a checkout, the data root is the repo root")
 

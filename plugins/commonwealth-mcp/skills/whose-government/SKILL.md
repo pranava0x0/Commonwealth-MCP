@@ -18,6 +18,9 @@ metadata:
     optional_capabilities:
       - geocode.address
       - address.lookup
+    example_prompt: >
+      Whose government covers 6800 Beulah St, Alexandria, VA 22310? The
+      envelope says Alexandria; is that the government?
 ---
 
 # Whose government

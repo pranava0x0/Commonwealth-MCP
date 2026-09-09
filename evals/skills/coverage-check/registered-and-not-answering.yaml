@@ -1,0 +1,25 @@
+# Declared active and operationally down. The walk's third empty: the
+# source exists, it is meant to answer, and it did not. Passing means
+# calling it an outage with the date of the reading; failing means either
+# "covered" (which promises an answer that will not come) or "no source"
+# (which is a permanent claim about a temporary state).
+id: skill-cc-outage
+tier: 3
+skill: coverage-check
+question: "Is parcel data available for Fairfax County right now?"
+toolset: discovery
+fixtures: [va-fairfax-parcels-zoning, va-vgin-statewide-parcels]
+expected:
+  jurisdiction: va:fairfax-county
+  capability: parcel.lookup
+  answerable: partial
+  reason: source_unavailable
+  must_say:
+    - "registered"
+    - "did not answer"
+  must_not_say:
+    - "no source is registered"
+score:
+  - kind: coverage_honesty
+  - kind: provenance_present
+traps: [outage]

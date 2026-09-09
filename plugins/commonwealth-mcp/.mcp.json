@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "commonwealth": {
+      "command": "commonwealth",
+      "args": ["serve", "--profile", "default"]
+    }
+  }
+}

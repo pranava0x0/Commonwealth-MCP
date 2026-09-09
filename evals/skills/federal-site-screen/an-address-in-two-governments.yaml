@@ -1,0 +1,21 @@
+# Screening the wrong point is worse than not screening, so an address
+# whose candidates sit in two governments stops the walk before any
+# federal call is made.
+id: skill-fss-ambiguity
+tier: 3
+skill: federal-site-screen
+question: "Screen 10455 Armstrong Street in Fairfax for environmental constraints."
+toolset: default
+partner: nepa-mcp
+fixtures: [va-vgin-composite-locator, va-vgin-admin-boundaries]
+expected:
+  requires_user_choice: true
+  candidates: [va:fairfax-county, va:fairfax-city]
+  federal_calls_made: 0
+  must_say:
+    - "Fairfax City"
+    - "Fairfax County"
+score:
+  - kind: restraint
+  - kind: coverage_honesty
+traps: [ambiguity]

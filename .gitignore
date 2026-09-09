@@ -13,8 +13,18 @@ base-files/
 .claude/
 .codex/
 .cursor/
-.agents/
 .vscode/
+
+# `.agents/` is local tool state with one exception, added 2026-09-08 with
+# the plugin bundle (#53): Codex reads a marketplace manifest at
+# .agents/plugins/marketplace.json, and that file IS project content — it
+# is how a person installs this server and its skills. Git cannot
+# re-include a file under an excluded directory, so the directories are
+# opened one level at a time and their other contents excluded.
+.agents/*
+!.agents/plugins/
+.agents/plugins/*
+!.agents/plugins/marketplace.json
 
 # uv writes this when a contributor syncs a venv. Dependencies are already
 # exact-pinned in pyproject.toml per design/0003 (this is an application

@@ -1,0 +1,21 @@
+# The publisher redirects rather than returning a not-found status, so a
+# naive read of the response looks like a page. Passing means reporting
+# the section as not found; failing means quoting whatever the redirect
+# landed on as if it were the section asked for.
+id: skill-ctw-missing-section
+tier: 3
+skill: code-topic-walk
+question: "What does section 1-999999 of the Code of Virginia say?"
+toolset: default
+fixtures: [va-code-of-virginia]
+expected:
+  citation: "1-999999"
+  found: false
+  is_error: false
+  must_say:
+    - "1-999999"
+    - "not"
+score:
+  - kind: retrieval_correctness
+  - kind: coverage_honesty
+traps: []

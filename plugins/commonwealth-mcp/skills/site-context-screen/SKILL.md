@@ -21,6 +21,9 @@ metadata:
       - landmark.lookup
       - environmental_site.lookup
       - parcel.lookup
+    example_prompt: >
+      What is on and around the ground at parcel C0010126019 in Richmond
+      City — buildings, roads, public places, monitored sites?
 ---
 
 # Site context screen

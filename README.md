@@ -4,8 +4,8 @@ Python tools for Virginia public data, with a command-line interface and an
 MCP server for AI assistants. For policy researchers and developers building
 applications for Virginia residents.
 
-[Try the browser demos](https://pranava0x0.github.io/Commonwealth-MCP/#try)
-· [Search the tools](https://pranava0x0.github.io/Commonwealth-MCP/#tools)
+[Try the browser demos](https://pranava0x0.github.io/Commonwealth-MCP/examples.html)
+· [Search the tools](https://pranava0x0.github.io/Commonwealth-MCP/tools.html)
 · [Run examples](examples/README.md)
 · [Add a data source](CONTRIBUTING.md)
 · [Design and remaining work](design/README.md)
@@ -66,9 +66,23 @@ commonwealth skills list               # where the bundled skills are on disk
 `uv pip install` would refuse here, because it installs into a virtual
 environment and this path has none.
 
-The examples, the recorded fixtures and the tests are repo-only. Skills
-travel as files: copy a directory from `commonwealth skills list` into your
-client's skills folder.
+The examples, the recorded fixtures and the tests are repo-only.
+
+### Server and skills in one install
+
+`plugins/commonwealth-mcp/` is a plugin bundle: the server entry and the
+six skills together. In a client that reads a marketplace:
+
+```
+/plugin marketplace add pranava0x0/Commonwealth-MCP
+/plugin install commonwealth-mcp@commonwealth-mcp
+```
+
+Install the package first, so `commonwealth serve` is on the path. For a
+client with no plugin system, `commonwealth configure <client>` writes the
+server entry on its own; skills then travel as files, copied from a
+directory `commonwealth skills list` prints into the client's skills
+folder.
 
 ## What works
 
@@ -190,7 +204,7 @@ availability separately, run `.venv/bin/commonwealth doctor --live`.
 | [design/](design/README.md) | Current architecture, contracts and planned work |
 | `src/commonwealth/` | Python implementation |
 | `sources/` | Source manifests and jurisdiction records |
-| `skills/` | Instructions for multi-tool workflows |
+| `plugins/commonwealth-mcp/` | The plugin bundle: the server entry, the client manifests, and `skills/` — instructions for multi-tool workflows |
 | `tests/`, `evals/` | Offline tests and workflow evaluations |
 | [docs/](docs/README.md) | Published site and audit records |
 | [research/](research/README.md) | Historical research; verify dated claims before reuse |

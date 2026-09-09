@@ -3,6 +3,68 @@
 One entry per significant work session or delegated research task: why it
 ran, cost where relevant, and whether it was worth it.
 
+## 2026-09-08 — four pages, one plugin, three skills
+
+Nine issues, all from the same measurement: the site was one page of
+21,144 px (29 screens) and 6,101 words, of which the source cards were
+8,208 px and 41% of the words because all fifteen printed every
+limitation. It was 1,333,013 bytes in one request, and 898 KB of that
+was three JSON blobs inlined so the file would work opened off disk.
+
+**The split (#46-#52).** A landing page and three reference pages —
+tools, sources, examples — sharing `docs/assets/site.css` and
+`docs/assets/site.js`. The catalog splits with it: `core.json` is 40 KB
+and embedded in all four pages, `coverage.json` and the two demo files
+are fetched by the page that shows them. The seal was the surprise: the
+same 133 KB image was inlined twice as a base64 data URI, 354 KB of the
+raw file, and `docs/assets/seal.webp` had been committed and identical
+the whole time. `docs/audits/page-weight-2026-09-08.md` has the numbers.
+
+The cost is that a page opened from `file://` no longer shows the fetched
+sections; it paints and names the fix. That property was worth 898 KB on
+every visit and served the maintainer more than any reader.
+
+**Nine screens was still too many.** The split got the landing page to
+6,537 px, which is better and still further than anyone should travel to
+find an install command. Three more changes, in the audit: constrain the
+prose rather than the container so grids widen, run the quick start as a
+tabbed stepper, and fold the coverage table under a derived one-line
+summary. 3,600 px and 991 words.
+
+**The plugin bundle (#53).** `plugins/commonwealth-mcp/` holds the server
+entry, a manifest for each of two clients, and the skills. The skills
+moved there from `skills/` at the root, because a client discovers a
+plugin's skills by convention in a directory under the plugin root, and
+the alternative was a second copy. One directory: `pyproject.toml`
+force-includes it into the wheel and `runtime.SKILLS_DIR` prefers the
+checkout. `tests/test_plugin_bundle.py` holds the three manifests to
+each other and to what `commonwealth configure` writes.
+
+`.gitignore` excluded `.agents/` as local tool state, which would have
+dropped the Codex marketplace manifest. Git cannot re-include a file
+under an excluded directory, so the exception opens the directories one
+level at a time.
+
+**Three skills (#54).** `coverage-check` runs entirely against the
+registry, so it costs no government request and answers while every
+upstream is down; it is the two-kinds-of-empty rule written as a
+workflow. `code-topic-walk` is #54's `code-section-check` widened from
+reading a citation to reaching one, because reading a citation is a
+single call and adds nothing a model cannot already do — the walk that
+earns a skill is the descent through the Code's contents, and the
+refusal when the descent does not arrive. `federal-site-screen` is the
+first skill spanning two servers, pairing the parcel walk with nepa-mcp's
+FEMA, EPA and USACE screens; its whole difficulty is keeping the two sets
+of citations apart, which its output contract does by reporting halves.
+
+Twelve eval tasks, four per skill. Each skill's starter prompt lives in
+its own frontmatter now, so the site's card and the skill cannot offer
+different prompts.
+
+**Still open.** The four remaining cross-server candidates in #54 (Census,
+LegiScan, CourtListener, GitHub) wait on the review design/skills.md § 4
+asks for. Publishing still waits on the maintainer (#40).
+
 ## 2026-09-08 — a wheel that works anywhere, and a way into the Code
 
 **The wheel carried no data.** `runtime.PROJECT_ROOT` resolved two
