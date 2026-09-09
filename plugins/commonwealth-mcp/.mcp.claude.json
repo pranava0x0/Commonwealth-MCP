@@ -1,0 +1,9 @@
+{
+  "mcpServers": {
+    "commonwealth": {
+      "command": "sh",
+      "args": ["${CLAUDE_PLUGIN_ROOT}/run-server.sh",
+               "serve", "--profile", "all"]
+    }
+  }
+}

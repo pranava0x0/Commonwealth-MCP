@@ -9,6 +9,15 @@
   "homepage": "https://pranava0x0.github.io/Commonwealth-MCP/",
   "repository": "https://github.com/pranava0x0/Commonwealth-MCP",
   "license": "Apache-2.0",
-  "keywords": ["virginia", "civic-tech", "gis", "open-data", "public-data",
-               "parcels", "zoning", "code-of-virginia"]
+  "mcpServers": "./.mcp.claude.json",
+  "keywords": [
+    "virginia",
+    "civic-tech",
+    "gis",
+    "open-data",
+    "public-data",
+    "parcels",
+    "zoning",
+    "code-of-virginia"
+  ]
 }

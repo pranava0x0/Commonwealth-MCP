@@ -16,6 +16,7 @@ SKILLS = PLUGIN / "skills"
 CLAUDE_MANIFEST = PLUGIN / ".claude-plugin" / "plugin.json"
 CODEX_MANIFEST = PLUGIN / ".codex-plugin" / "plugin.json"
 MCP_JSON = PLUGIN / ".mcp.json"
+CLAUDE_MCP_JSON = PLUGIN / ".mcp.claude.json"
 CLAUDE_MARKET = ROOT / ".claude-plugin" / "marketplace.json"
 CODEX_MARKET = ROOT / ".agents" / "plugins" / "marketplace.json"
 
@@ -173,35 +174,103 @@ def test_the_codex_prompts_are_the_ones_the_quick_start_shows():
         "drifted; regenerate the site and copy them across")
 
 
-def test_server_entry_profile_covers_all_bundled_skills():
-    """The profile configured in .mcp.json must expose the tools that
-    the bundled workflow skills require.
+# Which tool answers a capability. Declared, because nothing in the code
+# states it: a ToolSpec carries a toolset, not a capability, and the
+# registry maps capabilities to *sources*. The completeness assert below
+# is what keeps this from going stale — a new capability in the vocabulary
+# fails the test until it is named here.
+CAPABILITY_TOOLS = {
+    "address.lookup": "geo.find_address",
+    "boundary.lookup": "geo.find_boundaries",
+    "building.lookup": "geo.find_buildings",
+    "code_section.lookup": "civic.get_code_section",
+    "code_structure.browse": "civic.browse_code",
+    "environmental_site.lookup": "geo.find_environmental_sites",
+    "geocode.address": "geo.resolve_location",
+    "landmark.lookup": "geo.find_landmarks",
+    "parcel.lookup": "geo.find_parcel",
+    "road.lookup": "geo.find_roads",
+    "zoning.lookup": "geo.find_zoning",
+}
 
-    Issue #55 / Codex review: if .mcp.json uses 'default', coverage-check
-    and code-topic-walk fail because registry search/status and civic browse
-    are not exposed.
+
+def _bundle_profile(path: Path) -> str:
+    args = _load(path)["mcpServers"]["commonwealth"]["args"]
+    return args[args.index("--profile") + 1]
+
+
+def test_the_capability_map_names_every_capability_in_the_vocabulary():
+    """The map above is hand-written, so it needs a floor under it."""
+    import yaml
+
+    vocab = yaml.safe_load(
+        (ROOT / "sources" / "capabilities.yaml").read_text())
+    declared = {c["id"] for c in vocab["capabilities"]}
+    assert declared == set(CAPABILITY_TOOLS), (
+        "CAPABILITY_TOOLS and sources/capabilities.yaml disagree: "
+        f"missing {sorted(declared - set(CAPABILITY_TOOLS))}, "
+        f"extra {sorted(set(CAPABILITY_TOOLS) - declared)}")
+
+
+@pytest.mark.parametrize("path", [MCP_JSON, CLAUDE_MCP_JSON])
+def test_the_profile_exposes_every_tool_the_bundled_skills_walk(path):
+    """Every bundled skill must find the tools its walk calls.
+
+    `default` routes nine tools and the bundle carries six skills; three of
+    them walk tools that profile leaves out, so an install got a skill and
+    no way to finish it. Optional capabilities count: `site-context-screen`
+    declares roads and landmarks optional because a fork may not register
+    them, not because this bundle should withhold the tools.
     """
-    from commonwealth.servers.build import registries
-    from commonwealth.core.toolreg import expand_profile, PROFILES
+    import yaml
 
-    entry = _load(MCP_JSON)["mcpServers"]["commonwealth"]
-    args = entry["args"]
-    profile = args[args.index("--profile") + 1]
-    assert profile in PROFILES, f"unknown profile {profile!r} in .mcp.json"
+    from commonwealth.core.toolreg import PROFILES, expand_profile
+    from commonwealth.servers.build import registries
+
+    profile = _bundle_profile(path)
+    assert profile in PROFILES, (
+        f"unknown profile {profile!r} in {path.relative_to(ROOT)}")
     exposed = {t.name for t in expand_profile(profile, registries())}
 
-    mandatory_tools = {
-        "civic.browse_code",
-        "civic.get_code_section",
-        "registry.resolve_jurisdiction",
-        "registry.search_sources",
-        "registry.describe_source",
-        "registry.source_status",
-    }
-    missing = mandatory_tools - exposed
-    assert not missing, (
-        f"profile {profile!r} configured in .mcp.json is missing tools "
-        f"required by bundled skills: {sorted(missing)}")
+    for skill in sorted(SKILLS.glob("*/SKILL.md")):
+        front = yaml.safe_load(skill.read_text().split("---")[1])
+        meta = front.get("metadata", {}).get("commonwealth", {})
+        wanted = set(meta.get("required_capabilities") or []) | set(
+            meta.get("optional_capabilities") or [])
+        missing = {CAPABILITY_TOOLS[c] for c in wanted} - exposed
+        assert not missing, (
+            f"profile {profile!r} in {path.relative_to(ROOT)} does not "
+            f"expose {sorted(missing)}, which {skill.parent.name} walks")
+
+
+def test_both_server_entries_launch_the_same_profile():
+    """Two files because two clients resolve a bundled path differently;
+    one server, so they cannot offer different tools."""
+    assert _bundle_profile(MCP_JSON) == _bundle_profile(CLAUDE_MCP_JSON)
+
+
+def test_the_claude_manifest_points_at_the_server_entry_it_ships():
+    claude = _load(CLAUDE_MANIFEST)
+    assert (PLUGIN / claude["mcpServers"].removeprefix("./")) == CLAUDE_MCP_JSON
+    args = _load(CLAUDE_MCP_JSON)["mcpServers"]["commonwealth"]["args"]
+    launcher = PLUGIN / args[0].removeprefix("${CLAUDE_PLUGIN_ROOT}/")
+    assert launcher.exists() and launcher.stat().st_mode & 0o111, (
+        f"{args[0]} is what the manifest launches; {launcher.name} has to "
+        "exist in the bundle and be executable")
+
+
+def test_the_page_states_the_tool_count_the_bundle_actually_registers():
+    """The quick start said 15 while the manifest asked for a profile
+    carrying 13. Both numbers are derived now; this pins them together."""
+    from commonwealth.core.toolreg import expand_profile
+    from commonwealth.servers.build import registries
+
+    core = json.loads((ROOT / "docs" / "data" / "core.json").read_text())
+    plugin = core["plugin"]
+    assert plugin["profile"] == _bundle_profile(MCP_JSON)
+    assert plugin["tool_count"] == len(
+        expand_profile(plugin["profile"], registries()))
+    assert plugin["skill_count"] == len(list(SKILLS.glob("*/SKILL.md")))
 
 
 def test_the_site_names_the_marketplace_a_reader_would_type():

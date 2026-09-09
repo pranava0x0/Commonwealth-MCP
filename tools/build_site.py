@@ -870,14 +870,26 @@ def _virginia_law_adapter(mode: str):
 def plugin_bundle() -> dict:
     """What the quick start's install step says, read off the manifests.
 
-    The marketplace name, the plugin name and the skill count are three
-    numbers a page can state wrongly, and the reader finds out by typing a
-    command that fails. Read from the files a client would read.
+    The marketplace name, the plugin name, the skill count and the tool
+    count are four numbers a page can state wrongly, and the reader finds
+    out by typing a command that fails. Read from the files a client would
+    read.
+
+    The tool count is the profile the manifest launches, expanded, not the
+    number of tools that exist. The page said 15 while the manifest asked
+    for a profile carrying 13, which is the drift this closes.
     """
+    from commonwealth.core.toolreg import expand_profile
+    from commonwealth.servers.build import registries
+
     marketplace = json.loads(
         (ROOT / ".claude-plugin" / "marketplace.json").read_text())
     manifest = json.loads(
         (PLUGIN_DIR / ".claude-plugin" / "plugin.json").read_text())
+    server = json.loads(
+        (PLUGIN_DIR / manifest["mcpServers"].removeprefix("./")).read_text())
+    args = server["mcpServers"]["commonwealth"]["args"]
+    profile = args[args.index("--profile") + 1]
     return {
         "name": manifest["name"],
         "marketplace_name": marketplace["name"],
@@ -886,6 +898,8 @@ def plugin_bundle() -> dict:
         "marketplace": REPO_URL.removeprefix("https://github.com/"),
         "path": str(PLUGIN_DIR.relative_to(ROOT)),
         "skill_count": len(list(SKILLS_DIR.glob("*/SKILL.md"))),
+        "profile": profile,
+        "tool_count": len(expand_profile(profile, registries())),
     }
 
 

@@ -1220,10 +1220,12 @@
   "marketplace_name": "commonwealth-mcp",
   "marketplace": "pranava0x0/Commonwealth-MCP",
   "path": "plugins/commonwealth-mcp",
-  "skill_count": 6
+  "skill_count": 6,
+  "profile": "all",
+  "tool_count": 15
  },
  "demo_meta": {
-  "generated_at": "2026-09-09T01:08:51Z",
+  "generated_at": "2026-09-09T14:49:33Z",
   "mode": "fixtures",
   "call_count": 39,
   "fixture_recorded_at": "2026-09-02T05:29:35Z"

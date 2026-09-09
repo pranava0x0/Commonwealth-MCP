@@ -302,7 +302,9 @@ function renderPluginInstall(core){
   box.replaceChildren(withCopyButton(el("pre","",
     `/plugin marketplace add ${m.marketplace}\n/plugin install ${m.name}@${m.marketplace_name}`)));
   const note = el("p","meta");
-  note.append(`Registers ${core.counts.tools} tools and installs ` +
+  // The profile the manifest launches, not every tool that exists: those
+  // were the same number until a profile change made them differ.
+  note.append(`Registers ${m.tool_count} tools and installs ` +
     `${m.skill_count} ${plural(m.skill_count,"skill")}. `);
   note.append(repoLink(m.path + "/", "See what it contains"));
   note.append(".");
