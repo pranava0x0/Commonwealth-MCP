@@ -1,0 +1,22 @@
+# Vienna publishes its own zoning layer and sits inside Fairfax County,
+# which publishes one too. Both are registered and both answer, so the
+# coverage answer has to name whose source is whose rather than
+# reporting a single "covered".
+id: skill-cc-inherited-coverage
+tier: 3
+skill: coverage-check
+question: "What zoning coverage is there for the Town of Vienna?"
+toolset: discovery
+fixtures: [va-vienna-town-zoning, va-fairfax-parcels-zoning]
+expected:
+  jurisdiction: va:vienna-town
+  capability: zoning.lookup
+  answerable: true
+  sources_returned: 2
+  must_say:
+    - "Vienna"
+    - "Fairfax County"
+score:
+  - kind: coverage_honesty
+  - kind: provenance_present
+traps: []

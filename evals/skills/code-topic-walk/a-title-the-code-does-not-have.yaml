@@ -1,0 +1,20 @@
+# The publisher answers an unknown title and an empty one the same way, so
+# the answer has to say which question came back empty rather than
+# choosing the reading that suits it.
+id: skill-ctw-unknown-title
+tier: 3
+skill: code-topic-walk
+question: "What is in Title 99.9 of the Code of Virginia?"
+toolset: discovery
+fixtures: [va-code-of-virginia]
+expected:
+  title: "99.9"
+  found: false
+  must_say:
+    - "99.9"
+  must_not_say:
+    - "has no chapters"
+score:
+  - kind: coverage_honesty
+  - kind: restraint
+traps: [registry_gap]

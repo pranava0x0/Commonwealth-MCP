@@ -1,0 +1,22 @@
+{
+  "name": "commonwealth-mcp",
+  "description": "Virginia state and local public data over MCP, with a provenance envelope on every answer.",
+  "owner": {
+    "name": "pranava0x0",
+    "url": "https://github.com/pranava0x0"
+  },
+  "plugins": [
+    {
+      "name": "commonwealth-mcp",
+      "source": {
+        "source": "local",
+        "path": "./plugins/commonwealth-mcp"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Developer Tools"
+    }
+  ]
+}

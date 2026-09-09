@@ -1,0 +1,21 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "commonwealth-mcp",
+  "description": "Virginia state and local public data over MCP, with a provenance envelope on every answer.",
+  "owner": {
+    "name": "pranava0x0",
+    "url": "https://github.com/pranava0x0"
+  },
+  "plugins": [
+    {
+      "name": "commonwealth-mcp",
+      "description": "Virginia government records over MCP — parcels, zoning, addresses, boundaries, buildings, roads, public places, monitored environmental sites, and the Code of Virginia — plus the workflow skills that say which order to ask in and what an empty answer means.",
+      "author": {
+        "name": "pranava0x0"
+      },
+      "category": "data",
+      "source": "./plugins/commonwealth-mcp",
+      "homepage": "https://pranava0x0.github.io/Commonwealth-MCP/"
+    }
+  ]
+}

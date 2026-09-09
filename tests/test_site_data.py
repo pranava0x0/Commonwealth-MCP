@@ -9,16 +9,32 @@ import jsonschema
 import pytest
 
 ROOT = Path(__file__).resolve().parents[1]
-SITE = ROOT / "docs" / "data" / "site.json"
-DEMO = ROOT / "docs" / "data" / "audit-demo.json"
-RESOLVER = ROOT / "docs" / "data" / "resolver-demo.json"
+DOCS = ROOT / "docs"
+SKILLS_SRC = ROOT / "plugins" / "commonwealth-mcp" / "skills"
+# The catalog splits in two so a page loads only what it draws (issue #52):
+# `core` is embedded in all four pages, `coverage` is fetched by the two
+# views that show it. The `site` fixture puts them back together, which is
+# what build_catalog() returns and what every assertion here reads.
+CORE = DOCS / "data" / "core.json"
+COVERAGE = DOCS / "data" / "coverage.json"
+DEMO = DOCS / "data" / "audit-demo.json"
+RESOLVER = DOCS / "data" / "resolver-demo.json"
 REGEN = "regenerate: .venv/bin/python tools/build_site.py --fixtures"
+
+# Every page the build writes, and which section of the site each holds.
+PAGES = ("index.html", "tools.html", "sources.html", "examples.html")
 
 
 @pytest.fixture(scope="module")
-def site() -> dict:
-    assert SITE.exists(), f"missing {SITE}; {REGEN}"
-    return json.loads(SITE.read_text())
+def core() -> dict:
+    assert CORE.exists(), f"missing {CORE}; {REGEN}"
+    return json.loads(CORE.read_text())
+
+
+@pytest.fixture(scope="module")
+def site(core) -> dict:
+    assert COVERAGE.exists(), f"missing {COVERAGE}; {REGEN}"
+    return {**core, **json.loads(COVERAGE.read_text())}
 
 
 @pytest.fixture(scope="module")
@@ -43,7 +59,7 @@ def test_site_counts_match_live_registries(site):
            [t["name"] for t in current["tools"]], REGEN
     assert site["capabilities"] == current["capabilities"], REGEN
     assert site["capability_coverage"] == current["capability_coverage"], REGEN
-    print(f"site.json counts verified against live registries: "
+    print(f"catalog counts verified against live registries: "
           f"{site['counts']}")
 
 
@@ -130,24 +146,74 @@ def test_demo_shows_the_three_distinct_empties(demo):
     assert gap["envelope"]["coverage"]["registry"] == "none"
 
 
-def test_page_embeds_data_matching_the_committed_json(site, demo,
-                                                       resolver_demo):
-    """The page must work opened as a raw file (drag into a browser, email
-    attachment) — fetch() rejects file:// URLs, so the data is embedded
-    inline, not fetched. This locks the embedded copy against the committed
-    docs/data/*.json so the two can't silently diverge."""
-    html = (ROOT / "docs" / "index.html").read_text()
-    assert "fetch(" not in html, \
-        "the page must not fetch its data — embed it so file:// works"
-    for block_id, expected in [("data-site", site), ("data-audit-demo", demo),
-                               ("data-resolver-demo", resolver_demo)]:
+def test_every_page_embeds_the_core_block_and_fetches_the_rest(core):
+    """The four pages carry one small block inline and name the files they
+    fetch. Inlining all of it was 1.25 MB in one request (issue #52); the
+    trade is that a page opened straight off disk shows a note instead of
+    the trail, and `python -m http.server -d docs` is the documented fix."""
+    fetched = {"coverage", "audit-demo", "resolver-demo"}
+    for page in PAGES:
+        html = (DOCS / page).read_text()
         m = re.search(
-            rf'<script type="application/json" id="{block_id}">(.*?)</script>',
+            r'<script type="application/json" id="data-core">(.*?)</script>',
             html, re.DOTALL)
-        assert m, f"missing embedded data block #{block_id}"
-        assert json.loads(m.group(1)) == expected, (
-            f"embedded #{block_id} does not match docs/data/ — {REGEN}")
-    assert "hand-typed" not in html  # the page renders, it never restates
+        assert m, f"{page}: missing embedded data block #data-core"
+        assert json.loads(m.group(1)) == core, (
+            f"{page}: embedded #data-core does not match docs/data/ — {REGEN}")
+        assert "hand-typed" not in html  # the page renders, it never restates
+        for key in ("jurisdictions", "capability_coverage"):
+            assert key not in core, (
+                f"{key} belongs in coverage.json; embedding it puts "
+                "88% of the catalog's bytes back into every page")
+    js = (DOCS / "assets" / "site.js").read_text()
+    for name in fetched:
+        assert f'"{name}"' in js, (
+            f"nothing on the site loads data/{name}.json, so the committed "
+            "file is dead weight")
+    for name in fetched:
+        assert (DOCS / "data" / f"{name}.json").exists(), \
+            f"the site fetches data/{name}.json and it is not committed"
+
+
+def test_the_four_pages_share_one_nav_and_one_footer():
+    """The nav and the footer are hand-written in four files rather than
+    rendered, so that a reader without JavaScript still has both. This is
+    the cost of that choice: a link added to one page and not the others
+    fails here instead of shipping as a page that quietly leads nowhere."""
+    def block(html, start, end):
+        return html[html.index(start):html.index(end) + len(end)]
+
+    navs, feet = set(), set()
+    for page in PAGES:
+        html = (DOCS / page).read_text()
+        # aria-current marks the page you are on; it is the one difference.
+        navs.add(block(html, '<nav class="toc">', "</nav>")
+                 .replace(' aria-current="page"', ""))
+        feet.add(block(html, "<footer>", "</footer>"))
+    assert len(navs) == 1, "the four pages do not share one nav"
+    assert len(feet) == 1, "the four pages do not share one footer"
+    for page in PAGES:
+        html = (DOCS / page).read_text()
+        assert html.count('aria-current="page"') == 1, (
+            f"{page}: exactly one nav link marks the current page")
+
+
+def test_the_page_that_holds_each_section_is_the_one_the_nav_points_at():
+    """Issue #46 moved four sections onto three pages. A stranger's
+    bookmark of `#tools` and llms.txt's link to it still have to land on
+    the tools, which is what MOVED_ANCHORS in site.js is for."""
+    js = (DOCS / "assets" / "site.js").read_text()
+    for anchor, target in (("tools", "tools.html"), ("sources", "sources.html"),
+                           ("examples", "examples.html"),
+                           ("try", "examples.html")):
+        assert f'{anchor}: "{target}' in js, (
+            f"#{anchor} used to name a section of the one-page site and "
+            f"nothing redirects it to {target}")
+    for page, marker in (("tools.html", 'id="tool-results"'),
+                         ("sources.html", 'id="sources-cards"'),
+                         ("examples.html", 'id="calls"')):
+        assert marker in (DOCS / page).read_text(), \
+            f"{page} does not hold the section the nav sends readers to"
 
 
 def test_demo_calls_that_hit_the_source_show_the_real_http_exchange(demo):
@@ -208,6 +274,7 @@ def test_coverage_and_warning_definitions_cover_every_enum_value(site):
 # --- typed numbers in reader-facing prose ---------------------------------
 
 READER_FACING = ("README.md", "docs/llms.txt", "docs/index.html",
+                 "docs/tools.html", "docs/sources.html", "docs/examples.html",
                  "src/commonwealth/domains/registry.py")
 
 
@@ -257,7 +324,7 @@ def test_every_shipped_skill_is_named_on_the_reader_facing_pages():
     from commonwealth.core.skills import load_skills
 
     text = (ROOT / "docs" / "llms.txt").read_text()
-    missing = [sk.name for sk in load_skills(ROOT / "skills")
+    missing = [sk.name for sk in load_skills(SKILLS_SRC)
                if sk.name not in text]
     assert missing == [], (
         f"docs/llms.txt does not mention {missing}; it is the summary an "
@@ -271,7 +338,7 @@ def test_the_site_does_not_call_a_shipped_skill_planned(site):
     disk now, and this asserts the two agree."""
     from commonwealth.core.skills import load_skills
 
-    on_disk = {sk.name for sk in load_skills(ROOT / "skills")}
+    on_disk = {sk.name for sk in load_skills(SKILLS_SRC)}
     listed = {sk["name"]: sk["status"] for sk in site["skills"]}
     for name in on_disk:
         assert listed.get(name) == "shipped", (
@@ -281,4 +348,4 @@ def test_the_site_does_not_call_a_shipped_skill_planned(site):
         if name not in on_disk:
             assert status != "shipped", (
                 f"the page calls {name} shipped and there is no "
-                f"skills/{name}/SKILL.md")
+                f"{SKILLS_SRC.relative_to(ROOT)}/{name}/SKILL.md")

@@ -1,0 +1,567 @@
+:root{
+  --paper:#fdfbf4; --ink:#23262b; --muted:#62666d; --line:#e6e0d2;
+  --accent:#a7233a;             /* cardinal red, primary accent */
+  --leaf:#3f7d4a;                /* dogwood leaf green, secondary accent */
+  --navy:#0b3d66;                /* structural navy, used sparingly */
+  --card:#ffffff;
+  --ok:#1b6b43; --ok-bg:#e2f1e8;
+  --warn:#8a5a00; --warn-bg:#f6ecd9;
+  --bad:#9c2b3a; --bad-bg:#f6e2e5;
+  --neutral-bg:#f2ede0;
+  --pop:#c68a1e;                /* dogwood-center gold, tertiary accent */
+  --pill-a:#a7233a; --pill-b:#6e1626; --pill-ink:#fff;
+  --sans:-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  --mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    --paper:#15171c; --ink:#e9e6e0; --muted:#9a9d97; --line:#33362f;
+    --accent:#e2828f; --leaf:#7fc98c; --navy:#6fa8dc; --card:#1e2126;
+    --ok:#6fc08a; --ok-bg:#1d2d22; --warn:#d9a94e; --warn-bg:#2e2718;
+    --bad:#e08b8f; --bad-bg:#332025; --neutral-bg:#23261f;
+    --pop:#e0a23a; --pill-a:#7a1420; --pill-b:#4a0d16;
+  }
+}
+*{box-sizing:border-box}
+/* One content column, shared by every band on the page: the disclaimer, the
+   nav, the hero, the sections, the footer. Everything lines up on the same
+   left and right edge at every width. --pad is the gutter and shrinks with
+   the viewport, so narrow screens do not waste 40px on margins.
+
+   Two widths, not one. The column was 820px because that is about as wide
+   as a line of prose can be and stay readable, which meant a grid of cards
+   got two columns on a 27-inch screen and the page ran to nine screens of
+   scrolling. The container is wide now and the PROSE is what carries the
+   820px limit (--read, applied to paragraphs and list text below), so
+   cards, tables and steppers use the width and sentences do not. */
+:root{--measure:1120px; --read:74ch; --pad:24px}
+/* overflow-x on body alone does not reach the viewport while html is
+   `visible`, so a clipped-but-wide descendant could still pan the page
+   sideways on a phone. `clip` on both stops that without creating a scroll
+   container the way `hidden` would. */
+html{-webkit-text-size-adjust:100%;overflow-x:clip}
+.skip-link{position:absolute;left:12px;top:-80px;z-index:30;background:var(--card);padding:12px}
+.skip-link:focus{top:8px}
+:focus-visible{outline:3px solid var(--navy);outline-offset:3px}
+body{margin:0;background:var(--paper);color:var(--ink);
+  font:16px/1.6 var(--sans);overflow-x:clip}
+.wrap,main,footer{max-width:var(--measure);margin:0 auto;
+  padding-left:var(--pad);padding-right:var(--pad)}
+a{color:var(--accent)}
+code,pre{font-family:var(--mono);font-size:.86em}
+pre{background:var(--card);border:1px solid var(--line);padding:12px;
+  overflow-x:auto;border-radius:4px}
+[hidden]{display:none}
+
+.disclaimer{background:var(--navy);color:#fff}
+.disclaimer-inner{max-width:var(--measure);margin:0 auto;
+  padding:6px var(--pad);display:flex;flex-wrap:nowrap;gap:12px;
+  align-items:center;justify-content:space-between}
+.disclaimer p{margin:0;font-size:.72rem;color:#cfe0f2;min-width:0;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.dis-short{display:none}
+.disclaimer a{color:#fff;font-size:.72rem;white-space:nowrap;
+  flex-shrink:0;font-family:var(--mono)}
+
+.toc{position:sticky;top:0;z-index:10;background:var(--card);
+  border-bottom:1px solid var(--line)}
+.toc-inner{max-width:var(--measure);margin:0 auto;display:flex;
+  align-items:center;gap:10px;padding:9px var(--pad);
+  justify-content:space-between}
+.toc-brand{display:flex;align-items:center;gap:8px;flex-shrink:0;
+  text-decoration:none;color:var(--ink);font-weight:800;font-size:.92rem}
+.brand-mark-sm{border-radius:50%;flex-shrink:0;object-fit:cover}
+.toc-links{display:flex;gap:2px;flex-wrap:wrap;justify-content:flex-end}
+.toc a.toc-link{font-size:.78rem;font-family:var(--mono);color:var(--ink);
+  text-decoration:none;padding:7px 10px;border-radius:4px;white-space:nowrap}
+.toc a.toc-link:hover{background:var(--neutral-bg)}
+
+.hero{background:var(--paper);text-align:center;
+  border-bottom:1px solid var(--line)}
+.hero-inner{max-width:var(--measure);margin:0 auto;
+  padding:40px var(--pad) 34px}
+.brand-mark-lg{margin:0 auto 14px;border-radius:50%;object-fit:cover;
+  box-shadow:0 1px 4px rgba(0,0,0,.18)}
+.masthead h1{margin:0;font-size:clamp(1.8rem,6vw,2.6rem);
+  letter-spacing:.01em;font-weight:800;color:var(--ink)}
+.masthead .tagline{margin:12px auto 0;color:var(--muted);max-width:56ch;
+  font-size:1.05rem;text-wrap:pretty}
+
+.cta-row{display:flex;flex-wrap:wrap;gap:10px;margin:22px 0 0;
+  justify-content:center}
+.cta{font-family:var(--sans);font-size:.88rem;font-weight:700;
+  padding:10px 16px;border-radius:6px;text-decoration:none;
+  display:inline-flex;align-items:center;gap:6px;flex:0 0 auto;
+  white-space:nowrap}
+.cta.primary{background:var(--accent);color:#fff}
+.cta.secondary{background:transparent;color:var(--accent);
+  border:1.5px solid var(--accent)}
+.cta:hover{filter:brightness(1.1)}
+
+.counts{display:flex;flex-wrap:wrap;gap:6px 8px;margin:24px auto 0;
+  padding:11px 18px;width:fit-content;max-width:100%;border-radius:18px;
+  align-items:center;justify-content:center;
+  background:linear-gradient(100deg,var(--pill-a),var(--pill-b))}
+.count-seg{cursor:help;color:var(--pill-ink);font-size:.82rem;
+  white-space:nowrap;flex:0 0 auto}
+.count-seg b{font-size:1rem;font-weight:800}
+.count-arrow{color:#f3d9de;opacity:.7;flex:0 0 auto;font-size:.82rem}
+
+#counts-note{color:var(--muted);font-size:.9rem;margin:20px 0}
+
+section{margin:34px 0;scroll-margin-top:52px}
+.section-head{display:flex;justify-content:space-between;align-items:center;
+  gap:10px;border-bottom:2px solid var(--line);padding-bottom:6px}
+h2{font-size:1.2rem;font-weight:700;margin:0}
+/* Coverage rolled four former top-level sections into one. Its subheadings
+   need to read as a level below h2 without looking like card titles. */
+section > h3{font-size:.98rem;font-weight:700;margin:26px 0 2px;
+  padding-top:14px;border-top:1px solid var(--line);color:var(--ink)}
+section > h3:first-of-type{border-top:0;padding-top:0;margin-top:18px}
+.lede{margin:10px 0 14px;text-wrap:pretty}
+
+.call{background:var(--card);border:1px solid var(--line);border-radius:6px;
+  margin:8px 0;padding:10px 14px;scroll-margin-top:60px}
+/* Collapsed, a call is one scannable row. The marker is drawn by hand so it
+   sits before the index number in both themes and on Safari. */
+.call > summary{cursor:pointer;list-style:none;margin:-10px -14px;
+  padding:10px 14px;border-radius:6px}
+.call > summary::-webkit-details-marker{display:none}
+.call > summary::before{content:"▸";color:var(--accent);font-size:.8rem;
+  flex:0 0 auto}
+.call[open] > summary::before{content:"▾"}
+.call[open] > summary{margin-bottom:0}
+.call > summary:hover{background:var(--neutral-bg)}
+.call-head{display:flex;flex-wrap:wrap;gap:8px;align-items:baseline}
+.call-head .tool{font-family:var(--mono);font-weight:700;font-size:.95rem}
+.call-head .idx{font-family:var(--mono);color:var(--muted);font-size:.8rem}
+.call-head .ms{margin-left:auto;font-family:var(--mono);
+  color:var(--muted);font-size:.8rem}
+.call-head .chip{flex:0 0 auto}
+.call .note{margin:4px 0 8px;color:var(--muted);font-size:.92rem}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{font-family:var(--mono);font-size:.7rem;text-transform:uppercase;
+  letter-spacing:.06em;border:1px solid var(--line);border-radius:3px;
+  padding:2px 7px;background:var(--neutral-bg)}
+.chip.ok{background:var(--ok-bg);color:var(--ok);border-color:transparent}
+.chip.warn{background:var(--warn-bg);color:var(--warn);border-color:transparent}
+.chip.bad{background:var(--bad-bg);color:var(--bad);border-color:transparent}
+.srcline{font-family:var(--mono);font-size:.78rem;color:var(--muted);
+  margin-top:8px;overflow-wrap:anywhere}
+/* Call cards carry service URLs and layer paths with no spaces in them. */
+.call .note,.call-head,.chip,.decoder-item{overflow-wrap:anywhere}
+.line-table{display:block;overflow-x:auto;max-width:100%}
+
+/* Question-and-answer pairs in "What you can ask". The question carries the
+   weight; the answer is the explanation under it. */
+.qa{margin:14px 0}
+.qa .q{margin:0;font-weight:700;font-size:1rem}
+.qa .a{margin:3px 0 0;color:var(--muted)}
+.cap-q{font-weight:600;margin-bottom:3px}
+.cap-id{font-size:.76rem;color:var(--muted)}
+
+/* Collapsible reference blocks. The <h3> stays inside <summary> so the
+   heading structure survives for screen readers and the outline. */
+.fold{border-top:1px solid var(--line);margin:0}
+.fold > summary{cursor:pointer;list-style:none;padding:12px 0;
+  display:flex;align-items:center;gap:8px}
+.fold > summary::-webkit-details-marker{display:none}
+.fold > summary::before{content:"▸";color:var(--accent);font-size:.8rem}
+.fold[open] > summary::before{content:"▾"}
+.fold > summary h3{display:inline;margin:0;font-size:.98rem;border:0;
+  padding:0}
+.fold > summary:hover h3{color:var(--accent)}
+.fold > :last-child{margin-bottom:16px}
+.call details{margin-top:10px}
+.call summary{cursor:pointer;font-family:var(--mono);font-size:.78rem;
+  color:var(--accent)}
+.call pre{max-height:340px;overflow:auto;margin:8px 0 0}
+
+table{border-collapse:collapse;width:100%;font-size:.92rem}
+/* Wide content scrolls inside its own box. min-width:0 is the part that is
+   easy to miss: a flex or grid child defaults to min-content width, which
+   lets a wide table push the whole page sideways no matter what overflow
+   says. */
+.tablewrap{overflow-x:auto;max-width:100%;min-width:0}
+pre,.console-cmd{max-width:100%;min-width:0}
+th,td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--line);
+  vertical-align:top}
+th{font-family:var(--mono);font-size:.7rem;text-transform:uppercase;
+  letter-spacing:.1em;color:var(--muted)}
+td code{white-space:nowrap}
+
+.card{background:var(--card);border:1px solid var(--line);border-radius:6px;
+  padding:14px 16px;margin:12px 0}
+.card h3{margin:0 0 4px;font-size:1.02rem}
+.meta{font-family:var(--mono);font-size:.78rem;color:var(--muted)}
+ul.plain{padding-left:18px;margin:8px 0}
+.status-note{background:var(--warn-bg);color:var(--warn);border-radius:4px;
+  padding:2px 8px;font-family:var(--mono);font-size:.72rem;
+  text-transform:uppercase;letter-spacing:.06em}
+footer{border-top:1px solid var(--line);margin-top:40px;padding:16px 20px 40px;
+  color:var(--muted);font-size:.85rem}
+.doc-nav{display:flex;flex-wrap:wrap;gap:6px 18px;margin:0 0 14px}
+.doc-nav a{font-family:var(--sans);font-size:.85rem;font-weight:600}
+footer #foot{margin:0}
+#loaderr{color:var(--bad)}
+
+/* --- tool explorer ---------------------------------------------------- */
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;
+  overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+.filterbar{display:flex;flex-wrap:wrap;align-items:center;gap:10px;
+  margin:0 0 14px}
+#tool-search{font:15px/1.4 var(--mono);flex:1 1 260px;min-width:0;
+  padding:9px 12px;background:var(--card);color:var(--ink);
+  border:1px solid var(--line);border-radius:4px}
+#tool-search:focus{outline:2px solid var(--accent);outline-offset:1px}
+#tool-count{margin:0;white-space:nowrap}
+.chip-btn[aria-pressed="true"]{background:var(--accent);color:#fff;
+  border-color:transparent}
+/* min() so a narrow phone gets one full-width column rather than a
+   300px card the viewport cannot hold. */
+.tool-grid,.card-grid{display:grid;gap:12px;
+  grid-template-columns:repeat(auto-fill,minmax(min(300px,100%),1fr))}
+.card-grid{grid-template-columns:repeat(auto-fill,minmax(min(340px,100%),1fr))}
+.tool-grid .card,.card-grid .card{margin:0}
+#source-search{font:15px/1.4 var(--mono);flex:1 1 260px;min-width:0;
+  padding:9px 12px;background:var(--card);color:var(--ink);
+  border:1px solid var(--line);border-radius:4px}
+#source-search:focus{outline:2px solid var(--accent);outline-offset:1px}
+#source-count{margin:0;white-space:nowrap}
+.tool-head{display:flex;flex-wrap:wrap;align-items:center;gap:6px;
+  margin:0 0 6px}
+.tool-name{font-size:.95rem;font-weight:700;color:var(--accent);
+  overflow-wrap:anywhere}
+.tool-card p{margin:0 0 8px;font-size:.92rem}
+.tool-params{margin:0}
+.tool-params code.req{font-weight:700;color:var(--ink)}
+.skill-card p{margin:0 0 8px;font-size:.92rem}
+.skill-card .meta{margin:0 0 4px}
+.status-note.shipped{background:var(--ok-bg);color:var(--ok)}
+ol.steps-mini{margin:0 0 10px;padding-left:20px;font-size:.88rem;
+  color:var(--muted)}
+ol.steps-mini li{margin:2px 0}
+
+/* --- first-run steps -------------------------------------------------- */
+ol.steps{list-style:none;counter-reset:step;padding:0;margin:18px 0 0}
+.step{counter-increment:step;position:relative;padding:0 0 4px 44px;
+  margin:0 0 26px}
+.step::before{content:counter(step);position:absolute;left:0;top:2px;
+  width:28px;height:28px;border-radius:50%;background:var(--accent);
+  color:#fff;font:700 .85rem/28px var(--mono);text-align:center}
+.step h3{margin:2px 0 6px;font-size:1.02rem}
+.step > :last-child{margin-bottom:0}
+.copywrap{position:relative}
+.copywrap pre{margin:0}
+.copy-btn{position:absolute;top:8px;right:8px;font:inherit;font-size:.7rem;
+  font-family:var(--mono);text-transform:uppercase;letter-spacing:.06em;
+  cursor:pointer;padding:3px 9px;border-radius:4px;color:var(--muted);
+  background:var(--paper);border:1px solid var(--line)}
+.copy-btn:hover{color:var(--accent);border-color:var(--accent)}
+#client-snippet{margin:10px 0}
+@media (max-width:560px){
+  .step{padding-left:0}
+  .step::before{position:static;display:inline-block;margin:0 8px 4px 0;
+    vertical-align:middle}
+}
+
+.demo-app{background:var(--card);border:1px solid var(--line);
+  border-radius:6px;padding:16px 18px;margin:16px 0;scroll-margin-top:52px}
+.demo-app h3{margin:0 0 4px;font-size:1.05rem}
+.demo-note{color:var(--muted);font-size:.9rem;margin:0 0 12px}
+.demo-app input[type=text]{font:15px/1.4 var(--mono);width:100%;
+  max-width:420px;padding:8px 10px;background:var(--paper);color:var(--ink);
+  border:1px solid var(--line);border-radius:4px}
+.demo-app input[type=text]:focus{outline:2px solid var(--accent);
+  outline-offset:1px}
+.chip-btn{font:inherit;cursor:pointer}
+.resolve-out{margin-top:12px;min-height:1px}
+.resolve-hit{background:var(--ok-bg);color:var(--ok);border-radius:4px;
+  padding:8px 12px;font-size:.92rem}
+.resolve-amb{background:var(--warn-bg);color:var(--warn);border-radius:4px;
+  padding:8px 12px;font-size:.92rem}
+.resolve-amb .cand{display:block;margin-top:4px;color:var(--ink)}
+.resolve-none{color:var(--muted);font-size:.88rem}
+.tabs{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px}
+.tab{font-family:var(--mono);font-size:.76rem;border:1px solid var(--line);
+  border-radius:4px;padding:5px 9px;background:var(--neutral-bg);
+  color:var(--ink);cursor:pointer;text-align:left}
+.tab.active{background:var(--accent);color:var(--card);border-color:var(--accent)}
+.console-cmd{font-family:var(--mono);font-size:.82rem;background:var(--neutral-bg);
+  border-radius:4px;padding:8px 10px;overflow-x:auto;white-space:pre-wrap}
+.console-cmd .prompt{color:var(--accent);margin-right:6px}
+.run-btn{font-family:var(--mono);font-size:.78rem;margin:10px 0;
+  padding:6px 12px;border:1px solid var(--accent);border-radius:4px;
+  background:transparent;color:var(--accent);cursor:pointer}
+.run-btn:disabled{opacity:.5;cursor:default}
+.decoder-block{margin:10px 0;border:1px solid var(--line);border-radius:4px;
+  padding:2px 12px}
+.decoder-block summary{cursor:pointer;font-weight:700;font-size:.92rem;
+  padding:10px 0;list-style:none}
+.decoder-block summary::-webkit-details-marker{display:none}
+.decoder-block summary::before{content:"▸ ";color:var(--accent)}
+.decoder-block[open] summary::before{content:"▾ "}
+.decoder-block[open] summary{border-bottom:1px solid var(--line)}
+.decoder-grid{display:grid;gap:10px;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));
+  margin:10px 0}
+.decoder-item{border:1px solid var(--line);border-radius:4px;padding:8px 10px}
+.decoder-item .dt{font-family:var(--mono);font-size:.78rem;font-weight:700}
+.decoder-item .dv{font-family:var(--mono);font-size:.72rem;color:var(--accent);
+  margin:3px 0}
+.decoder-item p{margin:2px 0 0;font-size:.84rem;color:var(--muted)}
+.decoder-item .seen{font-size:.7rem;color:var(--muted);margin-top:4px}
+.line-table{width:100%;font-size:.9rem;border-collapse:collapse}
+.line-table td{padding:4px 8px 4px 0;vertical-align:top}
+.line-table td:first-child{white-space:nowrap;padding-right:14px}
+
+/* ------------------------------------------------------------------------
+   Responsive. The page had none of this before: one 960px column and
+   nowrap flex rows, so on a phone the disclaimer and the nav both ran off
+   the side and the counts pill pushed the body wider than the screen.
+
+   Two breakpoints, both chosen from content rather than device names:
+   820px is where the content column stops fitting with full gutters, and
+   560px is where two-up rows (nav brand + links, section head + arrows)
+   stop having room to sit side by side.
+   ------------------------------------------------------------------------ */
+/* The long disclaimer wording stops fitting alongside "View source" here.
+   The nav still fits: brand plus five links measure 542px, so the wordmark
+   survives down to the 560px breakpoint below. */
+@media (max-width: 900px){
+  .dis-long{display:none}
+  .dis-short{display:inline}
+  .toc a.toc-link{padding:7px 8px}
+  .toc-inner{gap:8px}
+}
+
+@media (max-width: 820px){
+  :root{--pad:18px}
+  .hero-inner{padding:32px var(--pad) 26px}
+  .masthead h1{font-size:clamp(1.6rem,7vw,2.2rem)}
+  .decoder-grid{grid-template-columns:repeat(auto-fill,minmax(210px,1fr))}
+}
+
+@media (max-width: 560px){
+  :root{--pad:14px}
+  body{font-size:15px}
+
+  /* The nav stacks: brand on its own line, links wrapping under it. They
+     stay tappable instead of being pushed off-screen. */
+  .toc-links{justify-content:flex-start}
+  .toc a.toc-link{padding:8px 9px;font-size:.76rem}
+  /* Below this the wordmark is what the links need back. The seal stays. */
+  .toc-brand span{display:none}
+  .toc-brand{font-size:.88rem}
+
+  /* One swipeable row rather than three stacked ones. Sticking it would
+     still eat screen for the whole visit, so it scrolls away and anchors
+     need no extra clearance. */
+  .toc{position:static}
+  .toc-inner{gap:6px}
+  .toc-links{flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch;
+    scrollbar-width:none;
+    mask-image:linear-gradient(to right,#000 calc(100% - 28px),transparent);
+    -webkit-mask-image:linear-gradient(to right,#000 calc(100% - 28px),transparent)}
+  .toc-links::-webkit-scrollbar{display:none}
+  section,.call,.demo-app{scroll-margin-top:12px}
+
+  .disclaimer p,.disclaimer a{font-size:.62rem}
+
+  .brand-mark-lg{width:104px;height:104px}
+  .cta{flex:1 1 0;min-width:0;justify-content:center;padding:10px 12px;
+    font-size:.84rem}
+  .cta-row{flex-wrap:nowrap;gap:8px}
+  .counts{border-radius:14px;padding:10px 14px;font-size:.92em}
+  .count-arrow{display:none}
+
+  .section-head{flex-wrap:wrap}
+  h2{font-size:1.1rem}
+
+  /* Elapsed time is pinned right with margin-left:auto on wide screens,
+     where it would collide with the tool name on a narrow card. Drop the
+     pin and let it share a line with the outcome chip instead. */
+  .call-head{gap:6px 8px;align-items:center}
+  .call-head .ms{margin-left:0}
+  .call-head .tool{font-size:.82rem}
+  .call-head .chip{font-size:.62rem;padding:1px 6px}
+  .call{padding:11px 12px}
+  .call pre{max-height:260px;font-size:.8em}
+
+  .demo-app{padding:13px 14px}
+  .demo-app input[type=text]{max-width:none}
+
+  th,td{padding:7px 8px}
+
+  .decoder-grid{grid-template-columns:1fr}
+  pre{padding:10px;font-size:.78em}
+}
+
+/* Someone who has asked for less motion should not get the smooth-scroll
+   the anchor links trigger. */
+@media (prefers-reduced-motion: reduce){
+  html{scroll-behavior:auto}
+  *{transition:none!important}
+}
+
+
+/* ------------------------------------------------------------------------
+   Added when the one page became four (GitHub issue #46). Everything below
+   belongs to a shape that did not exist while the whole project fitted in
+   one scroll: a nav that marks which page you are on, rows that hold their
+   detail behind a fold, and lists that show a first batch.
+   ------------------------------------------------------------------------ */
+
+/* The nav's current page. Marked rather than removed, so the row of four
+   is the same four on every page and the reader can see where they are. */
+.toc a.toc-link[aria-current="page"]{background:var(--neutral-bg);
+  color:var(--accent);font-weight:700}
+
+/* The works-with strip under the hero buttons. */
+.works-with{display:flex;flex-wrap:wrap;gap:6px;align-items:center;
+  justify-content:center;margin:18px 0 0}
+.works-label{font-size:.78rem;color:var(--muted);margin-right:2px}
+
+/* Question cards. Six of these replaced six paragraphs of 60 to 90 words. */
+.ask-card{display:flex;flex-direction:column;gap:4px}
+.ask-card .q{margin:0;font-weight:700;font-size:.98rem}
+.ask-card .a{margin:0;color:var(--muted);font-size:.92rem;flex:1 1 auto}
+.ask-card .meta{margin:6px 0 0}
+
+/* The featured walk: four steps of the recorded trail, shown open. */
+.walk-step{background:var(--card);border:1px solid var(--line);
+  border-radius:6px;padding:12px 14px;margin:10px 0}
+.walk-step .idx{font-family:var(--mono);color:var(--muted);font-size:.8rem}
+.walk-step .note{margin:6px 0 4px;color:var(--muted);font-size:.92rem}
+.walk-step .meta{margin:0}
+
+/* One heading per package on the tools page, per walk on the trail. */
+.group-head{font-size:.82rem;font-family:var(--mono);text-transform:uppercase;
+  letter-spacing:.08em;color:var(--muted);margin:22px 0 8px;
+  border-bottom:1px solid var(--line);padding-bottom:4px}
+#calls .group-head{margin-top:30px}
+#calls .lede{margin:0 0 10px}
+
+/* "Show 6 more sources". A button, in the shape of the hero's second CTA. */
+.showmore{display:inline-flex;margin:6px 0 0;cursor:pointer;
+  font-family:var(--sans)}
+
+/* A tool row: name, one-sentence summary, profile chip; the full
+   model-facing description opens underneath. */
+.tool-card{padding:10px 14px}
+.tool-card > summary{cursor:pointer;list-style:none;margin:-10px -14px;
+  padding:10px 14px;border-radius:6px;display:flex;flex-wrap:wrap;
+  align-items:baseline;gap:6px}
+.tool-card > summary::-webkit-details-marker{display:none}
+.tool-card > summary::before{content:"▸";color:var(--accent);font-size:.8rem}
+.tool-card[open] > summary::before{content:"▾"}
+.tool-card > summary:hover{background:var(--neutral-bg)}
+.tool-summary{font-size:.88rem;color:var(--muted);flex:1 1 200px;
+  min-width:0}
+.tool-card .tool-params{margin:8px 0 0}
+.tool-full{margin:8px 0 0;font-size:.9rem}
+
+/* Source cards, with the limitation text behind its own fold. */
+.source-card .chips{margin:0 0 8px}
+.source-card p{margin:0 0 8px;font-size:.92rem}
+.source-card .fold.lim{margin:0 0 8px;border-top:1px solid var(--line);
+  border-bottom:1px solid var(--line)}
+.source-card .fold.lim > summary{padding:8px 0}
+.source-card .fold.lim ul{margin:0 0 10px;font-size:.88rem;
+  color:var(--muted)}
+
+/* A starter prompt, with the call that answered it under the copy box. */
+.prompt{margin:0 0 12px}
+.prompt pre{white-space:pre-wrap}
+.prompt .meta{margin:4px 0 0;display:block}
+.doctor-out{color:var(--muted)}
+
+/* Skills named but not written: one line each, under a fold. */
+ul.planned{margin:0 0 14px;font-size:.92rem;color:var(--muted)}
+ul.planned code{color:var(--ink)}
+.skill-card .copywrap{margin:0 0 8px}
+.skill-card pre{white-space:pre-wrap;font-size:.8em}
+
+@media (max-width: 560px){
+  .tool-card > summary{gap:4px}
+  .tool-summary{flex-basis:100%}
+}
+
+
+/* ------------------------------------------------------------------------
+   Less scrolling. The landing page was 6,537 px (9.1 screens) after the
+   four-page split, which is better than 29 screens and still more than a
+   reader should have to travel to find the install command. Three changes,
+   each a different way of not stacking things: constrain prose rather than
+   the container so grids widen, show one step of the quick start at a time,
+   and fold the reference block under the answer it supports.
+   ------------------------------------------------------------------------ */
+
+/* Prose keeps its measure inside a wide container. Anything that is a grid,
+   a table, a stepper or a code block is exempt and uses the full width. */
+main > section > p,
+main > section > .lede,
+main > section > ol:not(.steps),
+main > section > ul,
+.step > p,
+.walk-step > .note,
+#counts-note > p{max-width:var(--read)}
+
+.hero-inner{padding:30px var(--pad) 24px}
+.brand-mark-lg{width:96px;height:96px;margin-bottom:10px}
+.masthead .tagline{margin-top:10px}
+.cta-row{margin-top:16px}
+.counts{margin-top:18px}
+section{margin:28px 0}
+
+/* --- the quick start as a tabbed stepper ------------------------------- */
+/* Four steps stacked ran to 1,568 px, and a reader on step one scrolled
+   past three they had not reached yet. One panel at a time, with the step
+   you are on marked, is the same four steps in a fifth of the height. */
+.stepper{display:flex;flex-wrap:wrap;gap:8px;margin:16px 0 14px;
+  border-bottom:2px solid var(--line);padding-bottom:12px}
+.step-tab{display:flex;align-items:center;gap:8px;cursor:pointer;
+  font:inherit;font-size:.88rem;text-align:left;padding:8px 12px;
+  border:1px solid var(--line);border-radius:6px;background:var(--card);
+  color:var(--ink)}
+.step-tab .n{display:inline-flex;align-items:center;justify-content:center;
+  width:22px;height:22px;border-radius:50%;background:var(--neutral-bg);
+  color:var(--muted);font:700 .75rem/1 var(--mono);flex:0 0 auto}
+.step-tab .when{font-family:var(--mono);font-size:.66rem;
+  text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+.step-tab[aria-selected="true"]{border-color:var(--accent);
+  background:var(--neutral-bg)}
+.step-tab[aria-selected="true"] .n{background:var(--accent);color:#fff}
+.step-tab[aria-selected="true"] .label{font-weight:700;color:var(--accent)}
+.step-panel[hidden]{display:none}
+.step-panel{margin:0}
+.step-panel > :first-child{margin-top:0}
+.step-next{margin-top:14px}
+
+/* --- reference blocks that open rather than stack ---------------------- */
+/* The coverage table is 11 rows and 1,239 px. It answers "does this work
+   where I am", which is a question a reader has once, so it opens on
+   request under the one-line summary that answers it for most people. */
+.fold.wide > summary h3{font-size:1.05rem}
+#coverage .fold{border-top:0}
+#counts-note table{margin-top:4px}
+
+/* --- the featured walk, two up ---------------------------------------- */
+#featured-walk{display:grid;gap:10px;
+  grid-template-columns:repeat(auto-fit,minmax(min(320px,100%),1fr))}
+#featured-walk .walk-step{margin:0}
+
+/* --- starter prompts, side by side ------------------------------------ */
+#starter-prompts{display:grid;gap:12px;
+  grid-template-columns:repeat(auto-fit,minmax(min(300px,100%),1fr))}
+#starter-prompts .prompt{margin:0}
+
+/* Cards get narrower minimums now that the container is wide, so a 1120px
+   row holds three or four of them rather than two. */
+.card-grid{grid-template-columns:repeat(auto-fill,minmax(min(280px,100%),1fr))}
+#ask-cards{grid-template-columns:repeat(auto-fill,minmax(min(250px,100%),1fr))}
+
+@media (max-width: 700px){
+  .stepper{gap:6px}
+  .step-tab{flex:1 1 calc(50% - 3px);padding:7px 9px;font-size:.82rem}
+  .step-tab .when{display:none}
+}

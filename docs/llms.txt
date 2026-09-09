@@ -41,7 +41,7 @@ Fifteen tools, nine of them in the default set and thirteen in discovery.
 - The text of a Code of Virginia section, by citation, and the Code's
   own table of contents to walk to one you do not have.
 
-Three skills package those into workflows — the order to ask in, and what
+Six skills package those into workflows — the order to ask in, and what
 an empty answer means at each step:
 
 - `whose-government`: which government covers a place, from a name,
@@ -49,6 +49,18 @@ an empty answer means at each step:
 - `parcel-zoning-screen`: a parcel's zoning district and what the record
   does and does not establish.
 - `site-context-screen`: what is on and around one piece of ground.
+- `coverage-check`: whether a question is answerable for a place before
+  asking it, and which of the three empties applies when it is not.
+- `code-topic-walk`: reaching a Code of Virginia section by subject when
+  the reader has no citation, by walking the Code's own contents.
+- `federal-site-screen`: one point screened against Virginia's records and
+  the federal flood, wetland and cleanup-site layers on a partner server,
+  reported as two halves with their citations kept apart.
+
+They install with the server as a plugin bundle: add the marketplace
+`pranava0x0/Commonwealth-MCP` and install `commonwealth-mcp`. For a client
+with no plugin system, `commonwealth configure <client>` writes the server
+entry alone.
 
 An answer too large to return inline comes back summarised with a
 `commonwealth://` handle to everything that was retrieved, readable as an
@@ -100,6 +112,8 @@ only path that runs.
 
 ## Optional
 
-- [Demo site](https://pranava0x0.github.io/Commonwealth-MCP/): one recorded call per tool, with the full answer each returned
-- [Tool search](https://pranava0x0.github.io/Commonwealth-MCP/#tools): every tool with the arguments it takes, searchable by name, package, or description
+- [Site](https://pranava0x0.github.io/Commonwealth-MCP/): what it answers, the quick start, one recorded walk, and the coverage table
+- [Tool reference](https://pranava0x0.github.io/Commonwealth-MCP/tools.html): every tool with the arguments it takes, searchable by name, package, or description
+- [Source registry](https://pranava0x0.github.io/Commonwealth-MCP/sources.html): every registered government system, whose terms apply, and what each one does not cover
+- [Recorded lookups](https://pranava0x0.github.io/Commonwealth-MCP/examples.html): one call per tool with the full answer, grouped by what each walk demonstrates
 - [Run log](https://github.com/pranava0x0/Commonwealth-MCP/blob/main/docs/RUNLOG.md): what happened when

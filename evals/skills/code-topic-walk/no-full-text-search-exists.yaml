@@ -1,0 +1,20 @@
+# The refusal that keeps the walk honest. No public endpoint searches the
+# Code's text, so a question phrased as a search has to be answered by
+# walking or declined — never by recalling law and attaching a citation.
+id: skill-ctw-no-search
+tier: 3
+skill: code-topic-walk
+question: "Which sections of the Code of Virginia mention short-term rentals?"
+toolset: discovery
+fixtures: [va-code-of-virginia]
+expected:
+  answerable: false
+  reason: no_full_text_search
+  must_say:
+    - "no full-text search"
+  must_not_say:
+    - "the following sections mention"
+score:
+  - kind: restraint
+  - kind: coverage_honesty
+traps: []

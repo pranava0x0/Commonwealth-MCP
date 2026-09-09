@@ -49,7 +49,18 @@ def _data_root() -> Path:
 
 DATA_ROOT = _data_root()
 SOURCES_DIR = DATA_ROOT / "sources"
-SKILLS_DIR = DATA_ROOT / "skills"
+
+# Skills are the one directory whose checkout path is not its wheel path.
+# They live inside the plugin bundle that installs them alongside the
+# server (GitHub issue #53), because a client discovers a plugin's skills
+# by convention, in a `skills/` directory under the plugin root. The wheel
+# force-includes that same directory flat under `_data/`, so there is one
+# copy in the repo and one in the package, and never a third to go stale.
+# The checkout wins where there is one, for the reason `_data_root()`
+# gives: an editable install's bundled copy is frozen at install time.
+_CHECKOUT_SKILLS = PROJECT_ROOT / "plugins" / "commonwealth-mcp" / "skills"
+SKILLS_DIR = (_CHECKOUT_SKILLS if _CHECKOUT_SKILLS.is_dir()
+              else DATA_ROOT / "skills")
 
 # The self-describing entry for the project's own jurisdiction table, used as
 # provenance when a tool answers from project data rather than a government

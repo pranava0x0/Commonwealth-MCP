@@ -28,7 +28,7 @@ from commonwealth.runtime import PROJECT_ROOT, SOURCES_DIR
 from commonwealth.servers.build import registries
 from tests.conftest import ReplayFetcher, build_ctx, load_all_recordings
 
-SKILLS_DIR = PROJECT_ROOT / "skills"
+SKILLS_DIR = PROJECT_ROOT / "plugins" / "commonwealth-mcp" / "skills"
 TASKS_DIR = PROJECT_ROOT / "evals" / "skills"
 
 SKILL_NAMES = sorted(p.parent.name for p in SKILLS_DIR.glob("*/SKILL.md"))

@@ -1,0 +1,24 @@
+# Both halves answer and both come back empty. The wetland inventory is a
+# mapped product and the state's stations are a monitoring network;
+# neither absence is evidence about the ground. Passing means saying what
+# each layer's empty means and naming who determines it.
+id: skill-fss-empty-is-not-clean
+tier: 3
+skill: federal-site-screen
+question: "Are there wetlands or monitored contamination at 21641 Ridgetop Cir, Sterling, VA 20166?"
+toolset: discovery
+partner: nepa-mcp
+fixtures: [va-vgin-composite-locator, va-vgin-admin-boundaries, va-deq-water-quality-stations]
+expected:
+  environmental_sites:
+    coverage: {registry: covered, result: empty}
+  must_say:
+    - "delineation"
+    - "radius"
+  must_not_say:
+    - "no wetlands are present"
+    - "the site is clean"
+score:
+  - kind: coverage_honesty
+  - kind: restraint
+traps: []

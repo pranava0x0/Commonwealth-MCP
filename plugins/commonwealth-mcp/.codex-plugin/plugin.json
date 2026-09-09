@@ -1,0 +1,41 @@
+{
+  "name": "commonwealth-mcp",
+  "version": "0.1.0",
+  "description": "Virginia government records over MCP — parcels, zoning, addresses, boundaries, buildings, roads, public places, monitored environmental sites, and the Code of Virginia — with the government system and retrieval date on every answer.",
+  "author": {
+    "name": "pranava0x0"
+  },
+  "homepage": "https://pranava0x0.github.io/Commonwealth-MCP/",
+  "license": "Apache-2.0",
+  "skills": "./skills/",
+  "mcpServers": "./.mcp.json",
+  "interface": {
+    "displayName": "Commonwealth-MCP",
+    "shortDescription": "Look up Virginia parcels, zoning, and state law",
+    "longDescription": "Commonwealth-MCP connects Codex to Virginia's own government systems: parcels, zoning districts, address points, jurisdiction boundaries, buildings, roads, public places, DEQ monitoring stations, and the Code of Virginia. Every answer names the system it came from, the date it was retrieved, and what the source says it does not cover.",
+    "developerName": "pranava0x0",
+    "category": "Developer Tools",
+    "capabilities": [
+      "MCP",
+      "Parcels and zoning",
+      "Jurisdiction boundaries",
+      "Code of Virginia"
+    ],
+    "websiteURL": "https://pranava0x0.github.io/Commonwealth-MCP/",
+    "defaultPrompt": [
+      "Whose government covers 21641 Ridgetop Cir, Sterling, VA 20166? Then tell me the parcel and the zoning at that point.",
+      "How is parcel 0102 14  0231 in Fairfax County zoned, and what does the answer not establish?",
+      "What does § 15.2-2200 of the Code of Virginia say?"
+    ]
+  },
+  "keywords": [
+    "virginia",
+    "civic-tech",
+    "gis",
+    "open-data",
+    "public-data",
+    "parcels",
+    "zoning",
+    "code-of-virginia"
+  ]
+}

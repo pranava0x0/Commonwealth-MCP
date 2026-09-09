@@ -19,6 +19,9 @@ metadata:
     optional_capabilities:
       - geocode.address
       - boundary.lookup
+    example_prompt: >
+      How is parcel 0102 14  0231 in Fairfax County zoned, and what does
+      the answer not establish?
 ---
 
 # Parcel zoning screen
