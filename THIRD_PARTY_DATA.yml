@@ -273,6 +273,16 @@ sources:
   - tests/fixtures/sources/va-code-of-virginia/search-appliance-down.html
   - tests/fixtures/sources/va-code-of-virginia/section-1-500.html
   - tests/fixtures/sources/va-code-of-virginia/section-15.2-2200.html
+- id: va-lis-legislative-api
+  name: Virginia LIS Legislative API (bills, members, committees)
+  publisher: Division of Legislative Automated Systems (DLAS), Virginia General
+    Assembly
+  manifest: sources/state/virginia-lis-api.yaml
+  terms_url: https://lis.virginia.gov/developers
+  terms_reviewed_at: null
+  automation_status: manual_review_required
+  data_classification: null
+  recorded_fixtures: []
 - id: va-open-data-portal
   name: Virginia Open Data Portal (CKAN)
   publisher: Virginia Office of Data Governance and Analytics

@@ -1,0 +1,97 @@
+# Inventory only: the General Assembly's legislative API, which bills,
+# members and committees live behind (GitHub issue #11). Registered as a
+# row so the gap is written down rather than showing up as a
+# Commonwealth that publishes no legislation.
+#
+# Access verified live 2026-09-09. The service is key-gated and the key
+# comes from a registration form a human fills in; that is a step to
+# take, not something to automate around, so no adapter is built here.
+#
+# The verification is worth recording because the obvious probe gets it
+# wrong. lis.virginia.gov serves a React single-page app, and any path
+# the app routes client-side answers HTTP 200 with the app's own HTML
+# shell — including `Bill/api/getbilllistasync`, which looks exactly
+# like a public bills endpoint until the body is read and turns out to
+# say "You need to enable JavaScript to run this app." The real API
+# paths are the ones that answer 401 with `text/plain`:
+#
+#   Session/api/getsessionlistasync      -> 401 text/plain
+#   Member/api/getmemberlistasync        -> 401 text/plain
+#   Committee/api/getcommitteelistasync  -> 401 text/plain
+#   Bill/api/getbilllistasync            -> 200 text/html, SPA shell
+#
+# So a status code alone does not establish whether this source is
+# reachable, and neither does a 200.
+#
+# `declared_state: proposed` and `adapter.type: none` keep this out of
+# selection; the activation gate refuses both. It declares no
+# capabilities because only an active manifest may.
+id: va-lis-legislative-api
+name: Virginia LIS Legislative API (bills, members, committees)
+jurisdiction: va
+
+publisher:
+  agency: Division of Legislative Automated Systems (DLAS), Virginia General Assembly
+  authority_level: primary
+
+domains: [civic]
+
+capabilities: []
+
+adapter:
+  type: none
+
+access:
+  mode: api_key
+  automation_status: manual_review_required
+  terms_url: https://lis.virginia.gov/developers
+  terms_notes: >
+    Not reviewed, and deliberately so. The terms that matter are the ones
+    attached to the key, and they are presented at registration; reading
+    the public developer page and recording that as a terms review would
+    be recording the wrong document. The review belongs to whoever
+    registers. What is established as of 2026-09-09 is the access mode —
+    the endpoints require a bearer credential and answer 401 without one.
+
+freshness:
+  expected_cadence: unknown
+  cadence_source: >
+    Bill status moves on the General Assembly's own session calendar. No
+    SLA is published for how quickly an action reaches the API, and it
+    cannot be observed from here without a key.
+  ttl_hint_seconds: 3600
+
+coverage:
+  geography: va
+  temporal: current
+  known_limitations:
+    - >
+      No key, so nothing is read. Bills, members and committees are not
+      available from this project at all. A question about legislation
+      returns registry coverage `none` for want of a registered source,
+      which means this project has nowhere to look and never that the
+      General Assembly passed nothing.
+    - >
+      Registration is a human step. Obtaining the key is a form the
+      operator fills in, and it is not something to work around.
+
+authority_notes: >
+  Intended capabilities, when a key exists: legislation.search and
+  bill.lookup, serving civic.search_legislation and civic.get_bill. They
+  are recorded here rather than in `capabilities` because a capability id
+  is a routing promise this row cannot keep. This is a second civic
+  source alongside the Code of Virginia pages, not a replacement for
+  them: the Code site needs no key and answers a different question.
+  Note also that bill identity is versioned — introduced, engrossed,
+  enrolled — and a tool built on this must return which version it read,
+  because "the bill" is an answer to a question nobody asked.
+
+health:
+  probe: none
+  expect: {}
+
+lifecycle:
+  declared_state: proposed
+  added: "2026-09-09"
+  last_verified: "2026-09-09"
+  verified_by: pranava0x0

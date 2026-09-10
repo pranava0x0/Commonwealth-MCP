@@ -518,3 +518,42 @@ search, which is the same naming discipline that made the existing tool
 `get_code_section` and not `search_law`. The JSON API would also replace
 the HTML parsing behind that tool, which is the fragility #12 lists as
 its own caveat.
+
+---
+
+## 19. An SPA answers HTTP 200 for API paths it does not have
+
+- **Source:** `va-lis-legislative-api` (registered as inventory)
+- **Observed:** 2026-09-09, answering issue #11's access question
+- **Test:** none; there is no adapter to test, which is the finding
+
+The General Assembly's legislative API is key-gated, and establishing
+that took more than reading status codes.
+
+`lis.virginia.gov` serves a React single-page app. Any path the app
+routes on the client answers **HTTP 200 with the app's own HTML shell**,
+whose body says "You need to enable JavaScript to run this app." That
+includes paths shaped exactly like endpoints:
+
+| Path | Status | Content-Type | What it is |
+|---|---|---|---|
+| `Session/api/getsessionlistasync` | 401 | `text/plain` | the real API |
+| `Member/api/getmemberlistasync` | 401 | `text/plain` | the real API |
+| `Committee/api/getcommitteelistasync` | 401 | `text/plain` | the real API |
+| `Bill/api/getbilllistasync` | 200 | `text/html` | the SPA shell |
+| `LegislationDetails/api/getlegislationdetailsasync` | 200 | `text/html` | the SPA shell |
+
+A probe that checked status codes would report the bills endpoint as
+public and the members endpoint as gated, and conclude this source was
+half-open. It is not: the 401s are the API, and the 200s are a web page.
+
+Two things follow for this project. Registering the source means reading
+bodies, not codes — `HttpFetcher._decode_json` already refuses a
+non-JSON body as "bot challenge or outage page?", which is the same
+instinct and would have caught this. And the health-probe vocabulary
+should not grow a check that treats 200 as healthy for a source whose
+200 is an error page; § 18's `search_watch` matches on the publisher's
+own sentence for the same reason.
+
+The API needs a key, the key comes from a registration form a human
+fills in, and issue #11 stays open until someone has one.

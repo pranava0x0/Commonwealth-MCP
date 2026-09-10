@@ -5,9 +5,9 @@
   "servers": 1,
   "tools": 16,
   "packages": 3,
-  "sources": 26,
+  "sources": 27,
   "sources_active": 20,
-  "sources_proposed": 6,
+  "sources_proposed": 7,
   "capabilities": 12,
   "jurisdictions": 323,
   "trap_pairs": 5
@@ -518,7 +518,7 @@
    "declared_state": "active",
    "terms_url": "https://law.lis.virginia.gov/vacode/",
    "known_limitations": [
-    "No full-text search. The publisher's own search endpoint is public and keyless and its backend answered every query with \"The Search Appliance is down\" on 2026-09-08; its JSON API has no search operation among the twenty-three it serves. Reaching a section means knowing the citation or walking the table of contents to it.",
+    "No full-text search. The publisher's own search endpoint is public and keyless and its backend answered every query with \"The Search Appliance is down\" on 2026-09-08 and again on 2026-09-09; its JSON API has no search operation among the twenty-three it serves. Reaching a section means knowing the citation or walking the table of contents to it. The endpoint is declared as `search_url` and watched by the health probe (`search_watch`), so its recovery is noticed rather than waited on.",
     "Browsing returns the publisher's own table of contents and nothing about what a section says. A chapter's title is a heading, not a summary of the law under it.",
     "Section text is parsed from the site's HTML, not read from a structured API \u2014 a redesign of the markup would break parsing before it broke any published contract. The table of contents does come from the publisher's JSON, and is not exposed to that.",
     "No machine-readable last-edit date per section; retrieval time is known, the underlying text's amendment date is only what the section's own citation-history paragraph states in prose."
@@ -650,6 +650,23 @@
     "Parcel identifiers are Loudoun County's MCPI numbers, republished by the town; VGIN's statewide layer uses the same numbers for Loudoun.",
     "The parcel layer exposes an address, acreage, and subdivision name and nothing else; no owner, assessment, or land-use fields.",
     "The zoning layer carries per-polygon dates that this manifest does not expose, because one of them holds a 1900 placeholder on some rows."
+   ]
+  },
+  {
+   "id": "va-lis-legislative-api",
+   "name": "Virginia LIS Legislative API (bills, members, committees)",
+   "jurisdiction": "va",
+   "jurisdiction_name": "Virginia, statewide",
+   "answers": [],
+   "publisher": "Division of Legislative Automated Systems (DLAS), Virginia General Assembly",
+   "authority_level": "primary",
+   "capabilities": [],
+   "data_classification": "open",
+   "declared_state": "proposed",
+   "terms_url": "https://lis.virginia.gov/developers",
+   "known_limitations": [
+    "No key, so nothing is read. Bills, members and committees are not available from this project at all. A question about legislation returns registry coverage `none` for want of a registered source, which means this project has nowhere to look and never that the General Assembly passed nothing.\n",
+    "Registration is a human step. Obtaining the key is a form the operator fills in, and it is not something to work around.\n"
    ]
   },
   {
@@ -1395,7 +1412,7 @@
    "call": 24
   }
  ],
- "doctor_output": "commonwealth 0.1.0.dev0\npython 3.12.13\nmcp sdk 2.1.1\njurisdiction table: 323 rows\nsource manifests: 26 (registry revision 2026-09-09)\nmanifests valid: 26/26\ndefault profile: 10 tools: registry.resolve_jurisdiction, geo.find_parcel, geo.find_zoning, geo.find_boundaries, geo.find_address, geo.resolve_location, geo.find_buildings, geo.find_environmental_sites, civic.get_code_section, civic.search_meetings\n(live source probes skipped; pass --live)\n\u2713 doctor: 0 problem(s)\n\nnext: point a client at it\n  commonwealth configure claude-code\n  commonwealth configure --help    # claude, codex, cursor, vscode",
+ "doctor_output": "commonwealth 0.1.0.dev0\npython 3.12.13\nmcp sdk 2.1.1\njurisdiction table: 323 rows\nsource manifests: 27 (registry revision 2026-09-09)\nmanifests valid: 27/27\ndefault profile: 10 tools: registry.resolve_jurisdiction, geo.find_parcel, geo.find_zoning, geo.find_boundaries, geo.find_address, geo.resolve_location, geo.find_buildings, geo.find_environmental_sites, civic.get_code_section, civic.search_meetings\n(live source probes skipped; pass --live)\n\u2713 doctor: 0 problem(s)\n\nnext: point a client at it\n  commonwealth configure claude-code\n  commonwealth configure --help    # claude, codex, cursor, vscode",
  "plugin": {
   "name": "commonwealth-mcp",
   "marketplace_name": "commonwealth-mcp",
@@ -1406,7 +1423,7 @@
   "tool_count": 16
  },
  "demo_meta": {
-  "generated_at": "2026-09-10T01:47:09Z",
+  "generated_at": "2026-09-10T02:02:59Z",
   "mode": "fixtures",
   "call_count": 45,
   "fixture_recorded_at": "2026-09-02T05:29:35Z"
