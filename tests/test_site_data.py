@@ -429,3 +429,35 @@ def test_the_code_demo_walks_a_connected_path(core, demo):
             f"the Code demo steps from {parent['crumb']!r} to "
             f"{child['crumb']!r}, and {wanted!r} is not among what "
             f"{parent['crumb']!r} returned")
+
+
+NUMBER_WORDS = {"nine": 9, "ten": 10, "eleven": 11, "twelve": 12,
+                "thirteen": 13, "fourteen": 14, "fifteen": 15,
+                "sixteen": 16, "seventeen": 17, "eighteen": 18,
+                "nineteen": 19, "twenty": 20}
+
+
+def test_llms_txt_states_the_tool_counts_the_profiles_actually_expose():
+    """`docs/llms.txt` is hand-written, spells its counts as words, and is
+    what an assistant reads instead of the page. It said fifteen tools
+    and nine in `default` for as long as that was true and would have
+    gone on saying it — this is the floor under the sentence."""
+    import re
+
+    from commonwealth.core.toolreg import expand_profile
+    from commonwealth.servers.build import registries
+
+    text = (ROOT / "docs" / "llms.txt").read_text()
+    match = re.search(
+        r"(\w+) tools, (\w+) of them in the default set and (\w+) in "
+        r"discovery", text)
+    assert match, ("docs/llms.txt no longer states its tool counts in the "
+                   "sentence this test reads; update both together")
+    regs = registries()
+    claimed = [NUMBER_WORDS.get(w.lower()) for w in match.groups()]
+    actual = [len(expand_profile(p, regs))
+              for p in ("all", "default", "discovery")]
+    assert claimed == actual, (
+        f"docs/llms.txt claims {match.group(0)!r}, and the profiles expose "
+        f"{actual[0]} tools with {actual[1]} in default and {actual[2]} in "
+        "discovery")

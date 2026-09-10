@@ -1,5 +1,5 @@
 {
- "generated_at": "2026-09-10T02:15:47Z",
+ "generated_at": "2026-09-10T02:31:08Z",
  "mode": "fixtures",
  "call_count": 45,
  "fixture_recorded_at": "2026-09-02T05:29:35Z",
@@ -74,7 +74,7 @@
       "authority_level": "official_derived",
       "access_path": "index",
       "source_updated_at": null,
-      "retrieved_at": "2026-09-10T02:15:43Z",
+      "retrieved_at": "2026-09-10T02:31:04Z",
       "cache_age_seconds": 0
      }
     ],
@@ -100,14 +100,14 @@
       "virginia_law": "0.1.1"
      },
      "registry_revision": "2026-09-09",
-     "request_id": "f7ab823b14574bb6bb5f8d6e437951a3"
+     "request_id": "620487bee6be4ea6af9fb07cb6dab27a"
     }
    },
    "error_text": null,
    "http_calls": [],
    "audit": {
-    "ts": "2026-09-10T02:15:43Z",
-    "request_id": "f7ab823b14574bb6bb5f8d6e437951a3",
+    "ts": "2026-09-10T02:31:04Z",
+    "request_id": "620487bee6be4ea6af9fb07cb6dab27a",
     "tool": "registry.resolve_jurisdiction",
     "server": "commonwealth",
     "server_version": "0.1.0.dev0",
@@ -139,8 +139,8 @@
     "requires_user_choice": false,
     "error": null,
     "registry_revision": "2026-09-09",
-    "trace_id": "83bdf02ca2a9adbd52b2b842c2d406d2",
-    "span_id": "b22c945ae276bf37"
+    "trace_id": "1ae0def3d79afcd5209094eaa40476f2",
+    "span_id": "23367ad135edf37b"
    }
   },
   {
@@ -197,7 +197,7 @@
       "authority_level": "official_secondary",
       "access_path": "live",
       "source_updated_at": null,
-      "retrieved_at": "2026-09-10T02:15:43Z",
+      "retrieved_at": "2026-09-10T02:31:04Z",
       "cache_age_seconds": 0
      },
      {
@@ -210,7 +210,7 @@
       "authority_level": "official_secondary",
       "access_path": "live",
       "source_updated_at": null,
-      "retrieved_at": "2026-09-10T02:15:43Z",
+      "retrieved_at": "2026-09-10T02:31:04Z",
       "cache_age_seconds": 0
      }
     ],
@@ -220,7 +220,7 @@
       "source_ref": "source_02",
       "record_id": "OBJECTID:53",
       "locator": null,
-      "retrieved_at": "2026-09-10T02:15:43Z",
+      "retrieved_at": "2026-09-10T02:31:04Z",
       "effective_at": null,
       "transformations": [
        "field_mapping:v1"
@@ -233,7 +233,7 @@
       "source_ref": "source_02",
       "record_id": "OBJECTID:53",
       "locator": null,
-      "retrieved_at": "2026-09-10T02:15:43Z",
+      "retrieved_at": "2026-09-10T02:31:04Z",
       "effective_at": null,
       "transformations": [
        "field_mapping:v1"
@@ -246,7 +246,7 @@
       "source_ref": "source_01",
       "record_id": "candidate:f8775952d5a8b036",
       "locator": null,
-      "retrieved_at": "2026-09-10T02:15:43Z",
+      "retrieved_at": "2026-09-10T02:31:04Z",
       "effective_at": null,
       "transformations": [
        "geocode:findAddressCandidates",
@@ -303,7 +303,7 @@
       "virginia_law": "0.1.1"
      },
      "registry_revision": "2026-09-09",
-     "request_id": "ccb2f87e57514b9d901466b8a7639e87"
+     "request_id": "c514f37e433646e3b05ebee2c08d76b1"
     }
    },
    "error_text": null,
@@ -498,8 +498,8 @@
     }
    ],
    "audit": {
-    "ts": "2026-09-10T02:15:43Z",
-    "request_id": "ccb2f87e57514b9d901466b8a7639e87",
+    "ts": "2026-09-10T02:31:04Z",
+    "request_id": "c514f37e433646e3b05ebee2c08d76b1",
     "tool": "geo.resolve_location",
     "server": "commonwealth",
     "server_version": "0.1.0.dev0",
@@ -539,8 +539,8 @@
     "requires_user_choice": false,
     "error": null,
     "registry_revision": "2026-09-09",
-    "trace_id": "168f33bcba910a49f3a1814076239679",
-    "span_id": "feb33bf0f47dfd7f"
+    "trace_id": "80dee61fd953dfc631d6aa8c7eebe91e",
+    "span_id": "c00c72a19dfb1223"
    }
   },
   {
@@ -578,7 +578,7 @@
       "authority_level": "official_secondary",
       "access_path": "live",
       "source_updated_at": null,
-      "retrieved_at": "2026-09-10T02:15:43Z",
+      "retrieved_at": "2026-09-10T02:31:04Z",
       "cache_age_seconds": 0
      }
     ],
@@ -588,7 +588,7 @@
       "source_ref": "source_01",
       "record_id": "OBJECTID:1207872",
       "locator": null,
-      "retrieved_at": "2026-09-10T02:15:43Z",
+      "retrieved_at": "2026-09-10T02:31:04Z",
       "effective_at": null,
       "transformations": [
        "field_mapping:v1"
@@ -635,7 +635,7 @@
       "virginia_law": "0.1.1"
      },
      "registry_revision": "2026-09-09",
-     "request_id": "362fd0544fe14db692ab2d9ef685ecc0"
+     "request_id": "3453844e7989478fbdaae4148950ad5b"
     }
    },
    "error_text": null,
@@ -676,8 +676,8 @@
     }
    ],
    "audit": {
-    "ts": "2026-09-10T02:15:43Z",
-    "request_id": "362fd0544fe14db692ab2d9ef685ecc0",
+    "ts": "2026-09-10T02:31:04Z",
+    "request_id": "3453844e7989478fbdaae4148950ad5b",
     "tool": "geo.find_parcel",
     "server": "commonwealth",
     "server_version": "0.1.0.dev0",
@@ -715,8 +715,8 @@
     "requires_user_choice": false,
     "error": null,
     "registry_revision": "2026-09-09",
-    "trace_id": "f7e09bb8170baeb076af8261fd5cc1cd",
-    "span_id": "a61f36454368e0d7"
+    "trace_id": "20a6408a249b8dc7f2c5d64e471dea46",
+    "span_id": "f176b402e0fd7269"
    }
   },
   {
@@ -766,14 +766,14 @@
       "virginia_law": "0.1.1"
      },
      "registry_revision": "2026-09-09",
-     "request_id": "5af392f615cb4cb2972bd16c91535c17"
+     "request_id": "2fa19637e3ec45d78b98722b4cbc0df7"
     }
    },
    "error_text": null,
    "http_calls": [],
    "audit": {
-    "ts": "2026-09-10T02:15:43Z",
-    "request_id": "5af392f615cb4cb2972bd16c91535c17",
+    "ts": "2026-09-10T02:31:04Z",
+    "request_id": "2fa19637e3ec45d78b98722b4cbc0df7",
     "tool": "geo.find_zoning",
     "server": "commonwealth",
     "server_version": "0.1.0.dev0",
@@ -802,8 +802,8 @@
     "requires_user_choice": false,
     "error": null,
     "registry_revision": "2026-09-09",
-    "trace_id": "011989cf6314a0b1def9eaaea1edf844",
-    "span_id": "5b6e77b5c044f119"
+    "trace_id": "1a810b4f39669dcc78788e2dd1855c70",
+    "span_id": "33f41ff398047044"
    }
   },
   {
@@ -831,7 +831,7 @@
       "authority_level": "official_derived",
       "access_path": "live",
       "source_updated_at": null,
-      "retrieved_at": "2026-09-10T02:15:43Z",
+      "retrieved_at": "2026-09-10T02:31:04Z",
       "cache_age_seconds": 0
      }
     ],
@@ -875,7 +875,7 @@
       "virginia_law": "0.1.1"
      },
      "registry_revision": "2026-09-09",
-     "request_id": "ee490c85eb3d42f08877ac195e533feb"
+     "request_id": "b8d10546972e40748cd5960050a50833"
     }
    },
    "error_text": null,
@@ -919,8 +919,8 @@
     }
    ],
    "audit": {
-    "ts": "2026-09-10T02:15:43Z",
-    "request_id": "ee490c85eb3d42f08877ac195e533feb",
+    "ts": "2026-09-10T02:31:04Z",
+    "request_id": "b8d10546972e40748cd5960050a50833",
     "tool": "geo.find_landmarks",
     "server": "commonwealth",
     "server_version": "0.1.0.dev0",
@@ -962,8 +962,8 @@
     "requires_user_choice": false,
     "error": null,
     "registry_revision": "2026-09-09",
-    "trace_id": "436ce900975e346c93c6e4cd02063526",
-    "span_id": "137f7209fcd36fb5"
+    "trace_id": "aede57433dce113112a93e496ddf99e2",
+    "span_id": "1e3763e5734925e4"
    }
   },
   {
@@ -999,7 +999,7 @@
       "authority_level": "official_derived",
       "access_path": "index",
       "source_updated_at": null,
-      "retrieved_at": "2026-09-10T02:15:43Z",
+      "retrieved_at": "2026-09-10T02:31:04Z",
       "cache_age_seconds": 0
      }
     ],
@@ -1026,14 +1026,14 @@
       "virginia_law": "0.1.1"
      },
      "registry_revision": "2026-09-09",
-     "request_id": "a0574d219cd24f6dbcefa7d70cb28dad"
+     "request_id": "00c222c8b6884772a4070c8c10abebf1"
     }
    },
    "error_text": null,
    "http_calls": [],
    "audit": {
-    "ts": "2026-09-10T02:15:43Z",
-    "request_id": "a0574d219cd24f6dbcefa7d70cb28dad",
+    "ts": "2026-09-10T02:31:04Z",
+    "request_id": "00c222c8b6884772a4070c8c10abebf1",
     "tool": "registry.resolve_jurisdiction",
     "server": "commonwealth",
     "server_version": "0.1.0.dev0",
@@ -1065,8 +1065,8 @@
     "requires_user_choice": true,
     "error": null,
     "registry_revision": "2026-09-09",
-    "trace_id": "1d3601dfbed7aa78e145885421b2ee65",
-    "span_id": "70b65733edf041b9"
+    "trace_id": "be0ed42d813cdb7e77165efa63550c05",
+    "span_id": "dfbcdc33bd0168df"
    }
   },
   {
@@ -1103,7 +1103,7 @@
       "authority_level": "official_derived",
       "access_path": "index",
       "source_updated_at": null,
-      "retrieved_at": "2026-09-10T02:15:43Z",
+      "retrieved_at": "2026-09-10T02:31:04Z",
       "cache_age_seconds": 0
      }
     ],
@@ -1113,7 +1113,7 @@
       "source_ref": "source_01",
       "record_id": "va:fairfax-county",
       "locator": null,
-      "retrieved_at": "2026-09-10T02:15:43Z",
+      "retrieved_at": "2026-09-10T02:31:04Z",
       "effective_at": null,
       "transformations": [],
       "payload_hash": null,
@@ -1141,14 +1141,14 @@
       "virginia_law": "0.1.1"
      },
      "registry_revision": "2026-09-09",
-     "request_id": "4ff43eb3ae944baf91a61e6468d919c3"
+     "request_id": "1d894de9bd71486093e88e07b0deac7a"
     }
    },
    "error_text": null,
    "http_calls": [],
    "audit": {
-    "ts": "2026-09-10T02:15:43Z",
-    "request_id": "4ff43eb3ae944baf91a61e6468d919c3",
+    "ts": "2026-09-10T02:31:04Z",
+    "request_id": "1d894de9bd71486093e88e07b0deac7a",
     "tool": "registry.resolve_jurisdiction",
     "server": "commonwealth",
     "server_version": "0.1.0.dev0",
@@ -1180,8 +1180,8 @@
     "requires_user_choice": false,
     "error": null,
     "registry_revision": "2026-09-09",
-    "trace_id": "d5a4d391026b0c30ad597f542191e970",
-    "span_id": "67490f407c3e8756"
+    "trace_id": "30f663b50b36655a279e6a3d7e17e310",
+    "span_id": "73bfa22af53ba0a8"
    }
   },
   {
@@ -1223,7 +1223,7 @@
       "authority_level": "official_derived",
       "access_path": "index",
       "source_updated_at": null,
-      "retrieved_at": "2026-09-10T02:15:43Z",
+      "retrieved_at": "2026-09-10T02:31:04Z",
       "cache_age_seconds": 0
      }
     ],
@@ -1233,7 +1233,7 @@
       "source_ref": "source_01",
       "record_id": "va:bedford-town",
       "locator": null,
-      "retrieved_at": "2026-09-10T02:15:43Z",
+      "retrieved_at": "2026-09-10T02:31:04Z",
       "effective_at": null,
       "transformations": [],
       "payload_hash": null,
@@ -1267,14 +1267,14 @@
       "virginia_law": "0.1.1"
      },
      "registry_revision": "2026-09-09",
-     "request_id": "5a39f5fb95ca4eedad091f83960313bc"
+     "request_id": "214c36f5bf1b48ff8f79544c6ecc8594"
     }
    },
    "error_text": null,
    "http_calls": [],
    "audit": {
-    "ts": "2026-09-10T02:15:43Z",
-    "request_id": "5a39f5fb95ca4eedad091f83960313bc",
+    "ts": "2026-09-10T02:31:04Z",
+    "request_id": "214c36f5bf1b48ff8f79544c6ecc8594",
     "tool": "registry.resolve_jurisdiction",
     "server": "commonwealth",
     "server_version": "0.1.0.dev0",
@@ -1308,8 +1308,8 @@
     "requires_user_choice": false,
     "error": null,
     "registry_revision": "2026-09-09",
-    "trace_id": "63e6be382ae4e7869b5479b6ad766c68",
-    "span_id": "92152392ac5031b6"
+    "trace_id": "0686c0013d8b6569fc1baadb8b23b667",
+    "span_id": "3271c6c3cc988c3a"
    }
   },
   {
@@ -1354,7 +1354,7 @@
       "authority_level": "official_secondary",
       "access_path": "live",
       "source_updated_at": null,
-      "retrieved_at": "2026-09-10T02:15:43Z",
+      "retrieved_at": "2026-09-10T02:31:04Z",
       "cache_age_seconds": 0
      }
     ],
@@ -1364,7 +1364,7 @@
       "source_ref": "source_01",
       "record_id": "OBJECTID:106",
       "locator": null,
-      "retrieved_at": "2026-09-10T02:15:43Z",
+      "retrieved_at": "2026-09-10T02:31:04Z",
       "effective_at": null,
       "transformations": [
        "field_mapping:v1"
@@ -1415,7 +1415,7 @@
       "virginia_law": "0.1.1"
      },
      "registry_revision": "2026-09-09",
-     "request_id": "aedd8d7f14224d73ae833229fdc94252"
+     "request_id": "e518e913c54e47259f79c7dba3f38452"
     }
    },
    "error_text": null,
@@ -1490,8 +1490,8 @@
     }
    ],
    "audit": {
-    "ts": "2026-09-10T02:15:43Z",
-    "request_id": "aedd8d7f14224d73ae833229fdc94252",
+    "ts": "2026-09-10T02:31:04Z",
+    "request_id": "e518e913c54e47259f79c7dba3f38452",
     "tool": "registry.resolve_jurisdiction",
     "server": "commonwealth",
     "server_version": "0.1.0.dev0",
@@ -1528,8 +1528,8 @@
     "requires_user_choice": false,
     "error": null,
     "registry_revision": "2026-09-09",
-    "trace_id": "256fcd17557b2028a9610e685a6682fc",
-    "span_id": "132d15a12c4e4b13"
+    "trace_id": "83de5ac59140843a500ddf4116ae7754",
+    "span_id": "cd5078b0724f9797"
    }
   },
   {
@@ -1577,7 +1577,7 @@
       "authority_level": "official_secondary",
       "access_path": "live",
       "source_updated_at": null,
-      "retrieved_at": "2026-09-10T02:15:43Z",
+      "retrieved_at": "2026-09-10T02:31:04Z",
       "cache_age_seconds": 0
      }
     ],
@@ -1587,7 +1587,7 @@
       "source_ref": "source_01",
       "record_id": "OBJECTID:29",
       "locator": null,
-      "retrieved_at": "2026-09-10T02:15:43Z",
+      "retrieved_at": "2026-09-10T02:31:04Z",
       "effective_at": null,
       "transformations": [
        "field_mapping:v1"
@@ -1600,7 +1600,7 @@
       "source_ref": "source_01",
       "record_id": "OBJECTID:106",
       "locator": null,
-      "retrieved_at": "2026-09-10T02:15:43Z",
+      "retrieved_at": "2026-09-10T02:31:04Z",
       "effective_at": null,
       "transformations": [
        "field_mapping:v1"
@@ -1646,7 +1646,7 @@
       "virginia_law": "0.1.1"
      },
      "registry_revision": "2026-09-09",
-     "request_id": "745ec88f59f149e0ab2ca939cf7e9872"
+     "request_id": "be5967d0cc814444ade4bbbd20b78e0c"
     }
    },
    "error_text": null,
@@ -1721,8 +1721,8 @@
     }
    ],
    "audit": {
-    "ts": "2026-09-10T02:15:43Z",
-    "request_id": "745ec88f59f149e0ab2ca939cf7e9872",
+    "ts": "2026-09-10T02:31:04Z",
+    "request_id": "be5967d0cc814444ade4bbbd20b78e0c",
     "tool": "registry.resolve_jurisdiction",
     "server": "commonwealth",
     "server_version": "0.1.0.dev0",
@@ -1758,8 +1758,8 @@
     "requires_user_choice": false,
     "error": null,
     "registry_revision": "2026-09-09",
-    "trace_id": "1fd746f29c2d7001fdc6a8aa568d4a4d",
-    "span_id": "4d56924282c15c58"
+    "trace_id": "d2ff840934906027760cd670bda53ae1",
+    "span_id": "a9d38ebc799ae792"
    }
   },
   {
@@ -1816,7 +1816,7 @@
       "authority_level": "official_secondary",
       "access_path": "live",
       "source_updated_at": null,
-      "retrieved_at": "2026-09-10T02:15:43Z",
+      "retrieved_at": "2026-09-10T02:31:04Z",
       "cache_age_seconds": 0
      },
      {
@@ -1829,7 +1829,7 @@
       "authority_level": "official_secondary",
       "access_path": "live",
       "source_updated_at": null,
-      "retrieved_at": "2026-09-10T02:15:43Z",
+      "retrieved_at": "2026-09-10T02:31:04Z",
       "cache_age_seconds": 0
      }
     ],
@@ -1839,7 +1839,7 @@
       "source_ref": "source_01",
       "record_id": "candidate:f1de77562df86b91",
       "locator": null,
-      "retrieved_at": "2026-09-10T02:15:43Z",
+      "retrieved_at": "2026-09-10T02:31:04Z",
       "effective_at": null,
       "transformations": [
        "geocode:findAddressCandidates",
@@ -1853,7 +1853,7 @@
       "source_ref": "source_02",
       "record_id": "OBJECTID:29",
       "locator": null,
-      "retrieved_at": "2026-09-10T02:15:43Z",
+      "retrieved_at": "2026-09-10T02:31:04Z",
       "effective_at": null,
       "transformations": [
        "field_mapping:v1"
@@ -1909,7 +1909,7 @@
       "virginia_law": "0.1.1"
      },
      "registry_revision": "2026-09-09",
-     "request_id": "3982bec68fa341179f5b9d4bfbc283b0"
+     "request_id": "4f80c37e3786459da7c36ab198c215fb"
     }
    },
    "error_text": null,
@@ -2000,8 +2000,8 @@
     }
    ],
    "audit": {
-    "ts": "2026-09-10T02:15:43Z",
-    "request_id": "3982bec68fa341179f5b9d4bfbc283b0",
+    "ts": "2026-09-10T02:31:04Z",
+    "request_id": "4f80c37e3786459da7c36ab198c215fb",
     "tool": "geo.resolve_location",
     "server": "commonwealth",
     "server_version": "0.1.0.dev0",
@@ -2041,8 +2041,8 @@
     "requires_user_choice": false,
     "error": null,
     "registry_revision": "2026-09-09",
-    "trace_id": "3fdd044321652909c7d340c050a1245b",
-    "span_id": "e72cf0a5c1ec2c44"
+    "trace_id": "1b7393b0b8618ccb619a5350184cb6a1",
+    "span_id": "d9e320dba1936f13"
    }
   },
   {
@@ -2127,7 +2127,7 @@
       "authority_level": "official_secondary",
       "access_path": "live",
       "source_updated_at": null,
-      "retrieved_at": "2026-09-10T02:15:43Z",
+      "retrieved_at": "2026-09-10T02:31:04Z",
       "cache_age_seconds": 0
      }
     ],
@@ -2137,7 +2137,7 @@
       "source_ref": "source_01",
       "record_id": "distinct:fips=51023|locality=Botetourt County",
       "locator": null,
-      "retrieved_at": "2026-09-10T02:15:43Z",
+      "retrieved_at": "2026-09-10T02:31:04Z",
       "effective_at": null,
       "transformations": [
        "field_mapping:v1",
@@ -2151,7 +2151,7 @@
       "source_ref": "source_01",
       "record_id": "distinct:fips=51678|locality=Lexington City",
       "locator": null,
-      "retrieved_at": "2026-09-10T02:15:43Z",
+      "retrieved_at": "2026-09-10T02:31:04Z",
       "effective_at": null,
       "transformations": [
        "field_mapping:v1",
@@ -2165,7 +2165,7 @@
       "source_ref": "source_01",
       "record_id": "distinct:fips=51163|locality=Rockbridge County",
       "locator": null,
-      "retrieved_at": "2026-09-10T02:15:43Z",
+      "retrieved_at": "2026-09-10T02:31:04Z",
       "effective_at": null,
       "transformations": [
        "field_mapping:v1",
@@ -2214,7 +2214,7 @@
       "virginia_law": "0.1.1"
      },
      "registry_revision": "2026-09-09",
-     "request_id": "17b1c35282304d9f9b45e71128d59ead"
+     "request_id": "cec9894bb4214d4c9ba902100d3fdc0b"
     }
    },
    "error_text": null,
@@ -2252,8 +2252,8 @@
     }
    ],
    "audit": {
-    "ts": "2026-09-10T02:15:43Z",
-    "request_id": "17b1c35282304d9f9b45e71128d59ead",
+    "ts": "2026-09-10T02:31:04Z",
+    "request_id": "cec9894bb4214d4c9ba902100d3fdc0b",
     "tool": "geo.resolve_location",
     "server": "commonwealth",
     "server_version": "0.1.0.dev0",
@@ -2287,8 +2287,8 @@
     "requires_user_choice": true,
     "error": null,
     "registry_revision": "2026-09-09",
-    "trace_id": "63b3cde76a8374b48fbeeed31d49dd66",
-    "span_id": "3a514550637b6eda"
+    "trace_id": "0e0b56bbf12eeb79299f3c052fa283d1",
+    "span_id": "dbbeab0137d71554"
    }
   },
   {
@@ -2359,7 +2359,7 @@
       "authority_level": "primary",
       "access_path": "live",
       "source_updated_at": null,
-      "retrieved_at": "2026-09-10T02:15:43Z",
+      "retrieved_at": "2026-09-10T02:31:04Z",
       "cache_age_seconds": 0
      },
      {
@@ -2372,7 +2372,7 @@
       "authority_level": "official_secondary",
       "access_path": "live",
       "source_updated_at": null,
-      "retrieved_at": "2026-09-10T02:15:43Z",
+      "retrieved_at": "2026-09-10T02:31:04Z",
       "cache_age_seconds": 0
      }
     ],
@@ -2382,7 +2382,7 @@
       "source_ref": "source_01",
       "record_id": "OBJECTID:1",
       "locator": null,
-      "retrieved_at": "2026-09-10T02:15:43Z",
+      "retrieved_at": "2026-09-10T02:31:04Z",
       "effective_at": null,
       "transformations": [
        "field_mapping:v1"
@@ -2395,7 +2395,7 @@
       "source_ref": "source_02",
       "record_id": "OBJECTID:1511920",
       "locator": null,
-      "retrieved_at": "2026-09-10T02:15:43Z",
+      "retrieved_at": "2026-09-10T02:31:04Z",
       "effective_at": null,
       "transformations": [
        "field_mapping:v1"
@@ -2449,7 +2449,7 @@
       "virginia_law": "0.1.1"
      },
      "registry_revision": "2026-09-09",
-     "request_id": "cae73014612f4269ba707adb0bd5cf30"
+     "request_id": "11dd64f5639a4d2ebd41e67f966cf7e9"
     }
    },
    "error_text": null,
@@ -2500,8 +2500,8 @@
     }
    ],
    "audit": {
-    "ts": "2026-09-10T02:15:43Z",
-    "request_id": "cae73014612f4269ba707adb0bd5cf30",
+    "ts": "2026-09-10T02:31:04Z",
+    "request_id": "11dd64f5639a4d2ebd41e67f966cf7e9",
     "tool": "geo.find_parcel",
     "server": "commonwealth",
     "server_version": "0.1.0.dev0",
@@ -2543,8 +2543,8 @@
     "requires_user_choice": false,
     "error": null,
     "registry_revision": "2026-09-09",
-    "trace_id": "432df7b3cdbd7a395fafa495447530c7",
-    "span_id": "e8d667b0fd17324f"
+    "trace_id": "5869af359085f05d9724cfa50c6d13e1",
+    "span_id": "c754117999ec8e01"
    }
   },
   {
@@ -2588,7 +2588,7 @@
       "authority_level": "primary",
       "access_path": "live",
       "source_updated_at": null,
-      "retrieved_at": "2026-09-10T02:15:43Z",
+      "retrieved_at": "2026-09-10T02:31:04Z",
       "cache_age_seconds": 0
      },
      {
@@ -2601,7 +2601,7 @@
       "authority_level": "primary",
       "access_path": "live",
       "source_updated_at": null,
-      "retrieved_at": "2026-09-10T02:15:43Z",
+      "retrieved_at": "2026-09-10T02:31:04Z",
       "cache_age_seconds": 0
      }
     ],
@@ -2611,7 +2611,7 @@
       "source_ref": "source_01",
       "record_id": "OBJECTID:1",
       "locator": null,
-      "retrieved_at": "2026-09-10T02:15:43Z",
+      "retrieved_at": "2026-09-10T02:31:04Z",
       "effective_at": null,
       "transformations": [
        "field_mapping:v1",
@@ -2625,7 +2625,7 @@
       "source_ref": "source_02",
       "record_id": "OBJECTID:46202",
       "locator": null,
-      "retrieved_at": "2026-09-10T02:15:43Z",
+      "retrieved_at": "2026-09-10T02:31:04Z",
       "effective_at": null,
       "transformations": [
        "field_mapping:v1",
@@ -2680,7 +2680,7 @@
       "virginia_law": "0.1.1"
      },
      "registry_revision": "2026-09-09",
-     "request_id": "940e6630541a4af89add0d2f3a717cf4"
+     "request_id": "72177aa3e98e40e0aeef869a4fb10af6"
     }
    },
    "error_text": null,
@@ -2735,8 +2735,8 @@
     }
    ],
    "audit": {
-    "ts": "2026-09-10T02:15:43Z",
-    "request_id": "940e6630541a4af89add0d2f3a717cf4",
+    "ts": "2026-09-10T02:31:04Z",
+    "request_id": "72177aa3e98e40e0aeef869a4fb10af6",
     "tool": "geo.find_zoning",
     "server": "commonwealth",
     "server_version": "0.1.0.dev0",
@@ -2779,8 +2779,8 @@
     "requires_user_choice": false,
     "error": null,
     "registry_revision": "2026-09-09",
-    "trace_id": "7012065a712aed748588c420e1494bbe",
-    "span_id": "9e965c90866f33b6"
+    "trace_id": "ea52b3dfec93d763d9ed150b0b752a1f",
+    "span_id": "9e8a216a5e84fc18"
    }
   },
   {
@@ -2830,7 +2830,7 @@
       "authority_level": "official_secondary",
       "access_path": "live",
       "source_updated_at": null,
-      "retrieved_at": "2026-09-10T02:15:43Z",
+      "retrieved_at": "2026-09-10T02:31:04Z",
       "cache_age_seconds": 0
      }
     ],
@@ -2840,7 +2840,7 @@
       "source_ref": "source_01",
       "record_id": "OBJECTID:3429779",
       "locator": null,
-      "retrieved_at": "2026-09-10T02:15:43Z",
+      "retrieved_at": "2026-09-10T02:31:04Z",
       "effective_at": null,
       "transformations": [
        "field_mapping:v1"
@@ -2893,7 +2893,7 @@
       "virginia_law": "0.1.1"
      },
      "registry_revision": "2026-09-09",
-     "request_id": "a97d0e8e192f475a998394ac4f70c6d0"
+     "request_id": "00515961ffbc459faf81b944d52c493d"
     }
    },
    "error_text": null,
@@ -2913,8 +2913,8 @@
     }
    ],
    "audit": {
-    "ts": "2026-09-10T02:15:43Z",
-    "request_id": "a97d0e8e192f475a998394ac4f70c6d0",
+    "ts": "2026-09-10T02:31:04Z",
+    "request_id": "00515961ffbc459faf81b944d52c493d",
     "tool": "geo.find_address",
     "server": "commonwealth",
     "server_version": "0.1.0.dev0",
@@ -2951,8 +2951,8 @@
     "requires_user_choice": false,
     "error": null,
     "registry_revision": "2026-09-09",
-    "trace_id": "ff8a84b8d87b90fc328fa7e2d8dae382",
-    "span_id": "01cf19d284f7b847"
+    "trace_id": "a240c5faeac16e05dc8068d7f1887079",
+    "span_id": "d3033e2369ef059c"
    }
   },
   {
@@ -3024,7 +3024,7 @@
       "authority_level": "primary",
       "access_path": "live",
       "source_updated_at": "2026-08-31T14:22:47Z",
-      "retrieved_at": "2026-09-10T02:15:43Z",
+      "retrieved_at": "2026-09-10T02:31:04Z",
       "cache_age_seconds": 0
      },
      {
@@ -3037,7 +3037,7 @@
       "authority_level": "primary",
       "access_path": "live",
       "source_updated_at": "2026-08-31T14:22:47Z",
-      "retrieved_at": "2026-09-10T02:15:43Z",
+      "retrieved_at": "2026-09-10T02:31:04Z",
       "cache_age_seconds": 0
      },
      {
@@ -3050,7 +3050,7 @@
       "authority_level": "official_secondary",
       "access_path": "live",
       "source_updated_at": null,
-      "retrieved_at": "2026-09-10T02:15:43Z",
+      "retrieved_at": "2026-09-10T02:31:04Z",
       "cache_age_seconds": 0
      }
     ],
@@ -3060,7 +3060,7 @@
       "source_ref": "source_02",
       "record_id": "OBJECTID:1116",
       "locator": null,
-      "retrieved_at": "2026-09-10T02:15:43Z",
+      "retrieved_at": "2026-09-10T02:31:04Z",
       "effective_at": null,
       "transformations": [
        "field_mapping:v1",
@@ -3074,7 +3074,7 @@
       "source_ref": "source_03",
       "record_id": "OBJECTID:1358632",
       "locator": null,
-      "retrieved_at": "2026-09-10T02:15:43Z",
+      "retrieved_at": "2026-09-10T02:31:04Z",
       "effective_at": null,
       "transformations": [
        "field_mapping:v1",
@@ -3090,7 +3090,7 @@
       "source_ref": "source_03",
       "record_id": "OBJECTID:1358633",
       "locator": null,
-      "retrieved_at": "2026-09-10T02:15:43Z",
+      "retrieved_at": "2026-09-10T02:31:04Z",
       "effective_at": null,
       "transformations": [
        "field_mapping:v1",
@@ -3146,7 +3146,7 @@
       "virginia_law": "0.1.1"
      },
      "registry_revision": "2026-09-09",
-     "request_id": "07b662bf5f9144c89aea2b91ba6061b1"
+     "request_id": "d4e2d159a64d4160a90e0ff712231b40"
     }
    },
    "error_text": null,
@@ -3219,8 +3219,8 @@
     }
    ],
    "audit": {
-    "ts": "2026-09-10T02:15:43Z",
-    "request_id": "07b662bf5f9144c89aea2b91ba6061b1",
+    "ts": "2026-09-10T02:31:04Z",
+    "request_id": "d4e2d159a64d4160a90e0ff712231b40",
     "tool": "geo.find_buildings",
     "server": "commonwealth",
     "server_version": "0.1.0.dev0",
@@ -3271,8 +3271,8 @@
     "requires_user_choice": false,
     "error": null,
     "registry_revision": "2026-09-09",
-    "trace_id": "f71a7d05088fb47b582ff22bcaac8955",
-    "span_id": "0c2a9e733d1404a0"
+    "trace_id": "0b41c763f25d0e3d221b7d4124985d0e",
+    "span_id": "1a3b4efcd79ca0fc"
    }
   },
   {
@@ -4020,7 +4020,7 @@
       "authority_level": "primary",
       "access_path": "live",
       "source_updated_at": "2026-08-20T16:28:34Z",
-      "retrieved_at": "2026-09-10T02:15:43Z",
+      "retrieved_at": "2026-09-10T02:31:04Z",
       "cache_age_seconds": 0
      },
      {
@@ -4033,7 +4033,7 @@
       "authority_level": "official_secondary",
       "access_path": "live",
       "source_updated_at": null,
-      "retrieved_at": "2026-09-10T02:15:43Z",
+      "retrieved_at": "2026-09-10T02:31:04Z",
       "cache_age_seconds": 0
      }
     ],
@@ -4043,7 +4043,7 @@
       "source_ref": "source_01",
       "record_id": "OBJECTID:192395",
       "locator": null,
-      "retrieved_at": "2026-09-10T02:15:43Z",
+      "retrieved_at": "2026-09-10T02:31:04Z",
       "effective_at": null,
       "transformations": [
        "field_mapping:v1"
@@ -4056,7 +4056,7 @@
       "source_ref": "source_01",
       "record_id": "OBJECTID:192558",
       "locator": null,
-      "retrieved_at": "2026-09-10T02:15:43Z",
+      "retrieved_at": "2026-09-10T02:31:04Z",
       "effective_at": null,
       "transformations": [
        "field_mapping:v1"
@@ -4069,7 +4069,7 @@
       "source_ref": "source_02",
       "record_id": "OBJECTID:419337",
       "locator": null,
-      "retrieved_at": "2026-09-10T02:15:43Z",
+      "retrieved_at": "2026-09-10T02:31:04Z",
       "effective_at": null,
       "transformations": [
        "field_mapping:v1"
@@ -4082,7 +4082,7 @@
       "source_ref": "source_02",
       "record_id": "OBJECTID:419482",
       "locator": null,
-      "retrieved_at": "2026-09-10T02:15:43Z",
+      "retrieved_at": "2026-09-10T02:31:04Z",
       "effective_at": null,
       "transformations": [
        "field_mapping:v1"
@@ -4095,7 +4095,7 @@
       "source_ref": "source_02",
       "record_id": "OBJECTID:419711",
       "locator": null,
-      "retrieved_at": "2026-09-10T02:15:43Z",
+      "retrieved_at": "2026-09-10T02:31:04Z",
       "effective_at": null,
       "transformations": [
        "field_mapping:v1"
@@ -4108,7 +4108,7 @@
       "source_ref": "source_02",
       "record_id": "OBJECTID:419830",
       "locator": null,
-      "retrieved_at": "2026-09-10T02:15:43Z",
+      "retrieved_at": "2026-09-10T02:31:04Z",
       "effective_at": null,
       "transformations": [
        "field_mapping:v1"
@@ -4121,7 +4121,7 @@
       "source_ref": "source_02",
       "record_id": "OBJECTID:419870",
       "locator": null,
-      "retrieved_at": "2026-09-10T02:15:43Z",
+      "retrieved_at": "2026-09-10T02:31:04Z",
       "effective_at": null,
       "transformations": [
        "field_mapping:v1"
@@ -4134,7 +4134,7 @@
       "source_ref": "source_02",
       "record_id": "OBJECTID:419874",
       "locator": null,
-      "retrieved_at": "2026-09-10T02:15:43Z",
+      "retrieved_at": "2026-09-10T02:31:04Z",
       "effective_at": null,
       "transformations": [
        "field_mapping:v1"
@@ -4147,7 +4147,7 @@
       "source_ref": "source_02",
       "record_id": "OBJECTID:419894",
       "locator": null,
-      "retrieved_at": "2026-09-10T02:15:43Z",
+      "retrieved_at": "2026-09-10T02:31:04Z",
       "effective_at": null,
       "transformations": [
        "field_mapping:v1"
@@ -4160,7 +4160,7 @@
       "source_ref": "source_02",
       "record_id": "OBJECTID:419926",
       "locator": null,
-      "retrieved_at": "2026-09-10T02:15:43Z",
+      "retrieved_at": "2026-09-10T02:31:04Z",
       "effective_at": null,
       "transformations": [
        "field_mapping:v1"
@@ -4173,7 +4173,7 @@
       "source_ref": "source_02",
       "record_id": "OBJECTID:419959",
       "locator": null,
-      "retrieved_at": "2026-09-10T02:15:43Z",
+      "retrieved_at": "2026-09-10T02:31:04Z",
       "effective_at": null,
       "transformations": [
        "field_mapping:v1"
@@ -4186,7 +4186,7 @@
       "source_ref": "source_02",
       "record_id": "OBJECTID:419968",
       "locator": null,
-      "retrieved_at": "2026-09-10T02:15:43Z",
+      "retrieved_at": "2026-09-10T02:31:04Z",
       "effective_at": null,
       "transformations": [
        "field_mapping:v1"
@@ -4199,7 +4199,7 @@
       "source_ref": "source_02",
       "record_id": "OBJECTID:419972",
       "locator": null,
-      "retrieved_at": "2026-09-10T02:15:43Z",
+      "retrieved_at": "2026-09-10T02:31:04Z",
       "effective_at": null,
       "transformations": [
        "field_mapping:v1"
@@ -4212,7 +4212,7 @@
       "source_ref": "source_02",
       "record_id": "OBJECTID:423128",
       "locator": null,
-      "retrieved_at": "2026-09-10T02:15:43Z",
+      "retrieved_at": "2026-09-10T02:31:04Z",
       "effective_at": null,
       "transformations": [
        "field_mapping:v1"
@@ -4225,7 +4225,7 @@
       "source_ref": "source_02",
       "record_id": "OBJECTID:423164",
       "locator": null,
-      "retrieved_at": "2026-09-10T02:15:43Z",
+      "retrieved_at": "2026-09-10T02:31:04Z",
       "effective_at": null,
       "transformations": [
        "field_mapping:v1"
@@ -4238,7 +4238,7 @@
       "source_ref": "source_02",
       "record_id": "OBJECTID:423251",
       "locator": null,
-      "retrieved_at": "2026-09-10T02:15:43Z",
+      "retrieved_at": "2026-09-10T02:31:04Z",
       "effective_at": null,
       "transformations": [
        "field_mapping:v1"
@@ -4251,7 +4251,7 @@
       "source_ref": "source_02",
       "record_id": "OBJECTID:423257",
       "locator": null,
-      "retrieved_at": "2026-09-10T02:15:43Z",
+      "retrieved_at": "2026-09-10T02:31:04Z",
       "effective_at": null,
       "transformations": [
        "field_mapping:v1"
@@ -4264,7 +4264,7 @@
       "source_ref": "source_02",
       "record_id": "OBJECTID:423279",
       "locator": null,
-      "retrieved_at": "2026-09-10T02:15:43Z",
+      "retrieved_at": "2026-09-10T02:31:04Z",
       "effective_at": null,
       "transformations": [
        "field_mapping:v1"
@@ -4277,7 +4277,7 @@
       "source_ref": "source_02",
       "record_id": "OBJECTID:423317",
       "locator": null,
-      "retrieved_at": "2026-09-10T02:15:43Z",
+      "retrieved_at": "2026-09-10T02:31:04Z",
       "effective_at": null,
       "transformations": [
        "field_mapping:v1"
@@ -4290,7 +4290,7 @@
       "source_ref": "source_02",
       "record_id": "OBJECTID:423333",
       "locator": null,
-      "retrieved_at": "2026-09-10T02:15:43Z",
+      "retrieved_at": "2026-09-10T02:31:04Z",
       "effective_at": null,
       "transformations": [
        "field_mapping:v1"
@@ -4303,7 +4303,7 @@
       "source_ref": "source_02",
       "record_id": "OBJECTID:423378",
       "locator": null,
-      "retrieved_at": "2026-09-10T02:15:43Z",
+      "retrieved_at": "2026-09-10T02:31:04Z",
       "effective_at": null,
       "transformations": [
        "field_mapping:v1"
@@ -4316,7 +4316,7 @@
       "source_ref": "source_02",
       "record_id": "OBJECTID:424050",
       "locator": null,
-      "retrieved_at": "2026-09-10T02:15:43Z",
+      "retrieved_at": "2026-09-10T02:31:04Z",
       "effective_at": null,
       "transformations": [
        "field_mapping:v1"
@@ -4329,7 +4329,7 @@
       "source_ref": "source_02",
       "record_id": "OBJECTID:424279",
       "locator": null,
-      "retrieved_at": "2026-09-10T02:15:43Z",
+      "retrieved_at": "2026-09-10T02:31:04Z",
       "effective_at": null,
       "transformations": [
        "field_mapping:v1"
@@ -4342,7 +4342,7 @@
       "source_ref": "source_02",
       "record_id": "OBJECTID:424477",
       "locator": null,
-      "retrieved_at": "2026-09-10T02:15:43Z",
+      "retrieved_at": "2026-09-10T02:31:04Z",
       "effective_at": null,
       "transformations": [
        "field_mapping:v1"
@@ -4355,7 +4355,7 @@
       "source_ref": "source_02",
       "record_id": "OBJECTID:424548",
       "locator": null,
-      "retrieved_at": "2026-09-10T02:15:43Z",
+      "retrieved_at": "2026-09-10T02:31:04Z",
       "effective_at": null,
       "transformations": [
        "field_mapping:v1"
@@ -4368,7 +4368,7 @@
       "source_ref": "source_02",
       "record_id": "OBJECTID:424628",
       "locator": null,
-      "retrieved_at": "2026-09-10T02:15:43Z",
+      "retrieved_at": "2026-09-10T02:31:04Z",
       "effective_at": null,
       "transformations": [
        "field_mapping:v1"
@@ -4381,7 +4381,7 @@
       "source_ref": "source_02",
       "record_id": "OBJECTID:424646",
       "locator": null,
-      "retrieved_at": "2026-09-10T02:15:43Z",
+      "retrieved_at": "2026-09-10T02:31:04Z",
       "effective_at": null,
       "transformations": [
        "field_mapping:v1"
@@ -4434,7 +4434,7 @@
      {
       "uri": "commonwealth://results/00000000000000000000000000000001",
       "media_type": "application/json",
-      "description": "All 39 records va-vgin-road-centerlines returned for this query, including the ones past the inline cap. Expires 2026-09-11T02:15:43Z; re-run geo.find_roads to regenerate it."
+      "description": "All 39 records va-vgin-road-centerlines returned for this query, including the ones past the inline cap. Expires 2026-09-11T02:31:04Z; re-run geo.find_roads to regenerate it."
      }
     ],
     "_execution": {
@@ -4450,7 +4450,7 @@
       "virginia_law": "0.1.1"
      },
      "registry_revision": "2026-09-09",
-     "request_id": "281806b3f88f49c7bc3d688d0b573f2b"
+     "request_id": "87a3c2dd183442fbbe753cf334760b89"
     }
    },
    "error_text": null,
@@ -4519,8 +4519,8 @@
     }
    ],
    "audit": {
-    "ts": "2026-09-10T02:15:43Z",
-    "request_id": "281806b3f88f49c7bc3d688d0b573f2b",
+    "ts": "2026-09-10T02:31:04Z",
+    "request_id": "87a3c2dd183442fbbe753cf334760b89",
     "tool": "geo.find_roads",
     "server": "commonwealth",
     "server_version": "0.1.0.dev0",
@@ -4566,8 +4566,8 @@
     "requires_user_choice": false,
     "error": null,
     "registry_revision": "2026-09-09",
-    "trace_id": "fe171037a7e2f09095d598b7c78beaa4",
-    "span_id": "132c3c0f5a506736"
+    "trace_id": "92bab9dccc38baf47dae0524c6771d23",
+    "span_id": "940955d9b606e9a6"
    }
   },
   {
@@ -4686,7 +4686,7 @@
       "authority_level": "official_derived",
       "access_path": "live",
       "source_updated_at": null,
-      "retrieved_at": "2026-09-10T02:15:43Z",
+      "retrieved_at": "2026-09-10T02:31:04Z",
       "cache_age_seconds": 0
      }
     ],
@@ -4696,7 +4696,7 @@
       "source_ref": "source_01",
       "record_id": "OBJECTID:805",
       "locator": null,
-      "retrieved_at": "2026-09-10T02:15:43Z",
+      "retrieved_at": "2026-09-10T02:31:04Z",
       "effective_at": null,
       "transformations": [
        "field_mapping:v1",
@@ -4710,7 +4710,7 @@
       "source_ref": "source_01",
       "record_id": "OBJECTID:1625",
       "locator": null,
-      "retrieved_at": "2026-09-10T02:15:43Z",
+      "retrieved_at": "2026-09-10T02:31:04Z",
       "effective_at": null,
       "transformations": [
        "field_mapping:v1",
@@ -4724,7 +4724,7 @@
       "source_ref": "source_01",
       "record_id": "OBJECTID:3188",
       "locator": null,
-      "retrieved_at": "2026-09-10T02:15:43Z",
+      "retrieved_at": "2026-09-10T02:31:04Z",
       "effective_at": null,
       "transformations": [
        "field_mapping:v1",
@@ -4738,7 +4738,7 @@
       "source_ref": "source_01",
       "record_id": "OBJECTID:5754",
       "locator": null,
-      "retrieved_at": "2026-09-10T02:15:43Z",
+      "retrieved_at": "2026-09-10T02:31:04Z",
       "effective_at": null,
       "transformations": [
        "field_mapping:v1",
@@ -4793,7 +4793,7 @@
       "virginia_law": "0.1.1"
      },
      "registry_revision": "2026-09-09",
-     "request_id": "efd2c2871bea48be98413d76b7d6c8ed"
+     "request_id": "d47fdf7148df4cadacbeb9fb6e1462ca"
     }
    },
    "error_text": null,
@@ -4819,8 +4819,8 @@
     }
    ],
    "audit": {
-    "ts": "2026-09-10T02:15:43Z",
-    "request_id": "efd2c2871bea48be98413d76b7d6c8ed",
+    "ts": "2026-09-10T02:31:04Z",
+    "request_id": "d47fdf7148df4cadacbeb9fb6e1462ca",
     "tool": "geo.find_landmarks",
     "server": "commonwealth",
     "server_version": "0.1.0.dev0",
@@ -4863,8 +4863,8 @@
     "requires_user_choice": false,
     "error": null,
     "registry_revision": "2026-09-09",
-    "trace_id": "c5429b2fab7cd02e9c49223f672e54b7",
-    "span_id": "905f629cf53f1c9f"
+    "trace_id": "f90cdf9ca15b3a5b7e93d1a266cf8168",
+    "span_id": "a4159ee7aaa0cccf"
    }
   },
   {
@@ -5289,7 +5289,7 @@
       "authority_level": "primary",
       "access_path": "live",
       "source_updated_at": null,
-      "retrieved_at": "2026-09-10T02:15:43Z",
+      "retrieved_at": "2026-09-10T02:31:04Z",
       "cache_age_seconds": 0
      }
     ],
@@ -5299,7 +5299,7 @@
       "source_ref": "source_01",
       "record_id": "OBJECTID:841",
       "locator": null,
-      "retrieved_at": "2026-09-10T02:15:43Z",
+      "retrieved_at": "2026-09-10T02:31:04Z",
       "effective_at": null,
       "transformations": [
        "field_mapping:v1",
@@ -5313,7 +5313,7 @@
       "source_ref": "source_01",
       "record_id": "OBJECTID:3617",
       "locator": null,
-      "retrieved_at": "2026-09-10T02:15:43Z",
+      "retrieved_at": "2026-09-10T02:31:04Z",
       "effective_at": null,
       "transformations": [
        "field_mapping:v1",
@@ -5327,7 +5327,7 @@
       "source_ref": "source_01",
       "record_id": "OBJECTID:4054",
       "locator": null,
-      "retrieved_at": "2026-09-10T02:15:43Z",
+      "retrieved_at": "2026-09-10T02:31:04Z",
       "effective_at": null,
       "transformations": [
        "field_mapping:v1",
@@ -5341,7 +5341,7 @@
       "source_ref": "source_01",
       "record_id": "OBJECTID:4544",
       "locator": null,
-      "retrieved_at": "2026-09-10T02:15:43Z",
+      "retrieved_at": "2026-09-10T02:31:04Z",
       "effective_at": null,
       "transformations": [
        "field_mapping:v1",
@@ -5355,7 +5355,7 @@
       "source_ref": "source_01",
       "record_id": "OBJECTID:4558",
       "locator": null,
-      "retrieved_at": "2026-09-10T02:15:43Z",
+      "retrieved_at": "2026-09-10T02:31:04Z",
       "effective_at": null,
       "transformations": [
        "field_mapping:v1",
@@ -5369,7 +5369,7 @@
       "source_ref": "source_01",
       "record_id": "OBJECTID:5058",
       "locator": null,
-      "retrieved_at": "2026-09-10T02:15:43Z",
+      "retrieved_at": "2026-09-10T02:31:04Z",
       "effective_at": null,
       "transformations": [
        "field_mapping:v1",
@@ -5383,7 +5383,7 @@
       "source_ref": "source_01",
       "record_id": "OBJECTID:12614",
       "locator": null,
-      "retrieved_at": "2026-09-10T02:15:43Z",
+      "retrieved_at": "2026-09-10T02:31:04Z",
       "effective_at": null,
       "transformations": [
        "field_mapping:v1",
@@ -5397,7 +5397,7 @@
       "source_ref": "source_01",
       "record_id": "OBJECTID:12952",
       "locator": null,
-      "retrieved_at": "2026-09-10T02:15:43Z",
+      "retrieved_at": "2026-09-10T02:31:04Z",
       "effective_at": null,
       "transformations": [
        "field_mapping:v1",
@@ -5411,7 +5411,7 @@
       "source_ref": "source_01",
       "record_id": "OBJECTID:13111",
       "locator": null,
-      "retrieved_at": "2026-09-10T02:15:43Z",
+      "retrieved_at": "2026-09-10T02:31:04Z",
       "effective_at": null,
       "transformations": [
        "field_mapping:v1",
@@ -5425,7 +5425,7 @@
       "source_ref": "source_01",
       "record_id": "OBJECTID:13112",
       "locator": null,
-      "retrieved_at": "2026-09-10T02:15:43Z",
+      "retrieved_at": "2026-09-10T02:31:04Z",
       "effective_at": null,
       "transformations": [
        "field_mapping:v1",
@@ -5439,7 +5439,7 @@
       "source_ref": "source_01",
       "record_id": "OBJECTID:13325",
       "locator": null,
-      "retrieved_at": "2026-09-10T02:15:43Z",
+      "retrieved_at": "2026-09-10T02:31:04Z",
       "effective_at": null,
       "transformations": [
        "field_mapping:v1",
@@ -5453,7 +5453,7 @@
       "source_ref": "source_01",
       "record_id": "OBJECTID:14254",
       "locator": null,
-      "retrieved_at": "2026-09-10T02:15:43Z",
+      "retrieved_at": "2026-09-10T02:31:04Z",
       "effective_at": null,
       "transformations": [
        "field_mapping:v1",
@@ -5467,7 +5467,7 @@
       "source_ref": "source_01",
       "record_id": "OBJECTID:14402",
       "locator": null,
-      "retrieved_at": "2026-09-10T02:15:43Z",
+      "retrieved_at": "2026-09-10T02:31:04Z",
       "effective_at": null,
       "transformations": [
        "field_mapping:v1",
@@ -5481,7 +5481,7 @@
       "source_ref": "source_01",
       "record_id": "OBJECTID:14403",
       "locator": null,
-      "retrieved_at": "2026-09-10T02:15:43Z",
+      "retrieved_at": "2026-09-10T02:31:04Z",
       "effective_at": null,
       "transformations": [
        "field_mapping:v1",
@@ -5495,7 +5495,7 @@
       "source_ref": "source_01",
       "record_id": "OBJECTID:15108",
       "locator": null,
-      "retrieved_at": "2026-09-10T02:15:43Z",
+      "retrieved_at": "2026-09-10T02:31:04Z",
       "effective_at": null,
       "transformations": [
        "field_mapping:v1",
@@ -5509,7 +5509,7 @@
       "source_ref": "source_01",
       "record_id": "OBJECTID:15496",
       "locator": null,
-      "retrieved_at": "2026-09-10T02:15:43Z",
+      "retrieved_at": "2026-09-10T02:31:04Z",
       "effective_at": null,
       "transformations": [
        "field_mapping:v1",
@@ -5523,7 +5523,7 @@
       "source_ref": "source_01",
       "record_id": "OBJECTID:16150",
       "locator": null,
-      "retrieved_at": "2026-09-10T02:15:43Z",
+      "retrieved_at": "2026-09-10T02:31:04Z",
       "effective_at": null,
       "transformations": [
        "field_mapping:v1",
@@ -5581,7 +5581,7 @@
       "virginia_law": "0.1.1"
      },
      "registry_revision": "2026-09-09",
-     "request_id": "c2ca6defbb4647dab7daef1b24dcc2e9"
+     "request_id": "25e6619be0bf4e6db6137555adc57f5d"
     }
    },
    "error_text": null,
@@ -5624,8 +5624,8 @@
     }
    ],
    "audit": {
-    "ts": "2026-09-10T02:15:43Z",
-    "request_id": "c2ca6defbb4647dab7daef1b24dcc2e9",
+    "ts": "2026-09-10T02:31:04Z",
+    "request_id": "25e6619be0bf4e6db6137555adc57f5d",
     "tool": "geo.find_environmental_sites",
     "server": "commonwealth",
     "server_version": "0.1.0.dev0",
@@ -5665,8 +5665,8 @@
     "requires_user_choice": false,
     "error": null,
     "registry_revision": "2026-09-09",
-    "trace_id": "256aa6c19fb3117688cc03eead3224b2",
-    "span_id": "594c71b87f492efb"
+    "trace_id": "c4c5233b89af916d57cc565e65671c6d",
+    "span_id": "2cb6b89ae7e74a45"
    }
   },
   {
@@ -5765,7 +5765,7 @@
       "authority_level": "official_secondary",
       "access_path": "live",
       "source_updated_at": null,
-      "retrieved_at": "2026-09-10T02:15:43Z",
+      "retrieved_at": "2026-09-10T02:31:04Z",
       "cache_age_seconds": 0
      }
     ],
@@ -5775,7 +5775,7 @@
       "source_ref": "source_01",
       "record_id": "OBJECTID:72",
       "locator": null,
-      "retrieved_at": "2026-09-10T02:15:43Z",
+      "retrieved_at": "2026-09-10T02:31:04Z",
       "effective_at": null,
       "transformations": [
        "field_mapping:v1",
@@ -5790,7 +5790,7 @@
       "source_ref": "source_01",
       "record_id": "OBJECTID:73",
       "locator": null,
-      "retrieved_at": "2026-09-10T02:15:43Z",
+      "retrieved_at": "2026-09-10T02:31:04Z",
       "effective_at": null,
       "transformations": [
        "field_mapping:v1",
@@ -5844,7 +5844,7 @@
       "virginia_law": "0.1.1"
      },
      "registry_revision": "2026-09-09",
-     "request_id": "21abf1239f9a49ab9089d95bf3dfbc40"
+     "request_id": "c47fbcbb1265488ea51ae7f33c7015b6"
     }
    },
    "error_text": null,
@@ -5867,12 +5867,12 @@
     }
    ],
    "audit": {
-    "ts": "2026-09-10T02:15:43Z",
-    "request_id": "21abf1239f9a49ab9089d95bf3dfbc40",
+    "ts": "2026-09-10T02:31:04Z",
+    "request_id": "c47fbcbb1265488ea51ae7f33c7015b6",
     "tool": "geo.find_boundaries",
     "server": "commonwealth",
     "server_version": "0.1.0.dev0",
-    "duration_ms": 0,
+    "duration_ms": 1,
     "args": {
      "jurisdiction": "Prince George County",
      "detail": "concise"
@@ -5903,8 +5903,8 @@
     "requires_user_choice": false,
     "error": null,
     "registry_revision": "2026-09-09",
-    "trace_id": "33b724ed856c38eaea5cb99b751fb321",
-    "span_id": "f5b7bf880d1cad70"
+    "trace_id": "6a9a1e58f363fdd28f8a3a7c6941b967",
+    "span_id": "fe0c25ccaa88bc3f"
    }
   },
   {
@@ -6646,7 +6646,7 @@
       "authority_level": "primary",
       "access_path": "live",
       "source_updated_at": null,
-      "retrieved_at": "2026-09-10T02:15:43Z",
+      "retrieved_at": "2026-09-10T02:31:05Z",
       "cache_age_seconds": 0
      }
     ],
@@ -6687,14 +6687,14 @@
       "virginia_law": "0.1.1"
      },
      "registry_revision": "2026-09-09",
-     "request_id": "51bb67dbb0bf49aa92fb64e4df086454"
+     "request_id": "32e4a45127ab47a2a0b87d2a6ef83aff"
     }
    },
    "error_text": null,
    "http_calls": [],
    "audit": {
-    "ts": "2026-09-10T02:15:43Z",
-    "request_id": "51bb67dbb0bf49aa92fb64e4df086454",
+    "ts": "2026-09-10T02:31:05Z",
+    "request_id": "32e4a45127ab47a2a0b87d2a6ef83aff",
     "tool": "civic.browse_code",
     "server": "commonwealth",
     "server_version": "0.1.0.dev0",
@@ -6728,8 +6728,8 @@
     "requires_user_choice": false,
     "error": null,
     "registry_revision": "2026-09-09",
-    "trace_id": "982620dd4ebb4b374f825d73bdf813ae",
-    "span_id": "c01f7823808883e5"
+    "trace_id": "0c0ff3bb4687f8e62e516feef2837214",
+    "span_id": "63e7c41e3301a334"
    }
   },
   {
@@ -7700,7 +7700,7 @@
       "authority_level": "primary",
       "access_path": "live",
       "source_updated_at": null,
-      "retrieved_at": "2026-09-10T02:15:43Z",
+      "retrieved_at": "2026-09-10T02:31:05Z",
       "cache_age_seconds": 0
      }
     ],
@@ -7741,14 +7741,14 @@
       "virginia_law": "0.1.1"
      },
      "registry_revision": "2026-09-09",
-     "request_id": "184cdce207724e32a09780eacb84941c"
+     "request_id": "fab1c5df70754207b299637433a38bbf"
     }
    },
    "error_text": null,
    "http_calls": [],
    "audit": {
-    "ts": "2026-09-10T02:15:43Z",
-    "request_id": "184cdce207724e32a09780eacb84941c",
+    "ts": "2026-09-10T02:31:05Z",
+    "request_id": "fab1c5df70754207b299637433a38bbf",
     "tool": "civic.browse_code",
     "server": "commonwealth",
     "server_version": "0.1.0.dev0",
@@ -7782,8 +7782,8 @@
     "requires_user_choice": false,
     "error": null,
     "registry_revision": "2026-09-09",
-    "trace_id": "111ea0d83233075dcca06ec53c406318",
-    "span_id": "c08048fcf2e39492"
+    "trace_id": "70967df6a8c5f72028c54dc8d4a7e691",
+    "span_id": "513332867c9080ec"
    }
   },
   {
@@ -9686,7 +9686,7 @@
       "authority_level": "primary",
       "access_path": "live",
       "source_updated_at": null,
-      "retrieved_at": "2026-09-10T02:15:43Z",
+      "retrieved_at": "2026-09-10T02:31:05Z",
       "cache_age_seconds": 0
      }
     ],
@@ -9727,14 +9727,14 @@
       "virginia_law": "0.1.1"
      },
      "registry_revision": "2026-09-09",
-     "request_id": "52596e6d4bfd450997a50a67ffae6895"
+     "request_id": "7a8a4a136cd24b88b935f5fef64a2810"
     }
    },
    "error_text": null,
    "http_calls": [],
    "audit": {
-    "ts": "2026-09-10T02:15:43Z",
-    "request_id": "52596e6d4bfd450997a50a67ffae6895",
+    "ts": "2026-09-10T02:31:05Z",
+    "request_id": "7a8a4a136cd24b88b935f5fef64a2810",
     "tool": "civic.browse_code",
     "server": "commonwealth",
     "server_version": "0.1.0.dev0",
@@ -9768,8 +9768,8 @@
     "requires_user_choice": false,
     "error": null,
     "registry_revision": "2026-09-09",
-    "trace_id": "52cf398cf4b274547637b02e1e830698",
-    "span_id": "fdd71e8f241efc88"
+    "trace_id": "dd10f5714e2587cf4dc18d4b3cdaac5b",
+    "span_id": "11651bb51cc2b396"
    }
   },
   {
@@ -9800,7 +9800,7 @@
       "authority_level": "primary",
       "access_path": "live",
       "source_updated_at": null,
-      "retrieved_at": "2026-09-10T02:15:43Z",
+      "retrieved_at": "2026-09-10T02:31:05Z",
       "cache_age_seconds": 0
      }
     ],
@@ -9841,14 +9841,14 @@
       "virginia_law": "0.1.1"
      },
      "registry_revision": "2026-09-09",
-     "request_id": "3b544a70a48146d6bf78af586be16728"
+     "request_id": "00d3c6f4b2ed459fa6f35e8585af42c0"
     }
    },
    "error_text": null,
    "http_calls": [],
    "audit": {
-    "ts": "2026-09-10T02:15:43Z",
-    "request_id": "3b544a70a48146d6bf78af586be16728",
+    "ts": "2026-09-10T02:31:05Z",
+    "request_id": "00d3c6f4b2ed459fa6f35e8585af42c0",
     "tool": "civic.browse_code",
     "server": "commonwealth",
     "server_version": "0.1.0.dev0",
@@ -9882,8 +9882,8 @@
     "requires_user_choice": false,
     "error": null,
     "registry_revision": "2026-09-09",
-    "trace_id": "46baec086d4c7c65b96230ebdd9fc987",
-    "span_id": "72b02af935386100"
+    "trace_id": "c6a32e0ade56ee538cef01dded7e7399",
+    "span_id": "ae05eb71973d7ce7"
    }
   },
   {
@@ -9920,7 +9920,7 @@
       "authority_level": "primary",
       "access_path": "live",
       "source_updated_at": null,
-      "retrieved_at": "2026-09-10T02:15:43Z",
+      "retrieved_at": "2026-09-10T02:31:05Z",
       "cache_age_seconds": 0
      }
     ],
@@ -9930,7 +9930,7 @@
       "source_ref": "source_01",
       "record_id": "15.2-2200",
       "locator": "https://law.lis.virginia.gov/vacode/15.2-2200/",
-      "retrieved_at": "2026-09-10T02:15:43Z",
+      "retrieved_at": "2026-09-10T02:31:05Z",
       "effective_at": null,
       "transformations": [],
       "payload_hash": null,
@@ -9973,14 +9973,14 @@
       "virginia_law": "0.1.1"
      },
      "registry_revision": "2026-09-09",
-     "request_id": "7ef3e0ff3eed420ea24df42e0d93fd61"
+     "request_id": "6d125fd9043944cc85b91659b1b58b47"
     }
    },
    "error_text": null,
    "http_calls": [],
    "audit": {
-    "ts": "2026-09-10T02:15:43Z",
-    "request_id": "7ef3e0ff3eed420ea24df42e0d93fd61",
+    "ts": "2026-09-10T02:31:05Z",
+    "request_id": "6d125fd9043944cc85b91659b1b58b47",
     "tool": "civic.get_code_section",
     "server": "commonwealth",
     "server_version": "0.1.0.dev0",
@@ -10012,8 +10012,8 @@
     "requires_user_choice": false,
     "error": null,
     "registry_revision": "2026-09-09",
-    "trace_id": "cfcc6e4df975157b961d8d5782d22e5c",
-    "span_id": "6f64d2ff39fb0eeb"
+    "trace_id": "66a323b48095f010f072bc6dc6bf812a",
+    "span_id": "0faf71da9382f8f3"
    }
   },
   {
@@ -10050,7 +10050,7 @@
       "authority_level": "primary",
       "access_path": "live",
       "source_updated_at": null,
-      "retrieved_at": "2026-09-10T02:15:43Z",
+      "retrieved_at": "2026-09-10T02:31:05Z",
       "cache_age_seconds": 0
      }
     ],
@@ -10060,7 +10060,7 @@
       "source_ref": "source_01",
       "record_id": "1-500",
       "locator": "https://law.lis.virginia.gov/vacode/1-500/",
-      "retrieved_at": "2026-09-10T02:15:43Z",
+      "retrieved_at": "2026-09-10T02:31:05Z",
       "effective_at": null,
       "transformations": [],
       "payload_hash": null,
@@ -10103,14 +10103,14 @@
       "virginia_law": "0.1.1"
      },
      "registry_revision": "2026-09-09",
-     "request_id": "385845d8c9e74aff9d25e296fd26b3fd"
+     "request_id": "0c16640d210940d5814c3aa597b2f50a"
     }
    },
    "error_text": null,
    "http_calls": [],
    "audit": {
-    "ts": "2026-09-10T02:15:43Z",
-    "request_id": "385845d8c9e74aff9d25e296fd26b3fd",
+    "ts": "2026-09-10T02:31:05Z",
+    "request_id": "0c16640d210940d5814c3aa597b2f50a",
     "tool": "civic.get_code_section",
     "server": "commonwealth",
     "server_version": "0.1.0.dev0",
@@ -10142,8 +10142,8 @@
     "requires_user_choice": false,
     "error": null,
     "registry_revision": "2026-09-09",
-    "trace_id": "dde7895d3bd6a182f02b7ae2a95d9c58",
-    "span_id": "2393ea0324654dd3"
+    "trace_id": "fb1256c27136e471cf1dcdcd7558dc7f",
+    "span_id": "1c2a832a53aaf65c"
    }
   },
   {
@@ -10192,14 +10192,14 @@
       "virginia_law": "0.1.1"
      },
      "registry_revision": "2026-09-09",
-     "request_id": "15b5bdf2f5c2422ead2b1a5c595fb45d"
+     "request_id": "9625535cedeb4b01b9356afe5cf801b0"
     }
    },
    "error_text": null,
    "http_calls": [],
    "audit": {
-    "ts": "2026-09-10T02:15:43Z",
-    "request_id": "15b5bdf2f5c2422ead2b1a5c595fb45d",
+    "ts": "2026-09-10T02:31:05Z",
+    "request_id": "9625535cedeb4b01b9356afe5cf801b0",
     "tool": "civic.get_code_section",
     "server": "commonwealth",
     "server_version": "0.1.0.dev0",
@@ -10222,8 +10222,8 @@
     "requires_user_choice": false,
     "error": null,
     "registry_revision": "2026-09-09",
-    "trace_id": "6d85bc62e8c78b20cf16b46f93966f47",
-    "span_id": "ec8f8daca018f4e9"
+    "trace_id": "d0453851b0ce1c08d5f7084834c3dd13",
+    "span_id": "a1bef1539f9ce052"
    }
   },
   {
@@ -10295,7 +10295,7 @@
       "authority_level": "primary",
       "access_path": "live",
       "source_updated_at": null,
-      "retrieved_at": "2026-09-10T02:15:43Z",
+      "retrieved_at": "2026-09-10T02:31:05Z",
       "cache_age_seconds": 0
      },
      {
@@ -10308,7 +10308,7 @@
       "authority_level": "primary",
       "access_path": "live",
       "source_updated_at": "2026-02-26T20:41:15Z",
-      "retrieved_at": "2026-09-10T02:15:43Z",
+      "retrieved_at": "2026-09-10T02:31:05Z",
       "cache_age_seconds": 0
      }
     ],
@@ -10318,7 +10318,7 @@
       "source_ref": "source_01",
       "record_id": "OBJECTID:35432",
       "locator": null,
-      "retrieved_at": "2026-09-10T02:15:43Z",
+      "retrieved_at": "2026-09-10T02:31:05Z",
       "effective_at": null,
       "transformations": [
        "field_mapping:v1"
@@ -10331,7 +10331,7 @@
       "source_ref": "source_02",
       "record_id": "FID:2",
       "locator": null,
-      "retrieved_at": "2026-09-10T02:15:43Z",
+      "retrieved_at": "2026-09-10T02:31:05Z",
       "effective_at": null,
       "transformations": [
        "field_mapping:v1"
@@ -10389,7 +10389,7 @@
       "virginia_law": "0.1.1"
      },
      "registry_revision": "2026-09-09",
-     "request_id": "3e3d769bbf53429d9e90907db2e26f04"
+     "request_id": "9397db7f67d045bda6a4f0594fb3c78d"
     }
    },
    "error_text": null,
@@ -10446,8 +10446,8 @@
     }
    ],
    "audit": {
-    "ts": "2026-09-10T02:15:43Z",
-    "request_id": "3e3d769bbf53429d9e90907db2e26f04",
+    "ts": "2026-09-10T02:31:05Z",
+    "request_id": "9397db7f67d045bda6a4f0594fb3c78d",
     "tool": "geo.find_zoning",
     "server": "commonwealth",
     "server_version": "0.1.0.dev0",
@@ -10493,8 +10493,8 @@
     "requires_user_choice": false,
     "error": null,
     "registry_revision": "2026-09-09",
-    "trace_id": "e5ca0e0d42f2dcd9c9e18cde9f653ac5",
-    "span_id": "b4cd166823410e1a"
+    "trace_id": "ff97d7ae829eca6a4ae89b89a7f6656d",
+    "span_id": "e15da55745e40f2e"
    }
   },
   {
@@ -10577,7 +10577,7 @@
       "authority_level": "primary",
       "access_path": "live",
       "source_updated_at": null,
-      "retrieved_at": "2026-09-10T02:15:43Z",
+      "retrieved_at": "2026-09-10T02:31:05Z",
       "cache_age_seconds": 0
      },
      {
@@ -10590,7 +10590,7 @@
       "authority_level": "primary",
       "access_path": "live",
       "source_updated_at": null,
-      "retrieved_at": "2026-09-10T02:15:43Z",
+      "retrieved_at": "2026-09-10T02:31:05Z",
       "cache_age_seconds": 0
      },
      {
@@ -10603,7 +10603,7 @@
       "authority_level": "primary",
       "access_path": "live",
       "source_updated_at": "2026-02-26T20:41:15Z",
-      "retrieved_at": "2026-09-10T02:15:43Z",
+      "retrieved_at": "2026-09-10T02:31:05Z",
       "cache_age_seconds": 0
      }
     ],
@@ -10613,7 +10613,7 @@
       "source_ref": "source_01",
       "record_id": "OBJECTID:102097",
       "locator": null,
-      "retrieved_at": "2026-09-10T02:15:43Z",
+      "retrieved_at": "2026-09-10T02:31:05Z",
       "effective_at": null,
       "transformations": [
        "field_mapping:v1",
@@ -10627,7 +10627,7 @@
       "source_ref": "source_02",
       "record_id": "OBJECTID:35432",
       "locator": null,
-      "retrieved_at": "2026-09-10T02:15:43Z",
+      "retrieved_at": "2026-09-10T02:31:05Z",
       "effective_at": null,
       "transformations": [
        "field_mapping:v1",
@@ -10641,7 +10641,7 @@
       "source_ref": "source_01",
       "record_id": "OBJECTID:102097",
       "locator": null,
-      "retrieved_at": "2026-09-10T02:15:43Z",
+      "retrieved_at": "2026-09-10T02:31:05Z",
       "effective_at": null,
       "transformations": [
        "field_mapping:v1",
@@ -10655,7 +10655,7 @@
       "source_ref": "source_03",
       "record_id": "FID:2",
       "locator": null,
-      "retrieved_at": "2026-09-10T02:15:43Z",
+      "retrieved_at": "2026-09-10T02:31:05Z",
       "effective_at": null,
       "transformations": [
        "field_mapping:v1",
@@ -10720,7 +10720,7 @@
       "virginia_law": "0.1.1"
      },
      "registry_revision": "2026-09-09",
-     "request_id": "19525b76c04247418283a0707116e506"
+     "request_id": "dc64927dfcc54dd7b512d0b14016b45b"
     }
    },
    "error_text": null,
@@ -10773,8 +10773,8 @@
     }
    ],
    "audit": {
-    "ts": "2026-09-10T02:15:43Z",
-    "request_id": "19525b76c04247418283a0707116e506",
+    "ts": "2026-09-10T02:31:05Z",
+    "request_id": "dc64927dfcc54dd7b512d0b14016b45b",
     "tool": "geo.find_zoning",
     "server": "commonwealth",
     "server_version": "0.1.0.dev0",
@@ -10824,8 +10824,8 @@
     "requires_user_choice": false,
     "error": null,
     "registry_revision": "2026-09-09",
-    "trace_id": "db5e002720172062067e5b93aab1e8a1",
-    "span_id": "153c3f0873ecd675"
+    "trace_id": "3070d6fcb2c47536e86a013d477769da",
+    "span_id": "863583b9b3ce005e"
    }
   },
   {
@@ -10898,7 +10898,7 @@
       "authority_level": "primary",
       "access_path": "live",
       "source_updated_at": "2026-03-25T14:20:47Z",
-      "retrieved_at": "2026-09-10T02:15:43Z",
+      "retrieved_at": "2026-09-10T02:31:05Z",
       "cache_age_seconds": 0
      },
      {
@@ -10911,7 +10911,7 @@
       "authority_level": "official_secondary",
       "access_path": "live",
       "source_updated_at": null,
-      "retrieved_at": "2026-09-10T02:15:43Z",
+      "retrieved_at": "2026-09-10T02:31:05Z",
       "cache_age_seconds": 0
      }
     ],
@@ -10921,7 +10921,7 @@
       "source_ref": "source_01",
       "record_id": "OBJECTID:1880238",
       "locator": null,
-      "retrieved_at": "2026-09-10T02:15:43Z",
+      "retrieved_at": "2026-09-10T02:31:05Z",
       "effective_at": null,
       "transformations": [
        "field_mapping:v1"
@@ -10934,7 +10934,7 @@
       "source_ref": "source_02",
       "record_id": "OBJECTID:1195622",
       "locator": null,
-      "retrieved_at": "2026-09-10T02:15:43Z",
+      "retrieved_at": "2026-09-10T02:31:05Z",
       "effective_at": null,
       "transformations": [
        "field_mapping:v1"
@@ -10991,7 +10991,7 @@
       "virginia_law": "0.1.1"
      },
      "registry_revision": "2026-09-09",
-     "request_id": "ecd03976c2374def828fafe4d28be6a3"
+     "request_id": "5cf8f60dd9964ede89127b93c0073e2e"
     }
    },
    "error_text": null,
@@ -11042,8 +11042,8 @@
     }
    ],
    "audit": {
-    "ts": "2026-09-10T02:15:43Z",
-    "request_id": "ecd03976c2374def828fafe4d28be6a3",
+    "ts": "2026-09-10T02:31:05Z",
+    "request_id": "5cf8f60dd9964ede89127b93c0073e2e",
     "tool": "geo.find_parcel",
     "server": "commonwealth",
     "server_version": "0.1.0.dev0",
@@ -11086,8 +11086,8 @@
     "requires_user_choice": false,
     "error": null,
     "registry_revision": "2026-09-09",
-    "trace_id": "b8c2d4b6267af39195bced5f944e585e",
-    "span_id": "0cc949e4581c0bd6"
+    "trace_id": "1f291683f09b3b418e91df3dc3b909ad",
+    "span_id": "2d93d6d74941a00c"
    }
   },
   {
@@ -11130,7 +11130,7 @@
       "authority_level": "primary",
       "access_path": "live",
       "source_updated_at": "2026-03-25T14:20:47Z",
-      "retrieved_at": "2026-09-10T02:15:43Z",
+      "retrieved_at": "2026-09-10T02:31:05Z",
       "cache_age_seconds": 0
      },
      {
@@ -11143,7 +11143,7 @@
       "authority_level": "primary",
       "access_path": "live",
       "source_updated_at": "2025-02-24T17:37:24Z",
-      "retrieved_at": "2026-09-10T02:15:43Z",
+      "retrieved_at": "2026-09-10T02:31:05Z",
       "cache_age_seconds": 0
      }
     ],
@@ -11153,7 +11153,7 @@
       "source_ref": "source_01",
       "record_id": "OBJECTID:1880238",
       "locator": null,
-      "retrieved_at": "2026-09-10T02:15:43Z",
+      "retrieved_at": "2026-09-10T02:31:05Z",
       "effective_at": null,
       "transformations": [
        "field_mapping:v1",
@@ -11167,7 +11167,7 @@
       "source_ref": "source_02",
       "record_id": "OBJECTID_12:2281",
       "locator": null,
-      "retrieved_at": "2026-09-10T02:15:43Z",
+      "retrieved_at": "2026-09-10T02:31:05Z",
       "effective_at": null,
       "transformations": [
        "field_mapping:v1",
@@ -11220,7 +11220,7 @@
       "virginia_law": "0.1.1"
      },
      "registry_revision": "2026-09-09",
-     "request_id": "2cd5f6a55f9f431f94e28c82eb7e125e"
+     "request_id": "5132f83436b94f218c1982ff934a2c96"
     }
    },
    "error_text": null,
@@ -11275,8 +11275,8 @@
     }
    ],
    "audit": {
-    "ts": "2026-09-10T02:15:43Z",
-    "request_id": "2cd5f6a55f9f431f94e28c82eb7e125e",
+    "ts": "2026-09-10T02:31:05Z",
+    "request_id": "5132f83436b94f218c1982ff934a2c96",
     "tool": "geo.find_zoning",
     "server": "commonwealth",
     "server_version": "0.1.0.dev0",
@@ -11319,8 +11319,8 @@
     "requires_user_choice": false,
     "error": null,
     "registry_revision": "2026-09-09",
-    "trace_id": "ebdfe94e76dccaecf8559384fb959629",
-    "span_id": "b3245027af9abbd7"
+    "trace_id": "33b0496fb58b200ac89ae76002dfb707",
+    "span_id": "0ecc67ec48a328ff"
    }
   },
   {
@@ -11580,7 +11580,7 @@
       "authority_level": "primary",
       "access_path": "live",
       "source_updated_at": null,
-      "retrieved_at": "2026-09-10T02:15:44Z",
+      "retrieved_at": "2026-09-10T02:31:05Z",
       "cache_age_seconds": 0
      }
     ],
@@ -11590,7 +11590,7 @@
       "source_ref": "source_01",
       "record_id": "5144",
       "locator": "https://richmondva.legistar.com/MeetingDetail.aspx?LEGID=5144&GID=387&G=09290454-F2A8-4339-97A7-B852FD86AB68",
-      "retrieved_at": "2026-09-10T02:15:44Z",
+      "retrieved_at": "2026-09-10T02:31:05Z",
       "effective_at": null,
       "transformations": [],
       "payload_hash": null,
@@ -11601,7 +11601,7 @@
       "source_ref": "source_01",
       "record_id": "5275",
       "locator": "https://richmondva.legistar.com/MeetingDetail.aspx?LEGID=5275&GID=387&G=09290454-F2A8-4339-97A7-B852FD86AB68",
-      "retrieved_at": "2026-09-10T02:15:44Z",
+      "retrieved_at": "2026-09-10T02:31:05Z",
       "effective_at": null,
       "transformations": [],
       "payload_hash": null,
@@ -11612,7 +11612,7 @@
       "source_ref": "source_01",
       "record_id": "5246",
       "locator": "https://richmondva.legistar.com/MeetingDetail.aspx?LEGID=5246&GID=387&G=09290454-F2A8-4339-97A7-B852FD86AB68",
-      "retrieved_at": "2026-09-10T02:15:44Z",
+      "retrieved_at": "2026-09-10T02:31:05Z",
       "effective_at": null,
       "transformations": [],
       "payload_hash": null,
@@ -11623,7 +11623,7 @@
       "source_ref": "source_01",
       "record_id": "5317",
       "locator": "https://richmondva.legistar.com/MeetingDetail.aspx?LEGID=5317&GID=387&G=09290454-F2A8-4339-97A7-B852FD86AB68",
-      "retrieved_at": "2026-09-10T02:15:44Z",
+      "retrieved_at": "2026-09-10T02:31:05Z",
       "effective_at": null,
       "transformations": [],
       "payload_hash": null,
@@ -11634,7 +11634,7 @@
       "source_ref": "source_01",
       "record_id": "5106",
       "locator": "https://richmondva.legistar.com/MeetingDetail.aspx?LEGID=5106&GID=387&G=09290454-F2A8-4339-97A7-B852FD86AB68",
-      "retrieved_at": "2026-09-10T02:15:44Z",
+      "retrieved_at": "2026-09-10T02:31:05Z",
       "effective_at": null,
       "transformations": [],
       "payload_hash": null,
@@ -11645,7 +11645,7 @@
       "source_ref": "source_01",
       "record_id": "5220",
       "locator": "https://richmondva.legistar.com/MeetingDetail.aspx?LEGID=5220&GID=387&G=09290454-F2A8-4339-97A7-B852FD86AB68",
-      "retrieved_at": "2026-09-10T02:15:44Z",
+      "retrieved_at": "2026-09-10T02:31:05Z",
       "effective_at": null,
       "transformations": [],
       "payload_hash": null,
@@ -11656,7 +11656,7 @@
       "source_ref": "source_01",
       "record_id": "5318",
       "locator": "https://richmondva.legistar.com/MeetingDetail.aspx?LEGID=5318&GID=387&G=09290454-F2A8-4339-97A7-B852FD86AB68",
-      "retrieved_at": "2026-09-10T02:15:44Z",
+      "retrieved_at": "2026-09-10T02:31:05Z",
       "effective_at": null,
       "transformations": [],
       "payload_hash": null,
@@ -11667,7 +11667,7 @@
       "source_ref": "source_01",
       "record_id": "5164",
       "locator": "https://richmondva.legistar.com/MeetingDetail.aspx?LEGID=5164&GID=387&G=09290454-F2A8-4339-97A7-B852FD86AB68",
-      "retrieved_at": "2026-09-10T02:15:44Z",
+      "retrieved_at": "2026-09-10T02:31:05Z",
       "effective_at": null,
       "transformations": [],
       "payload_hash": null,
@@ -11678,7 +11678,7 @@
       "source_ref": "source_01",
       "record_id": "5181",
       "locator": "https://richmondva.legistar.com/MeetingDetail.aspx?LEGID=5181&GID=387&G=09290454-F2A8-4339-97A7-B852FD86AB68",
-      "retrieved_at": "2026-09-10T02:15:44Z",
+      "retrieved_at": "2026-09-10T02:31:05Z",
       "effective_at": null,
       "transformations": [],
       "payload_hash": null,
@@ -11689,7 +11689,7 @@
       "source_ref": "source_01",
       "record_id": "5145",
       "locator": "https://richmondva.legistar.com/MeetingDetail.aspx?LEGID=5145&GID=387&G=09290454-F2A8-4339-97A7-B852FD86AB68",
-      "retrieved_at": "2026-09-10T02:15:44Z",
+      "retrieved_at": "2026-09-10T02:31:05Z",
       "effective_at": null,
       "transformations": [],
       "payload_hash": null,
@@ -11700,7 +11700,7 @@
       "source_ref": "source_01",
       "record_id": "5078",
       "locator": "https://richmondva.legistar.com/MeetingDetail.aspx?LEGID=5078&GID=387&G=09290454-F2A8-4339-97A7-B852FD86AB68",
-      "retrieved_at": "2026-09-10T02:15:44Z",
+      "retrieved_at": "2026-09-10T02:31:05Z",
       "effective_at": null,
       "transformations": [],
       "payload_hash": null,
@@ -11711,7 +11711,7 @@
       "source_ref": "source_01",
       "record_id": "5066",
       "locator": "https://richmondva.legistar.com/MeetingDetail.aspx?LEGID=5066&GID=387&G=09290454-F2A8-4339-97A7-B852FD86AB68",
-      "retrieved_at": "2026-09-10T02:15:44Z",
+      "retrieved_at": "2026-09-10T02:31:05Z",
       "effective_at": null,
       "transformations": [],
       "payload_hash": null,
@@ -11722,7 +11722,7 @@
       "source_ref": "source_01",
       "record_id": "5092",
       "locator": "https://richmondva.legistar.com/MeetingDetail.aspx?LEGID=5092&GID=387&G=09290454-F2A8-4339-97A7-B852FD86AB68",
-      "retrieved_at": "2026-09-10T02:15:44Z",
+      "retrieved_at": "2026-09-10T02:31:05Z",
       "effective_at": null,
       "transformations": [],
       "payload_hash": null,
@@ -11733,7 +11733,7 @@
       "source_ref": "source_01",
       "record_id": "5165",
       "locator": "https://richmondva.legistar.com/MeetingDetail.aspx?LEGID=5165&GID=387&G=09290454-F2A8-4339-97A7-B852FD86AB68",
-      "retrieved_at": "2026-09-10T02:15:44Z",
+      "retrieved_at": "2026-09-10T02:31:05Z",
       "effective_at": null,
       "transformations": [],
       "payload_hash": null,
@@ -11744,7 +11744,7 @@
       "source_ref": "source_01",
       "record_id": "5182",
       "locator": "https://richmondva.legistar.com/MeetingDetail.aspx?LEGID=5182&GID=387&G=09290454-F2A8-4339-97A7-B852FD86AB68",
-      "retrieved_at": "2026-09-10T02:15:44Z",
+      "retrieved_at": "2026-09-10T02:31:05Z",
       "effective_at": null,
       "transformations": [],
       "payload_hash": null,
@@ -11788,18 +11788,18 @@
       "virginia_law": "0.1.1"
      },
      "registry_revision": "2026-09-09",
-     "request_id": "08babbf8bd5947adae4be59cad1fb75c"
+     "request_id": "726b1fb771d34e11859e986459c4d83e"
     }
    },
    "error_text": null,
    "http_calls": [],
    "audit": {
-    "ts": "2026-09-10T02:15:44Z",
-    "request_id": "08babbf8bd5947adae4be59cad1fb75c",
+    "ts": "2026-09-10T02:31:05Z",
+    "request_id": "726b1fb771d34e11859e986459c4d83e",
     "tool": "civic.search_meetings",
     "server": "commonwealth",
     "server_version": "0.1.0.dev0",
-    "duration_ms": 916,
+    "duration_ms": 684,
     "args": {
      "jurisdiction": "Richmond City",
      "start_date": "2026-09-01",
@@ -11833,8 +11833,8 @@
     "requires_user_choice": false,
     "error": null,
     "registry_revision": "2026-09-09",
-    "trace_id": "b204229c8cc0cc48306fd2f6d365a7fa",
-    "span_id": "ba63b24675476b4b"
+    "trace_id": "6dd83aa92f22a15fc5378167c60fbdce",
+    "span_id": "bb3dc9e175e8c897"
    }
   },
   {
@@ -11944,7 +11944,7 @@
       "authority_level": "primary",
       "access_path": "live",
       "source_updated_at": null,
-      "retrieved_at": "2026-09-10T02:15:44Z",
+      "retrieved_at": "2026-09-10T02:31:06Z",
       "cache_age_seconds": 0
      }
     ],
@@ -11954,7 +11954,7 @@
       "source_ref": "source_01",
       "record_id": "2740",
       "locator": "https://alexandria.legistar.com/MeetingDetail.aspx?LEGID=2740&GID=239&G=188E7221-51C6-4DB4-965D-DA161BCFB1F6",
-      "retrieved_at": "2026-09-10T02:15:44Z",
+      "retrieved_at": "2026-09-10T02:31:06Z",
       "effective_at": null,
       "transformations": [],
       "payload_hash": null,
@@ -11965,7 +11965,7 @@
       "source_ref": "source_01",
       "record_id": "2754",
       "locator": "https://alexandria.legistar.com/MeetingDetail.aspx?LEGID=2754&GID=239&G=188E7221-51C6-4DB4-965D-DA161BCFB1F6",
-      "retrieved_at": "2026-09-10T02:15:44Z",
+      "retrieved_at": "2026-09-10T02:31:06Z",
       "effective_at": null,
       "transformations": [],
       "payload_hash": null,
@@ -11976,7 +11976,7 @@
       "source_ref": "source_01",
       "record_id": "2757",
       "locator": "https://alexandria.legistar.com/MeetingDetail.aspx?LEGID=2757&GID=239&G=188E7221-51C6-4DB4-965D-DA161BCFB1F6",
-      "retrieved_at": "2026-09-10T02:15:44Z",
+      "retrieved_at": "2026-09-10T02:31:06Z",
       "effective_at": null,
       "transformations": [],
       "payload_hash": null,
@@ -11987,7 +11987,7 @@
       "source_ref": "source_01",
       "record_id": "2799",
       "locator": "https://alexandria.legistar.com/MeetingDetail.aspx?LEGID=2799&GID=239&G=188E7221-51C6-4DB4-965D-DA161BCFB1F6",
-      "retrieved_at": "2026-09-10T02:15:44Z",
+      "retrieved_at": "2026-09-10T02:31:06Z",
       "effective_at": null,
       "transformations": [],
       "payload_hash": null,
@@ -11998,7 +11998,7 @@
       "source_ref": "source_01",
       "record_id": "2798",
       "locator": "https://alexandria.legistar.com/MeetingDetail.aspx?LEGID=2798&GID=239&G=188E7221-51C6-4DB4-965D-DA161BCFB1F6",
-      "retrieved_at": "2026-09-10T02:15:44Z",
+      "retrieved_at": "2026-09-10T02:31:06Z",
       "effective_at": null,
       "transformations": [],
       "payload_hash": null,
@@ -12042,18 +12042,18 @@
       "virginia_law": "0.1.1"
      },
      "registry_revision": "2026-09-09",
-     "request_id": "d1975b21d79a497b81a22d95b8bfd8ae"
+     "request_id": "1f5a07d5880e4c2291316ef33bdae305"
     }
    },
    "error_text": null,
    "http_calls": [],
    "audit": {
-    "ts": "2026-09-10T02:15:44Z",
-    "request_id": "d1975b21d79a497b81a22d95b8bfd8ae",
+    "ts": "2026-09-10T02:31:06Z",
+    "request_id": "1f5a07d5880e4c2291316ef33bdae305",
     "tool": "civic.search_meetings",
     "server": "commonwealth",
     "server_version": "0.1.0.dev0",
-    "duration_ms": 532,
+    "duration_ms": 798,
     "args": {
      "jurisdiction": "Alexandria City",
      "start_date": "2026-09-01",
@@ -12087,8 +12087,8 @@
     "requires_user_choice": false,
     "error": null,
     "registry_revision": "2026-09-09",
-    "trace_id": "f6d374ca20f27e0a7efa0ce7f9dc2b97",
-    "span_id": "78e6cba56b0fa6c4"
+    "trace_id": "cc948630594ea593a1cc0c4211d2fb6e",
+    "span_id": "6c2940d4238e13ac"
    }
   },
   {
@@ -12153,7 +12153,7 @@
       "authority_level": "primary",
       "access_path": "live",
       "source_updated_at": null,
-      "retrieved_at": "2026-09-10T02:15:45Z",
+      "retrieved_at": "2026-09-10T02:31:07Z",
       "cache_age_seconds": 0
      }
     ],
@@ -12163,7 +12163,7 @@
       "source_ref": "source_01",
       "record_id": "5144",
       "locator": "https://richmondva.legistar.com/MeetingDetail.aspx?LEGID=5144&GID=387&G=09290454-F2A8-4339-97A7-B852FD86AB68",
-      "retrieved_at": "2026-09-10T02:15:45Z",
+      "retrieved_at": "2026-09-10T02:31:07Z",
       "effective_at": null,
       "transformations": [],
       "payload_hash": null,
@@ -12174,7 +12174,7 @@
       "source_ref": "source_01",
       "record_id": "5145",
       "locator": "https://richmondva.legistar.com/MeetingDetail.aspx?LEGID=5145&GID=387&G=09290454-F2A8-4339-97A7-B852FD86AB68",
-      "retrieved_at": "2026-09-10T02:15:45Z",
+      "retrieved_at": "2026-09-10T02:31:07Z",
       "effective_at": null,
       "transformations": [],
       "payload_hash": null,
@@ -12218,18 +12218,18 @@
       "virginia_law": "0.1.1"
      },
      "registry_revision": "2026-09-09",
-     "request_id": "681e8f0fa0cc46aebdb853509d17ec58"
+     "request_id": "02adfa2974a64f73b5b35c1f11a47565"
     }
    },
    "error_text": null,
    "http_calls": [],
    "audit": {
-    "ts": "2026-09-10T02:15:45Z",
-    "request_id": "681e8f0fa0cc46aebdb853509d17ec58",
+    "ts": "2026-09-10T02:31:07Z",
+    "request_id": "02adfa2974a64f73b5b35c1f11a47565",
     "tool": "civic.search_meetings",
     "server": "commonwealth",
     "server_version": "0.1.0.dev0",
-    "duration_ms": 544,
+    "duration_ms": 541,
     "args": {
      "jurisdiction": "Richmond City",
      "start_date": "2026-09-01",
@@ -12263,8 +12263,8 @@
     "requires_user_choice": false,
     "error": null,
     "registry_revision": "2026-09-09",
-    "trace_id": "647d26ed9304b81f033c46d215d050a2",
-    "span_id": "c5dc5bd2e0b10d22"
+    "trace_id": "a77cd55eb4e32d65b2aee22707bcffef",
+    "span_id": "95c83a3e616aae9a"
    }
   },
   {
@@ -12497,7 +12497,7 @@
       "authority_level": "primary",
       "access_path": "live",
       "source_updated_at": null,
-      "retrieved_at": "2026-09-10T02:15:46Z",
+      "retrieved_at": "2026-09-10T02:31:07Z",
       "cache_age_seconds": 0
      }
     ],
@@ -12507,7 +12507,7 @@
       "source_ref": "source_01",
       "record_id": "3179",
       "locator": "https://richmondva.legistar.com/MeetingDetail.aspx?LEGID=3179&GID=387&G=09290454-F2A8-4339-97A7-B852FD86AB68",
-      "retrieved_at": "2026-09-10T02:15:46Z",
+      "retrieved_at": "2026-09-10T02:31:07Z",
       "effective_at": null,
       "transformations": [],
       "payload_hash": null,
@@ -12518,7 +12518,7 @@
       "source_ref": "source_01",
       "record_id": "3301",
       "locator": "https://richmondva.legistar.com/MeetingDetail.aspx?LEGID=3301&GID=387&G=09290454-F2A8-4339-97A7-B852FD86AB68",
-      "retrieved_at": "2026-09-10T02:15:46Z",
+      "retrieved_at": "2026-09-10T02:31:07Z",
       "effective_at": null,
       "transformations": [],
       "payload_hash": null,
@@ -12529,7 +12529,7 @@
       "source_ref": "source_01",
       "record_id": "3415",
       "locator": "https://richmondva.legistar.com/MeetingDetail.aspx?LEGID=3415&GID=387&G=09290454-F2A8-4339-97A7-B852FD86AB68",
-      "retrieved_at": "2026-09-10T02:15:46Z",
+      "retrieved_at": "2026-09-10T02:31:07Z",
       "effective_at": null,
       "transformations": [],
       "payload_hash": null,
@@ -12540,7 +12540,7 @@
       "source_ref": "source_01",
       "record_id": "3551",
       "locator": "https://richmondva.legistar.com/MeetingDetail.aspx?LEGID=3551&GID=387&G=09290454-F2A8-4339-97A7-B852FD86AB68",
-      "retrieved_at": "2026-09-10T02:15:46Z",
+      "retrieved_at": "2026-09-10T02:31:07Z",
       "effective_at": null,
       "transformations": [],
       "payload_hash": null,
@@ -12551,7 +12551,7 @@
       "source_ref": "source_01",
       "record_id": "3192",
       "locator": "https://richmondva.legistar.com/MeetingDetail.aspx?LEGID=3192&GID=387&G=09290454-F2A8-4339-97A7-B852FD86AB68",
-      "retrieved_at": "2026-09-10T02:15:46Z",
+      "retrieved_at": "2026-09-10T02:31:07Z",
       "effective_at": null,
       "transformations": [],
       "payload_hash": null,
@@ -12562,7 +12562,7 @@
       "source_ref": "source_01",
       "record_id": "3280",
       "locator": "https://richmondva.legistar.com/MeetingDetail.aspx?LEGID=3280&GID=387&G=09290454-F2A8-4339-97A7-B852FD86AB68",
-      "retrieved_at": "2026-09-10T02:15:46Z",
+      "retrieved_at": "2026-09-10T02:31:07Z",
       "effective_at": null,
       "transformations": [],
       "payload_hash": null,
@@ -12573,7 +12573,7 @@
       "source_ref": "source_01",
       "record_id": "3334",
       "locator": "https://richmondva.legistar.com/MeetingDetail.aspx?LEGID=3334&GID=387&G=09290454-F2A8-4339-97A7-B852FD86AB68",
-      "retrieved_at": "2026-09-10T02:15:46Z",
+      "retrieved_at": "2026-09-10T02:31:07Z",
       "effective_at": null,
       "transformations": [],
       "payload_hash": null,
@@ -12584,7 +12584,7 @@
       "source_ref": "source_01",
       "record_id": "3416",
       "locator": "https://richmondva.legistar.com/MeetingDetail.aspx?LEGID=3416&GID=387&G=09290454-F2A8-4339-97A7-B852FD86AB68",
-      "retrieved_at": "2026-09-10T02:15:46Z",
+      "retrieved_at": "2026-09-10T02:31:07Z",
       "effective_at": null,
       "transformations": [],
       "payload_hash": null,
@@ -12595,7 +12595,7 @@
       "source_ref": "source_01",
       "record_id": "4819",
       "locator": "https://richmondva.legistar.com/MeetingDetail.aspx?LEGID=4819&GID=387&G=09290454-F2A8-4339-97A7-B852FD86AB68",
-      "retrieved_at": "2026-09-10T02:15:46Z",
+      "retrieved_at": "2026-09-10T02:31:07Z",
       "effective_at": null,
       "transformations": [],
       "payload_hash": null,
@@ -12606,7 +12606,7 @@
       "source_ref": "source_01",
       "record_id": "3302",
       "locator": "https://richmondva.legistar.com/MeetingDetail.aspx?LEGID=3302&GID=387&G=09290454-F2A8-4339-97A7-B852FD86AB68",
-      "retrieved_at": "2026-09-10T02:15:46Z",
+      "retrieved_at": "2026-09-10T02:31:07Z",
       "effective_at": null,
       "transformations": [],
       "payload_hash": null,
@@ -12617,7 +12617,7 @@
       "source_ref": "source_01",
       "record_id": "3256",
       "locator": "https://richmondva.legistar.com/MeetingDetail.aspx?LEGID=3256&GID=387&G=09290454-F2A8-4339-97A7-B852FD86AB68",
-      "retrieved_at": "2026-09-10T02:15:46Z",
+      "retrieved_at": "2026-09-10T02:31:07Z",
       "effective_at": null,
       "transformations": [],
       "payload_hash": null,
@@ -12628,7 +12628,7 @@
       "source_ref": "source_01",
       "record_id": "3323",
       "locator": "https://richmondva.legistar.com/MeetingDetail.aspx?LEGID=3323&GID=387&G=09290454-F2A8-4339-97A7-B852FD86AB68",
-      "retrieved_at": "2026-09-10T02:15:46Z",
+      "retrieved_at": "2026-09-10T02:31:07Z",
       "effective_at": null,
       "transformations": [],
       "payload_hash": null,
@@ -12639,7 +12639,7 @@
       "source_ref": "source_01",
       "record_id": "3239",
       "locator": "https://richmondva.legistar.com/MeetingDetail.aspx?LEGID=3239&GID=387&G=09290454-F2A8-4339-97A7-B852FD86AB68",
-      "retrieved_at": "2026-09-10T02:15:46Z",
+      "retrieved_at": "2026-09-10T02:31:07Z",
       "effective_at": null,
       "transformations": [],
       "payload_hash": null,
@@ -12688,18 +12688,18 @@
       "virginia_law": "0.1.1"
      },
      "registry_revision": "2026-09-09",
-     "request_id": "a533b89bee314dada755b85b3e37957e"
+     "request_id": "680ba327a52e497ba209ebb1dca69745"
     }
    },
    "error_text": null,
    "http_calls": [],
    "audit": {
-    "ts": "2026-09-10T02:15:46Z",
-    "request_id": "a533b89bee314dada755b85b3e37957e",
+    "ts": "2026-09-10T02:31:07Z",
+    "request_id": "680ba327a52e497ba209ebb1dca69745",
     "tool": "civic.search_meetings",
     "server": "commonwealth",
     "server_version": "0.1.0.dev0",
-    "duration_ms": 922,
+    "duration_ms": 567,
     "args": {
      "jurisdiction": "Richmond City",
      "start_date": "2019-12-01",
@@ -12734,8 +12734,8 @@
     "requires_user_choice": false,
     "error": null,
     "registry_revision": "2026-09-09",
-    "trace_id": "ab7b5870cf1fab27d36168ea1df15a13",
-    "span_id": "fec45abccef5b6fd"
+    "trace_id": "992b36530b0ee36eccca7589e470efab",
+    "span_id": "6e9708d5c5da3910"
    }
   },
   {
@@ -12770,7 +12770,7 @@
       "authority_level": "primary",
       "access_path": "live",
       "source_updated_at": null,
-      "retrieved_at": "2026-09-10T02:15:46Z",
+      "retrieved_at": "2026-09-10T02:31:08Z",
       "cache_age_seconds": 0
      }
     ],
@@ -12812,18 +12812,18 @@
       "virginia_law": "0.1.1"
      },
      "registry_revision": "2026-09-09",
-     "request_id": "5c079fbee861496bb2d13734671bd8de"
+     "request_id": "219bbd052f794b86b2bdf57130419e59"
     }
    },
    "error_text": null,
    "http_calls": [],
    "audit": {
-    "ts": "2026-09-10T02:15:46Z",
-    "request_id": "5c079fbee861496bb2d13734671bd8de",
+    "ts": "2026-09-10T02:31:08Z",
+    "request_id": "219bbd052f794b86b2bdf57130419e59",
     "tool": "civic.search_meetings",
     "server": "commonwealth",
     "server_version": "0.1.0.dev0",
-    "duration_ms": 488,
+    "duration_ms": 592,
     "args": {
      "jurisdiction": "Richmond City",
      "start_date": "2030-01-01",
@@ -12857,8 +12857,8 @@
     "requires_user_choice": false,
     "error": null,
     "registry_revision": "2026-09-09",
-    "trace_id": "a480d3664fc461a1b3a3c2d2a4ca2feb",
-    "span_id": "5e16b8af10ff8eff"
+    "trace_id": "2ff8fcffec0a673387b0f252dc540c88",
+    "span_id": "774f9dba34d1b93d"
    }
   },
   {
@@ -12908,18 +12908,18 @@
       "virginia_law": "0.1.1"
      },
      "registry_revision": "2026-09-09",
-     "request_id": "76248e07d8144d44b76c0a58d79fb506"
+     "request_id": "2ff8570496224184bf761f82c2ed3a26"
     }
    },
    "error_text": null,
    "http_calls": [],
    "audit": {
-    "ts": "2026-09-10T02:15:46Z",
-    "request_id": "76248e07d8144d44b76c0a58d79fb506",
+    "ts": "2026-09-10T02:31:08Z",
+    "request_id": "2ff8570496224184bf761f82c2ed3a26",
     "tool": "civic.search_meetings",
     "server": "commonwealth",
     "server_version": "0.1.0.dev0",
-    "duration_ms": 1,
+    "duration_ms": 0,
     "args": {
      "jurisdiction": "Fairfax County",
      "start_date": "2026-09-01",
@@ -12944,8 +12944,8 @@
     "requires_user_choice": false,
     "error": null,
     "registry_revision": "2026-09-09",
-    "trace_id": "94fb812e7b420c98adbc495f30d13004",
-    "span_id": "3200911ac4902e5f"
+    "trace_id": "7bc9292f2f31f7e45f7e9faa55f3f454",
+    "span_id": "2ce80decd411c0a4"
    }
   },
   {
@@ -12994,7 +12994,7 @@
       "authority_level": "primary",
       "access_path": "live",
       "source_updated_at": null,
-      "retrieved_at": "2026-09-10T02:15:46Z",
+      "retrieved_at": "2026-09-10T02:31:08Z",
       "cache_age_seconds": 0
      },
      {
@@ -13007,7 +13007,7 @@
       "authority_level": "official_secondary",
       "access_path": "live",
       "source_updated_at": null,
-      "retrieved_at": "2026-09-10T02:15:46Z",
+      "retrieved_at": "2026-09-10T02:31:08Z",
       "cache_age_seconds": 0
      }
     ],
@@ -13057,7 +13057,7 @@
       "virginia_law": "0.1.1"
      },
      "registry_revision": "2026-09-09",
-     "request_id": "bded37e2fecf42b4a3a4b86e3aadfe47"
+     "request_id": "e9f8c7a2f4004d548722b4b3306a2569"
     }
    },
    "error_text": null,
@@ -13090,8 +13090,8 @@
     }
    ],
    "audit": {
-    "ts": "2026-09-10T02:15:46Z",
-    "request_id": "bded37e2fecf42b4a3a4b86e3aadfe47",
+    "ts": "2026-09-10T02:31:08Z",
+    "request_id": "e9f8c7a2f4004d548722b4b3306a2569",
     "tool": "geo.find_parcel",
     "server": "commonwealth",
     "server_version": "0.1.0.dev0",
@@ -13133,8 +13133,8 @@
     "requires_user_choice": false,
     "error": null,
     "registry_revision": "2026-09-09",
-    "trace_id": "24975f9245c2ae7bb2ddefc4d5acd189",
-    "span_id": "476259b675cd75df"
+    "trace_id": "e7387188e005b1857c9973a41b348d6d",
+    "span_id": "7eb15ba60f9ded19"
    }
   },
   {
@@ -13184,14 +13184,14 @@
       "virginia_law": "0.1.1"
      },
      "registry_revision": "2026-09-09",
-     "request_id": "ed6d48b0b4dd458b852fbfba083dffd6"
+     "request_id": "004626018ba943688f2065013d1b9a11"
     }
    },
    "error_text": null,
    "http_calls": [],
    "audit": {
-    "ts": "2026-09-10T02:15:46Z",
-    "request_id": "ed6d48b0b4dd458b852fbfba083dffd6",
+    "ts": "2026-09-10T02:31:08Z",
+    "request_id": "004626018ba943688f2065013d1b9a11",
     "tool": "geo.find_zoning",
     "server": "commonwealth",
     "server_version": "0.1.0.dev0",
@@ -13218,8 +13218,8 @@
     "requires_user_choice": false,
     "error": null,
     "registry_revision": "2026-09-09",
-    "trace_id": "b15d14786f9210f55c21bb35723d7e3c",
-    "span_id": "140268497fa44a86"
+    "trace_id": "56b28afba0f8f488b2e033f82b876dae",
+    "span_id": "87b692e9950f381e"
    }
   },
   {
@@ -13252,7 +13252,7 @@
       "authority_level": "primary",
       "access_path": "live",
       "source_updated_at": null,
-      "retrieved_at": "2026-09-10T02:15:46Z",
+      "retrieved_at": "2026-09-10T02:31:08Z",
       "cache_age_seconds": 0
      }
     ],
@@ -13304,7 +13304,7 @@
       "virginia_law": "0.1.1"
      },
      "registry_revision": "2026-09-09",
-     "request_id": "c378142aa3eb4ae08c97692c98ca5669"
+     "request_id": "9c4f29366fd74a0eba83b08e755347f8"
     }
    },
    "error_text": null,
@@ -13329,8 +13329,8 @@
     }
    ],
    "audit": {
-    "ts": "2026-09-10T02:15:46Z",
-    "request_id": "c378142aa3eb4ae08c97692c98ca5669",
+    "ts": "2026-09-10T02:31:08Z",
+    "request_id": "9c4f29366fd74a0eba83b08e755347f8",
     "tool": "geo.find_environmental_sites",
     "server": "commonwealth",
     "server_version": "0.1.0.dev0",
@@ -13370,8 +13370,8 @@
     "requires_user_choice": false,
     "error": null,
     "registry_revision": "2026-09-09",
-    "trace_id": "44f4d3cfe89a919b2c67e24c03aaa411",
-    "span_id": "5d527213f4ecb06a"
+    "trace_id": "21e8e49cf9e1275d6d7e35b59cdb50e2",
+    "span_id": "979c88f8ee3307fd"
    }
   },
   {
@@ -15547,7 +15547,7 @@
       "authority_level": "official_secondary",
       "access_path": "live",
       "source_updated_at": null,
-      "retrieved_at": "2026-09-10T02:15:46Z",
+      "retrieved_at": "2026-09-10T02:31:08Z",
       "cache_age_seconds": 0
      }
     ],
@@ -15557,7 +15557,7 @@
       "source_ref": "source_01",
       "record_id": "OBJECTID:29",
       "locator": null,
-      "retrieved_at": "2026-09-10T02:15:46Z",
+      "retrieved_at": "2026-09-10T02:31:08Z",
       "effective_at": null,
       "transformations": [
        "field_mapping:v1",
@@ -15602,7 +15602,7 @@
      {
       "uri": "commonwealth://results/00000000000000000000000000000002",
       "media_type": "application/json",
-      "description": "Fairfax County's boundary as va-vgin-admin-boundaries publishes it, with no generalization applied. Expires 2026-09-11T02:15:46Z; re-run geo.find_boundaries to regenerate it."
+      "description": "Fairfax County's boundary as va-vgin-admin-boundaries publishes it, with no generalization applied. Expires 2026-09-11T02:31:08Z; re-run geo.find_boundaries to regenerate it."
      }
     ],
     "_execution": {
@@ -15618,7 +15618,7 @@
       "virginia_law": "0.1.1"
      },
      "registry_revision": "2026-09-09",
-     "request_id": "51c488656b564b3a814d04e52802175e"
+     "request_id": "3daab782ed2f4cc78f8b36744926e851"
     }
    },
    "error_text": null,
@@ -15655,12 +15655,12 @@
     }
    ],
    "audit": {
-    "ts": "2026-09-10T02:15:46Z",
-    "request_id": "51c488656b564b3a814d04e52802175e",
+    "ts": "2026-09-10T02:31:08Z",
+    "request_id": "3daab782ed2f4cc78f8b36744926e851",
     "tool": "geo.find_boundaries",
     "server": "commonwealth",
     "server_version": "0.1.0.dev0",
-    "duration_ms": 50,
+    "duration_ms": 56,
     "args": {
      "jurisdiction": "Fairfax County",
      "detail": "full"
@@ -15691,8 +15691,8 @@
     "requires_user_choice": false,
     "error": null,
     "registry_revision": "2026-09-09",
-    "trace_id": "c8f0a53bca39da329d4296e140b047ad",
-    "span_id": "701259b45def3095"
+    "trace_id": "c3858bae5f70d3cb327ca338b5210150",
+    "span_id": "609af6df479de3ca"
    }
   },
   {
@@ -15762,7 +15762,7 @@
       "authority_level": "official_derived",
       "access_path": "index",
       "source_updated_at": null,
-      "retrieved_at": "2026-09-10T02:15:46Z",
+      "retrieved_at": "2026-09-10T02:31:08Z",
       "cache_age_seconds": 0
      }
     ],
@@ -15772,7 +15772,7 @@
       "source_ref": "source_01",
       "record_id": "va-fairfax-parcels-zoning",
       "locator": null,
-      "retrieved_at": "2026-09-10T02:15:46Z",
+      "retrieved_at": "2026-09-10T02:31:08Z",
       "effective_at": null,
       "transformations": [],
       "payload_hash": null,
@@ -15783,7 +15783,7 @@
       "source_ref": "source_01",
       "record_id": "va-leesburg-town-parcels-zoning",
       "locator": null,
-      "retrieved_at": "2026-09-10T02:15:46Z",
+      "retrieved_at": "2026-09-10T02:31:08Z",
       "effective_at": null,
       "transformations": [],
       "payload_hash": null,
@@ -15794,7 +15794,7 @@
       "source_ref": "source_01",
       "record_id": "va-richmond-city-parcels-zoning",
       "locator": null,
-      "retrieved_at": "2026-09-10T02:15:46Z",
+      "retrieved_at": "2026-09-10T02:31:08Z",
       "effective_at": null,
       "transformations": [],
       "payload_hash": null,
@@ -15805,7 +15805,7 @@
       "source_ref": "source_01",
       "record_id": "va-vienna-town-zoning",
       "locator": null,
-      "retrieved_at": "2026-09-10T02:15:46Z",
+      "retrieved_at": "2026-09-10T02:31:08Z",
       "effective_at": null,
       "transformations": [],
       "payload_hash": null,
@@ -15833,14 +15833,14 @@
       "virginia_law": "0.1.1"
      },
      "registry_revision": "2026-09-09",
-     "request_id": "19db4ea491394979ba52a5e51726014f"
+     "request_id": "424f1d1998cf4661b7db3d79b0891809"
     }
    },
    "error_text": null,
    "http_calls": [],
    "audit": {
-    "ts": "2026-09-10T02:15:46Z",
-    "request_id": "19db4ea491394979ba52a5e51726014f",
+    "ts": "2026-09-10T02:31:08Z",
+    "request_id": "424f1d1998cf4661b7db3d79b0891809",
     "tool": "registry.search_sources",
     "server": "commonwealth",
     "server_version": "0.1.0.dev0",
@@ -15874,8 +15874,8 @@
     "requires_user_choice": false,
     "error": null,
     "registry_revision": "2026-09-09",
-    "trace_id": "3e1bc3d3cad1cb81853d05faedcc29fc",
-    "span_id": "bb032f543e8e2d7f"
+    "trace_id": "1cdaf1869455d53890b96d4f9354d29e",
+    "span_id": "ff9b157f795667cf"
    }
   },
   {
@@ -15919,7 +15919,7 @@
       "authority_level": "official_derived",
       "access_path": "index",
       "source_updated_at": null,
-      "retrieved_at": "2026-09-10T02:15:46Z",
+      "retrieved_at": "2026-09-10T02:31:08Z",
       "cache_age_seconds": 0
      }
     ],
@@ -15929,7 +15929,7 @@
       "source_ref": "source_01",
       "record_id": "va-deq-water-quality-stations",
       "locator": null,
-      "retrieved_at": "2026-09-10T02:15:46Z",
+      "retrieved_at": "2026-09-10T02:31:08Z",
       "effective_at": null,
       "transformations": [],
       "payload_hash": null,
@@ -15957,14 +15957,14 @@
       "virginia_law": "0.1.1"
      },
      "registry_revision": "2026-09-09",
-     "request_id": "f482895286864b209475370c2d8f2b53"
+     "request_id": "b29e4e4c46fb4258870fd487b3486c3b"
     }
    },
    "error_text": null,
    "http_calls": [],
    "audit": {
-    "ts": "2026-09-10T02:15:46Z",
-    "request_id": "f482895286864b209475370c2d8f2b53",
+    "ts": "2026-09-10T02:31:08Z",
+    "request_id": "b29e4e4c46fb4258870fd487b3486c3b",
     "tool": "registry.describe_source",
     "server": "commonwealth",
     "server_version": "0.1.0.dev0",
@@ -15994,8 +15994,8 @@
     "requires_user_choice": false,
     "error": null,
     "registry_revision": "2026-09-09",
-    "trace_id": "6c447c32cc007fd34142ecfe5ddc989c",
-    "span_id": "568c1c7e72fe58c7"
+    "trace_id": "e8da16a485765458bcbdc297c0f87741",
+    "span_id": "505f28fd7ae0f4e7"
    }
   },
   {
@@ -16181,7 +16181,7 @@
       "authority_level": "official_derived",
       "access_path": "index",
       "source_updated_at": null,
-      "retrieved_at": "2026-09-10T02:15:46Z",
+      "retrieved_at": "2026-09-10T02:31:08Z",
       "cache_age_seconds": 0
      }
     ],
@@ -16191,7 +16191,7 @@
       "source_ref": "source_01",
       "record_id": "va-albemarle-county-meetings",
       "locator": null,
-      "retrieved_at": "2026-09-10T02:15:46Z",
+      "retrieved_at": "2026-09-10T02:31:08Z",
       "effective_at": null,
       "transformations": [],
       "payload_hash": null,
@@ -16202,7 +16202,7 @@
       "source_ref": "source_01",
       "record_id": "va-alexandria-city-meetings",
       "locator": null,
-      "retrieved_at": "2026-09-10T02:15:46Z",
+      "retrieved_at": "2026-09-10T02:31:08Z",
       "effective_at": null,
       "transformations": [],
       "payload_hash": null,
@@ -16213,7 +16213,7 @@
       "source_ref": "source_01",
       "record_id": "va-charles-city-county-meetings",
       "locator": null,
-      "retrieved_at": "2026-09-10T02:15:46Z",
+      "retrieved_at": "2026-09-10T02:31:08Z",
       "effective_at": null,
       "transformations": [],
       "payload_hash": null,
@@ -16224,7 +16224,7 @@
       "source_ref": "source_01",
       "record_id": "va-charles-city-county-parcels",
       "locator": null,
-      "retrieved_at": "2026-09-10T02:15:46Z",
+      "retrieved_at": "2026-09-10T02:31:08Z",
       "effective_at": null,
       "transformations": [],
       "payload_hash": null,
@@ -16235,7 +16235,7 @@
       "source_ref": "source_01",
       "record_id": "va-code-of-virginia",
       "locator": null,
-      "retrieved_at": "2026-09-10T02:15:46Z",
+      "retrieved_at": "2026-09-10T02:31:08Z",
       "effective_at": null,
       "transformations": [],
       "payload_hash": null,
@@ -16246,7 +16246,7 @@
       "source_ref": "source_01",
       "record_id": "va-deq-water-quality-stations",
       "locator": null,
-      "retrieved_at": "2026-09-10T02:15:46Z",
+      "retrieved_at": "2026-09-10T02:31:08Z",
       "effective_at": null,
       "transformations": [],
       "payload_hash": null,
@@ -16257,7 +16257,7 @@
       "source_ref": "source_01",
       "record_id": "va-eva-procurement",
       "locator": null,
-      "retrieved_at": "2026-09-10T02:15:46Z",
+      "retrieved_at": "2026-09-10T02:31:08Z",
       "effective_at": null,
       "transformations": [],
       "payload_hash": null,
@@ -16268,7 +16268,7 @@
       "source_ref": "source_01",
       "record_id": "va-fairfax-county-meetings",
       "locator": null,
-      "retrieved_at": "2026-09-10T02:15:46Z",
+      "retrieved_at": "2026-09-10T02:31:08Z",
       "effective_at": null,
       "transformations": [],
       "payload_hash": null,
@@ -16279,7 +16279,7 @@
       "source_ref": "source_01",
       "record_id": "va-fairfax-parcels-zoning",
       "locator": null,
-      "retrieved_at": "2026-09-10T02:15:46Z",
+      "retrieved_at": "2026-09-10T02:31:08Z",
       "effective_at": null,
       "transformations": [],
       "payload_hash": null,
@@ -16290,7 +16290,7 @@
       "source_ref": "source_01",
       "record_id": "va-hampton-city-meetings",
       "locator": null,
-      "retrieved_at": "2026-09-10T02:15:46Z",
+      "retrieved_at": "2026-09-10T02:31:08Z",
       "effective_at": null,
       "transformations": [],
       "payload_hash": null,
@@ -16301,7 +16301,7 @@
       "source_ref": "source_01",
       "record_id": "va-leesburg-town-parcels-zoning",
       "locator": null,
-      "retrieved_at": "2026-09-10T02:15:46Z",
+      "retrieved_at": "2026-09-10T02:31:08Z",
       "effective_at": null,
       "transformations": [],
       "payload_hash": null,
@@ -16312,7 +16312,7 @@
       "source_ref": "source_01",
       "record_id": "va-lis-legislative-api",
       "locator": null,
-      "retrieved_at": "2026-09-10T02:15:46Z",
+      "retrieved_at": "2026-09-10T02:31:08Z",
       "effective_at": null,
       "transformations": [],
       "payload_hash": null,
@@ -16323,7 +16323,7 @@
       "source_ref": "source_01",
       "record_id": "va-open-data-portal",
       "locator": null,
-      "retrieved_at": "2026-09-10T02:15:46Z",
+      "retrieved_at": "2026-09-10T02:31:08Z",
       "effective_at": null,
       "transformations": [],
       "payload_hash": null,
@@ -16334,7 +16334,7 @@
       "source_ref": "source_01",
       "record_id": "va-petersburg-city-meetings",
       "locator": null,
-      "retrieved_at": "2026-09-10T02:15:46Z",
+      "retrieved_at": "2026-09-10T02:31:08Z",
       "effective_at": null,
       "transformations": [],
       "payload_hash": null,
@@ -16345,7 +16345,7 @@
       "source_ref": "source_01",
       "record_id": "va-richmond-city-meetings",
       "locator": null,
-      "retrieved_at": "2026-09-10T02:15:46Z",
+      "retrieved_at": "2026-09-10T02:31:08Z",
       "effective_at": null,
       "transformations": [],
       "payload_hash": null,
@@ -16356,7 +16356,7 @@
       "source_ref": "source_01",
       "record_id": "va-richmond-city-parcels-zoning",
       "locator": null,
-      "retrieved_at": "2026-09-10T02:15:46Z",
+      "retrieved_at": "2026-09-10T02:31:08Z",
       "effective_at": null,
       "transformations": [],
       "payload_hash": null,
@@ -16367,7 +16367,7 @@
       "source_ref": "source_01",
       "record_id": "va-scc",
       "locator": null,
-      "retrieved_at": "2026-09-10T02:15:46Z",
+      "retrieved_at": "2026-09-10T02:31:08Z",
       "effective_at": null,
       "transformations": [],
       "payload_hash": null,
@@ -16378,7 +16378,7 @@
       "source_ref": "source_01",
       "record_id": "va-vdh",
       "locator": null,
-      "retrieved_at": "2026-09-10T02:15:46Z",
+      "retrieved_at": "2026-09-10T02:31:08Z",
       "effective_at": null,
       "transformations": [],
       "payload_hash": null,
@@ -16389,7 +16389,7 @@
       "source_ref": "source_01",
       "record_id": "va-vdot-lrs-routes",
       "locator": null,
-      "retrieved_at": "2026-09-10T02:15:46Z",
+      "retrieved_at": "2026-09-10T02:31:08Z",
       "effective_at": null,
       "transformations": [],
       "payload_hash": null,
@@ -16400,7 +16400,7 @@
       "source_ref": "source_01",
       "record_id": "va-vgin-address-points",
       "locator": null,
-      "retrieved_at": "2026-09-10T02:15:46Z",
+      "retrieved_at": "2026-09-10T02:31:08Z",
       "effective_at": null,
       "transformations": [],
       "payload_hash": null,
@@ -16411,7 +16411,7 @@
       "source_ref": "source_01",
       "record_id": "va-vgin-admin-boundaries",
       "locator": null,
-      "retrieved_at": "2026-09-10T02:15:46Z",
+      "retrieved_at": "2026-09-10T02:31:08Z",
       "effective_at": null,
       "transformations": [],
       "payload_hash": null,
@@ -16422,7 +16422,7 @@
       "source_ref": "source_01",
       "record_id": "va-vgin-building-footprints",
       "locator": null,
-      "retrieved_at": "2026-09-10T02:15:46Z",
+      "retrieved_at": "2026-09-10T02:31:08Z",
       "effective_at": null,
       "transformations": [],
       "payload_hash": null,
@@ -16433,7 +16433,7 @@
       "source_ref": "source_01",
       "record_id": "va-vgin-composite-locator",
       "locator": null,
-      "retrieved_at": "2026-09-10T02:15:46Z",
+      "retrieved_at": "2026-09-10T02:31:08Z",
       "effective_at": null,
       "transformations": [],
       "payload_hash": null,
@@ -16444,7 +16444,7 @@
       "source_ref": "source_01",
       "record_id": "va-vgin-landmarks",
       "locator": null,
-      "retrieved_at": "2026-09-10T02:15:46Z",
+      "retrieved_at": "2026-09-10T02:31:08Z",
       "effective_at": null,
       "transformations": [],
       "payload_hash": null,
@@ -16455,7 +16455,7 @@
       "source_ref": "source_01",
       "record_id": "va-vgin-road-centerlines",
       "locator": null,
-      "retrieved_at": "2026-09-10T02:15:46Z",
+      "retrieved_at": "2026-09-10T02:31:08Z",
       "effective_at": null,
       "transformations": [],
       "payload_hash": null,
@@ -16466,7 +16466,7 @@
       "source_ref": "source_01",
       "record_id": "va-vgin-statewide-parcels",
       "locator": null,
-      "retrieved_at": "2026-09-10T02:15:46Z",
+      "retrieved_at": "2026-09-10T02:31:08Z",
       "effective_at": null,
       "transformations": [],
       "payload_hash": null,
@@ -16477,7 +16477,7 @@
       "source_ref": "source_01",
       "record_id": "va-vienna-town-zoning",
       "locator": null,
-      "retrieved_at": "2026-09-10T02:15:46Z",
+      "retrieved_at": "2026-09-10T02:31:08Z",
       "effective_at": null,
       "transformations": [],
       "payload_hash": null,
@@ -16505,14 +16505,14 @@
       "virginia_law": "0.1.1"
      },
      "registry_revision": "2026-09-09",
-     "request_id": "73af7756e490480093d69f5cebea8063"
+     "request_id": "89a6f424f42b418b8a05e3f9e327ca5c"
     }
    },
    "error_text": null,
    "http_calls": [],
    "audit": {
-    "ts": "2026-09-10T02:15:46Z",
-    "request_id": "73af7756e490480093d69f5cebea8063",
+    "ts": "2026-09-10T02:31:08Z",
+    "request_id": "89a6f424f42b418b8a05e3f9e327ca5c",
     "tool": "registry.source_status",
     "server": "commonwealth",
     "server_version": "0.1.0.dev0",
@@ -16542,8 +16542,8 @@
     "requires_user_choice": false,
     "error": null,
     "registry_revision": "2026-09-09",
-    "trace_id": "55a0e1f2b61c95a6ba492b824095203c",
-    "span_id": "bab88dbbbcb66b6c"
+    "trace_id": "49c147d76a94dfec5ddd4660dbe5a441",
+    "span_id": "5827fa8f2691e950"
    }
   },
   {
@@ -16553,7 +16553,7 @@
    "error_text": "Error executing tool registry.search_sources: InvalidQuery: capability 'unicorns.lookup' is not in the vocabulary; known: ['address.lookup', 'boundary.lookup', 'building.lookup', 'code_section.lookup', 'code_structure.browse', 'environmental_site.lookup', 'geocode.address', 'landmark.lookup', 'meeting.search', 'parcel.lookup', 'road.lookup', 'zoning.lookup']",
    "http_calls": [],
    "audit": {
-    "ts": "2026-09-10T02:15:47Z",
+    "ts": "2026-09-10T02:31:08Z",
     "request_id": "",
     "tool": "registry.search_sources",
     "server": "commonwealth",
@@ -16576,8 +16576,8 @@
     "requires_user_choice": false,
     "error": "InvalidQuery",
     "registry_revision": "2026-09-09",
-    "trace_id": "b00cf066604b9225cdd63a1e200c3c00",
-    "span_id": "0a43932868641601"
+    "trace_id": "bcfe227e06e2917daa1540f8f1fa5f14",
+    "span_id": "ccde6b2a024081ba"
    }
   }
  ]
