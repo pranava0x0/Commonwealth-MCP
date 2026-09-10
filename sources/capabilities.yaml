@@ -57,3 +57,10 @@ capabilities:
       which is why these manifests name both. A locality with no
       registered agenda source is a registry gap, never an empty
       calendar.
+  - id: health_facility.lookup
+    description: >
+      Find hospitals and urgent-care facilities a locality publishes,
+      near a point or by name. A locality's own list of the places it
+      considers hospitals and urgent care — not a licensing register, and
+      not every place that provides care. A facility absent from it has
+      not been shown not to exist.

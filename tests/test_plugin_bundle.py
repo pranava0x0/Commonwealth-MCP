@@ -187,6 +187,7 @@ CAPABILITY_TOOLS = {
     "code_structure.browse": "civic.browse_code",
     "environmental_site.lookup": "geo.find_environmental_sites",
     "geocode.address": "geo.resolve_location",
+    "health_facility.lookup": "geo.find_health_facilities",
     "landmark.lookup": "geo.find_landmarks",
     "meeting.search": "civic.search_meetings",
     "parcel.lookup": "geo.find_parcel",

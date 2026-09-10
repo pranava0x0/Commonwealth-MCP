@@ -69,7 +69,14 @@ class EnvelopeBuilder:
             authority_level=authority_level, access_path=access_path,
             source_updated_at=source_updated_at, retrieved_at=retrieved_at,
             cache_age_seconds=cache_age_seconds))
-        if source_updated_at is None and warn_on_missing_freshness:
+        if (source_updated_at is None and warn_on_missing_freshness
+                # Once per source. A tool reading two layers of one
+                # service adds the entry twice, and the same sentence
+                # twice reads as two separate problems — the same guard
+                # the terms note and the staleness warning carry.
+                and not any(w.code == WarningCode.freshness_unavailable
+                            and w.source_id == source_id
+                            for w in self._warnings)):
             self.warn(WarningCode.freshness_unavailable,
                       "The publisher exposes no machine-readable update date "
                       "for this layer; retrieval time is known, data vintage "

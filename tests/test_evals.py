@@ -207,7 +207,7 @@ def test_the_oracle_run_passes_every_committed_tier2_task(ctx):
 
 
 @pytest.mark.parametrize("profile,expected_tools",
-                         [("default", 10), ("discovery", 14), ("all", 16)])
+                         [("default", 10), ("discovery", 14), ("all", 17)])
 def test_the_sweep_runs_at_every_real_toolset_size(ctx, profile,
                                                    expected_tools):
     """The 10/14/16 arms from bench.md § 5's 2026-09-09 amendment. The

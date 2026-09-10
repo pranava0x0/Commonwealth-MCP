@@ -174,6 +174,8 @@ CAPABILITY_COPY = {
                                   "monitored sites"),
     "geocode.address": ("Where is this address, and whose government is it?",
                         "geocoding"),
+    "health_facility.lookup": ("Where is the nearest hospital or urgent "
+                              "care?", "hospitals and urgent care"),
     "landmark.lookup": ("Which schools, libraries, or fire stations are "
                         "nearby?", "public places"),
     "meeting.search": ("When does this government meet, and about what?",
@@ -281,7 +283,9 @@ DEMO_GROUPS = [
         ("geo.find_parcel", dict(LOUDOUN),
          'No local parcel source is registered for Loudoun; VGIN returns a parcel.'),
         ("geo.find_zoning", dict(LOUDOUN),
-         'No zoning source is registered for Loudoun County.'),
+         'Zoning from Loudoun County\u2019s own layer. This call returned a '
+         'registry gap until the county was registered on 2026-09-10, and '
+         'it is the same call \u2014 what changed is the registry.'),
         ("geo.find_landmarks", dict(LOUDOUN),
          'The landmarks query returned no records within one kilometre.'),
     ]),
@@ -378,6 +382,31 @@ DEMO_GROUPS = [
          "The town's own zoning map layer, with a link to the ordinance "
          "section returned as data"),
     ]),
+
+    ('Hospitals and urgent care',
+     'The first health capability with an endpoint behind it. A locality '
+     'publishes its own map of the hospitals and urgent care inside it \u2014 '
+     'which is a narrower thing than a licensing register, and the answers '
+     'say so.', [
+        ("geo.find_health_facilities", {"jurisdiction": "Loudoun County",
+                                        "lon": -77.4875, "lat": 39.0437},
+         'Hospitals and urgent care near Ashburn. The county publishes its '
+         'own map of them; Virginia licenses hospitals through VDH, which '
+         'publishes nothing this server can query.'),
+        ("geo.find_health_facilities", {"jurisdiction": "Loudoun County",
+                                        "name": "Inova"},
+         'The same layer by name prefix.'),
+        ("geo.find_health_facilities", {"jurisdiction": "Loudoun County",
+                                        "lon": -77.9, "lat": 39.15,
+                                        "radius_meters": 2000.0},
+         'A point in western Loudoun with nothing within two kilometres. '
+         'A clean empty \u2014 and not evidence that care is unavailable.'),
+        ("geo.find_health_facilities", {"jurisdiction": "Fairfax County",
+                                        "lon": -77.2653, "lat": 38.9012},
+         'The same question where no health source is registered. Coverage '
+         'says none: Fairfax has hospitals, and this project has nowhere '
+         'to read them.'),
+     ]),
 
     ('When does this government meet?',
      'Five Virginia localities publish their meetings through one '

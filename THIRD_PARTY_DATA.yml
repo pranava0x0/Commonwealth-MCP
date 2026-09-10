@@ -93,6 +93,26 @@ sources:
   data_classification: open
   recorded_fixtures:
   - tests/fixtures/sources/va-leesburg-town-parcels-zoning/recorded.json
+- id: va-loudoun-county-health-facilities
+  name: Loudoun County Hospitals and Urgent Care (Loudoun County GIS)
+  publisher: Loudoun County government (Office of Mapping and Geographic Information)
+  manifest: sources/local/loudoun-county/health-facilities.yaml
+  terms_url: https://logis.loudoun.gov/metadata/Zoning.html
+  terms_reviewed_at: '2026-09-10'
+  automation_status: public_api
+  data_classification: open
+  recorded_fixtures:
+  - tests/fixtures/sources/va-loudoun-county-health-facilities/recorded.json
+- id: va-loudoun-county-parcels-zoning
+  name: Loudoun County Parcels and Zoning (Loudoun County GIS)
+  publisher: Loudoun County government (Office of Mapping and Geographic Information)
+  manifest: sources/local/loudoun-county/parcels-zoning.yaml
+  terms_url: https://logis.loudoun.gov/metadata/Zoning.html
+  terms_reviewed_at: '2026-09-10'
+  automation_status: public_api
+  data_classification: open
+  recorded_fixtures:
+  - tests/fixtures/sources/va-loudoun-county-parcels-zoning/recorded.json
 - id: va-petersburg-city-meetings
   name: Petersburg City Public Meetings (Granicus/Legistar)
   publisher: Petersburg City government (Office of the City Clerk)

@@ -21,6 +21,7 @@ from ..adapters.base import HttpFetcher, egress_policy_for
 from ..core import toolreg
 from ..core.envelope import utc_now_iso
 from ..core.errors import CommonwealthError
+from ..adapters.replay import ReplayFetcher
 from ..core.registry import (INVENTORY_ADAPTER, SourceManifest,
                              validate_manifest)
 from ..runtime import PROJECT_ROOT, SOURCES_DIR, RuntimeContext, load_context
@@ -898,6 +899,45 @@ async def _sample_buildings(adapter, m, params, ctx) -> dict:
     return out
 
 
+async def _sample_health_facilities(adapter, m, params, ctx) -> dict:
+    """Recording plan for a health-facility layer.
+
+    Three shapes: a point that finds facilities, a point far enough from
+    any that the answer is a clean empty, and a name prefix. The empty
+    one matters most — "no hospital within this radius" is the answer a
+    reader is likeliest to over-read, so it has to replay.
+    """
+    del ctx
+    from ..domains.geo import HEALTH_FACILITY_RADIUS_M
+    out: dict[str, Any] = {}
+    for layer in sorted(params.layers):
+        out[f"health:{layer}"] = await adapter.health(m, layer)
+
+    # Ashburn, in the data-centre corridor.
+    near = await adapter.query(m, "health_facilities",
+                               geometry_point=(-77.4875, 39.0437),
+                               distance_meters=HEALTH_FACILITY_RADIUS_M)
+    out["near_ashburn"] = {
+        "record_count": len(near.records),
+        "names": [r.canonical.get("name") for r in near.records[:6]],
+        "codes": sorted({str(r.canonical.get("facility_code"))
+                         for r in near.records})}
+
+    # Far western Loudoun, deliberately away from any facility.
+    empty = await adapter.query(m, "health_facilities",
+                                geometry_point=(-77.9, 39.15),
+                                distance_meters=2000.0)
+    out["far_from_any"] = {"record_count": len(empty.records)}
+
+    by_name = await adapter.query(m, "health_facilities",
+                                  where_prefix={"name": "Inova"})
+    out["by_name_prefix"] = {"prefix": "Inova",
+                             "record_count": len(by_name.records),
+                             "names": [r.canonical.get("name")
+                                       for r in by_name.records[:5]]}
+    return out
+
+
 async def _sample_landmarks(adapter, m, params, ctx) -> dict:
     """Recording plan for landmarks. Records the three query shapes plus a
     record whose LastCheck is null, because "nobody has re-checked this"
@@ -1145,6 +1185,14 @@ def cmd_sources_sample(args: argparse.Namespace) -> int:
             return _fail(f"{err.code}: {err}")
         return _write_fixture(m, recorder, summary, ctx)
 
+    if "health_facility.lookup" in m.capability_ids():
+        try:
+            summary = asyncio.run(_sample_health_facilities(adapter, m,
+                                                            params, ctx))
+        except CommonwealthError as err:
+            return _fail(f"{err.code}: {err}")
+        return _write_fixture(m, recorder, summary, ctx)
+
     if "landmark.lookup" in m.capability_ids():
         try:
             summary = asyncio.run(_sample_landmarks(adapter, m, params, ctx))
@@ -1225,6 +1273,49 @@ def cmd_sources_sample(args: argparse.Namespace) -> int:
                                            return_geometry=want_geometry)
         out["sterling_loudoun"] = {"point": list(LOUDOUN_POINT),
                                    "record_count": len(sterling.records)}
+        # Queries this source answers only because it shares a
+        # jurisdiction stack with another registered one. A town inside a
+        # county is the case: a Leesburg parcel query reaches the town's
+        # layer AND the county's, so the county's recording has to carry
+        # the town's PINs and points or every existing Leesburg test
+        # fails on a replay miss the moment the county is registered.
+        # Declared in the manifest because only a human knows which
+        # neighbours matter.
+        also = m.health.expect.get("also_record") or {}
+        for extra_pin in also.get("pins", []):
+            for want_geometry in (False, True):
+                await adapter.query(m, "parcels",
+                                    where_equals={"pin": str(extra_pin)},
+                                    return_geometry=want_geometry)
+        for layer in ("parcels", "zoning"):
+            if layer not in params.layers:
+                continue
+            for point in also.get("points", []):
+                for want_geometry in (False, True):
+                    await adapter.query(m, layer,
+                                        geometry_point=tuple(point),
+                                        return_geometry=want_geometry)
+        # And the polygon path. `find_zoning` by PIN reads the parcel
+        # polygon and intersects every zoning layer with it, so each
+        # extra PIN needs its zoning query recorded too — against this
+        # source's own polygon, which is what the tool will be holding
+        # by the time it asks.
+        if "zoning" in params.layers:
+            for extra_pin in also.get("pins", []):
+                eq = await adapter.query(m, "parcels",
+                                         where_equals={"pin": str(extra_pin)},
+                                         return_geometry=True)
+                for parcel in eq.records:
+                    geom = dict(parcel.geometry or {})
+                    if not geom:
+                        continue
+                    geom.setdefault("spatialReference", {"wkid": 4326})
+                    await adapter.query(m, "zoning", intersect_geometry=geom)
+
+        out["also_recorded"] = {"pins": list(also.get("pins", [])),
+                                "points": [list(x) for x in
+                                           also.get("points", [])]}
+
         pq = await adapter.query(m, "parcels", where_equals={"pin": str(pin)},
                                  return_geometry=True)
         if "zoning" not in params.layers:

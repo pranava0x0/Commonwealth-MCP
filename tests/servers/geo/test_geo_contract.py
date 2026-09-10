@@ -28,6 +28,7 @@ async def test_every_tool_has_output_schema_and_stable_order(server):
                      "geo.resolve_location", "geo.find_buildings",
                      "geo.find_landmarks", "geo.find_roads",
                      "geo.find_environmental_sites",
+                     "geo.find_health_facilities",
                      "civic.get_code_section", "civic.browse_code",
                      "civic.search_meetings"], (
         "registration order changed — that is a contract change, make it "

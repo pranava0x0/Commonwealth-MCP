@@ -1,0 +1,104 @@
+# The registry's first health source with an endpoint behind it. Until
+# now the health domain was one inventory row (va-vdh) recording that VDH
+# publishes plenty and none of it queryable.
+#
+# This is a locality's own list of the hospitals and urgent-care
+# facilities in its county, which is a narrower thing than a licensing
+# register and the manifest says so. Endpoint and fields verified live
+# 2026-09-10 against a point in Ashburn, which returned Inova Loudoun
+# Hospital-Lansdowne.
+id: va-loudoun-county-health-facilities
+name: Loudoun County Hospitals and Urgent Care (Loudoun County GIS)
+jurisdiction: va:loudoun-county
+
+publisher:
+  agency: Loudoun County government (Office of Mapping and Geographic Information)
+  authority_level: official_derived
+
+domains: [health]
+
+capabilities:
+  - id: health_facility.lookup
+    tool_hint: geo.find_health_facilities
+
+adapter:
+  type: arcgis
+  service_url: https://logis.loudoun.gov/gis/rest/services/COL/HospitalsUrgentCare/MapServer
+  field_mapping_version: "1"
+  layers:
+    health_facilities:
+      layer_id: 0
+      id_field: OBJECTID
+      geometry: point
+      field_mapping:
+        name: FACILITY_NAME
+        # "H" for hospital, and other codes for urgent care. Returned as
+        # the publisher's own code rather than expanded into prose, so a
+        # reader is never told this project's guess at what a letter
+        # means.
+        facility_code: FACILITY
+        address: Address
+
+access:
+  mode: anonymous
+  automation_status: public_api
+  terms_url: https://logis.loudoun.gov/metadata/Zoning.html
+  terms_notes: >
+    Same Loudoun County GIS terms as the county's parcel and zoning
+    layers, reviewed 2026-09-10 from the county's own layer metadata:
+    provided without warranty, no liability assumed, generated for county
+    use and available to the public, acknowledgement appreciated. The
+    terms are published per layer and read the same on each; they are
+    quoted in full in the parcels-and-zoning manifest beside this one.
+  terms_reviewed_at: "2026-09-10"
+  data_classification: open
+
+freshness:
+  expected_cadence: unknown
+  cadence_source: >
+    The county publishes no cadence for this layer and the records carry
+    no update date of their own.
+  ttl_hint_seconds: 86400
+
+coverage:
+  geography: va:loudoun-county
+  temporal: current
+  known_limitations:
+    - >
+      One county's list, not a state licensing register. Virginia
+      licenses hospitals through VDH, and this layer is Loudoun County's
+      own mapping of facilities inside Loudoun. A facility outside the
+      county, or one the county has not mapped, is simply not here.
+    - >
+      Hospitals and urgent care only. Physician offices, clinics,
+      free clinics, dialysis centres, pharmacies and emergency medical
+      services are not in this layer, so an empty answer says nothing
+      about whether care is available near a point.
+    - >
+      No hours, no capacity, no services offered, and no indication of
+      whether a facility is open today. A point on this layer is a
+      building the county has recorded as a hospital or urgent care.
+    - >
+      The records carry no update date, so the vintage of any one
+      facility is unknown; an answer reports retrieval time and says the
+      vintage is unavailable.
+
+authority_notes: >
+  Loudoun County's own mapping of facilities that other bodies license
+  and operate, which is why the authority level is official_derived
+  rather than primary. The county is authoritative about what it has
+  mapped; it is not the licensing authority for a hospital. VDH licenses
+  and inspects, and publishes nothing this registry can query
+  (see va-vdh).
+
+health:
+  probe: arcgis_layer_count
+  expect:
+    health_facilities:
+      min_expected: 5
+
+lifecycle:
+  declared_state: active
+  added: "2026-09-10"
+  last_verified: "2026-09-10"
+  verified_by: pranava0x0

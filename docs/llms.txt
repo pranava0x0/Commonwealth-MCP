@@ -13,7 +13,7 @@ exposes the result through the Model Context Protocol.
 
 ## What it answers today
 
-Sixteen tools, ten of them in the default set and fourteen in discovery.
+Seventeen tools, ten of them in the default set and fourteen in discovery.
 
 - Which local government covers a place, by name, FIPS code, street
   address, ZIP code, or coordinates. Ambiguous names return every match
@@ -38,6 +38,12 @@ Sixteen tools, ten of them in the default set and fourteen in discovery.
   DEQ's water-quality monitoring stations. Each is one published layer and
   none is an inventory.
 - Where a jurisdiction's boundary runs, statewide.
+- Where the hospitals and urgent care are, in the localities that publish
+  their own map of them — Loudoun County today. This is a county's map,
+  not a state licensing register: Virginia licenses hospitals through
+  VDH, which publishes nothing this project can query. Physician
+  offices, clinics and EMS are not in it, and an empty answer is never
+  evidence that care is unavailable near a point.
 - The text of a Code of Virginia section, by citation, and the Code's
   own table of contents to walk to one you do not have. There is no
   full-text search over the Code from any public endpoint, so reaching a

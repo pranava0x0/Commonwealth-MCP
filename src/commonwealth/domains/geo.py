@@ -2254,3 +2254,109 @@ GEO_TOOLS.register(ToolSpec(
         "clean. Say all of this to the user; do not summarise it away. "
         "A point is required — this source has no locality field."),
     toolset="default", contract_version="1", fn=find_environmental_sites))
+
+
+# --- health facilities -----------------------------------------------------
+#
+# The registry's first health capability with an endpoint behind it. The
+# domain existed as one inventory row saying VDH publishes plenty and
+# none of it queryable; what is registered now is a locality's own
+# mapping of the hospitals and urgent care inside it, which is a
+# narrower thing and is described as one everywhere it surfaces.
+
+HEALTH_FACILITY_RADIUS_M = 8000.0
+
+
+async def find_health_facilities(ctx: RuntimeContext, jurisdiction: str,
+                                 name: str = "",
+                                 lon: float | None = None,
+                                 lat: float | None = None,
+                                 radius_meters: float = HEALTH_FACILITY_RADIUS_M
+                                 ) -> Envelope:
+    b = _builder(ctx, "geo.find_health_facilities")
+    if (lon is None) != (lat is None):
+        raise InvalidQuery("a point needs both lon and lat")
+    if not (name or lon is not None):
+        raise InvalidQuery(
+            "pass `name` or a lon/lat point — an unbounded query would "
+            "return every facility in the jurisdiction")
+
+    frame = _resolve_frame(ctx, b, jurisdiction)
+    if frame.early is not None:
+        return frame.early
+    stack = frame.stack or []
+
+    selected = ctx.sources.select("health_facility.lookup", stack)
+    registry_dim, gaps = selection_coverage(
+        ctx.sources, "health_facility.lookup", stack, selected, builder=b)
+    blocks: list[dict] = []
+    failures = []
+    queries: list[ArcGISQueryResult] = []
+    for m in selected:
+        try:
+            q = await ctx.arcgis.query(
+                m, "health_facilities",
+                where_prefix={"name": name} if name else None,
+                geometry_point=(lon, lat) if lon is not None else None,
+                distance_meters=(radius_meters if lon is not None else None))
+        except CommonwealthError as err:
+            failures.append(failure(m.id, err.code, str(err)))
+            continue
+        queries.append(q)
+        block = _records_block(
+            b, _source_entry(b, m, q), q, m, ctx,
+            {"jurisdiction": jurisdiction, "name": name, "lon": lon,
+             "lat": lat, "radius_meters": radius_meters})
+        for row in block["records"]:
+            # The publisher's own code, left as a code. Expanding "H"
+            # into "hospital" would put this project's reading of a
+            # single letter where the publisher's value belongs, and the
+            # other codes in the layer are not documented anywhere it
+            # publishes.
+            row["facility_code_note"] = (
+                "`facility_code` is the publisher's own classification "
+                "code, returned unexpanded. The county documents no key "
+                "for it, so read it as the county's label rather than as "
+                "a licensed facility type.")
+        blocks.append(block)
+
+    if any(blk["record_count"] for blk in blocks):
+        b.warn(WarningCode.screening_only,
+               "This is a locality's own mapping of hospitals and urgent "
+               "care, not a licensing register and not a directory of "
+               "care. Physician offices, clinics, dialysis, pharmacies "
+               "and emergency medical services are not in it, nothing "
+               "here says whether a facility is open or what it offers, "
+               "and Virginia licenses hospitals through VDH rather than "
+               "through the county that drew this map.")
+
+    execution = (ExecutionCoverage.complete if not failures
+                 else ExecutionCoverage.failed if not blocks
+                 else ExecutionCoverage.partial)
+    total = sum(blk["record_count"] for blk in blocks)
+    return b.build({"results": blocks}, Coverage(
+        registry=registry_dim, execution=execution,
+        pagination=_pagination_dim(queries), result=result_dim(total),
+        jurisdictions_searched=stack if selected else [],
+        jurisdictions_unavailable=gaps, source_failures=failures,
+        known_limitations=sorted({lim for m in selected
+                                  for lim in m.coverage.known_limitations})))
+
+
+GEO_TOOLS.register(ToolSpec(
+    name="geo.find_health_facilities",
+    description=(
+        "Find hospitals and urgent-care facilities near a lon/lat point "
+        "in a Virginia locality, or by name prefix. This reads a "
+        "LOCALITY'S OWN MAP of the facilities inside it, not a state "
+        "licensing register: Virginia licenses hospitals through VDH, "
+        "which publishes nothing this server can query. Coverage is "
+        "thin — only localities that publish such a layer are "
+        "registered, and everywhere else returns coverage registry=none, "
+        "which means this project has nowhere to look and never that "
+        "there is no hospital there. Physician offices, clinics, "
+        "dialysis centres, pharmacies and EMS are not in these layers, "
+        "and no record says whether a facility is open, what it offers, "
+        "or whether it takes a given patient. An empty answer is not "
+        "evidence that care is unavailable near a point."),
+    toolset="spatial", contract_version="1", fn=find_health_facilities))

@@ -1,14 +1,14 @@
 {
  "version": "0.1.0.dev0",
- "registry_revision": "2026-09-09",
+ "registry_revision": "2026-09-10",
  "counts": {
   "servers": 1,
-  "tools": 16,
+  "tools": 17,
   "packages": 3,
-  "sources": 27,
-  "sources_active": 20,
+  "sources": 29,
+  "sources_active": 22,
   "sources_proposed": 7,
-  "capabilities": 12,
+  "capabilities": 13,
   "jurisdictions": 323,
   "trap_pairs": 5
  },
@@ -304,6 +304,36 @@
    ],
    "summary": "Find the environmental monitoring stations a Virginia agency has on record near a lon/lat point.",
    "description": "Find the environmental monitoring stations a Virginia agency has on record near a lon/lat point. READ THE LIMITS BEFORE USING THIS: it is NOT a complete inventory of environmental sites, and it is NOT a determination that any site is safe, contaminated, or suitable for a given use. What is registered today is DEQ's water-quality monitoring network \u2014 air, waste, and land programmes are not in it. A station on record means that spot is or was sampled and nothing more; historic stations are included, so read last_sample_date. An empty result means no station of that kind is on record near the point, never that the ground is clean. Say all of this to the user; do not summarise it away. A point is required \u2014 this source has no locality field."
+  },
+  {
+   "name": "geo.find_health_facilities",
+   "package": "geo",
+   "toolset": "spatial",
+   "contract_version": "1",
+   "parameters": [
+    {
+     "name": "jurisdiction",
+     "required": true
+    },
+    {
+     "name": "name",
+     "required": false
+    },
+    {
+     "name": "lon",
+     "required": false
+    },
+    {
+     "name": "lat",
+     "required": false
+    },
+    {
+     "name": "radius_meters",
+     "required": false
+    }
+   ],
+   "summary": "Find hospitals and urgent-care facilities near a lon/lat point in a Virginia locality, or by name prefix.",
+   "description": "Find hospitals and urgent-care facilities near a lon/lat point in a Virginia locality, or by name prefix. This reads a LOCALITY'S OWN MAP of the facilities inside it, not a state licensing register: Virginia licenses hospitals through VDH, which publishes nothing this server can query. Coverage is thin \u2014 only localities that publish such a layer are registered, and everywhere else returns coverage registry=none, which means this project has nowhere to look and never that there is no hospital there. Physician offices, clinics, dialysis centres, pharmacies and EMS are not in these layers, and no record says whether a facility is open, what it offers, or whether it takes a given patient. An empty answer is not evidence that care is unavailable near a point."
   },
   {
    "name": "registry.resolve_jurisdiction",
@@ -670,6 +700,54 @@
    ]
   },
   {
+   "id": "va-loudoun-county-health-facilities",
+   "name": "Loudoun County Hospitals and Urgent Care (Loudoun County GIS)",
+   "jurisdiction": "va:loudoun-county",
+   "jurisdiction_name": "Loudoun County",
+   "answers": [
+    "hospitals and urgent care"
+   ],
+   "publisher": "Loudoun County government (Office of Mapping and Geographic Information)",
+   "authority_level": "official_derived",
+   "capabilities": [
+    "health_facility.lookup"
+   ],
+   "data_classification": "open",
+   "declared_state": "active",
+   "terms_url": "https://logis.loudoun.gov/metadata/Zoning.html",
+   "known_limitations": [
+    "One county's list, not a state licensing register. Virginia licenses hospitals through VDH, and this layer is Loudoun County's own mapping of facilities inside Loudoun. A facility outside the county, or one the county has not mapped, is simply not here.\n",
+    "Hospitals and urgent care only. Physician offices, clinics, free clinics, dialysis centres, pharmacies and emergency medical services are not in this layer, so an empty answer says nothing about whether care is available near a point.\n",
+    "No hours, no capacity, no services offered, and no indication of whether a facility is open today. A point on this layer is a building the county has recorded as a hospital or urgent care.\n",
+    "The records carry no update date, so the vintage of any one facility is unknown; an answer reports retrieval time and says the vintage is unavailable.\n"
+   ]
+  },
+  {
+   "id": "va-loudoun-county-parcels-zoning",
+   "name": "Loudoun County Parcels and Zoning (Loudoun County GIS)",
+   "jurisdiction": "va:loudoun-county",
+   "jurisdiction_name": "Loudoun County",
+   "answers": [
+    "parcels",
+    "zoning"
+   ],
+   "publisher": "Loudoun County government (Office of Mapping and Geographic Information)",
+   "authority_level": "primary",
+   "capabilities": [
+    "parcel.lookup",
+    "zoning.lookup"
+   ],
+   "data_classification": "open",
+   "declared_state": "active",
+   "terms_url": "https://logis.loudoun.gov/metadata/Zoning.html",
+   "known_limitations": [
+    "Intended by the publisher for use at 1:2400 scale or smaller. A boundary read off this layer is not a survey and does not establish where a line falls on the ground.\n",
+    "Zoning here is the county's GIS rendering of its adopted ordinance, not the ordinance. The adopted Loudoun County Zoning Ordinance governs, and a district shown here is screening evidence.\n",
+    "Loudoun maintains two zoning ordinances in parallel. The registered layer is the current one; ground still governed by the 1972 ordinance is carried on a separate layer that is not registered here, so a district read from this source is the current ordinance's answer and may not be the only one that applies.\n",
+    "The incorporated towns inside Loudoun \u2014 Leesburg among them \u2014 adopt and administer their own zoning. A point inside a town returns the county's layer and the town's where one is registered, and the town is the government that zones it.\n"
+   ]
+  },
+  {
    "id": "va-open-data-portal",
    "name": "Virginia Open Data Portal (CKAN)",
    "jurisdiction": "va",
@@ -1018,6 +1096,7 @@
   "code_structure.browse",
   "environmental_site.lookup",
   "geocode.address",
+  "health_facility.lookup",
   "landmark.lookup",
   "meeting.search",
   "parcel.lookup",
@@ -1052,6 +1131,10 @@
   "geocode.address": {
    "question": "Where is this address, and whose government is it?",
    "subject": "geocoding"
+  },
+  "health_facility.lookup": {
+   "question": "Where is the nearest hospital or urgent care?",
+   "subject": "hospitals and urgent care"
   },
   "landmark.lookup": {
    "question": "Which schools, libraries, or fire stations are nearby?",
@@ -1145,6 +1228,7 @@
    "geo.find_landmarks",
    "geo.find_roads",
    "geo.find_environmental_sites",
+   "geo.find_health_facilities",
    "civic.get_code_section",
    "civic.browse_code",
    "civic.search_meetings"
@@ -1366,14 +1450,17 @@
    {
     "index": 3,
     "tool": "geo.find_zoning",
-    "note": "No zoning source is registered for Loudoun County.",
+    "note": "Zoning from Loudoun County\u2019s own layer. This call returned a registry gap until the county was registered on 2026-09-10, and it is the same call \u2014 what changed is the registry.",
     "coverage": {
-     "registry": "none",
+     "registry": "covered",
      "execution": "complete",
-     "pagination": "unknown",
-     "result": "empty"
+     "pagination": "complete",
+     "result": "hit"
     },
-    "warning_codes": [],
+    "warning_codes": [
+     "freshness_unavailable",
+     "screening_only"
+    ],
     "requires_user_choice": false,
     "error": null
    },
@@ -1412,7 +1499,7 @@
    "call": 24
   }
  ],
- "doctor_output": "commonwealth 0.1.0.dev0\npython 3.12.13\nmcp sdk 2.1.1\njurisdiction table: 323 rows\nsource manifests: 27 (registry revision 2026-09-09)\nmanifests valid: 27/27\ndefault profile: 10 tools: registry.resolve_jurisdiction, geo.find_parcel, geo.find_zoning, geo.find_boundaries, geo.find_address, geo.resolve_location, geo.find_buildings, geo.find_environmental_sites, civic.get_code_section, civic.search_meetings\n(live source probes skipped; pass --live)\n\u2713 doctor: 0 problem(s)\n\nnext: point a client at it\n  commonwealth configure claude-code\n  commonwealth configure --help    # claude, codex, cursor, vscode",
+ "doctor_output": "commonwealth 0.1.0.dev0\npython 3.12.13\nmcp sdk 2.1.1\njurisdiction table: 323 rows\nsource manifests: 29 (registry revision 2026-09-10)\nmanifests valid: 29/29\ndefault profile: 10 tools: registry.resolve_jurisdiction, geo.find_parcel, geo.find_zoning, geo.find_boundaries, geo.find_address, geo.resolve_location, geo.find_buildings, geo.find_environmental_sites, civic.get_code_section, civic.search_meetings\n(live source probes skipped; pass --live)\n\u2713 doctor: 0 problem(s)\n\nnext: point a client at it\n  commonwealth configure claude-code\n  commonwealth configure --help    # claude, codex, cursor, vscode",
  "plugin": {
   "name": "commonwealth-mcp",
   "marketplace_name": "commonwealth-mcp",
@@ -1420,7 +1507,7 @@
   "path": "plugins/commonwealth-mcp",
   "skill_count": 6,
   "profile": "all",
-  "tool_count": 16
+  "tool_count": 17
  },
  "demo_apps": {
   "screen": [
@@ -1499,7 +1586,7 @@
      {
       "label": "Zoning",
       "tool": "geo.find_zoning",
-      "call": 38
+      "call": 42
      }
     ]
    }
@@ -1508,32 +1595,32 @@
    {
     "label": "Richmond \u00b7 Sept 2026",
     "blurb": "An ordinary month. Each meeting carries the agenda document as a link, which this project never follows \u2014 so what the meeting is about is not in the answer.",
-    "call": 31
+    "call": 35
    },
    {
     "label": "Alexandria \u00b7 Sept 2026",
     "blurb": "A second locality, answered by the same adapter. The only difference between them is a client identifier in a manifest.",
-    "call": 32
+    "call": 36
    },
    {
     "label": "Richmond \u00b7 planning only",
     "blurb": "Narrowed to one body. The publisher's ordering is kept \u2014 this filters their answer rather than re-ranking it.",
-    "call": 33
+    "call": 37
    },
    {
     "label": "Richmond \u00b7 Dec 2019 (cancellations)",
     "blurb": "The platform publishes no cancellation field at all. Where a meeting was called off, it is said in the comment and nowhere else \u2014 so the reading is labelled as a reading, and the meeting is returned rather than dropped.",
-    "call": 34
+    "call": 38
    },
    {
     "label": "Richmond \u00b7 Jan 2030 (empty)",
     "blurb": "A registered locality with nothing in the window. Registry covered, publisher answered, no meetings.",
-    "call": 35
+    "call": 39
    },
    {
     "label": "Fairfax County (not registered)",
     "blurb": "Fairfax County meets constantly. It is not on this platform, so there is nowhere to read it. Compare this panel with the empty one above \u2014 they must never look the same.",
-    "call": 36
+    "call": 40
    }
   ],
   "code": [
@@ -1572,9 +1659,9 @@
   ]
  },
  "demo_meta": {
-  "generated_at": "2026-09-10T11:49:55Z",
+  "generated_at": "2026-09-10T12:24:01Z",
   "mode": "fixtures",
-  "call_count": 45,
+  "call_count": 49,
   "fixture_recorded_at": "2026-09-02T05:29:35Z"
  }
 }
