@@ -22,7 +22,8 @@ RESOLVER = DOCS / "data" / "resolver-demo.json"
 REGEN = "regenerate: .venv/bin/python tools/build_site.py --fixtures"
 
 # Every page the build writes, and which section of the site each holds.
-PAGES = ("index.html", "tools.html", "sources.html", "examples.html")
+PAGES = ("index.html", "tools.html", "sources.html", "examples.html",
+         "demos.html")
 
 
 @pytest.fixture(scope="module")
@@ -175,11 +176,12 @@ def test_every_page_embeds_the_core_block_and_fetches_the_rest(core):
             f"the site fetches data/{name}.json and it is not committed"
 
 
-def test_the_four_pages_share_one_nav_and_one_footer():
-    """The nav and the footer are hand-written in four files rather than
-    rendered, so that a reader without JavaScript still has both. This is
-    the cost of that choice: a link added to one page and not the others
-    fails here instead of shipping as a page that quietly leads nowhere."""
+def test_the_pages_share_one_nav_and_one_footer():
+    """The nav and the footer are hand-written in every page file rather
+    than rendered, so that a reader without JavaScript still has both.
+    This is the cost of that choice: a link added to one page and not the
+    others fails here instead of shipping as a page that quietly leads
+    nowhere."""
     def block(html, start, end):
         return html[html.index(start):html.index(end) + len(end)]
 
@@ -190,8 +192,8 @@ def test_the_four_pages_share_one_nav_and_one_footer():
         navs.add(block(html, '<nav class="toc">', "</nav>")
                  .replace(' aria-current="page"', ""))
         feet.add(block(html, "<footer>", "</footer>"))
-    assert len(navs) == 1, "the four pages do not share one nav"
-    assert len(feet) == 1, "the four pages do not share one footer"
+    assert len(navs) == 1, "the pages do not share one nav"
+    assert len(feet) == 1, "the pages do not share one footer"
     for page in PAGES:
         html = (DOCS / page).read_text()
         assert html.count('aria-current="page"') == 1, (
@@ -349,3 +351,81 @@ def test_the_site_does_not_call_a_shipped_skill_planned(site):
             assert status != "shipped", (
                 f"the page calls {name} shipped and there is no "
                 f"{SKILLS_SRC.relative_to(ROOT)}/{name}/SKILL.md")
+
+
+# --- the demo apps (demos.html) --------------------------------------------
+#
+# The apps address recorded calls by index, and tools/build_site.py
+# resolves those indices from DEMO_CALLS. These check the resolution is
+# real, so a demo cannot ship pointing at a call that moved.
+
+def test_every_demo_app_step_points_at_a_real_recorded_call(core, demo):
+    apps = core.get("demo_apps")
+    assert apps, f"core.json carries no demo_apps block; {REGEN}"
+    calls = demo["calls"]
+    refs = []
+    for site in apps["screen"]:
+        refs += [(f"screen/{site['label']}/{s['label']}", s["tool"], s["call"])
+                 for s in site["steps"]]
+    refs += [(f"meetings/{v['label']}", "civic.search_meetings", v["call"])
+             for v in apps["meetings"]]
+    refs += [(f"code/{s['crumb']}", s["tool"], s["call"])
+             for s in apps["code"]]
+    assert refs, "no demo app declares a step"
+    for where, tool, index in refs:
+        assert 0 <= index < len(calls), (
+            f"{where} points at trail position {index}, and the trail has "
+            f"{len(calls)} calls; {REGEN}")
+        actual = (calls[index].get("audit") or {}).get("tool")
+        assert actual == tool, (
+            f"{where} expects {tool} at trail position {index} and the "
+            f"trail has {actual} there — the demo would show the wrong "
+            f"answer with a straight face; {REGEN}")
+
+
+def test_the_demo_apps_resolve_from_the_builder():
+    """The indices are computed, not typed. Calling the builder proves a
+    reference that no longer resolves fails the BUILD rather than
+    rendering as an empty panel on the published page."""
+    import sys
+
+    sys.path.insert(0, str(ROOT / "tools"))
+    import build_site
+
+    apps = build_site.demo_apps()
+    assert set(apps) == {"screen", "meetings", "code"}
+    assert all(apps.values()), "a demo app resolved to no steps"
+
+
+def test_the_meetings_demo_shows_a_gap_beside_an_empty(core, demo):
+    """The pair the meetings app exists for. A registry gap and a covered
+    locality with nothing in the window must both be on the page, because
+    the demo's whole point is that they do not look the same."""
+    calls = demo["calls"]
+    shapes = {}
+    for view in core["demo_apps"]["meetings"]:
+        cov = (calls[view["call"]].get("envelope") or {}).get("coverage") or {}
+        shapes[view["label"]] = (cov.get("registry"), cov.get("result"))
+    assert ("none", "empty") in shapes.values(), (
+        "the meetings demo shows no registry gap; the panel that proves "
+        "a gap is not an empty calendar is missing")
+    assert ("covered", "empty") in shapes.values(), (
+        "the meetings demo shows no clean empty to compare the gap with")
+    assert ("covered", "hit") in shapes.values(), (
+        "the meetings demo shows no meetings at all")
+
+
+def test_the_code_demo_walks_a_connected_path(core, demo):
+    """Each step of the Code walk has to be reachable from the one above
+    it, or the app is four unrelated calls wearing breadcrumbs."""
+    steps = core["demo_apps"]["code"]
+    calls = demo["calls"]
+    for parent, child in zip(steps, steps[1:]):
+        block = ((calls[parent["call"]].get("envelope") or {})
+                 .get("data") or {}).get("results", [{}])[0]
+        rows = block.get("records") or []
+        wanted = child["chapter"] or child["title"] or child["citation"]
+        assert any(r.get("number") == wanted for r in rows), (
+            f"the Code demo steps from {parent['crumb']!r} to "
+            f"{child['crumb']!r}, and {wanted!r} is not among what "
+            f"{parent['crumb']!r} returned")

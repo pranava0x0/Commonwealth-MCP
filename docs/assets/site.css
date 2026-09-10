@@ -565,3 +565,62 @@ section{margin:28px 0}
   .step-tab{flex:1 1 calc(50% - 3px);padding:7px 9px;font-size:.82rem}
   .step-tab .when{display:none}
 }
+
+/* --- demos page -------------------------------------------------------- */
+.demo-blurb{color:var(--muted);font-size:.92rem;margin:0 0 14px;
+  max-width:62ch}
+.demo-label{display:block;font-size:.8rem;font-family:var(--mono);
+  color:var(--muted);margin:10px 0 4px}
+.demo-step{border-top:1px solid var(--line);padding:12px 0 4px}
+.demo-step h4{margin:0 0 2px;font-size:.95rem}
+.demo-step .meta{margin:0 0 6px;font-family:var(--mono);font-size:.76rem}
+.demo-answer{margin:6px 0 10px;font-size:.95rem}
+.demo-place{margin:4px 0;font-weight:600}
+.demo-foot{margin-top:8px}
+.demo-foot .chips{margin-bottom:6px}
+/* A registry gap is the answer this project most needs a reader not to
+   skim past, so it is the one block on the page with a rule beside it. */
+.demo-gap{border-left:3px solid var(--bad,#a33);padding-left:10px;
+  margin:8px 0;font-size:.88rem}
+.demo-warn{border-left:3px solid var(--warn,#b80);padding-left:10px;
+  margin:8px 0;font-size:.85rem;color:var(--muted)}
+.demo-missing{font-size:.85rem}
+.demo-rows{display:grid;grid-template-columns:auto 1fr;gap:2px 12px;
+  margin:6px 0;font-size:.88rem}
+.demo-rows dt{color:var(--muted);font-family:var(--mono);font-size:.76rem;
+  align-self:center}
+.demo-rows dd{margin:0}
+
+.meeting-card{border:1px solid var(--line);border-radius:4px;padding:10px 12px;
+  margin:8px 0;background:var(--neutral-bg)}
+.meeting-head{display:flex;gap:8px;align-items:center;flex-wrap:wrap;
+  margin-bottom:4px}
+.meeting-comment{margin:6px 0 0;font-size:.85rem;color:var(--muted)}
+.meeting-list .meta{margin:6px 0 0}
+
+.crumbs{display:flex;flex-wrap:wrap;gap:4px;align-items:center;
+  margin-bottom:10px}
+.crumb{font-family:var(--mono);font-size:.78rem;border:0;background:none;
+  color:var(--accent);cursor:pointer;padding:2px 4px;text-decoration:underline}
+.crumb.active{color:var(--ink);text-decoration:none;font-weight:600;
+  cursor:default}
+.crumb-sep{color:var(--muted)}
+.code-row{display:grid;grid-template-columns:auto 1fr auto;gap:10px;
+  align-items:center;padding:5px 0;border-bottom:1px solid var(--line);
+  font-size:.88rem}
+.code-num{font-family:var(--mono);font-size:.78rem;color:var(--muted);
+  min-width:5ch}
+.code-row.walkable{background:var(--neutral-bg)}
+.code-row .run-btn{margin:0;padding:3px 8px;font-size:.72rem}
+.code-para{margin:8px 0;font-size:.92rem;max-width:70ch}
+
+.envelope-part{border:1px solid var(--line);border-radius:4px;
+  padding:8px 10px;margin:8px 0}
+.envelope-part.absent{opacity:.6}
+.envelope-part-head{display:flex;gap:8px;align-items:baseline;
+  justify-content:space-between}
+.envelope-part-head code{font-size:.82rem;font-weight:600}
+.envelope-part .meta{margin:2px 0 6px}
+.envelope-part pre{max-height:260px;overflow:auto;font-size:.76rem;
+  background:var(--neutral-bg);border-radius:4px;padding:8px;margin:0}
+.walk-next{display:block;margin:4px 0 2px}

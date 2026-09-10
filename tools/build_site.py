@@ -470,6 +470,184 @@ DEMO_GROUPS = [
 DEMO_CALLS = [c for _, _, calls in DEMO_GROUPS for c in calls]
 
 
+# The demo apps on demos.html, and the recorded calls each one walks.
+#
+# Here rather than in site.js for the reason every other roster on this
+# page is derived: the apps address recorded calls by (tool, arguments),
+# DEMO_CALLS above decides which calls exist, and a hand-typed list in
+# another language is the copy that goes stale. `demo_apps()` checks
+# every reference against the trail and fails the build on a miss, so a
+# demo cannot quietly degrade into "no recorded answer for..." on the
+# published page.
+#
+# Two of the five apps are absent, because neither addresses a fixed
+# call: the coverage app queries the jurisdiction table, and the
+# envelope app picks one call per envelope SHAPE by predicate, so it
+# keeps working whatever the trail contains.
+LOUDOUN_PT = {"lon": -77.408014727372, "lat": 39.025534437083}
+VIENNA_PT = {"lon": -77.2653, "lat": 38.9012}
+
+DEMO_APP_SPECS = {
+    "screen": [
+        {"label": "Sterling, Loudoun County",
+         "blurb": "A mailing address whose postal city is not a "
+                  "government. Loudoun has no registered zoning source, "
+                  "so the same site produces a found record, a registry "
+                  "gap and an empty answer.",
+         "steps": [
+             ["Whose government?", "geo.resolve_location",
+              {"address": "21641 Ridgetop Cir, Sterling, VA 20166"}],
+             ["Parcel", "geo.find_parcel",
+              {"jurisdiction": "Loudoun County", **LOUDOUN_PT}],
+             ["Zoning", "geo.find_zoning",
+              {"jurisdiction": "Loudoun County", **LOUDOUN_PT}],
+             ["Public places nearby", "geo.find_landmarks",
+              {"jurisdiction": "Loudoun County", **LOUDOUN_PT}],
+         ]},
+        {"label": "A parcel in Vienna",
+         "blurb": "A town inside a county, where both governments "
+                  "publish a zoning layer over the same ground. Both "
+                  "answer, unranked.",
+         "steps": [
+             ["Whose government?", "registry.resolve_jurisdiction",
+              dict(VIENNA_PT)],
+             ["Zoning", "geo.find_zoning",
+              {"jurisdiction": "Vienna", **VIENNA_PT}],
+             ["Roads", "geo.find_roads",
+              {"jurisdiction": "Vienna", "street_name": "Center St"}],
+             ["Public places nearby", "geo.find_landmarks",
+              {"jurisdiction": "Vienna", **VIENNA_PT}],
+         ]},
+        {"label": "Richmond City",
+         "blurb": "A city that publishes its own layers, asked about "
+                  "buildings and monitored environmental sites.",
+         "steps": [
+             ["Buildings", "geo.find_buildings",
+              {"jurisdiction": "Richmond City", "pin": "C0010126019"}],
+             ["Monitored sites", "geo.find_environmental_sites",
+              {"jurisdiction": "Richmond City", "lon": -77.4360,
+               "lat": 37.5407}],
+         ]},
+        {"label": "Craig County",
+         "blurb": "A rural county with no registered zoning source. The "
+                  "whole point of the demo: this is a gap, not an empty "
+                  "county.",
+         "steps": [
+             ["Zoning", "geo.find_zoning",
+              {"jurisdiction": "Craig County", "pin": "123"}],
+         ]},
+    ],
+    "meetings": [
+        {"label": "Richmond \u00b7 Sept 2026",
+         "blurb": "An ordinary month. Each meeting carries the agenda "
+                  "document as a link, which this project never follows "
+                  "\u2014 so what the meeting is about is not in the "
+                  "answer.",
+         "args": {"jurisdiction": "Richmond City",
+                  "start_date": "2026-09-01", "end_date": "2026-09-30"}},
+        {"label": "Alexandria \u00b7 Sept 2026",
+         "blurb": "A second locality, answered by the same adapter. The "
+                  "only difference between them is a client identifier "
+                  "in a manifest.",
+         "args": {"jurisdiction": "Alexandria City",
+                  "start_date": "2026-09-01", "end_date": "2026-09-30"}},
+        {"label": "Richmond \u00b7 planning only",
+         "blurb": "Narrowed to one body. The publisher's ordering is "
+                  "kept \u2014 this filters their answer rather than "
+                  "re-ranking it.",
+         "args": {"jurisdiction": "Richmond City",
+                  "start_date": "2026-09-01", "end_date": "2026-09-30",
+                  "body": "planning"}},
+        {"label": "Richmond \u00b7 Dec 2019 (cancellations)",
+         "blurb": "The platform publishes no cancellation field at all. "
+                  "Where a meeting was called off, it is said in the "
+                  "comment and nowhere else \u2014 so the reading is "
+                  "labelled as a reading, and the meeting is returned "
+                  "rather than dropped.",
+         "args": {"jurisdiction": "Richmond City",
+                  "start_date": "2019-12-01", "end_date": "2019-12-31"}},
+        {"label": "Richmond \u00b7 Jan 2030 (empty)",
+         "blurb": "A registered locality with nothing in the window. "
+                  "Registry covered, publisher answered, no meetings.",
+         "args": {"jurisdiction": "Richmond City",
+                  "start_date": "2030-01-01", "end_date": "2030-01-31"}},
+        {"label": "Fairfax County (not registered)",
+         "blurb": "Fairfax County meets constantly. It is not on this "
+                  "platform, so there is nowhere to read it. Compare "
+                  "this panel with the empty one above \u2014 they must "
+                  "never look the same.",
+         "args": {"jurisdiction": "Fairfax County",
+                  "start_date": "2026-09-01", "end_date": "2026-09-30"}},
+    ],
+    "code": [
+        {"crumb": "The Code", "tool": "civic.browse_code", "args": {}},
+        {"crumb": "Title 15.2", "tool": "civic.browse_code",
+         "args": {"title": "15.2"}},
+        {"crumb": "Chapter 22", "tool": "civic.browse_code",
+         "args": {"title": "15.2", "chapter": "22"}},
+        {"crumb": "\u00a7 15.2-2200", "tool": "civic.get_code_section",
+         "args": {"citation": "15.2-2200"}},
+    ],
+}
+
+
+def _demo_index(tool: str, args: dict) -> int:
+    """Where in the recorded trail a demo step's call sits.
+
+    An INDEX, not a copy of the arguments. The page used to re-derive
+    the match in JavaScript by comparing argument dicts, and that is
+    subtly wrong twice over: the recorder writes a tool's defaults into
+    the audit record (`radius_meters`, empty `name`) so a demo's
+    arguments are only ever a subset of what was recorded, and matching
+    on a subset would let `browse_code {}` match `browse_code
+    {title: "15.2"}` — the top of the Code resolving to one title. So
+    the trail is indexed here, where DEMO_CALLS is, and the page reads
+    `calls[i]`.
+
+    `demo.calls` is DEMO_CALLS run in order, which is the same ordering
+    examples.html's `#call-N` anchors use.
+    """
+    matches = [i for i, (t_, a_, _) in enumerate(DEMO_CALLS)
+               if t_ == tool and a_ == args]
+    if len(matches) != 1:
+        raise AssertionError(
+            f"demos.html references {tool} with {args}, which matches "
+            f"{len(matches)} calls in DEMO_CALLS. A demo step must name "
+            "exactly one recorded call; add it, or disambiguate it.")
+    return matches[0]
+
+
+def demo_apps() -> dict:
+    """The app specs, with each recorded-call reference resolved to its
+    index in the trail. A demo naming a call the trail does not contain
+    fails the build rather than rendering as "no recorded answer" on the
+    published page, which is the drift a typed roster produces.
+    """
+    out: dict[str, Any] = {"screen": [], "meetings": [], "code": []}
+    for site in DEMO_APP_SPECS["screen"]:
+        out["screen"].append({
+            "label": site["label"], "blurb": site["blurb"],
+            "steps": [{"label": label, "tool": tool,
+                       "call": _demo_index(tool, args)}
+                      for label, tool, args in site["steps"]]})
+    for view in DEMO_APP_SPECS["meetings"]:
+        out["meetings"].append({
+            "label": view["label"], "blurb": view["blurb"],
+            "call": _demo_index("civic.search_meetings", view["args"])})
+    for step in DEMO_APP_SPECS["code"]:
+        out["code"].append({
+            "crumb": step["crumb"], "tool": step["tool"],
+            # What the next level down is keyed on, so the page can spot
+            # the row that continues the walk without re-deriving the
+            # argument shape of a Code citation.
+            "title": step["args"].get("title", ""),
+            "chapter": step["args"].get("chapter", ""),
+            "citation": step["args"].get("citation", ""),
+            "call": _demo_index(step["tool"], step["args"])})
+    return out
+
+
+
 def build_catalog() -> dict:
     import yaml
     from commonwealth import __version__
@@ -1053,8 +1231,11 @@ def structured_data(catalog: dict) -> dict:
 DOCS = DOCS_DATA.parent
 # Every page the build writes into. Each one carries the small `data-core`
 # block and fetches the large files it needs; index.html carries the
-# structured data and the featured walk as well.
-PAGES = ("index.html", "tools.html", "sources.html", "examples.html")
+# structured data and the featured walk as well. demos.html fetches both
+# large files — the recorded trail its apps run on, and the coverage
+# table one of them queries.
+PAGES = ("index.html", "tools.html", "sources.html", "examples.html",
+         "demos.html")
 
 
 def embed_data(html: str, block_id: str, obj: dict, page: str) -> str:
@@ -1112,6 +1293,7 @@ def main() -> int:
     catalog["starter_prompts"] = starter_prompts(demo)
     catalog["doctor_output"] = doctor_output()
     catalog["plugin"] = plugin_bundle()
+    catalog["demo_apps"] = demo_apps()
     catalog["demo_meta"] = {k: demo[k] for k in
                             ("generated_at", "mode", "call_count",
                              "fixture_recorded_at")}

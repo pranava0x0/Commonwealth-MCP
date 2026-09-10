@@ -1422,8 +1422,157 @@
   "profile": "all",
   "tool_count": 16
  },
+ "demo_apps": {
+  "screen": [
+   {
+    "label": "Sterling, Loudoun County",
+    "blurb": "A mailing address whose postal city is not a government. Loudoun has no registered zoning source, so the same site produces a found record, a registry gap and an empty answer.",
+    "steps": [
+     {
+      "label": "Whose government?",
+      "tool": "geo.resolve_location",
+      "call": 1
+     },
+     {
+      "label": "Parcel",
+      "tool": "geo.find_parcel",
+      "call": 2
+     },
+     {
+      "label": "Zoning",
+      "tool": "geo.find_zoning",
+      "call": 3
+     },
+     {
+      "label": "Public places nearby",
+      "tool": "geo.find_landmarks",
+      "call": 4
+     }
+    ]
+   },
+   {
+    "label": "A parcel in Vienna",
+    "blurb": "A town inside a county, where both governments publish a zoning layer over the same ground. Both answer, unranked.",
+    "steps": [
+     {
+      "label": "Whose government?",
+      "tool": "registry.resolve_jurisdiction",
+      "call": 9
+     },
+     {
+      "label": "Zoning",
+      "tool": "geo.find_zoning",
+      "call": 27
+     },
+     {
+      "label": "Roads",
+      "tool": "geo.find_roads",
+      "call": 16
+     },
+     {
+      "label": "Public places nearby",
+      "tool": "geo.find_landmarks",
+      "call": 17
+     }
+    ]
+   },
+   {
+    "label": "Richmond City",
+    "blurb": "A city that publishes its own layers, asked about buildings and monitored environmental sites.",
+    "steps": [
+     {
+      "label": "Buildings",
+      "tool": "geo.find_buildings",
+      "call": 15
+     },
+     {
+      "label": "Monitored sites",
+      "tool": "geo.find_environmental_sites",
+      "call": 18
+     }
+    ]
+   },
+   {
+    "label": "Craig County",
+    "blurb": "A rural county with no registered zoning source. The whole point of the demo: this is a gap, not an empty county.",
+    "steps": [
+     {
+      "label": "Zoning",
+      "tool": "geo.find_zoning",
+      "call": 38
+     }
+    ]
+   }
+  ],
+  "meetings": [
+   {
+    "label": "Richmond \u00b7 Sept 2026",
+    "blurb": "An ordinary month. Each meeting carries the agenda document as a link, which this project never follows \u2014 so what the meeting is about is not in the answer.",
+    "call": 31
+   },
+   {
+    "label": "Alexandria \u00b7 Sept 2026",
+    "blurb": "A second locality, answered by the same adapter. The only difference between them is a client identifier in a manifest.",
+    "call": 32
+   },
+   {
+    "label": "Richmond \u00b7 planning only",
+    "blurb": "Narrowed to one body. The publisher's ordering is kept \u2014 this filters their answer rather than re-ranking it.",
+    "call": 33
+   },
+   {
+    "label": "Richmond \u00b7 Dec 2019 (cancellations)",
+    "blurb": "The platform publishes no cancellation field at all. Where a meeting was called off, it is said in the comment and nowhere else \u2014 so the reading is labelled as a reading, and the meeting is returned rather than dropped.",
+    "call": 34
+   },
+   {
+    "label": "Richmond \u00b7 Jan 2030 (empty)",
+    "blurb": "A registered locality with nothing in the window. Registry covered, publisher answered, no meetings.",
+    "call": 35
+   },
+   {
+    "label": "Fairfax County (not registered)",
+    "blurb": "Fairfax County meets constantly. It is not on this platform, so there is nowhere to read it. Compare this panel with the empty one above \u2014 they must never look the same.",
+    "call": 36
+   }
+  ],
+  "code": [
+   {
+    "crumb": "The Code",
+    "tool": "civic.browse_code",
+    "title": "",
+    "chapter": "",
+    "citation": "",
+    "call": 20
+   },
+   {
+    "crumb": "Title 15.2",
+    "tool": "civic.browse_code",
+    "title": "15.2",
+    "chapter": "",
+    "citation": "",
+    "call": 21
+   },
+   {
+    "crumb": "Chapter 22",
+    "tool": "civic.browse_code",
+    "title": "15.2",
+    "chapter": "22",
+    "citation": "",
+    "call": 22
+   },
+   {
+    "crumb": "\u00a7 15.2-2200",
+    "tool": "civic.get_code_section",
+    "title": "",
+    "chapter": "",
+    "citation": "15.2-2200",
+    "call": 24
+   }
+  ]
+ },
  "demo_meta": {
-  "generated_at": "2026-09-10T02:02:59Z",
+  "generated_at": "2026-09-10T02:15:47Z",
   "mode": "fixtures",
   "call_count": 45,
   "fixture_recorded_at": "2026-09-02T05:29:35Z"
