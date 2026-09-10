@@ -118,10 +118,46 @@ class Access(_Strict):
     credential_ref: str | None = None
 
 
+# How often a publisher says it updates, in seconds. The vocabulary is
+# what manifests already use; `unknown` is not here because a source that
+# does not say how often it updates cannot be measured against its own
+# promise, and inventing a number for it would be this project deciding
+# what "current" means for someone else's data (GitHub issue #57).
+CADENCE_SECONDS = {
+    "continuous": 3600,
+    "daily": 86_400,
+    "weekly": 7 * 86_400,
+    "monthly": 30 * 86_400,
+    "quarterly": 90 * 86_400,
+    "annually": 365 * 86_400,
+}
+
+# How far past its own cadence a source may drift before an answer says
+# so. A grace factor rather than a hard edge: a daily feed retrieved on
+# Monday still showing Friday's edit is a weekend, not a fault. Two is a
+# choice — the smallest multiple that does not fire on ordinary slippage
+# — and it is written here, once, rather than left implicit in a
+# comparison.
+CADENCE_GRACE = 2
+
+
 class Freshness(_Strict):
     expected_cadence: str
     cadence_source: str  # stated | observed | unknown
     ttl_hint_seconds: int
+
+    def stale_after_seconds(self) -> int | None:
+        """When this publisher's own data should be called stale, or None.
+
+        None for a cadence this project does not recognise, `unknown`
+        included: there is no promise to measure against, and
+        `freshness_unavailable` already covers a source that reports no
+        vintage at all. The two warnings answer different questions —
+        "we do not know how old this is" and "we know, and it is older
+        than the publisher said it would be".
+        """
+        base = CADENCE_SECONDS.get((self.expected_cadence or "").lower())
+        return base * CADENCE_GRACE if base else None
 
 
 class CoverageDecl(_Strict):

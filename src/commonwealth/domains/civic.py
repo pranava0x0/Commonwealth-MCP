@@ -92,7 +92,8 @@ def _section_block(b: EnvelopeBuilder, m: SourceManifest,
         dataset=m.name, jurisdiction=m.jurisdiction,
         authority_level=m.publisher.authority_level,
         access_path=AccessPath.live,
-        source_updated_at=None, retrieved_at=_now(), cache_age_seconds=0)
+        source_updated_at=None, retrieved_at=_now(),
+        cache_age_seconds=0, manifest=m)
     ev_ref = b.add_evidence(source_ref=src_ref, record_id=section.citation,
                             retrieved_at=_now(), transformations=[],
                             locator=section.source_url)
@@ -167,7 +168,8 @@ def _browse_block(b: EnvelopeBuilder, m: SourceManifest,
         dataset="code-of-virginia-contents", jurisdiction=m.jurisdiction,
         authority_level=m.publisher.authority_level,
         access_path=AccessPath.live,
-        source_updated_at=None, retrieved_at=_now(), cache_age_seconds=0)
+        source_updated_at=None, retrieved_at=_now(),
+        cache_age_seconds=0, manifest=m)
     level = "section" if chapter else "chapter" if title else "title"
     rows = [{"kind": e.kind, "number": e.number, "name": e.name,
              # What to pass back to reach the next level down, so a model
@@ -285,7 +287,8 @@ def _meetings_block(b: EnvelopeBuilder, m: SourceManifest,
         dataset=m.name, jurisdiction=m.jurisdiction,
         authority_level=m.publisher.authority_level,
         access_path=AccessPath.live,
-        source_updated_at=newest, retrieved_at=_now(), cache_age_seconds=0)
+        source_updated_at=newest, retrieved_at=_now(),
+        cache_age_seconds=0, manifest=m)
 
     records = []
     for meeting in meetings:

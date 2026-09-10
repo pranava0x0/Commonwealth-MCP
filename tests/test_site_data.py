@@ -522,3 +522,48 @@ def test_the_landing_page_points_at_the_demos(core):
     main = body[body.index("<main"):body.index("</main>")]
     assert 'href="demos.html"' in main, (
         "index.html's nav links the demos and its body does not")
+
+
+def test_committed_demo_staleness_matches_what_a_build_would_produce(demo):
+    """The site data is generated and committed, and `stale_source` is
+    measured against wall-clock now (GitHub issue #57). So a recording
+    that is fresh today warns in a year, and the committed JSON silently
+    stops matching what `build_site.py` produces.
+
+    This is the legible version of that failure. It says which fixtures
+    crossed the line and what to do, instead of leaving a diff in a
+    440 KB JSON file for someone to interpret.
+    """
+    from commonwealth.core.assemble import _age_seconds
+    from commonwealth.core.registry import SourceRegistry
+    from commonwealth.runtime import SOURCES_DIR
+
+    registry = SourceRegistry.load(SOURCES_DIR)
+    drifted = []
+    for call in demo["calls"]:
+        envelope = call.get("envelope") or {}
+        warned = {w["code"] for w in envelope.get("warnings", [])}
+        for source in envelope.get("provenance", []):
+            manifest = registry.get(source["source_id"])
+            if manifest is None or not source.get("source_updated_at"):
+                continue
+            limit = manifest.freshness.stale_after_seconds()
+            if limit is None:
+                continue
+            age = _age_seconds(source["source_updated_at"],
+                               source["retrieved_at"])
+            if age is None:
+                continue
+            # What a build today would decide, against what is committed.
+            if (age > limit) != ("stale_source" in warned):
+                drifted.append(
+                    f"{source['source_id']} (vintage "
+                    f"{source['source_updated_at']}, cadence "
+                    f"{manifest.freshness.expected_cadence})")
+    assert not drifted, (
+        "these recordings have aged across their source's declared "
+        f"cadence since the site data was generated: {sorted(set(drifted))}. "
+        "The committed docs/data/*.json no longer matches what "
+        f"build_site.py produces. {REGEN} — and consider re-recording the "
+        "fixtures themselves with `commonwealth sources sample`, since "
+        "the underlying government data has moved on too.")

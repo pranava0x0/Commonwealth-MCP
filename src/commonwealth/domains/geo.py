@@ -86,8 +86,7 @@ def _source_entry(b: EnvelopeBuilder, m: SourceManifest,
         authority_level=m.publisher.authority_level,
         access_path=AccessPath.cache if q.from_cache else AccessPath.live,
         source_updated_at=q.source_updated_at, retrieved_at=q.retrieved_at,
-        cache_age_seconds=q.cache_age_seconds,
-        terms_gap=m.access.terms_gap)
+        cache_age_seconds=q.cache_age_seconds, manifest=m)
 
 
 def _records_block(b: EnvelopeBuilder, src_ref: str, q: ArcGISQueryResult,
@@ -1152,8 +1151,7 @@ def _geocode_source(b: EnvelopeBuilder, m: SourceManifest,
         authority_level=m.publisher.authority_level,
         access_path=AccessPath.cache if g.from_cache else AccessPath.live,
         source_updated_at=None, retrieved_at=g.retrieved_at,
-        cache_age_seconds=g.cache_age_seconds,
-        terms_gap=m.access.terms_gap)
+        cache_age_seconds=g.cache_age_seconds, manifest=m)
 
 
 async def _resolve_zip(ctx: RuntimeContext, b: EnvelopeBuilder,

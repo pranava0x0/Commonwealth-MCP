@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import uuid
 from dataclasses import dataclass
+from datetime import datetime
 
 from .envelope import (AccessPath, AuthorityLevel, Coverage, Envelope,
                        Evidence, ExecutionProvenance, JurisdictionGap,
@@ -45,7 +46,22 @@ class EnvelopeBuilder:
                   source_updated_at: str | None, retrieved_at: str,
                   cache_age_seconds: int,
                   warn_on_missing_freshness: bool = True,
-                  terms_gap: str | None = None) -> str:
+                  terms_gap: str | None = None,
+                  manifest=None) -> str:
+        """`manifest` carries everything derived from the registered
+        source: the terms gap to disclose, and the cadence a vintage is
+        measured against.
+
+        One argument rather than one per disclosure, because the
+        alternative is what happened to `terms_gap` — it was threaded
+        through as its own parameter and five of the seven call sites
+        never passed it. Nothing was lost only because the three sources
+        that declare a gap all happen to be reached by the two that did.
+        A call site that hands over the manifest cannot forget the next
+        disclosure that gets added here.
+        """
+        if manifest is not None and terms_gap is None:
+            terms_gap = manifest.access.terms_gap
         ref = f"source_{len(self._sources) + 1:02d}"
         self._sources.append(SourceEntry(
             id=ref, source_id=source_id, publisher=publisher, system=system,
@@ -58,11 +74,51 @@ class EnvelopeBuilder:
                       "The publisher exposes no machine-readable update date "
                       "for this layer; retrieval time is known, data vintage "
                       "is not.", source_id)
+        elif source_updated_at is not None and manifest is not None:
+            self._warn_if_stale(source_id, manifest, source_updated_at,
+                                retrieved_at)
         if terms_gap and not any(
                 w.code == WarningCode.terms_note and w.source_id == source_id
                 for w in self._warnings):
             self.warn(WarningCode.terms_note, terms_gap, source_id)
         return ref
+
+    def _warn_if_stale(self, source_id: str, manifest,
+                       source_updated_at: str, retrieved_at: str) -> None:
+        """Say so when a publisher's data is older than its own promise.
+
+        Measured against the cadence the manifest declares and nothing
+        else (GitHub issue #57). A source that says `unknown` is not
+        judged: there is no promise to be behind, and inventing a
+        threshold would be this project deciding what "current" means
+        for someone else's data.
+
+        This is the other half of `freshness_unavailable`. That one says
+        the vintage is unknown; this one says the vintage is known and
+        older than the publisher led you to expect.
+        """
+        limit = manifest.freshness.stale_after_seconds()
+        if limit is None:
+            return
+        age = _age_seconds(source_updated_at, retrieved_at)
+        if age is None or age <= limit:
+            return
+        # Once per source, not once per layer. A tool that reads two
+        # layers of one service adds the source entry twice, and the
+        # same sentence twice reads as two separate problems. The terms
+        # note guards itself the same way.
+        if any(w.code == WarningCode.stale_source and w.source_id == source_id
+               for w in self._warnings):
+            return
+        self.warn(
+            WarningCode.stale_source,
+            f"This data was last updated {age // 86_400} days before it "
+            f"was retrieved, and {manifest.publisher.agency} describes "
+            f"this source as updating {manifest.freshness.expected_cadence}. "
+            "It is the publisher's own schedule that it is behind, not a "
+            "deadline this project set. The records are still what the "
+            "publisher holds; they may not be what it has most recently "
+            "collected.", source_id)
 
     def add_evidence(self, *, source_ref: str, record_id: str,
                      retrieved_at: str, transformations: list[str],
@@ -112,6 +168,27 @@ class EnvelopeBuilder:
                         resources=self._resources,
                         requires_user_choice=requires_user_choice,
                         execution=self._execution)
+
+
+def _age_seconds(source_updated_at: str, retrieved_at: str) -> int | None:
+    """How far `source_updated_at` sits before `retrieved_at`.
+
+    None when either timestamp is not the ISO shape every envelope uses,
+    because a staleness claim computed from a string nobody could parse
+    would be worse than no claim. A negative age — a publisher stamping
+    data ahead of when it was read — reads as zero rather than as
+    freshness from the future.
+    """
+    def parse(value: str):
+        try:
+            return datetime.fromisoformat(value.replace("Z", "+00:00"))
+        except (ValueError, AttributeError):
+            return None
+
+    updated, read = parse(source_updated_at), parse(retrieved_at)
+    if updated is None or read is None:
+        return None
+    return max(0, int((read - updated).total_seconds()))
 
 
 def gap(jurisdiction: str, reason: str) -> JurisdictionGap:
