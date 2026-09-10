@@ -25,10 +25,63 @@ from ..core.egress import (DECOMPRESSION_RATIO_FLOOR_BYTES,
 from ..core.envelope import utc_now_iso
 from ..core.errors import RateLimited, SourceUnavailable
 from ..core.registry import DataClassification, SourceManifest
+from ..core.tracing import current_trace, propagate_upstream
 
 log = logging.getLogger("commonwealth.adapters")
 
-PER_HOST_CONCURRENCY = 2
+# How many requests this process will have in flight to one government
+# host at a time.
+#
+# **This budget is per process, and that is a real limitation** (GitHub
+# issue #20). Two Commonwealth processes — the CLI and the server, say,
+# or two server workers — each hold their own, so the rate a government
+# service actually sees is this number times the number of processes.
+# Nothing here can see the other processes, and a genuinely shared
+# budget needs somewhere to keep it, which is a bigger change than the
+# limit itself and one that belongs with hosting.
+#
+# What an operator can do today is divide it. Running four workers
+# against the same services? Set the budget to 1 and the total is four
+# rather than eight. The environment variable exists so that is a
+# setting rather than a patch, and so the per-process default is a
+# decision someone can see rather than a constant they have to find.
+DEFAULT_PER_HOST_CONCURRENCY = 2
+PER_HOST_CONCURRENCY_ENV = "COMMONWEALTH_PER_HOST_CONCURRENCY"
+
+
+def per_host_concurrency() -> int:
+    """The configured budget, or the default when unset or unusable.
+
+    A bad value falls back rather than failing startup: an operator's
+    typo in an environment variable should not take every government
+    lookup down, and the default is the conservative direction to fall.
+    Values below 1 are refused for the same reason — a budget of zero
+    would deadlock every request rather than slowing it.
+    """
+    raw = os.environ.get(PER_HOST_CONCURRENCY_ENV, "").strip()
+    if not raw:
+        return DEFAULT_PER_HOST_CONCURRENCY
+    try:
+        value = int(raw)
+    except ValueError:
+        log.warning("%s=%r is not an integer; using the default of %d "
+                    "requests in flight per host",
+                    PER_HOST_CONCURRENCY_ENV, raw,
+                    DEFAULT_PER_HOST_CONCURRENCY)
+        return DEFAULT_PER_HOST_CONCURRENCY
+    if value < 1:
+        log.warning("%s=%d would stop every request; using the default "
+                    "of %d", PER_HOST_CONCURRENCY_ENV, value,
+                    DEFAULT_PER_HOST_CONCURRENCY)
+        return DEFAULT_PER_HOST_CONCURRENCY
+    return value
+
+
+# Read once per process. The semaphores below are created on first use
+# and keep whatever value they were built with, so re-reading per call
+# would report a change that could not take effect.
+PER_HOST_CONCURRENCY = per_host_concurrency()
+
 RETRY_BUDGET = 1  # one retry inside the request deadline (../../../design/architecture.md § 38)
 REQUEST_TIMEOUT_SECONDS = 30.0
 
@@ -39,6 +92,23 @@ def _semaphore_for(host: str) -> asyncio.Semaphore:
     if host not in _host_semaphores:
         _host_semaphores[host] = asyncio.Semaphore(PER_HOST_CONCURRENCY)
     return _host_semaphores[host]
+
+
+def _log_request_span(host: str, url: str, hop: int):
+    """Open a span for one outbound request and log that it started.
+
+    Returns the span, or None when no trace is bound — a CLI run or a
+    test that never started one gets no invented ids and no extra log
+    line. The line is what makes issue #36's question answerable: given
+    a tool call's trace id, which government requests did it make?
+    """
+    trace = current_trace()
+    if trace is None:
+        return None
+    span = trace.child()
+    log.info("trace=%s span=%s parent=%s host=%s hop=%d url=%s",
+             span.trace_id, span.span_id, trace.span_id, host, hop, url)
+    return span
 
 
 def _declared_length(response: httpx.Response) -> int:
@@ -220,9 +290,15 @@ class HttpFetcher:
         for hop in range(4):  # initial request + MAX_REDIRECTS
             approved = self.policy.validate_url(current)
             host = urlparse(current).hostname or ""
+            # A span per hop, under whatever trace the tool call bound
+            # (GitHub issue #36). Nothing is sent to the host unless an
+            # operator has opted in; this exists so the log lines below
+            # can be joined back to the call that caused them.
+            span = _log_request_span(host, current, hop)
             async with _semaphore_for(host):
                 response = await self._request_with_retry(current, params,
-                                                          approved, posted)
+                                                          approved, posted,
+                                                          span)
             if response.status_code in (301, 302, 303, 307, 308):
                 location = response.headers.get("location")
                 if not location:
@@ -249,7 +325,8 @@ class HttpFetcher:
     async def _send_to_any_approved(self, url: str,
                                     params: dict[str, Any] | None,
                                     approved: tuple[str, ...],
-                                    post: bool | None = None) -> _Body:
+                                    post: bool | None = None,
+                                    span=None) -> _Body:
         """Try each approved address in turn and return the first response.
 
         Every address here passed the same policy check, so any of them is
@@ -269,7 +346,7 @@ class HttpFetcher:
                         follow_redirects=False,
                         timeout=REQUEST_TIMEOUT_SECONDS) as client:
                     return await self._read_capped(client, url, params,
-                                                   post)
+                                                   post, span)
             except httpx.HTTPError as err:
                 last = err
         # `approved` is never empty: validate_url refuses a host that
@@ -280,7 +357,8 @@ class HttpFetcher:
     async def _request_with_retry(self, url: str,
                                   params: dict[str, Any] | None,
                                   approved: tuple[str, ...],
-                                  post: bool | None = None) -> _Body:
+                                  post: bool | None = None,
+                                  span=None) -> _Body:
         """`approved` is every address the policy checked for this URL.
 
         Each attempt walks all of them (see `_send_to_any_approved`), so
@@ -291,7 +369,8 @@ class HttpFetcher:
         for attempt in range(RETRY_BUDGET + 1):
             try:
                 body = await self._send_to_any_approved(url, params,
-                                                        approved, post)
+                                                        approved, post,
+                                                        span)
             except httpx.HTTPError as err:
                 last = err
                 if attempt < RETRY_BUDGET:
@@ -323,7 +402,7 @@ class HttpFetcher:
     @staticmethod
     async def _read_capped(client: httpx.AsyncClient, url: str,
                            params: dict[str, Any] | None,
-                           post: bool | None = None) -> _Body:
+                           post: bool | None = None, span=None) -> _Body:
         """Stream the response, stopping as soon as it breaks a limit.
 
         Egress rule 6 has two halves. The byte cap used to be checked on
@@ -340,6 +419,12 @@ class HttpFetcher:
         """
         host = urlparse(url).hostname or ""
         request = _build_query_request(client, url, params, post)
+        if span is not None and propagate_upstream():
+            # Off by default. On only where an operator has said the next
+            # hop is theirs and collects spans (core/tracing.py).
+            request.headers["traceparent"] = span.traceparent()
+            if span.tracestate:
+                request.headers["tracestate"] = span.tracestate
         response = await client.send(request, stream=True)
         chunks: list[bytes] = []
         decoded = 0
@@ -486,9 +571,11 @@ def log_source_call(manifest: SourceManifest, operation: str,
         detail = f"params={sorted(params)}"
     else:
         detail = f"params={ {k: v for k, v in params.items() if k != 'f'} }"
-    log.info("source=%s op=%s %s records=%s",
+    trace = current_trace()
+    log.info("source=%s op=%s %s records=%s%s",
              manifest.id, operation, detail,
-             record_count if record_count is not None else "-")
+             record_count if record_count is not None else "-",
+             f" trace={trace.trace_id} span={trace.span_id}" if trace else "")
 
 
 def egress_policy_for(manifest: SourceManifest,

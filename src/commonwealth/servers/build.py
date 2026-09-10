@@ -11,6 +11,7 @@ from __future__ import annotations
 import inspect
 import logging
 import time
+from collections.abc import Mapping
 from typing import Any
 
 from mcp.server import MCPServer
@@ -18,6 +19,7 @@ from mcp.server.mcpserver.exceptions import ResourceError, ToolError
 from mcp.types import ToolAnnotations
 
 from ..core.audit import error_record, record_from_envelope
+from ..core.tracing import trace_call
 from ..core.errors import CommonwealthError
 from ..core.results import KINDS
 from ..core.skills import load_skills, unroutable_capabilities
@@ -167,11 +169,34 @@ def _register_result_resources(server: MCPServer,
             mime_type="application/json")(reader(kind))
 
 
+async def _trace_middleware(request_ctx, call_next):
+    """Bind a trace for the whole of one inbound request (issue #36).
+
+    Middleware rather than the tool wrapper, because it runs before
+    params validation and around every method — so a call that fails
+    validation is still followable, and the ContextVar is already set
+    by the time any adapter runs inside `call_next`.
+
+    `ctx.params` is the raw inbound params, which is where the MCP spec
+    puts `_meta` and where design/architecture.md § 23 says trace context
+    arrives. A client that sends nothing gets a trace started here; a
+    malformed header is ignored rather than failing the call
+    (core/tracing.py).
+    """
+    params = request_ctx.params or {}
+    meta = params.get("_meta") if isinstance(params, Mapping) else None
+    meta = meta if isinstance(meta, Mapping) else {}
+    with trace_call(traceparent=meta.get("traceparent"),
+                    tracestate=meta.get("tracestate")):
+        return await call_next(request_ctx)
+
+
 def build_server(ctx: RuntimeContext, profile: str = "default") -> MCPServer:
     check_skill_capabilities(ctx)
     specs = expand_profile(profile, registries())
     server = MCPServer(name=ctx.server_name, version=ctx.server_version,
-                       instructions=SERVER_INSTRUCTIONS)
+                       instructions=SERVER_INSTRUCTIONS,
+                       middleware=[_trace_middleware])
     _register_result_resources(server, ctx)
     annotations = ToolAnnotations(read_only_hint=True, destructive_hint=False,
                                   open_world_hint=True)
