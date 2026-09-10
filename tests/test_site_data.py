@@ -492,3 +492,33 @@ def test_the_coverage_demo_has_a_real_ambiguity_to_handle(site):
         "the two Fairfaxes now have identical coverage for every "
         "capability, so nothing on the site demonstrates why a shared "
         "name may not be resolved by picking one")
+
+
+def test_no_page_hardcodes_the_size_of_the_recorded_trail(demo):
+    """index.html linked to "All 39 recorded calls" while the trail held
+    forty-five (found 2026-09-10). The count is derived now; this stops
+    the next one being typed.
+
+    Any number that is not the current call count is caught, so this
+    fails whether the number goes stale or a new one is typed in.
+    """
+    import re
+
+    pattern = re.compile(r"(\d+)\s+recorded\s+calls?", re.I)
+    actual = demo["call_count"]
+    for page in PAGES:
+        for found in pattern.findall((DOCS / page).read_text()):
+            assert int(found) == actual, (
+                f"{page} says {found!r} recorded calls and the trail holds "
+                f"{actual}. Derive it from demo_meta.call_count rather than "
+                "typing it; see renderCallsLink in site.js")
+
+
+def test_the_landing_page_points_at_the_demos(core):
+    """A page nothing links to is a page nobody opens. The nav carries it
+    on every page; this is the one in the body, beside the trail it is an
+    alternative reading of."""
+    body = (DOCS / "index.html").read_text()
+    main = body[body.index("<main"):body.index("</main>")]
+    assert 'href="demos.html"' in main, (
+        "index.html's nav links the demos and its body does not")

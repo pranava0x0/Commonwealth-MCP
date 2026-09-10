@@ -211,7 +211,18 @@ const ASK_ANSWERS = {
     "agency that contributed it.",
   "code_section.lookup": "The section text from the state's own site, " +
     "linked to the live page.",
+  "meeting.search": "The bodies that meet, when, and a link to the agenda " +
+    "— for the few localities whose platform publishes one.",
 };
+
+/* The link to the full trail says how big the trail is. It said "All 39
+   recorded calls" while the trail held forty-five, which is what a typed
+   count does. */
+function renderCallsLink(core){
+  const a = document.getElementById("all-calls-link");
+  const n = (core.demo_meta || {}).call_count;
+  if (a && n) a.textContent = `All ${n} recorded calls`;
+}
 
 function renderAsk(core){
   const box = document.getElementById("ask-cards");
@@ -1247,6 +1258,11 @@ function meetingCard(rec){
     ["When", `${rec.date} at ${rec.time} (${rec.time_zone})`],
     ["Where", rec.location],
     ["Agenda status", rec.agenda_status],
+    // The publisher's own last edit. It matters most on the rows below
+    // it: a cancellation lives in the comment, and when the comment was
+    // last revised is the difference between one posted this morning
+    // and one posted years ago.
+    ["Publisher last edited", rec.last_modified],
   ]));
   if (rec.comment){
     const p = el("p", "meeting-comment");
@@ -1692,6 +1708,7 @@ function wireDemoTabs(){
     renderCounts(core);
     renderWorksWith(core);
     renderAsk(core);
+    renderCallsLink(core);
     renderFeaturedWalk(core);
     renderDoctorSample(core);
     renderStarterPrompts(core);
