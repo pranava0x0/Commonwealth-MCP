@@ -557,3 +557,68 @@ own sentence for the same reason.
 
 The API needs a key, the key comes from a registration form a human
 fills in, and issue #11 stays open until someone has one.
+
+---
+
+## 20. The legislature publishes bills as bulk CSV, keyless, in inconsistent casing
+
+- **Source:** `va-lis-legislative-api` (registered as inventory)
+- **Observed:** 2026-09-10, revising § 19's conclusion about issue #11
+- **Test:** none; nothing reads these files yet
+
+§ 19 established that the legislative JSON API is key-gated. That is
+still true and it was the wrong thing to stop at: the same division
+publishes the same session data as **bulk CSV over Azure Blob Storage,
+documented, keyless, and updated hourly during session**.
+
+The help page at `help.lis.virginia.gov/data/` gives the pattern:
+
+```text
+https://lis.blob.core.windows.net/lisfiles/<year><session-type>/<FILE>
+```
+
+where session type is `1` for a regular session, `2` and `3` for
+special sessions — so `20261/BILLS.CSV` is the 2026 regular session's
+bills. Verified live for the **current** session, not only historical
+ones.
+
+**The file names are not the casing the help page prints.** Azure Blob
+is case-sensitive and the container's own casing is inconsistent, so a
+client that trusts the documentation 404s on half the files:
+
+| Documented | Actually served | Size (2026 regular) |
+|---|---|---|
+| Bills.csv | `BILLS.CSV` | 1.3 MB |
+| Docket.csv | `DOCKET.CSV` | 78 KB |
+| Subdocket.csv | `SUBDOCKET.CSV` | 13 KB |
+| Vote.csv | `VOTE.CSV` | 3.9 MB |
+| History.csv | `HISTORY.CSV` | 4.7 MB |
+| Members.csv | `Members.csv` | 6.7 KB |
+| Committees.csv | `Committees.csv` | 1.9 KB |
+| Sponsors.csv | `Sponsors.csv` | 1.1 MB |
+| Summaries.csv | `Summaries.csv` | 4.3 MB |
+| Amendments.csv | `Amendments.csv` | 60 KB |
+| CommitteeMembers.csv | `CommitteeMembers.csv` | 6.5 KB |
+| SubCommitteeMembers.csv | `SubCommitteeMembers.csv` | 14 KB |
+| FiscalImpactStatements.csv | `FiscalImpactStatements.csv` | 325 KB |
+| VoteStatements.csv | `VoteStatements.csv` | 372 KB |
+
+`Section.csv` is documented and served under no casing tried.
+
+Container listing is disabled — `?restype=container&comp=list` returns
+`ResourceNotFound` — so a client cannot discover the real names. They
+have to be known, which is why they are written down here.
+
+**What this changes for issue #11.** The blocker was framed as "a
+registration only a human can complete." That is now only true of what
+the API carries beyond these files. Bills, votes, sponsors, summaries
+and history for the current session are readable today with no key.
+
+It is a different adapter shape from anything registered: a
+whole-session snapshot rather than a query service, so answering a
+question means downloading a file and filtering it locally. That is
+worth distinguishing from the Code of Virginia's missing search (§ 18).
+There, the publisher runs no full-text operation and building one would
+be this project answering a question the source cannot. Here the
+publisher hands over the whole dataset deliberately, and filtering what
+they published whole is reading it, not inventing an operation over it.

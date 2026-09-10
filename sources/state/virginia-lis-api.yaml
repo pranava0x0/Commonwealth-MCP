@@ -3,9 +3,13 @@
 # row so the gap is written down rather than showing up as a
 # Commonwealth that publishes no legislation.
 #
-# Access verified live 2026-09-09. The service is key-gated and the key
-# comes from a registration form a human fills in; that is a step to
-# take, not something to automate around, so no adapter is built here.
+# Access verified live 2026-09-09, and revised 2026-09-10: the JSON API
+# is key-gated, and it is not the only way in. The same division
+# publishes the same session data as bulk CSV over Azure Blob Storage,
+# documented, keyless, and updated hourly while the General Assembly is
+# sitting. That is a real route to bills and votes and it changes what
+# issue #11 is blocked on — see the `bulk` block below and
+# design/source-quirks.md § 20.
 #
 # The verification is worth recording because the obvious probe gets it
 # wrong. lis.virginia.gov serves a React single-page app, and any path
@@ -38,6 +42,10 @@ domains: [civic]
 
 capabilities: []
 
+# `type: none` keeps this row out of selection, and an inventory
+# adapter takes no parameters — so the bulk endpoint is recorded in
+# authority_notes below rather than here, where the schema would refuse
+# it and rightly so: a parameter block is for an adapter that runs.
 adapter:
   type: none
 
@@ -66,17 +74,38 @@ coverage:
   temporal: current
   known_limitations:
     - >
-      No key, so nothing is read. Bills, members and committees are not
-      available from this project at all. A question about legislation
-      returns registry coverage `none` for want of a registered source,
-      which means this project has nowhere to look and never that the
-      General Assembly passed nothing.
+      Nothing is read yet, so a question about legislation returns
+      registry coverage `none` for want of a registered source — which
+      means this project has nowhere to look and never that the General
+      Assembly passed nothing.
     - >
-      Registration is a human step. Obtaining the key is a form the
-      operator fills in, and it is not something to work around.
+      The bulk files are whole-session snapshots, not a query service.
+      Answering "which bills mention X" from them means downloading the
+      session and filtering locally. That is reading what the publisher
+      chose to hand over whole, which is a different thing from the
+      full-text search the Code of Virginia does not offer (issue #12) —
+      there the publisher runs no such operation at all.
+    - >
+      The keyed JSON API remains the only route to anything the bulk
+      files do not carry, and obtaining that key is a registration form
+      a human fills in.
+    - >
+      Bill identity is versioned — introduced, engrossed, enrolled. The
+      bulk BILLS.CSV carries one row per bill with its latest actions,
+      so a tool built on it must say which version it is describing
+      rather than implying "the bill".
 
 authority_notes: >
-  Intended capabilities, when a key exists: legislation.search and
+  Bulk endpoint, verified 2026-09-10 and not yet read by anything:
+  https://lis.blob.core.windows.net/lisfiles/<year><session-type>/<FILE>
+  — e.g. .../20261/BILLS.CSV for the 2026 regular session. Keyless,
+  documented at help.lis.virginia.gov/data/, updated hourly during
+  session, and served under file names whose casing does not match the
+  documentation (design/source-quirks.md § 20 lists the real ones).
+  Container listing is disabled, so the names cannot be discovered and
+  have to be known.
+
+  Intended capabilities, when there is an adapter: legislation.search and
   bill.lookup, serving civic.search_legislation and civic.get_bill. They
   are recorded here rather than in `capabilities` because a capability id
   is a routing promise this row cannot keep. This is a second civic
