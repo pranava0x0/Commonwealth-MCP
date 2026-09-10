@@ -1,0 +1,28 @@
+# design/bench.md § 5 task 7, as a registry_gap. Craig County is a real
+# Virginia county that really does zone land. Nothing here has a source
+# for it, and the answer has to say THAT rather than "no results" — the
+# distinction this whole project exists for.
+id: t2-craig-county-zoning-gap
+tier: 2
+question: "How is parcel 123 zoned in Craig County?"
+toolset: default
+fixtures: []
+expected:
+  tool: geo.find_zoning
+  arguments:
+    jurisdiction: Craig County
+    pin: "123"
+  coverage:
+    registry: none
+    result: empty
+  # The escalation hint the gap envelope owes the caller
+  # (design/provenance-envelope.md § 10). Asserted so the trap cannot
+  # pass on the coverage value alone while the hint quietly goes missing.
+  next_action: registry.search_sources
+  max_calls: 1
+score:
+  - kind: tool_choice
+  - kind: argument_match
+  - kind: coverage_honesty
+  - kind: restraint
+traps: [registry_gap]

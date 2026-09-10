@@ -1,0 +1,26 @@
+# An empty environmental answer that still owes its disclaimer. "No
+# monitoring station on record here" is not "nothing here", and a
+# station on record is not a finding either. The `stale`-adjacent point
+# is the one this asserts: the answer carries the source's own stated
+# limitations even when it found nothing.
+id: t2-environmental-absence
+tier: 2
+question: "Are there any monitored environmental sites at -74.5, 36.5 in Virginia?"
+toolset: discovery
+fixtures: [va-deq-water-quality-stations]
+expected:
+  tool: geo.find_environmental_sites
+  arguments:
+    jurisdiction: Virginia
+    lon: -74.5
+    lat: 36.5
+  coverage:
+    registry: covered
+    result: empty
+  max_calls: 1
+score:
+  - kind: tool_choice
+  - kind: argument_match
+  - kind: coverage_honesty
+  - kind: restraint
+traps: [overreach]

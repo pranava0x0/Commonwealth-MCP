@@ -1,0 +1,26 @@
+# The other half of the pair above, and the reason both are in the
+# suite: a covered locality with nothing in the window. Identical
+# `result: empty`, opposite `registry`. A model that reads them the same
+# way is the failure this pair is here to catch.
+id: t2-meetings-empty-window
+tier: 2
+question: "What meetings does Richmond City have in January 2030?"
+toolset: default
+fixtures: [va-richmond-city-meetings]
+expected:
+  tool: civic.search_meetings
+  arguments:
+    jurisdiction: Richmond City
+    start_date: "2030-01-01"
+    end_date: "2030-01-31"
+  coverage:
+    registry: covered
+    execution: complete
+    result: empty
+  max_calls: 1
+score:
+  - kind: tool_choice
+  - kind: argument_match
+  - kind: coverage_honesty
+  - kind: restraint
+traps: []

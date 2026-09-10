@@ -1549,6 +1549,144 @@ def cmd_configure(args: argparse.Namespace) -> int:
     return 0
 
 
+
+# --- eval (design/bench.md; GitHub issue #28) ------------------------------
+
+EVALS_DIR = PROJECT_ROOT / "evals"
+
+
+def _fixture_ctx() -> RuntimeContext:
+    """A runtime backed by the recorded fixtures, never the network.
+
+    A bench that reached live services would score the weather: a
+    government host being slow on the day would read as a model getting
+    worse. Every eval runs over the committed recordings, whose vintage
+    the result records.
+    """
+    from ..adapters.agenda_platform import AgendaPlatformAdapter
+    from ..adapters.arcgis import ArcGISAdapter
+    from ..adapters.arcgis_geocode import ArcGISGeocodeAdapter
+    from ..adapters.base import TTLCache
+    from ..adapters.replay import HtmlReplayFetcher, ReplayFetcher
+    from ..adapters.virginia_law import VirginiaLawAdapter
+    from ..core.jurisdiction import JurisdictionTable
+    from ..core.registry import SourceRegistry
+    from ..core.results import MemoryResultStore
+    from ..fixtures import (recorded_api_exchanges, recorded_exchanges,
+                            recorded_pages)
+
+    exchanges = recorded_exchanges()
+    return RuntimeContext(
+        sources=SourceRegistry.load(SOURCES_DIR),
+        jurisdictions=JurisdictionTable.load(SOURCES_DIR / "jurisdictions"),
+        arcgis=ArcGISAdapter(fetcher=ReplayFetcher(exchanges),
+                             cache=TTLCache()),
+        geocoder=ArcGISGeocodeAdapter(fetcher=ReplayFetcher(exchanges),
+                                      cache=TTLCache()),
+        virginia_law=VirginiaLawAdapter(
+            fetcher=HtmlReplayFetcher(recorded_pages()),
+            json_fetcher=ReplayFetcher(recorded_api_exchanges())),
+        agendas=AgendaPlatformAdapter(fetcher=ReplayFetcher(exchanges)),
+        results=MemoryResultStore(deterministic=True))
+
+
+def cmd_eval_list(args: argparse.Namespace) -> int:
+    from ..evals.loader import load_suite, suites
+
+    found = suites(EVALS_DIR)
+    if not found:
+        return _fail(f"no eval suites under {EVALS_DIR}")
+    for name in sorted(found):
+        tasks = load_suite(EVALS_DIR, name)
+        tiers = sorted({t.tier for t in tasks})
+        traps = sorted({p for t in tasks for p in t.traps})
+        print(f"{name}: {len(tasks)} task(s), tier(s) {tiers}, "
+              f"traps {traps or ['(none)']}")
+    return 0
+
+
+def cmd_eval_validate(args: argparse.Namespace) -> int:
+    """Load every task and say what the suite covers.
+
+    Loading is the check: `loader.py` refuses a task that names a trap
+    kind the spec does not define, a scorer that is not implemented, or
+    nothing to score at all.
+    """
+    from ..evals.loader import TRAP_KINDS, TaskLoadError, load_suite, suites
+
+    problems = 0
+    for name in sorted(suites(EVALS_DIR)):
+        try:
+            tasks = load_suite(EVALS_DIR, name)
+        except TaskLoadError as err:
+            print(f"✗ {name}: {err}")
+            problems += 1
+            continue
+        covered = {p for t in tasks for p in t.traps}
+        print(f"✓ {name}: {len(tasks)} task(s)")
+        # Reported, not enforced. Several trap kinds need a source this
+        # registry does not have yet, and failing the command for a gap
+        # the registry cannot close would make it useless as a check on
+        # the ones it can.
+        for kind in sorted(TRAP_KINDS - covered):
+            print(f"  - no {kind} task in this suite")
+    return 1 if problems else 0
+
+
+def cmd_eval_run(args: argparse.Namespace) -> int:
+    import asyncio
+    import json as _json
+
+    from ..evals.loader import TaskLoadError
+    from ..evals.runner import compare_to_baseline, run_suite, write_result
+
+    if args.model:
+        return _fail(
+            f"no client is wired for model {args.model!r}. Tier-2 model "
+            "runs are the one part of the bench that costs money "
+            "(design/bench.md § 6); implement a ModelClient and pass it "
+            "here. `--oracle` runs everything else.")
+    try:
+        run = asyncio.run(run_suite(EVALS_DIR, args.suite, _fixture_ctx(),
+                                    profile=args.profile, tier=args.tier))
+    except TaskLoadError as err:
+        return _fail(str(err))
+
+    for r in run.results:
+        if r.skipped is not None:
+            print(f"- {r.task_id}: skipped ({r.skipped})")
+            continue
+        mark = "✓" if r.passed else "✗"
+        print(f"{mark} {r.task_id} [{', '.join(r.traps) or 'no trap'}]")
+        for s in r.scores:
+            if not s.passed:
+                print(f"    {s.kind}: {s.detail}")
+
+    # The denominator, printed rather than left to be inferred (§ 4).
+    print(f"\n{run.passed}/{run.executed} passed "
+          f"({run.executed} of {len(run.results)} tasks executed, "
+          f"{run.toolset} toolset, {run.tool_count} tools, "
+          f"mode={run.mode})")
+
+    if args.out:
+        path = write_result(run, Path(args.out))
+        print(f"wrote {path}")
+
+    if args.baseline:
+        baseline_path = Path(args.baseline)
+        if not baseline_path.exists():
+            return _fail(f"no baseline at {baseline_path}")
+        problems = compare_to_baseline(run, _json.loads(
+            baseline_path.read_text()), threshold=args.threshold)
+        for problem in problems:
+            print(f"REGRESSION: {problem}")
+        if problems:
+            return 1
+        print("no regression against the baseline")
+    return 0 if run.executed and run.passed == run.executed else (
+        0 if args.allow_failures else 1)
+
+
 def main() -> int:
     ap = argparse.ArgumentParser(prog="commonwealth", description=__doc__)
     sub = ap.add_subparsers(dest="command", required=True)
@@ -1600,6 +1738,38 @@ def main() -> int:
     sksub = sk.add_subparsers(dest="skills_command", required=True)
     skl = sksub.add_parser("list")
     skl.set_defaults(fn=cmd_skills_list)
+
+    ev = sub.add_parser("eval", help="run the bench suites "
+                                     "(design/bench.md)")
+    evsub = ev.add_subparsers(dest="eval_command", required=True)
+    evl = evsub.add_parser("list", help="the suites and what they cover")
+    evl.set_defaults(fn=cmd_eval_list)
+    evv = evsub.add_parser("validate", help="load every task and report "
+                                           "which trap kinds are covered")
+    evv.set_defaults(fn=cmd_eval_validate)
+    evr = evsub.add_parser("run", help="score a suite")
+    evr.add_argument("suite")
+    evr.add_argument("--profile", default="default",
+                     help="toolset to expose: default (9), discovery (12), "
+                          "all (14) — the sweep in issue #28")
+    evr.add_argument("--tier", type=int, default=None,
+                     help="run only this tier")
+    evr.add_argument("--model", default=None,
+                     help="model id for a Tier-2 run; costs money and "
+                          "needs a client wired")
+    evr.add_argument("--oracle", action="store_true",
+                     help="run each task's own expected call (the default "
+                          "when no --model is given)")
+    evr.add_argument("--out", default=None, help="write the JSON result here")
+    evr.add_argument("--baseline", default=None,
+                     help="compare against a stored baseline and fail on "
+                          "regression")
+    evr.add_argument("--threshold", type=int, default=0,
+                     help="how many fewer passes than the baseline is "
+                          "tolerated")
+    evr.add_argument("--allow-failures", action="store_true",
+                     help="exit 0 even when tasks fail")
+    evr.set_defaults(fn=cmd_eval_run)
 
     sv2 = sub.add_parser("serve", help="run the MCP server")
     sv2.add_argument("--profile", default="default")

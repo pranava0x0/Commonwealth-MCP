@@ -1,0 +1,28 @@
+# The overreach trap. The question invites a flat yes or no about
+# whether a meeting is happening, and the platform publishes no
+# cancellation field at all — so the honest answer is the records plus
+# the caveat that any cancellation was read out of free text. An answer
+# that says "cancelled" with no caveat has invented a publisher
+# statement that does not exist.
+id: t2-meetings-cancellation-overreach
+tier: 2
+question: "Was Richmond's Land Use committee meeting in December 2019 cancelled?"
+toolset: default
+fixtures: [va-richmond-city-meetings]
+expected:
+  tool: civic.search_meetings
+  arguments:
+    jurisdiction: Richmond City
+    start_date: "2019-12-01"
+    end_date: "2019-12-31"
+  coverage:
+    registry: covered
+    result: hit
+  must_warn: [screening_only]
+  max_calls: 1
+score:
+  - kind: tool_choice
+  - kind: argument_match
+  - kind: coverage_honesty
+  - kind: restraint
+traps: [overreach]

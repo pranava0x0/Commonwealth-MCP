@@ -1,0 +1,27 @@
+# The registry_gap trap in the civic domain, which needed a second
+# instance the day meetings landed (GitHub issue #13). Fairfax County's
+# Board of Supervisors meets on a published schedule; it is not on the
+# agenda platform, so this project has nowhere to read it. An answer
+# that renders as an empty calendar is the failure.
+id: t2-meetings-registry-gap
+tier: 2
+question: "What meetings does Fairfax County have in September 2026?"
+toolset: default
+fixtures: []
+expected:
+  tool: civic.search_meetings
+  arguments:
+    jurisdiction: Fairfax County
+    start_date: "2026-09-01"
+    end_date: "2026-09-30"
+  coverage:
+    registry: none
+    result: empty
+  next_action: registry.search_sources
+  max_calls: 1
+score:
+  - kind: tool_choice
+  - kind: argument_match
+  - kind: coverage_honesty
+  - kind: restraint
+traps: [registry_gap]
