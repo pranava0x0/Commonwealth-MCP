@@ -49,3 +49,11 @@ capabilities:
       Find the environmental monitoring stations and regulated sites a
       state environmental agency has on record near a location. A station
       on record means the agency monitors that spot and nothing more.
+  - id: meeting.search
+    description: >
+      Find a locality's public meetings in a date window — the body, when
+      it meets, and a link to the agenda document. Served by a civic-tech
+      vendor on the locality's behalf rather than by the locality itself,
+      which is why these manifests name both. A locality with no
+      registered agenda source is a registry gap, never an empty
+      calendar.

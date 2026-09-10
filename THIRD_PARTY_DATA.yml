@@ -13,6 +13,37 @@
 # reviewed it yet, and such a source cannot go active.
 
 sources:
+- id: va-albemarle-county-meetings
+  name: Albemarle County Public Meetings (Granicus/Legistar)
+  publisher: Albemarle County government (Office of the Clerk to the Board)
+  manifest: sources/local/albemarle-county/meetings.yaml
+  terms_url: https://webapi.legistar.com/Help
+  terms_reviewed_at: '2026-09-09'
+  automation_status: public_api
+  data_classification: open
+  recorded_fixtures:
+  - tests/fixtures/sources/va-alexandria-city-meetings/recorded.json
+  - tests/fixtures/sources/va-richmond-city-meetings/recorded.json
+- id: va-alexandria-city-meetings
+  name: Alexandria City Public Meetings (Granicus/Legistar)
+  publisher: Alexandria City government (Office of the City Clerk)
+  manifest: sources/local/alexandria-city/meetings.yaml
+  terms_url: https://webapi.legistar.com/Help
+  terms_reviewed_at: '2026-09-09'
+  automation_status: public_api
+  data_classification: open
+  recorded_fixtures:
+  - tests/fixtures/sources/va-alexandria-city-meetings/recorded.json
+- id: va-charles-city-county-meetings
+  name: Charles City County Meeting Agendas (no machine-readable source found)
+  publisher: Charles City County government (Office of the Clerk to the Board of
+    Supervisors)
+  manifest: sources/local/charles-city-county/meetings.yaml
+  terms_url: https://www.co.charles-city.va.us/
+  terms_reviewed_at: null
+  automation_status: manual_review_required
+  data_classification: null
+  recorded_fixtures: []
 - id: va-charles-city-county-parcels
   name: Charles City County Tax Parcels (GIS Open Data)
   publisher: Charles City County government (GIS)
@@ -23,6 +54,15 @@ sources:
   data_classification: open
   recorded_fixtures:
   - tests/fixtures/sources/va-charles-city-county-parcels/recorded.json
+- id: va-fairfax-county-meetings
+  name: Fairfax County Meeting Agendas (no machine-readable source found)
+  publisher: Fairfax County government (Office of the Clerk to the Board of Supervisors)
+  manifest: sources/local/fairfax-county/meetings.yaml
+  terms_url: https://www.fairfaxcounty.gov/boardofsupervisors/board-meetings
+  terms_reviewed_at: null
+  automation_status: manual_review_required
+  data_classification: null
+  recorded_fixtures: []
 - id: va-fairfax-parcels-zoning
   name: Fairfax County Parcels and Zoning (Open Data)
   publisher: Fairfax County government (GIS and Mapping Services, Open Data)
@@ -34,6 +74,15 @@ sources:
   recorded_fixtures:
   - tests/fixtures/sources/va-fairfax-parcels-zoning/recorded.json
   - tests/fixtures/sources/va-vienna-town-zoning/recorded.json
+- id: va-hampton-city-meetings
+  name: Hampton City Public Meetings (Granicus/Legistar)
+  publisher: Hampton City government (Office of the City Clerk)
+  manifest: sources/local/hampton-city/meetings.yaml
+  terms_url: https://webapi.legistar.com/Help
+  terms_reviewed_at: '2026-09-09'
+  automation_status: public_api
+  data_classification: open
+  recorded_fixtures: []
 - id: va-leesburg-town-parcels-zoning
   name: Town of Leesburg Parcels and Zoning (ArcGIS Online)
   publisher: Town of Leesburg government (Information Technology, GIS Program)
@@ -44,6 +93,25 @@ sources:
   data_classification: open
   recorded_fixtures:
   - tests/fixtures/sources/va-leesburg-town-parcels-zoning/recorded.json
+- id: va-petersburg-city-meetings
+  name: Petersburg City Public Meetings (Granicus/Legistar)
+  publisher: Petersburg City government (Office of the City Clerk)
+  manifest: sources/local/petersburg-city/meetings.yaml
+  terms_url: https://webapi.legistar.com/Help
+  terms_reviewed_at: '2026-09-09'
+  automation_status: public_api
+  data_classification: open
+  recorded_fixtures: []
+- id: va-richmond-city-meetings
+  name: Richmond City Public Meetings (Granicus/Legistar)
+  publisher: Richmond City government (Office of the City Clerk)
+  manifest: sources/local/richmond-city/meetings.yaml
+  terms_url: https://webapi.legistar.com/Help
+  terms_reviewed_at: '2026-09-09'
+  automation_status: public_api
+  data_classification: open
+  recorded_fixtures:
+  - tests/fixtures/sources/va-richmond-city-meetings/recorded.json
 - id: va-richmond-city-parcels-zoning
   name: Richmond City Parcels and Zoning (GIS Open Data)
   publisher: City of Richmond (Information Technology / Assessor of Real Estate)

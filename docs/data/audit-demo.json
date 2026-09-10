@@ -1,7 +1,7 @@
 {
- "generated_at": "2026-09-09T14:49:33Z",
+ "generated_at": "2026-09-10T01:47:09Z",
  "mode": "fixtures",
- "call_count": 39,
+ "call_count": 45,
  "fixture_recorded_at": "2026-09-02T05:29:35Z",
  "groups": [
   {
@@ -29,21 +29,27 @@
    "count": 4
   },
   {
+   "title": "When does this government meet?",
+   "note": "Five Virginia localities publish their meetings through one civic-tech platform. The same walk shows what that platform does not publish, and what a locality that is not on it looks like.",
+   "first": 31,
+   "count": 6
+  },
+  {
    "title": "The ways an answer comes back with no data",
    "note": "A search that matched nothing, a place with no registered source, and an empty environmental answer that still carries its disclaimer.",
-   "first": 31,
+   "first": 37,
    "count": 3
   },
   {
    "title": "An answer too large to return inline",
    "note": "The generalized rings come back in the envelope and a commonwealth:// handle carries the publisher's full geometry.",
-   "first": 34,
+   "first": 40,
    "count": 1
   },
   {
    "title": "What is registered at all?",
    "note": "The registry answering about itself: what covers a capability, what a manifest says, whether each source is up, and what an unknown capability returns.",
-   "first": 35,
+   "first": 41,
    "count": 4
   }
  ],
@@ -68,7 +74,7 @@
       "authority_level": "official_derived",
       "access_path": "index",
       "source_updated_at": null,
-      "retrieved_at": "2026-09-09T14:49:33Z",
+      "retrieved_at": "2026-09-10T01:47:05Z",
       "cache_age_seconds": 0
      }
     ],
@@ -88,23 +94,24 @@
      "tool_contract_version": "2",
      "envelope_version": "1",
      "adapters": {
+      "agenda_platform": "0.1.0",
       "arcgis": "0.1.0",
       "arcgis_geocode": "0.1.0",
       "virginia_law": "0.1.1"
      },
-     "registry_revision": "2026-09-08",
-     "request_id": "d194881abd07442cb0834c7d5abc7ed4"
+     "registry_revision": "2026-09-09",
+     "request_id": "4e02172d73de4afe8df90d12265a8cd0"
     }
    },
    "error_text": null,
    "http_calls": [],
    "audit": {
-    "ts": "2026-09-09T14:49:33Z",
-    "request_id": "d194881abd07442cb0834c7d5abc7ed4",
+    "ts": "2026-09-10T01:47:05Z",
+    "request_id": "4e02172d73de4afe8df90d12265a8cd0",
     "tool": "registry.resolve_jurisdiction",
     "server": "commonwealth",
     "server_version": "0.1.0.dev0",
-    "duration_ms": 0,
+    "duration_ms": 1,
     "args": {
      "query": "Sterling"
     },
@@ -131,7 +138,7 @@
     "warning_codes": [],
     "requires_user_choice": false,
     "error": null,
-    "registry_revision": "2026-09-08"
+    "registry_revision": "2026-09-09"
    }
   },
   {
@@ -188,7 +195,7 @@
       "authority_level": "official_secondary",
       "access_path": "live",
       "source_updated_at": null,
-      "retrieved_at": "2026-09-09T14:49:33Z",
+      "retrieved_at": "2026-09-10T01:47:06Z",
       "cache_age_seconds": 0
      },
      {
@@ -201,7 +208,7 @@
       "authority_level": "official_secondary",
       "access_path": "live",
       "source_updated_at": null,
-      "retrieved_at": "2026-09-09T14:49:33Z",
+      "retrieved_at": "2026-09-10T01:47:06Z",
       "cache_age_seconds": 0
      }
     ],
@@ -211,7 +218,7 @@
       "source_ref": "source_02",
       "record_id": "OBJECTID:53",
       "locator": null,
-      "retrieved_at": "2026-09-09T14:49:33Z",
+      "retrieved_at": "2026-09-10T01:47:06Z",
       "effective_at": null,
       "transformations": [
        "field_mapping:v1"
@@ -224,7 +231,7 @@
       "source_ref": "source_02",
       "record_id": "OBJECTID:53",
       "locator": null,
-      "retrieved_at": "2026-09-09T14:49:33Z",
+      "retrieved_at": "2026-09-10T01:47:06Z",
       "effective_at": null,
       "transformations": [
        "field_mapping:v1"
@@ -237,7 +244,7 @@
       "source_ref": "source_01",
       "record_id": "candidate:f8775952d5a8b036",
       "locator": null,
-      "retrieved_at": "2026-09-09T14:49:33Z",
+      "retrieved_at": "2026-09-10T01:47:06Z",
       "effective_at": null,
       "transformations": [
        "geocode:findAddressCandidates",
@@ -288,12 +295,13 @@
      "tool_contract_version": "1",
      "envelope_version": "1",
      "adapters": {
+      "agenda_platform": "0.1.0",
       "arcgis": "0.1.0",
       "arcgis_geocode": "0.1.0",
       "virginia_law": "0.1.1"
      },
-     "registry_revision": "2026-09-08",
-     "request_id": "2fab323ccf314380886bf4b8648b066f"
+     "registry_revision": "2026-09-09",
+     "request_id": "07e5f3387b5c482b9bc11ab6eef46a1b"
     }
    },
    "error_text": null,
@@ -488,8 +496,8 @@
     }
    ],
    "audit": {
-    "ts": "2026-09-09T14:49:33Z",
-    "request_id": "2fab323ccf314380886bf4b8648b066f",
+    "ts": "2026-09-10T01:47:06Z",
+    "request_id": "07e5f3387b5c482b9bc11ab6eef46a1b",
     "tool": "geo.resolve_location",
     "server": "commonwealth",
     "server_version": "0.1.0.dev0",
@@ -528,7 +536,7 @@
     ],
     "requires_user_choice": false,
     "error": null,
-    "registry_revision": "2026-09-08"
+    "registry_revision": "2026-09-09"
    }
   },
   {
@@ -566,7 +574,7 @@
       "authority_level": "official_secondary",
       "access_path": "live",
       "source_updated_at": null,
-      "retrieved_at": "2026-09-09T14:49:33Z",
+      "retrieved_at": "2026-09-10T01:47:06Z",
       "cache_age_seconds": 0
      }
     ],
@@ -576,7 +584,7 @@
       "source_ref": "source_01",
       "record_id": "OBJECTID:1207872",
       "locator": null,
-      "retrieved_at": "2026-09-09T14:49:33Z",
+      "retrieved_at": "2026-09-10T01:47:06Z",
       "effective_at": null,
       "transformations": [
        "field_mapping:v1"
@@ -617,12 +625,13 @@
      "tool_contract_version": "1",
      "envelope_version": "1",
      "adapters": {
+      "agenda_platform": "0.1.0",
       "arcgis": "0.1.0",
       "arcgis_geocode": "0.1.0",
       "virginia_law": "0.1.1"
      },
-     "registry_revision": "2026-09-08",
-     "request_id": "8c493ef290a841c0b8c2312e841d7334"
+     "registry_revision": "2026-09-09",
+     "request_id": "acc38c8f9457470c9a4a584a20f60e40"
     }
    },
    "error_text": null,
@@ -663,8 +672,8 @@
     }
    ],
    "audit": {
-    "ts": "2026-09-09T14:49:33Z",
-    "request_id": "8c493ef290a841c0b8c2312e841d7334",
+    "ts": "2026-09-10T01:47:06Z",
+    "request_id": "acc38c8f9457470c9a4a584a20f60e40",
     "tool": "geo.find_parcel",
     "server": "commonwealth",
     "server_version": "0.1.0.dev0",
@@ -701,7 +710,7 @@
     ],
     "requires_user_choice": false,
     "error": null,
-    "registry_revision": "2026-09-08"
+    "registry_revision": "2026-09-09"
    }
   },
   {
@@ -745,19 +754,20 @@
      "tool_contract_version": "1",
      "envelope_version": "1",
      "adapters": {
+      "agenda_platform": "0.1.0",
       "arcgis": "0.1.0",
       "arcgis_geocode": "0.1.0",
       "virginia_law": "0.1.1"
      },
-     "registry_revision": "2026-09-08",
-     "request_id": "23ca48a99299463ea7b9d72b1e999f50"
+     "registry_revision": "2026-09-09",
+     "request_id": "8bb4a9a41b4b42709cb8869fb0365014"
     }
    },
    "error_text": null,
    "http_calls": [],
    "audit": {
-    "ts": "2026-09-09T14:49:33Z",
-    "request_id": "23ca48a99299463ea7b9d72b1e999f50",
+    "ts": "2026-09-10T01:47:06Z",
+    "request_id": "8bb4a9a41b4b42709cb8869fb0365014",
     "tool": "geo.find_zoning",
     "server": "commonwealth",
     "server_version": "0.1.0.dev0",
@@ -785,7 +795,7 @@
     "warning_codes": [],
     "requires_user_choice": false,
     "error": null,
-    "registry_revision": "2026-09-08"
+    "registry_revision": "2026-09-09"
    }
   },
   {
@@ -813,7 +823,7 @@
       "authority_level": "official_derived",
       "access_path": "live",
       "source_updated_at": null,
-      "retrieved_at": "2026-09-09T14:49:33Z",
+      "retrieved_at": "2026-09-10T01:47:06Z",
       "cache_age_seconds": 0
      }
     ],
@@ -851,12 +861,13 @@
      "tool_contract_version": "1",
      "envelope_version": "1",
      "adapters": {
+      "agenda_platform": "0.1.0",
       "arcgis": "0.1.0",
       "arcgis_geocode": "0.1.0",
       "virginia_law": "0.1.1"
      },
-     "registry_revision": "2026-09-08",
-     "request_id": "86995cc7bae74349950bd98615c18cca"
+     "registry_revision": "2026-09-09",
+     "request_id": "f3370bf2d96746c4ab68e5bd5176c700"
     }
    },
    "error_text": null,
@@ -900,8 +911,8 @@
     }
    ],
    "audit": {
-    "ts": "2026-09-09T14:49:33Z",
-    "request_id": "86995cc7bae74349950bd98615c18cca",
+    "ts": "2026-09-10T01:47:06Z",
+    "request_id": "f3370bf2d96746c4ab68e5bd5176c700",
     "tool": "geo.find_landmarks",
     "server": "commonwealth",
     "server_version": "0.1.0.dev0",
@@ -942,7 +953,7 @@
     ],
     "requires_user_choice": false,
     "error": null,
-    "registry_revision": "2026-09-08"
+    "registry_revision": "2026-09-09"
    }
   },
   {
@@ -978,7 +989,7 @@
       "authority_level": "official_derived",
       "access_path": "index",
       "source_updated_at": null,
-      "retrieved_at": "2026-09-09T14:49:33Z",
+      "retrieved_at": "2026-09-10T01:47:06Z",
       "cache_age_seconds": 0
      }
     ],
@@ -999,19 +1010,20 @@
      "tool_contract_version": "2",
      "envelope_version": "1",
      "adapters": {
+      "agenda_platform": "0.1.0",
       "arcgis": "0.1.0",
       "arcgis_geocode": "0.1.0",
       "virginia_law": "0.1.1"
      },
-     "registry_revision": "2026-09-08",
-     "request_id": "609011e880ae4c9488ab9b53c0ccdd45"
+     "registry_revision": "2026-09-09",
+     "request_id": "bfa7e11a0bb34f7993dec53f5dc05ecd"
     }
    },
    "error_text": null,
    "http_calls": [],
    "audit": {
-    "ts": "2026-09-09T14:49:33Z",
-    "request_id": "609011e880ae4c9488ab9b53c0ccdd45",
+    "ts": "2026-09-10T01:47:06Z",
+    "request_id": "bfa7e11a0bb34f7993dec53f5dc05ecd",
     "tool": "registry.resolve_jurisdiction",
     "server": "commonwealth",
     "server_version": "0.1.0.dev0",
@@ -1042,7 +1054,7 @@
     "warning_codes": [],
     "requires_user_choice": true,
     "error": null,
-    "registry_revision": "2026-09-08"
+    "registry_revision": "2026-09-09"
    }
   },
   {
@@ -1079,7 +1091,7 @@
       "authority_level": "official_derived",
       "access_path": "index",
       "source_updated_at": null,
-      "retrieved_at": "2026-09-09T14:49:33Z",
+      "retrieved_at": "2026-09-10T01:47:06Z",
       "cache_age_seconds": 0
      }
     ],
@@ -1089,7 +1101,7 @@
       "source_ref": "source_01",
       "record_id": "va:fairfax-county",
       "locator": null,
-      "retrieved_at": "2026-09-09T14:49:33Z",
+      "retrieved_at": "2026-09-10T01:47:06Z",
       "effective_at": null,
       "transformations": [],
       "payload_hash": null,
@@ -1111,19 +1123,20 @@
      "tool_contract_version": "2",
      "envelope_version": "1",
      "adapters": {
+      "agenda_platform": "0.1.0",
       "arcgis": "0.1.0",
       "arcgis_geocode": "0.1.0",
       "virginia_law": "0.1.1"
      },
-     "registry_revision": "2026-09-08",
-     "request_id": "9ddc9db601b04e7aa6380b63668fa55b"
+     "registry_revision": "2026-09-09",
+     "request_id": "2625c1d01ba14f1b8ae1e7d285e6f856"
     }
    },
    "error_text": null,
    "http_calls": [],
    "audit": {
-    "ts": "2026-09-09T14:49:33Z",
-    "request_id": "9ddc9db601b04e7aa6380b63668fa55b",
+    "ts": "2026-09-10T01:47:06Z",
+    "request_id": "2625c1d01ba14f1b8ae1e7d285e6f856",
     "tool": "registry.resolve_jurisdiction",
     "server": "commonwealth",
     "server_version": "0.1.0.dev0",
@@ -1154,7 +1167,7 @@
     "warning_codes": [],
     "requires_user_choice": false,
     "error": null,
-    "registry_revision": "2026-09-08"
+    "registry_revision": "2026-09-09"
    }
   },
   {
@@ -1196,7 +1209,7 @@
       "authority_level": "official_derived",
       "access_path": "index",
       "source_updated_at": null,
-      "retrieved_at": "2026-09-09T14:49:33Z",
+      "retrieved_at": "2026-09-10T01:47:06Z",
       "cache_age_seconds": 0
      }
     ],
@@ -1206,7 +1219,7 @@
       "source_ref": "source_01",
       "record_id": "va:bedford-town",
       "locator": null,
-      "retrieved_at": "2026-09-09T14:49:33Z",
+      "retrieved_at": "2026-09-10T01:47:06Z",
       "effective_at": null,
       "transformations": [],
       "payload_hash": null,
@@ -1234,19 +1247,20 @@
      "tool_contract_version": "2",
      "envelope_version": "1",
      "adapters": {
+      "agenda_platform": "0.1.0",
       "arcgis": "0.1.0",
       "arcgis_geocode": "0.1.0",
       "virginia_law": "0.1.1"
      },
-     "registry_revision": "2026-09-08",
-     "request_id": "a33bb87b14ff47a3860c36eef7609d83"
+     "registry_revision": "2026-09-09",
+     "request_id": "1b15d6b1220744ecbac4513fea592888"
     }
    },
    "error_text": null,
    "http_calls": [],
    "audit": {
-    "ts": "2026-09-09T14:49:33Z",
-    "request_id": "a33bb87b14ff47a3860c36eef7609d83",
+    "ts": "2026-09-10T01:47:06Z",
+    "request_id": "1b15d6b1220744ecbac4513fea592888",
     "tool": "registry.resolve_jurisdiction",
     "server": "commonwealth",
     "server_version": "0.1.0.dev0",
@@ -1279,7 +1293,7 @@
     ],
     "requires_user_choice": false,
     "error": null,
-    "registry_revision": "2026-09-08"
+    "registry_revision": "2026-09-09"
    }
   },
   {
@@ -1324,7 +1338,7 @@
       "authority_level": "official_secondary",
       "access_path": "live",
       "source_updated_at": null,
-      "retrieved_at": "2026-09-09T14:49:33Z",
+      "retrieved_at": "2026-09-10T01:47:06Z",
       "cache_age_seconds": 0
      }
     ],
@@ -1334,7 +1348,7 @@
       "source_ref": "source_01",
       "record_id": "OBJECTID:106",
       "locator": null,
-      "retrieved_at": "2026-09-09T14:49:33Z",
+      "retrieved_at": "2026-09-10T01:47:06Z",
       "effective_at": null,
       "transformations": [
        "field_mapping:v1"
@@ -1379,12 +1393,13 @@
      "tool_contract_version": "2",
      "envelope_version": "1",
      "adapters": {
+      "agenda_platform": "0.1.0",
       "arcgis": "0.1.0",
       "arcgis_geocode": "0.1.0",
       "virginia_law": "0.1.1"
      },
-     "registry_revision": "2026-09-08",
-     "request_id": "42f06b2c21d74433b7dfec4b5a09f504"
+     "registry_revision": "2026-09-09",
+     "request_id": "6fe2d454e2404a188f051f08ed655d6f"
     }
    },
    "error_text": null,
@@ -1459,8 +1474,8 @@
     }
    ],
    "audit": {
-    "ts": "2026-09-09T14:49:33Z",
-    "request_id": "42f06b2c21d74433b7dfec4b5a09f504",
+    "ts": "2026-09-10T01:47:06Z",
+    "request_id": "6fe2d454e2404a188f051f08ed655d6f",
     "tool": "registry.resolve_jurisdiction",
     "server": "commonwealth",
     "server_version": "0.1.0.dev0",
@@ -1496,7 +1511,7 @@
     ],
     "requires_user_choice": false,
     "error": null,
-    "registry_revision": "2026-09-08"
+    "registry_revision": "2026-09-09"
    }
   },
   {
@@ -1544,7 +1559,7 @@
       "authority_level": "official_secondary",
       "access_path": "live",
       "source_updated_at": null,
-      "retrieved_at": "2026-09-09T14:49:33Z",
+      "retrieved_at": "2026-09-10T01:47:06Z",
       "cache_age_seconds": 0
      }
     ],
@@ -1554,7 +1569,7 @@
       "source_ref": "source_01",
       "record_id": "OBJECTID:29",
       "locator": null,
-      "retrieved_at": "2026-09-09T14:49:33Z",
+      "retrieved_at": "2026-09-10T01:47:06Z",
       "effective_at": null,
       "transformations": [
        "field_mapping:v1"
@@ -1567,7 +1582,7 @@
       "source_ref": "source_01",
       "record_id": "OBJECTID:106",
       "locator": null,
-      "retrieved_at": "2026-09-09T14:49:33Z",
+      "retrieved_at": "2026-09-10T01:47:06Z",
       "effective_at": null,
       "transformations": [
        "field_mapping:v1"
@@ -1607,12 +1622,13 @@
      "tool_contract_version": "2",
      "envelope_version": "1",
      "adapters": {
+      "agenda_platform": "0.1.0",
       "arcgis": "0.1.0",
       "arcgis_geocode": "0.1.0",
       "virginia_law": "0.1.1"
      },
-     "registry_revision": "2026-09-08",
-     "request_id": "2cd473c070e04d4fb455f908779f7cce"
+     "registry_revision": "2026-09-09",
+     "request_id": "cf191095a8c044ecb53a0e09bbfbb7cd"
     }
    },
    "error_text": null,
@@ -1687,8 +1703,8 @@
     }
    ],
    "audit": {
-    "ts": "2026-09-09T14:49:33Z",
-    "request_id": "2cd473c070e04d4fb455f908779f7cce",
+    "ts": "2026-09-10T01:47:06Z",
+    "request_id": "cf191095a8c044ecb53a0e09bbfbb7cd",
     "tool": "registry.resolve_jurisdiction",
     "server": "commonwealth",
     "server_version": "0.1.0.dev0",
@@ -1723,7 +1739,7 @@
     ],
     "requires_user_choice": false,
     "error": null,
-    "registry_revision": "2026-09-08"
+    "registry_revision": "2026-09-09"
    }
   },
   {
@@ -1780,7 +1796,7 @@
       "authority_level": "official_secondary",
       "access_path": "live",
       "source_updated_at": null,
-      "retrieved_at": "2026-09-09T14:49:33Z",
+      "retrieved_at": "2026-09-10T01:47:06Z",
       "cache_age_seconds": 0
      },
      {
@@ -1793,7 +1809,7 @@
       "authority_level": "official_secondary",
       "access_path": "live",
       "source_updated_at": null,
-      "retrieved_at": "2026-09-09T14:49:33Z",
+      "retrieved_at": "2026-09-10T01:47:06Z",
       "cache_age_seconds": 0
      }
     ],
@@ -1803,7 +1819,7 @@
       "source_ref": "source_01",
       "record_id": "candidate:f1de77562df86b91",
       "locator": null,
-      "retrieved_at": "2026-09-09T14:49:33Z",
+      "retrieved_at": "2026-09-10T01:47:06Z",
       "effective_at": null,
       "transformations": [
        "geocode:findAddressCandidates",
@@ -1817,7 +1833,7 @@
       "source_ref": "source_02",
       "record_id": "OBJECTID:29",
       "locator": null,
-      "retrieved_at": "2026-09-09T14:49:33Z",
+      "retrieved_at": "2026-09-10T01:47:06Z",
       "effective_at": null,
       "transformations": [
        "field_mapping:v1"
@@ -1867,12 +1883,13 @@
      "tool_contract_version": "1",
      "envelope_version": "1",
      "adapters": {
+      "agenda_platform": "0.1.0",
       "arcgis": "0.1.0",
       "arcgis_geocode": "0.1.0",
       "virginia_law": "0.1.1"
      },
-     "registry_revision": "2026-09-08",
-     "request_id": "b38776419d444e1794282d9b1cb1567b"
+     "registry_revision": "2026-09-09",
+     "request_id": "56672bee144c42aea8f8c158b09e5189"
     }
    },
    "error_text": null,
@@ -1963,12 +1980,12 @@
     }
    ],
    "audit": {
-    "ts": "2026-09-09T14:49:33Z",
-    "request_id": "b38776419d444e1794282d9b1cb1567b",
+    "ts": "2026-09-10T01:47:06Z",
+    "request_id": "56672bee144c42aea8f8c158b09e5189",
     "tool": "geo.resolve_location",
     "server": "commonwealth",
     "server_version": "0.1.0.dev0",
-    "duration_ms": 0,
+    "duration_ms": 1,
     "args": {
      "address": "6800 Beulah St, Alexandria, VA 22310",
      "zip_code": ""
@@ -2003,7 +2020,7 @@
     ],
     "requires_user_choice": false,
     "error": null,
-    "registry_revision": "2026-09-08"
+    "registry_revision": "2026-09-09"
    }
   },
   {
@@ -2088,7 +2105,7 @@
       "authority_level": "official_secondary",
       "access_path": "live",
       "source_updated_at": null,
-      "retrieved_at": "2026-09-09T14:49:33Z",
+      "retrieved_at": "2026-09-10T01:47:06Z",
       "cache_age_seconds": 0
      }
     ],
@@ -2098,7 +2115,7 @@
       "source_ref": "source_01",
       "record_id": "distinct:fips=51023|locality=Botetourt County",
       "locator": null,
-      "retrieved_at": "2026-09-09T14:49:33Z",
+      "retrieved_at": "2026-09-10T01:47:06Z",
       "effective_at": null,
       "transformations": [
        "field_mapping:v1",
@@ -2112,7 +2129,7 @@
       "source_ref": "source_01",
       "record_id": "distinct:fips=51678|locality=Lexington City",
       "locator": null,
-      "retrieved_at": "2026-09-09T14:49:33Z",
+      "retrieved_at": "2026-09-10T01:47:06Z",
       "effective_at": null,
       "transformations": [
        "field_mapping:v1",
@@ -2126,7 +2143,7 @@
       "source_ref": "source_01",
       "record_id": "distinct:fips=51163|locality=Rockbridge County",
       "locator": null,
-      "retrieved_at": "2026-09-09T14:49:33Z",
+      "retrieved_at": "2026-09-10T01:47:06Z",
       "effective_at": null,
       "transformations": [
        "field_mapping:v1",
@@ -2169,12 +2186,13 @@
      "tool_contract_version": "1",
      "envelope_version": "1",
      "adapters": {
+      "agenda_platform": "0.1.0",
       "arcgis": "0.1.0",
       "arcgis_geocode": "0.1.0",
       "virginia_law": "0.1.1"
      },
-     "registry_revision": "2026-09-08",
-     "request_id": "158f2a32f87448aca153255c40df7bbc"
+     "registry_revision": "2026-09-09",
+     "request_id": "999e359d0bd84404a4b0d16c0b616a78"
     }
    },
    "error_text": null,
@@ -2212,8 +2230,8 @@
     }
    ],
    "audit": {
-    "ts": "2026-09-09T14:49:33Z",
-    "request_id": "158f2a32f87448aca153255c40df7bbc",
+    "ts": "2026-09-10T01:47:06Z",
+    "request_id": "999e359d0bd84404a4b0d16c0b616a78",
     "tool": "geo.resolve_location",
     "server": "commonwealth",
     "server_version": "0.1.0.dev0",
@@ -2246,7 +2264,7 @@
     ],
     "requires_user_choice": true,
     "error": null,
-    "registry_revision": "2026-09-08"
+    "registry_revision": "2026-09-09"
    }
   },
   {
@@ -2317,7 +2335,7 @@
       "authority_level": "primary",
       "access_path": "live",
       "source_updated_at": null,
-      "retrieved_at": "2026-09-09T14:49:33Z",
+      "retrieved_at": "2026-09-10T01:47:06Z",
       "cache_age_seconds": 0
      },
      {
@@ -2330,7 +2348,7 @@
       "authority_level": "official_secondary",
       "access_path": "live",
       "source_updated_at": null,
-      "retrieved_at": "2026-09-09T14:49:33Z",
+      "retrieved_at": "2026-09-10T01:47:06Z",
       "cache_age_seconds": 0
      }
     ],
@@ -2340,7 +2358,7 @@
       "source_ref": "source_01",
       "record_id": "OBJECTID:1",
       "locator": null,
-      "retrieved_at": "2026-09-09T14:49:33Z",
+      "retrieved_at": "2026-09-10T01:47:06Z",
       "effective_at": null,
       "transformations": [
        "field_mapping:v1"
@@ -2353,7 +2371,7 @@
       "source_ref": "source_02",
       "record_id": "OBJECTID:1511920",
       "locator": null,
-      "retrieved_at": "2026-09-09T14:49:33Z",
+      "retrieved_at": "2026-09-10T01:47:06Z",
       "effective_at": null,
       "transformations": [
        "field_mapping:v1"
@@ -2401,12 +2419,13 @@
      "tool_contract_version": "1",
      "envelope_version": "1",
      "adapters": {
+      "agenda_platform": "0.1.0",
       "arcgis": "0.1.0",
       "arcgis_geocode": "0.1.0",
       "virginia_law": "0.1.1"
      },
-     "registry_revision": "2026-09-08",
-     "request_id": "86a95deba7244925a96ae27e4eff0ef9"
+     "registry_revision": "2026-09-09",
+     "request_id": "c9c6297394eb441da50716b23cefc770"
     }
    },
    "error_text": null,
@@ -2457,8 +2476,8 @@
     }
    ],
    "audit": {
-    "ts": "2026-09-09T14:49:33Z",
-    "request_id": "86a95deba7244925a96ae27e4eff0ef9",
+    "ts": "2026-09-10T01:47:06Z",
+    "request_id": "c9c6297394eb441da50716b23cefc770",
     "tool": "geo.find_parcel",
     "server": "commonwealth",
     "server_version": "0.1.0.dev0",
@@ -2499,7 +2518,7 @@
     ],
     "requires_user_choice": false,
     "error": null,
-    "registry_revision": "2026-09-08"
+    "registry_revision": "2026-09-09"
    }
   },
   {
@@ -2543,7 +2562,7 @@
       "authority_level": "primary",
       "access_path": "live",
       "source_updated_at": null,
-      "retrieved_at": "2026-09-09T14:49:33Z",
+      "retrieved_at": "2026-09-10T01:47:06Z",
       "cache_age_seconds": 0
      },
      {
@@ -2556,7 +2575,7 @@
       "authority_level": "primary",
       "access_path": "live",
       "source_updated_at": null,
-      "retrieved_at": "2026-09-09T14:49:33Z",
+      "retrieved_at": "2026-09-10T01:47:06Z",
       "cache_age_seconds": 0
      }
     ],
@@ -2566,7 +2585,7 @@
       "source_ref": "source_01",
       "record_id": "OBJECTID:1",
       "locator": null,
-      "retrieved_at": "2026-09-09T14:49:33Z",
+      "retrieved_at": "2026-09-10T01:47:06Z",
       "effective_at": null,
       "transformations": [
        "field_mapping:v1",
@@ -2580,7 +2599,7 @@
       "source_ref": "source_02",
       "record_id": "OBJECTID:46202",
       "locator": null,
-      "retrieved_at": "2026-09-09T14:49:33Z",
+      "retrieved_at": "2026-09-10T01:47:06Z",
       "effective_at": null,
       "transformations": [
        "field_mapping:v1",
@@ -2629,12 +2648,13 @@
      "tool_contract_version": "1",
      "envelope_version": "1",
      "adapters": {
+      "agenda_platform": "0.1.0",
       "arcgis": "0.1.0",
       "arcgis_geocode": "0.1.0",
       "virginia_law": "0.1.1"
      },
-     "registry_revision": "2026-09-08",
-     "request_id": "fdbb40cf8b3e40c892be4d66ef95618c"
+     "registry_revision": "2026-09-09",
+     "request_id": "98d2ccce4cef43aeaaba1272b03d3035"
     }
    },
    "error_text": null,
@@ -2689,8 +2709,8 @@
     }
    ],
    "audit": {
-    "ts": "2026-09-09T14:49:33Z",
-    "request_id": "fdbb40cf8b3e40c892be4d66ef95618c",
+    "ts": "2026-09-10T01:47:06Z",
+    "request_id": "98d2ccce4cef43aeaaba1272b03d3035",
     "tool": "geo.find_zoning",
     "server": "commonwealth",
     "server_version": "0.1.0.dev0",
@@ -2732,7 +2752,7 @@
     ],
     "requires_user_choice": false,
     "error": null,
-    "registry_revision": "2026-09-08"
+    "registry_revision": "2026-09-09"
    }
   },
   {
@@ -2782,7 +2802,7 @@
       "authority_level": "official_secondary",
       "access_path": "live",
       "source_updated_at": null,
-      "retrieved_at": "2026-09-09T14:49:33Z",
+      "retrieved_at": "2026-09-10T01:47:06Z",
       "cache_age_seconds": 0
      }
     ],
@@ -2792,7 +2812,7 @@
       "source_ref": "source_01",
       "record_id": "OBJECTID:3429779",
       "locator": null,
-      "retrieved_at": "2026-09-09T14:49:33Z",
+      "retrieved_at": "2026-09-10T01:47:06Z",
       "effective_at": null,
       "transformations": [
        "field_mapping:v1"
@@ -2839,12 +2859,13 @@
      "tool_contract_version": "1",
      "envelope_version": "1",
      "adapters": {
+      "agenda_platform": "0.1.0",
       "arcgis": "0.1.0",
       "arcgis_geocode": "0.1.0",
       "virginia_law": "0.1.1"
      },
-     "registry_revision": "2026-09-08",
-     "request_id": "cb8a904a1a2244f1bca608ce800591d0"
+     "registry_revision": "2026-09-09",
+     "request_id": "b9c58feb6f4944f39725adceab2a3904"
     }
    },
    "error_text": null,
@@ -2864,8 +2885,8 @@
     }
    ],
    "audit": {
-    "ts": "2026-09-09T14:49:33Z",
-    "request_id": "cb8a904a1a2244f1bca608ce800591d0",
+    "ts": "2026-09-10T01:47:06Z",
+    "request_id": "b9c58feb6f4944f39725adceab2a3904",
     "tool": "geo.find_address",
     "server": "commonwealth",
     "server_version": "0.1.0.dev0",
@@ -2901,7 +2922,7 @@
     ],
     "requires_user_choice": false,
     "error": null,
-    "registry_revision": "2026-09-08"
+    "registry_revision": "2026-09-09"
    }
   },
   {
@@ -2973,7 +2994,7 @@
       "authority_level": "primary",
       "access_path": "live",
       "source_updated_at": "2026-08-31T14:22:47Z",
-      "retrieved_at": "2026-09-09T14:49:33Z",
+      "retrieved_at": "2026-09-10T01:47:06Z",
       "cache_age_seconds": 0
      },
      {
@@ -2986,7 +3007,7 @@
       "authority_level": "primary",
       "access_path": "live",
       "source_updated_at": "2026-08-31T14:22:47Z",
-      "retrieved_at": "2026-09-09T14:49:33Z",
+      "retrieved_at": "2026-09-10T01:47:06Z",
       "cache_age_seconds": 0
      },
      {
@@ -2999,7 +3020,7 @@
       "authority_level": "official_secondary",
       "access_path": "live",
       "source_updated_at": null,
-      "retrieved_at": "2026-09-09T14:49:33Z",
+      "retrieved_at": "2026-09-10T01:47:06Z",
       "cache_age_seconds": 0
      }
     ],
@@ -3009,7 +3030,7 @@
       "source_ref": "source_02",
       "record_id": "OBJECTID:1116",
       "locator": null,
-      "retrieved_at": "2026-09-09T14:49:33Z",
+      "retrieved_at": "2026-09-10T01:47:06Z",
       "effective_at": null,
       "transformations": [
        "field_mapping:v1",
@@ -3023,7 +3044,7 @@
       "source_ref": "source_03",
       "record_id": "OBJECTID:1358632",
       "locator": null,
-      "retrieved_at": "2026-09-09T14:49:33Z",
+      "retrieved_at": "2026-09-10T01:47:06Z",
       "effective_at": null,
       "transformations": [
        "field_mapping:v1",
@@ -3039,7 +3060,7 @@
       "source_ref": "source_03",
       "record_id": "OBJECTID:1358633",
       "locator": null,
-      "retrieved_at": "2026-09-09T14:49:33Z",
+      "retrieved_at": "2026-09-10T01:47:06Z",
       "effective_at": null,
       "transformations": [
        "field_mapping:v1",
@@ -3089,12 +3110,13 @@
      "tool_contract_version": "1",
      "envelope_version": "1",
      "adapters": {
+      "agenda_platform": "0.1.0",
       "arcgis": "0.1.0",
       "arcgis_geocode": "0.1.0",
       "virginia_law": "0.1.1"
      },
-     "registry_revision": "2026-09-08",
-     "request_id": "811fb1ee22c84e47aaf1ae2929a71fa5"
+     "registry_revision": "2026-09-09",
+     "request_id": "7e86d62d604c49ec93d0a8a5d73029d1"
     }
    },
    "error_text": null,
@@ -3167,8 +3189,8 @@
     }
    ],
    "audit": {
-    "ts": "2026-09-09T14:49:33Z",
-    "request_id": "811fb1ee22c84e47aaf1ae2929a71fa5",
+    "ts": "2026-09-10T01:47:06Z",
+    "request_id": "7e86d62d604c49ec93d0a8a5d73029d1",
     "tool": "geo.find_buildings",
     "server": "commonwealth",
     "server_version": "0.1.0.dev0",
@@ -3218,7 +3240,7 @@
     ],
     "requires_user_choice": false,
     "error": null,
-    "registry_revision": "2026-09-08"
+    "registry_revision": "2026-09-09"
    }
   },
   {
@@ -3966,7 +3988,7 @@
       "authority_level": "primary",
       "access_path": "live",
       "source_updated_at": "2026-08-20T16:28:34Z",
-      "retrieved_at": "2026-09-09T14:49:33Z",
+      "retrieved_at": "2026-09-10T01:47:06Z",
       "cache_age_seconds": 0
      },
      {
@@ -3979,7 +4001,7 @@
       "authority_level": "official_secondary",
       "access_path": "live",
       "source_updated_at": null,
-      "retrieved_at": "2026-09-09T14:49:33Z",
+      "retrieved_at": "2026-09-10T01:47:06Z",
       "cache_age_seconds": 0
      }
     ],
@@ -3989,7 +4011,7 @@
       "source_ref": "source_01",
       "record_id": "OBJECTID:192395",
       "locator": null,
-      "retrieved_at": "2026-09-09T14:49:33Z",
+      "retrieved_at": "2026-09-10T01:47:06Z",
       "effective_at": null,
       "transformations": [
        "field_mapping:v1"
@@ -4002,7 +4024,7 @@
       "source_ref": "source_01",
       "record_id": "OBJECTID:192558",
       "locator": null,
-      "retrieved_at": "2026-09-09T14:49:33Z",
+      "retrieved_at": "2026-09-10T01:47:06Z",
       "effective_at": null,
       "transformations": [
        "field_mapping:v1"
@@ -4015,7 +4037,7 @@
       "source_ref": "source_02",
       "record_id": "OBJECTID:419337",
       "locator": null,
-      "retrieved_at": "2026-09-09T14:49:33Z",
+      "retrieved_at": "2026-09-10T01:47:06Z",
       "effective_at": null,
       "transformations": [
        "field_mapping:v1"
@@ -4028,7 +4050,7 @@
       "source_ref": "source_02",
       "record_id": "OBJECTID:419482",
       "locator": null,
-      "retrieved_at": "2026-09-09T14:49:33Z",
+      "retrieved_at": "2026-09-10T01:47:06Z",
       "effective_at": null,
       "transformations": [
        "field_mapping:v1"
@@ -4041,7 +4063,7 @@
       "source_ref": "source_02",
       "record_id": "OBJECTID:419711",
       "locator": null,
-      "retrieved_at": "2026-09-09T14:49:33Z",
+      "retrieved_at": "2026-09-10T01:47:06Z",
       "effective_at": null,
       "transformations": [
        "field_mapping:v1"
@@ -4054,7 +4076,7 @@
       "source_ref": "source_02",
       "record_id": "OBJECTID:419830",
       "locator": null,
-      "retrieved_at": "2026-09-09T14:49:33Z",
+      "retrieved_at": "2026-09-10T01:47:06Z",
       "effective_at": null,
       "transformations": [
        "field_mapping:v1"
@@ -4067,7 +4089,7 @@
       "source_ref": "source_02",
       "record_id": "OBJECTID:419870",
       "locator": null,
-      "retrieved_at": "2026-09-09T14:49:33Z",
+      "retrieved_at": "2026-09-10T01:47:06Z",
       "effective_at": null,
       "transformations": [
        "field_mapping:v1"
@@ -4080,7 +4102,7 @@
       "source_ref": "source_02",
       "record_id": "OBJECTID:419874",
       "locator": null,
-      "retrieved_at": "2026-09-09T14:49:33Z",
+      "retrieved_at": "2026-09-10T01:47:06Z",
       "effective_at": null,
       "transformations": [
        "field_mapping:v1"
@@ -4093,7 +4115,7 @@
       "source_ref": "source_02",
       "record_id": "OBJECTID:419894",
       "locator": null,
-      "retrieved_at": "2026-09-09T14:49:33Z",
+      "retrieved_at": "2026-09-10T01:47:06Z",
       "effective_at": null,
       "transformations": [
        "field_mapping:v1"
@@ -4106,7 +4128,7 @@
       "source_ref": "source_02",
       "record_id": "OBJECTID:419926",
       "locator": null,
-      "retrieved_at": "2026-09-09T14:49:33Z",
+      "retrieved_at": "2026-09-10T01:47:06Z",
       "effective_at": null,
       "transformations": [
        "field_mapping:v1"
@@ -4119,7 +4141,7 @@
       "source_ref": "source_02",
       "record_id": "OBJECTID:419959",
       "locator": null,
-      "retrieved_at": "2026-09-09T14:49:33Z",
+      "retrieved_at": "2026-09-10T01:47:06Z",
       "effective_at": null,
       "transformations": [
        "field_mapping:v1"
@@ -4132,7 +4154,7 @@
       "source_ref": "source_02",
       "record_id": "OBJECTID:419968",
       "locator": null,
-      "retrieved_at": "2026-09-09T14:49:33Z",
+      "retrieved_at": "2026-09-10T01:47:06Z",
       "effective_at": null,
       "transformations": [
        "field_mapping:v1"
@@ -4145,7 +4167,7 @@
       "source_ref": "source_02",
       "record_id": "OBJECTID:419972",
       "locator": null,
-      "retrieved_at": "2026-09-09T14:49:33Z",
+      "retrieved_at": "2026-09-10T01:47:06Z",
       "effective_at": null,
       "transformations": [
        "field_mapping:v1"
@@ -4158,7 +4180,7 @@
       "source_ref": "source_02",
       "record_id": "OBJECTID:423128",
       "locator": null,
-      "retrieved_at": "2026-09-09T14:49:33Z",
+      "retrieved_at": "2026-09-10T01:47:06Z",
       "effective_at": null,
       "transformations": [
        "field_mapping:v1"
@@ -4171,7 +4193,7 @@
       "source_ref": "source_02",
       "record_id": "OBJECTID:423164",
       "locator": null,
-      "retrieved_at": "2026-09-09T14:49:33Z",
+      "retrieved_at": "2026-09-10T01:47:06Z",
       "effective_at": null,
       "transformations": [
        "field_mapping:v1"
@@ -4184,7 +4206,7 @@
       "source_ref": "source_02",
       "record_id": "OBJECTID:423251",
       "locator": null,
-      "retrieved_at": "2026-09-09T14:49:33Z",
+      "retrieved_at": "2026-09-10T01:47:06Z",
       "effective_at": null,
       "transformations": [
        "field_mapping:v1"
@@ -4197,7 +4219,7 @@
       "source_ref": "source_02",
       "record_id": "OBJECTID:423257",
       "locator": null,
-      "retrieved_at": "2026-09-09T14:49:33Z",
+      "retrieved_at": "2026-09-10T01:47:06Z",
       "effective_at": null,
       "transformations": [
        "field_mapping:v1"
@@ -4210,7 +4232,7 @@
       "source_ref": "source_02",
       "record_id": "OBJECTID:423279",
       "locator": null,
-      "retrieved_at": "2026-09-09T14:49:33Z",
+      "retrieved_at": "2026-09-10T01:47:06Z",
       "effective_at": null,
       "transformations": [
        "field_mapping:v1"
@@ -4223,7 +4245,7 @@
       "source_ref": "source_02",
       "record_id": "OBJECTID:423317",
       "locator": null,
-      "retrieved_at": "2026-09-09T14:49:33Z",
+      "retrieved_at": "2026-09-10T01:47:06Z",
       "effective_at": null,
       "transformations": [
        "field_mapping:v1"
@@ -4236,7 +4258,7 @@
       "source_ref": "source_02",
       "record_id": "OBJECTID:423333",
       "locator": null,
-      "retrieved_at": "2026-09-09T14:49:33Z",
+      "retrieved_at": "2026-09-10T01:47:06Z",
       "effective_at": null,
       "transformations": [
        "field_mapping:v1"
@@ -4249,7 +4271,7 @@
       "source_ref": "source_02",
       "record_id": "OBJECTID:423378",
       "locator": null,
-      "retrieved_at": "2026-09-09T14:49:33Z",
+      "retrieved_at": "2026-09-10T01:47:06Z",
       "effective_at": null,
       "transformations": [
        "field_mapping:v1"
@@ -4262,7 +4284,7 @@
       "source_ref": "source_02",
       "record_id": "OBJECTID:424050",
       "locator": null,
-      "retrieved_at": "2026-09-09T14:49:33Z",
+      "retrieved_at": "2026-09-10T01:47:06Z",
       "effective_at": null,
       "transformations": [
        "field_mapping:v1"
@@ -4275,7 +4297,7 @@
       "source_ref": "source_02",
       "record_id": "OBJECTID:424279",
       "locator": null,
-      "retrieved_at": "2026-09-09T14:49:33Z",
+      "retrieved_at": "2026-09-10T01:47:06Z",
       "effective_at": null,
       "transformations": [
        "field_mapping:v1"
@@ -4288,7 +4310,7 @@
       "source_ref": "source_02",
       "record_id": "OBJECTID:424477",
       "locator": null,
-      "retrieved_at": "2026-09-09T14:49:33Z",
+      "retrieved_at": "2026-09-10T01:47:06Z",
       "effective_at": null,
       "transformations": [
        "field_mapping:v1"
@@ -4301,7 +4323,7 @@
       "source_ref": "source_02",
       "record_id": "OBJECTID:424548",
       "locator": null,
-      "retrieved_at": "2026-09-09T14:49:33Z",
+      "retrieved_at": "2026-09-10T01:47:06Z",
       "effective_at": null,
       "transformations": [
        "field_mapping:v1"
@@ -4314,7 +4336,7 @@
       "source_ref": "source_02",
       "record_id": "OBJECTID:424628",
       "locator": null,
-      "retrieved_at": "2026-09-09T14:49:33Z",
+      "retrieved_at": "2026-09-10T01:47:06Z",
       "effective_at": null,
       "transformations": [
        "field_mapping:v1"
@@ -4327,7 +4349,7 @@
       "source_ref": "source_02",
       "record_id": "OBJECTID:424646",
       "locator": null,
-      "retrieved_at": "2026-09-09T14:49:33Z",
+      "retrieved_at": "2026-09-10T01:47:06Z",
       "effective_at": null,
       "transformations": [
        "field_mapping:v1"
@@ -4380,7 +4402,7 @@
      {
       "uri": "commonwealth://results/00000000000000000000000000000001",
       "media_type": "application/json",
-      "description": "All 39 records va-vgin-road-centerlines returned for this query, including the ones past the inline cap. Expires 2026-09-10T14:49:33Z; re-run geo.find_roads to regenerate it."
+      "description": "All 39 records va-vgin-road-centerlines returned for this query, including the ones past the inline cap. Expires 2026-09-11T01:47:06Z; re-run geo.find_roads to regenerate it."
      }
     ],
     "_execution": {
@@ -4390,12 +4412,13 @@
      "tool_contract_version": "1",
      "envelope_version": "1",
      "adapters": {
+      "agenda_platform": "0.1.0",
       "arcgis": "0.1.0",
       "arcgis_geocode": "0.1.0",
       "virginia_law": "0.1.1"
      },
-     "registry_revision": "2026-09-08",
-     "request_id": "35de9a8f605f44548af0a50e62808fd8"
+     "registry_revision": "2026-09-09",
+     "request_id": "ce8c9e2257204ed98be2f6a69920b352"
     }
    },
    "error_text": null,
@@ -4464,8 +4487,8 @@
     }
    ],
    "audit": {
-    "ts": "2026-09-09T14:49:33Z",
-    "request_id": "35de9a8f605f44548af0a50e62808fd8",
+    "ts": "2026-09-10T01:47:06Z",
+    "request_id": "ce8c9e2257204ed98be2f6a69920b352",
     "tool": "geo.find_roads",
     "server": "commonwealth",
     "server_version": "0.1.0.dev0",
@@ -4510,7 +4533,7 @@
     ],
     "requires_user_choice": false,
     "error": null,
-    "registry_revision": "2026-09-08"
+    "registry_revision": "2026-09-09"
    }
   },
   {
@@ -4629,7 +4652,7 @@
       "authority_level": "official_derived",
       "access_path": "live",
       "source_updated_at": null,
-      "retrieved_at": "2026-09-09T14:49:33Z",
+      "retrieved_at": "2026-09-10T01:47:06Z",
       "cache_age_seconds": 0
      }
     ],
@@ -4639,7 +4662,7 @@
       "source_ref": "source_01",
       "record_id": "OBJECTID:805",
       "locator": null,
-      "retrieved_at": "2026-09-09T14:49:33Z",
+      "retrieved_at": "2026-09-10T01:47:06Z",
       "effective_at": null,
       "transformations": [
        "field_mapping:v1",
@@ -4653,7 +4676,7 @@
       "source_ref": "source_01",
       "record_id": "OBJECTID:1625",
       "locator": null,
-      "retrieved_at": "2026-09-09T14:49:33Z",
+      "retrieved_at": "2026-09-10T01:47:06Z",
       "effective_at": null,
       "transformations": [
        "field_mapping:v1",
@@ -4667,7 +4690,7 @@
       "source_ref": "source_01",
       "record_id": "OBJECTID:3188",
       "locator": null,
-      "retrieved_at": "2026-09-09T14:49:33Z",
+      "retrieved_at": "2026-09-10T01:47:06Z",
       "effective_at": null,
       "transformations": [
        "field_mapping:v1",
@@ -4681,7 +4704,7 @@
       "source_ref": "source_01",
       "record_id": "OBJECTID:5754",
       "locator": null,
-      "retrieved_at": "2026-09-09T14:49:33Z",
+      "retrieved_at": "2026-09-10T01:47:06Z",
       "effective_at": null,
       "transformations": [
        "field_mapping:v1",
@@ -4730,12 +4753,13 @@
      "tool_contract_version": "1",
      "envelope_version": "1",
      "adapters": {
+      "agenda_platform": "0.1.0",
       "arcgis": "0.1.0",
       "arcgis_geocode": "0.1.0",
       "virginia_law": "0.1.1"
      },
-     "registry_revision": "2026-09-08",
-     "request_id": "5d383a4e18e242f69115b543dbc7f9a7"
+     "registry_revision": "2026-09-09",
+     "request_id": "df740723bdd04cb398201fd7b169ccd5"
     }
    },
    "error_text": null,
@@ -4761,8 +4785,8 @@
     }
    ],
    "audit": {
-    "ts": "2026-09-09T14:49:33Z",
-    "request_id": "5d383a4e18e242f69115b543dbc7f9a7",
+    "ts": "2026-09-10T01:47:06Z",
+    "request_id": "df740723bdd04cb398201fd7b169ccd5",
     "tool": "geo.find_landmarks",
     "server": "commonwealth",
     "server_version": "0.1.0.dev0",
@@ -4804,7 +4828,7 @@
     ],
     "requires_user_choice": false,
     "error": null,
-    "registry_revision": "2026-09-08"
+    "registry_revision": "2026-09-09"
    }
   },
   {
@@ -5229,7 +5253,7 @@
       "authority_level": "primary",
       "access_path": "live",
       "source_updated_at": null,
-      "retrieved_at": "2026-09-09T14:49:33Z",
+      "retrieved_at": "2026-09-10T01:47:06Z",
       "cache_age_seconds": 0
      }
     ],
@@ -5239,7 +5263,7 @@
       "source_ref": "source_01",
       "record_id": "OBJECTID:841",
       "locator": null,
-      "retrieved_at": "2026-09-09T14:49:33Z",
+      "retrieved_at": "2026-09-10T01:47:06Z",
       "effective_at": null,
       "transformations": [
        "field_mapping:v1",
@@ -5253,7 +5277,7 @@
       "source_ref": "source_01",
       "record_id": "OBJECTID:3617",
       "locator": null,
-      "retrieved_at": "2026-09-09T14:49:33Z",
+      "retrieved_at": "2026-09-10T01:47:06Z",
       "effective_at": null,
       "transformations": [
        "field_mapping:v1",
@@ -5267,7 +5291,7 @@
       "source_ref": "source_01",
       "record_id": "OBJECTID:4054",
       "locator": null,
-      "retrieved_at": "2026-09-09T14:49:33Z",
+      "retrieved_at": "2026-09-10T01:47:06Z",
       "effective_at": null,
       "transformations": [
        "field_mapping:v1",
@@ -5281,7 +5305,7 @@
       "source_ref": "source_01",
       "record_id": "OBJECTID:4544",
       "locator": null,
-      "retrieved_at": "2026-09-09T14:49:33Z",
+      "retrieved_at": "2026-09-10T01:47:06Z",
       "effective_at": null,
       "transformations": [
        "field_mapping:v1",
@@ -5295,7 +5319,7 @@
       "source_ref": "source_01",
       "record_id": "OBJECTID:4558",
       "locator": null,
-      "retrieved_at": "2026-09-09T14:49:33Z",
+      "retrieved_at": "2026-09-10T01:47:06Z",
       "effective_at": null,
       "transformations": [
        "field_mapping:v1",
@@ -5309,7 +5333,7 @@
       "source_ref": "source_01",
       "record_id": "OBJECTID:5058",
       "locator": null,
-      "retrieved_at": "2026-09-09T14:49:33Z",
+      "retrieved_at": "2026-09-10T01:47:06Z",
       "effective_at": null,
       "transformations": [
        "field_mapping:v1",
@@ -5323,7 +5347,7 @@
       "source_ref": "source_01",
       "record_id": "OBJECTID:12614",
       "locator": null,
-      "retrieved_at": "2026-09-09T14:49:33Z",
+      "retrieved_at": "2026-09-10T01:47:06Z",
       "effective_at": null,
       "transformations": [
        "field_mapping:v1",
@@ -5337,7 +5361,7 @@
       "source_ref": "source_01",
       "record_id": "OBJECTID:12952",
       "locator": null,
-      "retrieved_at": "2026-09-09T14:49:33Z",
+      "retrieved_at": "2026-09-10T01:47:06Z",
       "effective_at": null,
       "transformations": [
        "field_mapping:v1",
@@ -5351,7 +5375,7 @@
       "source_ref": "source_01",
       "record_id": "OBJECTID:13111",
       "locator": null,
-      "retrieved_at": "2026-09-09T14:49:33Z",
+      "retrieved_at": "2026-09-10T01:47:06Z",
       "effective_at": null,
       "transformations": [
        "field_mapping:v1",
@@ -5365,7 +5389,7 @@
       "source_ref": "source_01",
       "record_id": "OBJECTID:13112",
       "locator": null,
-      "retrieved_at": "2026-09-09T14:49:33Z",
+      "retrieved_at": "2026-09-10T01:47:06Z",
       "effective_at": null,
       "transformations": [
        "field_mapping:v1",
@@ -5379,7 +5403,7 @@
       "source_ref": "source_01",
       "record_id": "OBJECTID:13325",
       "locator": null,
-      "retrieved_at": "2026-09-09T14:49:33Z",
+      "retrieved_at": "2026-09-10T01:47:06Z",
       "effective_at": null,
       "transformations": [
        "field_mapping:v1",
@@ -5393,7 +5417,7 @@
       "source_ref": "source_01",
       "record_id": "OBJECTID:14254",
       "locator": null,
-      "retrieved_at": "2026-09-09T14:49:33Z",
+      "retrieved_at": "2026-09-10T01:47:06Z",
       "effective_at": null,
       "transformations": [
        "field_mapping:v1",
@@ -5407,7 +5431,7 @@
       "source_ref": "source_01",
       "record_id": "OBJECTID:14402",
       "locator": null,
-      "retrieved_at": "2026-09-09T14:49:33Z",
+      "retrieved_at": "2026-09-10T01:47:06Z",
       "effective_at": null,
       "transformations": [
        "field_mapping:v1",
@@ -5421,7 +5445,7 @@
       "source_ref": "source_01",
       "record_id": "OBJECTID:14403",
       "locator": null,
-      "retrieved_at": "2026-09-09T14:49:33Z",
+      "retrieved_at": "2026-09-10T01:47:06Z",
       "effective_at": null,
       "transformations": [
        "field_mapping:v1",
@@ -5435,7 +5459,7 @@
       "source_ref": "source_01",
       "record_id": "OBJECTID:15108",
       "locator": null,
-      "retrieved_at": "2026-09-09T14:49:33Z",
+      "retrieved_at": "2026-09-10T01:47:06Z",
       "effective_at": null,
       "transformations": [
        "field_mapping:v1",
@@ -5449,7 +5473,7 @@
       "source_ref": "source_01",
       "record_id": "OBJECTID:15496",
       "locator": null,
-      "retrieved_at": "2026-09-09T14:49:33Z",
+      "retrieved_at": "2026-09-10T01:47:06Z",
       "effective_at": null,
       "transformations": [
        "field_mapping:v1",
@@ -5463,7 +5487,7 @@
       "source_ref": "source_01",
       "record_id": "OBJECTID:16150",
       "locator": null,
-      "retrieved_at": "2026-09-09T14:49:33Z",
+      "retrieved_at": "2026-09-10T01:47:06Z",
       "effective_at": null,
       "transformations": [
        "field_mapping:v1",
@@ -5515,12 +5539,13 @@
      "tool_contract_version": "1",
      "envelope_version": "1",
      "adapters": {
+      "agenda_platform": "0.1.0",
       "arcgis": "0.1.0",
       "arcgis_geocode": "0.1.0",
       "virginia_law": "0.1.1"
      },
-     "registry_revision": "2026-09-08",
-     "request_id": "7954ab6920e24632af05350fe35cd374"
+     "registry_revision": "2026-09-09",
+     "request_id": "d4ea3ac1a0e14919abd40c1fb7e973d0"
     }
    },
    "error_text": null,
@@ -5563,8 +5588,8 @@
     }
    ],
    "audit": {
-    "ts": "2026-09-09T14:49:33Z",
-    "request_id": "7954ab6920e24632af05350fe35cd374",
+    "ts": "2026-09-10T01:47:06Z",
+    "request_id": "d4ea3ac1a0e14919abd40c1fb7e973d0",
     "tool": "geo.find_environmental_sites",
     "server": "commonwealth",
     "server_version": "0.1.0.dev0",
@@ -5603,7 +5628,7 @@
     ],
     "requires_user_choice": false,
     "error": null,
-    "registry_revision": "2026-09-08"
+    "registry_revision": "2026-09-09"
    }
   },
   {
@@ -5702,7 +5727,7 @@
       "authority_level": "official_secondary",
       "access_path": "live",
       "source_updated_at": null,
-      "retrieved_at": "2026-09-09T14:49:33Z",
+      "retrieved_at": "2026-09-10T01:47:06Z",
       "cache_age_seconds": 0
      }
     ],
@@ -5712,7 +5737,7 @@
       "source_ref": "source_01",
       "record_id": "OBJECTID:72",
       "locator": null,
-      "retrieved_at": "2026-09-09T14:49:33Z",
+      "retrieved_at": "2026-09-10T01:47:06Z",
       "effective_at": null,
       "transformations": [
        "field_mapping:v1",
@@ -5727,7 +5752,7 @@
       "source_ref": "source_01",
       "record_id": "OBJECTID:73",
       "locator": null,
-      "retrieved_at": "2026-09-09T14:49:33Z",
+      "retrieved_at": "2026-09-10T01:47:06Z",
       "effective_at": null,
       "transformations": [
        "field_mapping:v1",
@@ -5775,12 +5800,13 @@
      "tool_contract_version": "1",
      "envelope_version": "1",
      "adapters": {
+      "agenda_platform": "0.1.0",
       "arcgis": "0.1.0",
       "arcgis_geocode": "0.1.0",
       "virginia_law": "0.1.1"
      },
-     "registry_revision": "2026-09-08",
-     "request_id": "e50a4530f36a46a288dfae1aea47f4ae"
+     "registry_revision": "2026-09-09",
+     "request_id": "6d00a19dee664eda9c27f5331bf864ed"
     }
    },
    "error_text": null,
@@ -5803,8 +5829,8 @@
     }
    ],
    "audit": {
-    "ts": "2026-09-09T14:49:33Z",
-    "request_id": "e50a4530f36a46a288dfae1aea47f4ae",
+    "ts": "2026-09-10T01:47:06Z",
+    "request_id": "6d00a19dee664eda9c27f5331bf864ed",
     "tool": "geo.find_boundaries",
     "server": "commonwealth",
     "server_version": "0.1.0.dev0",
@@ -5838,7 +5864,7 @@
     ],
     "requires_user_choice": false,
     "error": null,
-    "registry_revision": "2026-09-08"
+    "registry_revision": "2026-09-09"
    }
   },
   {
@@ -6580,7 +6606,7 @@
       "authority_level": "primary",
       "access_path": "live",
       "source_updated_at": null,
-      "retrieved_at": "2026-09-09T14:49:33Z",
+      "retrieved_at": "2026-09-10T01:47:06Z",
       "cache_age_seconds": 0
      }
     ],
@@ -6615,19 +6641,20 @@
      "tool_contract_version": "1",
      "envelope_version": "1",
      "adapters": {
+      "agenda_platform": "0.1.0",
       "arcgis": "0.1.0",
       "arcgis_geocode": "0.1.0",
       "virginia_law": "0.1.1"
      },
-     "registry_revision": "2026-09-08",
-     "request_id": "f6557fc8fc2a48189ac9b03976eed8a9"
+     "registry_revision": "2026-09-09",
+     "request_id": "b75c42ebbe2241dfbc6d95d9dba1cebc"
     }
    },
    "error_text": null,
    "http_calls": [],
    "audit": {
-    "ts": "2026-09-09T14:49:33Z",
-    "request_id": "f6557fc8fc2a48189ac9b03976eed8a9",
+    "ts": "2026-09-10T01:47:06Z",
+    "request_id": "b75c42ebbe2241dfbc6d95d9dba1cebc",
     "tool": "civic.browse_code",
     "server": "commonwealth",
     "server_version": "0.1.0.dev0",
@@ -6660,7 +6687,7 @@
     ],
     "requires_user_choice": false,
     "error": null,
-    "registry_revision": "2026-09-08"
+    "registry_revision": "2026-09-09"
    }
   },
   {
@@ -7631,7 +7658,7 @@
       "authority_level": "primary",
       "access_path": "live",
       "source_updated_at": null,
-      "retrieved_at": "2026-09-09T14:49:33Z",
+      "retrieved_at": "2026-09-10T01:47:06Z",
       "cache_age_seconds": 0
      }
     ],
@@ -7666,19 +7693,20 @@
      "tool_contract_version": "1",
      "envelope_version": "1",
      "adapters": {
+      "agenda_platform": "0.1.0",
       "arcgis": "0.1.0",
       "arcgis_geocode": "0.1.0",
       "virginia_law": "0.1.1"
      },
-     "registry_revision": "2026-09-08",
-     "request_id": "1f0aeb29154e4ca8af7241214b114a97"
+     "registry_revision": "2026-09-09",
+     "request_id": "62ef741af702471abe19438b24df9a48"
     }
    },
    "error_text": null,
    "http_calls": [],
    "audit": {
-    "ts": "2026-09-09T14:49:33Z",
-    "request_id": "1f0aeb29154e4ca8af7241214b114a97",
+    "ts": "2026-09-10T01:47:06Z",
+    "request_id": "62ef741af702471abe19438b24df9a48",
     "tool": "civic.browse_code",
     "server": "commonwealth",
     "server_version": "0.1.0.dev0",
@@ -7711,7 +7739,7 @@
     ],
     "requires_user_choice": false,
     "error": null,
-    "registry_revision": "2026-09-08"
+    "registry_revision": "2026-09-09"
    }
   },
   {
@@ -9614,7 +9642,7 @@
       "authority_level": "primary",
       "access_path": "live",
       "source_updated_at": null,
-      "retrieved_at": "2026-09-09T14:49:33Z",
+      "retrieved_at": "2026-09-10T01:47:06Z",
       "cache_age_seconds": 0
      }
     ],
@@ -9649,19 +9677,20 @@
      "tool_contract_version": "1",
      "envelope_version": "1",
      "adapters": {
+      "agenda_platform": "0.1.0",
       "arcgis": "0.1.0",
       "arcgis_geocode": "0.1.0",
       "virginia_law": "0.1.1"
      },
-     "registry_revision": "2026-09-08",
-     "request_id": "ea2e365bd70f4b6a84b73cb0966e204c"
+     "registry_revision": "2026-09-09",
+     "request_id": "a0994cb8c1b4445596ed76cb917b587e"
     }
    },
    "error_text": null,
    "http_calls": [],
    "audit": {
-    "ts": "2026-09-09T14:49:33Z",
-    "request_id": "ea2e365bd70f4b6a84b73cb0966e204c",
+    "ts": "2026-09-10T01:47:06Z",
+    "request_id": "a0994cb8c1b4445596ed76cb917b587e",
     "tool": "civic.browse_code",
     "server": "commonwealth",
     "server_version": "0.1.0.dev0",
@@ -9694,7 +9723,7 @@
     ],
     "requires_user_choice": false,
     "error": null,
-    "registry_revision": "2026-09-08"
+    "registry_revision": "2026-09-09"
    }
   },
   {
@@ -9725,7 +9754,7 @@
       "authority_level": "primary",
       "access_path": "live",
       "source_updated_at": null,
-      "retrieved_at": "2026-09-09T14:49:33Z",
+      "retrieved_at": "2026-09-10T01:47:06Z",
       "cache_age_seconds": 0
      }
     ],
@@ -9760,19 +9789,20 @@
      "tool_contract_version": "1",
      "envelope_version": "1",
      "adapters": {
+      "agenda_platform": "0.1.0",
       "arcgis": "0.1.0",
       "arcgis_geocode": "0.1.0",
       "virginia_law": "0.1.1"
      },
-     "registry_revision": "2026-09-08",
-     "request_id": "ad4f11421c3445a3b55d609067c05039"
+     "registry_revision": "2026-09-09",
+     "request_id": "14d10edebb334743bee3568980128c37"
     }
    },
    "error_text": null,
    "http_calls": [],
    "audit": {
-    "ts": "2026-09-09T14:49:33Z",
-    "request_id": "ad4f11421c3445a3b55d609067c05039",
+    "ts": "2026-09-10T01:47:06Z",
+    "request_id": "14d10edebb334743bee3568980128c37",
     "tool": "civic.browse_code",
     "server": "commonwealth",
     "server_version": "0.1.0.dev0",
@@ -9805,7 +9835,7 @@
     ],
     "requires_user_choice": false,
     "error": null,
-    "registry_revision": "2026-09-08"
+    "registry_revision": "2026-09-09"
    }
   },
   {
@@ -9842,7 +9872,7 @@
       "authority_level": "primary",
       "access_path": "live",
       "source_updated_at": null,
-      "retrieved_at": "2026-09-09T14:49:33Z",
+      "retrieved_at": "2026-09-10T01:47:06Z",
       "cache_age_seconds": 0
      }
     ],
@@ -9852,7 +9882,7 @@
       "source_ref": "source_01",
       "record_id": "15.2-2200",
       "locator": "https://law.lis.virginia.gov/vacode/15.2-2200/",
-      "retrieved_at": "2026-09-09T14:49:33Z",
+      "retrieved_at": "2026-09-10T01:47:06Z",
       "effective_at": null,
       "transformations": [],
       "payload_hash": null,
@@ -9889,23 +9919,24 @@
      "tool_contract_version": "1",
      "envelope_version": "1",
      "adapters": {
+      "agenda_platform": "0.1.0",
       "arcgis": "0.1.0",
       "arcgis_geocode": "0.1.0",
       "virginia_law": "0.1.1"
      },
-     "registry_revision": "2026-09-08",
-     "request_id": "01e6510fd49d41548186f1fd90b60685"
+     "registry_revision": "2026-09-09",
+     "request_id": "a6503136042744659473fac3c133938e"
     }
    },
    "error_text": null,
    "http_calls": [],
    "audit": {
-    "ts": "2026-09-09T14:49:33Z",
-    "request_id": "01e6510fd49d41548186f1fd90b60685",
+    "ts": "2026-09-10T01:47:06Z",
+    "request_id": "a6503136042744659473fac3c133938e",
     "tool": "civic.get_code_section",
     "server": "commonwealth",
     "server_version": "0.1.0.dev0",
-    "duration_ms": 2,
+    "duration_ms": 1,
     "args": {
      "citation": "15.2-2200"
     },
@@ -9932,7 +9963,7 @@
     ],
     "requires_user_choice": false,
     "error": null,
-    "registry_revision": "2026-09-08"
+    "registry_revision": "2026-09-09"
    }
   },
   {
@@ -9969,7 +10000,7 @@
       "authority_level": "primary",
       "access_path": "live",
       "source_updated_at": null,
-      "retrieved_at": "2026-09-09T14:49:33Z",
+      "retrieved_at": "2026-09-10T01:47:06Z",
       "cache_age_seconds": 0
      }
     ],
@@ -9979,7 +10010,7 @@
       "source_ref": "source_01",
       "record_id": "1-500",
       "locator": "https://law.lis.virginia.gov/vacode/1-500/",
-      "retrieved_at": "2026-09-09T14:49:33Z",
+      "retrieved_at": "2026-09-10T01:47:06Z",
       "effective_at": null,
       "transformations": [],
       "payload_hash": null,
@@ -10016,23 +10047,24 @@
      "tool_contract_version": "1",
      "envelope_version": "1",
      "adapters": {
+      "agenda_platform": "0.1.0",
       "arcgis": "0.1.0",
       "arcgis_geocode": "0.1.0",
       "virginia_law": "0.1.1"
      },
-     "registry_revision": "2026-09-08",
-     "request_id": "a83f0bd5677d44d9b70ca6617202ce52"
+     "registry_revision": "2026-09-09",
+     "request_id": "837a8bccf5da4d149c8855e8732911fd"
     }
    },
    "error_text": null,
    "http_calls": [],
    "audit": {
-    "ts": "2026-09-09T14:49:33Z",
-    "request_id": "a83f0bd5677d44d9b70ca6617202ce52",
+    "ts": "2026-09-10T01:47:06Z",
+    "request_id": "837a8bccf5da4d149c8855e8732911fd",
     "tool": "civic.get_code_section",
     "server": "commonwealth",
     "server_version": "0.1.0.dev0",
-    "duration_ms": 2,
+    "duration_ms": 1,
     "args": {
      "citation": "1-500"
     },
@@ -10059,7 +10091,7 @@
     ],
     "requires_user_choice": false,
     "error": null,
-    "registry_revision": "2026-09-08"
+    "registry_revision": "2026-09-09"
    }
   },
   {
@@ -10102,19 +10134,20 @@
      "tool_contract_version": "1",
      "envelope_version": "1",
      "adapters": {
+      "agenda_platform": "0.1.0",
       "arcgis": "0.1.0",
       "arcgis_geocode": "0.1.0",
       "virginia_law": "0.1.1"
      },
-     "registry_revision": "2026-09-08",
-     "request_id": "05c95bb8759c4fdbbcf9dec008a75ec9"
+     "registry_revision": "2026-09-09",
+     "request_id": "ea2649b66b96466eabc21e6435d9c4fe"
     }
    },
    "error_text": null,
    "http_calls": [],
    "audit": {
-    "ts": "2026-09-09T14:49:33Z",
-    "request_id": "05c95bb8759c4fdbbcf9dec008a75ec9",
+    "ts": "2026-09-10T01:47:06Z",
+    "request_id": "ea2649b66b96466eabc21e6435d9c4fe",
     "tool": "civic.get_code_section",
     "server": "commonwealth",
     "server_version": "0.1.0.dev0",
@@ -10136,7 +10169,7 @@
     "warning_codes": [],
     "requires_user_choice": false,
     "error": null,
-    "registry_revision": "2026-09-08"
+    "registry_revision": "2026-09-09"
    }
   },
   {
@@ -10208,7 +10241,7 @@
       "authority_level": "primary",
       "access_path": "live",
       "source_updated_at": null,
-      "retrieved_at": "2026-09-09T14:49:33Z",
+      "retrieved_at": "2026-09-10T01:47:06Z",
       "cache_age_seconds": 0
      },
      {
@@ -10221,7 +10254,7 @@
       "authority_level": "primary",
       "access_path": "live",
       "source_updated_at": "2026-02-26T20:41:15Z",
-      "retrieved_at": "2026-09-09T14:49:33Z",
+      "retrieved_at": "2026-09-10T01:47:06Z",
       "cache_age_seconds": 0
      }
     ],
@@ -10231,7 +10264,7 @@
       "source_ref": "source_01",
       "record_id": "OBJECTID:35432",
       "locator": null,
-      "retrieved_at": "2026-09-09T14:49:33Z",
+      "retrieved_at": "2026-09-10T01:47:06Z",
       "effective_at": null,
       "transformations": [
        "field_mapping:v1"
@@ -10244,7 +10277,7 @@
       "source_ref": "source_02",
       "record_id": "FID:2",
       "locator": null,
-      "retrieved_at": "2026-09-09T14:49:33Z",
+      "retrieved_at": "2026-09-10T01:47:06Z",
       "effective_at": null,
       "transformations": [
        "field_mapping:v1"
@@ -10296,12 +10329,13 @@
      "tool_contract_version": "1",
      "envelope_version": "1",
      "adapters": {
+      "agenda_platform": "0.1.0",
       "arcgis": "0.1.0",
       "arcgis_geocode": "0.1.0",
       "virginia_law": "0.1.1"
      },
-     "registry_revision": "2026-09-08",
-     "request_id": "1e7dbd6f76154784bef5dc32e7c92a6c"
+     "registry_revision": "2026-09-09",
+     "request_id": "4e1f6fdf53244e86b0685414e1f0f002"
     }
    },
    "error_text": null,
@@ -10358,12 +10392,12 @@
     }
    ],
    "audit": {
-    "ts": "2026-09-09T14:49:33Z",
-    "request_id": "1e7dbd6f76154784bef5dc32e7c92a6c",
+    "ts": "2026-09-10T01:47:06Z",
+    "request_id": "4e1f6fdf53244e86b0685414e1f0f002",
     "tool": "geo.find_zoning",
     "server": "commonwealth",
     "server_version": "0.1.0.dev0",
-    "duration_ms": 1,
+    "duration_ms": 0,
     "args": {
      "jurisdiction": "Vienna",
      "pin": "",
@@ -10404,7 +10438,7 @@
     ],
     "requires_user_choice": false,
     "error": null,
-    "registry_revision": "2026-09-08"
+    "registry_revision": "2026-09-09"
    }
   },
   {
@@ -10487,7 +10521,7 @@
       "authority_level": "primary",
       "access_path": "live",
       "source_updated_at": null,
-      "retrieved_at": "2026-09-09T14:49:33Z",
+      "retrieved_at": "2026-09-10T01:47:06Z",
       "cache_age_seconds": 0
      },
      {
@@ -10500,7 +10534,7 @@
       "authority_level": "primary",
       "access_path": "live",
       "source_updated_at": null,
-      "retrieved_at": "2026-09-09T14:49:33Z",
+      "retrieved_at": "2026-09-10T01:47:06Z",
       "cache_age_seconds": 0
      },
      {
@@ -10513,7 +10547,7 @@
       "authority_level": "primary",
       "access_path": "live",
       "source_updated_at": "2026-02-26T20:41:15Z",
-      "retrieved_at": "2026-09-09T14:49:33Z",
+      "retrieved_at": "2026-09-10T01:47:06Z",
       "cache_age_seconds": 0
      }
     ],
@@ -10523,7 +10557,7 @@
       "source_ref": "source_01",
       "record_id": "OBJECTID:102097",
       "locator": null,
-      "retrieved_at": "2026-09-09T14:49:33Z",
+      "retrieved_at": "2026-09-10T01:47:06Z",
       "effective_at": null,
       "transformations": [
        "field_mapping:v1",
@@ -10537,7 +10571,7 @@
       "source_ref": "source_02",
       "record_id": "OBJECTID:35432",
       "locator": null,
-      "retrieved_at": "2026-09-09T14:49:33Z",
+      "retrieved_at": "2026-09-10T01:47:06Z",
       "effective_at": null,
       "transformations": [
        "field_mapping:v1",
@@ -10551,7 +10585,7 @@
       "source_ref": "source_01",
       "record_id": "OBJECTID:102097",
       "locator": null,
-      "retrieved_at": "2026-09-09T14:49:33Z",
+      "retrieved_at": "2026-09-10T01:47:06Z",
       "effective_at": null,
       "transformations": [
        "field_mapping:v1",
@@ -10565,7 +10599,7 @@
       "source_ref": "source_03",
       "record_id": "FID:2",
       "locator": null,
-      "retrieved_at": "2026-09-09T14:49:33Z",
+      "retrieved_at": "2026-09-10T01:47:06Z",
       "effective_at": null,
       "transformations": [
        "field_mapping:v1",
@@ -10624,12 +10658,13 @@
      "tool_contract_version": "1",
      "envelope_version": "1",
      "adapters": {
+      "agenda_platform": "0.1.0",
       "arcgis": "0.1.0",
       "arcgis_geocode": "0.1.0",
       "virginia_law": "0.1.1"
      },
-     "registry_revision": "2026-09-08",
-     "request_id": "968f423b96044def828c3a76ef1311fe"
+     "registry_revision": "2026-09-09",
+     "request_id": "90c79f4432d048c08d57fc2076139be3"
     }
    },
    "error_text": null,
@@ -10682,12 +10717,12 @@
     }
    ],
    "audit": {
-    "ts": "2026-09-09T14:49:33Z",
-    "request_id": "968f423b96044def828c3a76ef1311fe",
+    "ts": "2026-09-10T01:47:06Z",
+    "request_id": "90c79f4432d048c08d57fc2076139be3",
     "tool": "geo.find_zoning",
     "server": "commonwealth",
     "server_version": "0.1.0.dev0",
-    "duration_ms": 1,
+    "duration_ms": 0,
     "args": {
      "jurisdiction": "Vienna",
      "pin": "0384 02  0143"
@@ -10732,7 +10767,7 @@
     ],
     "requires_user_choice": false,
     "error": null,
-    "registry_revision": "2026-09-08"
+    "registry_revision": "2026-09-09"
    }
   },
   {
@@ -10805,7 +10840,7 @@
       "authority_level": "primary",
       "access_path": "live",
       "source_updated_at": "2026-03-25T14:20:47Z",
-      "retrieved_at": "2026-09-09T14:49:33Z",
+      "retrieved_at": "2026-09-10T01:47:06Z",
       "cache_age_seconds": 0
      },
      {
@@ -10818,7 +10853,7 @@
       "authority_level": "official_secondary",
       "access_path": "live",
       "source_updated_at": null,
-      "retrieved_at": "2026-09-09T14:49:33Z",
+      "retrieved_at": "2026-09-10T01:47:06Z",
       "cache_age_seconds": 0
      }
     ],
@@ -10828,7 +10863,7 @@
       "source_ref": "source_01",
       "record_id": "OBJECTID:1880238",
       "locator": null,
-      "retrieved_at": "2026-09-09T14:49:33Z",
+      "retrieved_at": "2026-09-10T01:47:06Z",
       "effective_at": null,
       "transformations": [
        "field_mapping:v1"
@@ -10841,7 +10876,7 @@
       "source_ref": "source_02",
       "record_id": "OBJECTID:1195622",
       "locator": null,
-      "retrieved_at": "2026-09-09T14:49:33Z",
+      "retrieved_at": "2026-09-10T01:47:06Z",
       "effective_at": null,
       "transformations": [
        "field_mapping:v1"
@@ -10892,12 +10927,13 @@
      "tool_contract_version": "1",
      "envelope_version": "1",
      "adapters": {
+      "agenda_platform": "0.1.0",
       "arcgis": "0.1.0",
       "arcgis_geocode": "0.1.0",
       "virginia_law": "0.1.1"
      },
-     "registry_revision": "2026-09-08",
-     "request_id": "515f10c7f74a4665a5f24477c135b1ad"
+     "registry_revision": "2026-09-09",
+     "request_id": "bad194e61ea14515a805679fbefa72e2"
     }
    },
    "error_text": null,
@@ -10948,12 +10984,12 @@
     }
    ],
    "audit": {
-    "ts": "2026-09-09T14:49:33Z",
-    "request_id": "515f10c7f74a4665a5f24477c135b1ad",
+    "ts": "2026-09-10T01:47:06Z",
+    "request_id": "bad194e61ea14515a805679fbefa72e2",
     "tool": "geo.find_parcel",
     "server": "commonwealth",
     "server_version": "0.1.0.dev0",
-    "duration_ms": 1,
+    "duration_ms": 0,
     "args": {
      "jurisdiction": "Leesburg",
      "pin": "231154488000"
@@ -10991,7 +11027,7 @@
     ],
     "requires_user_choice": false,
     "error": null,
-    "registry_revision": "2026-09-08"
+    "registry_revision": "2026-09-09"
    }
   },
   {
@@ -11034,7 +11070,7 @@
       "authority_level": "primary",
       "access_path": "live",
       "source_updated_at": "2026-03-25T14:20:47Z",
-      "retrieved_at": "2026-09-09T14:49:33Z",
+      "retrieved_at": "2026-09-10T01:47:06Z",
       "cache_age_seconds": 0
      },
      {
@@ -11047,7 +11083,7 @@
       "authority_level": "primary",
       "access_path": "live",
       "source_updated_at": "2025-02-24T17:37:24Z",
-      "retrieved_at": "2026-09-09T14:49:33Z",
+      "retrieved_at": "2026-09-10T01:47:06Z",
       "cache_age_seconds": 0
      }
     ],
@@ -11057,7 +11093,7 @@
       "source_ref": "source_01",
       "record_id": "OBJECTID:1880238",
       "locator": null,
-      "retrieved_at": "2026-09-09T14:49:33Z",
+      "retrieved_at": "2026-09-10T01:47:06Z",
       "effective_at": null,
       "transformations": [
        "field_mapping:v1",
@@ -11071,7 +11107,7 @@
       "source_ref": "source_02",
       "record_id": "OBJECTID_12:2281",
       "locator": null,
-      "retrieved_at": "2026-09-09T14:49:33Z",
+      "retrieved_at": "2026-09-10T01:47:06Z",
       "effective_at": null,
       "transformations": [
        "field_mapping:v1",
@@ -11118,12 +11154,13 @@
      "tool_contract_version": "1",
      "envelope_version": "1",
      "adapters": {
+      "agenda_platform": "0.1.0",
       "arcgis": "0.1.0",
       "arcgis_geocode": "0.1.0",
       "virginia_law": "0.1.1"
      },
-     "registry_revision": "2026-09-08",
-     "request_id": "60cde9938a4540a2a717941b1fdd2b85"
+     "registry_revision": "2026-09-09",
+     "request_id": "269ff3aafce04ee382e9e8bee98c1c0e"
     }
    },
    "error_text": null,
@@ -11178,8 +11215,8 @@
     }
    ],
    "audit": {
-    "ts": "2026-09-09T14:49:33Z",
-    "request_id": "60cde9938a4540a2a717941b1fdd2b85",
+    "ts": "2026-09-10T01:47:06Z",
+    "request_id": "269ff3aafce04ee382e9e8bee98c1c0e",
     "tool": "geo.find_zoning",
     "server": "commonwealth",
     "server_version": "0.1.0.dev0",
@@ -11221,7 +11258,1620 @@
     ],
     "requires_user_choice": false,
     "error": null,
-    "registry_revision": "2026-09-08"
+    "registry_revision": "2026-09-09"
+   }
+  },
+  {
+   "note": "A month of Richmond meetings, with the agenda document linked as data. The link is never fetched, so what each meeting is about is not in this answer.",
+   "is_error": false,
+   "envelope": {
+    "data": {
+     "results": [
+      {
+       "source_ref": "source_01",
+       "source_id": "va-richmond-city-meetings",
+       "records": [
+        {
+         "body": "Planning Commission",
+         "date": "2026-09-01",
+         "time": "6:00 PM",
+         "time_zone": "America/New_York",
+         "agenda_status": "Final",
+         "location": "5th Floor Conference Room",
+         "agenda_url": "https://legistar2.granicus.com/richmondva/meetings/2026/9/5144_A_Planning_Commission_26-09-01_Agenda.pdf",
+         "minutes_url": "https://legistar2.granicus.com/richmondva/meetings/2026/9/5144_M_Planning_Commission_26-09-01_Summary.pdf",
+         "portal_url": "https://richmondva.legistar.com/MeetingDetail.aspx?LEGID=5144&GID=387&G=09290454-F2A8-4339-97A7-B852FD86AB68",
+         "comment": "",
+         "evidence_refs": [
+          "evidence_01"
+         ]
+        },
+        {
+         "body": "Board of Zoning Appeals",
+         "date": "2026-09-02",
+         "time": "1:00 PM",
+         "time_zone": "America/New_York",
+         "agenda_status": "Final",
+         "location": "5th Floor Conference Room",
+         "agenda_url": "https://legistar2.granicus.com/richmondva/meetings/2026/9/5275_A_Board_of_Zoning_Appeals_26-09-02_Agenda.pdf",
+         "minutes_url": null,
+         "portal_url": "https://richmondva.legistar.com/MeetingDetail.aspx?LEGID=5275&GID=387&G=09290454-F2A8-4339-97A7-B852FD86AB68",
+         "comment": "",
+         "evidence_refs": [
+          "evidence_02"
+         ]
+        },
+        {
+         "body": "Organizational Development Standing Committee",
+         "date": "2026-09-08",
+         "time": "4:00 PM",
+         "time_zone": "America/New_York",
+         "agenda_status": "Final",
+         "location": "Council Chamber, 2nd Floor - City Hall",
+         "agenda_url": "https://legistar2.granicus.com/richmondva/meetings/2026/9/5246_A_Organizational_Development_Standing_Committee__26-09-08_Agenda.pdf",
+         "minutes_url": null,
+         "portal_url": "https://richmondva.legistar.com/MeetingDetail.aspx?LEGID=5246&GID=387&G=09290454-F2A8-4339-97A7-B852FD86AB68",
+         "comment": "",
+         "evidence_refs": [
+          "evidence_03"
+         ]
+        },
+        {
+         "body": "City Council",
+         "date": "2026-09-08",
+         "time": "4:00 PM",
+         "time_zone": "America/New_York",
+         "agenda_status": "Final",
+         "location": "Council Chamber, 2nd Floor - City Hall",
+         "agenda_url": "https://legistar2.granicus.com/richmondva/meetings/2026/9/5317_A_City_Council_26-09-08_Agenda.pdf",
+         "minutes_url": null,
+         "portal_url": "https://richmondva.legistar.com/MeetingDetail.aspx?LEGID=5317&GID=387&G=09290454-F2A8-4339-97A7-B852FD86AB68",
+         "comment": "Special Meeting",
+         "evidence_refs": [
+          "evidence_04"
+         ]
+        },
+        {
+         "body": "Education and Human Services Standing Committee",
+         "date": "2026-09-10",
+         "time": "2:00 PM",
+         "time_zone": "America/New_York",
+         "agenda_status": "Final",
+         "location": "Council Chamber, 2nd Floor - City Hall",
+         "agenda_url": "https://legistar2.granicus.com/richmondva/meetings/2026/9/5106_A_Education_and_Human_Services_Standing_Committee_26-09-10_Agenda.pdf",
+         "minutes_url": null,
+         "portal_url": "https://richmondva.legistar.com/MeetingDetail.aspx?LEGID=5106&GID=387&G=09290454-F2A8-4339-97A7-B852FD86AB68",
+         "comment": "To access the meeting via Microsoft Teams, please use the following \r\nhttps://go.rva.gov/EHS-Sep10 or dial *67-804-316-9457 and enter ID: 702 216 521#",
+         "evidence_refs": [
+          "evidence_05"
+         ]
+        },
+        {
+         "body": "Urban Design Committee",
+         "date": "2026-09-10",
+         "time": "10:00 AM",
+         "time_zone": "America/New_York",
+         "agenda_status": "Final",
+         "location": "5th Floor Conference Room of City Hall",
+         "agenda_url": "https://legistar2.granicus.com/richmondva/meetings/2026/9/5220_A_Urban_Design_Committee_26-09-10_Agenda.pdf",
+         "minutes_url": null,
+         "portal_url": "https://richmondva.legistar.com/MeetingDetail.aspx?LEGID=5220&GID=387&G=09290454-F2A8-4339-97A7-B852FD86AB68",
+         "comment": "",
+         "evidence_refs": [
+          "evidence_06"
+         ]
+        },
+        {
+         "body": "City Council",
+         "date": "2026-09-10",
+         "time": "2:00 PM",
+         "time_zone": "America/New_York",
+         "agenda_status": "Final",
+         "location": "Council Chamber, 2nd Floor - City Hall",
+         "agenda_url": "https://legistar2.granicus.com/richmondva/meetings/2026/9/5318_A_City_Council_26-09-10_Agenda.pdf",
+         "minutes_url": null,
+         "portal_url": "https://richmondva.legistar.com/MeetingDetail.aspx?LEGID=5318&GID=387&G=09290454-F2A8-4339-97A7-B852FD86AB68",
+         "comment": "Special Meeting\r\n\r\nTo access the meeting via Microsoft Teams, please use the following link: https://go.rva.gov/SpecMtgSept10 or dial *67-804-316-9457 and enter ID: 984 590 981#",
+         "evidence_refs": [
+          "evidence_07"
+         ]
+        },
+        {
+         "body": "Informal Meeting",
+         "date": "2026-09-14",
+         "time": "4:00 PM",
+         "time_zone": "America/New_York",
+         "agenda_status": "Final",
+         "location": "Council Chamber, 2nd Floor - City Hall",
+         "agenda_url": "https://legistar2.granicus.com/richmondva/meetings/2026/9/5164_A_Informal_Meeting_26-09-14_Agenda.pdf",
+         "minutes_url": null,
+         "portal_url": "https://richmondva.legistar.com/MeetingDetail.aspx?LEGID=5164&GID=387&G=09290454-F2A8-4339-97A7-B852FD86AB68",
+         "comment": "To access the meeting via Microsoft Teams, please use the following link:\r\nhttps://go.rva.gov/Informal-09142026 or dial *67-804-316-9457 and\r\nenter ID: 808 808 691#.",
+         "evidence_refs": [
+          "evidence_08"
+         ]
+        },
+        {
+         "body": "City Council",
+         "date": "2026-09-14",
+         "time": "6:00 PM",
+         "time_zone": "America/New_York",
+         "agenda_status": "Final",
+         "location": "Council Chamber, 2nd Floor - City Hall",
+         "agenda_url": "https://legistar2.granicus.com/richmondva/meetings/2026/9/5181_A_City_Council_26-09-14_Agenda.pdf",
+         "minutes_url": null,
+         "portal_url": "https://richmondva.legistar.com/MeetingDetail.aspx?LEGID=5181&GID=387&G=09290454-F2A8-4339-97A7-B852FD86AB68",
+         "comment": "To access the meeting via Microsoft Teams, please use the following link: https://go.rva.gov/Formal-09142026 or dial *67-804-316-9457 and enter ID: 563 115 708#.",
+         "evidence_refs": [
+          "evidence_09"
+         ]
+        },
+        {
+         "body": "Planning Commission",
+         "date": "2026-09-15",
+         "time": "6:00 PM",
+         "time_zone": "America/New_York",
+         "agenda_status": "Final",
+         "location": "5th Floor Conference Room",
+         "agenda_url": "https://legistar2.granicus.com/richmondva/meetings/2026/9/5145_A_Planning_Commission_26-09-15_Agenda.pdf",
+         "minutes_url": null,
+         "portal_url": "https://richmondva.legistar.com/MeetingDetail.aspx?LEGID=5145&GID=387&G=09290454-F2A8-4339-97A7-B852FD86AB68",
+         "comment": "To access the meeting via Microsoft Teams: https://go.rva.gov/CPC2026",
+         "evidence_refs": [
+          "evidence_10"
+         ]
+        },
+        {
+         "body": "Finance and Economic Development Standing Committee",
+         "date": "2026-09-16",
+         "time": "2:00 PM",
+         "time_zone": "America/New_York",
+         "agenda_status": "Final",
+         "location": "Council Chamber, 2nd Floor \u2013 City Hall",
+         "agenda_url": "https://legistar2.granicus.com/richmondva/meetings/2026/9/5078_A_Finance_and_Economic_Development_Standing_Committee_26-09-16_Agenda.pdf",
+         "minutes_url": null,
+         "portal_url": "https://richmondva.legistar.com/MeetingDetail.aspx?LEGID=5078&GID=387&G=09290454-F2A8-4339-97A7-B852FD86AB68",
+         "comment": "To access the meeting via Microsoft Teams, please use the following link: https://go.rva.gov/FIN-SEP16 or dial *67-804-316-9457 and enter ID: 624 337 228#",
+         "evidence_refs": [
+          "evidence_11"
+         ]
+        },
+        {
+         "body": "Land Use, Housing and Transportation Standing Committee",
+         "date": "2026-09-22",
+         "time": "3:00 PM",
+         "time_zone": "America/New_York",
+         "agenda_status": "Final",
+         "location": "Council Chamber, 2nd Floor - City Hall",
+         "agenda_url": "https://legistar2.granicus.com/richmondva/meetings/2026/9/5066_A_Land_Use%2C_Housing_and_Transportation_Standing_Committee_26-09-22_Agenda.pdf",
+         "minutes_url": null,
+         "portal_url": "https://richmondva.legistar.com/MeetingDetail.aspx?LEGID=5066&GID=387&G=09290454-F2A8-4339-97A7-B852FD86AB68",
+         "comment": "To access the meeting via Microsoft Teams, please use the following link: https://go.rva.gov/LUHT-SEP22 or dial *67-804-316-9457 and enter ID: 227 131 090#",
+         "evidence_refs": [
+          "evidence_12"
+         ]
+        },
+        {
+         "body": "Public Safety Standing Committee",
+         "date": "2026-09-22",
+         "time": "1:00 PM",
+         "time_zone": "America/New_York",
+         "agenda_status": "Final",
+         "location": "Council Chamber, 2nd Floor \u2013 City Hall",
+         "agenda_url": "https://legistar2.granicus.com/richmondva/meetings/2026/9/5092_A_Public_Safety_Standing_Committee_26-09-22_Agenda.pdf",
+         "minutes_url": null,
+         "portal_url": "https://richmondva.legistar.com/MeetingDetail.aspx?LEGID=5092&GID=387&G=09290454-F2A8-4339-97A7-B852FD86AB68",
+         "comment": "To access the meeting via Microsoft Teams, please use the following link: https://go.rva.gov/PS-SEP22 or dial *67-804-316-9457 and enter ID: 403 923 073#",
+         "evidence_refs": [
+          "evidence_13"
+         ]
+        },
+        {
+         "body": "Informal Meeting",
+         "date": "2026-09-28",
+         "time": "4:00 PM",
+         "time_zone": "America/New_York",
+         "agenda_status": "Final",
+         "location": "Council Chamber, 2nd Floor - City Hall",
+         "agenda_url": null,
+         "minutes_url": null,
+         "portal_url": "https://richmondva.legistar.com/MeetingDetail.aspx?LEGID=5165&GID=387&G=09290454-F2A8-4339-97A7-B852FD86AB68",
+         "comment": "To access the meeting via Microsoft Teams, please use the following link:\r\nhttps://go.rva.gov/Informal-09282026 or dial *67-804-316-9457 and\r\nenter ID: 813 245 130#.",
+         "evidence_refs": [
+          "evidence_14"
+         ]
+        },
+        {
+         "body": "City Council",
+         "date": "2026-09-28",
+         "time": "6:00 PM",
+         "time_zone": "America/New_York",
+         "agenda_status": "Final",
+         "location": "Council Chamber, 2nd Floor - City Hall",
+         "agenda_url": "https://legistar2.granicus.com/richmondva/meetings/2026/9/5182_A_City_Council_26-09-28_Agenda.pdf",
+         "minutes_url": null,
+         "portal_url": "https://richmondva.legistar.com/MeetingDetail.aspx?LEGID=5182&GID=387&G=09290454-F2A8-4339-97A7-B852FD86AB68",
+         "comment": "To access the meeting via Microsoft Teams, please use the following link: https://go.rva.gov/Formal-09282026 or dial *67-804-316-9457 and enter ID: 532 276 868#.",
+         "evidence_refs": [
+          "evidence_15"
+         ]
+        }
+       ],
+       "record_count": 15,
+       "window": {
+        "start_date": "2026-09-01",
+        "end_date": "2026-09-30"
+       },
+       "body_filter": null,
+       "source_url": "https://webapi.legistar.com/v1/richmondva/events"
+      }
+     ]
+    },
+    "provenance": [
+     {
+      "id": "source_01",
+      "source_id": "va-richmond-city-meetings",
+      "publisher": "Richmond City government (Office of the City Clerk)",
+      "system": "agenda_platform",
+      "dataset": "Richmond City Public Meetings (Granicus/Legistar)",
+      "jurisdiction": "va:richmond-city",
+      "authority_level": "primary",
+      "access_path": "live",
+      "source_updated_at": null,
+      "retrieved_at": "2026-09-10T01:47:07Z",
+      "cache_age_seconds": 0
+     }
+    ],
+    "evidence": [
+     {
+      "id": "evidence_01",
+      "source_ref": "source_01",
+      "record_id": "5144",
+      "locator": "https://richmondva.legistar.com/MeetingDetail.aspx?LEGID=5144&GID=387&G=09290454-F2A8-4339-97A7-B852FD86AB68",
+      "retrieved_at": "2026-09-10T01:47:07Z",
+      "effective_at": null,
+      "transformations": [],
+      "payload_hash": null,
+      "raw_recovery": "available"
+     },
+     {
+      "id": "evidence_02",
+      "source_ref": "source_01",
+      "record_id": "5275",
+      "locator": "https://richmondva.legistar.com/MeetingDetail.aspx?LEGID=5275&GID=387&G=09290454-F2A8-4339-97A7-B852FD86AB68",
+      "retrieved_at": "2026-09-10T01:47:07Z",
+      "effective_at": null,
+      "transformations": [],
+      "payload_hash": null,
+      "raw_recovery": "available"
+     },
+     {
+      "id": "evidence_03",
+      "source_ref": "source_01",
+      "record_id": "5246",
+      "locator": "https://richmondva.legistar.com/MeetingDetail.aspx?LEGID=5246&GID=387&G=09290454-F2A8-4339-97A7-B852FD86AB68",
+      "retrieved_at": "2026-09-10T01:47:07Z",
+      "effective_at": null,
+      "transformations": [],
+      "payload_hash": null,
+      "raw_recovery": "available"
+     },
+     {
+      "id": "evidence_04",
+      "source_ref": "source_01",
+      "record_id": "5317",
+      "locator": "https://richmondva.legistar.com/MeetingDetail.aspx?LEGID=5317&GID=387&G=09290454-F2A8-4339-97A7-B852FD86AB68",
+      "retrieved_at": "2026-09-10T01:47:07Z",
+      "effective_at": null,
+      "transformations": [],
+      "payload_hash": null,
+      "raw_recovery": "available"
+     },
+     {
+      "id": "evidence_05",
+      "source_ref": "source_01",
+      "record_id": "5106",
+      "locator": "https://richmondva.legistar.com/MeetingDetail.aspx?LEGID=5106&GID=387&G=09290454-F2A8-4339-97A7-B852FD86AB68",
+      "retrieved_at": "2026-09-10T01:47:07Z",
+      "effective_at": null,
+      "transformations": [],
+      "payload_hash": null,
+      "raw_recovery": "available"
+     },
+     {
+      "id": "evidence_06",
+      "source_ref": "source_01",
+      "record_id": "5220",
+      "locator": "https://richmondva.legistar.com/MeetingDetail.aspx?LEGID=5220&GID=387&G=09290454-F2A8-4339-97A7-B852FD86AB68",
+      "retrieved_at": "2026-09-10T01:47:07Z",
+      "effective_at": null,
+      "transformations": [],
+      "payload_hash": null,
+      "raw_recovery": "available"
+     },
+     {
+      "id": "evidence_07",
+      "source_ref": "source_01",
+      "record_id": "5318",
+      "locator": "https://richmondva.legistar.com/MeetingDetail.aspx?LEGID=5318&GID=387&G=09290454-F2A8-4339-97A7-B852FD86AB68",
+      "retrieved_at": "2026-09-10T01:47:07Z",
+      "effective_at": null,
+      "transformations": [],
+      "payload_hash": null,
+      "raw_recovery": "available"
+     },
+     {
+      "id": "evidence_08",
+      "source_ref": "source_01",
+      "record_id": "5164",
+      "locator": "https://richmondva.legistar.com/MeetingDetail.aspx?LEGID=5164&GID=387&G=09290454-F2A8-4339-97A7-B852FD86AB68",
+      "retrieved_at": "2026-09-10T01:47:07Z",
+      "effective_at": null,
+      "transformations": [],
+      "payload_hash": null,
+      "raw_recovery": "available"
+     },
+     {
+      "id": "evidence_09",
+      "source_ref": "source_01",
+      "record_id": "5181",
+      "locator": "https://richmondva.legistar.com/MeetingDetail.aspx?LEGID=5181&GID=387&G=09290454-F2A8-4339-97A7-B852FD86AB68",
+      "retrieved_at": "2026-09-10T01:47:07Z",
+      "effective_at": null,
+      "transformations": [],
+      "payload_hash": null,
+      "raw_recovery": "available"
+     },
+     {
+      "id": "evidence_10",
+      "source_ref": "source_01",
+      "record_id": "5145",
+      "locator": "https://richmondva.legistar.com/MeetingDetail.aspx?LEGID=5145&GID=387&G=09290454-F2A8-4339-97A7-B852FD86AB68",
+      "retrieved_at": "2026-09-10T01:47:07Z",
+      "effective_at": null,
+      "transformations": [],
+      "payload_hash": null,
+      "raw_recovery": "available"
+     },
+     {
+      "id": "evidence_11",
+      "source_ref": "source_01",
+      "record_id": "5078",
+      "locator": "https://richmondva.legistar.com/MeetingDetail.aspx?LEGID=5078&GID=387&G=09290454-F2A8-4339-97A7-B852FD86AB68",
+      "retrieved_at": "2026-09-10T01:47:07Z",
+      "effective_at": null,
+      "transformations": [],
+      "payload_hash": null,
+      "raw_recovery": "available"
+     },
+     {
+      "id": "evidence_12",
+      "source_ref": "source_01",
+      "record_id": "5066",
+      "locator": "https://richmondva.legistar.com/MeetingDetail.aspx?LEGID=5066&GID=387&G=09290454-F2A8-4339-97A7-B852FD86AB68",
+      "retrieved_at": "2026-09-10T01:47:07Z",
+      "effective_at": null,
+      "transformations": [],
+      "payload_hash": null,
+      "raw_recovery": "available"
+     },
+     {
+      "id": "evidence_13",
+      "source_ref": "source_01",
+      "record_id": "5092",
+      "locator": "https://richmondva.legistar.com/MeetingDetail.aspx?LEGID=5092&GID=387&G=09290454-F2A8-4339-97A7-B852FD86AB68",
+      "retrieved_at": "2026-09-10T01:47:07Z",
+      "effective_at": null,
+      "transformations": [],
+      "payload_hash": null,
+      "raw_recovery": "available"
+     },
+     {
+      "id": "evidence_14",
+      "source_ref": "source_01",
+      "record_id": "5165",
+      "locator": "https://richmondva.legistar.com/MeetingDetail.aspx?LEGID=5165&GID=387&G=09290454-F2A8-4339-97A7-B852FD86AB68",
+      "retrieved_at": "2026-09-10T01:47:07Z",
+      "effective_at": null,
+      "transformations": [],
+      "payload_hash": null,
+      "raw_recovery": "available"
+     },
+     {
+      "id": "evidence_15",
+      "source_ref": "source_01",
+      "record_id": "5182",
+      "locator": "https://richmondva.legistar.com/MeetingDetail.aspx?LEGID=5182&GID=387&G=09290454-F2A8-4339-97A7-B852FD86AB68",
+      "retrieved_at": "2026-09-10T01:47:07Z",
+      "effective_at": null,
+      "transformations": [],
+      "payload_hash": null,
+      "raw_recovery": "available"
+     }
+    ],
+    "coverage": {
+     "registry": "covered",
+     "execution": "complete",
+     "pagination": "complete",
+     "source_claim": "unknown",
+     "result": "hit",
+     "jurisdictions_searched": [
+      "va:richmond-city",
+      "va"
+     ],
+     "known_limitations": [
+      "Agenda and minutes documents are links, never content. This project does not fetch them, because the egress allowlist is pinned per manifest to the API host and the documents live on a different one. What a meeting is ABOUT is in the agenda PDF, so a body name and a date are not a summary of what will be discussed.\n",
+      "Meeting times are local wall-clock strings with no offset in the payload. The zone is declared in this manifest, not read from the publisher.\n",
+      "No cancellation field. The platform publishes an agenda-publication status (\"Final\", \"Final-revised\") and nothing that says a meeting was cancelled or rescheduled; where a locality records that at all, it records it in the free-text comment. Cancelled meetings are returned rather than omitted, with the comment verbatim and a note saying the reading came from prose, not from a published field.\n",
+      "The calendar covers the bodies this locality publishes through the platform. A body that meets and is not published here is absent from the answer, and absence is not evidence it did not meet.\n"
+     ]
+    },
+    "warnings": [
+     {
+      "code": "freshness_unavailable",
+      "message": "The publisher exposes no machine-readable update date for this layer; retrieval time is known, data vintage is not.",
+      "source_id": "va-richmond-city-meetings"
+     }
+    ],
+    "_execution": {
+     "server": "commonwealth",
+     "server_version": "0.1.0.dev0",
+     "tool": "civic.search_meetings",
+     "tool_contract_version": "1",
+     "envelope_version": "1",
+     "adapters": {
+      "agenda_platform": "0.1.0",
+      "arcgis": "0.1.0",
+      "arcgis_geocode": "0.1.0",
+      "virginia_law": "0.1.1"
+     },
+     "registry_revision": "2026-09-09",
+     "request_id": "0d04c4526e4a46dca1793c6fcb6cc10f"
+    }
+   },
+   "error_text": null,
+   "http_calls": [],
+   "audit": {
+    "ts": "2026-09-10T01:47:07Z",
+    "request_id": "0d04c4526e4a46dca1793c6fcb6cc10f",
+    "tool": "civic.search_meetings",
+    "server": "commonwealth",
+    "server_version": "0.1.0.dev0",
+    "duration_ms": 888,
+    "args": {
+     "jurisdiction": "Richmond City",
+     "start_date": "2026-09-01",
+     "end_date": "2026-09-30",
+     "body": ""
+    },
+    "arg_names": [
+     "body",
+     "end_date",
+     "jurisdiction",
+     "start_date"
+    ],
+    "coverage": {
+     "registry": "covered",
+     "execution": "complete",
+     "pagination": "complete",
+     "result": "hit"
+    },
+    "sources": [
+     {
+      "source_id": "va-richmond-city-meetings",
+      "access_path": "live",
+      "cache_age_seconds": 0,
+      "authority_level": "primary"
+     }
+    ],
+    "evidence_count": 15,
+    "warning_codes": [
+     "freshness_unavailable"
+    ],
+    "requires_user_choice": false,
+    "error": null,
+    "registry_revision": "2026-09-09"
+   }
+  },
+  {
+   "note": "The same question of a second locality. One adapter answers both; the only thing that differs is a client identifier in the manifest.",
+   "is_error": false,
+   "envelope": {
+    "data": {
+     "results": [
+      {
+       "source_ref": "source_01",
+       "source_id": "va-alexandria-city-meetings",
+       "records": [
+        {
+         "body": "Planning Commission Public Hearing",
+         "date": "2026-09-01",
+         "time": "7:00 PM",
+         "time_zone": "America/New_York",
+         "agenda_status": "Final",
+         "location": "Council Chambers, 4850 Mark Center Drive, Room 1305",
+         "agenda_url": "https://legistar.granicus.com/alexandria/meetings/2026/9/2740_A_Planning_Commission_Public_Hearing_26-09-01_Docket.pdf",
+         "minutes_url": "https://legistar.granicus.com/alexandria/meetings/2026/9/2740_M_Planning_Commission_Public_Hearing_26-09-01_Action_Docket.pdf",
+         "portal_url": "https://alexandria.legistar.com/MeetingDetail.aspx?LEGID=2740&GID=239&G=188E7221-51C6-4DB4-965D-DA161BCFB1F6",
+         "comment": "The Planning Commission held a work session at 6:00 pm to discuss the draft Historic Preservation Zoning Text Amendments",
+         "evidence_refs": [
+          "evidence_01"
+         ]
+        },
+        {
+         "body": "Board of Architectural Review Public Hearing",
+         "date": "2026-09-02",
+         "time": "7:00 PM",
+         "time_zone": "America/New_York",
+         "agenda_status": "Final",
+         "location": "901 Wythe Street",
+         "agenda_url": "https://legistar.granicus.com/alexandria/meetings/2026/9/2754_A_Board_of_Architectural_Review_Public_Hearing_26-09-02_Docket.pdf",
+         "minutes_url": "https://legistar.granicus.com/alexandria/meetings/2026/9/2754_M_Board_of_Architectural_Review_Public_Hearing_26-09-02_Action_Docket.pdf",
+         "portal_url": "https://alexandria.legistar.com/MeetingDetail.aspx?LEGID=2754&GID=239&G=188E7221-51C6-4DB4-965D-DA161BCFB1F6",
+         "comment": "",
+         "evidence_refs": [
+          "evidence_02"
+         ]
+        },
+        {
+         "body": "City Council Legislative Meeting",
+         "date": "2026-09-08",
+         "time": "6:00 PM",
+         "time_zone": "America/New_York",
+         "agenda_status": "Final",
+         "location": "Council Chamber",
+         "agenda_url": "https://legistar.granicus.com/alexandria/meetings/2026/9/2757_A_City_Council_Legislative_Meeting_26-09-08_Docket.pdf",
+         "minutes_url": "https://legistar.granicus.com/alexandria/meetings/2026/9/2757_M_City_Council_Legislative_Meeting_26-09-08_Action_Docket.pdf",
+         "portal_url": "https://alexandria.legistar.com/MeetingDetail.aspx?LEGID=2757&GID=239&G=188E7221-51C6-4DB4-965D-DA161BCFB1F6",
+         "comment": "There will be an executive session beginning at 6 p.m.  The regular meeting will begin at 7 p.m., or shortly thereafter.",
+         "evidence_refs": [
+          "evidence_03"
+         ]
+        },
+        {
+         "body": "Board of Zoning Appeals Public Hearing",
+         "date": "2026-09-14",
+         "time": "7:00 PM",
+         "time_zone": "America/New_York",
+         "agenda_status": "Final",
+         "location": "Council Chambers, 4850 Mark Center Drive",
+         "agenda_url": "https://legistar.granicus.com/alexandria/meetings/2026/9/2799_A_Board_of_Zoning_Appeals_Public_Hearing_26-09-14_Docket.pdf",
+         "minutes_url": null,
+         "portal_url": "https://alexandria.legistar.com/MeetingDetail.aspx?LEGID=2799&GID=239&G=188E7221-51C6-4DB4-965D-DA161BCFB1F6",
+         "comment": "",
+         "evidence_refs": [
+          "evidence_04"
+         ]
+        },
+        {
+         "body": "Board of Architectural Review Public Hearing",
+         "date": "2026-09-16",
+         "time": "7:00 PM",
+         "time_zone": "America/New_York",
+         "agenda_status": "Final",
+         "location": "901 Wythe Street",
+         "agenda_url": null,
+         "minutes_url": null,
+         "portal_url": "https://alexandria.legistar.com/MeetingDetail.aspx?LEGID=2798&GID=239&G=188E7221-51C6-4DB4-965D-DA161BCFB1F6",
+         "comment": "",
+         "evidence_refs": [
+          "evidence_05"
+         ]
+        }
+       ],
+       "record_count": 5,
+       "window": {
+        "start_date": "2026-09-01",
+        "end_date": "2026-09-30"
+       },
+       "body_filter": null,
+       "source_url": "https://webapi.legistar.com/v1/alexandria/events"
+      }
+     ]
+    },
+    "provenance": [
+     {
+      "id": "source_01",
+      "source_id": "va-alexandria-city-meetings",
+      "publisher": "Alexandria City government (Office of the City Clerk)",
+      "system": "agenda_platform",
+      "dataset": "Alexandria City Public Meetings (Granicus/Legistar)",
+      "jurisdiction": "va:alexandria-city",
+      "authority_level": "primary",
+      "access_path": "live",
+      "source_updated_at": null,
+      "retrieved_at": "2026-09-10T01:47:07Z",
+      "cache_age_seconds": 0
+     }
+    ],
+    "evidence": [
+     {
+      "id": "evidence_01",
+      "source_ref": "source_01",
+      "record_id": "2740",
+      "locator": "https://alexandria.legistar.com/MeetingDetail.aspx?LEGID=2740&GID=239&G=188E7221-51C6-4DB4-965D-DA161BCFB1F6",
+      "retrieved_at": "2026-09-10T01:47:07Z",
+      "effective_at": null,
+      "transformations": [],
+      "payload_hash": null,
+      "raw_recovery": "available"
+     },
+     {
+      "id": "evidence_02",
+      "source_ref": "source_01",
+      "record_id": "2754",
+      "locator": "https://alexandria.legistar.com/MeetingDetail.aspx?LEGID=2754&GID=239&G=188E7221-51C6-4DB4-965D-DA161BCFB1F6",
+      "retrieved_at": "2026-09-10T01:47:07Z",
+      "effective_at": null,
+      "transformations": [],
+      "payload_hash": null,
+      "raw_recovery": "available"
+     },
+     {
+      "id": "evidence_03",
+      "source_ref": "source_01",
+      "record_id": "2757",
+      "locator": "https://alexandria.legistar.com/MeetingDetail.aspx?LEGID=2757&GID=239&G=188E7221-51C6-4DB4-965D-DA161BCFB1F6",
+      "retrieved_at": "2026-09-10T01:47:07Z",
+      "effective_at": null,
+      "transformations": [],
+      "payload_hash": null,
+      "raw_recovery": "available"
+     },
+     {
+      "id": "evidence_04",
+      "source_ref": "source_01",
+      "record_id": "2799",
+      "locator": "https://alexandria.legistar.com/MeetingDetail.aspx?LEGID=2799&GID=239&G=188E7221-51C6-4DB4-965D-DA161BCFB1F6",
+      "retrieved_at": "2026-09-10T01:47:07Z",
+      "effective_at": null,
+      "transformations": [],
+      "payload_hash": null,
+      "raw_recovery": "available"
+     },
+     {
+      "id": "evidence_05",
+      "source_ref": "source_01",
+      "record_id": "2798",
+      "locator": "https://alexandria.legistar.com/MeetingDetail.aspx?LEGID=2798&GID=239&G=188E7221-51C6-4DB4-965D-DA161BCFB1F6",
+      "retrieved_at": "2026-09-10T01:47:07Z",
+      "effective_at": null,
+      "transformations": [],
+      "payload_hash": null,
+      "raw_recovery": "available"
+     }
+    ],
+    "coverage": {
+     "registry": "covered",
+     "execution": "complete",
+     "pagination": "complete",
+     "source_claim": "unknown",
+     "result": "hit",
+     "jurisdictions_searched": [
+      "va:alexandria-city",
+      "va"
+     ],
+     "known_limitations": [
+      "Agenda and minutes documents are links, never content. This project does not fetch them, because the egress allowlist is pinned per manifest to the API host and the documents live on a different one. What a meeting is ABOUT is in the agenda PDF, so a body name and a date are not a summary of what will be discussed.\n",
+      "Meeting times are local wall-clock strings with no offset in the payload. The zone is declared in this manifest, not read from the publisher.\n",
+      "No cancellation field. The platform publishes an agenda-publication status (\"Final\", \"Final-revised\") and nothing that says a meeting was cancelled or rescheduled; where a locality records that at all, it records it in the free-text comment. Cancelled meetings are returned rather than omitted, with the comment verbatim and a note saying the reading came from prose, not from a published field.\n",
+      "The calendar covers the bodies this locality publishes through the platform. A body that meets and is not published here is absent from the answer, and absence is not evidence it did not meet.\n"
+     ]
+    },
+    "warnings": [
+     {
+      "code": "freshness_unavailable",
+      "message": "The publisher exposes no machine-readable update date for this layer; retrieval time is known, data vintage is not.",
+      "source_id": "va-alexandria-city-meetings"
+     }
+    ],
+    "_execution": {
+     "server": "commonwealth",
+     "server_version": "0.1.0.dev0",
+     "tool": "civic.search_meetings",
+     "tool_contract_version": "1",
+     "envelope_version": "1",
+     "adapters": {
+      "agenda_platform": "0.1.0",
+      "arcgis": "0.1.0",
+      "arcgis_geocode": "0.1.0",
+      "virginia_law": "0.1.1"
+     },
+     "registry_revision": "2026-09-09",
+     "request_id": "5dd9b0e2b15a41ec8272659b8c028063"
+    }
+   },
+   "error_text": null,
+   "http_calls": [],
+   "audit": {
+    "ts": "2026-09-10T01:47:07Z",
+    "request_id": "5dd9b0e2b15a41ec8272659b8c028063",
+    "tool": "civic.search_meetings",
+    "server": "commonwealth",
+    "server_version": "0.1.0.dev0",
+    "duration_ms": 474,
+    "args": {
+     "jurisdiction": "Alexandria City",
+     "start_date": "2026-09-01",
+     "end_date": "2026-09-30",
+     "body": ""
+    },
+    "arg_names": [
+     "body",
+     "end_date",
+     "jurisdiction",
+     "start_date"
+    ],
+    "coverage": {
+     "registry": "covered",
+     "execution": "complete",
+     "pagination": "complete",
+     "result": "hit"
+    },
+    "sources": [
+     {
+      "source_id": "va-alexandria-city-meetings",
+      "access_path": "live",
+      "cache_age_seconds": 0,
+      "authority_level": "primary"
+     }
+    ],
+    "evidence_count": 5,
+    "warning_codes": [
+     "freshness_unavailable"
+    ],
+    "requires_user_choice": false,
+    "error": null,
+    "registry_revision": "2026-09-09"
+   }
+  },
+  {
+   "note": "Narrowed to one body. The publisher\u2019s ordering is kept; this filters the answer rather than re-ranking it.",
+   "is_error": false,
+   "envelope": {
+    "data": {
+     "results": [
+      {
+       "source_ref": "source_01",
+       "source_id": "va-richmond-city-meetings",
+       "records": [
+        {
+         "body": "Planning Commission",
+         "date": "2026-09-01",
+         "time": "6:00 PM",
+         "time_zone": "America/New_York",
+         "agenda_status": "Final",
+         "location": "5th Floor Conference Room",
+         "agenda_url": "https://legistar2.granicus.com/richmondva/meetings/2026/9/5144_A_Planning_Commission_26-09-01_Agenda.pdf",
+         "minutes_url": "https://legistar2.granicus.com/richmondva/meetings/2026/9/5144_M_Planning_Commission_26-09-01_Summary.pdf",
+         "portal_url": "https://richmondva.legistar.com/MeetingDetail.aspx?LEGID=5144&GID=387&G=09290454-F2A8-4339-97A7-B852FD86AB68",
+         "comment": "",
+         "evidence_refs": [
+          "evidence_01"
+         ]
+        },
+        {
+         "body": "Planning Commission",
+         "date": "2026-09-15",
+         "time": "6:00 PM",
+         "time_zone": "America/New_York",
+         "agenda_status": "Final",
+         "location": "5th Floor Conference Room",
+         "agenda_url": "https://legistar2.granicus.com/richmondva/meetings/2026/9/5145_A_Planning_Commission_26-09-15_Agenda.pdf",
+         "minutes_url": null,
+         "portal_url": "https://richmondva.legistar.com/MeetingDetail.aspx?LEGID=5145&GID=387&G=09290454-F2A8-4339-97A7-B852FD86AB68",
+         "comment": "To access the meeting via Microsoft Teams: https://go.rva.gov/CPC2026",
+         "evidence_refs": [
+          "evidence_02"
+         ]
+        }
+       ],
+       "record_count": 2,
+       "window": {
+        "start_date": "2026-09-01",
+        "end_date": "2026-09-30"
+       },
+       "body_filter": "planning",
+       "source_url": "https://webapi.legistar.com/v1/richmondva/events"
+      }
+     ]
+    },
+    "provenance": [
+     {
+      "id": "source_01",
+      "source_id": "va-richmond-city-meetings",
+      "publisher": "Richmond City government (Office of the City Clerk)",
+      "system": "agenda_platform",
+      "dataset": "Richmond City Public Meetings (Granicus/Legistar)",
+      "jurisdiction": "va:richmond-city",
+      "authority_level": "primary",
+      "access_path": "live",
+      "source_updated_at": null,
+      "retrieved_at": "2026-09-10T01:47:08Z",
+      "cache_age_seconds": 0
+     }
+    ],
+    "evidence": [
+     {
+      "id": "evidence_01",
+      "source_ref": "source_01",
+      "record_id": "5144",
+      "locator": "https://richmondva.legistar.com/MeetingDetail.aspx?LEGID=5144&GID=387&G=09290454-F2A8-4339-97A7-B852FD86AB68",
+      "retrieved_at": "2026-09-10T01:47:08Z",
+      "effective_at": null,
+      "transformations": [],
+      "payload_hash": null,
+      "raw_recovery": "available"
+     },
+     {
+      "id": "evidence_02",
+      "source_ref": "source_01",
+      "record_id": "5145",
+      "locator": "https://richmondva.legistar.com/MeetingDetail.aspx?LEGID=5145&GID=387&G=09290454-F2A8-4339-97A7-B852FD86AB68",
+      "retrieved_at": "2026-09-10T01:47:08Z",
+      "effective_at": null,
+      "transformations": [],
+      "payload_hash": null,
+      "raw_recovery": "available"
+     }
+    ],
+    "coverage": {
+     "registry": "covered",
+     "execution": "complete",
+     "pagination": "complete",
+     "source_claim": "unknown",
+     "result": "hit",
+     "jurisdictions_searched": [
+      "va:richmond-city",
+      "va"
+     ],
+     "known_limitations": [
+      "Agenda and minutes documents are links, never content. This project does not fetch them, because the egress allowlist is pinned per manifest to the API host and the documents live on a different one. What a meeting is ABOUT is in the agenda PDF, so a body name and a date are not a summary of what will be discussed.\n",
+      "Meeting times are local wall-clock strings with no offset in the payload. The zone is declared in this manifest, not read from the publisher.\n",
+      "No cancellation field. The platform publishes an agenda-publication status (\"Final\", \"Final-revised\") and nothing that says a meeting was cancelled or rescheduled; where a locality records that at all, it records it in the free-text comment. Cancelled meetings are returned rather than omitted, with the comment verbatim and a note saying the reading came from prose, not from a published field.\n",
+      "The calendar covers the bodies this locality publishes through the platform. A body that meets and is not published here is absent from the answer, and absence is not evidence it did not meet.\n"
+     ]
+    },
+    "warnings": [
+     {
+      "code": "freshness_unavailable",
+      "message": "The publisher exposes no machine-readable update date for this layer; retrieval time is known, data vintage is not.",
+      "source_id": "va-richmond-city-meetings"
+     }
+    ],
+    "_execution": {
+     "server": "commonwealth",
+     "server_version": "0.1.0.dev0",
+     "tool": "civic.search_meetings",
+     "tool_contract_version": "1",
+     "envelope_version": "1",
+     "adapters": {
+      "agenda_platform": "0.1.0",
+      "arcgis": "0.1.0",
+      "arcgis_geocode": "0.1.0",
+      "virginia_law": "0.1.1"
+     },
+     "registry_revision": "2026-09-09",
+     "request_id": "9ea89849040641608da8b781140625b2"
+    }
+   },
+   "error_text": null,
+   "http_calls": [],
+   "audit": {
+    "ts": "2026-09-10T01:47:08Z",
+    "request_id": "9ea89849040641608da8b781140625b2",
+    "tool": "civic.search_meetings",
+    "server": "commonwealth",
+    "server_version": "0.1.0.dev0",
+    "duration_ms": 502,
+    "args": {
+     "jurisdiction": "Richmond City",
+     "start_date": "2026-09-01",
+     "end_date": "2026-09-30",
+     "body": "planning"
+    },
+    "arg_names": [
+     "body",
+     "end_date",
+     "jurisdiction",
+     "start_date"
+    ],
+    "coverage": {
+     "registry": "covered",
+     "execution": "complete",
+     "pagination": "complete",
+     "result": "hit"
+    },
+    "sources": [
+     {
+      "source_id": "va-richmond-city-meetings",
+      "access_path": "live",
+      "cache_age_seconds": 0,
+      "authority_level": "primary"
+     }
+    ],
+    "evidence_count": 2,
+    "warning_codes": [
+     "freshness_unavailable"
+    ],
+    "requires_user_choice": false,
+    "error": null,
+    "registry_revision": "2026-09-09"
+   }
+  },
+  {
+   "note": "A window containing cancelled meetings. The platform publishes no cancellation field, so the cancellation is read out of the publisher\u2019s comment and labelled as a reading, never as a published status \u2014 and the meeting is returned, not dropped.",
+   "is_error": false,
+   "envelope": {
+    "data": {
+     "results": [
+      {
+       "source_ref": "source_01",
+       "source_id": "va-richmond-city-meetings",
+       "records": [
+        {
+         "body": "Organizational Development Standing Committee",
+         "date": "2019-12-02",
+         "time": "5:00 PM",
+         "time_zone": "America/New_York",
+         "agenda_status": "Final",
+         "location": "Council Chamber, 2nd Floor - City Hall",
+         "agenda_url": "http://legistar2.granicus.com/richmondva/meetings/2019/12/3179_A_Organizational_Development_Standing_Committee__19-12-02_Agenda.pdf",
+         "minutes_url": null,
+         "portal_url": "https://richmondva.legistar.com/MeetingDetail.aspx?LEGID=3179&GID=387&G=09290454-F2A8-4339-97A7-B852FD86AB68",
+         "comment": "",
+         "evidence_refs": [
+          "evidence_01"
+         ]
+        },
+        {
+         "body": "Planning Commission",
+         "date": "2019-12-02",
+         "time": "1:30 PM",
+         "time_zone": "America/New_York",
+         "agenda_status": "Final",
+         "location": "5th Floor Conference Room",
+         "agenda_url": "http://legistar2.granicus.com/richmondva/meetings/2019/12/3301_A_Planning_Commission_19-12-02_Agenda.pdf",
+         "minutes_url": "https://legistar2.granicus.com/richmondva/meetings/2019/12/3301_M_Planning_Commission_19-12-02_Meeting_Minutes.pdf",
+         "portal_url": "https://richmondva.legistar.com/MeetingDetail.aspx?LEGID=3301&GID=387&G=09290454-F2A8-4339-97A7-B852FD86AB68",
+         "comment": "",
+         "evidence_refs": [
+          "evidence_02"
+         ]
+        },
+        {
+         "body": "City Council",
+         "date": "2019-12-02",
+         "time": "3:00 PM",
+         "time_zone": "America/New_York",
+         "agenda_status": "Final",
+         "location": "Council Chamber, 2nd Floor - City Hall",
+         "agenda_url": null,
+         "minutes_url": null,
+         "portal_url": "https://richmondva.legistar.com/MeetingDetail.aspx?LEGID=3415&GID=387&G=09290454-F2A8-4339-97A7-B852FD86AB68",
+         "comment": "Navy Hill Development Proposal Work Session - 3 p.m.-5 p.m.",
+         "evidence_refs": [
+          "evidence_03"
+         ]
+        },
+        {
+         "body": "Board of Zoning Appeals",
+         "date": "2019-12-04",
+         "time": "1:00 PM",
+         "time_zone": "America/New_York",
+         "agenda_status": "Final",
+         "location": "5th Floor Conference Room",
+         "agenda_url": "http://legistar2.granicus.com/richmondva/meetings/2019/12/3551_A_Board_of_Zoning_Appeals_19-12-04_Agenda.pdf",
+         "minutes_url": null,
+         "portal_url": "https://richmondva.legistar.com/MeetingDetail.aspx?LEGID=3551&GID=387&G=09290454-F2A8-4339-97A7-B852FD86AB68",
+         "comment": "",
+         "evidence_refs": [
+          "evidence_04"
+         ]
+        },
+        {
+         "body": "Education and Human Services Standing Committee",
+         "date": "2019-12-05",
+         "time": "2:00 PM",
+         "time_zone": "America/New_York",
+         "agenda_status": "Final",
+         "location": "Council Chamber, 2nd Floor - City Hall",
+         "agenda_url": null,
+         "minutes_url": null,
+         "portal_url": "https://richmondva.legistar.com/MeetingDetail.aspx?LEGID=3192&GID=387&G=09290454-F2A8-4339-97A7-B852FD86AB68",
+         "comment": "",
+         "evidence_refs": [
+          "evidence_05"
+         ]
+        },
+        {
+         "body": "Urban Design Committee",
+         "date": "2019-12-05",
+         "time": "10:00 AM",
+         "time_zone": "America/New_York",
+         "agenda_status": "Final",
+         "location": "5th Floor Conference Room of City Hall",
+         "agenda_url": "http://legistar2.granicus.com/richmondva/meetings/2019/12/3280_A_Urban_Design_Committee_19-12-05_Agenda.pdf",
+         "minutes_url": null,
+         "portal_url": "https://richmondva.legistar.com/MeetingDetail.aspx?LEGID=3280&GID=387&G=09290454-F2A8-4339-97A7-B852FD86AB68",
+         "comment": "",
+         "evidence_refs": [
+          "evidence_06"
+         ]
+        },
+        {
+         "body": "City Council",
+         "date": "2019-12-09",
+         "time": "6:00 PM",
+         "time_zone": "America/New_York",
+         "agenda_status": "Final",
+         "location": "Council Chamber, 2nd Floor - City Hall",
+         "agenda_url": "http://legistar2.granicus.com/richmondva/meetings/2019/12/3334_A_City_Council__19-12-09_Agenda.pdf",
+         "minutes_url": "http://legistar2.granicus.com/richmondva/meetings/2019/12/3334_M_City_Council__19-12-09_Summary.pdf",
+         "portal_url": "https://richmondva.legistar.com/MeetingDetail.aspx?LEGID=3334&GID=387&G=09290454-F2A8-4339-97A7-B852FD86AB68",
+         "comment": "",
+         "evidence_refs": [
+          "evidence_07"
+         ]
+        },
+        {
+         "body": "City Council",
+         "date": "2019-12-09",
+         "time": "10:00 AM",
+         "time_zone": "America/New_York",
+         "agenda_status": "Final",
+         "location": "Council Chamber, 2nd Floor - City Hall",
+         "agenda_url": null,
+         "minutes_url": null,
+         "portal_url": "https://richmondva.legistar.com/MeetingDetail.aspx?LEGID=3416&GID=387&G=09290454-F2A8-4339-97A7-B852FD86AB68",
+         "comment": "CANCELLED Navy Hill Development Proposal Work Session",
+         "evidence_refs": [
+          "evidence_08"
+         ],
+         "cancellation_note": "The publisher's comment on this meeting says it was cancelled. This platform publishes no cancellation field, so that is read from the comment text quoted in `comment`, not from a status the publisher set. Read the comment before relying on it."
+        },
+        {
+         "body": "Informal Meeting",
+         "date": "2019-12-09",
+         "time": "4:00 PM",
+         "time_zone": "America/New_York",
+         "agenda_status": "Final",
+         "location": "Council Chamber, 2nd Floor - City Hall",
+         "agenda_url": null,
+         "minutes_url": null,
+         "portal_url": "https://richmondva.legistar.com/MeetingDetail.aspx?LEGID=4819&GID=387&G=09290454-F2A8-4339-97A7-B852FD86AB68",
+         "comment": "",
+         "evidence_refs": [
+          "evidence_09"
+         ]
+        },
+        {
+         "body": "Planning Commission",
+         "date": "2019-12-16",
+         "time": "1:30 PM",
+         "time_zone": "America/New_York",
+         "agenda_status": "Final",
+         "location": "5th Floor Conference Room",
+         "agenda_url": "http://legistar2.granicus.com/richmondva/meetings/2019/12/3302_A_Planning_Commission_19-12-16_Agenda.pdf",
+         "minutes_url": "https://legistar2.granicus.com/richmondva/meetings/2019/12/3302_M_Planning_Commission_19-12-16_Meeting_Minutes.pdf",
+         "portal_url": "https://richmondva.legistar.com/MeetingDetail.aspx?LEGID=3302&GID=387&G=09290454-F2A8-4339-97A7-B852FD86AB68",
+         "comment": "",
+         "evidence_refs": [
+          "evidence_10"
+         ]
+        },
+        {
+         "body": "Land Use, Housing and Transportation Standing Committee",
+         "date": "2019-12-17",
+         "time": "1:00 PM",
+         "time_zone": "America/New_York",
+         "agenda_status": "Final",
+         "location": "Council Chamber, 2nd Floor - City Hall",
+         "agenda_url": "http://legistar2.granicus.com/richmondva/meetings/2019/12/3256_A_Land_Use%2C_Housing_and_Transportation_Standing_Committee_19-12-17_Agenda.pdf",
+         "minutes_url": null,
+         "portal_url": "https://richmondva.legistar.com/MeetingDetail.aspx?LEGID=3256&GID=387&G=09290454-F2A8-4339-97A7-B852FD86AB68",
+         "comment": "This meeting has been cancelled.",
+         "evidence_refs": [
+          "evidence_11"
+         ],
+         "cancellation_note": "The publisher's comment on this meeting says it was cancelled. This platform publishes no cancellation field, so that is read from the comment text quoted in `comment`, not from a status the publisher set. Read the comment before relying on it."
+        },
+        {
+         "body": "Commission of Architectural Review",
+         "date": "2019-12-17",
+         "time": "3:30 PM",
+         "time_zone": "America/New_York",
+         "agenda_status": "Final",
+         "location": "5th Floor Conference Room of City Hall",
+         "agenda_url": "http://legistar2.granicus.com/richmondva/meetings/2019/12/3323_A_Commission_of_Architectural_Review_19-12-17_Agenda.pdf",
+         "minutes_url": "https://legistar2.granicus.com/richmondva/meetings/2019/12/3323_M_Commission_of_Architectural_Review_19-12-17_Meeting_Minutes.pdf",
+         "portal_url": "https://richmondva.legistar.com/MeetingDetail.aspx?LEGID=3323&GID=387&G=09290454-F2A8-4339-97A7-B852FD86AB68",
+         "comment": "",
+         "evidence_refs": [
+          "evidence_12"
+         ]
+        },
+        {
+         "body": "Governmental Operations Standing Committee",
+         "date": "2019-12-26",
+         "time": "12:00 PM",
+         "time_zone": "America/New_York",
+         "agenda_status": "Final",
+         "location": "Council Chamber, 2nd Floor - City Hall",
+         "agenda_url": "http://legistar2.granicus.com/richmondva/meetings/2019/12/3239_A_Governmental_Operations_Standing_Committee_19-12-26_Agenda.pdf",
+         "minutes_url": null,
+         "portal_url": "https://richmondva.legistar.com/MeetingDetail.aspx?LEGID=3239&GID=387&G=09290454-F2A8-4339-97A7-B852FD86AB68",
+         "comment": "This meeting has been cancelled.",
+         "evidence_refs": [
+          "evidence_13"
+         ],
+         "cancellation_note": "The publisher's comment on this meeting says it was cancelled. This platform publishes no cancellation field, so that is read from the comment text quoted in `comment`, not from a status the publisher set. Read the comment before relying on it."
+        }
+       ],
+       "record_count": 13,
+       "window": {
+        "start_date": "2019-12-01",
+        "end_date": "2019-12-31"
+       },
+       "body_filter": null,
+       "source_url": "https://webapi.legistar.com/v1/richmondva/events"
+      }
+     ]
+    },
+    "provenance": [
+     {
+      "id": "source_01",
+      "source_id": "va-richmond-city-meetings",
+      "publisher": "Richmond City government (Office of the City Clerk)",
+      "system": "agenda_platform",
+      "dataset": "Richmond City Public Meetings (Granicus/Legistar)",
+      "jurisdiction": "va:richmond-city",
+      "authority_level": "primary",
+      "access_path": "live",
+      "source_updated_at": null,
+      "retrieved_at": "2026-09-10T01:47:08Z",
+      "cache_age_seconds": 0
+     }
+    ],
+    "evidence": [
+     {
+      "id": "evidence_01",
+      "source_ref": "source_01",
+      "record_id": "3179",
+      "locator": "https://richmondva.legistar.com/MeetingDetail.aspx?LEGID=3179&GID=387&G=09290454-F2A8-4339-97A7-B852FD86AB68",
+      "retrieved_at": "2026-09-10T01:47:08Z",
+      "effective_at": null,
+      "transformations": [],
+      "payload_hash": null,
+      "raw_recovery": "available"
+     },
+     {
+      "id": "evidence_02",
+      "source_ref": "source_01",
+      "record_id": "3301",
+      "locator": "https://richmondva.legistar.com/MeetingDetail.aspx?LEGID=3301&GID=387&G=09290454-F2A8-4339-97A7-B852FD86AB68",
+      "retrieved_at": "2026-09-10T01:47:08Z",
+      "effective_at": null,
+      "transformations": [],
+      "payload_hash": null,
+      "raw_recovery": "available"
+     },
+     {
+      "id": "evidence_03",
+      "source_ref": "source_01",
+      "record_id": "3415",
+      "locator": "https://richmondva.legistar.com/MeetingDetail.aspx?LEGID=3415&GID=387&G=09290454-F2A8-4339-97A7-B852FD86AB68",
+      "retrieved_at": "2026-09-10T01:47:08Z",
+      "effective_at": null,
+      "transformations": [],
+      "payload_hash": null,
+      "raw_recovery": "available"
+     },
+     {
+      "id": "evidence_04",
+      "source_ref": "source_01",
+      "record_id": "3551",
+      "locator": "https://richmondva.legistar.com/MeetingDetail.aspx?LEGID=3551&GID=387&G=09290454-F2A8-4339-97A7-B852FD86AB68",
+      "retrieved_at": "2026-09-10T01:47:08Z",
+      "effective_at": null,
+      "transformations": [],
+      "payload_hash": null,
+      "raw_recovery": "available"
+     },
+     {
+      "id": "evidence_05",
+      "source_ref": "source_01",
+      "record_id": "3192",
+      "locator": "https://richmondva.legistar.com/MeetingDetail.aspx?LEGID=3192&GID=387&G=09290454-F2A8-4339-97A7-B852FD86AB68",
+      "retrieved_at": "2026-09-10T01:47:08Z",
+      "effective_at": null,
+      "transformations": [],
+      "payload_hash": null,
+      "raw_recovery": "available"
+     },
+     {
+      "id": "evidence_06",
+      "source_ref": "source_01",
+      "record_id": "3280",
+      "locator": "https://richmondva.legistar.com/MeetingDetail.aspx?LEGID=3280&GID=387&G=09290454-F2A8-4339-97A7-B852FD86AB68",
+      "retrieved_at": "2026-09-10T01:47:08Z",
+      "effective_at": null,
+      "transformations": [],
+      "payload_hash": null,
+      "raw_recovery": "available"
+     },
+     {
+      "id": "evidence_07",
+      "source_ref": "source_01",
+      "record_id": "3334",
+      "locator": "https://richmondva.legistar.com/MeetingDetail.aspx?LEGID=3334&GID=387&G=09290454-F2A8-4339-97A7-B852FD86AB68",
+      "retrieved_at": "2026-09-10T01:47:08Z",
+      "effective_at": null,
+      "transformations": [],
+      "payload_hash": null,
+      "raw_recovery": "available"
+     },
+     {
+      "id": "evidence_08",
+      "source_ref": "source_01",
+      "record_id": "3416",
+      "locator": "https://richmondva.legistar.com/MeetingDetail.aspx?LEGID=3416&GID=387&G=09290454-F2A8-4339-97A7-B852FD86AB68",
+      "retrieved_at": "2026-09-10T01:47:08Z",
+      "effective_at": null,
+      "transformations": [],
+      "payload_hash": null,
+      "raw_recovery": "available"
+     },
+     {
+      "id": "evidence_09",
+      "source_ref": "source_01",
+      "record_id": "4819",
+      "locator": "https://richmondva.legistar.com/MeetingDetail.aspx?LEGID=4819&GID=387&G=09290454-F2A8-4339-97A7-B852FD86AB68",
+      "retrieved_at": "2026-09-10T01:47:08Z",
+      "effective_at": null,
+      "transformations": [],
+      "payload_hash": null,
+      "raw_recovery": "available"
+     },
+     {
+      "id": "evidence_10",
+      "source_ref": "source_01",
+      "record_id": "3302",
+      "locator": "https://richmondva.legistar.com/MeetingDetail.aspx?LEGID=3302&GID=387&G=09290454-F2A8-4339-97A7-B852FD86AB68",
+      "retrieved_at": "2026-09-10T01:47:08Z",
+      "effective_at": null,
+      "transformations": [],
+      "payload_hash": null,
+      "raw_recovery": "available"
+     },
+     {
+      "id": "evidence_11",
+      "source_ref": "source_01",
+      "record_id": "3256",
+      "locator": "https://richmondva.legistar.com/MeetingDetail.aspx?LEGID=3256&GID=387&G=09290454-F2A8-4339-97A7-B852FD86AB68",
+      "retrieved_at": "2026-09-10T01:47:08Z",
+      "effective_at": null,
+      "transformations": [],
+      "payload_hash": null,
+      "raw_recovery": "available"
+     },
+     {
+      "id": "evidence_12",
+      "source_ref": "source_01",
+      "record_id": "3323",
+      "locator": "https://richmondva.legistar.com/MeetingDetail.aspx?LEGID=3323&GID=387&G=09290454-F2A8-4339-97A7-B852FD86AB68",
+      "retrieved_at": "2026-09-10T01:47:08Z",
+      "effective_at": null,
+      "transformations": [],
+      "payload_hash": null,
+      "raw_recovery": "available"
+     },
+     {
+      "id": "evidence_13",
+      "source_ref": "source_01",
+      "record_id": "3239",
+      "locator": "https://richmondva.legistar.com/MeetingDetail.aspx?LEGID=3239&GID=387&G=09290454-F2A8-4339-97A7-B852FD86AB68",
+      "retrieved_at": "2026-09-10T01:47:08Z",
+      "effective_at": null,
+      "transformations": [],
+      "payload_hash": null,
+      "raw_recovery": "available"
+     }
+    ],
+    "coverage": {
+     "registry": "covered",
+     "execution": "complete",
+     "pagination": "complete",
+     "source_claim": "unknown",
+     "result": "hit",
+     "jurisdictions_searched": [
+      "va:richmond-city",
+      "va"
+     ],
+     "known_limitations": [
+      "Agenda and minutes documents are links, never content. This project does not fetch them, because the egress allowlist is pinned per manifest to the API host and the documents live on a different one. What a meeting is ABOUT is in the agenda PDF, so a body name and a date are not a summary of what will be discussed.\n",
+      "Meeting times are local wall-clock strings with no offset in the payload. The zone is declared in this manifest, not read from the publisher.\n",
+      "No cancellation field. The platform publishes an agenda-publication status (\"Final\", \"Final-revised\") and nothing that says a meeting was cancelled or rescheduled; where a locality records that at all, it records it in the free-text comment. Cancelled meetings are returned rather than omitted, with the comment verbatim and a note saying the reading came from prose, not from a published field.\n",
+      "The calendar covers the bodies this locality publishes through the platform. A body that meets and is not published here is absent from the answer, and absence is not evidence it did not meet.\n"
+     ]
+    },
+    "warnings": [
+     {
+      "code": "freshness_unavailable",
+      "message": "The publisher exposes no machine-readable update date for this layer; retrieval time is known, data vintage is not.",
+      "source_id": "va-richmond-city-meetings"
+     },
+     {
+      "code": "screening_only",
+      "message": "3 of these meetings carry a comment saying the meeting was cancelled or rescheduled. This platform publishes no cancellation field, so that reading comes from the comment text, which is returned verbatim on each record. Read the comment before relying on it, and check the publisher's own page for anything that matters.",
+      "source_id": "va-richmond-city-meetings"
+     }
+    ],
+    "_execution": {
+     "server": "commonwealth",
+     "server_version": "0.1.0.dev0",
+     "tool": "civic.search_meetings",
+     "tool_contract_version": "1",
+     "envelope_version": "1",
+     "adapters": {
+      "agenda_platform": "0.1.0",
+      "arcgis": "0.1.0",
+      "arcgis_geocode": "0.1.0",
+      "virginia_law": "0.1.1"
+     },
+     "registry_revision": "2026-09-09",
+     "request_id": "3668d1f3ed0545cd8977f73d54b771ff"
+    }
+   },
+   "error_text": null,
+   "http_calls": [],
+   "audit": {
+    "ts": "2026-09-10T01:47:08Z",
+    "request_id": "3668d1f3ed0545cd8977f73d54b771ff",
+    "tool": "civic.search_meetings",
+    "server": "commonwealth",
+    "server_version": "0.1.0.dev0",
+    "duration_ms": 738,
+    "args": {
+     "jurisdiction": "Richmond City",
+     "start_date": "2019-12-01",
+     "end_date": "2019-12-31",
+     "body": ""
+    },
+    "arg_names": [
+     "body",
+     "end_date",
+     "jurisdiction",
+     "start_date"
+    ],
+    "coverage": {
+     "registry": "covered",
+     "execution": "complete",
+     "pagination": "complete",
+     "result": "hit"
+    },
+    "sources": [
+     {
+      "source_id": "va-richmond-city-meetings",
+      "access_path": "live",
+      "cache_age_seconds": 0,
+      "authority_level": "primary"
+     }
+    ],
+    "evidence_count": 13,
+    "warning_codes": [
+     "freshness_unavailable",
+     "screening_only"
+    ],
+    "requires_user_choice": false,
+    "error": null,
+    "registry_revision": "2026-09-09"
+   }
+  },
+  {
+   "note": "A covered locality with nothing in the window. Registry covered, publisher answered, no meetings \u2014 a clean empty.",
+   "is_error": false,
+   "envelope": {
+    "data": {
+     "results": [
+      {
+       "source_ref": "source_01",
+       "source_id": "va-richmond-city-meetings",
+       "records": [],
+       "record_count": 0,
+       "window": {
+        "start_date": "2030-01-01",
+        "end_date": "2030-01-31"
+       },
+       "body_filter": null,
+       "source_url": "https://webapi.legistar.com/v1/richmondva/events",
+       "note": "Richmond City Public Meetings (Granicus/Legistar) published no meetings between 2030-01-01 and 2030-01-31. The source is registered and answered; this is an empty window, not an absence of coverage. Bodies this locality does not publish through the platform would not appear here either."
+      }
+     ]
+    },
+    "provenance": [
+     {
+      "id": "source_01",
+      "source_id": "va-richmond-city-meetings",
+      "publisher": "Richmond City government (Office of the City Clerk)",
+      "system": "agenda_platform",
+      "dataset": "Richmond City Public Meetings (Granicus/Legistar)",
+      "jurisdiction": "va:richmond-city",
+      "authority_level": "primary",
+      "access_path": "live",
+      "source_updated_at": null,
+      "retrieved_at": "2026-09-10T01:47:09Z",
+      "cache_age_seconds": 0
+     }
+    ],
+    "evidence": [],
+    "coverage": {
+     "registry": "covered",
+     "execution": "complete",
+     "pagination": "complete",
+     "source_claim": "unknown",
+     "result": "empty",
+     "jurisdictions_searched": [
+      "va:richmond-city",
+      "va"
+     ],
+     "known_limitations": [
+      "Agenda and minutes documents are links, never content. This project does not fetch them, because the egress allowlist is pinned per manifest to the API host and the documents live on a different one. What a meeting is ABOUT is in the agenda PDF, so a body name and a date are not a summary of what will be discussed.\n",
+      "Meeting times are local wall-clock strings with no offset in the payload. The zone is declared in this manifest, not read from the publisher.\n",
+      "No cancellation field. The platform publishes an agenda-publication status (\"Final\", \"Final-revised\") and nothing that says a meeting was cancelled or rescheduled; where a locality records that at all, it records it in the free-text comment. Cancelled meetings are returned rather than omitted, with the comment verbatim and a note saying the reading came from prose, not from a published field.\n",
+      "The calendar covers the bodies this locality publishes through the platform. A body that meets and is not published here is absent from the answer, and absence is not evidence it did not meet.\n"
+     ]
+    },
+    "warnings": [
+     {
+      "code": "freshness_unavailable",
+      "message": "The publisher exposes no machine-readable update date for this layer; retrieval time is known, data vintage is not.",
+      "source_id": "va-richmond-city-meetings"
+     }
+    ],
+    "_execution": {
+     "server": "commonwealth",
+     "server_version": "0.1.0.dev0",
+     "tool": "civic.search_meetings",
+     "tool_contract_version": "1",
+     "envelope_version": "1",
+     "adapters": {
+      "agenda_platform": "0.1.0",
+      "arcgis": "0.1.0",
+      "arcgis_geocode": "0.1.0",
+      "virginia_law": "0.1.1"
+     },
+     "registry_revision": "2026-09-09",
+     "request_id": "fde752dce91646fe92e70cce69bd03c9"
+    }
+   },
+   "error_text": null,
+   "http_calls": [],
+   "audit": {
+    "ts": "2026-09-10T01:47:09Z",
+    "request_id": "fde752dce91646fe92e70cce69bd03c9",
+    "tool": "civic.search_meetings",
+    "server": "commonwealth",
+    "server_version": "0.1.0.dev0",
+    "duration_ms": 710,
+    "args": {
+     "jurisdiction": "Richmond City",
+     "start_date": "2030-01-01",
+     "end_date": "2030-01-31",
+     "body": ""
+    },
+    "arg_names": [
+     "body",
+     "end_date",
+     "jurisdiction",
+     "start_date"
+    ],
+    "coverage": {
+     "registry": "covered",
+     "execution": "complete",
+     "pagination": "complete",
+     "result": "empty"
+    },
+    "sources": [
+     {
+      "source_id": "va-richmond-city-meetings",
+      "access_path": "live",
+      "cache_age_seconds": 0,
+      "authority_level": "primary"
+     }
+    ],
+    "evidence_count": 0,
+    "warning_codes": [
+     "freshness_unavailable"
+    ],
+    "requires_user_choice": false,
+    "error": null,
+    "registry_revision": "2026-09-09"
+   }
+  },
+  {
+   "note": "The same question where no agenda source is registered. Coverage says none. Fairfax County meets constantly; this project has nowhere to read it, and the two must never render the same way.",
+   "is_error": false,
+   "envelope": {
+    "data": {
+     "results": []
+    },
+    "provenance": [],
+    "evidence": [],
+    "coverage": {
+     "registry": "none",
+     "execution": "complete",
+     "pagination": "complete",
+     "source_claim": "unknown",
+     "result": "empty",
+     "jurisdictions_unavailable": [
+      {
+       "jurisdiction": "va:fairfax-county",
+       "reason": "no_registered_source"
+      },
+      {
+       "jurisdiction": "va",
+       "reason": "no_registered_source"
+      }
+     ]
+    },
+    "warnings": [],
+    "next_actions": [
+     {
+      "finding": "registry_gap",
+      "suggested_capability": "registry.search_sources",
+      "reason": "No source is registered for meeting.search in va:fairfax-county, va. The records may well exist; this project has no registered place to read them. Search the registry for what is covered, and treat the gap as unknown rather than as an absence."
+     }
+    ],
+    "_execution": {
+     "server": "commonwealth",
+     "server_version": "0.1.0.dev0",
+     "tool": "civic.search_meetings",
+     "tool_contract_version": "1",
+     "envelope_version": "1",
+     "adapters": {
+      "agenda_platform": "0.1.0",
+      "arcgis": "0.1.0",
+      "arcgis_geocode": "0.1.0",
+      "virginia_law": "0.1.1"
+     },
+     "registry_revision": "2026-09-09",
+     "request_id": "bad754fb8dc349f491ec4d7875057969"
+    }
+   },
+   "error_text": null,
+   "http_calls": [],
+   "audit": {
+    "ts": "2026-09-10T01:47:09Z",
+    "request_id": "bad754fb8dc349f491ec4d7875057969",
+    "tool": "civic.search_meetings",
+    "server": "commonwealth",
+    "server_version": "0.1.0.dev0",
+    "duration_ms": 2,
+    "args": {
+     "jurisdiction": "Fairfax County",
+     "start_date": "2026-09-01",
+     "end_date": "2026-09-30",
+     "body": ""
+    },
+    "arg_names": [
+     "body",
+     "end_date",
+     "jurisdiction",
+     "start_date"
+    ],
+    "coverage": {
+     "registry": "none",
+     "execution": "complete",
+     "pagination": "complete",
+     "result": "empty"
+    },
+    "sources": [],
+    "evidence_count": 0,
+    "warning_codes": [],
+    "requires_user_choice": false,
+    "error": null,
+    "registry_revision": "2026-09-09"
    }
   },
   {
@@ -11270,7 +12920,7 @@
       "authority_level": "primary",
       "access_path": "live",
       "source_updated_at": null,
-      "retrieved_at": "2026-09-09T14:49:33Z",
+      "retrieved_at": "2026-09-10T01:47:09Z",
       "cache_age_seconds": 0
      },
      {
@@ -11283,7 +12933,7 @@
       "authority_level": "official_secondary",
       "access_path": "live",
       "source_updated_at": null,
-      "retrieved_at": "2026-09-09T14:49:33Z",
+      "retrieved_at": "2026-09-10T01:47:09Z",
       "cache_age_seconds": 0
      }
     ],
@@ -11327,12 +12977,13 @@
      "tool_contract_version": "1",
      "envelope_version": "1",
      "adapters": {
+      "agenda_platform": "0.1.0",
       "arcgis": "0.1.0",
       "arcgis_geocode": "0.1.0",
       "virginia_law": "0.1.1"
      },
-     "registry_revision": "2026-09-08",
-     "request_id": "52d10b876b614dc7a5e7fdafa57e7c6b"
+     "registry_revision": "2026-09-09",
+     "request_id": "41188691bca24e5ca5d3ac9d2b4b1c79"
     }
    },
    "error_text": null,
@@ -11365,12 +13016,12 @@
     }
    ],
    "audit": {
-    "ts": "2026-09-09T14:49:33Z",
-    "request_id": "52d10b876b614dc7a5e7fdafa57e7c6b",
+    "ts": "2026-09-10T01:47:09Z",
+    "request_id": "41188691bca24e5ca5d3ac9d2b4b1c79",
     "tool": "geo.find_parcel",
     "server": "commonwealth",
     "server_version": "0.1.0.dev0",
-    "duration_ms": 0,
+    "duration_ms": 1,
     "args": {
      "jurisdiction": "Fairfax County",
      "pin": "NO SUCH PIN"
@@ -11407,7 +13058,7 @@
     ],
     "requires_user_choice": false,
     "error": null,
-    "registry_revision": "2026-09-08"
+    "registry_revision": "2026-09-09"
    }
   },
   {
@@ -11451,23 +13102,24 @@
      "tool_contract_version": "1",
      "envelope_version": "1",
      "adapters": {
+      "agenda_platform": "0.1.0",
       "arcgis": "0.1.0",
       "arcgis_geocode": "0.1.0",
       "virginia_law": "0.1.1"
      },
-     "registry_revision": "2026-09-08",
-     "request_id": "1e249f7023944fc3a1b35d9ad8f60674"
+     "registry_revision": "2026-09-09",
+     "request_id": "e2ad4e0348644523946eafd1df3d2083"
     }
    },
    "error_text": null,
    "http_calls": [],
    "audit": {
-    "ts": "2026-09-09T14:49:33Z",
-    "request_id": "1e249f7023944fc3a1b35d9ad8f60674",
+    "ts": "2026-09-10T01:47:09Z",
+    "request_id": "e2ad4e0348644523946eafd1df3d2083",
     "tool": "geo.find_zoning",
     "server": "commonwealth",
     "server_version": "0.1.0.dev0",
-    "duration_ms": 0,
+    "duration_ms": 1,
     "args": {
      "jurisdiction": "Craig County",
      "pin": "123"
@@ -11489,7 +13141,7 @@
     "warning_codes": [],
     "requires_user_choice": false,
     "error": null,
-    "registry_revision": "2026-09-08"
+    "registry_revision": "2026-09-09"
    }
   },
   {
@@ -11522,7 +13174,7 @@
       "authority_level": "primary",
       "access_path": "live",
       "source_updated_at": null,
-      "retrieved_at": "2026-09-09T14:49:33Z",
+      "retrieved_at": "2026-09-10T01:47:09Z",
       "cache_age_seconds": 0
      }
     ],
@@ -11568,12 +13220,13 @@
      "tool_contract_version": "1",
      "envelope_version": "1",
      "adapters": {
+      "agenda_platform": "0.1.0",
       "arcgis": "0.1.0",
       "arcgis_geocode": "0.1.0",
       "virginia_law": "0.1.1"
      },
-     "registry_revision": "2026-09-08",
-     "request_id": "877bbc576cc742fdb583db928238b9b0"
+     "registry_revision": "2026-09-09",
+     "request_id": "a7960534b3ec4266b567d64dda6b7188"
     }
    },
    "error_text": null,
@@ -11598,12 +13251,12 @@
     }
    ],
    "audit": {
-    "ts": "2026-09-09T14:49:33Z",
-    "request_id": "877bbc576cc742fdb583db928238b9b0",
+    "ts": "2026-09-10T01:47:09Z",
+    "request_id": "a7960534b3ec4266b567d64dda6b7188",
     "tool": "geo.find_environmental_sites",
     "server": "commonwealth",
     "server_version": "0.1.0.dev0",
-    "duration_ms": 0,
+    "duration_ms": 1,
     "args": {
      "jurisdiction": "Virginia",
      "lon": -74.5,
@@ -11638,7 +13291,7 @@
     ],
     "requires_user_choice": false,
     "error": null,
-    "registry_revision": "2026-09-08"
+    "registry_revision": "2026-09-09"
    }
   },
   {
@@ -13814,7 +15467,7 @@
       "authority_level": "official_secondary",
       "access_path": "live",
       "source_updated_at": null,
-      "retrieved_at": "2026-09-09T14:49:33Z",
+      "retrieved_at": "2026-09-10T01:47:09Z",
       "cache_age_seconds": 0
      }
     ],
@@ -13824,7 +15477,7 @@
       "source_ref": "source_01",
       "record_id": "OBJECTID:29",
       "locator": null,
-      "retrieved_at": "2026-09-09T14:49:33Z",
+      "retrieved_at": "2026-09-10T01:47:09Z",
       "effective_at": null,
       "transformations": [
        "field_mapping:v1",
@@ -13869,7 +15522,7 @@
      {
       "uri": "commonwealth://results/00000000000000000000000000000002",
       "media_type": "application/json",
-      "description": "Fairfax County's boundary as va-vgin-admin-boundaries publishes it, with no generalization applied. Expires 2026-09-10T14:49:33Z; re-run geo.find_boundaries to regenerate it."
+      "description": "Fairfax County's boundary as va-vgin-admin-boundaries publishes it, with no generalization applied. Expires 2026-09-11T01:47:09Z; re-run geo.find_boundaries to regenerate it."
      }
     ],
     "_execution": {
@@ -13879,12 +15532,13 @@
      "tool_contract_version": "1",
      "envelope_version": "1",
      "adapters": {
+      "agenda_platform": "0.1.0",
       "arcgis": "0.1.0",
       "arcgis_geocode": "0.1.0",
       "virginia_law": "0.1.1"
      },
-     "registry_revision": "2026-09-08",
-     "request_id": "6268d04f21a4401c81fd408ae4d6e6d2"
+     "registry_revision": "2026-09-09",
+     "request_id": "7634fe836b7b4bd684b96728f1795c29"
     }
    },
    "error_text": null,
@@ -13921,12 +15575,12 @@
     }
    ],
    "audit": {
-    "ts": "2026-09-09T14:49:33Z",
-    "request_id": "6268d04f21a4401c81fd408ae4d6e6d2",
+    "ts": "2026-09-10T01:47:09Z",
+    "request_id": "7634fe836b7b4bd684b96728f1795c29",
     "tool": "geo.find_boundaries",
     "server": "commonwealth",
     "server_version": "0.1.0.dev0",
-    "duration_ms": 44,
+    "duration_ms": 47,
     "args": {
      "jurisdiction": "Fairfax County",
      "detail": "full"
@@ -13956,7 +15610,7 @@
     ],
     "requires_user_choice": false,
     "error": null,
-    "registry_revision": "2026-09-08"
+    "registry_revision": "2026-09-09"
    }
   },
   {
@@ -14026,7 +15680,7 @@
       "authority_level": "official_derived",
       "access_path": "index",
       "source_updated_at": null,
-      "retrieved_at": "2026-09-09T14:49:33Z",
+      "retrieved_at": "2026-09-10T01:47:09Z",
       "cache_age_seconds": 0
      }
     ],
@@ -14036,7 +15690,7 @@
       "source_ref": "source_01",
       "record_id": "va-fairfax-parcels-zoning",
       "locator": null,
-      "retrieved_at": "2026-09-09T14:49:33Z",
+      "retrieved_at": "2026-09-10T01:47:09Z",
       "effective_at": null,
       "transformations": [],
       "payload_hash": null,
@@ -14047,7 +15701,7 @@
       "source_ref": "source_01",
       "record_id": "va-leesburg-town-parcels-zoning",
       "locator": null,
-      "retrieved_at": "2026-09-09T14:49:33Z",
+      "retrieved_at": "2026-09-10T01:47:09Z",
       "effective_at": null,
       "transformations": [],
       "payload_hash": null,
@@ -14058,7 +15712,7 @@
       "source_ref": "source_01",
       "record_id": "va-richmond-city-parcels-zoning",
       "locator": null,
-      "retrieved_at": "2026-09-09T14:49:33Z",
+      "retrieved_at": "2026-09-10T01:47:09Z",
       "effective_at": null,
       "transformations": [],
       "payload_hash": null,
@@ -14069,7 +15723,7 @@
       "source_ref": "source_01",
       "record_id": "va-vienna-town-zoning",
       "locator": null,
-      "retrieved_at": "2026-09-09T14:49:33Z",
+      "retrieved_at": "2026-09-10T01:47:09Z",
       "effective_at": null,
       "transformations": [],
       "payload_hash": null,
@@ -14091,19 +15745,20 @@
      "tool_contract_version": "1",
      "envelope_version": "1",
      "adapters": {
+      "agenda_platform": "0.1.0",
       "arcgis": "0.1.0",
       "arcgis_geocode": "0.1.0",
       "virginia_law": "0.1.1"
      },
-     "registry_revision": "2026-09-08",
-     "request_id": "65c572b6c0c047d78738433874490e6d"
+     "registry_revision": "2026-09-09",
+     "request_id": "bb31ca98fc0743a0932b2cfc0463fb7e"
     }
    },
    "error_text": null,
    "http_calls": [],
    "audit": {
-    "ts": "2026-09-09T14:49:33Z",
-    "request_id": "65c572b6c0c047d78738433874490e6d",
+    "ts": "2026-09-10T01:47:09Z",
+    "request_id": "bb31ca98fc0743a0932b2cfc0463fb7e",
     "tool": "registry.search_sources",
     "server": "commonwealth",
     "server_version": "0.1.0.dev0",
@@ -14136,7 +15791,7 @@
     "warning_codes": [],
     "requires_user_choice": false,
     "error": null,
-    "registry_revision": "2026-09-08"
+    "registry_revision": "2026-09-09"
    }
   },
   {
@@ -14180,7 +15835,7 @@
       "authority_level": "official_derived",
       "access_path": "index",
       "source_updated_at": null,
-      "retrieved_at": "2026-09-09T14:49:33Z",
+      "retrieved_at": "2026-09-10T01:47:09Z",
       "cache_age_seconds": 0
      }
     ],
@@ -14190,7 +15845,7 @@
       "source_ref": "source_01",
       "record_id": "va-deq-water-quality-stations",
       "locator": null,
-      "retrieved_at": "2026-09-09T14:49:33Z",
+      "retrieved_at": "2026-09-10T01:47:09Z",
       "effective_at": null,
       "transformations": [],
       "payload_hash": null,
@@ -14212,19 +15867,20 @@
      "tool_contract_version": "1",
      "envelope_version": "1",
      "adapters": {
+      "agenda_platform": "0.1.0",
       "arcgis": "0.1.0",
       "arcgis_geocode": "0.1.0",
       "virginia_law": "0.1.1"
      },
-     "registry_revision": "2026-09-08",
-     "request_id": "671e27901cfe4644979f1cbaff5dbb89"
+     "registry_revision": "2026-09-09",
+     "request_id": "22553cf7c44d44afa964d7ede6d36d08"
     }
    },
    "error_text": null,
    "http_calls": [],
    "audit": {
-    "ts": "2026-09-09T14:49:33Z",
-    "request_id": "671e27901cfe4644979f1cbaff5dbb89",
+    "ts": "2026-09-10T01:47:09Z",
+    "request_id": "22553cf7c44d44afa964d7ede6d36d08",
     "tool": "registry.describe_source",
     "server": "commonwealth",
     "server_version": "0.1.0.dev0",
@@ -14253,7 +15909,7 @@
     "warning_codes": [],
     "requires_user_choice": false,
     "error": null,
-    "registry_revision": "2026-09-08"
+    "registry_revision": "2026-09-09"
    }
   },
   {
@@ -14262,6 +15918,24 @@
    "envelope": {
     "data": {
      "sources": [
+      {
+       "id": "va-albemarle-county-meetings",
+       "declared_state": "active",
+       "operational_state": "unknown",
+       "last_verified": "2026-09-09"
+      },
+      {
+       "id": "va-alexandria-city-meetings",
+       "declared_state": "active",
+       "operational_state": "unknown",
+       "last_verified": "2026-09-09"
+      },
+      {
+       "id": "va-charles-city-county-meetings",
+       "declared_state": "proposed",
+       "operational_state": "unknown",
+       "last_verified": "2026-09-09"
+      },
       {
        "id": "va-charles-city-county-parcels",
        "declared_state": "active",
@@ -14287,10 +15961,22 @@
        "last_verified": "2026-08-29"
       },
       {
+       "id": "va-fairfax-county-meetings",
+       "declared_state": "proposed",
+       "operational_state": "unknown",
+       "last_verified": "2026-09-09"
+      },
+      {
        "id": "va-fairfax-parcels-zoning",
        "declared_state": "active",
        "operational_state": "unknown",
        "last_verified": "2026-08-27"
+      },
+      {
+       "id": "va-hampton-city-meetings",
+       "declared_state": "active",
+       "operational_state": "unknown",
+       "last_verified": "2026-09-09"
       },
       {
        "id": "va-leesburg-town-parcels-zoning",
@@ -14303,6 +15989,18 @@
        "declared_state": "proposed",
        "operational_state": "unknown",
        "last_verified": "2026-08-29"
+      },
+      {
+       "id": "va-petersburg-city-meetings",
+       "declared_state": "active",
+       "operational_state": "unknown",
+       "last_verified": "2026-09-09"
+      },
+      {
+       "id": "va-richmond-city-meetings",
+       "declared_state": "active",
+       "operational_state": "unknown",
+       "last_verified": "2026-09-09"
       },
       {
        "id": "va-richmond-city-parcels-zoning",
@@ -14377,7 +16075,7 @@
        "last_verified": "2026-09-07"
       }
      ],
-     "record_count": 19,
+     "record_count": 26,
      "note": "operational_state comes from runtime probes; 'unknown' means no probe has run in this process."
     },
     "provenance": [
@@ -14391,7 +16089,7 @@
       "authority_level": "official_derived",
       "access_path": "index",
       "source_updated_at": null,
-      "retrieved_at": "2026-09-09T14:49:33Z",
+      "retrieved_at": "2026-09-10T01:47:09Z",
       "cache_age_seconds": 0
      }
     ],
@@ -14399,9 +16097,9 @@
      {
       "id": "evidence_01",
       "source_ref": "source_01",
-      "record_id": "va-charles-city-county-parcels",
+      "record_id": "va-albemarle-county-meetings",
       "locator": null,
-      "retrieved_at": "2026-09-09T14:49:33Z",
+      "retrieved_at": "2026-09-10T01:47:09Z",
       "effective_at": null,
       "transformations": [],
       "payload_hash": null,
@@ -14410,9 +16108,9 @@
      {
       "id": "evidence_02",
       "source_ref": "source_01",
-      "record_id": "va-code-of-virginia",
+      "record_id": "va-alexandria-city-meetings",
       "locator": null,
-      "retrieved_at": "2026-09-09T14:49:33Z",
+      "retrieved_at": "2026-09-10T01:47:09Z",
       "effective_at": null,
       "transformations": [],
       "payload_hash": null,
@@ -14421,9 +16119,9 @@
      {
       "id": "evidence_03",
       "source_ref": "source_01",
-      "record_id": "va-deq-water-quality-stations",
+      "record_id": "va-charles-city-county-meetings",
       "locator": null,
-      "retrieved_at": "2026-09-09T14:49:33Z",
+      "retrieved_at": "2026-09-10T01:47:09Z",
       "effective_at": null,
       "transformations": [],
       "payload_hash": null,
@@ -14432,9 +16130,9 @@
      {
       "id": "evidence_04",
       "source_ref": "source_01",
-      "record_id": "va-eva-procurement",
+      "record_id": "va-charles-city-county-parcels",
       "locator": null,
-      "retrieved_at": "2026-09-09T14:49:33Z",
+      "retrieved_at": "2026-09-10T01:47:09Z",
       "effective_at": null,
       "transformations": [],
       "payload_hash": null,
@@ -14443,9 +16141,9 @@
      {
       "id": "evidence_05",
       "source_ref": "source_01",
-      "record_id": "va-fairfax-parcels-zoning",
+      "record_id": "va-code-of-virginia",
       "locator": null,
-      "retrieved_at": "2026-09-09T14:49:33Z",
+      "retrieved_at": "2026-09-10T01:47:09Z",
       "effective_at": null,
       "transformations": [],
       "payload_hash": null,
@@ -14454,9 +16152,9 @@
      {
       "id": "evidence_06",
       "source_ref": "source_01",
-      "record_id": "va-leesburg-town-parcels-zoning",
+      "record_id": "va-deq-water-quality-stations",
       "locator": null,
-      "retrieved_at": "2026-09-09T14:49:33Z",
+      "retrieved_at": "2026-09-10T01:47:09Z",
       "effective_at": null,
       "transformations": [],
       "payload_hash": null,
@@ -14465,9 +16163,9 @@
      {
       "id": "evidence_07",
       "source_ref": "source_01",
-      "record_id": "va-open-data-portal",
+      "record_id": "va-eva-procurement",
       "locator": null,
-      "retrieved_at": "2026-09-09T14:49:33Z",
+      "retrieved_at": "2026-09-10T01:47:09Z",
       "effective_at": null,
       "transformations": [],
       "payload_hash": null,
@@ -14476,9 +16174,9 @@
      {
       "id": "evidence_08",
       "source_ref": "source_01",
-      "record_id": "va-richmond-city-parcels-zoning",
+      "record_id": "va-fairfax-county-meetings",
       "locator": null,
-      "retrieved_at": "2026-09-09T14:49:33Z",
+      "retrieved_at": "2026-09-10T01:47:09Z",
       "effective_at": null,
       "transformations": [],
       "payload_hash": null,
@@ -14487,9 +16185,9 @@
      {
       "id": "evidence_09",
       "source_ref": "source_01",
-      "record_id": "va-scc",
+      "record_id": "va-fairfax-parcels-zoning",
       "locator": null,
-      "retrieved_at": "2026-09-09T14:49:33Z",
+      "retrieved_at": "2026-09-10T01:47:09Z",
       "effective_at": null,
       "transformations": [],
       "payload_hash": null,
@@ -14498,9 +16196,9 @@
      {
       "id": "evidence_10",
       "source_ref": "source_01",
-      "record_id": "va-vdh",
+      "record_id": "va-hampton-city-meetings",
       "locator": null,
-      "retrieved_at": "2026-09-09T14:49:33Z",
+      "retrieved_at": "2026-09-10T01:47:09Z",
       "effective_at": null,
       "transformations": [],
       "payload_hash": null,
@@ -14509,9 +16207,9 @@
      {
       "id": "evidence_11",
       "source_ref": "source_01",
-      "record_id": "va-vdot-lrs-routes",
+      "record_id": "va-leesburg-town-parcels-zoning",
       "locator": null,
-      "retrieved_at": "2026-09-09T14:49:33Z",
+      "retrieved_at": "2026-09-10T01:47:09Z",
       "effective_at": null,
       "transformations": [],
       "payload_hash": null,
@@ -14520,9 +16218,9 @@
      {
       "id": "evidence_12",
       "source_ref": "source_01",
-      "record_id": "va-vgin-address-points",
+      "record_id": "va-open-data-portal",
       "locator": null,
-      "retrieved_at": "2026-09-09T14:49:33Z",
+      "retrieved_at": "2026-09-10T01:47:09Z",
       "effective_at": null,
       "transformations": [],
       "payload_hash": null,
@@ -14531,9 +16229,9 @@
      {
       "id": "evidence_13",
       "source_ref": "source_01",
-      "record_id": "va-vgin-admin-boundaries",
+      "record_id": "va-petersburg-city-meetings",
       "locator": null,
-      "retrieved_at": "2026-09-09T14:49:33Z",
+      "retrieved_at": "2026-09-10T01:47:09Z",
       "effective_at": null,
       "transformations": [],
       "payload_hash": null,
@@ -14542,9 +16240,9 @@
      {
       "id": "evidence_14",
       "source_ref": "source_01",
-      "record_id": "va-vgin-building-footprints",
+      "record_id": "va-richmond-city-meetings",
       "locator": null,
-      "retrieved_at": "2026-09-09T14:49:33Z",
+      "retrieved_at": "2026-09-10T01:47:09Z",
       "effective_at": null,
       "transformations": [],
       "payload_hash": null,
@@ -14553,9 +16251,9 @@
      {
       "id": "evidence_15",
       "source_ref": "source_01",
-      "record_id": "va-vgin-composite-locator",
+      "record_id": "va-richmond-city-parcels-zoning",
       "locator": null,
-      "retrieved_at": "2026-09-09T14:49:33Z",
+      "retrieved_at": "2026-09-10T01:47:09Z",
       "effective_at": null,
       "transformations": [],
       "payload_hash": null,
@@ -14564,9 +16262,9 @@
      {
       "id": "evidence_16",
       "source_ref": "source_01",
-      "record_id": "va-vgin-landmarks",
+      "record_id": "va-scc",
       "locator": null,
-      "retrieved_at": "2026-09-09T14:49:33Z",
+      "retrieved_at": "2026-09-10T01:47:09Z",
       "effective_at": null,
       "transformations": [],
       "payload_hash": null,
@@ -14575,9 +16273,9 @@
      {
       "id": "evidence_17",
       "source_ref": "source_01",
-      "record_id": "va-vgin-road-centerlines",
+      "record_id": "va-vdh",
       "locator": null,
-      "retrieved_at": "2026-09-09T14:49:33Z",
+      "retrieved_at": "2026-09-10T01:47:09Z",
       "effective_at": null,
       "transformations": [],
       "payload_hash": null,
@@ -14586,9 +16284,9 @@
      {
       "id": "evidence_18",
       "source_ref": "source_01",
-      "record_id": "va-vgin-statewide-parcels",
+      "record_id": "va-vdot-lrs-routes",
       "locator": null,
-      "retrieved_at": "2026-09-09T14:49:33Z",
+      "retrieved_at": "2026-09-10T01:47:09Z",
       "effective_at": null,
       "transformations": [],
       "payload_hash": null,
@@ -14597,9 +16295,86 @@
      {
       "id": "evidence_19",
       "source_ref": "source_01",
+      "record_id": "va-vgin-address-points",
+      "locator": null,
+      "retrieved_at": "2026-09-10T01:47:09Z",
+      "effective_at": null,
+      "transformations": [],
+      "payload_hash": null,
+      "raw_recovery": "available"
+     },
+     {
+      "id": "evidence_20",
+      "source_ref": "source_01",
+      "record_id": "va-vgin-admin-boundaries",
+      "locator": null,
+      "retrieved_at": "2026-09-10T01:47:09Z",
+      "effective_at": null,
+      "transformations": [],
+      "payload_hash": null,
+      "raw_recovery": "available"
+     },
+     {
+      "id": "evidence_21",
+      "source_ref": "source_01",
+      "record_id": "va-vgin-building-footprints",
+      "locator": null,
+      "retrieved_at": "2026-09-10T01:47:09Z",
+      "effective_at": null,
+      "transformations": [],
+      "payload_hash": null,
+      "raw_recovery": "available"
+     },
+     {
+      "id": "evidence_22",
+      "source_ref": "source_01",
+      "record_id": "va-vgin-composite-locator",
+      "locator": null,
+      "retrieved_at": "2026-09-10T01:47:09Z",
+      "effective_at": null,
+      "transformations": [],
+      "payload_hash": null,
+      "raw_recovery": "available"
+     },
+     {
+      "id": "evidence_23",
+      "source_ref": "source_01",
+      "record_id": "va-vgin-landmarks",
+      "locator": null,
+      "retrieved_at": "2026-09-10T01:47:09Z",
+      "effective_at": null,
+      "transformations": [],
+      "payload_hash": null,
+      "raw_recovery": "available"
+     },
+     {
+      "id": "evidence_24",
+      "source_ref": "source_01",
+      "record_id": "va-vgin-road-centerlines",
+      "locator": null,
+      "retrieved_at": "2026-09-10T01:47:09Z",
+      "effective_at": null,
+      "transformations": [],
+      "payload_hash": null,
+      "raw_recovery": "available"
+     },
+     {
+      "id": "evidence_25",
+      "source_ref": "source_01",
+      "record_id": "va-vgin-statewide-parcels",
+      "locator": null,
+      "retrieved_at": "2026-09-10T01:47:09Z",
+      "effective_at": null,
+      "transformations": [],
+      "payload_hash": null,
+      "raw_recovery": "available"
+     },
+     {
+      "id": "evidence_26",
+      "source_ref": "source_01",
       "record_id": "va-vienna-town-zoning",
       "locator": null,
-      "retrieved_at": "2026-09-09T14:49:33Z",
+      "retrieved_at": "2026-09-10T01:47:09Z",
       "effective_at": null,
       "transformations": [],
       "payload_hash": null,
@@ -14621,19 +16396,20 @@
      "tool_contract_version": "1",
      "envelope_version": "1",
      "adapters": {
+      "agenda_platform": "0.1.0",
       "arcgis": "0.1.0",
       "arcgis_geocode": "0.1.0",
       "virginia_law": "0.1.1"
      },
-     "registry_revision": "2026-09-08",
-     "request_id": "6f0d192ca3234830993d51c871ca7afa"
+     "registry_revision": "2026-09-09",
+     "request_id": "bac7c1a2bf774e2290e2ea59dea7d392"
     }
    },
    "error_text": null,
    "http_calls": [],
    "audit": {
-    "ts": "2026-09-09T14:49:33Z",
-    "request_id": "6f0d192ca3234830993d51c871ca7afa",
+    "ts": "2026-09-10T01:47:09Z",
+    "request_id": "bac7c1a2bf774e2290e2ea59dea7d392",
     "tool": "registry.source_status",
     "server": "commonwealth",
     "server_version": "0.1.0.dev0",
@@ -14658,21 +16434,21 @@
       "authority_level": "official_derived"
      }
     ],
-    "evidence_count": 19,
+    "evidence_count": 26,
     "warning_codes": [],
     "requires_user_choice": false,
     "error": null,
-    "registry_revision": "2026-09-08"
+    "registry_revision": "2026-09-09"
    }
   },
   {
    "note": "An unknown capability returns an InvalidQuery error.",
    "is_error": true,
    "envelope": null,
-   "error_text": "Error executing tool registry.search_sources: InvalidQuery: capability 'unicorns.lookup' is not in the vocabulary; known: ['address.lookup', 'boundary.lookup', 'building.lookup', 'code_section.lookup', 'code_structure.browse', 'environmental_site.lookup', 'geocode.address', 'landmark.lookup', 'parcel.lookup', 'road.lookup', 'zoning.lookup']",
+   "error_text": "Error executing tool registry.search_sources: InvalidQuery: capability 'unicorns.lookup' is not in the vocabulary; known: ['address.lookup', 'boundary.lookup', 'building.lookup', 'code_section.lookup', 'code_structure.browse', 'environmental_site.lookup', 'geocode.address', 'landmark.lookup', 'meeting.search', 'parcel.lookup', 'road.lookup', 'zoning.lookup']",
    "http_calls": [],
    "audit": {
-    "ts": "2026-09-09T14:49:33Z",
+    "ts": "2026-09-10T01:47:09Z",
     "request_id": "",
     "tool": "registry.search_sources",
     "server": "commonwealth",
@@ -14694,7 +16470,7 @@
     "warning_codes": [],
     "requires_user_choice": false,
     "error": "InvalidQuery",
-    "registry_revision": "2026-09-08"
+    "registry_revision": "2026-09-09"
    }
   }
  ]

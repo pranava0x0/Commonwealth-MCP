@@ -14,6 +14,7 @@ from pathlib import Path
 
 import pytest
 
+from commonwealth.adapters.agenda_platform import AgendaPlatformAdapter
 from commonwealth.adapters.arcgis import ArcGISAdapter
 from commonwealth.adapters.arcgis_geocode import ArcGISGeocodeAdapter
 from commonwealth.adapters.base import TTLCache
@@ -113,7 +114,8 @@ def build_ctx(extra_manifests: list[SourceManifest] | None = None,
               fetcher: object | None = None,
               civic_fetcher: object | None = None,
               civic_api_fetcher: object | None = None,
-              geocode_fetcher: object | None = None) -> RuntimeContext:
+              geocode_fetcher: object | None = None,
+              agenda_fetcher: object | None = None) -> RuntimeContext:
     exchanges = load_all_recordings() + list(extra_exchanges or [])
     replay = fetcher or ReplayFetcher(exchanges)
     civic_replay = civic_fetcher or HtmlReplayFetcher(load_civic_pages())
@@ -123,6 +125,10 @@ def build_ctx(extra_manifests: list[SourceManifest] | None = None,
     # adapters are given separate instances so a test can swap one for a
     # failure stub without also breaking the other's replay.
     geocode_replay = geocode_fetcher or ReplayFetcher(exchanges)
+    # The agenda platform replays from the same pool for the same reason,
+    # and gets its own instance so an outage stub for meetings does not
+    # take the parcel layers down with it.
+    agenda_replay = agenda_fetcher or ReplayFetcher(exchanges)
     real = SourceRegistry.load(SOURCES_DIR)
     manifests = list(real.manifests.values()) + list(extra_manifests or [])
     registry = SourceRegistry(manifests, real.capability_vocab, real.revision)
@@ -133,7 +139,8 @@ def build_ctx(extra_manifests: list[SourceManifest] | None = None,
         geocoder=ArcGISGeocodeAdapter(fetcher=geocode_replay,
                                       cache=TTLCache()),
         virginia_law=VirginiaLawAdapter(fetcher=civic_replay,
-                                        json_fetcher=civic_api))
+                                        json_fetcher=civic_api),
+        agendas=AgendaPlatformAdapter(fetcher=agenda_replay))
 
 
 @pytest.fixture()

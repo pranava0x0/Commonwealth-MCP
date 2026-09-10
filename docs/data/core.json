@@ -1,14 +1,14 @@
 {
  "version": "0.1.0.dev0",
- "registry_revision": "2026-09-08",
+ "registry_revision": "2026-09-09",
  "counts": {
   "servers": 1,
-  "tools": 15,
+  "tools": 16,
   "packages": 3,
-  "sources": 19,
-  "sources_active": 15,
-  "sources_proposed": 4,
-  "capabilities": 11,
+  "sources": 26,
+  "sources_active": 20,
+  "sources_proposed": 6,
+  "capabilities": 12,
   "jurisdictions": 323,
   "trap_pairs": 5
  },
@@ -44,6 +44,32 @@
    ],
    "summary": "Walk the Code of Virginia's table of contents.",
    "description": "Walk the Code of Virginia's table of contents. No arguments lists the titles; `title` lists that title's chapters; `title` and `chapter` list that chapter's sections. Each row carries the arguments for the next step down, and a section row carries the citation to pass to civic.get_code_section for its text. This is the publisher's own contents listing, not a search: there is no full-text search over the Code of Virginia from any public endpoint, so a question about what the law SAYS has to become a walk to a section and then a read of it. Headings are headings \u2014 a chapter named for zoning is not a promise about what its sections contain."
+  },
+  {
+   "name": "civic.search_meetings",
+   "package": "civic",
+   "toolset": "default",
+   "contract_version": "1",
+   "parameters": [
+    {
+     "name": "jurisdiction",
+     "required": true
+    },
+    {
+     "name": "start_date",
+     "required": true
+    },
+    {
+     "name": "end_date",
+     "required": true
+    },
+    {
+     "name": "body",
+     "required": false
+    }
+   ],
+   "summary": "Find a Virginia locality's public meetings between two dates \u2014 the body, when it meets, where, and a link to the agenda document.",
+   "description": "Find a Virginia locality's public meetings between two dates \u2014 the body, when it meets, where, and a link to the agenda document. Both dates are required and the window is capped at 400 days: there is no default range, because a silently widened query answers a different question. `body` narrows to bodies whose name contains it. Meetings come from the civic-tech platform the locality publishes through, not from the locality's own servers, and only a few Virginia localities are registered \u2014 a locality with no registered source returns coverage registry=none, which means this project has nowhere to look, never that the government does not meet. `agenda_status` is the publisher's status for the AGENDA, not for the meeting; the platform publishes no cancellation field at all, so a cancelled meeting is returned like any other with its comment text carrying the cancellation and a `cancellation_note` saying that reading came from prose. The agenda link is data and is never fetched, so what a meeting is ABOUT is not in this answer."
   },
   {
    "name": "geo.find_parcel",
@@ -391,6 +417,68 @@
  ],
  "sources": [
   {
+   "id": "va-albemarle-county-meetings",
+   "name": "Albemarle County Public Meetings (Granicus/Legistar)",
+   "jurisdiction": "va:albemarle-county",
+   "jurisdiction_name": "Albemarle County",
+   "answers": [
+    "public meetings"
+   ],
+   "publisher": "Albemarle County government (Office of the Clerk to the Board)",
+   "authority_level": "primary",
+   "capabilities": [
+    "meeting.search"
+   ],
+   "data_classification": "open",
+   "declared_state": "active",
+   "terms_url": "https://webapi.legistar.com/Help",
+   "known_limitations": [
+    "No cancellation field. The platform publishes an agenda-publication status (\"Final\", \"Final-revised\") and nothing that says a meeting was cancelled or rescheduled; where a locality records that at all, it records it in the free-text comment. Cancelled meetings are returned rather than omitted, with the comment verbatim and a note saying the reading came from prose, not from a published field.\n",
+    "Meeting times are local wall-clock strings with no offset in the payload. The zone is declared in this manifest, not read from the publisher.\n",
+    "Agenda and minutes documents are links, never content. This project does not fetch them, because the egress allowlist is pinned per manifest to the API host and the documents live on a different one. What a meeting is ABOUT is in the agenda PDF, so a body name and a date are not a summary of what will be discussed.\n",
+    "The calendar covers the bodies this locality publishes through the platform. A body that meets and is not published here is absent from the answer, and absence is not evidence it did not meet.\n"
+   ]
+  },
+  {
+   "id": "va-alexandria-city-meetings",
+   "name": "Alexandria City Public Meetings (Granicus/Legistar)",
+   "jurisdiction": "va:alexandria-city",
+   "jurisdiction_name": "Alexandria City",
+   "answers": [
+    "public meetings"
+   ],
+   "publisher": "Alexandria City government (Office of the City Clerk)",
+   "authority_level": "primary",
+   "capabilities": [
+    "meeting.search"
+   ],
+   "data_classification": "open",
+   "declared_state": "active",
+   "terms_url": "https://webapi.legistar.com/Help",
+   "known_limitations": [
+    "No cancellation field. The platform publishes an agenda-publication status (\"Final\", \"Final-revised\") and nothing that says a meeting was cancelled or rescheduled; where a locality records that at all, it records it in the free-text comment. Cancelled meetings are returned rather than omitted, with the comment verbatim and a note saying the reading came from prose, not from a published field.\n",
+    "Meeting times are local wall-clock strings with no offset in the payload. The zone is declared in this manifest, not read from the publisher.\n",
+    "Agenda and minutes documents are links, never content. This project does not fetch them, because the egress allowlist is pinned per manifest to the API host and the documents live on a different one. What a meeting is ABOUT is in the agenda PDF, so a body name and a date are not a summary of what will be discussed.\n",
+    "The calendar covers the bodies this locality publishes through the platform. A body that meets and is not published here is absent from the answer, and absence is not evidence it did not meet.\n"
+   ]
+  },
+  {
+   "id": "va-charles-city-county-meetings",
+   "name": "Charles City County Meeting Agendas (no machine-readable source found)",
+   "jurisdiction": "va:charles-city-county",
+   "jurisdiction_name": "Charles City County",
+   "answers": [],
+   "publisher": "Charles City County government (Office of the Clerk to the Board of Supervisors)",
+   "authority_level": "primary",
+   "capabilities": [],
+   "data_classification": "open",
+   "declared_state": "proposed",
+   "terms_url": "https://www.co.charles-city.va.us/",
+   "known_limitations": [
+    "No machine-readable meeting source is registered for this locality. Meetings happen; this project cannot read them. A `civic.search_meetings` call for this jurisdiction returns registry coverage `none`, which is a gap in what is registered and never a statement that the locality held no meetings."
+   ]
+  },
+  {
    "id": "va-charles-city-county-parcels",
    "name": "Charles City County Tax Parcels (GIS Open Data)",
    "jurisdiction": "va:charles-city-county",
@@ -478,6 +566,22 @@
    ]
   },
   {
+   "id": "va-fairfax-county-meetings",
+   "name": "Fairfax County Meeting Agendas (no machine-readable source found)",
+   "jurisdiction": "va:fairfax-county",
+   "jurisdiction_name": "Fairfax County",
+   "answers": [],
+   "publisher": "Fairfax County government (Office of the Clerk to the Board of Supervisors)",
+   "authority_level": "primary",
+   "capabilities": [],
+   "data_classification": "open",
+   "declared_state": "proposed",
+   "terms_url": "https://www.fairfaxcounty.gov/boardofsupervisors/board-meetings",
+   "known_limitations": [
+    "No machine-readable meeting source is registered for this locality. Meetings happen; this project cannot read them. A `civic.search_meetings` call for this jurisdiction returns registry coverage `none`, which is a gap in what is registered and never a statement that the locality held no meetings."
+   ]
+  },
+  {
    "id": "va-fairfax-parcels-zoning",
    "name": "Fairfax County Parcels and Zoning (Open Data)",
    "jurisdiction": "va:fairfax-county",
@@ -498,6 +602,29 @@
    "known_limitations": [
     "GIS zoning is a screening representation; the adopted zoning ordinance and official zoning map govern.",
     "Neither layer publishes a machine-readable last-edit date."
+   ]
+  },
+  {
+   "id": "va-hampton-city-meetings",
+   "name": "Hampton City Public Meetings (Granicus/Legistar)",
+   "jurisdiction": "va:hampton-city",
+   "jurisdiction_name": "Hampton City",
+   "answers": [
+    "public meetings"
+   ],
+   "publisher": "Hampton City government (Office of the City Clerk)",
+   "authority_level": "primary",
+   "capabilities": [
+    "meeting.search"
+   ],
+   "data_classification": "open",
+   "declared_state": "active",
+   "terms_url": "https://webapi.legistar.com/Help",
+   "known_limitations": [
+    "No cancellation field. The platform publishes an agenda-publication status (\"Final\", \"Final-revised\") and nothing that says a meeting was cancelled or rescheduled; where a locality records that at all, it records it in the free-text comment. Cancelled meetings are returned rather than omitted, with the comment verbatim and a note saying the reading came from prose, not from a published field.\n",
+    "Meeting times are local wall-clock strings with no offset in the payload. The zone is declared in this manifest, not read from the publisher.\n",
+    "Agenda and minutes documents are links, never content. This project does not fetch them, because the egress allowlist is pinned per manifest to the API host and the documents live on a different one. What a meeting is ABOUT is in the agenda PDF, so a body name and a date are not a summary of what will be discussed.\n",
+    "The calendar covers the bodies this locality publishes through the platform. A body that meets and is not published here is absent from the answer, and absence is not evidence it did not meet.\n"
    ]
   },
   {
@@ -541,6 +668,52 @@
     "Verified 2026-08-29: CKAN 2.9.11 with the Action API reachable anonymously (`/api/3/action/status_show` returns 200), 64 publishing organizations.\n",
     "This is a catalog, not a data source. Its records describe other agencies' datasets; a query against it answers \"who published something about X\", never \"what is at this address\". The capability it would answer is dataset discovery, which overlaps `registry.search_sources` and needs a design decision before a tool, not just a manifest.\n",
     "Most resources are file downloads (CSV, shapefile) rather than queryable services, so onboarding one of them means the download question decision 0006 defers, not another ArcGIS registration.\n"
+   ]
+  },
+  {
+   "id": "va-petersburg-city-meetings",
+   "name": "Petersburg City Public Meetings (Granicus/Legistar)",
+   "jurisdiction": "va:petersburg-city",
+   "jurisdiction_name": "Petersburg City",
+   "answers": [
+    "public meetings"
+   ],
+   "publisher": "Petersburg City government (Office of the City Clerk)",
+   "authority_level": "primary",
+   "capabilities": [
+    "meeting.search"
+   ],
+   "data_classification": "open",
+   "declared_state": "active",
+   "terms_url": "https://webapi.legistar.com/Help",
+   "known_limitations": [
+    "No cancellation field. The platform publishes an agenda-publication status (\"Final\", \"Final-revised\") and nothing that says a meeting was cancelled or rescheduled; where a locality records that at all, it records it in the free-text comment. Cancelled meetings are returned rather than omitted, with the comment verbatim and a note saying the reading came from prose, not from a published field.\n",
+    "Meeting times are local wall-clock strings with no offset in the payload. The zone is declared in this manifest, not read from the publisher.\n",
+    "Agenda and minutes documents are links, never content. This project does not fetch them, because the egress allowlist is pinned per manifest to the API host and the documents live on a different one. What a meeting is ABOUT is in the agenda PDF, so a body name and a date are not a summary of what will be discussed.\n",
+    "The calendar covers the bodies this locality publishes through the platform. A body that meets and is not published here is absent from the answer, and absence is not evidence it did not meet.\n"
+   ]
+  },
+  {
+   "id": "va-richmond-city-meetings",
+   "name": "Richmond City Public Meetings (Granicus/Legistar)",
+   "jurisdiction": "va:richmond-city",
+   "jurisdiction_name": "Richmond City",
+   "answers": [
+    "public meetings"
+   ],
+   "publisher": "Richmond City government (Office of the City Clerk)",
+   "authority_level": "primary",
+   "capabilities": [
+    "meeting.search"
+   ],
+   "data_classification": "open",
+   "declared_state": "active",
+   "terms_url": "https://webapi.legistar.com/Help",
+   "known_limitations": [
+    "No cancellation field. The platform publishes an agenda-publication status (\"Final\", \"Final-revised\") and nothing that says a meeting was cancelled or rescheduled; where a locality records that at all, it records it in the free-text comment. Cancelled meetings are returned rather than omitted, with the comment verbatim and a note saying the reading came from prose, not from a published field.\n",
+    "Meeting times are local wall-clock strings with no offset in the payload. The zone is declared in this manifest, not read from the publisher.\n",
+    "Agenda and minutes documents are links, never content. This project does not fetch them, because the egress allowlist is pinned per manifest to the API host and the documents live on a different one. What a meeting is ABOUT is in the agenda PDF, so a body name and a date are not a summary of what will be discussed.\n",
+    "The calendar covers the bodies this locality publishes through the platform. A body that meets and is not published here is absent from the answer, and absence is not evidence it did not meet.\n"
    ]
   },
   {
@@ -829,6 +1002,7 @@
   "environmental_site.lookup",
   "geocode.address",
   "landmark.lookup",
+  "meeting.search",
   "parcel.lookup",
   "road.lookup",
   "zoning.lookup"
@@ -865,6 +1039,10 @@
   "landmark.lookup": {
    "question": "Which schools, libraries, or fire stations are nearby?",
    "subject": "public places"
+  },
+  "meeting.search": {
+   "question": "When does this government meet, and about what?",
+   "subject": "public meetings"
   },
   "parcel.lookup": {
    "question": "What is this parcel?",
@@ -917,7 +1095,8 @@
    "geo.resolve_location",
    "geo.find_buildings",
    "geo.find_environmental_sites",
-   "civic.get_code_section"
+   "civic.get_code_section",
+   "civic.search_meetings"
   ],
   "discovery": [
    "registry.resolve_jurisdiction",
@@ -932,6 +1111,7 @@
    "geo.find_buildings",
    "geo.find_environmental_sites",
    "civic.get_code_section",
+   "civic.search_meetings",
    "civic.browse_code"
   ],
   "all": [
@@ -949,7 +1129,8 @@
    "geo.find_roads",
    "geo.find_environmental_sites",
    "civic.get_code_section",
-   "civic.browse_code"
+   "civic.browse_code",
+   "civic.search_meetings"
   ]
  },
  "skills": [
@@ -1214,7 +1395,7 @@
    "call": 24
   }
  ],
- "doctor_output": "commonwealth 0.1.0.dev0\npython 3.12.13\nmcp sdk 2.1.1\njurisdiction table: 323 rows\nsource manifests: 19 (registry revision 2026-09-08)\nmanifests valid: 19/19\ndefault profile: 9 tools: registry.resolve_jurisdiction, geo.find_parcel, geo.find_zoning, geo.find_boundaries, geo.find_address, geo.resolve_location, geo.find_buildings, geo.find_environmental_sites, civic.get_code_section\n(live source probes skipped; pass --live)\n\u2713 doctor: 0 problem(s)\n\nnext: point a client at it\n  commonwealth configure claude-code\n  commonwealth configure --help    # claude, codex, cursor, vscode",
+ "doctor_output": "commonwealth 0.1.0.dev0\npython 3.12.13\nmcp sdk 2.1.1\njurisdiction table: 323 rows\nsource manifests: 26 (registry revision 2026-09-09)\nmanifests valid: 26/26\ndefault profile: 10 tools: registry.resolve_jurisdiction, geo.find_parcel, geo.find_zoning, geo.find_boundaries, geo.find_address, geo.resolve_location, geo.find_buildings, geo.find_environmental_sites, civic.get_code_section, civic.search_meetings\n(live source probes skipped; pass --live)\n\u2713 doctor: 0 problem(s)\n\nnext: point a client at it\n  commonwealth configure claude-code\n  commonwealth configure --help    # claude, codex, cursor, vscode",
  "plugin": {
   "name": "commonwealth-mcp",
   "marketplace_name": "commonwealth-mcp",
@@ -1222,12 +1403,12 @@
   "path": "plugins/commonwealth-mcp",
   "skill_count": 6,
   "profile": "all",
-  "tool_count": 15
+  "tool_count": 16
  },
  "demo_meta": {
-  "generated_at": "2026-09-09T14:49:33Z",
+  "generated_at": "2026-09-10T01:47:09Z",
   "mode": "fixtures",
-  "call_count": 39,
+  "call_count": 45,
   "fixture_recorded_at": "2026-09-02T05:29:35Z"
  }
 }

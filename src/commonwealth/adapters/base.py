@@ -72,6 +72,21 @@ class Fetcher(Protocol):
     async def fetch_json(self, url: str, params: dict[str, Any]) -> dict: ...
 
 
+class JsonListFetcher(Protocol):
+    """For publishers whose answer is a bare JSON array.
+
+    Every source registered before the agenda platforms wrapped its rows
+    in an object, so `fetch_json` refusing a non-object body was a free
+    check against an outage page decoding as data. Legistar's Web API
+    returns the array itself, so that check would refuse every real
+    answer. It is a separate method rather than a loosened `fetch_json`
+    so the object-shaped sources keep the guarantee they had.
+    """
+
+    async def fetch_json_list(self, url: str,
+                              params: dict[str, Any]) -> list: ...
+
+
 class HtmlFetcher(Protocol):
     async def fetch_html(self, url: str) -> tuple[str, str]: ...
 
@@ -180,6 +195,10 @@ class HttpFetcher:
     async def fetch_json(self, url: str, params: dict[str, Any]) -> dict:
         response, host = await self._fetch(url, params)
         return self._decode_json(response, host)
+
+    async def fetch_json_list(self, url: str, params: dict[str, Any]) -> list:
+        response, host = await self._fetch(url, params)
+        return self._decode_json_list(response, host)
 
     async def fetch_html(self, url: str) -> tuple[str, str]:
         """Returns (html, final_url) — the final URL after any redirects,
@@ -356,16 +375,35 @@ class HttpFetcher:
         finally:
             await response.aclose()
 
-    def _decode_json(self, body: _Body, host: str) -> dict:
+    def _parse_json(self, body: _Body, host: str) -> Any:
         raw = self._checked_body(body, host)
         try:
-            payload = json.loads(raw)
+            return json.loads(raw)
         except json.JSONDecodeError as err:
             raise SourceUnavailable(
                 f"{host} returned non-JSON where JSON was expected "
                 "(bot challenge or outage page?)") from err
+
+    def _decode_json(self, body: _Body, host: str) -> dict:
+        payload = self._parse_json(body, host)
         if not isinstance(payload, dict):
             raise SourceUnavailable(f"{host} returned a non-object JSON body")
+        return payload
+
+    def _decode_json_list(self, body: _Body, host: str) -> list:
+        """The array shape, refused just as firmly when it is not one.
+
+        A publisher that answers HTTP 200 with an error object instead of
+        its usual array would otherwise reach the caller as a row count of
+        zero — "no meetings" where the truth is "could not look", which is
+        the confusion this project refuses everywhere else.
+        """
+        payload = self._parse_json(body, host)
+        if not isinstance(payload, list):
+            raise SourceUnavailable(
+                f"{host} returned {type(payload).__name__}, not the JSON "
+                "array this endpoint documents. Treat it as the service "
+                "having changed or failed, not as an empty result.")
         return payload
 
     def _decode_html(self, body: _Body, host: str) -> str:

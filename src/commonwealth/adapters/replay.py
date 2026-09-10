@@ -10,7 +10,9 @@ from typing import Any
 
 class ReplayFetcher:
     def __init__(self, exchanges: list[dict]) -> None:
-        self._map: dict[str, dict] = {}
+        # Values are whatever the publisher sent: an object for
+        # most sources, a bare array for the agenda platforms.
+        self._map: dict[str, Any] = {}
         for ex in exchanges:
             self._map[self._key(ex["url"], ex["params"])] = ex["response"]
         if not self._map:
@@ -25,6 +27,19 @@ class ReplayFetcher:
             separators=(",", ":"))
 
     async def fetch_json(self, url: str, params: dict[str, Any]) -> dict:
+        return self._replay(url, params)
+
+    async def fetch_json_list(self, url: str,
+                              params: dict[str, Any]) -> list:
+        """The array-shaped answer (see `base.JsonListFetcher`).
+
+        A recording stores whatever the publisher sent, so this replays
+        the array as recorded rather than re-wrapping it — the recorded
+        JSON for an agenda platform is a list at the top level.
+        """
+        return self._replay(url, params)
+
+    def _replay(self, url: str, params: dict[str, Any]) -> Any:
         key = self._key(url, params)
         self.calls.append(key)
         if key not in self._map:

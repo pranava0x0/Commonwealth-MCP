@@ -176,6 +176,8 @@ CAPABILITY_COPY = {
                         "geocoding"),
     "landmark.lookup": ("Which schools, libraries, or fire stations are "
                         "nearby?", "public places"),
+    "meeting.search": ("When does this government meet, and about what?",
+                       "public meetings"),
     "parcel.lookup": ("What is this parcel?", "parcels"),
     "road.lookup": ("What roads are here, and what are they called?",
                     "roads"),
@@ -376,6 +378,47 @@ DEMO_GROUPS = [
          "The town's own zoning map layer, with a link to the ordinance "
          "section returned as data"),
     ]),
+
+    ('When does this government meet?',
+     'Five Virginia localities publish their meetings through one '
+     'civic-tech platform. The same walk shows what that platform does '
+     'not publish, and what a locality that is not on it looks like.', [
+        ("civic.search_meetings", {"jurisdiction": "Richmond City",
+                                   "start_date": "2026-09-01",
+                                   "end_date": "2026-09-30"},
+         'A month of Richmond meetings, with the agenda document linked as '
+         'data. The link is never fetched, so what each meeting is about '
+         'is not in this answer.'),
+        ("civic.search_meetings", {"jurisdiction": "Alexandria City",
+                                   "start_date": "2026-09-01",
+                                   "end_date": "2026-09-30"},
+         'The same question of a second locality. One adapter answers both; '
+         'the only thing that differs is a client identifier in the manifest.'),
+        ("civic.search_meetings", {"jurisdiction": "Richmond City",
+                                   "start_date": "2026-09-01",
+                                   "end_date": "2026-09-30",
+                                   "body": "planning"},
+         'Narrowed to one body. The publisher’s ordering is kept; this '
+         'filters the answer rather than re-ranking it.'),
+        ("civic.search_meetings", {"jurisdiction": "Richmond City",
+                                   "start_date": "2019-12-01",
+                                   "end_date": "2019-12-31"},
+         'A window containing cancelled meetings. The platform publishes no '
+         'cancellation field, so the cancellation is read out of the '
+         'publisher’s comment and labelled as a reading, never as a '
+         'published status — and the meeting is returned, not dropped.'),
+        ("civic.search_meetings", {"jurisdiction": "Richmond City",
+                                   "start_date": "2030-01-01",
+                                   "end_date": "2030-01-31"},
+         'A covered locality with nothing in the window. Registry covered, '
+         'publisher answered, no meetings — a clean empty.'),
+        ("civic.search_meetings", {"jurisdiction": "Fairfax County",
+                                   "start_date": "2026-09-01",
+                                   "end_date": "2026-09-30"},
+         'The same question where no agenda source is registered. Coverage '
+         'says none. Fairfax County meets constantly; this project has '
+         'nowhere to read it, and the two must never render the same way.'),
+     ]),
 
     ('The ways an answer comes back with no data',
      'A search that matched nothing, a place with no registered '

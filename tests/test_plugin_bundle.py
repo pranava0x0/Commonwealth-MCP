@@ -188,6 +188,7 @@ CAPABILITY_TOOLS = {
     "environmental_site.lookup": "geo.find_environmental_sites",
     "geocode.address": "geo.resolve_location",
     "landmark.lookup": "geo.find_landmarks",
+    "meeting.search": "civic.search_meetings",
     "parcel.lookup": "geo.find_parcel",
     "road.lookup": "geo.find_roads",
     "zoning.lookup": "geo.find_zoning",

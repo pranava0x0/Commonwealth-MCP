@@ -1,21 +1,32 @@
-"""Civic tools: Code of Virginia section lookup (design/domain-servers.md
-§ 4, first slice).
+"""Civic tools: the Code of Virginia, and local public meetings
+(design/domain-servers.md § 4).
 
-design/domain-servers.md sketches `civic.search_law` as full-text search;
-what's actually built here is direct-citation lookup only (the site's own
-search feature was not reverse-engineered) — named `get_code_section`
-rather than `search_law` so the tool's name doesn't overclaim what it
-does. Selection discipline matches geo (../../../design/architecture.md decision 0005 Chosen): the top two
+Three tools over two very different publishers. The Code is one
+statewide text, read by citation (`get_code_section`) or walked through
+its own table of contents (`browse_code`). Meetings are per locality
+(`search_meetings`), and are the first thing this server reads that a
+government published and a *vendor* serves — see
+`adapters/agenda_platform.py` for why the manifests name both.
+
+design/domain-servers.md sketches `civic.search_law` as full-text
+search. It is still not built and, as of the 2026-09-09 re-check, still
+cannot be: the publisher serves no full-text search from any public
+endpoint (GitHub issue #12, design/source-quirks.md § 18). The tools
+here are named for what they do — `get_code_section`, not `search_law` —
+so a name never overclaims. Selection discipline matches geo
+(../../../design/architecture.md decision 0005 Chosen): the top two
 selectable sources for the capability are queried and every per-source
 result is surfaced, never merged into one answer.
 """
 from __future__ import annotations
 
+from ..adapters.agenda_platform import (MAX_RANGE_DAYS, Meeting,
+                                        check_range)
 from ..adapters.virginia_law import CodeSection
 from ..core.assemble import (EnvelopeBuilder, failure, result_dim,
-                             selection_coverage)
+                             resolve_frame, selection_coverage)
 from ..core.envelope import AccessPath, Coverage, Envelope, \
-    ExecutionCoverage, PaginationCoverage
+    ExecutionCoverage, PaginationCoverage, WarningCode
 from ..core.errors import CommonwealthError, InvalidQuery
 from ..core.registry import SourceManifest
 from ..core.toolreg import ToolRegistry, ToolSpec
@@ -200,3 +211,150 @@ CIVIC_TOOLS.register(ToolSpec(
         "headings — a chapter named for zoning is not a promise about "
         "what its sections contain."),
     toolset="discovery", contract_version="1", fn=browse_code))
+
+
+# The Code is one statewide text; meetings are not. This is the civic
+# domain's first locality-scoped tool, so it resolves a jurisdiction the
+# way the geo tools do rather than assuming the statewide stack above.
+async def search_meetings(ctx: RuntimeContext, jurisdiction: str,
+                          start_date: str, end_date: str,
+                          body: str = "") -> Envelope:
+    b = _builder(ctx, "civic.search_meetings")
+    # Before anything else, and deliberately not inside the per-source
+    # loop below. The adapter checks the window too, but down there a
+    # raised InvalidQuery is caught by the `except CommonwealthError`
+    # that records a SOURCE failure — so an out-of-range window came
+    # back as `execution: failed` against a healthy publisher, which
+    # blames the government for the caller's argument. A bad window is
+    # bad whatever the registry covers, so it is refused here, once.
+    check_range(start_date, end_date)
+    frame = resolve_frame(ctx.jurisdictions, b, jurisdiction)
+    if frame.early is not None:
+        return frame.early
+    stack = frame.stack or []
+
+    selected = ctx.sources.select("meeting.search", stack)
+    registry_dim, gaps = selection_coverage(
+        ctx.sources, "meeting.search", stack, selected, builder=b)
+
+    blocks: list[dict] = []
+    failures = []
+    total = 0
+    for m in selected:
+        try:
+            meetings, url = await ctx.agendas.search_meetings(
+                m, start_date, end_date, body or None)
+        except CommonwealthError as err:
+            failures.append(failure(m.id, err.code, str(err)))
+            continue
+        blocks.append(_meetings_block(b, m, meetings, url,
+                                      start_date, end_date, body))
+        total += len(meetings)
+
+    execution = (ExecutionCoverage.complete if not failures
+                 else ExecutionCoverage.failed if not blocks
+                 else ExecutionCoverage.partial)
+    coverage = Coverage(
+        registry=registry_dim, execution=execution,
+        # The publisher applies the date window itself and returns the
+        # whole of it; there is no paging to be partway through.
+        pagination=PaginationCoverage.complete,
+        result=result_dim(total),
+        jurisdictions_searched=stack if selected else [],
+        jurisdictions_unavailable=gaps,
+        source_failures=failures,
+        known_limitations=sorted({lim for m in selected
+                                  for lim in m.coverage.known_limitations}))
+    return b.build({"results": blocks}, coverage)
+
+
+def _meetings_block(b: EnvelopeBuilder, m: SourceManifest,
+                    meetings: list[Meeting], url: str, start_date: str,
+                    end_date: str, body: str) -> dict:
+    src_ref = b.add_source(
+        source_id=m.id, publisher=m.publisher.agency, system=m.adapter.type,
+        dataset=m.name, jurisdiction=m.jurisdiction,
+        authority_level=m.publisher.authority_level,
+        access_path=AccessPath.live,
+        source_updated_at=None, retrieved_at=_now(), cache_age_seconds=0)
+
+    records = []
+    for meeting in meetings:
+        ev_ref = b.add_evidence(
+            source_ref=src_ref, record_id=meeting.event_id,
+            retrieved_at=_now(), transformations=[],
+            locator=meeting.portal_url or url)
+        record = {
+            "body": meeting.body,
+            "date": meeting.meeting_date,
+            "time": meeting.meeting_time,
+            "time_zone": meeting.time_zone,
+            # The publisher's own value, and only ever that. It says
+            # whether the AGENDA is final, which is not whether the
+            # meeting is happening — the field name says so, and the
+            # tool description says so again.
+            "agenda_status": meeting.agenda_status,
+            "location": meeting.location,
+            # Links, returned as data and never followed.
+            "agenda_url": meeting.agenda_url,
+            "minutes_url": meeting.minutes_url,
+            "portal_url": meeting.portal_url,
+            "comment": meeting.comment,
+            "evidence_refs": [ev_ref],
+        }
+        if meeting.cancellation_note:
+            record["cancellation_note"] = meeting.cancellation_note
+        records.append(record)
+
+    cancelled = [r for r in records if "cancellation_note" in r]
+    if cancelled:
+        # Read from prose, so it is disclosed as a screening reading
+        # rather than passed off as the publisher's own status.
+        b.warn(WarningCode.screening_only,
+               f"{len(cancelled)} of these meetings carry a comment saying "
+               "the meeting was cancelled or rescheduled. This platform "
+               "publishes no cancellation field, so that reading comes "
+               "from the comment text, which is returned verbatim on each "
+               "record. Read the comment before relying on it, and check "
+               "the publisher's own page for anything that matters.",
+               source_id=m.id)
+
+    block = {"source_ref": src_ref, "source_id": m.id,
+             "records": records, "record_count": len(records),
+             "window": {"start_date": start_date, "end_date": end_date},
+             "body_filter": body or None,
+             "source_url": url}
+    if not records:
+        block["note"] = (
+            f"{m.name} published no meetings between {start_date} and "
+            f"{end_date}"
+            + (f" for a body matching {body!r}" if body else "")
+            + ". The source is registered and answered; this is an empty "
+              "window, not an absence of coverage. Bodies this locality "
+              "does not publish through the platform would not appear "
+              "here either.")
+    return block
+
+
+CIVIC_TOOLS.register(ToolSpec(
+    name="civic.search_meetings",
+    description=(
+        "Find a Virginia locality's public meetings between two dates — "
+        "the body, when it meets, where, and a link to the agenda "
+        "document. Both dates are required and the window is capped at "
+        f"{MAX_RANGE_DAYS} days: there is no default range, because a "
+        "silently widened query answers a different question. "
+        "`body` narrows to bodies whose name contains it. "
+        "Meetings come from the civic-tech platform the locality "
+        "publishes through, not from the locality's own servers, and "
+        "only a few Virginia localities are registered — a locality with "
+        "no registered source returns coverage registry=none, which "
+        "means this project has nowhere to look, never that the "
+        "government does not meet. `agenda_status` is the publisher's "
+        "status for the AGENDA, not for the meeting; the platform "
+        "publishes no cancellation field at all, so a cancelled meeting "
+        "is returned like any other with its comment text carrying the "
+        "cancellation and a `cancellation_note` saying that reading came "
+        "from prose. The agenda link is data and is never fetched, so "
+        "what a meeting is ABOUT is not in this answer."),
+    toolset="default", contract_version="1", fn=search_meetings))

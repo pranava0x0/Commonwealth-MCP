@@ -8,10 +8,12 @@ explicit at build time, never defaulted into optimism.
 from __future__ import annotations
 
 import uuid
+from dataclasses import dataclass
 
 from .envelope import (AccessPath, AuthorityLevel, Coverage, Envelope,
                        Evidence, ExecutionProvenance, JurisdictionGap,
                        NextAction, RawRecovery, RegistryCoverage,
+                       ExecutionCoverage, PaginationCoverage,
                        ResourceRef, ResultCoverage, SourceEntry,
                        SourceFailure, WarningCode, WarningNote)
 
@@ -167,3 +169,54 @@ def selection_coverage(sources, capability: str, stack: list[str],
                         "as unknown rather than as an absence."))
         return RegistryCoverage.none, gaps
     return RegistryCoverage.partial, gaps
+
+
+@dataclass
+class Frame:
+    """Resolved jurisdiction stack, or the envelope that ends the call."""
+
+    stack: list[str] | None = None
+    early: Envelope | None = None
+
+
+def resolve_frame(jurisdictions, b: EnvelopeBuilder,
+                  jurisdiction: str) -> Frame:
+    resolution = jurisdictions.resolve(jurisdiction)
+    if resolution.resolved is not None:
+        j = resolution.resolved
+        stack = [j.id] + [p.id for p in jurisdictions.parents_of(j)]
+        if resolution.matched_former_name:
+            # Every geo tool's description tells the caller to pass the
+            # jurisdiction string as given, so a historical name reaches
+            # here as readily as it reaches registry.resolve_jurisdiction
+            # — and answering it silently returns current data under a
+            # government that no longer exists.
+            b.warn(WarningCode.alias_match,
+                   f"{resolution.matched_former_name!r} names a Virginia "
+                   "government that no longer exists under that name. "
+                   f"This answer is about {j.name}, which governs that "
+                   "territory now. A record using the old name predates "
+                   "the change; check its date before treating this as "
+                   "current.")
+        return Frame(stack=stack)
+    if resolution.candidates:
+        env = b.build(
+            {"resolved": None,
+             "candidates": [c.model_dump() for c in resolution.candidates],
+             "note": "The jurisdiction is ambiguous. Present these "
+                     "candidates to the user; do not select one yourself."},
+            Coverage(registry=RegistryCoverage.covered,
+                     execution=ExecutionCoverage.complete,
+                     pagination=PaginationCoverage.complete,
+                     result=ResultCoverage.hit),
+            requires_user_choice=True)
+        return Frame(early=env)
+    env = b.build(
+        {"results": [],
+         "note": f"{jurisdiction!r} matches no Virginia jurisdiction in the "
+                 "table. registry.resolve_jurisdiction shows what resolves."},
+        Coverage(registry=RegistryCoverage.covered,
+                 execution=ExecutionCoverage.complete,
+                 pagination=PaginationCoverage.complete,
+                 result=ResultCoverage.empty))
+    return Frame(early=env)

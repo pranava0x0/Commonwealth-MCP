@@ -14,8 +14,8 @@ from dataclasses import dataclass
 from ..adapters.arcgis import ArcGISQueryResult, ArcGISRecord
 from ..adapters.arcgis_geocode import (GeocodeCandidate,
                                        GeocodeResult)
-from ..core.assemble import (EnvelopeBuilder, failure, result_dim,
-                             selection_coverage)
+from ..core.assemble import (EnvelopeBuilder, Frame, failure, result_dim,
+                             resolve_frame, selection_coverage)
 from ..core.envelope import (AccessPath, Coverage, Envelope,
                              ExecutionCoverage, PaginationCoverage,
                              RegistryCoverage, ResultCoverage, WarningCode)
@@ -69,55 +69,13 @@ def _builder(ctx: RuntimeContext, tool: str) -> EnvelopeBuilder:
                            adapters=ctx.adapters)
 
 
-@dataclass
-class _Frame:
-    """Resolved jurisdiction stack, or the envelope that ends the call."""
-
-    stack: list[str] | None = None
-    early: Envelope | None = None
-
-
+# Jurisdiction-stack resolution moved to core.assemble when the civic
+# domain gained a locality-scoped tool (GitHub issue #13) and needed the
+# same behaviour. Re-exported under its local name so this module's call
+# sites read as they did; the implementation is shared, not copied.
 def _resolve_frame(ctx: RuntimeContext, b: EnvelopeBuilder,
-                   jurisdiction: str) -> _Frame:
-    resolution = ctx.jurisdictions.resolve(jurisdiction)
-    if resolution.resolved is not None:
-        j = resolution.resolved
-        stack = [j.id] + [p.id for p in ctx.jurisdictions.parents_of(j)]
-        if resolution.matched_former_name:
-            # Every geo tool's description tells the caller to pass the
-            # jurisdiction string as given, so a historical name reaches
-            # here as readily as it reaches registry.resolve_jurisdiction
-            # — and answering it silently returns current data under a
-            # government that no longer exists.
-            b.warn(WarningCode.alias_match,
-                   f"{resolution.matched_former_name!r} names a Virginia "
-                   "government that no longer exists under that name. "
-                   f"This answer is about {j.name}, which governs that "
-                   "territory now. A record using the old name predates "
-                   "the change; check its date before treating this as "
-                   "current.")
-        return _Frame(stack=stack)
-    if resolution.candidates:
-        env = b.build(
-            {"resolved": None,
-             "candidates": [c.model_dump() for c in resolution.candidates],
-             "note": "The jurisdiction is ambiguous. Present these "
-                     "candidates to the user; do not select one yourself."},
-            Coverage(registry=RegistryCoverage.covered,
-                     execution=ExecutionCoverage.complete,
-                     pagination=PaginationCoverage.complete,
-                     result=ResultCoverage.hit),
-            requires_user_choice=True)
-        return _Frame(early=env)
-    env = b.build(
-        {"results": [],
-         "note": f"{jurisdiction!r} matches no Virginia jurisdiction in the "
-                 "table. registry.resolve_jurisdiction shows what resolves."},
-        Coverage(registry=RegistryCoverage.covered,
-                 execution=ExecutionCoverage.complete,
-                 pagination=PaginationCoverage.complete,
-                 result=ResultCoverage.empty))
-    return _Frame(early=env)
+                   jurisdiction: str) -> Frame:
+    return resolve_frame(ctx.jurisdictions, b, jurisdiction)
 
 
 def _source_entry(b: EnvelopeBuilder, m: SourceManifest,

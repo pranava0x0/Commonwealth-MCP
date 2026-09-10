@@ -317,6 +317,30 @@ def cmd_sources_probe(args: argparse.Namespace) -> int:
                 print(f"✗ {sid}: {err.code}: {err}")
                 problems += 1
             continue
+        if m.adapter.type == "agenda_platform":
+            checked += 1
+            try:
+                h = asyncio.run(ctx.agendas.health(
+                    m, m.health.expect.get("known_body")))
+            except CommonwealthError as err:
+                print(f"✗ {sid}: {err.code}: {err}")
+                problems += 1
+                continue
+            body = h.get("body")
+            # An empty calendar is a healthy answer, so the probe reports
+            # what came back rather than grading it on a record count. The
+            # declared body is the real check: this client answering with
+            # a calendar that never mentions its own council is the shape
+            # a silently-repointed client identifier would take.
+            found = body is None or body["found"]
+            print(f"{'✓' if found else '✗'} {sid}: {h['meetings']} meeting(s) "
+                  f"in the last {h['window_days']} days"
+                  + (f", {body['name']!r} "
+                     f"{'present' if body['found'] else 'ABSENT'}"
+                     if body else ""))
+            if not found:
+                problems += 1
+            continue
         if m.adapter.type == INVENTORY_ADAPTER:
             # Inventory has no endpoint by construction, so "not probed"
             # is the correct outcome rather than a gap. Counted as
@@ -376,7 +400,19 @@ class _RecordingFetcher:
         self.exchanges: list[dict] = []
 
     async def fetch_json(self, url: str, params: dict) -> dict:
-        payload = await self.inner.fetch_json(url, params)
+        return await self._record(self.inner.fetch_json, url, params)
+
+    async def fetch_json_list(self, url: str, params: dict) -> list:
+        """The array-shaped answer, recorded the same way.
+
+        A recording stores what the publisher sent, and for an agenda
+        platform that is a bare JSON array; `ReplayFetcher` reads it back
+        through the matching method.
+        """
+        return await self._record(self.inner.fetch_json_list, url, params)
+
+    async def _record(self, call, url: str, params: dict):
+        payload = await call(url, params)
         self.exchanges.append({
             "url": url,
             "params": {k: str(v) for k, v in params.items()},
@@ -1079,9 +1115,11 @@ def cmd_sources_sample(args: argparse.Namespace) -> int:
         return _fail(f"unknown source {args.source_id!r}")
     if m.adapter.type == "arcgis_geocode":
         return _sample_geocoder(m, ctx)
+    if m.adapter.type == "agenda_platform":
+        return _sample_meetings(m, ctx)
     if m.adapter.type != "arcgis":
-        return _fail(f"sample supports arcgis and arcgis_geocode for now, "
-                     f"not {m.adapter.type!r}")
+        return _fail(f"sample supports arcgis, arcgis_geocode and "
+                     f"agenda_platform for now, not {m.adapter.type!r}")
     params = arcgis_mod.ArcGISParams.model_validate(
         m.adapter.model_dump(exclude={"type"}))
     adapter, recorder = _recording_adapter_for(m)
@@ -1285,6 +1323,74 @@ def contributing_sources(m: SourceManifest, exchanges: list[dict],
         if owner is not None:
             found.setdefault(owner.id, owner)
     return [m] + [found[sid] for sid in sorted(found) if sid != m.id]
+
+
+# The windows every agenda-platform recording covers. Fixed dates, not
+# "the next 30 days": a fixture is recorded once and replayed forever, so
+# a window computed from the recording date would stop matching the
+# moment the calendar moved on, and the replay would fail on a key that
+# used to exist. Each window is here because it produces a different
+# shape of answer.
+MEETING_SAMPLE_WINDOWS = [
+    # A month with meetings in it — the ordinary answer.
+    ("busy", "2026-09-01", "2026-09-30"),
+    # A month with no meetings at all. The clean empty: registry covered,
+    # publisher answered, nothing in range. This is the case that must
+    # never be confused with a locality that has no registered source,
+    # and the contract tests assert the two envelopes differ.
+    ("empty", "2030-01-01", "2030-01-31"),
+]
+
+# One window per client that contains a meeting the publisher's comment
+# says was cancelled. There is no cancellation field on this platform, so
+# a fixture that never records one would let the prose-reading path ship
+# untested (see `agenda_platform._cancellation_note`).
+MEETING_CANCELLATION_WINDOWS = {
+    "richmondva": ("2019-12-01", "2019-12-31"),
+    "alexandria": ("2020-03-01", "2020-04-30"),
+}
+
+
+def _sample_meetings(m: SourceManifest, ctx: RuntimeContext) -> int:
+    """Recording plan for an agenda-platform source.
+
+    Records the same windows for every client, so the fixtures for two
+    localities differ only in the client identifier — which is the claim
+    the adapter makes (one adapter, many jurisdictions) and the thing a
+    reader should be able to check by diffing two recordings.
+    """
+    from ..adapters import agenda_platform as agenda_mod
+
+    p = agenda_mod.AgendaPlatformParams.model_validate(
+        m.adapter.model_dump(exclude={"type"}))
+    rec = _RecordingFetcher(
+        HttpFetcher(policy=egress_policy_for(m, p.service_url)))
+    adapter = agenda_mod.AgendaPlatformAdapter(fetcher=rec)
+
+    windows = list(MEETING_SAMPLE_WINDOWS)
+    cancelled = MEETING_CANCELLATION_WINDOWS.get(p.client)
+    if cancelled:
+        windows.append(("cancellation", *cancelled))
+
+    async def run() -> dict:
+        out: dict[str, Any] = {"client": p.client, "windows": {}}
+        for label, start, end in windows:
+            meetings, url = await adapter.search_meetings(m, start, end)
+            out["windows"][label] = {
+                "start_date": start, "end_date": end,
+                "meetings": len(meetings),
+                "bodies": sorted({x.body for x in meetings})[:8],
+                "with_agenda": sum(1 for x in meetings if x.agenda_url),
+                "cancellation_notes": sum(1 for x in meetings
+                                          if x.cancellation_note),
+                "url": url}
+        return out
+
+    try:
+        summary = asyncio.run(run())
+    except CommonwealthError as err:
+        return _fail(f"{err.code}: {err}")
+    return _write_fixture(m, rec, summary, ctx)
 
 
 def _write_fixture(m: SourceManifest, recorder: "_RecordingFetcher",
