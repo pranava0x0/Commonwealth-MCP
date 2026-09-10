@@ -271,12 +271,21 @@ async def search_meetings(ctx: RuntimeContext, jurisdiction: str,
 def _meetings_block(b: EnvelopeBuilder, m: SourceManifest,
                     meetings: list[Meeting], url: str, start_date: str,
                     end_date: str, body: str) -> dict:
+    # The publisher stamps every meeting with when it was last edited,
+    # and that is the only freshness signal this platform gives. The
+    # newest one in the answer is the vintage of the answer: nothing in
+    # this window has been touched since. An empty window has no
+    # timestamp and reports none, which is honest — with no records
+    # there is no vintage, and `add_source` warns
+    # `freshness_unavailable` for exactly that case.
+    newest = max((x.last_modified for x in meetings if x.last_modified),
+                 default=None)
     src_ref = b.add_source(
         source_id=m.id, publisher=m.publisher.agency, system=m.adapter.type,
         dataset=m.name, jurisdiction=m.jurisdiction,
         authority_level=m.publisher.authority_level,
         access_path=AccessPath.live,
-        source_updated_at=None, retrieved_at=_now(), cache_age_seconds=0)
+        source_updated_at=newest, retrieved_at=_now(), cache_age_seconds=0)
 
     records = []
     for meeting in meetings:
@@ -300,6 +309,11 @@ def _meetings_block(b: EnvelopeBuilder, m: SourceManifest,
             "minutes_url": meeting.minutes_url,
             "portal_url": meeting.portal_url,
             "comment": meeting.comment,
+            # When the publisher last edited this notice. The comment is
+            # where a cancellation lives, so "when was this last
+            # revised" is the difference between a cancellation posted
+            # this morning and one posted years ago.
+            "last_modified": meeting.last_modified,
             "evidence_refs": [ev_ref],
         }
         if meeting.cancellation_note:

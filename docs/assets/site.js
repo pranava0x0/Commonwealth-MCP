@@ -1416,6 +1416,17 @@ function renderCodeDemo(demo, CODE_WALK){
 
 /* --- 4. Check what is covered ------------------------------------------- */
 
+/* A government's name, with its kind only where the name does not
+   already carry it. The table spells towns "Abingdon (town)" and
+   counties "Accomack County", so appending the kind unconditionally
+   produced "Abingdon (town) (town)". */
+function placeLabel(j){
+  const kind = (j.kind || "").replace("-", " ");
+  const name = j.name || "";
+  return kind && !name.toLowerCase().includes(kind.split(" ").pop())
+    ? `${name} (${kind})` : name;
+}
+
 function renderCoverageDemo(core){
   const capsBox = document.getElementById("coverage-caps");
   const input = document.getElementById("coverage-place");
@@ -1457,11 +1468,23 @@ function renderCoverageDemo(core){
       return;
     }
 
-    const place = table.jurisdictions.find(j =>
+    /* An exact name or alias settles it. Otherwise every government the
+       typed text is a prefix of is a candidate, and more than one
+       candidate is answered with the candidates — never by taking the
+       first row of a table that happens to be sorted alphabetically.
+       "Fairfax" matches Fairfax City and Fairfax County, and this panel
+       telling a reader that one of them is uncovered while the other is
+       covered would be the exact failure the page opposite it warns
+       about. `registry.resolve_jurisdiction` behaves the same way, and
+       for the same reason. */
+    const exact = table.jurisdictions.find(j =>
       j.name.toLowerCase() === typed ||
-      (j.aliases || []).some(a => a.toLowerCase() === typed)) ||
-      table.jurisdictions.find(j => j.name.toLowerCase().startsWith(typed));
-    if (!place){
+      (j.aliases || []).some(a => a.toLowerCase() === typed));
+    const prefixed = exact ? [exact] : table.jurisdictions.filter(j =>
+      j.name.toLowerCase().startsWith(typed) ||
+      (j.aliases || []).some(a => a.toLowerCase().startsWith(typed)));
+
+    if (!prefixed.length){
       nodes.push(el("p", "demo-answer",
         `No Virginia government matches “${input.value.trim()}”. ` +
         "Fairfax City and Fairfax County are two different governments; " +
@@ -1469,10 +1492,30 @@ function renderCoverageDemo(core){
       out.replaceChildren(...nodes);
       return;
     }
+    if (prefixed.length > 1){
+      nodes.push(el("p", "demo-answer",
+        `“${input.value.trim()}” names ${prefixed.length} Virginia ` +
+        "governments. They can have different coverage, so this is not " +
+        "answered until one of them is named."));
+      const list = el("div", "chips");
+      for (const j of prefixed.slice(0, 12)){
+        const b = el("button", "tab", placeLabel(j));
+        b.type = "button";
+        b.addEventListener("click", ()=>{ input.value = j.name; draw(); });
+        list.append(b);
+      }
+      nodes.push(list);
+      if (prefixed.length > 12)
+        nodes.push(el("p", "meta",
+                      `…and ${prefixed.length - 12} more. Type more of the name.`));
+      out.replaceChildren(...nodes);
+      return;
+    }
+    const place = prefixed[0];
 
     const cov = table.capability_coverage[active] || {};
     const hit = (cov.covered || []).find(c => c.jurisdiction === place.id);
-    nodes.push(el("p", "demo-place", `${place.name} (${place.kind})`));
+    nodes.push(el("p", "demo-place", placeLabel(place)));
     if (hit){
       nodes.push(el("p", "demo-answer", "Covered."));
       nodes.push(demoRows([["Sources", hit.sources.join(", ")]]));

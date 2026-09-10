@@ -145,16 +145,29 @@ async def _call_tool(ctx, spec, arguments: dict) -> Attempt:
                    calls=[spec.name])
 
 
-async def run_suite(root: Path, suite: str, ctx, *, profile: str = "default",
+async def run_suite(root: Path, suite: str, ctx=None, *,
+                    profile: str = "default",
                     model: ModelClient | None = None,
-                    tier: int | None = None) -> RunResult:
-    """Score `suite` against a fixture-backed `ctx`.
+                    tier: int | None = None,
+                    context_factory=None) -> RunResult:
+    """Score `suite` against fixture-backed contexts.
 
     With no `model` this is an oracle run: each task's own expected call
     is executed and the envelope assertions are scored. That measures
     the tasks, not a model — it is what proves a trap can be caught at
     all before anyone pays to find out whether a model catches it.
+
+    `context_factory(fixtures)` builds the runtime a task runs against
+    — `commonwealth.fixtures.replay_context` is one —
+    which is what makes a task's declared `fixtures:` mean something: the
+    replay pool is narrowed to what the task declared, so a task that
+    reaches an undeclared recording fails on the replay rather than
+    quietly passing on inputs it never named. Pass `ctx` instead to run
+    every task against one shared context — the tests that are checking
+    the harness rather than the declarations do that.
     """
+    if ctx is None and context_factory is None:
+        raise ValueError("run_suite needs either a ctx or a context_factory")
     from ..core.toolreg import expand_profile
     from ..servers.build import registries
 
@@ -172,6 +185,12 @@ async def run_suite(root: Path, suite: str, ctx, *, profile: str = "default",
                     model=model.name if model else "oracle",
                     toolset=profile, tool_count=len(specs),
                     started_at=_now())
+
+    def _ctx_for(task: Task):
+        """This task's runtime, narrowed to the fixtures it declares."""
+        if context_factory is None:
+            return ctx
+        return context_factory(task.fixtures)
 
     for task in tasks:
         if tier is not None and task.tier != tier:
@@ -197,7 +216,7 @@ async def run_suite(root: Path, suite: str, ctx, *, profile: str = "default",
                     Attempt(None, {}, None),
                     skipped=f"{want} is not in the {profile!r} toolset"))
                 continue
-            attempt = await _call_tool(ctx, specs[want],
+            attempt = await _call_tool(_ctx_for(task), specs[want],
                                        task.expected_arguments)
         else:
             tools = [{"name": s.name, "description": s.description}
@@ -210,7 +229,8 @@ async def run_suite(root: Path, suite: str, ctx, *, profile: str = "default",
                                         f"toolset does not expose",
                                   calls=[chosen] if chosen else [])
             else:
-                attempt = await _call_tool(ctx, specs[chosen], arguments)
+                attempt = await _call_tool(_ctx_for(task), specs[chosen],
+                                           arguments)
 
         scores = score_task(task, attempt)
         run.results.append(TaskResult(
@@ -235,27 +255,49 @@ def write_result(run: RunResult, out_dir: Path) -> Path:
 
 
 def compare_to_baseline(run: RunResult, baseline: dict,
-                        threshold: int = 0) -> list[str]:
-    """Regressions against a stored baseline (§ 4).
+                        threshold: int = 0) -> tuple[list[str], list[str]]:
+    """Compare a run against a stored baseline (§ 4).
 
-    Returns the complaints. CI fails on a regression beyond `threshold`
-    and only warns on an improvement, because a baseline that updated
-    itself on a good day would ratchet quietly and stop being a baseline.
+    Returns (fatal, notes). `threshold` is how many lost passes are
+    tolerated, and it has to govern the per-task complaints as well as
+    the total: reporting every regressed task as fatal made
+    `--threshold 1` refuse even one lost pass, which is the opposite of
+    what the flag says. Below the threshold the regressions are still
+    printed — a tolerated regression that nobody sees is not tolerated,
+    it is hidden — they just do not fail the run.
+
+    A task in the baseline that did not run at all is fatal whatever the
+    threshold. That is not a score moving; it is the denominator moving,
+    which is the failure § 4 exists to make unmissable.
     """
-    problems = []
+    fatal: list[str] = []
+    notes: list[str] = []
     was = {r["task"]: r["passed"] for r in baseline.get("results", [])}
     now = {r.task_id: r.passed for r in run.results if r.skipped is None}
-    for task_id, passed in sorted(now.items()):
-        if was.get(task_id) and not passed:
-            problems.append(f"{task_id}: passed in the baseline, fails now")
+
+    regressed = [task_id for task_id, passed in sorted(now.items())
+                 if was.get(task_id) and not passed]
+    lines = [f"{task_id}: passed in the baseline, fails now"
+             for task_id in regressed]
+    if len(regressed) > threshold:
+        fatal += lines
+    else:
+        notes += lines
+
     dropped = sorted(set(was) - set(now))
     if dropped:
-        problems.append(
+        fatal.append(
             f"{len(dropped)} task(s) in the baseline did not run: {dropped}")
+
     lost = baseline.get("passed", 0) - run.passed
     if lost > threshold:
-        problems.append(
+        fatal.append(
             f"{lost} fewer tasks pass than the baseline "
             f"({run.passed} vs {baseline.get('passed')}), over the "
             f"threshold of {threshold}")
-    return problems
+    elif lost > 0:
+        notes.append(
+            f"{lost} fewer tasks pass than the baseline "
+            f"({run.passed} vs {baseline.get('passed')}), within the "
+            f"threshold of {threshold}")
+    return fatal, notes

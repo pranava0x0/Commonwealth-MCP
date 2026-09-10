@@ -73,6 +73,21 @@ def load_task(path: Path, split: str = "public") -> Task:
     if not isinstance(doc, dict):
         raise TaskLoadError(f"{path}: task file is not a mapping")
 
+    fixtures = list(doc.get("fixtures") or [])
+    # A declared fixture that is not on disk makes the declaration
+    # meaningless, and `eval validate` accepting a misspelled or deleted
+    # directory is exactly how it stops being a check. The names are
+    # checked here so the failure names the file, not a replay miss
+    # three layers down.
+    from ..fixtures import fixture_names
+
+    known = set(fixture_names())
+    missing = sorted(set(fixtures) - known)
+    if missing:
+        raise TaskLoadError(
+            f"{path}: declares fixture(s) {missing} that are not recorded; "
+            f"known fixtures are {sorted(known)}")
+
     traps = list(doc.get("traps") or [])
     unknown = set(traps) - TRAP_KINDS
     if unknown:
@@ -97,7 +112,7 @@ def load_task(path: Path, split: str = "public") -> Task:
         question=str(_require(doc, "question", path)),
         toolset=str(doc.get("toolset") or "default"),
         path=path,
-        fixtures=list(doc.get("fixtures") or []),
+        fixtures=fixtures,
         expected=dict(doc.get("expected") or {}),
         score=kinds,
         traps=traps,

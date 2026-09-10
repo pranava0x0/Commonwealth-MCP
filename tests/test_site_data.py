@@ -461,3 +461,34 @@ def test_llms_txt_states_the_tool_counts_the_profiles_actually_expose():
         f"docs/llms.txt claims {match.group(0)!r}, and the profiles expose "
         f"{actual[0]} tools with {actual[1]} in default and {actual[2]} in "
         "discovery")
+
+
+def test_the_coverage_demo_has_a_real_ambiguity_to_handle(site):
+    """The demo used to resolve a typed prefix by taking the first match,
+    and this is what that cost (found in review of PR #56).
+
+    "Fairfax" is a prefix of two governments, and they do NOT have the
+    same coverage — the county has a registered zoning source and the
+    city does not. Picking the alphabetically first told a reader that
+    Fairfax zoning was uncovered, which is wrong for the county and is
+    the single confusion this project exists to prevent.
+
+    Pinned as data rather than as JS behaviour: if the table or the
+    registry ever changes so the two agree, the demo's ambiguity path
+    stops being exercised by anything real and this says so.
+    """
+    by_name = {j["name"]: j["id"] for j in site["jurisdictions"]}
+    prefixed = sorted(i for n, i in by_name.items()
+                      if n.lower().startswith("fairfax"))
+    assert prefixed == ["va:fairfax-city", "va:fairfax-county"], (
+        "'Fairfax' no longer names exactly two governments")
+
+    differing = []
+    for capability, cov in site["capability_coverage"].items():
+        covered = {c["jurisdiction"] for c in cov.get("covered", [])}
+        if ("va:fairfax-county" in covered) != ("va:fairfax-city" in covered):
+            differing.append(capability)
+    assert differing, (
+        "the two Fairfaxes now have identical coverage for every "
+        "capability, so nothing on the site demonstrates why a shared "
+        "name may not be resolved by picking one")

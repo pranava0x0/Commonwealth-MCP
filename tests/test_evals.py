@@ -290,21 +290,42 @@ def test_committed_baselines_match_a_fresh_oracle_run(ctx):
 def test_a_regression_against_the_baseline_is_reported(ctx):
     run = asyncio.run(run_suite(EVALS, "tier2", ctx, profile="all"))
     baseline = run.as_dict()
-    assert compare_to_baseline(run, baseline) == []
+    assert compare_to_baseline(run, baseline) == ([], [])
 
     # One task that used to pass now fails.
     run.results[0].passed = False
-    problems = compare_to_baseline(run, baseline)
-    assert any("passed in the baseline" in p for p in problems)
+    fatal, _ = compare_to_baseline(run, baseline)
+    assert any("passed in the baseline" in p for p in fatal)
 
 
-def test_a_baseline_task_that_stops_running_is_a_regression(ctx):
-    """Silently dropping a task is the failure mode a denominator exists
-    to catch, so it is caught here too."""
+def test_the_threshold_governs_per_task_regressions_too(ctx):
+    """`--threshold 1` says one lost pass is tolerated, and it has to mean
+    it. Reporting every regressed task as fatal made the flag describe
+    behaviour the code did not have."""
+    run = asyncio.run(run_suite(EVALS, "tier2", ctx, profile="all"))
+    baseline = run.as_dict()
+    run.results[0].passed = False
+
+    fatal, notes = compare_to_baseline(run, baseline, threshold=1)
+    assert fatal == [], f"one lost pass inside a threshold of 1 is fatal: {fatal}"
+    # Tolerated, not hidden: a regression nobody sees is not tolerated.
+    assert any("passed in the baseline" in n for n in notes)
+
+    run.results[1].passed = False
+    fatal, _ = compare_to_baseline(run, baseline, threshold=1)
+    assert fatal, "two lost passes past a threshold of 1 must be fatal"
+
+
+def test_a_baseline_task_that_stops_running_is_fatal_at_any_threshold(ctx):
+    """Silently dropping a task is the denominator moving, not a score
+    moving, so no threshold tolerates it."""
     run = asyncio.run(run_suite(EVALS, "tier2", ctx, profile="all"))
     baseline = run.as_dict()
     run.results = run.results[1:]
-    assert any("did not run" in p for p in compare_to_baseline(run, baseline))
+    for threshold in (0, 5, 99):
+        fatal, _ = compare_to_baseline(run, baseline, threshold=threshold)
+        assert any("did not run" in p for p in fatal), (
+            f"a dropped task was tolerated at threshold {threshold}")
 
 
 def test_writing_a_result_keys_it_by_suite_model_and_toolset(ctx, tmp_path):
@@ -312,3 +333,77 @@ def test_writing_a_result_keys_it_by_suite_model_and_toolset(ctx, tmp_path):
     path = write_result(run, tmp_path)
     assert path.name == "tier2-oracle-discovery.json"
     assert json.loads(path.read_text())["toolset"] == "discovery"
+
+
+# --- declared fixtures are enforced (Codex review, PR #56) -----------------
+
+def test_a_task_declaring_an_unrecorded_fixture_is_refused(tmp_path):
+    """`eval validate` accepting a misspelled or deleted fixture directory
+    is how it stops being a check."""
+    p = _write(tmp_path, "s", "t", {
+        "id": "x", "tier": 2, "question": "q",
+        "fixtures": ["va-not-a-real-fixture"],
+        "score": [{"kind": "tool_choice"}]})
+    with pytest.raises(TaskLoadError, match="not recorded"):
+        load_task(p)
+
+
+def test_every_committed_task_declares_fixtures_that_exist():
+    """Loading is the check, so this is really an assertion that the
+    committed suites still load — but it names the reason."""
+    from commonwealth.fixtures import fixture_names
+
+    known = set(fixture_names())
+    for name in suites(EVALS):
+        for task in load_suite(EVALS, name):
+            assert set(task.fixtures) <= known, (
+                f"{task.id} declares fixtures outside {sorted(known)}")
+
+
+def test_a_task_cannot_pass_on_a_fixture_it_did_not_declare(ctx, tmp_path):
+    """The point of enforcing the declaration. The same call passes when
+    its recording is declared and fails when it is not, so `fixtures:` is
+    a contract rather than a comment."""
+    from commonwealth.fixtures import replay_context
+
+    def task(fixtures):
+        _write(tmp_path, "s", "t", {
+            "id": "declared", "tier": 2, "question": "q",
+            "fixtures": fixtures,
+            "expected": {"tool": "geo.find_zoning",
+                         "arguments": {"jurisdiction": "Fairfax County",
+                                       "pin": "0102 14  0231"},
+                         "coverage": {"result": "hit"}},
+            "score": [{"kind": "coverage_honesty"}]})
+        return asyncio.run(run_suite(tmp_path, "s", profile="all",
+                                     context_factory=replay_context))
+
+    assert task(["va-fairfax-parcels-zoning"]).results[0].passed is True
+    undeclared = task(["va-vgin-landmarks"]).results[0]
+    assert undeclared.passed is False
+    assert "no fixture for this call" in (undeclared.attempt.error or "")
+
+
+def test_a_task_declaring_no_fixtures_still_runs(ctx, tmp_path):
+    """A registry-gap task reaches no source at all. An empty pool is the
+    correct pool for it, not a broken one."""
+    from commonwealth.fixtures import replay_context
+
+    _write(tmp_path, "s", "t", {
+        "id": "gap", "tier": 2, "question": "q", "fixtures": [],
+        "expected": {"tool": "geo.find_zoning",
+                     "arguments": {"jurisdiction": "Craig County",
+                                   "pin": "123"},
+                     "coverage": {"registry": "none"}},
+        "score": [{"kind": "coverage_honesty"}]})
+    run = asyncio.run(run_suite(tmp_path, "s", profile="all",
+                                context_factory=replay_context))
+    assert run.results[0].passed is True
+
+
+def test_run_suite_needs_a_context_or_a_factory(tmp_path):
+    _write(tmp_path, "s", "t", {
+        "id": "x", "tier": 2, "question": "q",
+        "score": [{"kind": "tool_choice"}]})
+    with pytest.raises(ValueError, match="ctx or a context_factory"):
+        asyncio.run(run_suite(tmp_path, "s"))

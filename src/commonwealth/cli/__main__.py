@@ -1555,39 +1555,20 @@ def cmd_configure(args: argparse.Namespace) -> int:
 EVALS_DIR = PROJECT_ROOT / "evals"
 
 
-def _fixture_ctx() -> RuntimeContext:
+def _fixture_ctx(fixtures: list[str] | None = None) -> RuntimeContext:
     """A runtime backed by the recorded fixtures, never the network.
 
     A bench that reached live services would score the weather: a
     government host being slow on the day would read as a model getting
     worse. Every eval runs over the committed recordings, whose vintage
     the result records.
-    """
-    from ..adapters.agenda_platform import AgendaPlatformAdapter
-    from ..adapters.arcgis import ArcGISAdapter
-    from ..adapters.arcgis_geocode import ArcGISGeocodeAdapter
-    from ..adapters.base import TTLCache
-    from ..adapters.replay import HtmlReplayFetcher, ReplayFetcher
-    from ..adapters.virginia_law import VirginiaLawAdapter
-    from ..core.jurisdiction import JurisdictionTable
-    from ..core.registry import SourceRegistry
-    from ..core.results import MemoryResultStore
-    from ..fixtures import (recorded_api_exchanges, recorded_exchanges,
-                            recorded_pages)
 
-    exchanges = recorded_exchanges()
-    return RuntimeContext(
-        sources=SourceRegistry.load(SOURCES_DIR),
-        jurisdictions=JurisdictionTable.load(SOURCES_DIR / "jurisdictions"),
-        arcgis=ArcGISAdapter(fetcher=ReplayFetcher(exchanges),
-                             cache=TTLCache()),
-        geocoder=ArcGISGeocodeAdapter(fetcher=ReplayFetcher(exchanges),
-                                      cache=TTLCache()),
-        virginia_law=VirginiaLawAdapter(
-            fetcher=HtmlReplayFetcher(recorded_pages()),
-            json_fetcher=ReplayFetcher(recorded_api_exchanges())),
-        agendas=AgendaPlatformAdapter(fetcher=ReplayFetcher(exchanges)),
-        results=MemoryResultStore(deterministic=True))
+    `fixtures` narrows the replay pool to what a task declared, so the
+    declaration is enforced rather than decorative.
+    """
+    from ..fixtures import replay_context
+
+    return replay_context(fixtures=fixtures)
 
 
 def cmd_eval_list(args: argparse.Namespace) -> int:
@@ -1647,7 +1628,8 @@ def cmd_eval_run(args: argparse.Namespace) -> int:
             "(design/bench.md § 6); implement a ModelClient and pass it "
             "here. `--oracle` runs everything else.")
     try:
-        run = asyncio.run(run_suite(EVALS_DIR, args.suite, _fixture_ctx(),
+        run = asyncio.run(run_suite(EVALS_DIR, args.suite,
+                                    context_factory=_fixture_ctx,
                                     profile=args.profile, tier=args.tier))
     except TaskLoadError as err:
         return _fail(str(err))
@@ -1676,13 +1658,19 @@ def cmd_eval_run(args: argparse.Namespace) -> int:
         baseline_path = Path(args.baseline)
         if not baseline_path.exists():
             return _fail(f"no baseline at {baseline_path}")
-        problems = compare_to_baseline(run, _json.loads(
+        fatal, notes = compare_to_baseline(run, _json.loads(
             baseline_path.read_text()), threshold=args.threshold)
-        for problem in problems:
+        # Printed either way. A regression inside the threshold is
+        # tolerated, not hidden.
+        for note in notes:
+            print(f"note: {note}")
+        for problem in fatal:
             print(f"REGRESSION: {problem}")
-        if problems:
+        if fatal:
             return 1
-        print("no regression against the baseline")
+        print("no regression against the baseline"
+              + (f" beyond the threshold of {args.threshold}"
+                 if notes else ""))
     return 0 if run.executed and run.passed == run.executed else (
         0 if args.allow_failures else 1)
 

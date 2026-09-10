@@ -165,3 +165,52 @@ async def test_the_cancellation_reading_is_disclosed_as_a_warning():
     env = await search_meetings(ctx, "Richmond City", **CANCELLED)
     codes = [w.code.value for w in env.warnings]
     assert "screening_only" in codes
+
+
+# --- freshness reaches the envelope (Codex review, PR #56) -----------------
+
+async def test_the_answer_reports_the_publishers_own_vintage():
+    """`source_updated_at` was None on every meetings answer, so each one
+    warned `freshness_unavailable` over a timestamp the publisher had
+    actually sent."""
+    ctx = build_ctx()
+    from commonwealth.domains.civic import search_meetings
+
+    env = await search_meetings(ctx, "Richmond City", **BUSY)
+    [source] = env.provenance
+    assert source.source_updated_at, (
+        "the publisher stamps every meeting with when it was last "
+        "edited, and the answer reports no vintage")
+    assert "freshness_unavailable" not in [w.code.value for w in env.warnings]
+
+    # The newest edit in the window, so the vintage describes the answer
+    # rather than whichever record happened to be first.
+    records = env.data["results"][0]["records"]
+    assert source.source_updated_at == max(r["last_modified"]
+                                           for r in records)
+
+
+async def test_an_empty_window_still_admits_it_has_no_vintage():
+    """With no records there is nothing to date, and saying so is the
+    honest answer rather than borrowing a timestamp from elsewhere."""
+    ctx = build_ctx()
+    from commonwealth.domains.civic import search_meetings
+
+    env = await search_meetings(ctx, "Richmond City", **EMPTY)
+    [source] = env.provenance
+    assert source.source_updated_at is None
+    assert "freshness_unavailable" in [w.code.value for w in env.warnings]
+
+
+async def test_a_cancellation_comment_can_be_dated():
+    """The comment is where a cancellation lives, so when it was last
+    revised is the difference between one posted this morning and one
+    posted years ago."""
+    ctx = build_ctx()
+    from commonwealth.domains.civic import search_meetings
+
+    env = await search_meetings(ctx, "Richmond City", **CANCELLED)
+    cancelled = [r for r in env.data["results"][0]["records"]
+                 if "cancellation_note" in r]
+    assert cancelled
+    assert all(r["last_modified"] for r in cancelled)

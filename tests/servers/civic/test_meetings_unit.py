@@ -46,6 +46,34 @@ def test_a_window_that_is_not_one_is_refused(start, end):
         check_range(start, end)
 
 
+def test_the_last_expressible_date_is_refused_rather_than_overflowing():
+    """The publisher's filter is half-open, so the query asks for the day
+    AFTER `end_date`. At date.max that raises OverflowError, which is not
+    a CommonwealthError — it would escape the domain and server wrappers
+    as an untyped internal failure, past the audit path a typed error
+    takes. Found in review of PR #56."""
+    from datetime import date
+
+    with pytest.raises(InvalidQuery) as err:
+        check_range("9999-12-31", "9999-12-31")
+    assert "ends earlier" in str(err.value)
+    # And the day before it is still a perfectly good window, so the
+    # guard is a boundary rather than a horizon.
+    start, end = check_range("9999-12-29", "9999-12-30")
+    assert end < date.max
+
+
+async def test_an_overflowing_window_is_a_typed_error_through_the_tool():
+    """The whole point of the guard: the caller gets InvalidQuery, not a
+    500 from an OverflowError nobody catches."""
+    from commonwealth.domains.civic import search_meetings
+    from tests.conftest import build_ctx
+
+    with pytest.raises(InvalidQuery):
+        await search_meetings(build_ctx(), "Richmond City",
+                              start_date="9999-12-31", end_date="9999-12-31")
+
+
 def test_an_overlong_window_names_the_limit_rather_than_truncating():
     """The failure mode is a silent default, so the error has to say what
     the limit is and that there is no default to fall back to."""
@@ -217,3 +245,48 @@ async def test_a_list_of_non_objects_is_an_outage_not_an_empty_calendar():
     adapter = AgendaPlatformAdapter(fetcher=JunkFetcher())
     with pytest.raises(SourceUnavailable):
         await adapter.search_meetings(manifest, "2026-09-01", "2026-09-30")
+
+
+# --- the publisher's freshness signal (Codex review, PR #56) ---------------
+
+@pytest.mark.parametrize("raw,expected", [
+    ("2026-09-08T14:17:05.757", "2026-09-08T14:17:05Z"),
+    ("2014-05-24T04:17:58.883", "2014-05-24T04:17:58Z"),
+    ("2026-09-08T14:17:05Z", "2026-09-08T14:17:05Z"),
+])
+def test_a_publisher_timestamp_is_normalised_not_reformatted(raw, expected):
+    from commonwealth.adapters.agenda_platform import _utc
+
+    assert _utc(raw) == expected
+
+
+@pytest.mark.parametrize("raw", ["", None, "not a date", "2026-13-45T00:00:00"])
+def test_an_unparseable_timestamp_becomes_none_rather_than_a_guess(raw):
+    """A freshness claim invented from a string nobody could parse is
+    worse than admitting the vintage is unknown."""
+    from commonwealth.adapters.agenda_platform import _utc
+
+    assert _utc(raw) is None
+
+
+async def test_every_meeting_carries_the_publishers_last_edit():
+    from commonwealth.core.registry import SourceRegistry
+    from commonwealth.runtime import SOURCES_DIR
+    from commonwealth.adapters.replay import ReplayFetcher
+
+    registry = SourceRegistry.load(SOURCES_DIR)
+    manifest = registry.get("va-richmond-city-meetings")
+    exchanges = _recorded("va-richmond-city-meetings")["exchanges"]
+    adapter = AgendaPlatformAdapter(fetcher=ReplayFetcher(exchanges))
+    meetings, _ = await adapter.search_meetings(
+        manifest, "2026-09-01", "2026-09-30")
+
+    rows = {str(r["EventId"]): r for r in _one_recorded_window(
+        "va-richmond-city-meetings")}
+    assert meetings
+    for m in meetings:
+        raw = rows[m.event_id]["EventLastModifiedUtc"]
+        assert m.last_modified is not None, (
+            "the publisher sent a last-modified timestamp and it was "
+            "dropped; it is the only freshness signal this platform has")
+        assert m.last_modified.startswith(raw[:19])

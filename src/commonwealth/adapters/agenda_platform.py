@@ -37,7 +37,7 @@ from __future__ import annotations
 
 import re
 from dataclasses import dataclass
-from datetime import date, timedelta
+from datetime import date, datetime, timedelta
 from typing import Any
 
 from pydantic import BaseModel, ConfigDict
@@ -150,6 +150,18 @@ def check_range(start_date: str, end_date: str) -> tuple[date, date]:
     if end < start:
         raise InvalidQuery(
             f"end_date {end_date} is before start_date {start_date}.")
+    if end >= date.max:
+        # The publisher's filter is a half-open interval, so the query
+        # below asks for the day AFTER `end` — and `date.max + 1 day`
+        # raises OverflowError, which is not a CommonwealthError and so
+        # escapes the domain and server wrappers as an untyped internal
+        # failure, past the audit path a typed error takes. A window
+        # ending at the last representable date is refused here, where
+        # the refusal is the documented one.
+        raise InvalidQuery(
+            f"end_date {end_date} is the last date this calendar can "
+            "express, and the query needs the day after it. Ask for a "
+            "window that ends earlier.")
     span = (end - start).days + 1
     if span > MAX_RANGE_DAYS:
         raise InvalidQuery(
@@ -216,6 +228,29 @@ def _rows(payload: Any) -> list[dict]:
 def _text(row: dict, key: str) -> str:
     value = row.get(key)
     return "" if value is None else str(value).strip()
+
+
+def _utc(value: str) -> str | None:
+    """One of the publisher's UTC timestamps, in this project's shape.
+
+    The platform sends `2026-09-08T14:17:05.757` — no offset, and the
+    field name is the only thing saying it is UTC. Sub-second precision
+    on a "when was this notice last edited" timestamp is noise, so it is
+    dropped, and the `Z` is added because every other timestamp in an
+    envelope carries one and a reader should not have to know which
+    fields are secretly UTC.
+
+    Anything that is not the documented shape returns None rather than a
+    guess: a freshness claim invented from an unparseable string is
+    worse than admitting the vintage is unknown.
+    """
+    if not value:
+        return None
+    try:
+        parsed = datetime.fromisoformat(value.rstrip("Z"))
+    except ValueError:
+        return None
+    return parsed.replace(microsecond=0).strftime("%Y-%m-%dT%H:%M:%SZ")
 
 
 class AgendaPlatformAdapter:
@@ -312,7 +347,13 @@ class AgendaPlatformAdapter:
             comment=comment,
             cancellation_note=_cancellation_note(comment),
             event_id=_text(row, "EventId"),
-            last_modified=_text(row, "EventLastModifiedUtc") or None,
+            # The only freshness signal this platform publishes.
+            # Carried through to the envelope, where it becomes both the
+            # record's own `last_modified` and the source entry's
+            # `source_updated_at` — without it every meetings answer
+            # warned `freshness_unavailable` over a timestamp the
+            # publisher had sent.
+            last_modified=_utc(_text(row, "EventLastModifiedUtc")),
         )
 
     async def health(self, manifest: SourceManifest,

@@ -16,6 +16,7 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
+from .adapters.agenda_platform import AgendaPlatformAdapter
 from .adapters.arcgis import ArcGISAdapter
 from .adapters.arcgis_geocode import ArcGISGeocodeAdapter
 from .adapters.base import TTLCache
@@ -23,6 +24,7 @@ from .adapters.replay import HtmlReplayFetcher, ReplayFetcher
 from .adapters.virginia_law import VirginiaLawAdapter
 from .core.jurisdiction import JurisdictionTable
 from .core.registry import SourceRegistry
+from .core.results import MemoryResultStore
 from .runtime import PROJECT_ROOT, SOURCES_DIR, RuntimeContext
 
 FIXTURES_DIR = PROJECT_ROOT / "tests" / "fixtures" / "sources"
@@ -31,16 +33,56 @@ CIVIC_SERVICE_URL = "https://law.lis.virginia.gov/vacode"
 CIVIC_SEARCH_URL = "https://law.lis.virginia.gov/search_cov"
 
 
-def recorded_exchanges() -> list[dict]:
+def fixture_names() -> list[str]:
+    """Every recorded fixture directory, by name.
+
+    Every directory, not every `recorded.json`. The Code of Virginia's
+    recordings are `api-recorded.json` plus a handful of HTML pages,
+    because its two endpoints answer in different formats and merging
+    its JSON into the ArcGIS pool would put one publisher's shapes in
+    another's replay. It is still a fixture, and a task declaring it
+    should not be told it does not exist.
+    """
+    return sorted(p.name for p in FIXTURES_DIR.iterdir()
+                  if p.is_dir() and any(p.iterdir()))
+
+
+def recorded_exchanges(only: list[str] | None = None) -> list[dict]:
     """Every committed source's recorded JSON exchanges, merged.
 
     One pool rather than one per source, because a single query can
     legitimately reach more than one source (decision 0005-C) and the
-    replay has to cover whichever ones actually get queried."""
+    replay has to cover whichever ones actually get queried.
+
+    `only` narrows the pool to the named fixture directories, which is
+    how a bench task's declared `fixtures:` becomes enforceable rather
+    than decorative: with the pool narrowed, a task that reaches an
+    undeclared recording fails on the replay instead of quietly passing
+    on inputs it never declared. An unknown name is an error, not an
+    empty pool — a typo that silently narrowed to nothing would make
+    every task using it fail for the wrong reason.
+    """
+    if only is not None:
+        known = set(fixture_names())
+        unknown = sorted(set(only) - known)
+        if unknown:
+            raise FileNotFoundError(
+                f"no recorded fixture directory named {unknown} under "
+                f"{FIXTURES_DIR}; known fixtures are {sorted(known)}")
+        # Only the directories that contribute to THIS pool. A declared
+        # fixture whose recordings are a different format (the Code of
+        # Virginia's HTML pages and JSON API) contributes nothing here
+        # and is wired separately by `replay_context`, so it is skipped
+        # rather than treated as a missing file.
+        paths = [path for name in sorted(set(only))
+                 if (path := FIXTURES_DIR / name / "recorded.json").exists()]
+    else:
+        paths = sorted(FIXTURES_DIR.glob("*/recorded.json"))
+
     exchanges: list[dict] = []
-    for path in sorted(FIXTURES_DIR.glob("*/recorded.json")):
+    for path in paths:
         exchanges.extend(json.loads(path.read_text())["exchanges"])
-    if not exchanges:
+    if not exchanges and only is None:
         raise FileNotFoundError(
             f"no recorded fixtures under {FIXTURES_DIR}; run "
             "`commonwealth sources sample <source-id>`")
@@ -88,19 +130,36 @@ def recorded_api_exchanges() -> list[dict]:
     return json.loads(path.read_text())["exchanges"]
 
 
-def replay_context(sources_dir: Path | None = None) -> RuntimeContext:
+def replay_context(fixtures: list[str] | None = None,
+                   sources_dir: Path | None = None) -> RuntimeContext:
     """A context whose adapters replay the recordings instead of reaching
     the network. Unknown requests fail loudly — a replay that silently
-    returned nothing would make every consumer vacuous."""
+    returned nothing would make every consumer vacuous.
+
+    `fixtures` narrows the pool to those directories (see
+    `recorded_exchanges`). A task or script that declares its inputs
+    gets a context that can only answer from them. It comes first so
+    this function is usable as the bench runner's `context_factory`
+    without a lambda in between.
+    """
     root = sources_dir or SOURCES_DIR
-    exchanges = recorded_exchanges()
+    exchanges = recorded_exchanges(fixtures)
+    # A narrowed pool can legitimately be empty — a task whose expected
+    # answer is a registry gap reaches no source at all — and
+    # ReplayFetcher refuses to be built with nothing, because for every
+    # other caller an empty pool means an unloaded fixture. One sentinel
+    # exchange nothing will ever request keeps that check meaningful for
+    # them and lets a no-source task run.
+    pool = exchanges or [{"url": "commonwealth://no-fixtures-declared",
+                          "params": {}, "response": {}}]
     return RuntimeContext(
         sources=SourceRegistry.load(root),
         jurisdictions=JurisdictionTable.load(root / "jurisdictions"),
-        arcgis=ArcGISAdapter(fetcher=ReplayFetcher(exchanges),
-                             cache=TTLCache()),
-        geocoder=ArcGISGeocodeAdapter(fetcher=ReplayFetcher(exchanges),
+        arcgis=ArcGISAdapter(fetcher=ReplayFetcher(pool), cache=TTLCache()),
+        geocoder=ArcGISGeocodeAdapter(fetcher=ReplayFetcher(pool),
                                       cache=TTLCache()),
         virginia_law=VirginiaLawAdapter(
             fetcher=HtmlReplayFetcher(recorded_pages()),
-            json_fetcher=ReplayFetcher(recorded_api_exchanges())))
+            json_fetcher=ReplayFetcher(recorded_api_exchanges())),
+        agendas=AgendaPlatformAdapter(fetcher=ReplayFetcher(pool)),
+        results=MemoryResultStore(deterministic=True))
