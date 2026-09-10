@@ -28,6 +28,7 @@ from .runtime import PROJECT_ROOT, SOURCES_DIR, RuntimeContext
 FIXTURES_DIR = PROJECT_ROOT / "tests" / "fixtures" / "sources"
 CIVIC_FIXTURE_DIR = FIXTURES_DIR / "va-code-of-virginia"
 CIVIC_SERVICE_URL = "https://law.lis.virginia.gov/vacode"
+CIVIC_SEARCH_URL = "https://law.lis.virginia.gov/search_cov"
 
 
 def recorded_exchanges() -> list[dict]:
@@ -56,7 +57,17 @@ def recorded_pages() -> dict[str, tuple[str, str]]:
     # (title 15.2, chapter 22), so walking to a citation and reading it
     # replays as one path rather than two halves that only look joined.
     walked = (CIVIC_FIXTURE_DIR / "section-15.2-2200.html").read_text()
+    # The publisher's own full-text search, recorded 2026-09-09 answering
+    # exactly what it has answered every query since 2026-08-28: "The
+    # Search Appliance is down." Nothing reads this endpoint — it is here
+    # so the health watch over it (GitHub issue #12) replays offline like
+    # everything else, and so the page a recovery would replace is on
+    # disk to diff against.
+    search_down = (CIVIC_FIXTURE_DIR / "search-appliance-down.html"
+                   ).read_text()
+    search_url = f"{CIVIC_SEARCH_URL}?query=zoning"
     return {
+        search_url: (search_down, f"{CIVIC_SEARCH_URL}/"),
         f"{CIVIC_SERVICE_URL}/1-500/": (found,
                                         f"{CIVIC_SERVICE_URL}/1-500/"),
         f"{CIVIC_SERVICE_URL}/1-999999/": (missing,

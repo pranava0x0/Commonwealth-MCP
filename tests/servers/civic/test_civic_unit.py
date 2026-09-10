@@ -128,3 +128,83 @@ async def test_browsing_never_claims_to_be_a_search(cw_ctx):
     assert any("No full-text search" in lim
                for lim in env.coverage.known_limitations), (
         "the source's own limitation travels with the answer")
+
+
+# --- the search watch (GitHub issue #12) -----------------------------------
+#
+# `civic.search_law` is not built because the publisher's own full-text
+# search has no working backend. These pin the watch that says so — and,
+# more importantly, the one that will say when it comes back.
+
+class _SearchPageFetcher:
+    def __init__(self, html: str) -> None:
+        self.html = html
+        self.urls: list[str] = []
+
+    async def fetch_html(self, url: str) -> tuple[str, str]:
+        self.urls.append(url)
+        return self.html, url
+
+
+def _law_manifest():
+    from commonwealth.core.registry import SourceRegistry
+    from commonwealth.runtime import SOURCES_DIR
+
+    return SourceRegistry.load(SOURCES_DIR).get("va-code-of-virginia")
+
+
+async def test_the_appliance_down_page_reads_as_down():
+    from commonwealth.adapters.virginia_law import VirginiaLawAdapter
+
+    fetcher = _SearchPageFetcher(
+        "<html><body><p>The Search Appliance is down. "
+        "Please try again later.</p></body></html>")
+    status = await VirginiaLawAdapter(fetcher=fetcher).search_status(
+        _law_manifest())
+    assert status["reachable"] is True
+    assert status["appliance_up"] is False
+    assert "no full-text search" in status["detail"]
+
+
+async def test_a_page_without_the_marker_reads_as_recovered():
+    """The other half, and the one that matters: when the publisher fixes
+    their search, this is what flips."""
+    from commonwealth.adapters.virginia_law import VirginiaLawAdapter
+
+    fetcher = _SearchPageFetcher(
+        "<html><body><ol><li>§ 15.2-2280. Zoning ordinances</li>"
+        "</ol></body></html>")
+    status = await VirginiaLawAdapter(fetcher=fetcher).search_status(
+        _law_manifest())
+    assert status["appliance_up"] is True
+    assert "issue #12 is unblocked" in status["detail"]
+
+
+async def test_an_unreachable_search_endpoint_is_not_a_recovery():
+    """A fetch that fails must never read as the appliance being up."""
+    from commonwealth.adapters.virginia_law import VirginiaLawAdapter
+    from commonwealth.core.errors import SourceUnavailable
+
+    class Down:
+        async def fetch_html(self, url):
+            raise SourceUnavailable("simulated outage")
+
+    status = await VirginiaLawAdapter(fetcher=Down()).search_status(
+        _law_manifest())
+    assert status["reachable"] is False and status["appliance_up"] is False
+
+
+async def test_a_manifest_with_no_search_endpoint_is_not_watched():
+    from commonwealth.adapters.virginia_law import VirginiaLawAdapter
+
+    manifest = _law_manifest().model_copy(deep=True)
+    del manifest.adapter.search_url
+    status = await VirginiaLawAdapter(fetcher=_SearchPageFetcher("")
+                                      ).search_status(manifest)
+    assert status is None
+
+
+def test_the_manifest_declares_the_endpoint_it_watches():
+    manifest = _law_manifest()
+    assert manifest.adapter.search_url == (
+        "https://law.lis.virginia.gov/search_cov")

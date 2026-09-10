@@ -459,7 +459,9 @@ and that holds whichever geometry is true.
 
 - **Source:** `va-code-of-virginia`
 - **Observed:** 2026-09-08, answering issue #12's first acceptance criterion
-- **Test:** none yet; recorded before any code is written against it
+- **Re-checked:** 2026-09-09 — unchanged; see the watch below
+- **Test:** `VirginiaLawAdapter.search_status()`, reported under
+  `search_watch` in this source's health output
 
 Issue #12 asks whether the site's own search is public or keyed before
 anything is built. Both halves of the answer turned out to matter.
@@ -492,6 +494,21 @@ does not exist returns `{"TitleNumber":null,"TitleName":null,"ChapterList":[]}`
 with HTTP 200, which is the same "found nothing" shape
 `civic.get_code_section` already reports as `found=False` rather than an
 error.
+
+**Re-checked 2026-09-09, and watched from now on.** `search_cov` still
+answers — publicly, keylessly, HTTP 200 after one redirect — and its
+backend still returns "The Search Appliance is down" for every query
+tried. Two consecutive days is not a blip, and the endpoint is the
+publisher's to fix, not this project's to work around.
+
+Nothing reads that endpoint. What changed is that the manifest now
+declares it as `search_url` and the adapter's health output carries a
+`search_watch` block saying whether the backend has come back. It is
+reported and never graded: both endpoints this project actually reads
+are healthy, so a down search appliance is not this source being
+unhealthy. The point is that the day it recovers shows up in
+`commonwealth sources probe` instead of waiting for someone to
+re-try it by hand.
 
 That leaves two consequences, neither of them decided here. Full-text search over the
 Code has no working public path today, so #12 cannot be closed as

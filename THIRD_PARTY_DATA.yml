@@ -270,6 +270,7 @@ sources:
   recorded_fixtures:
   - tests/fixtures/sources/va-code-of-virginia/api-recorded.json
   - tests/fixtures/sources/va-code-of-virginia/no-such-section.html
+  - tests/fixtures/sources/va-code-of-virginia/search-appliance-down.html
   - tests/fixtures/sources/va-code-of-virginia/section-1-500.html
   - tests/fixtures/sources/va-code-of-virginia/section-15.2-2200.html
 - id: va-open-data-portal

@@ -29,6 +29,9 @@ adapter:
   type: virginia_law
   service_url: https://law.lis.virginia.gov/vacode
   api_url: https://law.lis.virginia.gov/api
+  # Watched, never read (GitHub issue #12). See search_watch in
+  # the health output and design/source-quirks.md § 18.
+  search_url: https://law.lis.virginia.gov/search_cov
 
 access:
   mode: anonymous
@@ -59,9 +62,12 @@ coverage:
   known_limitations:
     - No full-text search. The publisher's own search endpoint is public
       and keyless and its backend answered every query with "The Search
-      Appliance is down" on 2026-09-08; its JSON API has no search
-      operation among the twenty-three it serves. Reaching a section
-      means knowing the citation or walking the table of contents to it.
+      Appliance is down" on 2026-09-08 and again on 2026-09-09; its JSON
+      API has no search operation among the twenty-three it serves.
+      Reaching a section means knowing the citation or walking the table
+      of contents to it. The endpoint is declared as `search_url` and
+      watched by the health probe (`search_watch`), so its recovery is
+      noticed rather than waited on.
     - Browsing returns the publisher's own table of contents and nothing
       about what a section says. A chapter's title is a heading, not a
       summary of the law under it.
