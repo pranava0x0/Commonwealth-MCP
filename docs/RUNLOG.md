@@ -3,6 +3,58 @@
 One entry per significant work session or delegated research task: why it
 ran, cost where relevant, and whether it was worth it.
 
+## 2026-09-09 to 2026-09-11 — meetings, health, Loudoun, a bench runner, and a Demos page
+
+It took one PR (#56) and four review rounds, and it cleared most of the
+open issue list.
+
+**Beyond land records.** `civic.search_meetings` reads five localities'
+public meetings from the Legistar platform, whose API turned out to be
+public and keyless. The platform publishes no cancellation field — every
+event is "Final" — so a cancellation is read out of the comment and
+labelled as a reading. `geo.find_health_facilities` opens the health
+domain over Loudoun County's own map of hospitals and urgent care, which
+is a county's list and says so. Loudoun County's parcels and zoning are
+registered too; it was every demo's standing example of a gap.
+
+**What the survey found not to exist.** Fairfax and Charles City are not
+on the agenda platform. VDOE publishes no queryable endpoint, and the two
+"Virginia Schools" items on ArcGIS Online are saved queries over the
+landmarks layer already registered. The Code of Virginia's search
+backend reported itself down on both days it was checked, so #12 waits
+on the publisher and a health probe now watches for it.
+
+**A correction.** The first pass concluded the legislative API was
+key-gated and #11 was blocked on a registration. An outside review
+pointed at bulk files, and they are real: keyless, hourly during
+session, live for the current session, and served under file names
+whose casing does not match the documentation (source-quirks § 20).
+
+**Also shipped:** W3C trace context through adapter calls (#36); a
+divisible per-host budget (#20, partial); the `commonwealth eval` runner
+with an oracle mode that proves a trap can be caught before a model run
+is paid for (#28, partial); `stale_source` implemented against each
+publisher's own declared cadence (#57); and a fifth page of five small
+demo apps. Codex found twelve real problems across three rounds,
+including the demo silently resolving "Fairfax" to one of two
+governments whose zoning coverage differs.
+
+**The last round before merge.** Regenerating the site with the network
+refused showed the `--fixtures` build had been reading the meetings
+calls from the live publisher: the agenda adapter was never given the
+replay fetcher. The builder now replays it, and a test rebuilds the trail
+with egress denied and compares it to the committed data. A self-review
+of the branch found six more: the Code search watch dropped its query,
+the Loudoun health floors sat under a key the probe never read, a
+meetings answer had no inline cap, a town inside a covered county read
+as covered, oracle mode passed a task whose call errored, and baselines
+counted skipped tasks as dropped. A staleness warning is now only
+raised against a cadence whose provenance the manifest records.
+
+**Worth it?** Yes. The registry went from land records only to land,
+meetings and health, and three issues that looked blocked turned out to
+be blocked on a wrong reading of the source rather than on the source.
+
 ## 2026-09-08 — four pages, one plugin, three skills
 
 Nine issues, all from the same measurement: the site was one page of

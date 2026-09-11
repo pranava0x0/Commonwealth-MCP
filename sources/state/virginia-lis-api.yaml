@@ -1,0 +1,126 @@
+# Inventory only: the General Assembly's legislative API, which bills,
+# members and committees live behind (GitHub issue #11). Registered as a
+# row so the gap is written down rather than showing up as a
+# Commonwealth that publishes no legislation.
+#
+# Access verified live 2026-09-09, and revised 2026-09-10: the JSON API
+# is key-gated, and it is not the only way in. The same division
+# publishes the same session data as bulk CSV over Azure Blob Storage,
+# documented, keyless, and updated hourly while the General Assembly is
+# sitting. That is a real route to bills and votes and it changes what
+# issue #11 is blocked on — see the `bulk` block below and
+# design/source-quirks.md § 20.
+#
+# The verification is worth recording because the obvious probe gets it
+# wrong. lis.virginia.gov serves a React single-page app, and any path
+# the app routes client-side answers HTTP 200 with the app's own HTML
+# shell — including `Bill/api/getbilllistasync`, which looks exactly
+# like a public bills endpoint until the body is read and turns out to
+# say "You need to enable JavaScript to run this app." The real API
+# paths are the ones that answer 401 with `text/plain`:
+#
+#   Session/api/getsessionlistasync      -> 401 text/plain
+#   Member/api/getmemberlistasync        -> 401 text/plain
+#   Committee/api/getcommitteelistasync  -> 401 text/plain
+#   Bill/api/getbilllistasync            -> 200 text/html, SPA shell
+#
+# So a status code alone does not establish whether this source is
+# reachable, and neither does a 200.
+#
+# `declared_state: proposed` and `adapter.type: none` keep this out of
+# selection; the activation gate refuses both. It declares no
+# capabilities because only an active manifest may.
+id: va-lis-legislative-api
+name: Virginia LIS Legislative API (bills, members, committees)
+jurisdiction: va
+
+publisher:
+  agency: Division of Legislative Automated Systems (DLAS), Virginia General Assembly
+  authority_level: primary
+
+domains: [civic]
+
+capabilities: []
+
+# `type: none` keeps this row out of selection, and an inventory
+# adapter takes no parameters — so the bulk endpoint is recorded in
+# authority_notes below rather than here, where the schema would refuse
+# it and rightly so: a parameter block is for an adapter that runs.
+adapter:
+  type: none
+
+access:
+  mode: api_key
+  automation_status: manual_review_required
+  terms_url: https://lis.virginia.gov/developers
+  terms_notes: >
+    Not reviewed, and deliberately so. The terms that matter are the ones
+    attached to the key, and they are presented at registration; reading
+    the public developer page and recording that as a terms review would
+    be recording the wrong document. The review belongs to whoever
+    registers. What is established as of 2026-09-09 is the access mode —
+    the endpoints require a bearer credential and answer 401 without one.
+
+freshness:
+  expected_cadence: unknown
+  cadence_source: >
+    Bill status moves on the General Assembly's own session calendar. No
+    SLA is published for how quickly an action reaches the API, and it
+    cannot be observed from here without a key.
+  ttl_hint_seconds: 3600
+
+coverage:
+  geography: va
+  temporal: current
+  known_limitations:
+    - >
+      Nothing is read yet, so a question about legislation returns
+      registry coverage `none` for want of a registered source — which
+      means this project has nowhere to look and never that the General
+      Assembly passed nothing.
+    - >
+      The bulk files are whole-session snapshots, not a query service.
+      Answering "which bills mention X" from them means downloading the
+      session and filtering locally. That is reading what the publisher
+      chose to hand over whole, which is a different thing from the
+      full-text search the Code of Virginia does not offer (issue #12) —
+      there the publisher runs no such operation at all.
+    - >
+      The keyed JSON API remains the only route to anything the bulk
+      files do not carry, and obtaining that key is a registration form
+      a human fills in.
+    - >
+      Bill identity is versioned — introduced, engrossed, enrolled. The
+      bulk BILLS.CSV carries one row per bill with its latest actions,
+      so a tool built on it must say which version it is describing
+      rather than implying "the bill".
+
+authority_notes: >
+  Bulk endpoint, verified 2026-09-10 and not yet read by anything:
+  https://lis.blob.core.windows.net/lisfiles/<year><session-type>/<FILE>
+  — e.g. .../20261/BILLS.CSV for the 2026 regular session. Keyless,
+  documented at help.lis.virginia.gov/data/, updated hourly during
+  session, and served under file names whose casing does not match the
+  documentation (design/source-quirks.md § 20 lists the real ones).
+  Container listing is disabled, so the names cannot be discovered and
+  have to be known.
+
+  Intended capabilities, when there is an adapter: legislation.search and
+  bill.lookup, serving civic.search_legislation and civic.get_bill. They
+  are recorded here rather than in `capabilities` because a capability id
+  is a routing promise this row cannot keep. This is a second civic
+  source alongside the Code of Virginia pages, not a replacement for
+  them: the Code site needs no key and answers a different question.
+  Note also that bill identity is versioned — introduced, engrossed,
+  enrolled — and a tool built on this must return which version it read,
+  because "the bill" is an answer to a question nobody asked.
+
+health:
+  probe: none
+  expect: {}
+
+lifecycle:
+  declared_state: proposed
+  added: "2026-09-09"
+  last_verified: "2026-09-09"
+  verified_by: pranava0x0

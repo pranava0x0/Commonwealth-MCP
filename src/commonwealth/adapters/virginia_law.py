@@ -27,7 +27,8 @@ from typing import Any
 
 from pydantic import BaseModel, ConfigDict
 
-from ..core.errors import InvalidQuery, SourceUnavailable
+from ..core.errors import (CommonwealthError, InvalidQuery,
+                           SourceUnavailable)
 from ..core.registry import SourceManifest, register_adapter_params
 from .base import HtmlFetcher, HttpFetcher, egress_policy_for, log_source_call
 
@@ -41,6 +42,14 @@ class VirginiaLawParams(BaseModel):
     # reads. A manifest without it browses nothing and still looks up
     # sections.
     api_url: str | None = None
+    # The publisher's own full-text search, which is public and keyless
+    # and whose backend has answered every query with "The Search
+    # Appliance is down" since it was first checked (GitHub issue #12,
+    # source-quirks.md § 18). No tool reads it: there is nothing behind
+    # it to read. It is declared so `search_status()` can watch it, and
+    # so the day it starts answering is a probe result rather than
+    # something nobody thinks to re-check.
+    search_url: str | None = None
 
 
 register_adapter_params("virginia_law", VirginiaLawParams)
@@ -273,6 +282,49 @@ class VirginiaLawAdapter:
                            paragraphs=parser.paragraphs,
                            source_url=final_url)
 
+    # The exact sentence the publisher's search backend returns instead
+    # of results. Matched on rather than inferred from an empty result
+    # page, because "down" and "no matches" are different answers and
+    # this is the one the publisher actually gives.
+    SEARCH_DOWN_MARKER = "Search Appliance is down"
+
+    async def search_status(self, manifest: SourceManifest,
+                            query: str = "zoning") -> dict | None:
+        """Is the publisher's own full-text search answering yet?
+
+        `civic.search_law` (issue #12) is not built because there is
+        nothing to build it on: the endpoint is public and keyless and
+        its backend has returned "The Search Appliance is down" to every
+        query since 2026-08-28, re-checked 2026-09-08 and 2026-09-09. A
+        tool shipped against it would record an outage as its fixture.
+
+        This is not a tool and does not answer questions about the Code.
+        It watches one thing — whether that backend has come back — so
+        the answer arrives as a probe result rather than depending on
+        someone remembering to try it again. Returns None when the
+        manifest declares no search endpoint to watch.
+        """
+        p = VirginiaLawParams.model_validate(
+            manifest.adapter.model_dump(exclude={"type"}))
+        if not p.search_url:
+            return None
+        fetcher = self._fetcher_for(manifest, p.search_url)
+        url = f"{p.search_url}?query={query}"
+        try:
+            html, final_url = await fetcher.fetch_html(url)
+        except CommonwealthError as err:
+            return {"reachable": False, "appliance_up": False,
+                    "detail": str(err), "url": url}
+        up = self.SEARCH_DOWN_MARKER not in html
+        return {"reachable": True, "appliance_up": up, "url": final_url,
+                "detail": ("the search backend answered; issue #12 is "
+                           "unblocked and civic.search_law can be built "
+                           "and recorded against it"
+                           if up else
+                           "the publisher's search backend still reports "
+                           "itself down, so there is no full-text search "
+                           "over the Code of Virginia to build on")}
+
     async def health(self, manifest: SourceManifest, known_section: str,
                      known_title: str | None) -> dict:
         """Both endpoints, because this source has two.
@@ -292,6 +344,13 @@ class VirginiaLawAdapter:
             entries, _ = await self.browse(manifest, title=known_title)
             out["browse"] = {"title": known_title, "chapters": len(entries),
                              "found": bool(entries)}
+        # Watched, not graded. The search backend being down does not make
+        # this source unhealthy — both endpoints this project actually
+        # reads are working — so it is reported and never counted as a
+        # problem. It is here so its recovery gets noticed.
+        status = await self.search_status(manifest)
+        if status is not None:
+            out["search_watch"] = status
         return out
 
     async def browse(self, manifest: SourceManifest, title: str = "",

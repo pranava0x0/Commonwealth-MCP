@@ -1,0 +1,20 @@
+# design/bench.md § 5 task 8 — the ambiguity trap. "Fairfax" names two
+# governments that share a border and most of a name. Passing means
+# handing both back; failing means picking one and sounding certain.
+id: t2-fairfax-city-vs-county
+tier: 2
+question: "Which Virginia government is Fairfax?"
+toolset: default
+fixtures: []
+expected:
+  tool: registry.resolve_jurisdiction
+  arguments:
+    query: fairfax
+  requires_user_choice: true
+  max_calls: 1
+score:
+  - kind: tool_choice
+  - kind: argument_match
+  - kind: coverage_honesty
+  - kind: restraint
+traps: [ambiguity]

@@ -643,3 +643,59 @@ async def test_a_303_turns_a_posted_query_into_a_get_of_the_location(
     assert seen[1][1].endswith("/result?f=json"), seen[1][1]
     assert seen[1][2] == b"", "a GET of the Location carries no body"
 
+
+
+# --- the per-host budget is configurable (GitHub issue #20) ----------------
+#
+# It remains per PROCESS. These pin the one control an operator has today
+# — dividing it — and the refusals that keep a typo from taking every
+# lookup down.
+
+def test_the_budget_defaults_to_two(monkeypatch):
+    from commonwealth.adapters.base import (DEFAULT_PER_HOST_CONCURRENCY,
+                                            PER_HOST_CONCURRENCY_ENV,
+                                            per_host_concurrency)
+
+    monkeypatch.delenv(PER_HOST_CONCURRENCY_ENV, raising=False)
+    assert per_host_concurrency() == DEFAULT_PER_HOST_CONCURRENCY == 2
+
+
+@pytest.mark.parametrize("value,expected", [("1", 1), ("4", 4), ("16", 16)])
+def test_an_operator_can_divide_the_budget(monkeypatch, value, expected):
+    """Four workers against one service, budget 1 each, is a total of
+    four rather than eight."""
+    from commonwealth.adapters.base import (PER_HOST_CONCURRENCY_ENV,
+                                            per_host_concurrency)
+
+    monkeypatch.setenv(PER_HOST_CONCURRENCY_ENV, value)
+    assert per_host_concurrency() == expected
+
+
+@pytest.mark.parametrize("value", ["0", "-1", "abc", "2.5", " "])
+def test_an_unusable_budget_falls_back_rather_than_failing_startup(
+        monkeypatch, value):
+    """A typo in an environment variable must not stop every government
+    lookup, and zero would deadlock rather than slow anything."""
+    from commonwealth.adapters.base import (DEFAULT_PER_HOST_CONCURRENCY,
+                                            PER_HOST_CONCURRENCY_ENV,
+                                            per_host_concurrency)
+
+    monkeypatch.setenv(PER_HOST_CONCURRENCY_ENV, value)
+    assert per_host_concurrency() == DEFAULT_PER_HOST_CONCURRENCY
+
+
+async def test_fetch_html_keeps_the_urls_own_query(monkeypatch):
+    """`fetch_html` passed `params={}`, and httpx takes an empty dict as a
+    query to set, so the URL's own query was stripped before sending. The
+    Code of Virginia's search watch asked for `search_cov?query=zoning`
+    and fetched the bare landing page (found in review of PR #56)."""
+    seen: list[str] = []
+
+    def handler(request):
+        seen.append(str(request.url))
+        return httpx.Response(200, text="<html>ok</html>",
+                              headers={"content-type": "text/html"})
+
+    fetcher = _fetcher_over(handler, monkeypatch)
+    await fetcher.fetch_html(URL + "?query=zoning")
+    assert seen == [URL + "?query=zoning"]

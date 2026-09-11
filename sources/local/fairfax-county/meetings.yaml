@@ -1,0 +1,79 @@
+# Inventory only: Fairfax County publishes meeting agendas, and not in a way
+# anything here can read (GitHub issue #13). This file exists so the gap
+# is written down rather than showing up as a locality that holds no
+# meetings.
+#
+# Checked live 2026-09-09. The Granicus/Legistar Web API — the platform
+# behind the five registered meeting sources — answers this locality's
+# slug with "LegistarConnectionString setting is not set up in InSite for
+# client", which is the vendor saying there is no such client, not an
+# outage. The county publishes board meeting materials through its own CMS as linked PDFs, with no API found behind them.
+#
+# Note that the vendor's portal host wildcards: `<anything>.legistar.com`
+# answers HTTP 200 for slugs that are not clients at all, so a portal
+# that loads is not evidence a locality is on the platform. The API is
+# the only thing that answers that question, and for this locality it
+# answers no.
+#
+# `declared_state: proposed` and `adapter.type: none` keep this row out
+# of selection; the activation gate refuses both, so it can never be
+# queried or probed. It declares no capabilities because the registry
+# only lets an active manifest do that — the intended capability is
+# recorded below instead.
+id: va-fairfax-county-meetings
+name: Fairfax County Meeting Agendas (no machine-readable source found)
+jurisdiction: va:fairfax-county
+
+publisher:
+  agency: Fairfax County government (Office of the Clerk to the Board of Supervisors)
+  authority_level: primary
+
+domains: [civic]
+
+capabilities: []
+
+adapter:
+  type: none
+
+access:
+  mode: anonymous
+  automation_status: manual_review_required
+  terms_url: https://www.fairfaxcounty.gov/boardofsupervisors/board-meetings
+  terms_notes: >
+    Not reviewed. There is nothing to review terms for until a
+    machine-readable endpoint is found: this row records the absence of
+    one. A terms review is part of registering a source, not part of
+    recording that none exists.
+
+freshness:
+  expected_cadence: unknown
+  cadence_source: >
+    Unknown, and unknowable from here without an endpoint to observe.
+  ttl_hint_seconds: 3600
+
+coverage:
+  geography: va:fairfax-county
+  temporal: current
+  known_limitations:
+    - No machine-readable meeting source is registered for this locality.
+      Meetings happen; this project cannot read them. A `civic.search_meetings`
+      call for this jurisdiction returns registry coverage `none`, which
+      is a gap in what is registered and never a statement that the
+      locality held no meetings.
+
+authority_notes: >
+  Intended capability, when a source is found: meeting.search, serving
+  civic.search_meetings. It is recorded here rather than in
+  `capabilities` because the registry's activation gate allows only an
+  active manifest to declare a capability, and a capability id is a
+  routing promise this row cannot keep. Fairfax County is one of the three localities with registered sources of their own, which is why its absence from the agenda platform is worth recording explicitly rather than leaving as silence.
+
+health:
+  probe: none
+  expect: {}
+
+lifecycle:
+  declared_state: proposed
+  added: "2026-09-09"
+  last_verified: "2026-09-09"
+  verified_by: pranava0x0

@@ -1,0 +1,24 @@
+# The publisher answers a section it does not have by redirecting to the
+# enclosing title's listing, HTTP 200 — not a 404. Passing means
+# found=False; failing means reading a chapter listing as the text of a
+# section, which is a wrong answer wearing a correct one's clothes.
+id: t2-code-section-not-found
+tier: 2
+question: "What does Code of Virginia section 1-999999 say?"
+toolset: default
+fixtures: [va-code-of-virginia]
+expected:
+  tool: civic.get_code_section
+  arguments:
+    citation: "1-999999"
+  coverage:
+    registry: covered
+    execution: complete
+    result: empty
+  max_calls: 1
+score:
+  - kind: tool_choice
+  - kind: argument_match
+  - kind: coverage_honesty
+  - kind: restraint
+traps: []

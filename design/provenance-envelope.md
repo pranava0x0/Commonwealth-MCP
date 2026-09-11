@@ -176,6 +176,14 @@ Structured, typed, and few. A warning changes how the reader should use the data
  "source_id": "va-fairfax-zoning"}
 ```
 
+**`stale_source`, implemented 2026-09-10 (GitHub issue #57).** It was declared here and in the code from the start and emitted from nowhere for as long as almost no source reported a vintage. Six now do, so it is wired: `EnvelopeBuilder.add_source` compares `source_updated_at` to `retrieved_at` and warns when the gap is more than twice the `expected_cadence` the manifest declares.
+
+Three decisions, recorded because none of them is forced:
+
+- **The publisher's own cadence is the yardstick**, exactly as this line already said. A source declaring `unknown` is never judged, and neither is one whose `cadence_source` is `unknown`: a cadence nobody recorded the origin of is not the publisher's promise, and holding the publisher to it would attribute a schedule to them that they may never have given (two manifests declare `daily` that way; found in review of PR #56). Either way there is no promise to be behind, and inventing a threshold would be this project deciding what "current" means for someone else's data. `freshness_unavailable` already covers a source that reports no vintage at all, and the two are mutually exclusive by construction.
+- **Twice the cadence, not once.** A daily feed read on Monday still showing Friday's edit is a weekend, not a fault. The grace factor is a constant named `CADENCE_GRACE` rather than a number inside a comparison.
+- **It makes the fixture-backed build time-dependent, and that is accepted.** Staleness is measured against now, so a recording that is fresh today warns later and the committed `docs/data/*.json` stops matching what `build_site.py` produces. Rather than avoid that, a test names the fixtures that crossed the line and says to regenerate — a build that notices its recordings have aged is doing its job, as long as it says so in words instead of a diff.
+
 Initial warning codes: `screening_only`, `stale_source` (source's own update cadence missed), `boundary_precision` (parcel/boundary geometry generalized), `alias_match` (entity matched via alias, not exact ID), `mixed_vintages` (results combine different as-of dates), `terms_note` (source terms constrain reuse).
 
 Four more codes were added during implementation without the review the rule below requires; this note, added 2026-08-28, records them: `freshness_unavailable` (publisher exposes no update date; the envelope says so instead of guessing), `sensitive_public_data` (allowlisted fields withheld per classification), `insecure_transport` (a manifest-declared HTTP-only source), `truncated_inline` (more records retrieved than shown, count and narrowing advice attached).

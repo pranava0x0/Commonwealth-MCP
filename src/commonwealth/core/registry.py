@@ -41,6 +41,14 @@ ACTIVATABLE = {AutomationStatus.permitted, AutomationStatus.public_api,
 # activation gate, so an inventory row can never be queried or probed.
 INVENTORY_ADAPTER = "none"
 NO_PROBE = "none"
+# The probe every ArcGIS manifest declares, and the keys its `expect`
+# block is read for. `min_features` is the floor per layer; the rest are
+# sample records the recorder uses. A key outside this set is not an
+# error the probe reports, it is a floor that silently becomes 1 (two
+# manifests shipped that way; found in review of PR #56).
+ARCGIS_COUNT_PROBE = "arcgis_layer_count"
+ARCGIS_PROBE_EXPECT_KEYS = frozenset(
+    {"min_features", "sample_pin", "sample_point", "also_record"})
 
 
 class DataClassification(str, enum.Enum):
@@ -118,10 +126,70 @@ class Access(_Strict):
     credential_ref: str | None = None
 
 
+# How often a publisher says it updates, in seconds. The vocabulary is
+# what manifests already use; `unknown` is not here because a source that
+# does not say how often it updates cannot be measured against its own
+# promise, and inventing a number for it would be this project deciding
+# what "current" means for someone else's data (GitHub issue #57).
+CADENCE_SECONDS = {
+    "continuous": 3600,
+    "daily": 86_400,
+    "weekly": 7 * 86_400,
+    "monthly": 30 * 86_400,
+    "quarterly": 90 * 86_400,
+    "annually": 365 * 86_400,
+}
+
+# How far past its own cadence a source may drift before an answer says
+# so. A grace factor rather than a hard edge: a daily feed retrieved on
+# Monday still showing Friday's edit is a weekend, not a fault. Two is a
+# choice — the smallest multiple that does not fire on ordinary slippage
+# — and it is written here, once, rather than left implicit in a
+# comparison.
+CADENCE_GRACE = 2
+
+# What a manifest writes for `cadence_source` when nobody recorded where
+# the cadence came from. The design vocabulary is stated | observed |
+# unknown; in practice manifests write the statement out ("Stated by the
+# publisher in the service description: ...") and this is the one value
+# that is a sentinel rather than a record.
+NO_CADENCE_PROVENANCE = "unknown"
+
+
 class Freshness(_Strict):
     expected_cadence: str
     cadence_source: str  # stated | observed | unknown
     ttl_hint_seconds: int
+
+    def cadence_has_provenance(self) -> bool:
+        """Whether the manifest says where its cadence came from.
+
+        `expected_cadence: daily` with `cadence_source: unknown` is a
+        figure somebody wrote down without recording who said it. That
+        is not the publisher's promise, so it is not a yardstick this
+        project may hold the publisher to. Found in review of PR #56:
+        two manifests declare `daily` that way, and the staleness
+        warning was telling callers the publisher had described that
+        schedule.
+        """
+        source = (self.cadence_source or "").strip().lower()
+        return bool(source) and source != NO_CADENCE_PROVENANCE
+
+    def stale_after_seconds(self) -> int | None:
+        """When this publisher's own data should be called stale, or None.
+
+        None for a cadence this project does not recognise, `unknown`
+        included, and None for a cadence whose provenance is unknown:
+        either way there is no promise of the publisher's to measure
+        against, and `freshness_unavailable` already covers a source
+        that reports no vintage at all. The two warnings answer
+        different questions — "we do not know how old this is" and "we
+        know, and it is older than the publisher said it would be".
+        """
+        if not self.cadence_has_provenance():
+            return None
+        base = CADENCE_SECONDS.get((self.expected_cadence or "").lower())
+        return base * CADENCE_GRACE if base else None
 
 
 class CoverageDecl(_Strict):
@@ -239,6 +307,29 @@ def validate_manifest(manifest: SourceManifest, path: str,
     unknown_caps = manifest.capability_ids() - known_capabilities
     if unknown_caps:
         bad(f"capabilities not in the vocabulary: {sorted(unknown_caps)}")
+
+    if manifest.health.probe == ARCGIS_COUNT_PROBE:
+        expect = manifest.health.expect or {}
+        unknown_keys = sorted(set(expect) - ARCGIS_PROBE_EXPECT_KEYS)
+        if unknown_keys:
+            bad(f"health.expect for probe {ARCGIS_COUNT_PROBE!r} is not read "
+                f"for {unknown_keys}, so every floor would fall back to 1; "
+                "declare floors as min_features: {<layer>: <count>}")
+        floors = expect.get("min_features")
+        layers = set(manifest.adapter.model_dump().get("layers") or {})
+        if isinstance(floors, dict):
+            stray = sorted(set(floors) - layers)
+            if stray:
+                bad("health.expect.min_features names layers this manifest "
+                    f"does not declare: {stray}; declared: {sorted(layers)}")
+            if any(isinstance(v, bool) or not isinstance(v, int) or v < 1
+                   for v in floors.values()):
+                bad("health.expect.min_features values must be whole "
+                    "numbers of at least 1")
+        elif floors is not None and (isinstance(floors, bool)
+                                     or not isinstance(floors, int)):
+            bad("health.expect.min_features must be a whole number or a "
+                "map of layer to whole number")
 
     params_model = _ADAPTER_PARAMS.get(manifest.adapter.type)
     if params_model is None:

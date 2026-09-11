@@ -13,7 +13,7 @@ exposes the result through the Model Context Protocol.
 
 ## What it answers today
 
-Fifteen tools, nine of them in the default set and thirteen in discovery.
+Seventeen tools, ten of them in the default set and fourteen in discovery.
 
 - Which local government covers a place, by name, FIPS code, street
   address, ZIP code, or coordinates. Ambiguous names return every match
@@ -38,8 +38,26 @@ Fifteen tools, nine of them in the default set and thirteen in discovery.
   DEQ's water-quality monitoring stations. Each is one published layer and
   none is an inventory.
 - Where a jurisdiction's boundary runs, statewide.
+- Where the hospitals and urgent care are, in the localities that publish
+  their own map of them — Loudoun County today. This is a county's map,
+  not a state licensing register: Virginia licenses hospitals through
+  VDH, which publishes nothing this project can query. Physician
+  offices, clinics and EMS are not in it, and an empty answer is never
+  evidence that care is unavailable near a point.
 - The text of a Code of Virginia section, by citation, and the Code's
-  own table of contents to walk to one you do not have.
+  own table of contents to walk to one you do not have. There is no
+  full-text search over the Code from any public endpoint, so reaching a
+  section you cannot cite means walking to it.
+- When a locality's public bodies meet, in Richmond City, Alexandria
+  City, Albemarle County, Hampton City, and Petersburg City. These come
+  from the civic-tech platform each locality publishes through rather
+  than from the locality's own servers, and most Virginia localities are
+  not on it — a locality with no registered source returns a coverage
+  gap, never an empty calendar. The platform publishes no cancellation
+  field at all, so a cancelled meeting comes back with the publisher's
+  comment and a note saying the cancellation was read out of prose. The
+  agenda document is a link and is never fetched, so what a meeting is
+  about is not in the answer.
 
 Six skills package those into workflows — the order to ask in, and what
 an empty answer means at each step:
@@ -116,4 +134,5 @@ only path that runs.
 - [Tool reference](https://pranava0x0.github.io/Commonwealth-MCP/tools.html): every tool with the arguments it takes, searchable by name, package, or description
 - [Source registry](https://pranava0x0.github.io/Commonwealth-MCP/sources.html): every registered government system, whose terms apply, and what each one does not cover
 - [Recorded lookups](https://pranava0x0.github.io/Commonwealth-MCP/examples.html): one call per tool with the full answer, grouped by what each walk demonstrates
+- [Demos](https://pranava0x0.github.io/Commonwealth-MCP/demos.html): five short apps over the same recorded answers — screen a site, find a public meeting, walk the Code, check coverage, read an envelope
 - [Run log](https://github.com/pranava0x0/Commonwealth-MCP/blob/main/docs/RUNLOG.md): what happened when

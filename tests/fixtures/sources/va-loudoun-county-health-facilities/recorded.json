@@ -1,0 +1,980 @@
+{
+ "source_id": "va-loudoun-county-health-facilities",
+ "recorded_at": "2026-09-11T12:28:32Z",
+ "rights": {
+  "sources": [
+   {
+    "source_id": "va-loudoun-county-health-facilities",
+    "publisher": "Loudoun County government (Office of Mapping and Geographic Information)",
+    "terms_url": "https://logis.loudoun.gov/metadata/Zoning.html"
+   }
+  ],
+  "note": "Recorded government-published responses; third-party content excluded from the repo's CC0 grant (../../../design/architecture.md decision 0011). Each publisher's own terms govern its own responses."
+ },
+ "summary": {
+  "health:health_facilities": {
+   "layer": "health_facilities",
+   "feature_count": 28,
+   "min_expected": 1,
+   "healthy": true
+  },
+  "near_ashburn": {
+   "record_count": 12,
+   "names": [
+    "Inova Loudoun Hospital-Lansdowne",
+    "Nova Medical and Urgent Care Center-Sterling",
+    "Loudoun Walk In Medical Center",
+    "Medics USA Primary and Urgent Care Center",
+    "Nova Medical and Urgent Care Center-Ashburn",
+    "Patient First-Leesburg"
+   ],
+   "codes": [
+    "H",
+    "U"
+   ]
+  },
+  "far_from_any": {
+   "record_count": 0
+  },
+  "near_sterling": {
+   "point": [
+    -77.408014727372,
+    39.025534437083
+   ],
+   "record_count": 12
+  },
+  "by_name_prefix": {
+   "prefix": "Inova",
+   "record_count": 6,
+   "names": [
+    "Inova Urgent Care Center-Dulles South",
+    "Inova Loudoun Hospital-Lansdowne",
+    "Inova Urgent Care Center",
+    "Inova Emergency Care Center-Leesburg",
+    "Inova Primary Care - Ashburn"
+   ]
+  }
+ },
+ "exchanges": [
+  {
+   "url": "https://logis.loudoun.gov/gis/rest/services/COL/HospitalsUrgentCare/MapServer/0/query",
+   "params": {
+    "f": "json",
+    "where": "1=1",
+    "returnCountOnly": "true"
+   },
+   "response": {
+    "count": 28
+   }
+  },
+  {
+   "url": "https://logis.loudoun.gov/gis/rest/services/COL/HospitalsUrgentCare/MapServer/0/query",
+   "params": {
+    "f": "json",
+    "outFields": "Address,FACILITY,FACILITY_NAME,OBJECTID",
+    "resultRecordCount": "50",
+    "returnGeometry": "false",
+    "geometry": "{\"x\": -77.4875, \"y\": 39.0437, \"spatialReference\": {\"wkid\": 4326}}",
+    "geometryType": "esriGeometryPoint",
+    "inSR": "4326",
+    "spatialRel": "esriSpatialRelIntersects",
+    "distance": "8000.0",
+    "units": "esriSRUnit_Meter"
+   },
+   "response": {
+    "displayFieldName": "FACILITY_NAME",
+    "fieldAliases": {
+     "Address": "Address",
+     "FACILITY": "Facility",
+     "FACILITY_NAME": "Facility_Name",
+     "OBJECTID": "OBJECTID"
+    },
+    "fields": [
+     {
+      "name": "Address",
+      "type": "esriFieldTypeString",
+      "alias": "Address",
+      "length": 50
+     },
+     {
+      "name": "FACILITY",
+      "type": "esriFieldTypeString",
+      "alias": "Facility",
+      "length": 50
+     },
+     {
+      "name": "FACILITY_NAME",
+      "type": "esriFieldTypeString",
+      "alias": "Facility_Name",
+      "length": 50
+     },
+     {
+      "name": "OBJECTID",
+      "type": "esriFieldTypeOID",
+      "alias": "OBJECTID"
+     }
+    ],
+    "features": [
+     {
+      "attributes": {
+       "Address": "44045 Riverside Pkwy, Leesburg, VA 20176",
+       "FACILITY": "H",
+       "FACILITY_NAME": "Inova Loudoun Hospital-Lansdowne",
+       "OBJECTID": 2
+      }
+     },
+     {
+      "attributes": {
+       "Address": "21036 Tripleseven Rd, Sterling, VA 20165",
+       "FACILITY": "U",
+       "FACILITY_NAME": "Nova Medical and Urgent Care Center-Sterling",
+       "OBJECTID": 3
+      }
+     },
+     {
+      "attributes": {
+       "Address": "44320 Premier Plaza #120, Ashburn, VA 20147",
+       "FACILITY": "U",
+       "FACILITY_NAME": "Loudoun Walk In Medical Center",
+       "OBJECTID": 5
+      }
+     },
+     {
+      "attributes": {
+       "Address": "44050 Ashburn Village Blvd, Ashburn, VA 20147",
+       "FACILITY": "U",
+       "FACILITY_NAME": "Medics USA Primary and Urgent Care Center",
+       "OBJECTID": 9
+      }
+     },
+     {
+      "attributes": {
+       "Address": "21785 Filigree Ct #100, Ashburn, VA 20147",
+       "FACILITY": "U",
+       "FACILITY_NAME": "Nova Medical and Urgent Care Center-Ashburn",
+       "OBJECTID": 10
+      }
+     },
+     {
+      "attributes": {
+       "Address": "601 Potomac Station, Leesburg, VA 20176",
+       "FACILITY": "U",
+       "FACILITY_NAME": "Patient First-Leesburg",
+       "OBJECTID": 15
+      }
+     },
+     {
+      "attributes": {
+       "Address": "44095 Pipeline Pl #370, Ashburn, VA 20147",
+       "FACILITY": "U",
+       "FACILITY_NAME": "Inova Primary Care - Ashburn",
+       "OBJECTID": 21
+      }
+     },
+     {
+      "attributes": {
+       "Address": "43480 Yukon Dr #100, Ashburn, VA 20147",
+       "FACILITY": "H",
+       "FACILITY_NAME": "Kaiser Permanente",
+       "OBJECTID": 22
+      }
+     },
+     {
+      "attributes": {
+       "Address": "22505 Landmark Ct, Ashburn, VA 20148",
+       "FACILITY": "H",
+       "FACILITY_NAME": "Inova Emergency Care Center",
+       "OBJECTID": 23
+      }
+     },
+     {
+      "attributes": {
+       "Address": "21001 SYCOLIN RD  #180, VA 20147",
+       "FACILITY": "U",
+       "FACILITY_NAME": "ASHBURN WALK IN & URGENT CARE",
+       "OBJECTID": 24
+      }
+     },
+     {
+      "attributes": {
+       "Address": "43150 BROADLANDS CENTER PLZ #184, VA 20148",
+       "FACILITY": "U",
+       "FACILITY_NAME": "ACT FAST URGENT CARE ",
+       "OBJECTID": 25
+      }
+     },
+     {
+      "attributes": {
+       "Address": "46200 Potomac Run Plaza Sterling, VA 20164",
+       "FACILITY": "U",
+       "FACILITY_NAME": "CARE NOW URGENT CARE CASCADES",
+       "OBJECTID": 27
+      }
+     }
+    ]
+   }
+  },
+  {
+   "url": "https://logis.loudoun.gov/gis/rest/services/COL/HospitalsUrgentCare/MapServer/0",
+   "params": {
+    "f": "json"
+   },
+   "response": {
+    "currentVersion": 10.91,
+    "cimVersion": "2.9.0",
+    "id": 0,
+    "name": "Hospitals and Urgent Care Facilities",
+    "type": "Feature Layer",
+    "description": "This Data set consists of point locations representing the building location of hospitals and urgent care facilities in Loudoun County, Virginia.",
+    "geometryType": "esriGeometryPoint",
+    "sourceSpatialReference": {
+     "wkid": 2924,
+     "latestWkid": 2924,
+     "xyTolerance": 0.0032808333333333335,
+     "zTolerance": 0.001,
+     "mTolerance": 0.001,
+     "falseX": -110512500,
+     "falseY": -88858000,
+     "xyUnits": 3048.0060960121914,
+     "falseZ": -100000,
+     "zUnits": 10000,
+     "falseM": -100000,
+     "mUnits": 10000
+    },
+    "copyrightText": "",
+    "parentLayer": null,
+    "subLayers": [],
+    "minScale": 0,
+    "maxScale": 0,
+    "referenceScale": 0.0,
+    "drawingInfo": {
+     "renderer": {
+      "type": "uniqueValue",
+      "field1": "FACILITY",
+      "defaultSymbol": {
+       "type": "esriSMS",
+       "style": "esriSMSCircle",
+       "color": [
+        0,
+        166,
+        116,
+        255
+       ],
+       "size": 4,
+       "angle": 0,
+       "xoffset": 0,
+       "yoffset": 0,
+       "outline": {
+        "color": [
+         0,
+         0,
+         0,
+         255
+        ],
+        "width": 1
+       }
+      },
+      "defaultLabel": "<all other values>",
+      "uniqueValueInfos": [
+       {
+        "symbol": {
+         "type": "esriPMS",
+         "url": "0d65e3a32e647c451040cdfdc3d8f5c7",
+         "imageData": "iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAACXBIWXMAAA7EAAAOxAGVKw4bAAABB0lEQVQ4jeXQsWrCQBzH8e8lckOmSpciDi4WXJNAoIODT+HiGzi4+BQOvoSbwc3BR1AQhA6iQvsAGSqEDk25XIcsPRsK0TiIPzg4fvD/8L+rUHIqVwS1AFzgq6AhgR2IzxOQZ89jsdnw6PukUqKjCHE4YP2ebjRIazW0UrBcYjsOSRzjA6+noEoSHpSCMMSq12EygV7PXKffxxoM4HiEahXiGAl85zy5nNw46HkwGpldu30B2Gplp0j+BbdbmM/NrtMB1z0TXK9hODS78fgC8JzcOZg2m0SOw1O3mxVaQxCYA9MphGF2DwLQmo/VCpkDirfZTL8AdsGlbGCftyEg3gtif1L6H/4AUwpDasRD3NoAAAAASUVORK5CYII=",
+         "contentType": "image/png",
+         "width": 15,
+         "height": 15,
+         "angle": 0,
+         "xoffset": 0,
+         "yoffset": 0
+        },
+        "value": "H",
+        "label": "Hospital"
+       },
+       {
+        "symbol": {
+         "type": "esriPMS",
+         "url": "49d4a98274fac448e3a0ee9beb4c1897",
+         "imageData": "iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAAwElEQVQ4jdXOIU4DURSF4e+FSVeBJCRVrUUQloAsregKCF0GFraAmuBQmDY1dRV1CDSYhh00zNRMyONRMQwTkvmTJ9659/45mZbJ/lWY08dlnJWsxywaCTHAbRwE7v1B+Gs6JHzkpOA6mZ8euLnIuYuDwNOI5TfhJ8eBWY0Sw+p9UfAmFbZFh4Q7XnqM42HgrOQmuXnGQxwcsfkhnLJFHi9Wn1T4epXsHWzYFh0XFswzzpP4vbFwwgdW9brVEDZhDwPLIElXCd2DAAAAAElFTkSuQmCC",
+         "contentType": "image/png",
+         "width": 15,
+         "height": 15,
+         "angle": 0,
+         "xoffset": 0,
+         "yoffset": 0
+        },
+        "value": "U",
+        "label": "Urgent Care"
+       }
+      ],
+      "fieldDelimiter": ",",
+      "authoringInfo": {
+       "colorRamp": {
+        "type": "multipart",
+        "colorRamps": [
+         {
+          "type": "algorithmic",
+          "algorithm": "esriCIELabAlgorithm",
+          "fromColor": [
+           35,
+           106,
+           153,
+           255
+          ],
+          "toColor": [
+           35,
+           106,
+           153,
+           255
+          ]
+         },
+         {
+          "type": "algorithmic",
+          "algorithm": "esriCIELabAlgorithm",
+          "fromColor": [
+           68,
+           196,
+           45,
+           255
+          ],
+          "toColor": [
+           68,
+           196,
+           45,
+           255
+          ]
+         },
+         {
+          "type": "algorithmic",
+          "algorithm": "esriCIELabAlgorithm",
+          "fromColor": [
+           189,
+           60,
+           40,
+           255
+          ],
+          "toColor": [
+           189,
+           60,
+           40,
+           255
+          ]
+         },
+         {
+          "type": "algorithmic",
+          "algorithm": "esriCIELabAlgorithm",
+          "fromColor": [
+           199,
+           52,
+           194,
+           255
+          ],
+          "toColor": [
+           199,
+           52,
+           194,
+           255
+          ]
+         },
+         {
+          "type": "algorithmic",
+          "algorithm": "esriCIELabAlgorithm",
+          "fromColor": [
+           65,
+           186,
+           154,
+           255
+          ],
+          "toColor": [
+           65,
+           186,
+           154,
+           255
+          ]
+         },
+         {
+          "type": "algorithmic",
+          "algorithm": "esriCIELabAlgorithm",
+          "fromColor": [
+           163,
+           142,
+           49,
+           255
+          ],
+          "toColor": [
+           163,
+           142,
+           49,
+           255
+          ]
+         },
+         {
+          "type": "algorithmic",
+          "algorithm": "esriCIELabAlgorithm",
+          "fromColor": [
+           41,
+           60,
+           186,
+           255
+          ],
+          "toColor": [
+           41,
+           60,
+           186,
+           255
+          ]
+         },
+         {
+          "type": "algorithmic",
+          "algorithm": "esriCIELabAlgorithm",
+          "fromColor": [
+           176,
+           56,
+           104,
+           255
+          ],
+          "toColor": [
+           176,
+           56,
+           104,
+           255
+          ]
+         },
+         {
+          "type": "algorithmic",
+          "algorithm": "esriCIELabAlgorithm",
+          "fromColor": [
+           46,
+           158,
+           72,
+           255
+          ],
+          "toColor": [
+           46,
+           158,
+           72,
+           255
+          ]
+         },
+         {
+          "type": "algorithmic",
+          "algorithm": "esriCIELabAlgorithm",
+          "fromColor": [
+           173,
+           201,
+           71,
+           255
+          ],
+          "toColor": [
+           173,
+           201,
+           71,
+           255
+          ]
+         },
+         {
+          "type": "algorithmic",
+          "algorithm": "esriCIELabAlgorithm",
+          "fromColor": [
+           61,
+           72,
+           153,
+           255
+          ],
+          "toColor": [
+           61,
+           72,
+           153,
+           255
+          ]
+         },
+         {
+          "type": "algorithmic",
+          "algorithm": "esriCIELabAlgorithm",
+          "fromColor": [
+           73,
+           180,
+           201,
+           255
+          ],
+          "toColor": [
+           73,
+           180,
+           201,
+           255
+          ]
+         },
+         {
+          "type": "algorithmic",
+          "algorithm": "esriCIELabAlgorithm",
+          "fromColor": [
+           171,
+           101,
+           58,
+           255
+          ],
+          "toColor": [
+           171,
+           101,
+           58,
+           255
+          ]
+         }
+        ]
+       }
+      }
+     },
+     "scaleSymbols": true,
+     "transparency": 0,
+     "labelingInfo": null
+    },
+    "defaultVisibility": true,
+    "extent": {
+     "xmin": 11707762.744025022,
+     "ymin": 7024076.160332933,
+     "xmax": 11803025.771018282,
+     "ymax": 7101393.3859475255,
+     "spatialReference": {
+      "wkid": 2924,
+      "latestWkid": 2924,
+      "xyTolerance": 0.003280833333333333,
+      "zTolerance": 0.001,
+      "mTolerance": 0.001,
+      "falseX": -110512500,
+      "falseY": -88858000,
+      "xyUnits": 36916142.964165,
+      "falseZ": -100000,
+      "zUnits": 10000,
+      "falseM": -100000,
+      "mUnits": 10000
+     }
+    },
+    "hasAttachments": false,
+    "htmlPopupType": "esriServerHTMLPopupTypeAsHTMLText",
+    "displayField": "FACILITY_NAME",
+    "typeIdField": null,
+    "subtypeFieldName": null,
+    "subtypeField": null,
+    "defaultSubtypeCode": null,
+    "fields": [
+     {
+      "name": "OBJECTID",
+      "type": "esriFieldTypeOID",
+      "alias": "OBJECTID",
+      "domain": null
+     },
+     {
+      "name": "SHAPE",
+      "type": "esriFieldTypeGeometry",
+      "alias": "SHAPE",
+      "domain": null
+     },
+     {
+      "name": "ID",
+      "type": "esriFieldTypeInteger",
+      "alias": "Id",
+      "domain": null
+     },
+     {
+      "name": "FACILITY_NAME",
+      "type": "esriFieldTypeString",
+      "alias": "Facility_Name",
+      "length": 50,
+      "domain": null
+     },
+     {
+      "name": "FACILITY",
+      "type": "esriFieldTypeString",
+      "alias": "Facility",
+      "length": 50,
+      "domain": null
+     },
+     {
+      "name": "Address",
+      "type": "esriFieldTypeString",
+      "alias": "Address",
+      "length": 50,
+      "domain": null
+     }
+    ],
+    "geometryField": {
+     "name": "SHAPE",
+     "type": "esriFieldTypeGeometry",
+     "alias": "SHAPE"
+    },
+    "indexes": [
+     {
+      "name": "FDO_OBJECTID",
+      "fields": "OBJECTID",
+      "isAscending": true,
+      "isUnique": true,
+      "description": ""
+     },
+     {
+      "name": "FDO_SHAPE",
+      "fields": "SHAPE",
+      "isAscending": true,
+      "isUnique": false,
+      "description": ""
+     }
+    ],
+    "subtypes": [],
+    "relationships": [],
+    "canModifyLayer": true,
+    "canScaleSymbols": false,
+    "hasLabels": false,
+    "capabilities": "Map,Query,Data",
+    "maxRecordCount": 1000,
+    "supportsStatistics": true,
+    "supportsExceedsLimitStatistics": true,
+    "supportsAdvancedQueries": true,
+    "supportedQueryFormats": "JSON, geoJSON, PBF",
+    "isDataVersioned": false,
+    "ownershipBasedAccessControlForFeatures": {
+     "allowOthersToQuery": true
+    },
+    "useStandardizedQueries": true,
+    "supportedSpatialRelationships": [
+     "esriSpatialRelIntersects",
+     "esriSpatialRelContains",
+     "esriSpatialRelCrosses",
+     "esriSpatialRelEnvelopeIntersects",
+     "esriSpatialRelIndexIntersects",
+     "esriSpatialRelOverlaps",
+     "esriSpatialRelTouches",
+     "esriSpatialRelWithin",
+     "esriSpatialRelRelation"
+    ],
+    "advancedQueryCapabilities": {
+     "useStandardizedQueries": true,
+     "supportsStatistics": true,
+     "supportsPercentileStatistics": true,
+     "supportsHavingClause": true,
+     "supportsOrderBy": true,
+     "supportsDistinct": true,
+     "supportsCountDistinct": true,
+     "supportsPagination": true,
+     "supportsLod": false,
+     "supportsQueryWithLodSR": false,
+     "supportsTrueCurve": true,
+     "supportsQueryWithDatumTransformation": true,
+     "supportsReturningQueryExtent": true,
+     "supportsQueryWithDistance": true,
+     "supportsSqlExpression": true,
+     "supportsTimeRelation": true,
+     "supportsSqlFormat": false,
+     "supportsQueryAnalytic": false
+    },
+    "supportsDatumTransformation": true,
+    "dateFieldsTimeReference": {
+     "timeZone": "Eastern Standard Time",
+     "respectsDaylightSaving": true
+    },
+    "preferredTimeReference": {
+     "timeZone": "Eastern Standard Time",
+     "respectsDaylightSaving": true
+    },
+    "datesInUnknownTimezone": false,
+    "hasMetadata": true,
+    "isDataArchived": false,
+    "archivingInfo": {
+     "supportsQueryWithHistoricMoment": false,
+     "startArchivingMoment": -1
+    },
+    "supportsCoordinatesQuantization": true,
+    "supportsDynamicLegends": true
+   }
+  },
+  {
+   "url": "https://logis.loudoun.gov/gis/rest/services/COL/HospitalsUrgentCare/MapServer/0/query",
+   "params": {
+    "f": "json",
+    "outFields": "Address,FACILITY,FACILITY_NAME,OBJECTID",
+    "resultRecordCount": "50",
+    "returnGeometry": "false",
+    "geometry": "{\"x\": -77.9, \"y\": 39.15, \"spatialReference\": {\"wkid\": 4326}}",
+    "geometryType": "esriGeometryPoint",
+    "inSR": "4326",
+    "spatialRel": "esriSpatialRelIntersects",
+    "distance": "2000.0",
+    "units": "esriSRUnit_Meter"
+   },
+   "response": {
+    "displayFieldName": "FACILITY_NAME",
+    "fieldAliases": {
+     "Address": "Address",
+     "FACILITY": "Facility",
+     "FACILITY_NAME": "Facility_Name",
+     "OBJECTID": "OBJECTID"
+    },
+    "fields": [
+     {
+      "name": "Address",
+      "type": "esriFieldTypeString",
+      "alias": "Address",
+      "length": 50
+     },
+     {
+      "name": "FACILITY",
+      "type": "esriFieldTypeString",
+      "alias": "Facility",
+      "length": 50
+     },
+     {
+      "name": "FACILITY_NAME",
+      "type": "esriFieldTypeString",
+      "alias": "Facility_Name",
+      "length": 50
+     },
+     {
+      "name": "OBJECTID",
+      "type": "esriFieldTypeOID",
+      "alias": "OBJECTID"
+     }
+    ],
+    "features": []
+   }
+  },
+  {
+   "url": "https://logis.loudoun.gov/gis/rest/services/COL/HospitalsUrgentCare/MapServer/0/query",
+   "params": {
+    "f": "json",
+    "outFields": "Address,FACILITY,FACILITY_NAME,OBJECTID",
+    "resultRecordCount": "50",
+    "returnGeometry": "false",
+    "geometry": "{\"x\": -77.408014727372, \"y\": 39.025534437083, \"spatialReference\": {\"wkid\": 4326}}",
+    "geometryType": "esriGeometryPoint",
+    "inSR": "4326",
+    "spatialRel": "esriSpatialRelIntersects",
+    "distance": "8000.0",
+    "units": "esriSRUnit_Meter"
+   },
+   "response": {
+    "displayFieldName": "FACILITY_NAME",
+    "fieldAliases": {
+     "Address": "Address",
+     "FACILITY": "Facility",
+     "FACILITY_NAME": "Facility_Name",
+     "OBJECTID": "OBJECTID"
+    },
+    "fields": [
+     {
+      "name": "Address",
+      "type": "esriFieldTypeString",
+      "alias": "Address",
+      "length": 50
+     },
+     {
+      "name": "FACILITY",
+      "type": "esriFieldTypeString",
+      "alias": "Facility",
+      "length": 50
+     },
+     {
+      "name": "FACILITY_NAME",
+      "type": "esriFieldTypeString",
+      "alias": "Facility_Name",
+      "length": 50
+     },
+     {
+      "name": "OBJECTID",
+      "type": "esriFieldTypeOID",
+      "alias": "OBJECTID"
+     }
+    ],
+    "features": [
+     {
+      "attributes": {
+       "Address": "21036 Tripleseven Rd, Sterling, VA 20165",
+       "FACILITY": "U",
+       "FACILITY_NAME": "Nova Medical and Urgent Care Center-Sterling",
+       "OBJECTID": 3
+      }
+     },
+     {
+      "attributes": {
+       "Address": "44320 Premier Plaza #120, Ashburn, VA 20147",
+       "FACILITY": "U",
+       "FACILITY_NAME": "Loudoun Walk In Medical Center",
+       "OBJECTID": 5
+      }
+     },
+     {
+      "attributes": {
+       "Address": "44050 Ashburn Village Blvd, Ashburn, VA 20147",
+       "FACILITY": "U",
+       "FACILITY_NAME": "Medics USA Primary and Urgent Care Center",
+       "OBJECTID": 9
+      }
+     },
+     {
+      "attributes": {
+       "Address": "21785 Filigree Ct #100, Ashburn, VA 20147",
+       "FACILITY": "U",
+       "FACILITY_NAME": "Nova Medical and Urgent Care Center-Ashburn",
+       "OBJECTID": 10
+      }
+     },
+     {
+      "attributes": {
+       "Address": "45305 Catalina Ct 103, Sterling, VA 20166",
+       "FACILITY": "U",
+       "FACILITY_NAME": "Concentra Urgent Care",
+       "OBJECTID": 13
+      }
+     },
+     {
+      "attributes": {
+       "Address": "46440 Benedict Dr Suite 107, Sterling, VA 20164",
+       "FACILITY": "U",
+       "FACILITY_NAME": "Loudoun Medical Group Primary Care Center",
+       "OBJECTID": 14
+      }
+     },
+     {
+      "attributes": {
+       "Address": "47100 Community Pl #100, Sterling, VA 20164",
+       "FACILITY": "U",
+       "FACILITY_NAME": "Patient First-Sterling",
+       "OBJECTID": 16
+      }
+     },
+     {
+      "attributes": {
+       "Address": "44095 Pipeline Pl #370, Ashburn, VA 20147",
+       "FACILITY": "U",
+       "FACILITY_NAME": "Inova Primary Care - Ashburn",
+       "OBJECTID": 21
+      }
+     },
+     {
+      "attributes": {
+       "Address": "43480 Yukon Dr #100, Ashburn, VA 20147",
+       "FACILITY": "H",
+       "FACILITY_NAME": "Kaiser Permanente",
+       "OBJECTID": 22
+      }
+     },
+     {
+      "attributes": {
+       "Address": "22505 Landmark Ct, Ashburn, VA 20148",
+       "FACILITY": "H",
+       "FACILITY_NAME": "Inova Emergency Care Center",
+       "OBJECTID": 23
+      }
+     },
+     {
+      "attributes": {
+       "Address": "101 ENTERPRISE ST STERLING VA 20164",
+       "FACILITY": "U",
+       "FACILITY_NAME": "Care Now Urgent Care Sterling",
+       "OBJECTID": 26
+      }
+     },
+     {
+      "attributes": {
+       "Address": "46200 Potomac Run Plaza Sterling, VA 20164",
+       "FACILITY": "U",
+       "FACILITY_NAME": "CARE NOW URGENT CARE CASCADES",
+       "OBJECTID": 27
+      }
+     }
+    ]
+   }
+  },
+  {
+   "url": "https://logis.loudoun.gov/gis/rest/services/COL/HospitalsUrgentCare/MapServer/0/query",
+   "params": {
+    "f": "json",
+    "outFields": "Address,FACILITY,FACILITY_NAME,OBJECTID",
+    "resultRecordCount": "50",
+    "returnGeometry": "false",
+    "where": "FACILITY_NAME LIKE 'Inova%' ESCAPE '\\'"
+   },
+   "response": {
+    "displayFieldName": "FACILITY_NAME",
+    "fieldAliases": {
+     "Address": "Address",
+     "FACILITY": "Facility",
+     "FACILITY_NAME": "Facility_Name",
+     "OBJECTID": "OBJECTID"
+    },
+    "fields": [
+     {
+      "name": "Address",
+      "type": "esriFieldTypeString",
+      "alias": "Address",
+      "length": 50
+     },
+     {
+      "name": "FACILITY",
+      "type": "esriFieldTypeString",
+      "alias": "Facility",
+      "length": 50
+     },
+     {
+      "name": "FACILITY_NAME",
+      "type": "esriFieldTypeString",
+      "alias": "Facility_Name",
+      "length": 50
+     },
+     {
+      "name": "OBJECTID",
+      "type": "esriFieldTypeOID",
+      "alias": "OBJECTID"
+     }
+    ],
+    "features": [
+     {
+      "attributes": {
+       "Address": "24801 Pinebrook Rd #110, Chantilly, VA 20152",
+       "FACILITY": "U",
+       "FACILITY_NAME": "Inova Urgent Care Center-Dulles South",
+       "OBJECTID": 1
+      }
+     },
+     {
+      "attributes": {
+       "Address": "44045 Riverside Pkwy, Leesburg, VA 20176",
+       "FACILITY": "H",
+       "FACILITY_NAME": "Inova Loudoun Hospital-Lansdowne",
+       "OBJECTID": 2
+      }
+     },
+     {
+      "attributes": {
+       "Address": "740 E. Main St, Purcellville, VA 20132",
+       "FACILITY": "U",
+       "FACILITY_NAME": "Inova Urgent Care Center",
+       "OBJECTID": 6
+      }
+     },
+     {
+      "attributes": {
+       "Address": "224 Cornwall Street NW, Leesburg, VA 20176",
+       "FACILITY": "H",
+       "FACILITY_NAME": "Inova Emergency Care Center-Leesburg",
+       "OBJECTID": 7
+      }
+     },
+     {
+      "attributes": {
+       "Address": "44095 Pipeline Pl #370, Ashburn, VA 20147",
+       "FACILITY": "U",
+       "FACILITY_NAME": "Inova Primary Care - Ashburn",
+       "OBJECTID": 21
+      }
+     },
+     {
+      "attributes": {
+       "Address": "22505 Landmark Ct, Ashburn, VA 20148",
+       "FACILITY": "H",
+       "FACILITY_NAME": "Inova Emergency Care Center",
+       "OBJECTID": 23
+      }
+     }
+    ]
+   }
+  }
+ ]
+}

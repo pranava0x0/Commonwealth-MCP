@@ -14,11 +14,12 @@ from dataclasses import dataclass
 from ..adapters.arcgis import ArcGISQueryResult, ArcGISRecord
 from ..adapters.arcgis_geocode import (GeocodeCandidate,
                                        GeocodeResult)
-from ..core.assemble import (EnvelopeBuilder, failure, result_dim,
-                             selection_coverage)
+from ..core.assemble import (EnvelopeBuilder, Frame, failure, result_dim,
+                             resolve_frame, selection_coverage)
 from ..core.envelope import (AccessPath, Coverage, Envelope,
                              ExecutionCoverage, PaginationCoverage,
                              RegistryCoverage, ResultCoverage, WarningCode)
+from ..core.envelope import INLINE_RECORD_CAP
 from ..core.errors import CommonwealthError, InvalidQuery
 from ..core.jurisdiction import Jurisdiction, JurisdictionKind
 from ..core.registry import SourceManifest
@@ -28,8 +29,6 @@ from ..runtime import RuntimeContext
 from .containment import resolve_point, warn_if_near_a_border
 
 GEO_TOOLS = ToolRegistry(package="geo")
-
-INLINE_RECORD_CAP = 25
 
 # Degrees of allowable offset handed to the platform's own generalization.
 # ~0.0002 deg is roughly 22 m at Virginia's latitude: enough to shrink a
@@ -69,55 +68,13 @@ def _builder(ctx: RuntimeContext, tool: str) -> EnvelopeBuilder:
                            adapters=ctx.adapters)
 
 
-@dataclass
-class _Frame:
-    """Resolved jurisdiction stack, or the envelope that ends the call."""
-
-    stack: list[str] | None = None
-    early: Envelope | None = None
-
-
+# Jurisdiction-stack resolution moved to core.assemble when the civic
+# domain gained a locality-scoped tool (GitHub issue #13) and needed the
+# same behaviour. Re-exported under its local name so this module's call
+# sites read as they did; the implementation is shared, not copied.
 def _resolve_frame(ctx: RuntimeContext, b: EnvelopeBuilder,
-                   jurisdiction: str) -> _Frame:
-    resolution = ctx.jurisdictions.resolve(jurisdiction)
-    if resolution.resolved is not None:
-        j = resolution.resolved
-        stack = [j.id] + [p.id for p in ctx.jurisdictions.parents_of(j)]
-        if resolution.matched_former_name:
-            # Every geo tool's description tells the caller to pass the
-            # jurisdiction string as given, so a historical name reaches
-            # here as readily as it reaches registry.resolve_jurisdiction
-            # — and answering it silently returns current data under a
-            # government that no longer exists.
-            b.warn(WarningCode.alias_match,
-                   f"{resolution.matched_former_name!r} names a Virginia "
-                   "government that no longer exists under that name. "
-                   f"This answer is about {j.name}, which governs that "
-                   "territory now. A record using the old name predates "
-                   "the change; check its date before treating this as "
-                   "current.")
-        return _Frame(stack=stack)
-    if resolution.candidates:
-        env = b.build(
-            {"resolved": None,
-             "candidates": [c.model_dump() for c in resolution.candidates],
-             "note": "The jurisdiction is ambiguous. Present these "
-                     "candidates to the user; do not select one yourself."},
-            Coverage(registry=RegistryCoverage.covered,
-                     execution=ExecutionCoverage.complete,
-                     pagination=PaginationCoverage.complete,
-                     result=ResultCoverage.hit),
-            requires_user_choice=True)
-        return _Frame(early=env)
-    env = b.build(
-        {"results": [],
-         "note": f"{jurisdiction!r} matches no Virginia jurisdiction in the "
-                 "table. registry.resolve_jurisdiction shows what resolves."},
-        Coverage(registry=RegistryCoverage.covered,
-                 execution=ExecutionCoverage.complete,
-                 pagination=PaginationCoverage.complete,
-                 result=ResultCoverage.empty))
-    return _Frame(early=env)
+                   jurisdiction: str) -> Frame:
+    return resolve_frame(ctx.jurisdictions, b, jurisdiction)
 
 
 def _source_entry(b: EnvelopeBuilder, m: SourceManifest,
@@ -128,8 +85,7 @@ def _source_entry(b: EnvelopeBuilder, m: SourceManifest,
         authority_level=m.publisher.authority_level,
         access_path=AccessPath.cache if q.from_cache else AccessPath.live,
         source_updated_at=q.source_updated_at, retrieved_at=q.retrieved_at,
-        cache_age_seconds=q.cache_age_seconds,
-        terms_gap=m.access.terms_gap)
+        cache_age_seconds=q.cache_age_seconds, manifest=m)
 
 
 def _records_block(b: EnvelopeBuilder, src_ref: str, q: ArcGISQueryResult,
@@ -1194,8 +1150,7 @@ def _geocode_source(b: EnvelopeBuilder, m: SourceManifest,
         authority_level=m.publisher.authority_level,
         access_path=AccessPath.cache if g.from_cache else AccessPath.live,
         source_updated_at=None, retrieved_at=g.retrieved_at,
-        cache_age_seconds=g.cache_age_seconds,
-        terms_gap=m.access.terms_gap)
+        cache_age_seconds=g.cache_age_seconds, manifest=m)
 
 
 async def _resolve_zip(ctx: RuntimeContext, b: EnvelopeBuilder,
@@ -2298,3 +2253,109 @@ GEO_TOOLS.register(ToolSpec(
         "clean. Say all of this to the user; do not summarise it away. "
         "A point is required — this source has no locality field."),
     toolset="default", contract_version="1", fn=find_environmental_sites))
+
+
+# --- health facilities -----------------------------------------------------
+#
+# The registry's first health capability with an endpoint behind it. The
+# domain existed as one inventory row saying VDH publishes plenty and
+# none of it queryable; what is registered now is a locality's own
+# mapping of the hospitals and urgent care inside it, which is a
+# narrower thing and is described as one everywhere it surfaces.
+
+HEALTH_FACILITY_RADIUS_M = 8000.0
+
+
+async def find_health_facilities(ctx: RuntimeContext, jurisdiction: str,
+                                 name: str = "",
+                                 lon: float | None = None,
+                                 lat: float | None = None,
+                                 radius_meters: float = HEALTH_FACILITY_RADIUS_M
+                                 ) -> Envelope:
+    b = _builder(ctx, "geo.find_health_facilities")
+    if (lon is None) != (lat is None):
+        raise InvalidQuery("a point needs both lon and lat")
+    if not (name or lon is not None):
+        raise InvalidQuery(
+            "pass `name` or a lon/lat point — an unbounded query would "
+            "return every facility in the jurisdiction")
+
+    frame = _resolve_frame(ctx, b, jurisdiction)
+    if frame.early is not None:
+        return frame.early
+    stack = frame.stack or []
+
+    selected = ctx.sources.select("health_facility.lookup", stack)
+    registry_dim, gaps = selection_coverage(
+        ctx.sources, "health_facility.lookup", stack, selected, builder=b)
+    blocks: list[dict] = []
+    failures = []
+    queries: list[ArcGISQueryResult] = []
+    for m in selected:
+        try:
+            q = await ctx.arcgis.query(
+                m, "health_facilities",
+                where_prefix={"name": name} if name else None,
+                geometry_point=(lon, lat) if lon is not None else None,
+                distance_meters=(radius_meters if lon is not None else None))
+        except CommonwealthError as err:
+            failures.append(failure(m.id, err.code, str(err)))
+            continue
+        queries.append(q)
+        block = _records_block(
+            b, _source_entry(b, m, q), q, m, ctx,
+            {"jurisdiction": jurisdiction, "name": name, "lon": lon,
+             "lat": lat, "radius_meters": radius_meters})
+        for row in block["records"]:
+            # The publisher's own code, left as a code. Expanding "H"
+            # into "hospital" would put this project's reading of a
+            # single letter where the publisher's value belongs, and the
+            # other codes in the layer are not documented anywhere it
+            # publishes.
+            row["facility_code_note"] = (
+                "`facility_code` is the publisher's own classification "
+                "code, returned unexpanded. The county documents no key "
+                "for it, so read it as the county's label rather than as "
+                "a licensed facility type.")
+        blocks.append(block)
+
+    if any(blk["record_count"] for blk in blocks):
+        b.warn(WarningCode.screening_only,
+               "This is a locality's own mapping of hospitals and urgent "
+               "care, not a licensing register and not a directory of "
+               "care. Physician offices, clinics, dialysis, pharmacies "
+               "and emergency medical services are not in it, nothing "
+               "here says whether a facility is open or what it offers, "
+               "and Virginia licenses hospitals through VDH rather than "
+               "through the county that drew this map.")
+
+    execution = (ExecutionCoverage.complete if not failures
+                 else ExecutionCoverage.failed if not blocks
+                 else ExecutionCoverage.partial)
+    total = sum(blk["record_count"] for blk in blocks)
+    return b.build({"results": blocks}, Coverage(
+        registry=registry_dim, execution=execution,
+        pagination=_pagination_dim(queries), result=result_dim(total),
+        jurisdictions_searched=stack if selected else [],
+        jurisdictions_unavailable=gaps, source_failures=failures,
+        known_limitations=sorted({lim for m in selected
+                                  for lim in m.coverage.known_limitations})))
+
+
+GEO_TOOLS.register(ToolSpec(
+    name="geo.find_health_facilities",
+    description=(
+        "Find hospitals and urgent-care facilities near a lon/lat point "
+        "in a Virginia locality, or by name prefix. This reads a "
+        "LOCALITY'S OWN MAP of the facilities inside it, not a state "
+        "licensing register: Virginia licenses hospitals through VDH, "
+        "which publishes nothing this server can query. Coverage is "
+        "thin — only localities that publish such a layer are "
+        "registered, and everywhere else returns coverage registry=none, "
+        "which means this project has nowhere to look and never that "
+        "there is no hospital there. Physician offices, clinics, "
+        "dialysis centres, pharmacies and EMS are not in these layers, "
+        "and no record says whether a facility is open, what it offers, "
+        "or whether it takes a given patient. An empty answer is not "
+        "evidence that care is unavailable near a point."),
+    toolset="spatial", contract_version="1", fn=find_health_facilities))

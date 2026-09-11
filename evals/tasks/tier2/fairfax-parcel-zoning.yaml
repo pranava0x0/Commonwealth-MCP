@@ -1,0 +1,28 @@
+# design/bench.md § 5 task 1 — the clean baseline. Everything registered,
+# everything answers, a record comes back. A suite whose traps all pass
+# and whose baseline fails is measuring something other than the traps.
+id: t2-fairfax-parcel-zoning
+tier: 2
+question: "What is the zoning for parcel 0102 14  0231 in Fairfax County?"
+toolset: default
+fixtures: [va-fairfax-parcels-zoning]
+expected:
+  tool: geo.find_zoning
+  arguments:
+    jurisdiction: Fairfax County
+    # The recorded fixture's own sample_pin. A task has to name a
+    # parcel the recording actually contains, or it scores the
+    # fixture rather than the tool.
+    pin: "0102 14  0231"
+  coverage:
+    registry: covered
+    execution: complete
+    result: hit
+  max_calls: 1
+score:
+  - kind: tool_choice
+  - kind: argument_match
+  - kind: provenance_present
+  - kind: coverage_honesty
+  - kind: restraint
+traps: []

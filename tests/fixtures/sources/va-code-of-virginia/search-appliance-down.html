@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head id="Head1">
+    <title>Search Results</title>
+	<meta name="robots" content="noindex,nofollow" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+	<link rel="icon" type="image/png" href="https://law.lis.virginia.gov/images/favicon-law16.ico" sizes="16x16" />
+	<link rel="icon" type="image/png" href="https://law.lis.virginia.gov/images/favicon-law32.ico" sizes="32x32" />
+	<link rel="apple-touch-icon" href="//law.lis.virginia.gov/images/favicon-law16.png" sizes="16x16" />
+	<link rel="apple-touch-icon" href="//law.lis.virginia.gov/images/favicon-law32.png" sizes="32x32" />
+    <link rel="stylesheet" href="/Content/base.css" type="text/css" media="all" />
+    <!--[if lt IE 9]><link rel="stylesheet" href="./Content/ie8.css" type="text/css" media="all" /><![endif]-->
+	<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" />
+    <link rel="stylesheet" href="//law.lis.virginia.gov/Content/720_grid.css" type="text/css" media="screen and (min-width: 720px)" />
+    <link rel="stylesheet" href="//law.lis.virginia.gov/Content/986_grid.css" type="text/css" media="screen and (min-width: 986px)" />
+    <link rel="stylesheet" href="//law.lis.virginia.gov/Content/1236_grid.css" media="screen and (min-width: 1236px)" />
+    <link href='//fonts.googleapis.com/css?family=PT+Sans+Narrow:400,700' rel='stylesheet' type='text/css' />
+    <link href='//fonts.googleapis.com/css?family=PT+Serif:400,400italic,700,700italic' rel='stylesheet' type='text/css' />
+    <link href="//fonts.googleapis.com/css?family=PT+Sans+Narrow:400,700" rel="stylesheet" type="text/css" />
+    <link href="//fonts.googleapis.com/css?family=PT+Serif:400,400italic,700,700italic" rel="stylesheet" type="text/css" />
+    <link href="//fonts.googleapis.com/css?family=Lato:400,700,300,300italic,400italic,700italic" rel="stylesheet" type="text/css" />
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js" type="text/javascript"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.8.18/jquery-ui.min.js" type="text/javascript"></script>
+</head>
+<body>
+    <input type="hidden" id="hidST" />
+    <div class="top-bar">
+      <nav id="sub-menu">
+        <ul>
+          <li><a href="http://virginiageneralassembly.gov/">Virginia General Assembly</a> /</li>
+          <li><a href="//lis.virginia.gov/live.htm">LIVE HELP</a> /</li>
+          <li><a href="//lis.virginia.gov">LIS Home</a></li>
+        </ul>
+      </nav>
+    </div>
+<header> 
+</header>
+<div id="logo-container-beta">
+    <a href="//lis.virginia.gov">
+        <div id="logo-beta"></div>
+    </a>
+</div>
+<div class="va-law">
+  <div class="grid">
+    <div class="row">
+      <div class="slot-0-1-2">
+        <h1><a href="../">Virginia Law</a></h1>
+      </div>
+      <div class="slot-3-4-5">
+        <h4 class="search-title">Search</h4>
+        <div class="input-group .search-comp ">
+          <div class="input-group-btn">
+                    <label for="searchList" class="sr-only">Select Search Type</label>
+                    <select id="searchList" name="searchTypeSelect" class="btn input-sm btn-default dropdown-toggle" aria-label="Select Search Type">
+                        <option value="all">All</option>
+                        <option value="code" selected="selected">Code of Virginia</option>
+                        <option value="admin">Administrative Code</option>
+                        <option value="constitution">Constitution</option>
+                        <option value="charters">Charters</option>
+                        <option value="authorities">Authorities</option>
+                        <option value="compacts">Compacts</option>
+                        <option value="uncodified">Uncodified Acts</option>
+                    </select>
+                </div>
+                <input aria-label="search input" type="text" id="txtSearch" class="form-control input-sm" placeholder="Search" />
+                <span class="input-group-btn">
+                    <button aria-label="search button" class="btn btn-sm btn-default" id="searchBtn" type="submit" value="Code_of_Virginia">
+                        <i class="fa fa-search"></i>
+                    </button>
+                </span>
+        </div>
+        <!-- /input-group --> 
+      </div>
+    </div>
+  </div>
+</div>
+<div class="grid">
+  <div class="row">
+	<link href="/Content/mindbreeze.css" rel="stylesheet" type="text/css" />
+	<link href="https://search.lis.virginia.gov/apps/css/adapted.css" rel="stylesheet">
+	<link href="https://search.lis.virginia.gov/resource/theme/custom.css" rel="stylesheet">
+	<style>
+		body {
+			font-family: "Segoe UI","Segoe",Tahoma,Helvetica,Arial,sans-serif !important;
+			font-size: 13px !important;
+		}
+		h1, h2, h3, h4, h5, h6 {
+			font-family: "Segoe UI Semilight","Segoe UI","Segoe",Tahoma,Helvetica,Arial,sans-serif !important;
+			font-weight: normal !important;
+		}
+		.mb-stack {
+			padding: 0px !important;
+			margin-bottom: 0px !important;
+		}
+		h2 {
+			font-size: 1.46em !important;
+		}
+	</style>
+	<div id="searchdown" style="display:none;">
+		The Search Appliance is down. Please try again later.
+	</div>
+	<div data-template="view">
+		<div class="container mb-role" role="main" id="main" data-shortcut="alt+2" data-aria-describedby="results-description" data-track-activedescendant>
+			<script type="text/x-mustache-template" data-tag-name="span" data-id="results-description" data-class-name="mb-role" data-attr-role="tooltip" data-attr-aria-hidden="true">
+				{{i18n.editor_result_title}} (Alt+2)
+			</script>
+			<div data-template="alert"></div>
+			<div class="mb-stack" data-template="stack" data-model="stack">
+				<div class="mb-stack-title" aria-live="assertive">
+				  <script type="text/x-mustache-template" data-attr-role="status" data-attr-class="{{^estimated_count?}}hide{{/estimated_count?}}" data-attr-tabindex="-1">
+					{{^status_messages.no_results?}}
+					  <h2>{{#estimated_count?}}{{estimated_count}} {{i18n.editor_result_title}}{{/estimated_count?}}
+						<button class="btn hidden-when-mb-stack-has-child btn-export"
+						  name="export"
+						  data-action-name="exportResults"
+						>{{i18n.export}}
+						</button>
+					  </h2>
+					{{/status_messages.no_results?}}
+				  </script>
+				</div>
+				<div class="mb-stack-content">
+					<div data-template="searchinfo"></div>
+					<div id="snippet-target"></div>
+				</div>
+			</div>
+			<div data-template="pages" class="" data-max-page-count="100">
+				<script type="text/x-mustache-template" data-class-name="pagination text-center">
+					{{#pages?}}
+					<ul>
+						{{#onFirstPage?}}
+						<li class="disabled"><span>&laquo;</span></li>
+						{{/onFirstPage?}}
+						{{^onFirstPage?}}
+						<li><a href="#" data-action-name="previousPage">&laquo;</a></li>
+						{{/onFirstPage?}}
+						{{#pages}}
+						<li class="{{#current_page?}}active{{/current_page?}}"><a href="#" data-action-name="setPage" data-page="{{page_number}}">{{page}}</a></li>
+						{{/pages}}
+						{{#more_avail?}}
+						{{/more_avail?}}
+						{{#onLastPage?}}
+						<li class="disabled"><span>&raquo;</span></li>
+						{{/onLastPage?}}
+						{{^onLastPage?}}
+						<li><a href="#" data-action-name="nextPage">&raquo;</a></li>
+						{{/onLastPage?}}
+					</ul>
+					{{/pages?}}
+				</script>
+			</div>
+		</div>
+	</div>
+  </div>
+  <div class="row">
+	<span style="float: right;">Experiencing issues with search? <a href="/search-help">Click here for help</a></span>
+  </div>
+</div>
+    <div id="valawfooter" class="va-law-footer">
+        <div class="grid">
+            <div class="row">
+                <div class="slot-6 foot-callout">
+                    <h4><i class="fa fa-book"></i> Virginia Law Library</h4>
+					
+                    <p>The Code of Virginia, Constitution of Virginia, Charters, Authorities, Compacts and Uncodified Acts are available in both PDF and CSV formats. <a class="more" href="/law-library"><i class="fa fa-arrow-circle-right"></i></a></p>
+                </div>
+                <div class="slot-7 foot-callout">
+                    <h4><i class="fa fa-question-circle"></i> Helpful Resources</h4>
+                    <ul>
+                        <li><a href="http://codecommission.dls.virginia.gov/">Virginia Code Commission</a></li>
+                        <li><a href="http://register.dls.virginia.gov/">Virginia Register of Regulations</a></li>
+                        <li><a href="//www.archives.gov/exhibits/charters/constitution_transcript.html">U.S. Constitution</a></li>
+                    </ul>
+                </div>
+                <div class="slot-8 foot-callout">
+                    <h4><i class="fa fa-wrench"></i> For Developers</h4>
+                    <p>The Virginia Law website data is available via a web service. <a class="more" href="/developers"><i class="fa fa-arrow-circle-right"></i></a></p>
+                </div>
+                <div class="slot-9 foot-callout">
+                    <h4 id="twitter"><a href="//twitter.com/va_laws"><i class="fa fa-twitter"></i> Follow us on Twitter</a></h4>
+                    <img id="ga-seal" src="/images/ga_seal_lis.png" alt="virginia general assembly seal" />
+                </div>
+            </div>
+        </div>
+    </div>
+        <div class="footer">
+            <div class="grid">
+              <div class="row">
+                <p>&copy; Copyright Commonwealth of Virginia, <script>document.write(new Date().getFullYear())</script>. All rights reserved. Site developed by the <a href="http://dlas.virginia.gov">Division of Legislative Automated Systems (DLAS)</a>.</p>
+              </div>
+            </div>
+        </div>
+        <!-- / .grid --> 
+	<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+	<!--[if lt IE 9]>
+		<script src="/Scripts/html5shiv.js"></script>
+		<script src="/Scripts/respond.js"></script>
+	<![endif]-->
+    <script src="https://search.lis.virginia.gov/apps/scripts/client.js" data-global-export="false"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script src="https://law.lis.virginia.gov/Scripts/bootstrap.min.js" type="text/javascript" charset="utf-8"></script>
+	<script src="/Scripts/search.js" type="text/javascript"></script>
+    <script>
+		if (typeof Mindbreeze === 'undefined' || Mindbreeze === null ){
+			$("div#searchdown").show()
+		} else {
+			Mindbreeze.require(["client/loader", "utils/browser", "api/v2/api"],
+			  function (Loader, browser, API) {
+				Loader.loadAppFromResource({ sourceURL: "https://search.lis.virginia.gov", appid: "4FE8F4CE19DB4B7E81487AFE3D5776B7", target: "#snippet-target" });
+				API.search.on("loadoutput", function(model, atts, options) { setTimeout(paginationHack, 10); });
+				var i=1;
+			  });
+		}
+
+		function paginationHack() {
+			var radius = 8;
+			var $pages = $(".pagination ul >li:not(:first-child):not(:last-child)");
+			var $activePage = $pages.filter(".active");
+			var indexOfActive = $pages.index($activePage);
+			var indexOfFirst = Math.max(indexOfActive - radius, 0);
+			var indexOfLast = indexOfFirst + 2 * radius + 3;
+			var replacementForHiddenContentPrevious = "<li><a data-action-name='setPage' data-page='"+ (indexOfFirst-1) +"'>...</a></li>";
+			var replacementForHiddenContentNext = "<li><a data-action-name='setPage' data-page='"+ (indexOfLast+1) +"'>...</a></li>";
+
+			$pages.each(function(i, value) { if (i < indexOfFirst || i > indexOfLast) $(value).hide(); });
+
+			if (indexOfFirst > 0) $pages.first().before(replacementForHiddenContentPrevious);
+			if (indexOfLast < $pages.length - 1) $pages.last().before(replacementForHiddenContentNext);
+		}
+
+		$( document ).ready(function() {
+			$("a").attr('target', '_self');
+			window.setTimeout(function () {
+				if ($("div.mb-stack-title div[role=status]").length == 2) {
+					$("div.mb-stack-title div[role=status]:eq(1)").hide(); //hide first result count ... not the second
+				}
+			}, 2000);
+		});
+    </script>
+</body>
+</html>

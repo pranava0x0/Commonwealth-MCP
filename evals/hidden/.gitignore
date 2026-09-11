@@ -1,0 +1,6 @@
+# The hidden set is maintainer-held (design/bench.md § 3). The directory
+# and its README are committed so the split is visible and the runner has
+# somewhere to look; the tasks themselves are not.
+*
+!.gitignore
+!README.md

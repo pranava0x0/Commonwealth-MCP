@@ -459,7 +459,9 @@ and that holds whichever geometry is true.
 
 - **Source:** `va-code-of-virginia`
 - **Observed:** 2026-09-08, answering issue #12's first acceptance criterion
-- **Test:** none yet; recorded before any code is written against it
+- **Re-checked:** 2026-09-09 — unchanged; see the watch below
+- **Test:** `VirginiaLawAdapter.search_status()`, reported under
+  `search_watch` in this source's health output
 
 Issue #12 asks whether the site's own search is public or keyed before
 anything is built. Both halves of the answer turned out to matter.
@@ -493,6 +495,21 @@ with HTTP 200, which is the same "found nothing" shape
 `civic.get_code_section` already reports as `found=False` rather than an
 error.
 
+**Re-checked 2026-09-09, and watched from now on.** `search_cov` still
+answers — publicly, keylessly, HTTP 200 after one redirect — and its
+backend still returns "The Search Appliance is down" for every query
+tried. Two consecutive days is not a blip, and the endpoint is the
+publisher's to fix, not this project's to work around.
+
+Nothing reads that endpoint. What changed is that the manifest now
+declares it as `search_url` and the adapter's health output carries a
+`search_watch` block saying whether the backend has come back. It is
+reported and never graded: both endpoints this project actually reads
+are healthy, so a down search appliance is not this source being
+unhealthy. The point is that the day it recovers shows up in
+`commonwealth sources probe` instead of waiting for someone to
+re-try it by hand.
+
 That leaves two consequences, neither of them decided here. Full-text search over the
 Code has no working public path today, so #12 cannot be closed as
 written. And the structural operations answer the need behind it — a
@@ -501,3 +518,107 @@ search, which is the same naming discipline that made the existing tool
 `get_code_section` and not `search_law`. The JSON API would also replace
 the HTML parsing behind that tool, which is the fragility #12 lists as
 its own caveat.
+
+---
+
+## 19. An SPA answers HTTP 200 for API paths it does not have
+
+- **Source:** `va-lis-legislative-api` (registered as inventory)
+- **Observed:** 2026-09-09, answering issue #11's access question
+- **Test:** none; there is no adapter to test, which is the finding
+
+The General Assembly's legislative API is key-gated, and establishing
+that took more than reading status codes.
+
+`lis.virginia.gov` serves a React single-page app. Any path the app
+routes on the client answers **HTTP 200 with the app's own HTML shell**,
+whose body says "You need to enable JavaScript to run this app." That
+includes paths shaped exactly like endpoints:
+
+| Path | Status | Content-Type | What it is |
+|---|---|---|---|
+| `Session/api/getsessionlistasync` | 401 | `text/plain` | the real API |
+| `Member/api/getmemberlistasync` | 401 | `text/plain` | the real API |
+| `Committee/api/getcommitteelistasync` | 401 | `text/plain` | the real API |
+| `Bill/api/getbilllistasync` | 200 | `text/html` | the SPA shell |
+| `LegislationDetails/api/getlegislationdetailsasync` | 200 | `text/html` | the SPA shell |
+
+A probe that checked status codes would report the bills endpoint as
+public and the members endpoint as gated, and conclude this source was
+half-open. It is not: the 401s are the API, and the 200s are a web page.
+
+Two things follow for this project. Registering the source means reading
+bodies, not codes — `HttpFetcher._decode_json` already refuses a
+non-JSON body as "bot challenge or outage page?", which is the same
+instinct and would have caught this. And the health-probe vocabulary
+should not grow a check that treats 200 as healthy for a source whose
+200 is an error page; § 18's `search_watch` matches on the publisher's
+own sentence for the same reason.
+
+The API needs a key, the key comes from a registration form a human
+fills in, and issue #11 stays open until someone has one.
+
+---
+
+## 20. The legislature publishes bills as bulk CSV, keyless, in inconsistent casing
+
+- **Source:** `va-lis-legislative-api` (registered as inventory)
+- **Observed:** 2026-09-10, revising § 19's conclusion about issue #11
+- **Test:** none; nothing reads these files yet
+
+§ 19 established that the legislative JSON API is key-gated. That is
+still true and it was the wrong thing to stop at: the same division
+publishes the same session data as **bulk CSV over Azure Blob Storage,
+documented, keyless, and updated hourly during session**.
+
+The help page at `help.lis.virginia.gov/data/` gives the pattern:
+
+```text
+https://lis.blob.core.windows.net/lisfiles/<year><session-type>/<FILE>
+```
+
+where session type is `1` for a regular session, `2` and `3` for
+special sessions — so `20261/BILLS.CSV` is the 2026 regular session's
+bills. Verified live for the **current** session, not only historical
+ones.
+
+**The file names are not the casing the help page prints.** Azure Blob
+is case-sensitive and the container's own casing is inconsistent, so a
+client that trusts the documentation 404s on half the files:
+
+| Documented | Actually served | Size (2026 regular) |
+|---|---|---|
+| Bills.csv | `BILLS.CSV` | 1.3 MB |
+| Docket.csv | `DOCKET.CSV` | 78 KB |
+| Subdocket.csv | `SUBDOCKET.CSV` | 13 KB |
+| Vote.csv | `VOTE.CSV` | 3.9 MB |
+| History.csv | `HISTORY.CSV` | 4.7 MB |
+| Members.csv | `Members.csv` | 6.7 KB |
+| Committees.csv | `Committees.csv` | 1.9 KB |
+| Sponsors.csv | `Sponsors.csv` | 1.1 MB |
+| Summaries.csv | `Summaries.csv` | 4.3 MB |
+| Amendments.csv | `Amendments.csv` | 60 KB |
+| CommitteeMembers.csv | `CommitteeMembers.csv` | 6.5 KB |
+| SubCommitteeMembers.csv | `SubCommitteeMembers.csv` | 14 KB |
+| FiscalImpactStatements.csv | `FiscalImpactStatements.csv` | 325 KB |
+| VoteStatements.csv | `VoteStatements.csv` | 372 KB |
+
+`Section.csv` is documented and served under no casing tried.
+
+Container listing is disabled — `?restype=container&comp=list` returns
+`ResourceNotFound` — so a client cannot discover the real names. They
+have to be known, which is why they are written down here.
+
+**What this changes for issue #11.** The blocker was framed as "a
+registration only a human can complete." That is now only true of what
+the API carries beyond these files. Bills, votes, sponsors, summaries
+and history for the current session are readable today with no key.
+
+It is a different adapter shape from anything registered: a
+whole-session snapshot rather than a query service, so answering a
+question means downloading a file and filtering it locally. That is
+worth distinguishing from the Code of Virginia's missing search (§ 18).
+There, the publisher runs no full-text operation and building one would
+be this project answering a question the source cannot. Here the
+publisher hands over the whole dataset deliberately, and filtering what
+they published whole is reading it, not inventing an operation over it.

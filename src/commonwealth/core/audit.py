@@ -16,6 +16,7 @@ from typing import Any
 from pydantic import BaseModel, ConfigDict, Field
 
 from .envelope import Envelope, utc_now_iso
+from .tracing import trace_fields
 
 
 class AuditSource(BaseModel):
@@ -44,6 +45,12 @@ class AuditRecord(BaseModel):
     requires_user_choice: bool = False
     error: str | None = None
     registry_revision: str
+    # The trace this call ran under, when one was bound (GitHub issue
+    # #36). Optional because a CLI run or a direct call may not start a
+    # trace, and inventing an id for one would make an audit log look
+    # joinable to spans that do not exist.
+    trace_id: str | None = None
+    span_id: str | None = None
 
 
 def record_from_envelope(tool: str, args: dict[str, Any],
@@ -78,7 +85,8 @@ def record_from_envelope(tool: str, args: dict[str, Any],
         evidence_count=len(envelope.evidence),
         warning_codes=sorted({w.code.value for w in envelope.warnings}),
         requires_user_choice=envelope.requires_user_choice,
-        registry_revision=execution.registry_revision)
+        registry_revision=execution.registry_revision,
+        **trace_fields())
 
 
 def error_record(tool: str, args: dict[str, Any], error_code: str,
@@ -95,7 +103,10 @@ def error_record(tool: str, args: dict[str, Any], error_code: str,
         server_version=server_version, duration_ms=duration_ms,
         args=None if sensitive else args, arg_names=sorted(args),
         coverage={}, evidence_count=0, error=error_code,
-        registry_revision=registry_revision)
+        registry_revision=registry_revision,
+        # A failed call is the one most worth following through its
+        # requests, so the trace is attached here too.
+        **trace_fields())
 
 
 class AuditLog:

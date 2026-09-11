@@ -1,0 +1,106 @@
+# Public meeting calendar for Alexandria City, served by the Granicus/Legistar
+# agenda platform (GitHub issue #13). One adapter serves every locality on
+# this platform; the only thing that distinguishes this file from the
+# other four is `client`, which is the point the adapter's docstring
+# makes and which the recorded fixtures for two of these localities test.
+#
+# Client identifier and endpoint verified live 2026-09-09.
+id: va-alexandria-city-meetings
+name: Alexandria City Public Meetings (Granicus/Legistar)
+jurisdiction: va:alexandria-city
+
+publisher:
+  agency: Alexandria City government (Office of the City Clerk)
+  authority_level: primary
+
+domains: [civic]
+
+capabilities:
+  - id: meeting.search
+    tool_hint: civic.search_meetings
+
+adapter:
+  type: agenda_platform
+  service_url: https://webapi.legistar.com/v1
+  client: alexandria
+  portal_url: https://alexandria.legistar.com/Calendar.aspx
+  timezone: America/New_York
+
+access:
+  mode: anonymous
+  automation_status: public_api
+  terms_url: https://webapi.legistar.com/Help
+  terms_notes: >
+    Terms reviewed per platform, not per locality (GitHub issue #13): one
+    vendor serves every client from one host under one set of terms, and
+    reviewing them 323 times would be 323 copies of one finding. Read
+    2026-09-09: the Web API is served publicly over HTTPS with no key,
+    no registration and no published rate limit, and the host serves no
+    robots.txt. The vendor's own help page at webapi.legistar.com/Help
+    documents the read endpoints used here. That page also documents
+    POST, PUT and DELETE verbs; this project is read-only by
+    construction and the adapter has no code that could call one.
+    The records themselves are the locality's public meeting notices,
+    published under Virginia's open-meetings requirements. Re-review
+    with the standard 12-month cadence, and per platform.
+  terms_reviewed_at: "2026-09-09"
+  data_classification: open
+
+freshness:
+  expected_cadence: unknown
+  cadence_source: >
+    Agendas are posted on the locality's own noticing schedule; Virginia
+    requires public notice in advance of a meeting, but the platform
+    publishes no SLA for when a record appears or is revised. Each record
+    carries the publisher's own last-modified timestamp.
+  ttl_hint_seconds: 3600
+
+coverage:
+  geography: va:alexandria-city
+  temporal: current
+  known_limitations:
+    - >
+      No cancellation field. The platform publishes an agenda-publication
+      status ("Final", "Final-revised") and nothing that says a meeting
+      was cancelled or rescheduled; where a locality records that at all,
+      it records it in the free-text comment. Cancelled meetings are
+      returned rather than omitted, with the comment verbatim and a note
+      saying the reading came from prose, not from a published field.
+    - >
+      Meeting times are local wall-clock strings with no offset in the
+      payload. The zone is declared in this manifest, not read from the
+      publisher.
+    - >
+      Agenda and minutes documents are links, never content. This project
+      does not fetch them, because the egress allowlist is pinned per
+      manifest to the API host and the documents live on a different one.
+      What a meeting is ABOUT is in the agenda PDF, so a body name and a
+      date are not a summary of what will be discussed.
+    - >
+      The calendar covers the bodies this locality publishes through the
+      platform. A body that meets and is not published here is absent
+      from the answer, and absence is not evidence it did not meet.
+authority_notes: >
+  The meeting records are Alexandria City's own, published by the locality under
+  Virginia's open-meetings law. The API serving them is the vendor's:
+  Granicus operates the platform on the locality's behalf, so the
+  publisher of the record and the operator of the endpoint are two
+  different bodies. Every other source in this registry is served by the
+  government that produced it, and this is the first that is not — the
+  distinction is recorded here rather than left for a reader to infer
+  from the hostname. `authority_level: primary` describes the locality's
+  relationship to its own meeting notices; it is not a statement about
+  the vendor.
+
+health:
+  probe: agenda_platform_calendar
+  expect:
+    # A body this locality has published through the platform for years,
+    # used as a liveness check that this client's calendar answers.
+    known_body: "City Council"
+
+lifecycle:
+  declared_state: active
+  added: "2026-09-09"
+  last_verified: "2026-09-09"
+  verified_by: pranava0x0

@@ -27,6 +27,7 @@ VIENNA = "va-vienna-town-zoning"
 LEESBURG = "va-leesburg-town-parcels-zoning"
 FAIRFAX = "va-fairfax-parcels-zoning"
 VGIN = "va-vgin-statewide-parcels"
+LOUDOUN = "va-loudoun-county-parcels-zoning"
 
 
 def _summary(source_id: str) -> dict:
@@ -286,38 +287,51 @@ async def test_a_parcel_source_that_is_down_is_asked_once_per_call():
 
 # --- Leesburg: a town with its own parcels beside the statewide layer ---
 
-async def test_a_leesburg_parcel_number_answers_from_the_town_and_the_state(
+async def test_a_leesburg_parcel_number_answers_from_the_town_and_the_county(
         ctx):
+    """Two `primary` publishers now cover this ground — the town and its
+    county — and selection queries the top two (decision 0005), so
+    VGIN's statewide layer is no longer among them.
+
+    That changed when Loudoun County was registered (2026-09-10). It is
+    the intended behaviour rather than a regression: for a parcel inside
+    Leesburg, the town and the county are closer authorities than a
+    statewide aggregation of local submissions, and the rule is to take
+    the top two rather than to take everything.
+    """
     s = _summary(LEESBURG)
     env = await find_parcel(ctx, jurisdiction="Leesburg", pin=s["sample_pin"])
     by = _by_source(env)
-    assert set(by) == {LEESBURG, VGIN}, sorted(by)
+    assert set(by) == {LEESBURG, LOUDOUN}, sorted(by)
     assert env.coverage.jurisdictions_searched == [
         "va:leesburg-town", "va:loudoun-county", "va"]
     town = by[LEESBURG]["records"]
     assert len(town) == 1
     assert town[0]["pin"] == s["sample_pin"]
     assert town[0]["address"]
-    assert by[VGIN]["record_count"] == 1, (
-        "VGIN carries Loudoun's parcel numbers as PTM_ID; the town's number "
-        "reaches both")
-    assert env.data["comparison"]["agreement"] is True
+    assert by[LOUDOUN]["record_count"] == 1, (
+        "the town republishes the county's own parcel number (PA_MCPI), "
+        "so one number reaches both layers")
 
 
 async def test_a_leesburg_point_answers_from_both_parcel_sources(ctx):
     lon, lat = _summary(LEESBURG)["sample_point"]
     env = await find_parcel(ctx, jurisdiction="Leesburg", lon=lon, lat=lat)
     by = _by_source(env)
-    assert set(by) == {LEESBURG, VGIN}, sorted(by)
-    for sid in (LEESBURG, VGIN):
+    assert set(by) == {LEESBURG, LOUDOUN}, sorted(by)
+    for sid in (LEESBURG, LOUDOUN):
         assert by[sid]["record_count"] >= 1, sid
 
 
 async def test_leesburg_zoning_by_parcel_number_reads_the_towns_own_map(ctx):
     s = _summary(LEESBURG)
     env = await find_zoning(ctx, jurisdiction="Leesburg", pin=s["sample_pin"])
-    assert [blk["source_id"] for blk in env.data["results"]] == [LEESBURG], (
-        "Loudoun County has no zoning source and VGIN publishes none")
+    answered = [blk["source_id"] for blk in env.data["results"]]
+    assert answered[0] == LEESBURG, (
+        f"the town's own zoning map should lead; got {answered}")
+    assert LOUDOUN in answered, (
+        "the county publishes zoning too since 2026-09-10, and both "
+        "governments' layers cover this ground")
     records = env.data["results"][0]["records"]
     assert [r["district"] for r in records] == s["zoning_districts"]
     assert records[0]["ordinance_link"].startswith(
@@ -325,31 +339,63 @@ async def test_leesburg_zoning_by_parcel_number_reads_the_towns_own_map(ctx):
         "the link is the publisher's, returned as data")
     codes = {w.code for w in env.warnings}
     assert "screening_only" in codes
-    assert "freshness_unavailable" not in codes, (
-        "both town layers publish an edit date, so the answer carries a "
-        "source_updated_at rather than the warning")
-    assert all(p.source_updated_at for p in env.provenance), [
+    # Freshness is per source, and two publishers answer this now. Both
+    # town layers expose an edit date, so no freshness warning may name
+    # the town; the county's MapServer exposes none, and the warning
+    # that says so names the county rather than tarring both.
+    town_entries = [p for p in env.provenance if p.source_id == LEESBURG]
+    assert town_entries and all(p.source_updated_at for p in town_entries), [
         (p.source_id, p.source_updated_at) for p in env.provenance]
+    assert not any(w.code == "freshness_unavailable" and w.source_id == LEESBURG
+                   for w in env.warnings), (
+        "the town publishes an edit date and was warned about anyway")
+    # And it is said once per source, not once per layer.
+    stale_notes = [w for w in env.warnings
+                   if w.code == "freshness_unavailable"]
+    assert len(stale_notes) == len({w.source_id for w in stale_notes})
 
 
-async def test_loudoun_county_itself_is_still_a_zoning_gap(ctx):
-    """The town's source is registered under the town, not the county. A
-    Loudoun query must not borrow it."""
+async def test_loudoun_county_answers_from_its_own_source_not_the_towns(ctx):
+    """Loudoun was this registry's standing example of a zoning gap until
+    the county's own source was registered (2026-09-10). It is covered
+    now — and the thing worth asserting is that it answers from the
+    COUNTY's layer, never by borrowing the town's.
+
+    The town's source is registered under the town. A county query that
+    reached into it would be this project inventing jurisdiction that
+    the Town of Leesburg holds and Loudoun County does not.
+    """
     lon, lat = _summary(LEESBURG)["sterling_loudoun"]["point"]
     env = await find_zoning(ctx, jurisdiction="Loudoun County", lon=lon,
                             lat=lat)
-    assert env.coverage.registry.value == "none"
-    assert env.data["results"] == []
+    assert env.coverage.registry.value == "covered"
+    answered = {b["source_id"] for b in env.data["results"]}
+    assert answered == {"va-loudoun-county-parcels-zoning"}, (
+        f"a Loudoun query answered from {answered}; the town's layer is "
+        "the town's")
 
 
-async def test_the_town_layer_down_leaves_leesburg_zoning_failed():
+async def test_the_town_layer_down_leaves_leesburg_zoning_partial():
+    """The town's host is down and the county's is not.
+
+    Before Loudoun County was registered (2026-09-10) this was the whole
+    answer failing, because the town was the only zoning publisher for
+    this ground. Now a second government covers it, so the honest report
+    is `partial` — one source answered, one did not, and the one that
+    did not is named. The town's own map is still the authority for a
+    parcel inside the town, so a partial answer here is a worse answer,
+    and the failure list is what says so.
+    """
     s = _summary(LEESBURG)
     ctx = build_ctx(fetcher=_HostOutage("7owdfh5mgjEgbCSM"))
     env = await find_zoning(ctx, jurisdiction="Leesburg", pin=s["sample_pin"])
-    assert env.coverage.execution.value == "failed"
+    assert env.coverage.execution.value == "partial"
     assert env.coverage.registry.value == "covered", (
         "an outage is not a registry gap")
     assert [f.source_id for f in env.coverage.source_failures] == [LEESBURG]
+    answered = {b["source_id"] for b in env.data["results"]}
+    assert answered == {LOUDOUN}, (
+        "the county's layer is on another host and should still answer")
 
 
 async def test_a_truncated_borrowed_parcel_query_truncates_the_zoning_answer(

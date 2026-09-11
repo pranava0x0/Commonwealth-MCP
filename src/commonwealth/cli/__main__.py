@@ -21,6 +21,7 @@ from ..adapters.base import HttpFetcher, egress_policy_for
 from ..core import toolreg
 from ..core.envelope import utc_now_iso
 from ..core.errors import CommonwealthError
+from ..adapters.replay import ReplayFetcher
 from ..core.registry import (INVENTORY_ADAPTER, SourceManifest,
                              validate_manifest)
 from ..runtime import PROJECT_ROOT, SOURCES_DIR, RuntimeContext, load_context
@@ -317,6 +318,30 @@ def cmd_sources_probe(args: argparse.Namespace) -> int:
                 print(f"✗ {sid}: {err.code}: {err}")
                 problems += 1
             continue
+        if m.adapter.type == "agenda_platform":
+            checked += 1
+            try:
+                h = asyncio.run(ctx.agendas.health(
+                    m, m.health.expect.get("known_body")))
+            except CommonwealthError as err:
+                print(f"✗ {sid}: {err.code}: {err}")
+                problems += 1
+                continue
+            body = h.get("body")
+            # An empty calendar is a healthy answer, so the probe reports
+            # what came back rather than grading it on a record count. The
+            # declared body is the real check: this client answering with
+            # a calendar that never mentions its own council is the shape
+            # a silently-repointed client identifier would take.
+            found = body is None or body["found"]
+            print(f"{'✓' if found else '✗'} {sid}: {h['meetings']} meeting(s) "
+                  f"in the last {h['window_days']} days"
+                  + (f", {body['name']!r} "
+                     f"{'present' if body['found'] else 'ABSENT'}"
+                     if body else ""))
+            if not found:
+                problems += 1
+            continue
         if m.adapter.type == INVENTORY_ADAPTER:
             # Inventory has no endpoint by construction, so "not probed"
             # is the correct outcome rather than a gap. Counted as
@@ -376,7 +401,19 @@ class _RecordingFetcher:
         self.exchanges: list[dict] = []
 
     async def fetch_json(self, url: str, params: dict) -> dict:
-        payload = await self.inner.fetch_json(url, params)
+        return await self._record(self.inner.fetch_json, url, params)
+
+    async def fetch_json_list(self, url: str, params: dict) -> list:
+        """The array-shaped answer, recorded the same way.
+
+        A recording stores what the publisher sent, and for an agenda
+        platform that is a bare JSON array; `ReplayFetcher` reads it back
+        through the matching method.
+        """
+        return await self._record(self.inner.fetch_json_list, url, params)
+
+    async def _record(self, call, url: str, params: dict):
+        payload = await call(url, params)
         self.exchanges.append({
             "url": url,
             "params": {k: str(v) for k, v in params.items()},
@@ -862,6 +899,53 @@ async def _sample_buildings(adapter, m, params, ctx) -> dict:
     return out
 
 
+async def _sample_health_facilities(adapter, m, params, ctx) -> dict:
+    """Recording plan for a health-facility layer.
+
+    Three shapes: a point that finds facilities, a point far enough from
+    any that the answer is a clean empty, and a name prefix. The empty
+    one matters most — "no hospital within this radius" is the answer a
+    reader is likeliest to over-read, so it has to replay.
+    """
+    del ctx
+    from ..domains.geo import HEALTH_FACILITY_RADIUS_M
+    out: dict[str, Any] = {}
+    for layer in sorted(params.layers):
+        out[f"health:{layer}"] = await adapter.health(m, layer)
+
+    # Ashburn, in the data-centre corridor.
+    near = await adapter.query(m, "health_facilities",
+                               geometry_point=(-77.4875, 39.0437),
+                               distance_meters=HEALTH_FACILITY_RADIUS_M)
+    out["near_ashburn"] = {
+        "record_count": len(near.records),
+        "names": [r.canonical.get("name") for r in near.records[:6]],
+        "codes": sorted({str(r.canonical.get("facility_code"))
+                         for r in near.records})}
+
+    # Far western Loudoun, deliberately away from any facility.
+    empty = await adapter.query(m, "health_facilities",
+                                geometry_point=(-77.9, 39.15),
+                                distance_meters=2000.0)
+    out["far_from_any"] = {"record_count": len(empty.records)}
+
+    # The Sterling walk (LOUDOUN_POINT): the address the example scripts
+    # and the demos start from asks for hospitals near it too.
+    sterling = await adapter.query(m, "health_facilities",
+                                   geometry_point=LOUDOUN_POINT,
+                                   distance_meters=HEALTH_FACILITY_RADIUS_M)
+    out["near_sterling"] = {"point": list(LOUDOUN_POINT),
+                            "record_count": len(sterling.records)}
+
+    by_name = await adapter.query(m, "health_facilities",
+                                  where_prefix={"name": "Inova"})
+    out["by_name_prefix"] = {"prefix": "Inova",
+                             "record_count": len(by_name.records),
+                             "names": [r.canonical.get("name")
+                                       for r in by_name.records[:5]]}
+    return out
+
+
 async def _sample_landmarks(adapter, m, params, ctx) -> dict:
     """Recording plan for landmarks. Records the three query shapes plus a
     record whose LastCheck is null, because "nobody has re-checked this"
@@ -1079,9 +1163,11 @@ def cmd_sources_sample(args: argparse.Namespace) -> int:
         return _fail(f"unknown source {args.source_id!r}")
     if m.adapter.type == "arcgis_geocode":
         return _sample_geocoder(m, ctx)
+    if m.adapter.type == "agenda_platform":
+        return _sample_meetings(m, ctx)
     if m.adapter.type != "arcgis":
-        return _fail(f"sample supports arcgis and arcgis_geocode for now, "
-                     f"not {m.adapter.type!r}")
+        return _fail(f"sample supports arcgis, arcgis_geocode and "
+                     f"agenda_platform for now, not {m.adapter.type!r}")
     params = arcgis_mod.ArcGISParams.model_validate(
         m.adapter.model_dump(exclude={"type"}))
     adapter, recorder = _recording_adapter_for(m)
@@ -1103,6 +1189,14 @@ def cmd_sources_sample(args: argparse.Namespace) -> int:
     if "building.lookup" in m.capability_ids():
         try:
             summary = asyncio.run(_sample_buildings(adapter, m, params, ctx))
+        except CommonwealthError as err:
+            return _fail(f"{err.code}: {err}")
+        return _write_fixture(m, recorder, summary, ctx)
+
+    if "health_facility.lookup" in m.capability_ids():
+        try:
+            summary = asyncio.run(_sample_health_facilities(adapter, m,
+                                                            params, ctx))
         except CommonwealthError as err:
             return _fail(f"{err.code}: {err}")
         return _write_fixture(m, recorder, summary, ctx)
@@ -1187,6 +1281,49 @@ def cmd_sources_sample(args: argparse.Namespace) -> int:
                                            return_geometry=want_geometry)
         out["sterling_loudoun"] = {"point": list(LOUDOUN_POINT),
                                    "record_count": len(sterling.records)}
+        # Queries this source answers only because it shares a
+        # jurisdiction stack with another registered one. A town inside a
+        # county is the case: a Leesburg parcel query reaches the town's
+        # layer AND the county's, so the county's recording has to carry
+        # the town's PINs and points or every existing Leesburg test
+        # fails on a replay miss the moment the county is registered.
+        # Declared in the manifest because only a human knows which
+        # neighbours matter.
+        also = m.health.expect.get("also_record") or {}
+        for extra_pin in also.get("pins", []):
+            for want_geometry in (False, True):
+                await adapter.query(m, "parcels",
+                                    where_equals={"pin": str(extra_pin)},
+                                    return_geometry=want_geometry)
+        for layer in ("parcels", "zoning"):
+            if layer not in params.layers:
+                continue
+            for point in also.get("points", []):
+                for want_geometry in (False, True):
+                    await adapter.query(m, layer,
+                                        geometry_point=tuple(point),
+                                        return_geometry=want_geometry)
+        # And the polygon path. `find_zoning` by PIN reads the parcel
+        # polygon and intersects every zoning layer with it, so each
+        # extra PIN needs its zoning query recorded too — against this
+        # source's own polygon, which is what the tool will be holding
+        # by the time it asks.
+        if "zoning" in params.layers:
+            for extra_pin in also.get("pins", []):
+                eq = await adapter.query(m, "parcels",
+                                         where_equals={"pin": str(extra_pin)},
+                                         return_geometry=True)
+                for parcel in eq.records:
+                    geom = dict(parcel.geometry or {})
+                    if not geom:
+                        continue
+                    geom.setdefault("spatialReference", {"wkid": 4326})
+                    await adapter.query(m, "zoning", intersect_geometry=geom)
+
+        out["also_recorded"] = {"pins": list(also.get("pins", [])),
+                                "points": [list(x) for x in
+                                           also.get("points", [])]}
+
         pq = await adapter.query(m, "parcels", where_equals={"pin": str(pin)},
                                  return_geometry=True)
         if "zoning" not in params.layers:
@@ -1285,6 +1422,74 @@ def contributing_sources(m: SourceManifest, exchanges: list[dict],
         if owner is not None:
             found.setdefault(owner.id, owner)
     return [m] + [found[sid] for sid in sorted(found) if sid != m.id]
+
+
+# The windows every agenda-platform recording covers. Fixed dates, not
+# "the next 30 days": a fixture is recorded once and replayed forever, so
+# a window computed from the recording date would stop matching the
+# moment the calendar moved on, and the replay would fail on a key that
+# used to exist. Each window is here because it produces a different
+# shape of answer.
+MEETING_SAMPLE_WINDOWS = [
+    # A month with meetings in it — the ordinary answer.
+    ("busy", "2026-09-01", "2026-09-30"),
+    # A month with no meetings at all. The clean empty: registry covered,
+    # publisher answered, nothing in range. This is the case that must
+    # never be confused with a locality that has no registered source,
+    # and the contract tests assert the two envelopes differ.
+    ("empty", "2030-01-01", "2030-01-31"),
+]
+
+# One window per client that contains a meeting the publisher's comment
+# says was cancelled. There is no cancellation field on this platform, so
+# a fixture that never records one would let the prose-reading path ship
+# untested (see `agenda_platform._cancellation_note`).
+MEETING_CANCELLATION_WINDOWS = {
+    "richmondva": ("2019-12-01", "2019-12-31"),
+    "alexandria": ("2020-03-01", "2020-04-30"),
+}
+
+
+def _sample_meetings(m: SourceManifest, ctx: RuntimeContext) -> int:
+    """Recording plan for an agenda-platform source.
+
+    Records the same windows for every client, so the fixtures for two
+    localities differ only in the client identifier — which is the claim
+    the adapter makes (one adapter, many jurisdictions) and the thing a
+    reader should be able to check by diffing two recordings.
+    """
+    from ..adapters import agenda_platform as agenda_mod
+
+    p = agenda_mod.AgendaPlatformParams.model_validate(
+        m.adapter.model_dump(exclude={"type"}))
+    rec = _RecordingFetcher(
+        HttpFetcher(policy=egress_policy_for(m, p.service_url)))
+    adapter = agenda_mod.AgendaPlatformAdapter(fetcher=rec)
+
+    windows = list(MEETING_SAMPLE_WINDOWS)
+    cancelled = MEETING_CANCELLATION_WINDOWS.get(p.client)
+    if cancelled:
+        windows.append(("cancellation", *cancelled))
+
+    async def run() -> dict:
+        out: dict[str, Any] = {"client": p.client, "windows": {}}
+        for label, start, end in windows:
+            meetings, url = await adapter.search_meetings(m, start, end)
+            out["windows"][label] = {
+                "start_date": start, "end_date": end,
+                "meetings": len(meetings),
+                "bodies": sorted({x.body for x in meetings})[:8],
+                "with_agenda": sum(1 for x in meetings if x.agenda_url),
+                "cancellation_notes": sum(1 for x in meetings
+                                          if x.cancellation_note),
+                "url": url}
+        return out
+
+    try:
+        summary = asyncio.run(run())
+    except CommonwealthError as err:
+        return _fail(f"{err.code}: {err}")
+    return _write_fixture(m, rec, summary, ctx)
 
 
 def _write_fixture(m: SourceManifest, recorder: "_RecordingFetcher",
@@ -1443,6 +1648,151 @@ def cmd_configure(args: argparse.Namespace) -> int:
     return 0
 
 
+
+# --- eval (design/bench.md; GitHub issue #28) ------------------------------
+
+EVALS_DIR = PROJECT_ROOT / "evals"
+
+
+def _fixture_ctx(fixtures: list[str] | None = None) -> RuntimeContext:
+    """A runtime backed by the recorded fixtures, never the network.
+
+    A bench that reached live services would score the weather: a
+    government host being slow on the day would read as a model getting
+    worse. Every eval runs over the committed recordings, whose vintage
+    the result records.
+
+    `fixtures` narrows the replay pool to what a task declared, so the
+    declaration is enforced rather than decorative.
+    """
+    from ..fixtures import replay_context
+
+    return replay_context(fixtures=fixtures)
+
+
+def cmd_eval_list(args: argparse.Namespace) -> int:
+    from ..evals.loader import TaskLoadError, load_suite, suites
+
+    found = suites(EVALS_DIR)
+    if not found:
+        return _fail(f"no eval suites under {EVALS_DIR}")
+    for name in sorted(found):
+        try:
+            tasks = load_suite(EVALS_DIR, name)
+        except TaskLoadError as err:
+            return _fail(str(err))
+        tiers = sorted({t.tier for t in tasks})
+        traps = sorted({p for t in tasks for p in t.traps})
+        print(f"{name}: {len(tasks)} task(s), tier(s) {tiers}, "
+              f"traps {traps or ['(none)']}")
+    return 0
+
+
+def cmd_eval_validate(args: argparse.Namespace) -> int:
+    """Load every task and say what the suite covers.
+
+    Loading is the check: `loader.py` refuses a task that names a trap
+    kind the spec does not define, a scorer that is not implemented, or
+    nothing to score at all.
+    """
+    from ..evals.loader import TRAP_KINDS, TaskLoadError, load_suite, suites
+
+    problems = 0
+    for name in sorted(suites(EVALS_DIR)):
+        try:
+            tasks = load_suite(EVALS_DIR, name)
+        except TaskLoadError as err:
+            print(f"✗ {name}: {err}")
+            problems += 1
+            continue
+        covered = {p for t in tasks for p in t.traps}
+        print(f"✓ {name}: {len(tasks)} task(s)")
+        # Reported, not enforced. Several trap kinds need a source this
+        # registry does not have yet, and failing the command for a gap
+        # the registry cannot close would make it useless as a check on
+        # the ones it can.
+        for kind in sorted(TRAP_KINDS - covered):
+            print(f"  - no {kind} task in this suite")
+    return 1 if problems else 0
+
+
+def cmd_eval_run(args: argparse.Namespace) -> int:
+    import asyncio
+    import json as _json
+
+    from ..evals.loader import TaskLoadError
+    from ..evals.runner import compare_to_baseline, run_suite, write_result
+
+    if args.model:
+        return _fail(
+            f"no client is wired for model {args.model!r}. Tier-2 model "
+            "runs are the one part of the bench that costs money "
+            "(design/bench.md § 6); implement a ModelClient and pass it "
+            "here. `--oracle` runs everything else.")
+    try:
+        run = asyncio.run(run_suite(EVALS_DIR, args.suite,
+                                    context_factory=_fixture_ctx,
+                                    profile=args.profile, tier=args.tier))
+    except TaskLoadError as err:
+        return _fail(str(err))
+
+    for r in run.results:
+        if r.skipped is not None:
+            print(f"- {r.task_id}: skipped ({r.skipped})")
+            continue
+        mark = "✓" if r.passed else "✗"
+        print(f"{mark} {r.task_id} [{', '.join(r.traps) or 'no trap'}]")
+        for s in r.scores:
+            if not s.passed:
+                print(f"    {s.kind}: {s.detail}")
+
+    # The denominator, printed rather than left to be inferred (§ 4).
+    print(f"\n{run.passed}/{run.executed} passed "
+          f"({run.executed} of {len(run.results)} tasks executed, "
+          f"{run.toolset} toolset, {run.tool_count} tools, "
+          f"mode={run.mode})")
+
+    if args.out:
+        path = write_result(run, Path(args.out))
+        print(f"wrote {path}")
+
+    if args.baseline:
+        baseline_path = Path(args.baseline)
+        if not baseline_path.exists():
+            return _fail(f"no baseline at {baseline_path}")
+        try:
+            baseline = _json.loads(baseline_path.read_text())
+        except ValueError as err:
+            return _fail(f"{baseline_path} is not a JSON result: {err}")
+        fatal, notes = compare_to_baseline(run, baseline,
+                                           threshold=args.threshold)
+        # Printed either way. A regression inside the threshold is
+        # tolerated, not hidden.
+        for note in notes:
+            print(f"note: {note}")
+        for problem in fatal:
+            print(f"REGRESSION: {problem}")
+        if fatal:
+            return 1
+        # "Beyond the threshold" only when one was set: with none, no
+        # fatal means no regression at all, and a note about a moved tool
+        # count is not a tolerated regression.
+        print("no regression against the baseline"
+              + (f" beyond the threshold of {args.threshold}"
+                 if args.threshold else ""))
+    return 0 if run.executed and run.passed == run.executed else (
+        0 if args.allow_failures else 1)
+
+
+def _count(text: str) -> int:
+    """An argparse type for a number of things: zero or more."""
+    value = int(text)
+    if value < 0:
+        raise argparse.ArgumentTypeError(f"{text} is negative; a count of "
+                                         "tolerated regressions is 0 or more")
+    return value
+
+
 def main() -> int:
     ap = argparse.ArgumentParser(prog="commonwealth", description=__doc__)
     sub = ap.add_subparsers(dest="command", required=True)
@@ -1494,6 +1844,44 @@ def main() -> int:
     sksub = sk.add_subparsers(dest="skills_command", required=True)
     skl = sksub.add_parser("list")
     skl.set_defaults(fn=cmd_skills_list)
+
+    ev = sub.add_parser("eval", help="run the bench suites "
+                                     "(design/bench.md)")
+    evsub = ev.add_subparsers(dest="eval_command", required=True)
+    evl = evsub.add_parser("list", help="the suites and what they cover")
+    evl.set_defaults(fn=cmd_eval_list)
+    evv = evsub.add_parser("validate", help="load every task and report "
+                                           "which trap kinds are covered")
+    evv.set_defaults(fn=cmd_eval_validate)
+    evr = evsub.add_parser("run", help="score a suite")
+    evr.add_argument("suite")
+    # Names, not counts: the tool counts were typed here once and were
+    # wrong within the same PR. The run prints the count it actually got.
+    evr.add_argument("--profile", default="default",
+                     choices=sorted(toolreg.PROFILES),
+                     help="toolset to expose; the sweep in issue #28 runs "
+                          "the same suite at each")
+    evr.add_argument("--tier", type=int, default=None,
+                     help="run only this tier")
+    mode = evr.add_mutually_exclusive_group()
+    mode.add_argument("--model", default=None,
+                      help="model id for a Tier-2 run; costs money and "
+                           "needs a client wired")
+    mode.add_argument("--oracle", action="store_true",
+                      help="run each task's own expected call (the default "
+                           "when no --model is given)")
+    evr.add_argument("--out", default=None,
+                     help="directory to write the JSON result into, named "
+                          "by suite, model and toolset")
+    evr.add_argument("--baseline", default=None,
+                     help="compare against a stored baseline and fail on "
+                          "regression")
+    evr.add_argument("--threshold", type=_count, default=0,
+                     help="how many fewer passes than the baseline is "
+                          "tolerated")
+    evr.add_argument("--allow-failures", action="store_true",
+                     help="exit 0 even when tasks fail")
+    evr.set_defaults(fn=cmd_eval_run)
 
     sv2 = sub.add_parser("serve", help="run the MCP server")
     sv2.add_argument("--profile", default="default")

@@ -19,6 +19,13 @@ function repoLink(path, text){
   return a;
 }
 
+// Publisher URLs come out of recorded data. Only a web address becomes a
+// link; anything else is left out rather than set as an href that would
+// run on click.
+function safeHref(href){
+  return /^https?:\/\//i.test(href || "") ? href : null;
+}
+
 function el(tag, cls, text){
   const n = document.createElement(tag);
   if (cls) n.className = cls;
@@ -211,7 +218,18 @@ const ASK_ANSWERS = {
     "agency that contributed it.",
   "code_section.lookup": "The section text from the state's own site, " +
     "linked to the live page.",
+  "meeting.search": "The bodies that meet, when, and a link to the agenda " +
+    "— for the few localities whose platform publishes one.",
 };
+
+/* The link to the full trail says how big the trail is. It said "All 39
+   recorded calls" while the trail held forty-five, which is what a typed
+   count does. */
+function renderCallsLink(core){
+  const a = document.getElementById("all-calls-link");
+  const n = (core.demo_meta || {}).call_count;
+  if (a && n) a.textContent = `All ${n} recorded calls`;
+}
 
 function renderAsk(core){
   const box = document.getElementById("ask-cards");
@@ -239,9 +257,18 @@ function renderFeaturedWalk(core){
   const box = document.getElementById("featured-walk");
   if (!box) return;
   const f = core.featured;
+  /* The step count is the trail's, not typed: this said "asked four
+     ways" as a literal, and the walk has grown since. */
+  const n = f.steps.length;
+  const words = ["zero","one","two","three","four","five","six","seven",
+                 "eight","nine","ten"];
+  const count = words[n] || String(n);
+  const title = document.getElementById("featured-title");
+  if (title) title.textContent = `One walk, ${count} answers`;
   document.getElementById("featured-lede").textContent =
-    `${f.address}, asked four ways. Three of the four answers come back ` +
-    "differently, and telling them apart is the point of the whole thing.";
+    `${f.address}, asked ${count} ways. Some come back with records, one ` +
+    "comes back checked and empty, and one has no registered source at " +
+    "all — telling those apart is the point of the whole thing.";
   f.steps.forEach((s, i) => {
     const row = el("div","walk-step");
     const head = el("div","tool-head");
@@ -1108,6 +1135,576 @@ function followMovedAnchor(){
   }
 }
 
+/* --- demos page -------------------------------------------------------- *
+
+   Five short apps over the recorded trail. Each one is a question
+   somebody actually asks, put together as an app rather than a call
+   list: the examples page already shows every call in order, and a
+   second copy of that list would not have been worth a tab.
+
+   Everything here reads the same recorded envelopes the examples page
+   reads. Nothing makes a live request, and nothing invents an answer —
+   an app that has no recording for a combination says so rather than
+   drawing an empty result, because a blank panel is exactly the
+   "nothing there" this project refuses to render.
+*/
+
+const DEMO_APPS = [
+  ["screen",   "Screen a site"],
+  ["meetings", "Find a public meeting"],
+  ["code",     "Walk the Code"],
+  ["coverage", "Check what is covered"],
+  ["envelope", "Read an envelope"],
+];
+
+/* A recorded call, by its index in the trail.
+
+   tools/build_site.py resolves each demo step to an index and fails the
+   build if one does not resolve, so a lookup here cannot silently miss.
+   It used to compare argument dicts, which was wrong twice over: the
+   recorder writes a tool's defaults into the audit record, so a demo's
+   arguments are only ever a subset of what was recorded; and matching on
+   a subset let `browse_code {}` match `browse_code {title: "15.2"}` —
+   the top of the Code resolving to one title. */
+function callAt(demo, i){
+  return (demo.calls || [])[i];
+}
+
+function missingRecording(at){
+  const box = el("div", "demo-missing");
+  box.append(el("p", "meta",
+    `No recorded answer at trail position ${at}. The embedded page data ` +
+    "and data/audit-demo.json are out of step; rebuild both with " +
+    "tools/build_site.py."));
+  return box;
+}
+
+/* The block every app ends with: what the answer does not settle. It is
+   the same text the envelope carries, surfaced rather than buried,
+   because the caveat is the product. */
+function answerFooter(env){
+  const wrap = el("div", "demo-foot");
+  wrap.append(coverageChips(env.coverage || {}));
+  const cov = env.coverage || {};
+  if (cov.registry === "none"){
+    const p = el("p", "demo-gap");
+    p.textContent = "No source is registered for this. The records may " +
+      "well exist — this project has nowhere to read them. That is not " +
+      "the same as an empty answer.";
+    wrap.append(p);
+  } else if (cov.result === "empty"){
+    const p = el("p", "meta");
+    p.textContent = "A source is registered and it answered. It holds no " +
+      "matching record.";
+    wrap.append(p);
+  }
+  for (const w of (env.warnings || [])){
+    const p = el("p", "demo-warn");
+    p.append(el("strong", "", w.code + ": "), w.message);
+    wrap.append(p);
+  }
+  const sources = env.provenance || [];
+  if (sources.length){
+    const p = el("p", "meta");
+    p.textContent = "From: " + joinNames([...new Set(
+      sources.map(s => s.publisher))]) + ".";
+    wrap.append(p);
+  }
+  for (const a of (env.next_actions || [])){
+    const p = el("p", "meta");
+    p.append(el("strong", "", "Next: "), a.reason);
+    wrap.append(p);
+  }
+  return wrap;
+}
+
+function demoRows(pairs){
+  const dl = el("dl", "demo-rows");
+  for (const [k, v] of pairs){
+    if (v === null || v === undefined || v === "") continue;
+    dl.append(el("dt", "", k), el("dd", "", String(v)));
+  }
+  return dl;
+}
+
+/* --- 1. Screen a site --------------------------------------------------- */
+
+function renderScreenDemo(demo, SCREEN_SITES){
+  const picker = document.getElementById("screen-picker");
+  const out = document.getElementById("screen-out");
+  if (!picker || !out) return;
+  const buttons = SCREEN_SITES.map((site, i) => {
+    const b = el("button", "tab", site.label);
+    b.type = "button";
+    b.addEventListener("click", ()=>show(i));
+    return b;
+  });
+  picker.replaceChildren(...buttons);
+
+  function show(i){
+    buttons.forEach((b, n)=>b.classList.toggle("active", n === i));
+    const site = SCREEN_SITES[i];
+    const nodes = [el("p", "demo-blurb", site.blurb)];
+    for (const step of site.steps){
+      const call = callAt(demo, step.call);
+      const card = el("div", "demo-step");
+      card.append(el("h4", "", step.label));
+      card.append(el("p", "meta", step.tool));
+      if (!call){ card.append(missingRecording(step.call)); }
+      else {
+        card.append(el("p", "demo-answer", call.note));
+        card.append(answerFooter(call.envelope || {}));
+      }
+      nodes.push(card);
+    }
+    out.replaceChildren(...nodes);
+  }
+  show(0);
+}
+
+/* --- 2. Find a public meeting ------------------------------------------- */
+
+function meetingCard(rec){
+  const card = el("div", "meeting-card");
+  const head = el("div", "meeting-head");
+  head.append(el("strong", "", rec.body));
+  if (rec.cancellation_note) head.append(el("span", "chip bad", "see comment"));
+  card.append(head);
+  card.append(demoRows([
+    ["When", `${rec.date} at ${rec.time} (${rec.time_zone})`],
+    ["Where", rec.location],
+    ["Agenda status", rec.agenda_status],
+    // The publisher's own last edit. It matters most on the rows below
+    // it: a cancellation lives in the comment, and when the comment was
+    // last revised is the difference between one posted this morning
+    // and one posted years ago.
+    ["Publisher last edited", rec.last_modified],
+  ]));
+  if (rec.comment){
+    const p = el("p", "meeting-comment");
+    p.append(el("strong", "", "Publisher's comment: "), rec.comment);
+    card.append(p);
+  }
+  if (rec.cancellation_note)
+    card.append(el("p", "demo-warn", rec.cancellation_note));
+  const links = el("p", "meta");
+  for (const [label, href] of [["Agenda document", safeHref(rec.agenda_url)],
+                               ["Publisher's page", safeHref(rec.portal_url)]]){
+    if (!href) continue;
+    const a = el("a", "", label + " ↗");
+    a.href = href; a.target = "_blank"; a.rel = "noopener";
+    links.append(a, " ");
+  }
+  if (links.childNodes.length) card.append(links);
+  return card;
+}
+
+function renderMeetingsDemo(demo, MEETING_VIEWS){
+  const picker = document.getElementById("meetings-picker");
+  const out = document.getElementById("meetings-out");
+  if (!picker || !out) return;
+  const buttons = MEETING_VIEWS.map((view, i) => {
+    const b = el("button", "tab", view.label);
+    b.type = "button";
+    b.addEventListener("click", ()=>show(i));
+    return b;
+  });
+  picker.replaceChildren(...buttons);
+
+  function show(i){
+    buttons.forEach((b, n)=>b.classList.toggle("active", n === i));
+    const view = MEETING_VIEWS[i];
+    const call = callAt(demo, view.call);
+    const nodes = [el("p", "demo-blurb", view.blurb)];
+    if (!call){
+      out.replaceChildren(...nodes, missingRecording(view.call));
+      return;
+    }
+    const env = call.envelope || {};
+    const block = ((env.data || {}).results || [])[0];
+    const records = block ? block.records : [];
+    if (!block){
+      nodes.push(el("p", "demo-answer", call.note));
+    } else if (!records.length){
+      nodes.push(el("p", "demo-answer", block.note));
+    } else {
+      nodes.push(el("p", "demo-answer",
+        `${records.length} ${plural(records.length, "meeting")} between ` +
+        `${block.window.start_date} and ${block.window.end_date}` +
+        (block.body_filter ? `, body matching “${block.body_filter}”` : "") +
+        "."));
+      // A pointer, not a re-ordering. The cancelled meetings are the
+      // reason this panel exists, and in the publisher's own date order
+      // they can sit below the fold — but sorting them to the top would
+      // be this project re-ranking a publisher's answer, which it does
+      // nowhere else. So the list keeps their order and a line above it
+      // says which rows to look at.
+      const flagged = records.filter(r => r.cancellation_note);
+      if (flagged.length){
+        const p = el("p", "demo-warn");
+        p.append(el("strong", "", "Read the comment on: "),
+                 flagged.map(r => `${r.body} (${r.date})`).join("; "));
+        nodes.push(p);
+      }
+      const list = el("div", "meeting-list");
+      showMore(list, records.map(meetingCard), 4, "meeting");
+      nodes.push(list);
+    }
+    nodes.push(answerFooter(env));
+    out.replaceChildren(...nodes);
+  }
+  show(0);
+}
+
+/* --- 3. Walk the Code --------------------------------------------------- */
+
+function renderCodeDemo(demo, CODE_WALK){
+  const crumbs = document.getElementById("code-crumbs");
+  const out = document.getElementById("code-out");
+  if (!crumbs || !out) return;
+
+  function show(depth){
+    const trail = [];
+    CODE_WALK.slice(0, depth + 1).forEach((step, i) => {
+      const b = el("button", "crumb" + (i === depth ? " active" : ""),
+                   step.crumb);
+      b.type = "button";
+      b.addEventListener("click", ()=>show(i));
+      trail.push(b);
+      if (i < depth) trail.push(el("span", "crumb-sep", "›"));
+    });
+    crumbs.replaceChildren(...trail);
+
+    const step = CODE_WALK[depth];
+    const call = callAt(demo, step.call);
+    if (!call){ out.replaceChildren(missingRecording(step.call)); return; }
+    const env = call.envelope || {};
+    const block = ((env.data || {}).results || [])[0];
+    const nodes = [el("p", "demo-answer", call.note)];
+
+    if (step.tool === "civic.get_code_section" && block && block.found){
+      // The publisher's heading usually already opens with the section
+      // number ("§ 15.2-2200. Declaration of legislative intent"), so
+      // prefixing it unconditionally printed the citation twice. Their
+      // heading is used as published where it carries the number, and
+      // only prefixed where it does not.
+      const heading = (block.heading || "").trim();
+      nodes.push(el("h4", "", heading.includes(block.citation)
+                   ? heading : `§ ${block.citation}. ${heading}`));
+      for (const para of (block.paragraphs || []))
+        nodes.push(el("p", "code-para", para));
+      const sourceHref = safeHref(block.source_url);
+      if (sourceHref){
+        const a = el("a", "meta", "Read it on the publisher's site ↗");
+        a.href = sourceHref; a.target = "_blank"; a.rel = "noopener";
+        nodes.push(a);
+      }
+    } else if (block && block.records){
+      const next = depth + 1 < CODE_WALK.length ? CODE_WALK[depth + 1] : null;
+      const isNext = r => next && (
+        (r.kind === "title" && r.number === next.title) ||
+        (r.kind === "chapter" && r.number === next.chapter) ||
+        (r.kind === "section" && r.number === next.citation));
+
+      // The step the recorded walk continues into, offered above the
+      // list. The Code's titles are not in an order that puts 15.2 near
+      // the top, so leaving the only walkable row to be found among a
+      // hundred others — and behind a "show more" — made the demo look
+      // like a dead end. The list below keeps the publisher's own order
+      // and its own button; this is a shortcut to the same step, not a
+      // re-ordering of what they published.
+      const step = block.records.find(isNext);
+      if (step){
+        const cta = el("button", "run-btn walk-next",
+                       `Open ${step.number} · ${step.name} ›`);
+        cta.type = "button";
+        cta.addEventListener("click", ()=>show(depth + 1));
+        nodes.push(cta);
+        const hint = el("p", "meta");
+        hint.textContent = "The recorded walk continues here. Every other " +
+          "row below is a real branch of the Code; this demo only has a " +
+          "recording for this one.";
+        nodes.push(hint);
+      }
+
+      const list = el("div", "code-list");
+      const rows = block.records.map(r => {
+        const row = el("div", "code-row" + (isNext(r) ? " walkable" : ""));
+        row.append(el("span", "code-num", r.number));
+        row.append(el("span", "", r.name));
+        if (isNext(r)){
+          const b = el("button", "run-btn", "Open ›");
+          b.type = "button";
+          b.addEventListener("click", ()=>show(depth + 1));
+          row.append(b);
+        }
+        return row;
+      });
+      showMore(list, rows, 8, "row");
+      nodes.push(list);
+    }
+    nodes.push(answerFooter(env));
+    out.replaceChildren(...nodes);
+  }
+  show(0);
+}
+
+/* --- 4. Check what is covered ------------------------------------------- */
+
+/* A government's name, with its kind only where the name does not
+   already carry it. The table spells towns "Abingdon (town)" and
+   counties "Accomack County", so appending the kind unconditionally
+   produced "Abingdon (town) (town)". */
+function placeLabel(j){
+  const kind = (j.kind || "").replace("-", " ");
+  const name = j.name || "";
+  return kind && !name.toLowerCase().includes(kind.split(" ").pop())
+    ? `${name} (${kind})` : name;
+}
+
+function renderCoverageDemo(core){
+  const capsBox = document.getElementById("coverage-caps");
+  const input = document.getElementById("coverage-place");
+  const out = document.getElementById("coverage-out");
+  if (!capsBox || !input || !out) return;
+
+  const caps = Object.keys(core.capability_copy || {}).sort();
+  let active = caps.includes("zoning.lookup") ? "zoning.lookup" : caps[0];
+  let table = null;
+
+  const buttons = caps.map(cap => {
+    const copy = core.capability_copy[cap] || {};
+    const b = el("button", "tab", copy.subject || cap);
+    b.type = "button";
+    b.title = copy.question || cap;
+    b.addEventListener("click", ()=>{ active = cap; draw(); });
+    return b;
+  });
+  capsBox.replaceChildren(...buttons);
+
+  input.addEventListener("input", draw);
+  loadData("coverage").then(c => { table = c; draw(); },
+                            err => dataError("coverage-out", err));
+
+  function draw(){
+    buttons.forEach((b, i)=>b.classList.toggle("active", caps[i] === active));
+    if (!table){ return; }
+    const copy = core.capability_copy[active] || {};
+    const typed = input.value.trim().toLowerCase();
+    const nodes = [el("p", "demo-blurb", copy.question || active)];
+
+    if (!typed){
+      const cov = table.capability_coverage[active] || {};
+      const n = (cov.covered || []).length;
+      nodes.push(el("p", "demo-answer",
+        `${n} of ${table.jurisdictions.length} Virginia governments have a ` +
+        `registered source for this. Type a place to check one.`));
+      out.replaceChildren(...nodes);
+      return;
+    }
+
+    /* An exact name or alias settles it. Otherwise every government the
+       typed text is a prefix of is a candidate, and more than one
+       candidate is answered with the candidates — never by taking the
+       first row of a table that happens to be sorted alphabetically.
+       "Fairfax" matches Fairfax City and Fairfax County, and this panel
+       telling a reader that one of them is uncovered while the other is
+       covered would be the exact failure the page opposite it warns
+       about. `registry.resolve_jurisdiction` behaves the same way, and
+       for the same reason. */
+    const exact = table.jurisdictions.find(j =>
+      j.name.toLowerCase() === typed ||
+      (j.aliases || []).some(a => a.toLowerCase() === typed));
+    const prefixed = exact ? [exact] : table.jurisdictions.filter(j =>
+      j.name.toLowerCase().startsWith(typed) ||
+      (j.aliases || []).some(a => a.toLowerCase().startsWith(typed)));
+
+    if (!prefixed.length){
+      nodes.push(el("p", "demo-answer",
+        `No Virginia government matches “${input.value.trim()}”. ` +
+        "Fairfax City and Fairfax County are two different governments; " +
+        "so are Richmond City and Richmond County."));
+      out.replaceChildren(...nodes);
+      return;
+    }
+    if (prefixed.length > 1){
+      nodes.push(el("p", "demo-answer",
+        `“${input.value.trim()}” names ${prefixed.length} Virginia ` +
+        "governments. They can have different coverage, so this is not " +
+        "answered until one of them is named."));
+      const list = el("div", "chips");
+      for (const j of prefixed.slice(0, 12)){
+        const b = el("button", "tab", placeLabel(j));
+        b.type = "button";
+        b.addEventListener("click", ()=>{ input.value = j.name; draw(); });
+        list.append(b);
+      }
+      nodes.push(list);
+      if (prefixed.length > 12)
+        nodes.push(el("p", "meta",
+                      `…and ${prefixed.length - 12} more. Type more of the name.`));
+      out.replaceChildren(...nodes);
+      return;
+    }
+    const place = prefixed[0];
+
+    const cov = table.capability_coverage[active] || {};
+    const hit = (cov.covered || []).find(c => c.jurisdiction === place.id);
+    nodes.push(el("p", "demo-place", placeLabel(place)));
+    if (hit){
+      nodes.push(el("p", "demo-answer", "Covered."));
+      nodes.push(demoRows([["Sources", hit.sources.join(", ")]]));
+    } else {
+      nodes.push(el("p", "demo-answer", "No registered source."));
+      const p = el("p", "demo-gap");
+      p.textContent = `Nothing here can answer “${copy.question || active}” ` +
+        `for ${place.name}. The records may well exist and the government ` +
+        "may well publish them; this project has no registered place to " +
+        "read them. A tool call returns coverage registry=none, which is " +
+        "a gap in what is registered — never a finding about the ground.";
+      nodes.push(p);
+    }
+    out.replaceChildren(...nodes);
+  }
+}
+
+/* --- 5. Read an envelope ------------------------------------------------ */
+
+const ENVELOPE_PARTS = [
+  ["data", "The answer itself. Records as the publisher spells them."],
+  ["coverage", "What was searched, whether it completed, and whether " +
+   "anything matched. Read before the data: an empty result and no " +
+   "registered source are different answers."],
+  ["provenance", "Which system each fact came from, who publishes it, " +
+   "and when it was retrieved."],
+  ["evidence", "One entry per claim, pointing back at the record and the " +
+   "source entry behind it."],
+  ["warnings", "What this answer does not establish."],
+  ["next_actions", "Where to go when the answer is a gap."],
+];
+
+function renderEnvelopeDemo(demo){
+  const picker = document.getElementById("envelope-picker");
+  const out = document.getElementById("envelope-out");
+  if (!picker || !out) return;
+
+  /* One representative call per shape, so the picker teaches the shapes
+     rather than offering forty-five near-identical rows. */
+  const wanted = [
+    // An ambiguous answer also has result=hit and no warnings, and it
+    // has its own row below — so it is excluded here rather than
+    // labelled "a found record", which is the one thing it is not.
+    ["A found record", c => c.envelope && (c.envelope.coverage||{}).result === "hit"
+                            && !c.envelope.requires_user_choice
+                            && !(c.envelope.warnings||[]).length],
+    ["An answer with warnings", c => c.envelope && (c.envelope.warnings||[]).length >= 2],
+    ["A registry gap", c => c.envelope && (c.envelope.coverage||{}).registry === "none"],
+    ["A clean empty", c => c.envelope && (c.envelope.coverage||{}).registry === "covered"
+                           && (c.envelope.coverage||{}).result === "empty"],
+    ["Needs the user to choose", c => c.envelope && c.envelope.requires_user_choice],
+    ["A typed error", c => c.is_error],
+  ];
+  const picks = [];
+  for (const [label, test] of wanted){
+    const call = demo.calls.find(c => test(c) && !picks.some(p => p.call === c));
+    if (call) picks.push({label, call});
+  }
+
+  const buttons = picks.map((p, i) => {
+    const b = el("button", "tab", p.label);
+    b.type = "button";
+    b.addEventListener("click", ()=>show(i));
+    return b;
+  });
+  picker.replaceChildren(...buttons);
+
+  function show(i){
+    buttons.forEach((b, n)=>b.classList.toggle("active", n === i));
+    const {call} = picks[i];
+    const audit = call.audit || {};
+    const nodes = [];
+    nodes.push(demoRows([
+      ["Tool", audit.tool],
+      ["Asked", JSON.stringify(audit.args || {})],
+    ]));
+    nodes.push(el("p", "demo-answer", call.note));
+
+    if (call.is_error){
+      const p = el("p", "demo-warn");
+      p.append(el("strong", "", "Typed error: "), call.error_text || "");
+      nodes.push(p);
+      const note = el("p", "meta");
+      note.textContent = "An error is not an empty answer. It says the " +
+        "question could not be asked as posed, and its message is written " +
+        "for the model that has to fix the call.";
+      nodes.push(note);
+      out.replaceChildren(...nodes);
+      return;
+    }
+
+    const env = call.envelope || {};
+    for (const [key, blurb] of ENVELOPE_PARTS){
+      const value = env[key];
+      const present = Array.isArray(value) ? value.length : value != null;
+      const box = el("div", "envelope-part" + (present ? "" : " absent"));
+      const head = el("div", "envelope-part-head");
+      head.append(el("code", "", key));
+      head.append(el("span", "meta", present
+        ? (Array.isArray(value) ? `${value.length} ${plural(value.length,"entry").replace("entrys","entries")}` : "present")
+        : "not in this answer"));
+      box.append(head, el("p", "meta", blurb));
+      if (present){
+        const pre = el("pre", "copyable");
+        pre.textContent = JSON.stringify(value, null, 1);
+        box.append(pre);
+      }
+      nodes.push(box);
+    }
+    out.replaceChildren(...nodes);
+    addCopyButtons();
+  }
+  show(0);
+}
+
+/* --- tabs --------------------------------------------------------------- */
+
+function wireDemoTabs(){
+  const bar = document.getElementById("demo-tabs");
+  if (!bar) return;
+  const panels = DEMO_APPS.map(([id]) => document.getElementById("demo-" + id));
+  const buttons = DEMO_APPS.map(([id, label], i) => {
+    const b = el("button", "tab", label);
+    b.type = "button";
+    b.setAttribute("role", "tab");
+    b.id = "demotab-" + id;
+    if (panels[i]) panels[i].setAttribute("aria-labelledby", b.id);
+    b.addEventListener("click", ()=>select(i));
+    b.addEventListener("keydown", e => {
+      const step = e.key === "ArrowRight" ? 1 : e.key === "ArrowLeft" ? -1 : 0;
+      if (!step) return;
+      e.preventDefault();
+      select((i + step + DEMO_APPS.length) % DEMO_APPS.length, true);
+    });
+    return b;
+  });
+  bar.replaceChildren(...buttons);
+
+  function select(i, focus){
+    buttons.forEach((b, n)=>{
+      b.classList.toggle("active", n === i);
+      b.setAttribute("aria-selected", String(n === i));
+      b.tabIndex = n === i ? 0 : -1;
+    });
+    panels.forEach((p, n)=>{ if (p) p.hidden = n !== i; });
+    if (focus) buttons[i].focus();
+    const id = DEMO_APPS[i][0];
+    if (location.hash !== "#" + id) history.replaceState(null, "", "#" + id);
+  }
+
+  const fromHash = DEMO_APPS.findIndex(([id]) => "#" + id === location.hash);
+  select(fromHash >= 0 ? fromHash : 0);
+}
+
 /* --- page dispatch ----------------------------------------------------- */
 
 (function(){
@@ -1130,6 +1727,7 @@ function followMovedAnchor(){
     renderCounts(core);
     renderWorksWith(core);
     renderAsk(core);
+    renderCallsLink(core);
     renderFeaturedWalk(core);
     renderDoctorSample(core);
     renderStarterPrompts(core);
@@ -1147,6 +1745,18 @@ function followMovedAnchor(){
   } else if (page === "sources"){
     renderSources(core);
     renderJurisdictions(core);
+  } else if (page === "demos"){
+    wireDemoTabs();
+    renderCoverageDemo(core);
+    loadData("audit-demo").then(demo => {
+      // The app specs are built and checked by tools/build_site.py, so a
+      // demo cannot address a call the recorded trail does not contain.
+      const apps = core.demo_apps || {};
+      renderScreenDemo(demo, apps.screen || []);
+      renderMeetingsDemo(demo, apps.meetings || []);
+      renderCodeDemo(demo, apps.code || []);
+      renderEnvelopeDemo(demo);
+    }, err => dataError("screen-out", err));
   } else if (page === "examples"){
     renderResolver();
     loadData("audit-demo").then(demo => {
@@ -1163,3 +1773,4 @@ function followMovedAnchor(){
     }, err => dataError("calls", err));
   }
 })();
+

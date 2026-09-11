@@ -174,8 +174,12 @@ CAPABILITY_COPY = {
                                   "monitored sites"),
     "geocode.address": ("Where is this address, and whose government is it?",
                         "geocoding"),
+    "health_facility.lookup": ("Where is the nearest hospital or urgent "
+                              "care?", "hospitals and urgent care"),
     "landmark.lookup": ("Which schools, libraries, or fire stations are "
                         "nearby?", "public places"),
+    "meeting.search": ("When does this government meet, and about what?",
+                       "public meetings"),
     "parcel.lookup": ("What is this parcel?", "parcels"),
     "road.lookup": ("What roads are here, and what are they called?",
                     "roads"),
@@ -268,20 +272,33 @@ LOUDOUN = {"jurisdiction": "Loudoun County",
 
 DEMO_GROUPS = [
     ('One address, every question',
-     'One mailing address in Sterling, asked five ways. It is the '
-     'walk that produces a found record, a registry gap, and an '
-     'empty result in a row.', [
+     'One mailing address in Sterling, asked seven ways. Records found, '
+     'a query that came back empty, and a subject with no registered '
+     'source at all \u2014 the three answers this project exists to tell '
+     'apart, in one walk.', [
         ("registry.resolve_jurisdiction", {"query": "Sterling"},
          'Sterling does not resolve as a government name; use an address or coordinate.'),
         ("geo.resolve_location",
          {"address": "21641 Ridgetop Cir, Sterling, VA 20166"},
          'The Sterling mailing address resolves to Loudoun County.'),
         ("geo.find_parcel", dict(LOUDOUN),
-         'No local parcel source is registered for Loudoun; VGIN returns a parcel.'),
+         'Loudoun County\u2019s own parcel layer and VGIN\u2019s statewide one '
+         'both answer, unranked.'),
         ("geo.find_zoning", dict(LOUDOUN),
-         'No zoning source is registered for Loudoun County.'),
+         'Zoning from Loudoun County\u2019s own layer. This call returned a '
+         'registry gap until the county was registered on 2026-09-10, and '
+         'it is the same call \u2014 what changed is the registry.'),
         ("geo.find_landmarks", dict(LOUDOUN),
          'The landmarks query returned no records within one kilometre.'),
+        ("geo.find_health_facilities", dict(LOUDOUN),
+         'Hospitals and urgent care within eight kilometres, from the '
+         'county\u2019s own map of them.'),
+        ("civic.search_meetings", {"jurisdiction": "Loudoun County",
+                                   "start_date": "2026-09-01",
+                                   "end_date": "2026-09-30"},
+         'Loudoun County\u2019s public meetings. The county is not on the '
+         'agenda platform, so no source is registered: a gap, and the '
+         'county certainly meets.'),
     ]),
 
     ('Whose government is this?',
@@ -377,6 +394,72 @@ DEMO_GROUPS = [
          "section returned as data"),
     ]),
 
+    ('Hospitals and urgent care',
+     'The first health capability with an endpoint behind it. A locality '
+     'publishes its own map of the hospitals and urgent care inside it \u2014 '
+     'which is a narrower thing than a licensing register, and the answers '
+     'say so.', [
+        ("geo.find_health_facilities", {"jurisdiction": "Loudoun County",
+                                        "lon": -77.4875, "lat": 39.0437},
+         'Hospitals and urgent care near Ashburn. The county publishes its '
+         'own map of them; Virginia licenses hospitals through VDH, which '
+         'publishes nothing this server can query.'),
+        ("geo.find_health_facilities", {"jurisdiction": "Loudoun County",
+                                        "name": "Inova"},
+         'The same layer by name prefix.'),
+        ("geo.find_health_facilities", {"jurisdiction": "Loudoun County",
+                                        "lon": -77.9, "lat": 39.15,
+                                        "radius_meters": 2000.0},
+         'A point in western Loudoun with nothing within two kilometres. '
+         'A clean empty \u2014 and not evidence that care is unavailable.'),
+        ("geo.find_health_facilities", {"jurisdiction": "Fairfax County",
+                                        "lon": -77.2653, "lat": 38.9012},
+         'The same question where no health source is registered. Coverage '
+         'says none: Fairfax has hospitals, and this project has nowhere '
+         'to read them.'),
+     ]),
+
+    ('When does this government meet?',
+     'Several Virginia localities publish their meetings through one '
+     'civic-tech platform. The same walk shows what that platform does '
+     'not publish, and what a locality that is not on it looks like.', [
+        ("civic.search_meetings", {"jurisdiction": "Richmond City",
+                                   "start_date": "2026-09-01",
+                                   "end_date": "2026-09-30"},
+         'A month of Richmond meetings, with the agenda document linked as '
+         'data. The link is never fetched, so what each meeting is about '
+         'is not in this answer.'),
+        ("civic.search_meetings", {"jurisdiction": "Alexandria City",
+                                   "start_date": "2026-09-01",
+                                   "end_date": "2026-09-30"},
+         'The same question of a second locality. One adapter answers both; '
+         'the only thing that differs is a client identifier in the manifest.'),
+        ("civic.search_meetings", {"jurisdiction": "Richmond City",
+                                   "start_date": "2026-09-01",
+                                   "end_date": "2026-09-30",
+                                   "body": "planning"},
+         'Narrowed to one body. The publisher’s ordering is kept; this '
+         'filters the answer rather than re-ranking it.'),
+        ("civic.search_meetings", {"jurisdiction": "Richmond City",
+                                   "start_date": "2019-12-01",
+                                   "end_date": "2019-12-31"},
+         'A window containing cancelled meetings. The platform publishes no '
+         'cancellation field, so the cancellation is read out of the '
+         'publisher’s comment and labelled as a reading, never as a '
+         'published status — and the meeting is returned, not dropped.'),
+        ("civic.search_meetings", {"jurisdiction": "Richmond City",
+                                   "start_date": "2030-01-01",
+                                   "end_date": "2030-01-31"},
+         'A covered locality with nothing in the window. Registry covered, '
+         'publisher answered, no meetings — a clean empty.'),
+        ("civic.search_meetings", {"jurisdiction": "Fairfax County",
+                                   "start_date": "2026-09-01",
+                                   "end_date": "2026-09-30"},
+         'The same question where no agenda source is registered. Coverage '
+         'says none. Fairfax County meets constantly; this project has '
+         'nowhere to read it, and the two must never render the same way.'),
+     ]),
+
     ('The ways an answer comes back with no data',
      'A search that matched nothing, a place with no registered '
      'source, and an empty environmental answer that still carries '
@@ -425,6 +508,191 @@ DEMO_GROUPS = [
 # The flat, ordered trail. The groups above are the reading order;
 # this is what the audit run walks and what the tests index into.
 DEMO_CALLS = [c for _, _, calls in DEMO_GROUPS for c in calls]
+
+
+# The demo apps on demos.html, and the recorded calls each one walks.
+#
+# Here rather than in site.js for the reason every other roster on this
+# page is derived: the apps address recorded calls by (tool, arguments),
+# DEMO_CALLS above decides which calls exist, and a hand-typed list in
+# another language is the copy that goes stale. `demo_apps()` checks
+# every reference against the trail and fails the build on a miss, so a
+# demo cannot quietly degrade into "no recorded answer for..." on the
+# published page.
+#
+# Two of the five apps are absent, because neither addresses a fixed
+# call: the coverage app queries the jurisdiction table, and the
+# envelope app picks one call per envelope SHAPE by predicate, so it
+# keeps working whatever the trail contains.
+LOUDOUN_PT = {"lon": -77.408014727372, "lat": 39.025534437083}
+VIENNA_PT = {"lon": -77.2653, "lat": 38.9012}
+
+DEMO_APP_SPECS = {
+    "screen": [
+        {"label": "Sterling, Loudoun County",
+         "blurb": "A mailing address whose postal city is not a "
+                  "government. The county answers for its parcels, "
+                  "zoning and hospitals; nothing nearby is on the "
+                  "public-places list; and its public meetings have no "
+                  "registered source — three kinds of answer on one "
+                  "screen.",
+         "steps": [
+             ["Whose government?", "geo.resolve_location",
+              {"address": "21641 Ridgetop Cir, Sterling, VA 20166"}],
+             ["Parcel", "geo.find_parcel",
+              {"jurisdiction": "Loudoun County", **LOUDOUN_PT}],
+             ["Zoning", "geo.find_zoning",
+              {"jurisdiction": "Loudoun County", **LOUDOUN_PT}],
+             ["Public places nearby", "geo.find_landmarks",
+              {"jurisdiction": "Loudoun County", **LOUDOUN_PT}],
+             ["Hospitals and urgent care", "geo.find_health_facilities",
+              {"jurisdiction": "Loudoun County", **LOUDOUN_PT}],
+             ["Public meetings", "civic.search_meetings",
+              {"jurisdiction": "Loudoun County",
+               "start_date": "2026-09-01", "end_date": "2026-09-30"}],
+         ]},
+        {"label": "A parcel in Vienna",
+         "blurb": "A town inside a county, where both governments "
+                  "publish a zoning layer over the same ground. Both "
+                  "answer, unranked.",
+         "steps": [
+             ["Whose government?", "registry.resolve_jurisdiction",
+              dict(VIENNA_PT)],
+             ["Zoning", "geo.find_zoning",
+              {"jurisdiction": "Vienna", **VIENNA_PT}],
+             ["Roads", "geo.find_roads",
+              {"jurisdiction": "Vienna", "street_name": "Center St"}],
+             ["Public places nearby", "geo.find_landmarks",
+              {"jurisdiction": "Vienna", **VIENNA_PT}],
+         ]},
+        {"label": "Richmond City",
+         "blurb": "A city that publishes its own layers, asked about "
+                  "buildings and monitored environmental sites.",
+         "steps": [
+             ["Buildings", "geo.find_buildings",
+              {"jurisdiction": "Richmond City", "pin": "C0010126019"}],
+             ["Monitored sites", "geo.find_environmental_sites",
+              {"jurisdiction": "Richmond City", "lon": -77.4360,
+               "lat": 37.5407}],
+         ]},
+        {"label": "Craig County",
+         "blurb": "A rural county with no registered zoning source. The "
+                  "whole point of the demo: this is a gap, not an empty "
+                  "county.",
+         "steps": [
+             ["Zoning", "geo.find_zoning",
+              {"jurisdiction": "Craig County", "pin": "123"}],
+         ]},
+    ],
+    "meetings": [
+        {"label": "Richmond \u00b7 Sept 2026",
+         "blurb": "An ordinary month. Each meeting carries the agenda "
+                  "document as a link, which this project never follows "
+                  "\u2014 so what the meeting is about is not in the "
+                  "answer.",
+         "args": {"jurisdiction": "Richmond City",
+                  "start_date": "2026-09-01", "end_date": "2026-09-30"}},
+        {"label": "Alexandria \u00b7 Sept 2026",
+         "blurb": "A second locality, answered by the same adapter. The "
+                  "only difference between them is a client identifier "
+                  "in a manifest.",
+         "args": {"jurisdiction": "Alexandria City",
+                  "start_date": "2026-09-01", "end_date": "2026-09-30"}},
+        {"label": "Richmond \u00b7 planning only",
+         "blurb": "Narrowed to one body. The publisher's ordering is "
+                  "kept \u2014 this filters their answer rather than "
+                  "re-ranking it.",
+         "args": {"jurisdiction": "Richmond City",
+                  "start_date": "2026-09-01", "end_date": "2026-09-30",
+                  "body": "planning"}},
+        {"label": "Richmond \u00b7 Dec 2019 (cancellations)",
+         "blurb": "The platform publishes no cancellation field at all. "
+                  "Where a meeting was called off, it is said in the "
+                  "comment and nowhere else \u2014 so the reading is "
+                  "labelled as a reading, and the meeting is returned "
+                  "rather than dropped.",
+         "args": {"jurisdiction": "Richmond City",
+                  "start_date": "2019-12-01", "end_date": "2019-12-31"}},
+        {"label": "Richmond \u00b7 Jan 2030 (empty)",
+         "blurb": "A registered locality with nothing in the window. "
+                  "Registry covered, publisher answered, no meetings.",
+         "args": {"jurisdiction": "Richmond City",
+                  "start_date": "2030-01-01", "end_date": "2030-01-31"}},
+        {"label": "Fairfax County (not registered)",
+         "blurb": "Fairfax County meets constantly. It is not on this "
+                  "platform, so there is nowhere to read it. Compare "
+                  "this panel with the empty one above \u2014 they must "
+                  "never look the same.",
+         "args": {"jurisdiction": "Fairfax County",
+                  "start_date": "2026-09-01", "end_date": "2026-09-30"}},
+    ],
+    "code": [
+        {"crumb": "The Code", "tool": "civic.browse_code", "args": {}},
+        {"crumb": "Title 15.2", "tool": "civic.browse_code",
+         "args": {"title": "15.2"}},
+        {"crumb": "Chapter 22", "tool": "civic.browse_code",
+         "args": {"title": "15.2", "chapter": "22"}},
+        {"crumb": "\u00a7 15.2-2200", "tool": "civic.get_code_section",
+         "args": {"citation": "15.2-2200"}},
+    ],
+}
+
+
+def _demo_index(tool: str, args: dict) -> int:
+    """Where in the recorded trail a demo step's call sits.
+
+    An INDEX, not a copy of the arguments. The page used to re-derive
+    the match in JavaScript by comparing argument dicts, and that is
+    subtly wrong twice over: the recorder writes a tool's defaults into
+    the audit record (`radius_meters`, empty `name`) so a demo's
+    arguments are only ever a subset of what was recorded, and matching
+    on a subset would let `browse_code {}` match `browse_code
+    {title: "15.2"}` — the top of the Code resolving to one title. So
+    the trail is indexed here, where DEMO_CALLS is, and the page reads
+    `calls[i]`.
+
+    `demo.calls` is DEMO_CALLS run in order, which is the same ordering
+    examples.html's `#call-N` anchors use.
+    """
+    matches = [i for i, (t_, a_, _) in enumerate(DEMO_CALLS)
+               if t_ == tool and a_ == args]
+    if len(matches) != 1:
+        raise AssertionError(
+            f"demos.html references {tool} with {args}, which matches "
+            f"{len(matches)} calls in DEMO_CALLS. A demo step must name "
+            "exactly one recorded call; add it, or disambiguate it.")
+    return matches[0]
+
+
+def demo_apps() -> dict:
+    """The app specs, with each recorded-call reference resolved to its
+    index in the trail. A demo naming a call the trail does not contain
+    fails the build rather than rendering as "no recorded answer" on the
+    published page, which is the drift a typed roster produces.
+    """
+    out: dict[str, Any] = {"screen": [], "meetings": [], "code": []}
+    for site in DEMO_APP_SPECS["screen"]:
+        out["screen"].append({
+            "label": site["label"], "blurb": site["blurb"],
+            "steps": [{"label": label, "tool": tool,
+                       "call": _demo_index(tool, args)}
+                      for label, tool, args in site["steps"]]})
+    for view in DEMO_APP_SPECS["meetings"]:
+        out["meetings"].append({
+            "label": view["label"], "blurb": view["blurb"],
+            "call": _demo_index("civic.search_meetings", view["args"])})
+    for step in DEMO_APP_SPECS["code"]:
+        out["code"].append({
+            "crumb": step["crumb"], "tool": step["tool"],
+            # What the next level down is keyed on, so the page can spot
+            # the row that continues the walk without re-deriving the
+            # argument shape of a Code citation.
+            "title": step["args"].get("title", ""),
+            "chapter": step["args"].get("chapter", ""),
+            "citation": step["args"].get("citation", ""),
+            "call": _demo_index(step["tool"], step["args"])})
+    return out
+
 
 
 def build_catalog() -> dict:
@@ -673,7 +941,10 @@ def _summarize_params(params: dict) -> dict:
     return out
 
 
-def _summarize_response(resp: dict) -> dict:
+def _summarize_response(resp: dict | list) -> dict:
+    if isinstance(resp, list):
+        # The agenda platform answers with a JSON array at the top level.
+        return {"records": len(resp)}
     if "features" in resp and isinstance(resp["features"], list):
         return {"features": len(resp["features"])}
     if "count" in resp:
@@ -713,16 +984,29 @@ class TrackingFetcher:
     async def fetch_json(self, url: str, params: dict) -> dict:
         inner = self._inner or self._fetcher_for_live(url)
         response = await inner.fetch_json(url, params)
+        self._record(url, params, response)
+        return response
+
+    async def fetch_json_list(self, url: str, params: dict) -> list:
+        """The array-shaped answer the agenda platform sends (see
+        `base.JsonListFetcher`), tracked the same way so a meetings
+        call's outbound request shows on the page like every other."""
+        inner = self._inner or self._fetcher_for_live(url)
+        response = await inner.fetch_json_list(url, params)
+        self._record(url, params, response)
+        return response
+
+    def _record(self, url: str, params: dict, response) -> None:
         self.calls.append({
             "url": url,
             "params": _summarize_params(params),
             "response": _summarize_response(response),
         })
-        return response
 
 
 async def run_demo(mode: str) -> dict:
     from mcp.client import Client
+    from commonwealth.adapters.agenda_platform import AgendaPlatformAdapter
     from commonwealth.adapters.arcgis import ArcGISAdapter
     from commonwealth.adapters.base import TTLCache
     from commonwealth.adapters.replay import ReplayFetcher
@@ -746,9 +1030,18 @@ async def run_demo(mode: str) -> dict:
     # store would write a payload and bake a fresh random
     # `commonwealth://` id into committed site data on every rebuild —
     # a handle no reader of the published page could ever resolve.
+    # Every adapter the runtime has goes through the tracker, in both
+    # modes. The agenda platform was left to the runtime's default, whose
+    # fetcher is live, so the "fixtures" build read the meetings calls
+    # from the publisher over the network and the page showed no
+    # outbound request for them; with the network refused they failed as
+    # EgressRefused and the demo had no meetings at all (found while
+    # regenerating the site for review round 3 of PR #56). A test now
+    # runs this trail with the network refused.
     ctx = load_context(arcgis=adapter, geocoder=_geocoder(mode, tracker),
                        results=MemoryResultStore(deterministic=True),
-                       virginia_law=_virginia_law_adapter(mode))
+                       virginia_law=_virginia_law_adapter(mode),
+                       agendas=AgendaPlatformAdapter(fetcher=tracker))
 
     server = build_server(ctx, profile="all")
     calls: list[dict] = []
@@ -798,10 +1091,17 @@ async def run_demo(mode: str) -> dict:
 # to. It is the walk chosen because those three answers come back three
 # different ways — a record found, no source registered, and a search that
 # matched nothing — which is the distinction the whole project turns on.
+# Five steps so the landing page shows all three answers this project
+# exists to tell apart: found (parcel, zoning), checked-and-empty
+# (landmarks), and no registered source (meetings). It was four steps
+# ending on landmarks, and it lost its registry gap on 2026-09-10 when
+# Loudoun County's zoning was registered — the gap now comes from the
+# civic side, where Loudoun is not on the agenda platform.
 FEATURED_WALK = ("One address, every question",
                  "21641 Ridgetop Cir, Sterling, VA 20166",
                  ("geo.resolve_location", "geo.find_parcel",
-                  "geo.find_zoning", "geo.find_landmarks"))
+                  "geo.find_zoning", "geo.find_landmarks",
+                  "civic.search_meetings"))
 
 
 def featured_walk(demo: dict) -> dict:
@@ -994,7 +1294,8 @@ def structured_data(catalog: dict) -> dict:
                  f"{c['tools']} tools over {c['sources_active']} registered "
                  f"government systems, covering parcels, zoning, "
                  f"jurisdiction boundaries, addresses, buildings, roads, "
-                 f"landmarks, monitored environmental sites and the Code of "
+                 f"landmarks, monitored environmental sites, hospitals and "
+                 f"urgent care, local public meetings and the Code of "
                  f"Virginia. Every answer carries its sources, retrieval "
                  f"dates and coverage, and every one of Virginia's "
                  f"{c['jurisdictions']} governments is in its jurisdiction "
@@ -1002,7 +1303,8 @@ def structured_data(catalog: dict) -> dict:
              "keywords": ["mcp", "model-context-protocol", "virginia",
                           "civic-tech", "gis", "open-data", "public-data",
                           "arcgis", "parcels", "zoning",
-                          "code-of-virginia"]},
+                          "code-of-virginia", "public-meetings",
+                          "legistar", "health-facilities"]},
         ],
     }
 
@@ -1010,8 +1312,66 @@ def structured_data(catalog: dict) -> dict:
 DOCS = DOCS_DATA.parent
 # Every page the build writes into. Each one carries the small `data-core`
 # block and fetches the large files it needs; index.html carries the
-# structured data and the featured walk as well.
-PAGES = ("index.html", "tools.html", "sources.html", "examples.html")
+# structured data and the featured walk as well. demos.html fetches both
+# large files — the recorded trail its apps run on, and the coverage
+# table one of them queries.
+PAGES = ("index.html", "tools.html", "sources.html", "examples.html",
+         "demos.html")
+
+
+def _page_meta(html: str) -> tuple[str, str]:
+    """A page's own title and description, read off its head.
+
+    Read rather than restated, so the structured data a crawler reads
+    cannot describe a page differently from the page itself.
+    """
+    title = re.search(r"<title>([^<]*)</title>", html)
+    desc = re.search(r'<meta name="description" content="([^"]*)"', html)
+    if not (title and desc):
+        raise AssertionError("a page is missing its <title> or description")
+    return title.group(1), desc.group(1)
+
+
+def page_structured_data(page: str, html: str) -> dict:
+    """schema.org JSON-LD for a reference page: what it is, and where it
+    sits under the site. The landing page carries the software entry
+    (`structured_data`); these point back at it by id rather than
+    repeating it."""
+    title, description = _page_meta(html)
+    url = SITE_URL + page
+    short = title.split(" — ")[0]
+    return {
+        "@context": "https://schema.org",
+        "@graph": [
+            {"@type": "WebPage", "@id": url + "#webpage", "url": url,
+             "name": title, "description": description,
+             "isPartOf": {"@id": SITE_URL + "#website"},
+             "about": {"@id": SITE_URL + "#software"}},
+            {"@type": "BreadcrumbList", "itemListElement": [
+                {"@type": "ListItem", "position": 1,
+                 "name": "Commonwealth-MCP", "item": SITE_URL},
+                {"@type": "ListItem", "position": 2, "name": short,
+                 "item": url}]},
+        ],
+    }
+
+
+def sitemap_xml(lastmod: str) -> str:
+    """Every published page, from PAGES, so a page added there is in the
+    sitemap without anyone remembering to add it. `lastmod` is the
+    registry revision, which is what the pages' content moves with."""
+    rows = "".join(
+        f"  <url><loc>{SITE_URL}{'' if page == 'index.html' else page}</loc>"
+        f"<lastmod>{lastmod}</lastmod></url>\n" for page in PAGES)
+    return ('<?xml version="1.0" encoding="UTF-8"?>\n'
+            '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
+            f"{rows}</urlset>\n")
+
+
+def robots_txt() -> str:
+    # Nothing here is private: the site is the published documentation
+    # and every page is meant to be read, by people and by crawlers.
+    return f"User-agent: *\nAllow: /\nSitemap: {SITE_URL}sitemap.xml\n"
 
 
 def embed_data(html: str, block_id: str, obj: dict, page: str) -> str:
@@ -1069,6 +1429,7 @@ def main() -> int:
     catalog["starter_prompts"] = starter_prompts(demo)
     catalog["doctor_output"] = doctor_output()
     catalog["plugin"] = plugin_bundle()
+    catalog["demo_apps"] = demo_apps()
     catalog["demo_meta"] = {k: demo[k] for k in
                             ("generated_at", "mode", "call_count",
                              "fixture_recorded_at")}
@@ -1084,11 +1445,14 @@ def main() -> int:
     for page in PAGES:
         path = DOCS / page
         html = embed_data(path.read_text(), "data-core", catalog, page)
-        if page == "index.html":
-            html = embed_data(html, "data-jsonld",
-                              structured_data(catalog), page)
+        html = embed_data(html, "data-jsonld",
+                          structured_data(catalog) if page == "index.html"
+                          else page_structured_data(page, html), page)
         path.write_text(html)
         print(f"{page}: {len(html)} bytes")
+    (DOCS / "sitemap.xml").write_text(
+        sitemap_xml(catalog["registry_revision"]))
+    (DOCS / "robots.txt").write_text(robots_txt())
 
     print(f"core.json: {catalog['counts']}")
     print(f"coverage.json: {len(coverage['capability_coverage'])} capabilities "

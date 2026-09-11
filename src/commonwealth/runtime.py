@@ -8,6 +8,7 @@ from pathlib import Path
 
 from . import __version__
 from .adapters import ADAPTER_VERSIONS
+from .adapters.agenda_platform import AgendaPlatformAdapter
 from .adapters.arcgis import ArcGISAdapter
 from .adapters.arcgis_geocode import ArcGISGeocodeAdapter
 from .adapters.virginia_law import VirginiaLawAdapter
@@ -82,6 +83,8 @@ class RuntimeContext:
     geocoder: ArcGISGeocodeAdapter = field(
         default_factory=ArcGISGeocodeAdapter)
     virginia_law: VirginiaLawAdapter = field(default_factory=VirginiaLawAdapter)
+    agendas: AgendaPlatformAdapter = field(
+        default_factory=AgendaPlatformAdapter)
     server_name: str = "commonwealth"
     server_version: str = __version__
     adapters: dict[str, str] = field(
@@ -110,6 +113,7 @@ def load_context(sources_dir: Path | None = None,
                  arcgis: ArcGISAdapter | None = None,
                  virginia_law: VirginiaLawAdapter | None = None,
                  geocoder: ArcGISGeocodeAdapter | None = None,
+                 agendas: AgendaPlatformAdapter | None = None,
                  results: ResultStore | None = None) -> RuntimeContext:
     root = sources_dir or SOURCES_DIR
     store = results if results is not None else DiskResultStore()
@@ -123,4 +127,5 @@ def load_context(sources_dir: Path | None = None,
         arcgis=arcgis or ArcGISAdapter(),
         geocoder=geocoder or ArcGISGeocodeAdapter(),
         virginia_law=virginia_law or VirginiaLawAdapter(),
+        agendas=agendas or AgendaPlatformAdapter(),
         results=store)
