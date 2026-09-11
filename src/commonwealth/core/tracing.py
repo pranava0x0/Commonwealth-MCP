@@ -31,12 +31,19 @@ from contextlib import contextmanager
 from dataclasses import dataclass
 
 # version "-" trace-id(32 hex) "-" parent-id(16 hex) "-" flags(2 hex).
-# Only version 00 is defined; the spec says a parser that does not know a
-# later version should still read the first four fields, so this accepts
-# any two-hex version and keeps going.
+#
+# Only version 00 is defined, and it is exactly these four fields. A later
+# version may append fields after another dash, and the spec asks a parser
+# that does not know that version to read the first four and ignore the
+# rest — so the tail is allowed for any version but 00. Version `ff` is
+# reserved as invalid outright: a header carrying it is malformed and
+# starts a new trace, rather than being continued (found in review of
+# PR #56; this regex used to accept it).
 _TRACEPARENT = re.compile(
     r"^(?P<version>[0-9a-f]{2})-(?P<trace_id>[0-9a-f]{32})-"
-    r"(?P<span_id>[0-9a-f]{16})-(?P<flags>[0-9a-f]{2})$")
+    r"(?P<span_id>[0-9a-f]{16})-(?P<flags>[0-9a-f]{2})"
+    r"(?P<tail>-[^\s]*)?$")
+_INVALID_VERSION = "ff"
 
 # All-zero ids are explicitly invalid in the spec, and treating one as a
 # real trace would group every such call under one id.
@@ -92,6 +99,13 @@ def parse_traceparent(value: str | None,
         return None
     match = _TRACEPARENT.match(value.strip())
     if not match:
+        return None
+    version = match.group("version")
+    if version == _INVALID_VERSION:
+        return None
+    if version == "00" and match.group("tail"):
+        # Version 00 is defined as exactly four fields. Trailing data on
+        # it is a malformed header, not a newer one.
         return None
     trace_id = match.group("trace_id")
     span_id = match.group("span_id")

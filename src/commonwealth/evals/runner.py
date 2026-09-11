@@ -63,7 +63,12 @@ class RunResult:
     tool_count: int
     started_at: str
     results: list[TaskResult] = field(default_factory=list)
+    # The oldest recording any executed task declared: the run's answers
+    # are at least this old. `fixture_vintages` has each one, so a
+    # refreshed fixture shows up as a changed input rather than as a
+    # score that moved for no stated reason.
     fixture_recorded_at: str | None = None
+    fixture_vintages: dict[str, str | None] = field(default_factory=dict)
 
     @property
     def executed(self) -> int:
@@ -95,6 +100,7 @@ class RunResult:
             "toolset": self.toolset, "tool_count": self.tool_count,
             "started_at": self.started_at,
             "fixture_recorded_at": self.fixture_recorded_at,
+            "fixture_vintages": self.fixture_vintages,
             # The denominator, spelled out three ways so no reading of it
             # can quietly drop the tasks that did not run (§ 4).
             "tasks_in_suite": len(self.results),
@@ -169,6 +175,7 @@ async def run_suite(root: Path, suite: str, ctx=None, *,
     if ctx is None and context_factory is None:
         raise ValueError("run_suite needs either a ctx or a context_factory")
     from ..core.toolreg import expand_profile
+    from ..fixtures import fixture_vintage
     from ..servers.build import registries
 
     # The RUN's profile decides what is exposed, not each task's own
@@ -236,6 +243,11 @@ async def run_suite(root: Path, suite: str, ctx=None, *,
         run.results.append(TaskResult(
             task.id, task.tier, task.split, task.traps,
             all(s.passed for s in scores), scores, attempt))
+        for name in task.fixtures:
+            run.fixture_vintages.setdefault(name, fixture_vintage(name))
+
+    dated = sorted(v for v in run.fixture_vintages.values() if v)
+    run.fixture_recorded_at = dated[0] if dated else None
     return run
 
 
@@ -272,6 +284,37 @@ def compare_to_baseline(run: RunResult, baseline: dict,
     """
     fatal: list[str] = []
     notes: list[str] = []
+
+    # Identity first. A baseline is keyed by (suite, model, toolset) per
+    # § 4, and comparing across any of them compares experiments defined
+    # as incomparable — an `all` baseline against a `default` run, or an
+    # oracle baseline against a model run, would otherwise report "no
+    # regression" with a straight face (found in review of PR #56).
+    for key in ("suite", "model", "toolset"):
+        mine = getattr(run, key)
+        theirs = baseline.get(key)
+        if theirs != mine:
+            fatal.append(
+                f"the baseline is for {key} {theirs!r} and this run is "
+                f"{mine!r}; results keyed differently are not comparable. "
+                "Pass the baseline written for this suite, model and "
+                "toolset.")
+    if fatal:
+        return fatal, notes
+    # Same key, different inputs: said, not failed. A tool count that
+    # moved means the profile changed under the baseline, and a fixture
+    # vintage that moved means the recordings did; either explains a
+    # score change better than the model does.
+    if baseline.get("tool_count") not in (None, run.tool_count):
+        notes.append(f"the {run.toolset} toolset exposed "
+                     f"{baseline['tool_count']} tools in the baseline and "
+                     f"{run.tool_count} now")
+    before = baseline.get("fixture_vintages") or {}
+    moved = sorted(k for k, v in run.fixture_vintages.items()
+                   if k in before and before[k] != v)
+    if moved:
+        notes.append(f"fixtures re-recorded since the baseline: {moved}")
+
     was = {r["task"]: r["passed"] for r in baseline.get("results", [])}
     now = {r.task_id: r.passed for r in run.results if r.skipped is None}
 

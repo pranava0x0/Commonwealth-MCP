@@ -52,12 +52,26 @@ def test_an_unusable_traceparent_is_ignored_rather_than_fatal(value):
     assert parse_traceparent(value) is None
 
 
-def test_a_later_version_is_still_read():
+def test_a_later_version_is_read_by_its_first_four_fields():
     """The spec asks a parser that does not know a version to read the
-    first four fields anyway."""
+    first four fields and ignore anything a later version appends."""
     ctx = parse_traceparent(
-        "ff-4bf92f3577b34da6a3ce929d0e0e4736-00f067aa0ba902b7-01")
+        "01-4bf92f3577b34da6a3ce929d0e0e4736-00f067aa0ba902b7-01-futurefield")
     assert ctx is not None and ctx.trace_id == CLIENT_TRACE_ID
+
+
+def test_the_reserved_version_ff_is_malformed():
+    """W3C Trace Context reserves `ff` as invalid. This test used to
+    assert the opposite, which is how the parser came to continue a trace
+    a conforming implementation must discard (review of PR #56)."""
+    assert parse_traceparent(
+        "ff-4bf92f3577b34da6a3ce929d0e0e4736-00f067aa0ba902b7-01") is None
+
+
+def test_version_00_with_trailing_data_is_malformed():
+    """Version 00 is exactly four fields. A tail on it is not a newer
+    version, it is a broken header."""
+    assert parse_traceparent(CLIENT_TRACE + "-extra") is None
 
 
 def test_tracestate_is_carried_verbatim():

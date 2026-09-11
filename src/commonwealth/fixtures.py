@@ -130,6 +130,29 @@ def recorded_api_exchanges() -> list[dict]:
     return json.loads(path.read_text())["exchanges"]
 
 
+def fixture_vintage(name: str) -> str | None:
+    """When a fixture directory was recorded, from its own file.
+
+    Most directories carry `recorded.json`; the Code of Virginia's JSON
+    recordings are `api-recorded.json` (its HTML pages carry no date, so
+    the API recording is the directory's vintage). None when neither
+    exists or neither says.
+    """
+    for filename in ("recorded.json", "api-recorded.json"):
+        path = FIXTURES_DIR / name / filename
+        if path.exists():
+            return json.loads(path.read_text()).get("recorded_at")
+    return None
+
+
+# What a replay seam holds when a caller declared fixtures and this one
+# was not among them. ReplayFetcher and HtmlReplayFetcher refuse to be
+# built empty, because for every other caller empty means an unloaded
+# fixture; one entry nothing will ever request keeps that check honest
+# and makes any real request against this seam fail as unrecorded.
+_UNDECLARED = "commonwealth://no-fixtures-declared"
+
+
 def replay_context(fixtures: list[str] | None = None,
                    sources_dir: Path | None = None) -> RuntimeContext:
     """A context whose adapters replay the recordings instead of reaching
@@ -150,8 +173,17 @@ def replay_context(fixtures: list[str] | None = None,
     # other caller an empty pool means an unloaded fixture. One sentinel
     # exchange nothing will ever request keeps that check meaningful for
     # them and lets a no-source task run.
-    pool = exchanges or [{"url": "commonwealth://no-fixtures-declared",
-                          "params": {}, "response": {}}]
+    pool = exchanges or [{"url": _UNDECLARED, "params": {}, "response": {}}]
+    # The Code of Virginia's recordings are wired separately from the
+    # ArcGIS pool, and they obey the same declaration: a caller that named
+    # its fixtures and left this one out gets a Code replay that refuses
+    # everything. It used to be wired unconditionally, so a task could
+    # read a section it never declared (found in review of PR #56).
+    code_declared = fixtures is None or CIVIC_FIXTURE_DIR.name in fixtures
+    pages = (recorded_pages() if code_declared
+             else {_UNDECLARED: ("", _UNDECLARED)})
+    api = (recorded_api_exchanges() if code_declared
+           else [{"url": _UNDECLARED, "params": {}, "response": {}}])
     return RuntimeContext(
         sources=SourceRegistry.load(root),
         jurisdictions=JurisdictionTable.load(root / "jurisdictions"),
@@ -159,7 +191,7 @@ def replay_context(fixtures: list[str] | None = None,
         geocoder=ArcGISGeocodeAdapter(fetcher=ReplayFetcher(pool),
                                       cache=TTLCache()),
         virginia_law=VirginiaLawAdapter(
-            fetcher=HtmlReplayFetcher(recorded_pages()),
-            json_fetcher=ReplayFetcher(recorded_api_exchanges())),
+            fetcher=HtmlReplayFetcher(pages),
+            json_fetcher=ReplayFetcher(api)),
         agendas=AgendaPlatformAdapter(fetcher=ReplayFetcher(pool)),
         results=MemoryResultStore(deterministic=True))

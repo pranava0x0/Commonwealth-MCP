@@ -407,3 +407,66 @@ def test_run_suite_needs_a_context_or_a_factory(tmp_path):
         "score": [{"kind": "tool_choice"}]})
     with pytest.raises(ValueError, match="ctx or a context_factory"):
         asyncio.run(run_suite(tmp_path, "s"))
+
+
+# --- round 2 of the PR #56 review ------------------------------------------
+
+def test_the_code_replay_obeys_the_declaration_too(tmp_path):
+    """The Code of Virginia's recordings are wired apart from the ArcGIS
+    pool, and they used to be wired unconditionally — so a task could read
+    a section it never declared."""
+    from commonwealth.fixtures import replay_context
+
+    def run_with(fixtures):
+        _write(tmp_path, "s", "t", {
+            "id": "code", "tier": 2, "question": "q", "fixtures": fixtures,
+            "expected": {"tool": "civic.get_code_section",
+                         "arguments": {"citation": "1-500"},
+                         "coverage": {"result": "hit"}},
+            "score": [{"kind": "coverage_honesty"}]})
+        return asyncio.run(run_suite(tmp_path, "s", profile="all",
+                                     context_factory=replay_context)
+                           ).results[0]
+
+    assert run_with(["va-code-of-virginia"]).passed is True
+    undeclared = run_with([])
+    assert undeclared.passed is False
+    assert "no fixture for this call" in (undeclared.attempt.error or "")
+
+
+def test_a_result_carries_the_vintage_of_its_fixtures():
+    """`fixture_recorded_at` was declared and always null, so a refreshed
+    fixture changed a run's inputs with nothing in the result saying so."""
+    from commonwealth.fixtures import fixture_vintage, replay_context
+
+    run = asyncio.run(run_suite(EVALS, "tier2", profile="all",
+                                context_factory=replay_context))
+    declared = {f for t in load_suite(EVALS, "tier2") for f in t.fixtures}
+    assert set(run.fixture_vintages) == declared
+    assert all(run.fixture_vintages[f] == fixture_vintage(f)
+               for f in declared)
+    assert run.fixture_recorded_at == min(
+        v for v in run.fixture_vintages.values() if v)
+    assert run.as_dict()["fixture_recorded_at"] is not None
+
+
+@pytest.mark.parametrize("key,wrong", [
+    ("suite", "some-other-suite"), ("toolset", "default"),
+    ("model", "claude-opus-5")])
+def test_a_baseline_for_a_different_experiment_is_refused(ctx, key, wrong):
+    """An `all` baseline against a `default` run, or an oracle baseline
+    against a model run, used to report "no regression"."""
+    run = asyncio.run(run_suite(EVALS, "tier2", ctx, profile="all"))
+    baseline = run.as_dict()
+    baseline[key] = wrong
+    fatal, _ = compare_to_baseline(run, baseline)
+    assert fatal and "not comparable" in fatal[0]
+
+
+def test_moved_inputs_are_noted_rather_than_failed(ctx):
+    run = asyncio.run(run_suite(EVALS, "tier2", ctx, profile="all"))
+    baseline = run.as_dict()
+    baseline["tool_count"] = run.tool_count - 1
+    fatal, notes = compare_to_baseline(run, baseline)
+    assert fatal == []
+    assert any("tools in the baseline" in n for n in notes)
