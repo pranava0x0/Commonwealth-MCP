@@ -113,6 +113,9 @@ section{margin:34px 0;scroll-margin-top:52px}
 .section-head{display:flex;justify-content:space-between;align-items:center;
   gap:10px;border-bottom:2px solid var(--line);padding-bottom:6px}
 h2{font-size:1.2rem;font-weight:700;margin:0}
+/* A reference page's title is its h1 for crawlers and screen readers,
+   and reads at the same size as the section headings under it. */
+.section-head h1{font-size:1.2rem;font-weight:700;margin:0}
 /* Coverage rolled four former top-level sections into one. Its subheadings
    need to read as a level below h2 without looking like card titles. */
 section > h3{font-size:.98rem;font-weight:700;margin:26px 0 2px;

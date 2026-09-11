@@ -929,6 +929,14 @@ async def _sample_health_facilities(adapter, m, params, ctx) -> dict:
                                 distance_meters=2000.0)
     out["far_from_any"] = {"record_count": len(empty.records)}
 
+    # The Sterling walk (LOUDOUN_POINT): the address the example scripts
+    # and the demos start from asks for hospitals near it too.
+    sterling = await adapter.query(m, "health_facilities",
+                                   geometry_point=LOUDOUN_POINT,
+                                   distance_meters=HEALTH_FACILITY_RADIUS_M)
+    out["near_sterling"] = {"point": list(LOUDOUN_POINT),
+                            "record_count": len(sterling.records)}
+
     by_name = await adapter.query(m, "health_facilities",
                                   where_prefix={"name": "Inova"})
     out["by_name_prefix"] = {"prefix": "Inova",

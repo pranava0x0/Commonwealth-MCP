@@ -567,3 +567,98 @@ def test_committed_demo_staleness_matches_what_a_build_would_produce(demo):
         f"build_site.py produces. {REGEN} — and consider re-recording the "
         "fixtures themselves with `commonwealth sources sample`, since "
         "the underlying government data has moved on too.")
+
+
+# --- SEO: what a crawler and a link preview read ---------------------------
+#
+# Hand-written in each page's head, so each is a place to drift. These
+# are the floor under the ones that matter.
+
+SITE = "https://pranava0x0.github.io/Commonwealth-MCP/"
+
+
+def _head(page: str) -> str:
+    html = (DOCS / page).read_text()
+    return html[:html.index("</head>")]
+
+
+def _meta(html: str, attr: str, name: str) -> str | None:
+    m = re.search(rf'<meta {attr}="{re.escape(name)}" content="([^"]*)"', html)
+    return m.group(1) if m else None
+
+
+@pytest.mark.parametrize("page", PAGES)
+def test_each_page_has_exactly_one_h1(page):
+    """The reference pages had none: their title was an h2, so a crawler
+    and a screen reader found no page heading at all."""
+    assert (DOCS / page).read_text().count("<h1") == 1, page
+
+
+@pytest.mark.parametrize("page", PAGES)
+def test_each_page_names_itself_canonically(page):
+    want = SITE if page == "index.html" else SITE + page
+    head = _head(page)
+    assert f'<link rel="canonical" href="{want}">' in head, page
+    assert _meta(head, "property", "og:url") == want, page
+
+
+@pytest.mark.parametrize("page", PAGES)
+def test_titles_and_descriptions_fit_what_a_results_page_shows(page):
+    """Search results cut a description at about 160 characters and a
+    title at about 60-70, so what fits is what gets read."""
+    head = _head(page)
+    title = re.search(r"<title>([^<]*)</title>", head).group(1)
+    desc = _meta(head, "name", "description")
+    assert 10 <= len(title) <= 70, (page, len(title), title)
+    assert desc and 50 <= len(desc) <= 160, (page, len(desc or ""), desc)
+    assert "Commonwealth-MCP" in title, page
+
+
+@pytest.mark.parametrize("page", PAGES)
+def test_each_page_carries_a_complete_link_preview(page):
+    head = _head(page)
+    for attr, name in (("property", "og:title"), ("property", "og:description"),
+                       ("property", "og:type"), ("property", "og:image"),
+                       ("property", "og:site_name"), ("name", "twitter:card"),
+                       ("name", "twitter:image")):
+        assert _meta(head, attr, name), f"{page} has no {name}"
+    image = _meta(head, "property", "og:image")
+    assert image.startswith(SITE), "a preview image must be an absolute URL"
+    local = DOCS / image[len(SITE):]
+    assert local.exists(), f"{page} points og:image at {local}, which is missing"
+    assert local.stat().st_size < 200_000, "link-preview image over 200 KB"
+
+
+@pytest.mark.parametrize("page", PAGES)
+def test_each_page_embeds_structured_data_that_parses(page):
+    html = (DOCS / page).read_text()
+    m = re.search(r'<script type="application/ld\+json" id="data-jsonld">'
+                  r'(.*?)</script>', html, re.S)
+    assert m, f"{page} has no JSON-LD block"
+    data = json.loads(m.group(1))
+    assert data.get("@context") == "https://schema.org", page
+    assert data.get("@graph"), f"{page}'s JSON-LD is empty; {REGEN}"
+
+
+def test_the_sitemap_lists_every_page_and_robots_points_at_it():
+    """Both are generated from PAGES, so a new page is in the sitemap
+    without anyone remembering it."""
+    sitemap = (DOCS / "sitemap.xml").read_text()
+    locs = re.findall(r"<loc>([^<]+)</loc>", sitemap)
+    want = [SITE if p == "index.html" else SITE + p for p in PAGES]
+    assert locs == want, f"sitemap drifted from PAGES; {REGEN}"
+    robots = (DOCS / "robots.txt").read_text()
+    assert f"Sitemap: {SITE}sitemap.xml" in robots
+
+
+def test_the_featured_heading_counts_the_steps_it_shows(core):
+    """The landing page said "One walk, four answers" as a literal; the
+    script now sets it from the step count, and the static fallback a
+    reader without JavaScript sees has to agree."""
+    words = ["zero", "one", "two", "three", "four", "five", "six",
+             "seven", "eight", "nine", "ten"]
+    n = len(core["featured"]["steps"])
+    html = (DOCS / "index.html").read_text()
+    m = re.search(r'id="featured-title">One walk, (\w+) answers<', html)
+    assert m and m.group(1) == words[n], (
+        f"the featured heading says {m and m.group(1)!r}; the walk has {n}")

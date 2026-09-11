@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://pranava0x0.github.io/Commonwealth-MCP/sitemap.xml

@@ -250,9 +250,18 @@ function renderFeaturedWalk(core){
   const box = document.getElementById("featured-walk");
   if (!box) return;
   const f = core.featured;
+  /* The step count is the trail's, not typed: this said "asked four
+     ways" as a literal, and the walk has grown since. */
+  const n = f.steps.length;
+  const words = ["zero","one","two","three","four","five","six","seven",
+                 "eight","nine","ten"];
+  const count = words[n] || String(n);
+  const title = document.getElementById("featured-title");
+  if (title) title.textContent = `One walk, ${count} answers`;
   document.getElementById("featured-lede").textContent =
-    `${f.address}, asked four ways. Three of the four answers come back ` +
-    "differently, and telling them apart is the point of the whole thing.";
+    `${f.address}, asked ${count} ways. Some come back with records, one ` +
+    "comes back checked and empty, and one has no registered source at " +
+    "all — telling those apart is the point of the whole thing.";
   f.steps.forEach((s, i) => {
     const row = el("div","walk-step");
     const head = el("div","tool-head");

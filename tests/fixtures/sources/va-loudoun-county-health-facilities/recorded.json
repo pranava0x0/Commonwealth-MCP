@@ -1,6 +1,6 @@
 {
  "source_id": "va-loudoun-county-health-facilities",
- "recorded_at": "2026-09-10T12:03:17Z",
+ "recorded_at": "2026-09-11T12:28:32Z",
  "rights": {
   "sources": [
    {
@@ -35,6 +35,13 @@
   },
   "far_from_any": {
    "record_count": 0
+  },
+  "near_sterling": {
+   "point": [
+    -77.408014727372,
+    39.025534437083
+   ],
+   "record_count": 12
   },
   "by_name_prefix": {
    "prefix": "Inova",
@@ -726,6 +733,153 @@
      }
     ],
     "features": []
+   }
+  },
+  {
+   "url": "https://logis.loudoun.gov/gis/rest/services/COL/HospitalsUrgentCare/MapServer/0/query",
+   "params": {
+    "f": "json",
+    "outFields": "Address,FACILITY,FACILITY_NAME,OBJECTID",
+    "resultRecordCount": "50",
+    "returnGeometry": "false",
+    "geometry": "{\"x\": -77.408014727372, \"y\": 39.025534437083, \"spatialReference\": {\"wkid\": 4326}}",
+    "geometryType": "esriGeometryPoint",
+    "inSR": "4326",
+    "spatialRel": "esriSpatialRelIntersects",
+    "distance": "8000.0",
+    "units": "esriSRUnit_Meter"
+   },
+   "response": {
+    "displayFieldName": "FACILITY_NAME",
+    "fieldAliases": {
+     "Address": "Address",
+     "FACILITY": "Facility",
+     "FACILITY_NAME": "Facility_Name",
+     "OBJECTID": "OBJECTID"
+    },
+    "fields": [
+     {
+      "name": "Address",
+      "type": "esriFieldTypeString",
+      "alias": "Address",
+      "length": 50
+     },
+     {
+      "name": "FACILITY",
+      "type": "esriFieldTypeString",
+      "alias": "Facility",
+      "length": 50
+     },
+     {
+      "name": "FACILITY_NAME",
+      "type": "esriFieldTypeString",
+      "alias": "Facility_Name",
+      "length": 50
+     },
+     {
+      "name": "OBJECTID",
+      "type": "esriFieldTypeOID",
+      "alias": "OBJECTID"
+     }
+    ],
+    "features": [
+     {
+      "attributes": {
+       "Address": "21036 Tripleseven Rd, Sterling, VA 20165",
+       "FACILITY": "U",
+       "FACILITY_NAME": "Nova Medical and Urgent Care Center-Sterling",
+       "OBJECTID": 3
+      }
+     },
+     {
+      "attributes": {
+       "Address": "44320 Premier Plaza #120, Ashburn, VA 20147",
+       "FACILITY": "U",
+       "FACILITY_NAME": "Loudoun Walk In Medical Center",
+       "OBJECTID": 5
+      }
+     },
+     {
+      "attributes": {
+       "Address": "44050 Ashburn Village Blvd, Ashburn, VA 20147",
+       "FACILITY": "U",
+       "FACILITY_NAME": "Medics USA Primary and Urgent Care Center",
+       "OBJECTID": 9
+      }
+     },
+     {
+      "attributes": {
+       "Address": "21785 Filigree Ct #100, Ashburn, VA 20147",
+       "FACILITY": "U",
+       "FACILITY_NAME": "Nova Medical and Urgent Care Center-Ashburn",
+       "OBJECTID": 10
+      }
+     },
+     {
+      "attributes": {
+       "Address": "45305 Catalina Ct 103, Sterling, VA 20166",
+       "FACILITY": "U",
+       "FACILITY_NAME": "Concentra Urgent Care",
+       "OBJECTID": 13
+      }
+     },
+     {
+      "attributes": {
+       "Address": "46440 Benedict Dr Suite 107, Sterling, VA 20164",
+       "FACILITY": "U",
+       "FACILITY_NAME": "Loudoun Medical Group Primary Care Center",
+       "OBJECTID": 14
+      }
+     },
+     {
+      "attributes": {
+       "Address": "47100 Community Pl #100, Sterling, VA 20164",
+       "FACILITY": "U",
+       "FACILITY_NAME": "Patient First-Sterling",
+       "OBJECTID": 16
+      }
+     },
+     {
+      "attributes": {
+       "Address": "44095 Pipeline Pl #370, Ashburn, VA 20147",
+       "FACILITY": "U",
+       "FACILITY_NAME": "Inova Primary Care - Ashburn",
+       "OBJECTID": 21
+      }
+     },
+     {
+      "attributes": {
+       "Address": "43480 Yukon Dr #100, Ashburn, VA 20147",
+       "FACILITY": "H",
+       "FACILITY_NAME": "Kaiser Permanente",
+       "OBJECTID": 22
+      }
+     },
+     {
+      "attributes": {
+       "Address": "22505 Landmark Ct, Ashburn, VA 20148",
+       "FACILITY": "H",
+       "FACILITY_NAME": "Inova Emergency Care Center",
+       "OBJECTID": 23
+      }
+     },
+     {
+      "attributes": {
+       "Address": "101 ENTERPRISE ST STERLING VA 20164",
+       "FACILITY": "U",
+       "FACILITY_NAME": "Care Now Urgent Care Sterling",
+       "OBJECTID": 26
+      }
+     },
+     {
+      "attributes": {
+       "Address": "46200 Potomac Run Plaza Sterling, VA 20164",
+       "FACILITY": "U",
+       "FACILITY_NAME": "CARE NOW URGENT CARE CASCADES",
+       "OBJECTID": 27
+      }
+     }
+    ]
    }
   },
   {

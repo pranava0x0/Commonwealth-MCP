@@ -272,22 +272,33 @@ LOUDOUN = {"jurisdiction": "Loudoun County",
 
 DEMO_GROUPS = [
     ('One address, every question',
-     'One mailing address in Sterling, asked five ways. It is the '
-     'walk that produces a found record, a registry gap, and an '
-     'empty result in a row.', [
+     'One mailing address in Sterling, asked seven ways. Records found, '
+     'a query that came back empty, and a subject with no registered '
+     'source at all \u2014 the three answers this project exists to tell '
+     'apart, in one walk.', [
         ("registry.resolve_jurisdiction", {"query": "Sterling"},
          'Sterling does not resolve as a government name; use an address or coordinate.'),
         ("geo.resolve_location",
          {"address": "21641 Ridgetop Cir, Sterling, VA 20166"},
          'The Sterling mailing address resolves to Loudoun County.'),
         ("geo.find_parcel", dict(LOUDOUN),
-         'No local parcel source is registered for Loudoun; VGIN returns a parcel.'),
+         'Loudoun County\u2019s own parcel layer and VGIN\u2019s statewide one '
+         'both answer, unranked.'),
         ("geo.find_zoning", dict(LOUDOUN),
          'Zoning from Loudoun County\u2019s own layer. This call returned a '
          'registry gap until the county was registered on 2026-09-10, and '
          'it is the same call \u2014 what changed is the registry.'),
         ("geo.find_landmarks", dict(LOUDOUN),
          'The landmarks query returned no records within one kilometre.'),
+        ("geo.find_health_facilities", dict(LOUDOUN),
+         'Hospitals and urgent care within eight kilometres, from the '
+         'county\u2019s own map of them.'),
+        ("civic.search_meetings", {"jurisdiction": "Loudoun County",
+                                   "start_date": "2026-09-01",
+                                   "end_date": "2026-09-30"},
+         'Loudoun County\u2019s public meetings. The county is not on the '
+         'agenda platform, so no source is registered: a gap, and the '
+         'county certainly meets.'),
     ]),
 
     ('Whose government is this?',
@@ -520,9 +531,11 @@ DEMO_APP_SPECS = {
     "screen": [
         {"label": "Sterling, Loudoun County",
          "blurb": "A mailing address whose postal city is not a "
-                  "government. Loudoun has no registered zoning source, "
-                  "so the same site produces a found record, a registry "
-                  "gap and an empty answer.",
+                  "government. The county answers for its parcels, "
+                  "zoning and hospitals; nothing nearby is on the "
+                  "public-places list; and its public meetings have no "
+                  "registered source — three kinds of answer on one "
+                  "screen.",
          "steps": [
              ["Whose government?", "geo.resolve_location",
               {"address": "21641 Ridgetop Cir, Sterling, VA 20166"}],
@@ -532,6 +545,11 @@ DEMO_APP_SPECS = {
               {"jurisdiction": "Loudoun County", **LOUDOUN_PT}],
              ["Public places nearby", "geo.find_landmarks",
               {"jurisdiction": "Loudoun County", **LOUDOUN_PT}],
+             ["Hospitals and urgent care", "geo.find_health_facilities",
+              {"jurisdiction": "Loudoun County", **LOUDOUN_PT}],
+             ["Public meetings", "civic.search_meetings",
+              {"jurisdiction": "Loudoun County",
+               "start_date": "2026-09-01", "end_date": "2026-09-30"}],
          ]},
         {"label": "A parcel in Vienna",
          "blurb": "A town inside a county, where both governments "
@@ -1048,10 +1066,17 @@ async def run_demo(mode: str) -> dict:
 # to. It is the walk chosen because those three answers come back three
 # different ways — a record found, no source registered, and a search that
 # matched nothing — which is the distinction the whole project turns on.
+# Five steps so the landing page shows all three answers this project
+# exists to tell apart: found (parcel, zoning), checked-and-empty
+# (landmarks), and no registered source (meetings). It was four steps
+# ending on landmarks, and it lost its registry gap on 2026-09-10 when
+# Loudoun County's zoning was registered — the gap now comes from the
+# civic side, where Loudoun is not on the agenda platform.
 FEATURED_WALK = ("One address, every question",
                  "21641 Ridgetop Cir, Sterling, VA 20166",
                  ("geo.resolve_location", "geo.find_parcel",
-                  "geo.find_zoning", "geo.find_landmarks"))
+                  "geo.find_zoning", "geo.find_landmarks",
+                  "civic.search_meetings"))
 
 
 def featured_walk(demo: dict) -> dict:
@@ -1244,7 +1269,8 @@ def structured_data(catalog: dict) -> dict:
                  f"{c['tools']} tools over {c['sources_active']} registered "
                  f"government systems, covering parcels, zoning, "
                  f"jurisdiction boundaries, addresses, buildings, roads, "
-                 f"landmarks, monitored environmental sites and the Code of "
+                 f"landmarks, monitored environmental sites, hospitals and "
+                 f"urgent care, local public meetings and the Code of "
                  f"Virginia. Every answer carries its sources, retrieval "
                  f"dates and coverage, and every one of Virginia's "
                  f"{c['jurisdictions']} governments is in its jurisdiction "
@@ -1252,7 +1278,8 @@ def structured_data(catalog: dict) -> dict:
              "keywords": ["mcp", "model-context-protocol", "virginia",
                           "civic-tech", "gis", "open-data", "public-data",
                           "arcgis", "parcels", "zoning",
-                          "code-of-virginia"]},
+                          "code-of-virginia", "public-meetings",
+                          "legistar", "health-facilities"]},
         ],
     }
 
@@ -1265,6 +1292,61 @@ DOCS = DOCS_DATA.parent
 # table one of them queries.
 PAGES = ("index.html", "tools.html", "sources.html", "examples.html",
          "demos.html")
+
+
+def _page_meta(html: str) -> tuple[str, str]:
+    """A page's own title and description, read off its head.
+
+    Read rather than restated, so the structured data a crawler reads
+    cannot describe a page differently from the page itself.
+    """
+    title = re.search(r"<title>([^<]*)</title>", html)
+    desc = re.search(r'<meta name="description" content="([^"]*)"', html)
+    if not (title and desc):
+        raise AssertionError("a page is missing its <title> or description")
+    return title.group(1), desc.group(1)
+
+
+def page_structured_data(page: str, html: str) -> dict:
+    """schema.org JSON-LD for a reference page: what it is, and where it
+    sits under the site. The landing page carries the software entry
+    (`structured_data`); these point back at it by id rather than
+    repeating it."""
+    title, description = _page_meta(html)
+    url = SITE_URL + page
+    short = title.split(" — ")[0]
+    return {
+        "@context": "https://schema.org",
+        "@graph": [
+            {"@type": "WebPage", "@id": url + "#webpage", "url": url,
+             "name": title, "description": description,
+             "isPartOf": {"@id": SITE_URL + "#website"},
+             "about": {"@id": SITE_URL + "#software"}},
+            {"@type": "BreadcrumbList", "itemListElement": [
+                {"@type": "ListItem", "position": 1,
+                 "name": "Commonwealth-MCP", "item": SITE_URL},
+                {"@type": "ListItem", "position": 2, "name": short,
+                 "item": url}]},
+        ],
+    }
+
+
+def sitemap_xml(lastmod: str) -> str:
+    """Every published page, from PAGES, so a page added there is in the
+    sitemap without anyone remembering to add it. `lastmod` is the
+    registry revision, which is what the pages' content moves with."""
+    rows = "".join(
+        f"  <url><loc>{SITE_URL}{'' if page == 'index.html' else page}</loc>"
+        f"<lastmod>{lastmod}</lastmod></url>\n" for page in PAGES)
+    return ('<?xml version="1.0" encoding="UTF-8"?>\n'
+            '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
+            f"{rows}</urlset>\n")
+
+
+def robots_txt() -> str:
+    # Nothing here is private: the site is the published documentation
+    # and every page is meant to be read, by people and by crawlers.
+    return f"User-agent: *\nAllow: /\nSitemap: {SITE_URL}sitemap.xml\n"
 
 
 def embed_data(html: str, block_id: str, obj: dict, page: str) -> str:
@@ -1338,11 +1420,14 @@ def main() -> int:
     for page in PAGES:
         path = DOCS / page
         html = embed_data(path.read_text(), "data-core", catalog, page)
-        if page == "index.html":
-            html = embed_data(html, "data-jsonld",
-                              structured_data(catalog), page)
+        html = embed_data(html, "data-jsonld",
+                          structured_data(catalog) if page == "index.html"
+                          else page_structured_data(page, html), page)
         path.write_text(html)
         print(f"{page}: {len(html)} bytes")
+    (DOCS / "sitemap.xml").write_text(
+        sitemap_xml(catalog["registry_revision"]))
+    (DOCS / "robots.txt").write_text(robots_txt())
 
     print(f"core.json: {catalog['counts']}")
     print(f"coverage.json: {len(coverage['capability_coverage'])} capabilities "

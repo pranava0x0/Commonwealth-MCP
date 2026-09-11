@@ -695,8 +695,10 @@
    "declared_state": "proposed",
    "terms_url": "https://lis.virginia.gov/developers",
    "known_limitations": [
-    "No key, so nothing is read. Bills, members and committees are not available from this project at all. A question about legislation returns registry coverage `none` for want of a registered source, which means this project has nowhere to look and never that the General Assembly passed nothing.\n",
-    "Registration is a human step. Obtaining the key is a form the operator fills in, and it is not something to work around.\n"
+    "Nothing is read yet, so a question about legislation returns registry coverage `none` for want of a registered source \u2014 which means this project has nowhere to look and never that the General Assembly passed nothing.\n",
+    "The bulk files are whole-session snapshots, not a query service. Answering \"which bills mention X\" from them means downloading the session and filtering locally. That is reading what the publisher chose to hand over whole, which is a different thing from the full-text search the Code of Virginia does not offer (issue #12) \u2014 there the publisher runs no such operation at all.\n",
+    "The keyed JSON API remains the only route to anything the bulk files do not carry, and obtaining that key is a registration form a human fills in.\n",
+    "Bill identity is versioned \u2014 introduced, engrossed, enrolled. The bulk BILLS.CSV carries one row per bill with its latest actions, so a tool built on it must say which version it is describing rather than implying \"the bill\".\n"
    ]
   },
   {
@@ -1434,7 +1436,7 @@
    {
     "index": 2,
     "tool": "geo.find_parcel",
-    "note": "No local parcel source is registered for Loudoun; VGIN returns a parcel.",
+    "note": "Loudoun County\u2019s own parcel layer and VGIN\u2019s statewide one both answer, unranked.",
     "coverage": {
      "registry": "covered",
      "execution": "complete",
@@ -1479,6 +1481,20 @@
     ],
     "requires_user_choice": false,
     "error": null
+   },
+   {
+    "index": 6,
+    "tool": "civic.search_meetings",
+    "note": "Loudoun County\u2019s public meetings. The county is not on the agenda platform, so no source is registered: a gap, and the county certainly meets.",
+    "coverage": {
+     "registry": "none",
+     "execution": "complete",
+     "pagination": "complete",
+     "result": "empty"
+    },
+    "warning_codes": [],
+    "requires_user_choice": false,
+    "error": null
    }
   ]
  },
@@ -1491,12 +1507,12 @@
   {
    "text": "How is parcel 0102 14  0231 in Fairfax County zoned, and what does the answer not establish?",
    "tool": "geo.find_zoning",
-   "call": 13
+   "call": 15
   },
   {
    "text": "What does \u00a7 15.2-2200 of the Code of Virginia say?",
    "tool": "civic.get_code_section",
-   "call": 24
+   "call": 26
   }
  ],
  "doctor_output": "commonwealth 0.1.0.dev0\npython 3.12.13\nmcp sdk 2.1.1\njurisdiction table: 323 rows\nsource manifests: 29 (registry revision 2026-09-10)\nmanifests valid: 29/29\ndefault profile: 10 tools: registry.resolve_jurisdiction, geo.find_parcel, geo.find_zoning, geo.find_boundaries, geo.find_address, geo.resolve_location, geo.find_buildings, geo.find_environmental_sites, civic.get_code_section, civic.search_meetings\n(live source probes skipped; pass --live)\n\u2713 doctor: 0 problem(s)\n\nnext: point a client at it\n  commonwealth configure claude-code\n  commonwealth configure --help    # claude, codex, cursor, vscode",
@@ -1513,7 +1529,7 @@
   "screen": [
    {
     "label": "Sterling, Loudoun County",
-    "blurb": "A mailing address whose postal city is not a government. Loudoun has no registered zoning source, so the same site produces a found record, a registry gap and an empty answer.",
+    "blurb": "A mailing address whose postal city is not a government. The county answers for its parcels, zoning and hospitals; nothing nearby is on the public-places list; and its public meetings have no registered source \u2014 three kinds of answer on one screen.",
     "steps": [
      {
       "label": "Whose government?",
@@ -1534,6 +1550,16 @@
       "label": "Public places nearby",
       "tool": "geo.find_landmarks",
       "call": 4
+     },
+     {
+      "label": "Hospitals and urgent care",
+      "tool": "geo.find_health_facilities",
+      "call": 5
+     },
+     {
+      "label": "Public meetings",
+      "tool": "civic.search_meetings",
+      "call": 6
      }
     ]
    },
@@ -1544,22 +1570,22 @@
      {
       "label": "Whose government?",
       "tool": "registry.resolve_jurisdiction",
-      "call": 9
+      "call": 11
      },
      {
       "label": "Zoning",
       "tool": "geo.find_zoning",
-      "call": 27
+      "call": 29
      },
      {
       "label": "Roads",
       "tool": "geo.find_roads",
-      "call": 16
+      "call": 18
      },
      {
       "label": "Public places nearby",
       "tool": "geo.find_landmarks",
-      "call": 17
+      "call": 19
      }
     ]
    },
@@ -1570,12 +1596,12 @@
      {
       "label": "Buildings",
       "tool": "geo.find_buildings",
-      "call": 15
+      "call": 17
      },
      {
       "label": "Monitored sites",
       "tool": "geo.find_environmental_sites",
-      "call": 18
+      "call": 20
      }
     ]
    },
@@ -1586,7 +1612,7 @@
      {
       "label": "Zoning",
       "tool": "geo.find_zoning",
-      "call": 42
+      "call": 44
      }
     ]
    }
@@ -1595,32 +1621,32 @@
    {
     "label": "Richmond \u00b7 Sept 2026",
     "blurb": "An ordinary month. Each meeting carries the agenda document as a link, which this project never follows \u2014 so what the meeting is about is not in the answer.",
-    "call": 35
+    "call": 37
    },
    {
     "label": "Alexandria \u00b7 Sept 2026",
     "blurb": "A second locality, answered by the same adapter. The only difference between them is a client identifier in a manifest.",
-    "call": 36
+    "call": 38
    },
    {
     "label": "Richmond \u00b7 planning only",
     "blurb": "Narrowed to one body. The publisher's ordering is kept \u2014 this filters their answer rather than re-ranking it.",
-    "call": 37
+    "call": 39
    },
    {
     "label": "Richmond \u00b7 Dec 2019 (cancellations)",
     "blurb": "The platform publishes no cancellation field at all. Where a meeting was called off, it is said in the comment and nowhere else \u2014 so the reading is labelled as a reading, and the meeting is returned rather than dropped.",
-    "call": 38
+    "call": 40
    },
    {
     "label": "Richmond \u00b7 Jan 2030 (empty)",
     "blurb": "A registered locality with nothing in the window. Registry covered, publisher answered, no meetings.",
-    "call": 39
+    "call": 41
    },
    {
     "label": "Fairfax County (not registered)",
     "blurb": "Fairfax County meets constantly. It is not on this platform, so there is nowhere to read it. Compare this panel with the empty one above \u2014 they must never look the same.",
-    "call": 40
+    "call": 42
    }
   ],
   "code": [
@@ -1630,7 +1656,7 @@
     "title": "",
     "chapter": "",
     "citation": "",
-    "call": 20
+    "call": 22
    },
    {
     "crumb": "Title 15.2",
@@ -1638,7 +1664,7 @@
     "title": "15.2",
     "chapter": "",
     "citation": "",
-    "call": 21
+    "call": 23
    },
    {
     "crumb": "Chapter 22",
@@ -1646,7 +1672,7 @@
     "title": "15.2",
     "chapter": "22",
     "citation": "",
-    "call": 22
+    "call": 24
    },
    {
     "crumb": "\u00a7 15.2-2200",
@@ -1654,14 +1680,14 @@
     "title": "",
     "chapter": "",
     "citation": "15.2-2200",
-    "call": 24
+    "call": 26
    }
   ]
  },
  "demo_meta": {
-  "generated_at": "2026-09-10T12:24:01Z",
+  "generated_at": "2026-09-11T12:34:04Z",
   "mode": "fixtures",
-  "call_count": 49,
+  "call_count": 51,
   "fixture_recorded_at": "2026-09-02T05:29:35Z"
  }
 }
