@@ -4,7 +4,7 @@ Python tools for Virginia public data, with a command-line interface and an
 MCP server for AI assistants. For policy researchers and developers building
 applications for Virginia residents.
 
-[Try the browser demos](https://pranava0x0.github.io/Commonwealth-MCP/examples.html)
+[Try the browser demos](https://pranava0x0.github.io/Commonwealth-MCP/demos.html)
 · [Search the tools](https://pranava0x0.github.io/Commonwealth-MCP/tools.html)
 · [Run examples](examples/README.md)
 · [Add a data source](CONTRIBUTING.md)
@@ -89,13 +89,15 @@ folder.
 | Question | Registered sources |
 |---|---|
 | Which government covers a place? | Names, FIPS codes, addresses, ZIP codes and coordinates; the table contains 133 counties and independent cities and 189 towns |
-| What parcel is here? | Fairfax County, Richmond City, Charles City County, the Town of Leesburg, and VGIN statewide parcels |
-| How is a parcel zoned? | Fairfax County, Richmond City, and the Towns of Leesburg and Vienna. A point in Vienna returns the town's layer and the county's, both unranked |
+| What parcel is here? | Fairfax County, Loudoun County, Richmond City, Charles City County, the Town of Leesburg, and VGIN statewide parcels |
+| How is a parcel zoned? | Fairfax County, Loudoun County, Richmond City, and the Towns of Leesburg and Vienna. A point in a town returns the town's layer and the county's, both unranked |
 | Which address points, buildings, roads or public places are nearby? | VGIN statewide layers; VDOT road routes |
 | Which water-quality stations are nearby? | DEQ monitoring stations, including historical stations |
 | Where is a government boundary? | VGIN locality and town polygons |
 | What does a Code of Virginia section say? | Section lookup by citation |
 | Which part of the Code covers this subject? | The Code's own table of contents: titles, chapters, sections. A walk to a citation, not a full-text search — no public endpoint offers one |
+| When does a local government meet? | Richmond City, Alexandria City, Albemarle County, Hampton City and Petersburg City, from the agenda platform each publishes through. The platform has no cancellation field, so a cancellation is read from the publisher's comment and labelled as a reading |
+| Where are the hospitals and urgent care? | Loudoun County's own map of them — a county's list, not a state licensing register, with no hours or services |
 
 A registered statewide layer does not guarantee complete or current records
 for every place. Read each result's sources, dates, coverage and warnings.
@@ -165,20 +167,26 @@ retrieved; it does not remove upstream query limits.
 
 ## What remains
 
-Most directly integrated local sources are concentrated in five localities:
-Fairfax County, Richmond City, Charles City County, and the Towns of
-Leesburg and Vienna. Adding another locality's parcel or zoning layer is the
-most useful contribution and the best-documented path
-([CONTRIBUTING.md](CONTRIBUTING.md)).
+Directly integrated local sources cover a handful of places: Fairfax,
+Loudoun and Charles City counties, Richmond City, and the Towns of Leesburg
+and Vienna for parcels and zoning, and five localities for public
+meetings. Adding another locality's layer is the most useful contribution
+and the best-documented path ([CONTRIBUTING.md](CONTRIBUTING.md)); the
+state's open-data portal lists many of them
+([issue #60](https://github.com/pranava0x0/Commonwealth-MCP/issues/60)).
 
 Packaging landed on 2026-09-08: the source manifests, the jurisdiction
 table and the skills ship inside the wheel, so an install works without a
 checkout. What remains before the server is published is a release version
 and the upload itself
 ([issue #40](https://github.com/pranava0x0/Commonwealth-MCP/issues/40)).
-State legislation search, local meetings and full-text Code search are
-tracked in
-[issues #11–13](https://github.com/pranava0x0/Commonwealth-MCP/issues?q=is%3Aissue+is%3Aopen).
+State legislation and full-text Code search are tracked in
+[issue #11](https://github.com/pranava0x0/Commonwealth-MCP/issues/11) and
+[issue #12](https://github.com/pranava0x0/Commonwealth-MCP/issues/12). The
+legislature publishes bills and votes as keyless bulk files
+([design/source-quirks.md § 20](design/source-quirks.md)), so #11 waits on
+an adapter rather than a key. #12 waits on the publisher, whose search
+backend reports itself down.
 
 Budgets, procurement, school statistics, transit, permits and service
 requests need source discovery and adapters. They are proposed areas of

@@ -33,6 +33,21 @@ parts that matter most:
   page found, contact is X" is useful. One that invents a terms page is
   worse than nothing.
 - Field names come from the source, not from what would be convenient.
+- Registering a county whose towns are already registered changes the
+  towns' answers, because a town query reaches the town's layer and the
+  county's. Put the town's sample PIN and points under
+  `health.expect.also_record` in the county's manifest, so the town's
+  fixtures keep replaying when the county's are recorded
+  (`sources/local/loudoun-county/parcels-zoning.yaml` does this for
+  Leesburg).
+- A locality on the Legistar agenda platform is one manifest: copy an
+  existing `meetings.yaml` and change `client`. Confirm the client on the
+  API (`webapi.legistar.com/v1/<client>/bodies`), not on the portal —
+  `<anything>.legistar.com` answers HTTP 200, including names that are
+  not clients.
+- The state's open-data portal, data.virginia.gov, lists many locality
+  layers with their ArcGIS URLs. It is where to find a source, not a
+  source to cite: register the locality's own service it points at.
 
 Existing manifests in `sources/local/` and `sources/state/` are the
 working examples.
