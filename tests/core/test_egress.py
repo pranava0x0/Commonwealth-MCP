@@ -682,3 +682,20 @@ def test_an_unusable_budget_falls_back_rather_than_failing_startup(
 
     monkeypatch.setenv(PER_HOST_CONCURRENCY_ENV, value)
     assert per_host_concurrency() == DEFAULT_PER_HOST_CONCURRENCY
+
+
+async def test_fetch_html_keeps_the_urls_own_query(monkeypatch):
+    """`fetch_html` passed `params={}`, and httpx takes an empty dict as a
+    query to set, so the URL's own query was stripped before sending. The
+    Code of Virginia's search watch asked for `search_cov?query=zoning`
+    and fetched the bare landing page (found in review of PR #56)."""
+    seen: list[str] = []
+
+    def handler(request):
+        seen.append(str(request.url))
+        return httpx.Response(200, text="<html>ok</html>",
+                              headers={"content-type": "text/html"})
+
+    fetcher = _fetcher_over(handler, monkeypatch)
+    await fetcher.fetch_html(URL + "?query=zoning")
+    assert seen == [URL + "?query=zoning"]

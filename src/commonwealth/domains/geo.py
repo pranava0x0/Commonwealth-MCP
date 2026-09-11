@@ -19,6 +19,7 @@ from ..core.assemble import (EnvelopeBuilder, Frame, failure, result_dim,
 from ..core.envelope import (AccessPath, Coverage, Envelope,
                              ExecutionCoverage, PaginationCoverage,
                              RegistryCoverage, ResultCoverage, WarningCode)
+from ..core.envelope import INLINE_RECORD_CAP
 from ..core.errors import CommonwealthError, InvalidQuery
 from ..core.jurisdiction import Jurisdiction, JurisdictionKind
 from ..core.registry import SourceManifest
@@ -28,8 +29,6 @@ from ..runtime import RuntimeContext
 from .containment import resolve_point, warn_if_near_a_border
 
 GEO_TOOLS = ToolRegistry(package="geo")
-
-INLINE_RECORD_CAP = 25
 
 # Degrees of allowable offset handed to the platform's own generalization.
 # ~0.0002 deg is roughly 22 m at Virginia's latitude: enough to shrink a

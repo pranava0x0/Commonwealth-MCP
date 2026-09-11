@@ -25,6 +25,10 @@ ENVELOPE_VERSION = "1"
 # Soft budget from design/provenance-envelope.md § 1.1; the contract test
 # enforces it over fixtures and prints measured sizes.
 DATA_TOKEN_BUDGET = 2000
+# How many records a tool shows inline before the rest go to the result
+# store (decision 0013; GitHub issue #33). One number for every domain,
+# so a meetings answer and a parcel answer are cut at the same place.
+INLINE_RECORD_CAP = 25
 
 
 class _Strict(BaseModel):

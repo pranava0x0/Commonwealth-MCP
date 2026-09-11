@@ -19,6 +19,13 @@ function repoLink(path, text){
   return a;
 }
 
+// Publisher URLs come out of recorded data. Only a web address becomes a
+// link; anything else is left out rather than set as an href that would
+// run on click.
+function safeHref(href){
+  return /^https?:\/\//i.test(href || "") ? href : null;
+}
+
 function el(tag, cls, text){
   const n = document.createElement(tag);
   if (cls) n.className = cls;
@@ -1281,8 +1288,8 @@ function meetingCard(rec){
   if (rec.cancellation_note)
     card.append(el("p", "demo-warn", rec.cancellation_note));
   const links = el("p", "meta");
-  for (const [label, href] of [["Agenda document", rec.agenda_url],
-                               ["Publisher's page", rec.portal_url]]){
+  for (const [label, href] of [["Agenda document", safeHref(rec.agenda_url)],
+                               ["Publisher's page", safeHref(rec.portal_url)]]){
     if (!href) continue;
     const a = el("a", "", label + " ↗");
     a.href = href; a.target = "_blank"; a.rel = "noopener";
@@ -1386,9 +1393,12 @@ function renderCodeDemo(demo, CODE_WALK){
                    ? heading : `§ ${block.citation}. ${heading}`));
       for (const para of (block.paragraphs || []))
         nodes.push(el("p", "code-para", para));
-      const a = el("a", "meta", "Read it on the publisher's site ↗");
-      a.href = block.source_url; a.target = "_blank"; a.rel = "noopener";
-      nodes.push(a);
+      const sourceHref = safeHref(block.source_url);
+      if (sourceHref){
+        const a = el("a", "meta", "Read it on the publisher's site ↗");
+        a.href = sourceHref; a.target = "_blank"; a.rel = "noopener";
+        nodes.push(a);
+      }
     } else if (block && block.records){
       const next = depth + 1 < CODE_WALK.length ? CODE_WALK[depth + 1] : null;
       const isNext = r => next && (

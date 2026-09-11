@@ -95,10 +95,11 @@ class EnvelopeBuilder:
         """Say so when a publisher's data is older than its own promise.
 
         Measured against the cadence the manifest declares and nothing
-        else (GitHub issue #57). A source that says `unknown` is not
-        judged: there is no promise to be behind, and inventing a
-        threshold would be this project deciding what "current" means
-        for someone else's data.
+        else (GitHub issue #57). A source that says `unknown`, for the
+        cadence or for where the cadence came from, is not judged: there
+        is no promise to be behind, and inventing a threshold would be
+        this project deciding what "current" means for someone else's
+        data.
 
         This is the other half of `freshness_unavailable`. That one says
         the vintage is unknown; this one says the vintage is known and
@@ -117,15 +118,19 @@ class EnvelopeBuilder:
         if any(w.code == WarningCode.stale_source and w.source_id == source_id
                for w in self._warnings):
             return
+        # "Recorded as", not "the publisher describes": the manifest's
+        # cadence_source says whether the figure was stated by the
+        # publisher or observed, and the sentence has to be true either
+        # way.
         self.warn(
             WarningCode.stale_source,
             f"This data was last updated {age // 86_400} days before it "
-            f"was retrieved, and {manifest.publisher.agency} describes "
-            f"this source as updating {manifest.freshness.expected_cadence}. "
-            "It is the publisher's own schedule that it is behind, not a "
-            "deadline this project set. The records are still what the "
-            "publisher holds; they may not be what it has most recently "
-            "collected.", source_id)
+            f"was retrieved, and the source is recorded as updating "
+            f"{manifest.freshness.expected_cadence}. That cadence is "
+            f"{manifest.publisher.agency}'s own, with its origin recorded "
+            "in the source manifest, not a deadline this project set. The "
+            "records are still what the publisher holds; they may not be "
+            "what it has most recently collected.", source_id)
 
     def add_evidence(self, *, source_ref: str, record_id: str,
                      retrieved_at: str, transformations: list[str],

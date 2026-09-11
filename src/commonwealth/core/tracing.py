@@ -86,16 +86,22 @@ def new_span_id() -> str:
     return secrets.token_hex(8)
 
 
-def parse_traceparent(value: str | None,
-                      tracestate: str | None = None) -> TraceContext | None:
+def parse_traceparent(value: object,
+                      tracestate: object = None) -> TraceContext | None:
     """A client's `traceparent`, or None if it is absent or malformed.
 
     Malformed is not an error and not a reason to fail a tool call: the
     spec says a receiver that cannot parse the field starts a new trace.
     Refusing the call would let a broken caller header take a government
     lookup down.
+
+    Typed `object` rather than `str` because the values come out of the
+    request's `_meta`, which is caller JSON: a number or a list arrives
+    here as easily as a string, and is as malformed as any other
+    unparseable header (review of PR #56: `.strip()` on one raised
+    before the tool ran).
     """
-    if not value:
+    if not isinstance(value, str) or not value.strip():
         return None
     match = _TRACEPARENT.match(value.strip())
     if not match:
@@ -111,10 +117,11 @@ def parse_traceparent(value: str | None,
     span_id = match.group("span_id")
     if trace_id == _ZERO_TRACE or span_id == _ZERO_SPAN:
         return None
-    state = tracestate.strip() if tracestate else None
-    if state and len(state.encode()) > MAX_TRACESTATE_BYTES:
+    state = tracestate.strip() if isinstance(tracestate, str) else ""
+    if not state or len(state.encode()) > MAX_TRACESTATE_BYTES:
         # Truncating vendor state would corrupt it; dropping it loses
-        # nothing this project uses.
+        # nothing this project uses. A non-string is dropped the same
+        # way: it is not vendor state, it is a malformed field.
         state = None
     return TraceContext(
         trace_id=trace_id,
@@ -135,8 +142,8 @@ def current_trace() -> TraceContext | None:
 
 
 @contextmanager
-def trace_call(traceparent: str | None = None,
-               tracestate: str | None = None,
+def trace_call(traceparent: object = None,
+               tracestate: object = None,
                trace_id: str | None = None):
     """Bind a trace for the duration of one tool call.
 

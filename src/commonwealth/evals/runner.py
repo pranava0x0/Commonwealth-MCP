@@ -240,6 +240,19 @@ async def run_suite(root: Path, suite: str, ctx=None, *,
                                            arguments)
 
         scores = score_task(task, attempt)
+        if attempt.envelope is None:
+            # A call that produced no envelope tested nothing about the
+            # question. In oracle mode tool_choice and argument_match
+            # compare the expected call against itself and pass by
+            # construction, and restraint passes any task that is not an
+            # overreach trap, so a task scoring only those passed on a PIN
+            # no fixture holds or a window the tool refused. That is the
+            # vacuous pass § 5 exists to prevent, one scorer over (found in
+            # review of PR #56).
+            scores.append(Score(
+                "answered", False,
+                "the call produced no envelope, so nothing about the "
+                f"question was tested: {attempt.error or 'no call was made'}"))
         run.results.append(TaskResult(
             task.id, task.tier, task.split, task.traps,
             all(s.passed for s in scores), scores, attempt))
@@ -315,7 +328,13 @@ def compare_to_baseline(run: RunResult, baseline: dict,
     if moved:
         notes.append(f"fixtures re-recorded since the baseline: {moved}")
 
-    was = {r["task"]: r["passed"] for r in baseline.get("results", [])}
+    # Only the tasks the baseline ran. One it skipped, for a tier filter,
+    # a tool outside that toolset or a Tier-3 walk in oracle mode, was
+    # never in its denominator and cannot have stopped running (found in
+    # review of PR #56: a skill suite compared against its own result
+    # reported every task as dropped).
+    was = {r["task"]: r["passed"] for r in baseline.get("results", [])
+           if r.get("skipped") is None}
     now = {r.task_id: r.passed for r in run.results if r.skipped is None}
 
     regressed = [task_id for task_id, passed in sorted(now.items())

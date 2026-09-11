@@ -141,3 +141,45 @@ def test_load_rejects_a_manifest_that_fails_activation_gates(tmp_path):
     (tmp_path / "bad.yaml").write_text(yaml.safe_dump(doc))
     with pytest.raises(ValueError, match="activation gates"):
         SourceRegistry.load(tmp_path)
+
+
+# --- health floors the probe can read ---------------------------------------
+
+def test_health_floors_under_an_unread_key_are_refused():
+    """`expect: {parcels: {min_expected: 100000}}` is a floor nothing
+    reads: the probe falls back to 1, and a layer answering with a single
+    feature passes as healthy. Two manifests shipped that way (found in
+    review of PR #56)."""
+    m = _manifest(**{"health.expect": {"parcels": {"min_expected": 100000}}})
+    assert any("not read for ['parcels']" in p for p in _problems(m))
+
+
+def test_health_floors_must_name_declared_layers():
+    m = _manifest(**{"health.expect": {"min_features": {"buildings": 5}}})
+    assert any("does not declare: ['buildings']" in p for p in _problems(m))
+
+
+@pytest.mark.parametrize("floors", [
+    {"parcels": 0}, {"parcels": "many"}, {"parcels": True}, "lots",
+])
+def test_health_floors_are_whole_numbers(floors):
+    m = _manifest(**{"health.expect": {"min_features": floors}})
+    assert any("whole number" in p for p in _problems(m))
+
+
+def test_the_floors_a_manifest_declares_are_the_floors_the_probe_uses():
+    """Through the real probe over the recorded count, for the manifests
+    that had it wrong."""
+    import asyncio
+
+    from commonwealth.fixtures import replay_context
+
+    ctx = replay_context()
+    for source_id, layer, floor in (
+            ("va-loudoun-county-parcels-zoning", "parcels", 100_000),
+            ("va-loudoun-county-parcels-zoning", "zoning", 1_000),
+            ("va-loudoun-county-health-facilities", "health_facilities", 5)):
+        result = asyncio.run(ctx.arcgis.health(ctx.sources.get(source_id),
+                                               layer))
+        assert result["min_expected"] == floor, (source_id, layer, result)
+        assert result["healthy"] is True, (source_id, layer, result)

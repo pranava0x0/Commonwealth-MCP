@@ -662,3 +662,44 @@ def test_the_featured_heading_counts_the_steps_it_shows(core):
     m = re.search(r'id="featured-title">One walk, (\w+) answers<', html)
     assert m and m.group(1) == words[n], (
         f"the featured heading says {m and m.group(1)!r}; the walk has {n}")
+
+
+def test_the_fixtures_build_reaches_no_network(monkeypatch, demo):
+    """`build_site.py --fixtures` is the offline build, and it was not:
+    the agenda-platform adapter was never given the replay fetcher, so
+    the meetings calls in the committed trail were answered by a live
+    request to the publisher, and the page showed no outbound request
+    for them. With the network refused they failed as EgressRefused and
+    the Demos page had no meetings at all (found regenerating the site
+    for review round 3 of PR #56).
+
+    So the trail is rebuilt here with the network refused, and what it
+    produces has to agree with what is committed on every call's
+    coverage. A call that only answers when the network is on cannot
+    get in.
+    """
+    import asyncio
+    import sys
+
+    sys.path.insert(0, str(ROOT / "tools"))
+    import build_site
+
+    monkeypatch.setenv("COMMONWEALTH_DENY_NETWORK", "1")
+    fresh = asyncio.run(build_site.run_demo("fixtures"))
+
+    def shape(call):
+        audit = call["audit"]
+        envelope = call.get("envelope") or {}
+        coverage = envelope.get("coverage") or {}
+        return (audit["tool"], json.dumps(audit["args"], sort_keys=True),
+                coverage.get("registry"), coverage.get("execution"),
+                coverage.get("result"), len(envelope.get("evidence", [])),
+                call["is_error"],
+                [f["error"] for f in coverage.get("source_failures", [])])
+
+    refused = [s for s in map(shape, fresh["calls"]) if "EgressRefused" in s[-1]]
+    assert refused == [], (
+        "these calls in the fixtures build reached for the network, so an "
+        f"adapter is missing its replay fetcher: {refused}")
+    assert list(map(shape, fresh["calls"])) == list(map(shape, demo["calls"])), (
+        f"the committed trail is not what an offline build produces; {REGEN}")

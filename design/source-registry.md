@@ -57,6 +57,8 @@ access:
 freshness:
   expected_cadence: daily
   cadence_source: stated            # stated (publisher says) | observed (we measured) | unknown
+                                    # unknown also switches off the stale_source warning: a cadence
+                                    # nobody can source is not the publisher's promise
   ttl_hint_seconds: 86400           # feeds the adapter response cache and ttlMs on result RESOURCES
                                     # (protocol cache hints do not attach to tools/call results)
 

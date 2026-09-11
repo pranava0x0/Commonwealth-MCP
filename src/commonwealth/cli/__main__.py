@@ -1671,13 +1671,16 @@ def _fixture_ctx(fixtures: list[str] | None = None) -> RuntimeContext:
 
 
 def cmd_eval_list(args: argparse.Namespace) -> int:
-    from ..evals.loader import load_suite, suites
+    from ..evals.loader import TaskLoadError, load_suite, suites
 
     found = suites(EVALS_DIR)
     if not found:
         return _fail(f"no eval suites under {EVALS_DIR}")
     for name in sorted(found):
-        tasks = load_suite(EVALS_DIR, name)
+        try:
+            tasks = load_suite(EVALS_DIR, name)
+        except TaskLoadError as err:
+            return _fail(str(err))
         tiers = sorted({t.tier for t in tasks})
         traps = sorted({p for t in tasks for p in t.traps})
         print(f"{name}: {len(tasks)} task(s), tier(s) {tiers}, "
@@ -1757,8 +1760,12 @@ def cmd_eval_run(args: argparse.Namespace) -> int:
         baseline_path = Path(args.baseline)
         if not baseline_path.exists():
             return _fail(f"no baseline at {baseline_path}")
-        fatal, notes = compare_to_baseline(run, _json.loads(
-            baseline_path.read_text()), threshold=args.threshold)
+        try:
+            baseline = _json.loads(baseline_path.read_text())
+        except ValueError as err:
+            return _fail(f"{baseline_path} is not a JSON result: {err}")
+        fatal, notes = compare_to_baseline(run, baseline,
+                                           threshold=args.threshold)
         # Printed either way. A regression inside the threshold is
         # tolerated, not hidden.
         for note in notes:
@@ -1767,11 +1774,23 @@ def cmd_eval_run(args: argparse.Namespace) -> int:
             print(f"REGRESSION: {problem}")
         if fatal:
             return 1
+        # "Beyond the threshold" only when one was set: with none, no
+        # fatal means no regression at all, and a note about a moved tool
+        # count is not a tolerated regression.
         print("no regression against the baseline"
               + (f" beyond the threshold of {args.threshold}"
-                 if notes else ""))
+                 if args.threshold else ""))
     return 0 if run.executed and run.passed == run.executed else (
         0 if args.allow_failures else 1)
+
+
+def _count(text: str) -> int:
+    """An argparse type for a number of things: zero or more."""
+    value = int(text)
+    if value < 0:
+        raise argparse.ArgumentTypeError(f"{text} is negative; a count of "
+                                         "tolerated regressions is 0 or more")
+    return value
 
 
 def main() -> int:
@@ -1836,22 +1855,28 @@ def main() -> int:
     evv.set_defaults(fn=cmd_eval_validate)
     evr = evsub.add_parser("run", help="score a suite")
     evr.add_argument("suite")
+    # Names, not counts: the tool counts were typed here once and were
+    # wrong within the same PR. The run prints the count it actually got.
     evr.add_argument("--profile", default="default",
-                     help="toolset to expose: default (9), discovery (12), "
-                          "all (14) — the sweep in issue #28")
+                     choices=sorted(toolreg.PROFILES),
+                     help="toolset to expose; the sweep in issue #28 runs "
+                          "the same suite at each")
     evr.add_argument("--tier", type=int, default=None,
                      help="run only this tier")
-    evr.add_argument("--model", default=None,
-                     help="model id for a Tier-2 run; costs money and "
-                          "needs a client wired")
-    evr.add_argument("--oracle", action="store_true",
-                     help="run each task's own expected call (the default "
-                          "when no --model is given)")
-    evr.add_argument("--out", default=None, help="write the JSON result here")
+    mode = evr.add_mutually_exclusive_group()
+    mode.add_argument("--model", default=None,
+                      help="model id for a Tier-2 run; costs money and "
+                           "needs a client wired")
+    mode.add_argument("--oracle", action="store_true",
+                      help="run each task's own expected call (the default "
+                           "when no --model is given)")
+    evr.add_argument("--out", default=None,
+                     help="directory to write the JSON result into, named "
+                          "by suite, model and toolset")
     evr.add_argument("--baseline", default=None,
                      help="compare against a stored baseline and fail on "
                           "regression")
-    evr.add_argument("--threshold", type=int, default=0,
+    evr.add_argument("--threshold", type=_count, default=0,
                      help="how many fewer passes than the baseline is "
                           "tolerated")
     evr.add_argument("--allow-failures", action="store_true",

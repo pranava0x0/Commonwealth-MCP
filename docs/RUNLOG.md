@@ -35,9 +35,21 @@ divisible per-host budget (#20, partial); the `commonwealth eval` runner
 with an oracle mode that proves a trap can be caught before a model run
 is paid for (#28, partial); `stale_source` implemented against each
 publisher's own declared cadence (#57); and a fifth page of five small
-demo apps. Codex found 15 real problems across three rounds, including
-the demo silently resolving "Fairfax" to one of two governments whose
-zoning coverage differs.
+demo apps. Codex found twelve real problems across three rounds,
+including the demo silently resolving "Fairfax" to one of two
+governments whose zoning coverage differs.
+
+**The last round before merge.** Regenerating the site with the network
+refused showed the `--fixtures` build had been reading the meetings
+calls from the live publisher: the agenda adapter was never given the
+replay fetcher. The builder now replays it, and a test rebuilds the trail
+with egress denied and compares it to the committed data. A self-review
+of the branch found six more: the Code search watch dropped its query,
+the Loudoun health floors sat under a key the probe never read, a
+meetings answer had no inline cap, a town inside a covered county read
+as covered, oracle mode passed a task whose call errored, and baselines
+counted skipped tasks as dropped. A staleness warning is now only
+raised against a cadence whose provenance the manifest records.
 
 **Worth it?** Yes. The registry went from land records only to land,
 meetings and health, and three issues that looked blocked turned out to

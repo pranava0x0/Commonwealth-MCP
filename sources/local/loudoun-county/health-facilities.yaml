@@ -94,8 +94,8 @@ authority_notes: >
 health:
   probe: arcgis_layer_count
   expect:
-    health_facilities:
-      min_expected: 5
+    min_features:
+      health_facilities: 5
 
 lifecycle:
   declared_state: active

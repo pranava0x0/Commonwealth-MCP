@@ -17,8 +17,8 @@ from commonwealth.fixtures import replay_context
 from commonwealth.runtime import SOURCES_DIR
 
 
-def _freshness(cadence: str) -> Freshness:
-    return Freshness(expected_cadence=cadence, cadence_source="stated",
+def _freshness(cadence: str, source: str = "stated") -> Freshness:
+    return Freshness(expected_cadence=cadence, cadence_source=source,
                      ttl_hint_seconds=3600)
 
 
@@ -41,6 +41,29 @@ def test_a_source_that_promises_nothing_is_not_judged(cadence):
     be this project deciding what 'current' means for someone else's
     data."""
     assert _freshness(cadence).stale_after_seconds() is None
+
+
+@pytest.mark.parametrize("source", ["unknown", "Unknown", " unknown ", ""])
+def test_a_cadence_nobody_can_source_is_not_a_promise(source):
+    """`expected_cadence: daily` with `cadence_source: unknown` is a
+    figure somebody wrote down without recording who said it. Holding
+    the publisher to it would attribute a schedule to them that they may
+    never have given (review of PR #56: two manifests declare `daily`
+    that way)."""
+    freshness = _freshness("daily", source)
+    assert freshness.cadence_has_provenance() is False
+    assert freshness.stale_after_seconds() is None
+
+
+def test_a_written_out_provenance_counts():
+    """Manifests write the provenance out rather than using the one-word
+    vocabulary, and a quoted statement from the publisher is the
+    strongest provenance there is."""
+    stated = _freshness(
+        "quarterly",
+        'Stated by the publisher: "locator files are updated quarterly."')
+    assert stated.cadence_has_provenance() is True
+    assert stated.stale_after_seconds() == 180 * 86_400
 
 
 def test_the_grace_factor_is_stated_once():
@@ -99,69 +122,131 @@ def builder():
 
 
 @pytest.fixture(scope="module")
-def daily_manifest():
+def stated_manifest():
+    """A source whose manifest quotes the publisher on its cadence."""
     registry = SourceRegistry.load(SOURCES_DIR)
-    m = registry.get("va-richmond-city-parcels-zoning")
-    assert m.freshness.expected_cadence == "daily", (
+    m = registry.get("va-vdot-lrs-routes")
+    assert m.freshness.expected_cadence == "annually", (
         "this test needs a source that declares a real cadence")
+    assert m.freshness.cadence_has_provenance(), (
+        "this test needs a source that says where its cadence came from")
     return m
 
 
-def test_a_source_past_its_own_cadence_says_so(builder, daily_manifest):
+@pytest.fixture(scope="module")
+def unsourced_manifest():
+    """A source whose manifest declares a cadence and does not say where
+    the figure came from."""
+    registry = SourceRegistry.load(SOURCES_DIR)
+    m = registry.get("va-richmond-city-parcels-zoning")
+    assert m.freshness.expected_cadence == "daily"
+    assert not m.freshness.cadence_has_provenance(), (
+        "this test needs a manifest with cadence_source: unknown; if "
+        "Richmond's has since been recorded, point it at another")
+    return m
+
+
+def _stamp(moment: datetime) -> str:
+    return moment.strftime("%Y-%m-%dT%H:%M:%SZ")
+
+
+def test_a_source_past_its_own_cadence_says_so(builder, stated_manifest):
     now = datetime.now(timezone.utc)
-    old = (now - timedelta(days=30)).strftime("%Y-%m-%dT%H:%M:%SZ")
-    _entry(builder, daily_manifest, old, now.strftime("%Y-%m-%dT%H:%M:%SZ"))
+    _entry(builder, stated_manifest, _stamp(now - timedelta(days=3 * 365)),
+           _stamp(now))
     warnings = {w.code.value: w.message for w in builder._warnings}
     assert "stale_source" in warnings
     message = warnings["stale_source"]
     # The publisher's schedule, named as theirs.
-    assert "daily" in message
+    assert "annually" in message
+    assert stated_manifest.publisher.agency in message
     assert "not a deadline this project set" in message
 
 
-def test_a_source_within_its_cadence_stays_quiet(builder, daily_manifest):
+def test_a_source_within_its_cadence_stays_quiet(builder, stated_manifest):
     now = datetime.now(timezone.utc)
-    recent = (now - timedelta(hours=6)).strftime("%Y-%m-%dT%H:%M:%SZ")
-    _entry(builder, daily_manifest, recent, now.strftime("%Y-%m-%dT%H:%M:%SZ"))
+    _entry(builder, stated_manifest, _stamp(now - timedelta(days=30)),
+           _stamp(now))
     assert "stale_source" not in {w.code.value for w in builder._warnings}
 
 
+def test_an_unsourced_cadence_is_not_held_against_the_publisher(
+        builder, unsourced_manifest):
+    """Richmond's manifest says `daily` and `cadence_source: unknown`. A
+    vintage weeks past a daily cadence is not called stale, because
+    nothing records that the daily figure is Richmond's. The warning
+    that used to fire here told callers the city "describes this source
+    as updating daily", which the manifest does not support (review of
+    PR #56)."""
+    now = datetime.now(timezone.utc)
+    _entry(builder, unsourced_manifest, _stamp(now - timedelta(days=30)),
+           _stamp(now))
+    codes = {w.code.value for w in builder._warnings}
+    assert "stale_source" not in codes
+    # The vintage is known, so the other freshness warning is wrong too.
+    assert "freshness_unavailable" not in codes
+
+
 def test_the_two_freshness_warnings_are_never_both_right(builder,
-                                                         daily_manifest):
+                                                         stated_manifest):
     """`freshness_unavailable` means the vintage is unknown and
     `stale_source` means it is known and old. One answer cannot be
     both."""
-    now = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
-    _entry(builder, daily_manifest, None, now)
+    _entry(builder, stated_manifest, None, _stamp(datetime.now(timezone.utc)))
     codes = {w.code.value for w in builder._warnings}
     assert "freshness_unavailable" in codes
     assert "stale_source" not in codes
 
 
-def test_the_warning_fires_once_per_source_not_once_per_layer(builder,
-                                                              daily_manifest):
+def test_the_warning_fires_once_per_source_not_once_per_layer(
+        builder, stated_manifest):
     """A tool reading two layers of one service adds the source entry
     twice, and the same sentence twice reads as two problems."""
     now = datetime.now(timezone.utc)
-    old = (now - timedelta(days=30)).strftime("%Y-%m-%dT%H:%M:%SZ")
-    read = now.strftime("%Y-%m-%dT%H:%M:%SZ")
-    _entry(builder, daily_manifest, old, read)
-    _entry(builder, daily_manifest, old, read)
+    old, read = _stamp(now - timedelta(days=3 * 365)), _stamp(now)
+    _entry(builder, stated_manifest, old, read)
+    _entry(builder, stated_manifest, old, read)
     codes = [w.code.value for w in builder._warnings]
     assert codes.count("stale_source") == 1
 
 
-def test_a_real_tool_call_carries_the_warning():
+def test_a_real_tool_call_carries_the_warning(monkeypatch):
     """Through a tool over the recorded fixtures, so what is tested is
-    the wiring from manifest to warning rather than the builder alone."""
+    the wiring from manifest to warning rather than the builder alone.
+
+    VDOT's routes layer quotes the publisher on an annual cadence and
+    reports a vintage. The recording is weeks old rather than years, so
+    the cadence is shortened to a second here to make that vintage count
+    as stale: the rule under test is the wiring, not the calendar.
+    """
+    from commonwealth.core import registry
+    from commonwealth.domains.geo import find_roads
+
+    monkeypatch.setitem(registry.CADENCE_SECONDS, "annually", 1)
+    env = asyncio.run(find_roads(replay_context(), jurisdiction="Vienna",
+                                 street_name="Center St"))
+    stale = [w for w in env.warnings if w.code.value == "stale_source"]
+    assert [w.source_id for w in stale] == ["va-vdot-lrs-routes"], (
+        "the recorded VDOT routes layer reports a vintage and states an "
+        "annual cadence; with that cadence shortened, the answer should "
+        "say the layer is behind it")
+    assert "annually" in stale[0].message
+
+
+def test_a_real_tool_call_does_not_judge_an_unsourced_cadence(monkeypatch):
+    """The same wiring, on the source whose `daily` has no recorded
+    provenance. Even with the cadence shortened to a second, Richmond's
+    parcel layer is not called stale."""
+    from commonwealth.core import registry
     from commonwealth.domains.geo import find_buildings
 
+    monkeypatch.setitem(registry.CADENCE_SECONDS, "daily", 1)
     env = asyncio.run(find_buildings(replay_context(),
                                      jurisdiction="Richmond City",
                                      pin="C0010126019"))
-    assert "stale_source" in {w.code.value for w in env.warnings}, (
-        "the recorded Richmond parcel layer declares a daily cadence and "
-        "its vintage is well past it; the answer should say so")
+    assert "va-richmond-city-parcels-zoning" in {
+        s.source_id for s in env.provenance}
+    assert "stale_source" not in {w.code.value for w in env.warnings}
 
 
 # --- every add_source call site hands over its manifest --------------------

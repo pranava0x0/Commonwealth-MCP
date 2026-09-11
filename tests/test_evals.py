@@ -470,3 +470,36 @@ def test_moved_inputs_are_noted_rather_than_failed(ctx):
     fatal, notes = compare_to_baseline(run, baseline)
     assert fatal == []
     assert any("tools in the baseline" in n for n in notes)
+
+
+def test_a_call_that_produced_no_envelope_fails_the_task(ctx, tmp_path):
+    """In oracle mode tool_choice and argument_match compare the expected
+    call against itself, so a task scoring only those passed on a PIN no
+    fixture holds. A call with no envelope tested nothing (found in
+    review of PR #56)."""
+    _write(tmp_path, "s", "t", {
+        "id": "unanswered", "tier": 2, "question": "q",
+        "expected": {"tool": "geo.find_parcel",
+                     "arguments": {"jurisdiction": "Fairfax County",
+                                   "pin": "NOT A RECORDED PIN AT ALL"}},
+        "score": [{"kind": "tool_choice"}, {"kind": "argument_match"}]})
+    run = asyncio.run(run_suite(tmp_path, "s", ctx, profile="all"))
+    result = run.results[0]
+    assert result.passed is False
+    answered = [s for s in result.scores if s.kind == "answered"]
+    assert answered and "no fixture for this call" in answered[0].detail
+    # The scorers the task named still ran and still say what they saw.
+    assert {s.kind for s in result.scores} >= {"tool_choice",
+                                               "argument_match"}
+
+
+def test_a_task_the_baseline_skipped_is_not_a_dropped_task(ctx):
+    """Oracle mode skips every Tier-3 walk. A skill suite compared
+    against its own result reported each of them as a task that had
+    stopped running, fatal at any threshold (found in review of PR #56).
+    """
+    run = asyncio.run(run_suite(EVALS, "skill:whose-government", ctx,
+                                profile="default"))
+    assert run.results and all(r.skipped for r in run.results), (
+        "this test needs a suite the oracle skips entirely")
+    assert compare_to_baseline(run, run.as_dict()) == ([], [])

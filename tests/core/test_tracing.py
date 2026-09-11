@@ -46,6 +46,14 @@ def test_the_sampled_flag_is_read_from_the_header():
     # group every call that sent it under a single trace.
     "00-" + "0" * 32 + "-00f067aa0ba902b7-01",
     "00-4bf92f3577b34da6a3ce929d0e0e4736-" + "0" * 16 + "-01",
+    # `_meta` is caller JSON, so these arrive as easily as a string
+    # (review of PR #56: `.strip()` on one raised before the tool ran).
+    1,
+    1.5,
+    True,
+    [CLIENT_TRACE],
+    {"traceparent": CLIENT_TRACE},
+    CLIENT_TRACE.encode(),
 ])
 def test_an_unusable_traceparent_is_ignored_rather_than_fatal(value):
     """A broken caller header must not be able to fail a lookup."""
@@ -85,6 +93,16 @@ def test_an_oversized_tracestate_is_dropped_not_truncated():
     ctx = parse_traceparent(CLIENT_TRACE,
                             "x=" + "y" * (MAX_TRACESTATE_BYTES + 10))
     assert ctx is not None and ctx.tracestate is None
+
+
+@pytest.mark.parametrize("state", [
+    1, ["vendor=abc"], {"vendor": "abc"}, b"vendor=abc", "   ",
+])
+def test_a_non_string_tracestate_is_dropped_not_fatal(state):
+    """The trace is still continued; only the unusable state is dropped."""
+    ctx = parse_traceparent(CLIENT_TRACE, state)
+    assert ctx is not None and ctx.trace_id == CLIENT_TRACE_ID
+    assert ctx.tracestate is None
 
 
 def test_the_header_round_trips():
@@ -163,6 +181,22 @@ async def test_a_call_with_no_client_trace_still_gets_one():
         await client.call_tool("civic.get_code_section", {"citation": "1-500"})
     record = ctx.audit.records[-1]
     assert record.trace_id and len(record.trace_id) == 32
+
+
+async def test_malformed_trace_metadata_cannot_fail_a_call():
+    """A caller sending `_meta: {"traceparent": 1}` gets an answer and a
+    trace started here, not an AttributeError ahead of the tool (review
+    of PR #56)."""
+    ctx = build_ctx()
+    server = build_server(ctx, profile="all")
+    async with Client(server) as client:
+        res = await client.call_tool(
+            "civic.get_code_section", {"citation": "1-500"},
+            meta={"traceparent": 1, "tracestate": ["vendor=abc"]})
+    assert res.is_error is False
+    record = ctx.audit.records[-1]
+    assert record.trace_id and len(record.trace_id) == 32
+    assert record.trace_id != CLIENT_TRACE_ID
 
 
 async def test_a_failed_call_is_traced_too():

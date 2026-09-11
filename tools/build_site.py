@@ -420,7 +420,7 @@ DEMO_GROUPS = [
      ]),
 
     ('When does this government meet?',
-     'Five Virginia localities publish their meetings through one '
+     'Several Virginia localities publish their meetings through one '
      'civic-tech platform. The same walk shows what that platform does '
      'not publish, and what a locality that is not on it looks like.', [
         ("civic.search_meetings", {"jurisdiction": "Richmond City",
@@ -941,7 +941,10 @@ def _summarize_params(params: dict) -> dict:
     return out
 
 
-def _summarize_response(resp: dict) -> dict:
+def _summarize_response(resp: dict | list) -> dict:
+    if isinstance(resp, list):
+        # The agenda platform answers with a JSON array at the top level.
+        return {"records": len(resp)}
     if "features" in resp and isinstance(resp["features"], list):
         return {"features": len(resp["features"])}
     if "count" in resp:
@@ -981,16 +984,29 @@ class TrackingFetcher:
     async def fetch_json(self, url: str, params: dict) -> dict:
         inner = self._inner or self._fetcher_for_live(url)
         response = await inner.fetch_json(url, params)
+        self._record(url, params, response)
+        return response
+
+    async def fetch_json_list(self, url: str, params: dict) -> list:
+        """The array-shaped answer the agenda platform sends (see
+        `base.JsonListFetcher`), tracked the same way so a meetings
+        call's outbound request shows on the page like every other."""
+        inner = self._inner or self._fetcher_for_live(url)
+        response = await inner.fetch_json_list(url, params)
+        self._record(url, params, response)
+        return response
+
+    def _record(self, url: str, params: dict, response) -> None:
         self.calls.append({
             "url": url,
             "params": _summarize_params(params),
             "response": _summarize_response(response),
         })
-        return response
 
 
 async def run_demo(mode: str) -> dict:
     from mcp.client import Client
+    from commonwealth.adapters.agenda_platform import AgendaPlatformAdapter
     from commonwealth.adapters.arcgis import ArcGISAdapter
     from commonwealth.adapters.base import TTLCache
     from commonwealth.adapters.replay import ReplayFetcher
@@ -1014,9 +1030,18 @@ async def run_demo(mode: str) -> dict:
     # store would write a payload and bake a fresh random
     # `commonwealth://` id into committed site data on every rebuild —
     # a handle no reader of the published page could ever resolve.
+    # Every adapter the runtime has goes through the tracker, in both
+    # modes. The agenda platform was left to the runtime's default, whose
+    # fetcher is live, so the "fixtures" build read the meetings calls
+    # from the publisher over the network and the page showed no
+    # outbound request for them; with the network refused they failed as
+    # EgressRefused and the demo had no meetings at all (found while
+    # regenerating the site for review round 3 of PR #56). A test now
+    # runs this trail with the network refused.
     ctx = load_context(arcgis=adapter, geocoder=_geocoder(mode, tracker),
                        results=MemoryResultStore(deterministic=True),
-                       virginia_law=_virginia_law_adapter(mode))
+                       virginia_law=_virginia_law_adapter(mode),
+                       agendas=AgendaPlatformAdapter(fetcher=tracker))
 
     server = build_server(ctx, profile="all")
     calls: list[dict] = []

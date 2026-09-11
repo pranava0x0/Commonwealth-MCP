@@ -23,12 +23,14 @@ from __future__ import annotations
 from ..adapters.agenda_platform import (MAX_RANGE_DAYS, Meeting,
                                         check_range)
 from ..adapters.virginia_law import CodeSection
-from ..core.assemble import (EnvelopeBuilder, failure, result_dim,
+from ..core.assemble import (EnvelopeBuilder, failure, gap, result_dim,
                              resolve_frame, selection_coverage)
-from ..core.envelope import AccessPath, Coverage, Envelope, \
-    ExecutionCoverage, PaginationCoverage, WarningCode
+from ..core.envelope import (INLINE_RECORD_CAP, AccessPath, Coverage,
+                             Envelope, ExecutionCoverage, PaginationCoverage,
+                             RegistryCoverage, WarningCode)
 from ..core.errors import CommonwealthError, InvalidQuery
 from ..core.registry import SourceManifest
+from ..core.results import RetentionForbidden, resource_ref
 from ..core.toolreg import ToolRegistry, ToolSpec
 from ..runtime import RuntimeContext
 
@@ -238,7 +240,21 @@ async def search_meetings(ctx: RuntimeContext, jurisdiction: str,
     selected = ctx.sources.select("meeting.search", stack)
     registry_dim, gaps = selection_coverage(
         ctx.sources, "meeting.search", stack, selected, builder=b)
+    # A county's calendar is the county's. The parent-stack fallback that
+    # is right for land records, where a county layer covers town ground,
+    # is wrong here: a Board of Supervisors' agenda does not carry a town
+    # council's meetings. So a town whose only selectable source is its
+    # county's is partial coverage with the town named as the gap, never
+    # covered (found in review of PR #56: Scottsville read as covered on
+    # Albemarle County's calendar).
+    borrowed = bool(selected) and not any(m.jurisdiction == stack[0]
+                                          for m in selected)
+    if borrowed:
+        registry_dim = RegistryCoverage.partial
+        gaps = gaps + [gap(stack[0], "no_registered_source")]
 
+    arguments = {"jurisdiction": jurisdiction, "start_date": start_date,
+                 "end_date": end_date, "body": body}
     blocks: list[dict] = []
     failures = []
     total = 0
@@ -249,8 +265,17 @@ async def search_meetings(ctx: RuntimeContext, jurisdiction: str,
         except CommonwealthError as err:
             failures.append(failure(m.id, err.code, str(err)))
             continue
-        blocks.append(_meetings_block(b, m, meetings, url,
-                                      start_date, end_date, body))
+        block = _meetings_block(ctx, b, m, meetings, url, start_date,
+                                end_date, body, arguments)
+        if borrowed:
+            asked = _display(ctx, stack[0])
+            block["scope_note"] = (
+                f"This is the calendar of {_display(ctx, m.jurisdiction)}, "
+                f"which contains {asked}. {asked} has no registered "
+                "meetings source of its own, so its council and boards are "
+                "not in this answer, and their absence here says nothing "
+                "about whether they meet.")
+        blocks.append(block)
         total += len(meetings)
 
     execution = (ExecutionCoverage.complete if not failures
@@ -270,9 +295,15 @@ async def search_meetings(ctx: RuntimeContext, jurisdiction: str,
     return b.build({"results": blocks}, coverage)
 
 
-def _meetings_block(b: EnvelopeBuilder, m: SourceManifest,
-                    meetings: list[Meeting], url: str, start_date: str,
-                    end_date: str, body: str) -> dict:
+def _display(ctx: RuntimeContext, jurisdiction_id: str) -> str:
+    j = ctx.jurisdictions.get(jurisdiction_id)
+    return j.name if j is not None else jurisdiction_id
+
+
+def _meetings_block(ctx: RuntimeContext, b: EnvelopeBuilder,
+                    m: SourceManifest, meetings: list[Meeting], url: str,
+                    start_date: str, end_date: str, body: str,
+                    arguments: dict) -> dict:
     # The publisher stamps every meeting with when it was last edited,
     # and that is the only freshness signal this platform gives. The
     # newest one in the answer is the vintage of the answer: nothing in
@@ -290,57 +321,48 @@ def _meetings_block(b: EnvelopeBuilder, m: SourceManifest,
         source_updated_at=newest, retrieved_at=_now(),
         cache_age_seconds=0, manifest=m)
 
-    records = []
-    for meeting in meetings:
-        ev_ref = b.add_evidence(
+    records = [_meeting_record(meeting) for meeting in meetings]
+    # What fits inline, with the whole set kept in the result store
+    # (decision 0013). The geo tools have cut their answers this way
+    # since issue #33; this one returned every meeting in the window, so
+    # a year of a busy locality came back as hundreds of records with no
+    # sign that a narrower question existed (found in review of PR #56).
+    inline = records[:INLINE_RECORD_CAP]
+    handle = None
+    if len(records) > len(inline):
+        handle = _store_full_meetings(ctx, b, m, records, arguments)
+        b.warn(WarningCode.truncated_inline,
+               f"{len(records)} meetings retrieved; {len(inline)} shown "
+               "inline. " + (f"All {len(records)} are at {handle}. "
+                             if handle else "")
+               + "Narrow the window or name a body to see more of them "
+               "inline.", m.id)
+    for record, meeting in zip(inline, meetings):
+        record["evidence_refs"] = [b.add_evidence(
             source_ref=src_ref, record_id=meeting.event_id,
             retrieved_at=_now(), transformations=[],
-            locator=meeting.portal_url or url)
-        record = {
-            "body": meeting.body,
-            "date": meeting.meeting_date,
-            "time": meeting.meeting_time,
-            "time_zone": meeting.time_zone,
-            # The publisher's own value, and only ever that. It says
-            # whether the AGENDA is final, which is not whether the
-            # meeting is happening — the field name says so, and the
-            # tool description says so again.
-            "agenda_status": meeting.agenda_status,
-            "location": meeting.location,
-            # Links, returned as data and never followed.
-            "agenda_url": meeting.agenda_url,
-            "minutes_url": meeting.minutes_url,
-            "portal_url": meeting.portal_url,
-            "comment": meeting.comment,
-            # When the publisher last edited this notice. The comment is
-            # where a cancellation lives, so "when was this last
-            # revised" is the difference between a cancellation posted
-            # this morning and one posted years ago.
-            "last_modified": meeting.last_modified,
-            "evidence_refs": [ev_ref],
-        }
-        if meeting.cancellation_note:
-            record["cancellation_note"] = meeting.cancellation_note
-        records.append(record)
+            locator=meeting.portal_url or url)]
 
     cancelled = [r for r in records if "cancellation_note" in r]
     if cancelled:
         # Read from prose, so it is disclosed as a screening reading
         # rather than passed off as the publisher's own status.
         b.warn(WarningCode.screening_only,
-               f"{len(cancelled)} of these meetings carry a comment saying "
-               "the meeting was cancelled or rescheduled. This platform "
-               "publishes no cancellation field, so that reading comes "
-               "from the comment text, which is returned verbatim on each "
-               "record. Read the comment before relying on it, and check "
-               "the publisher's own page for anything that matters.",
+               f"{len(cancelled)} of the meetings retrieved carry a comment "
+               "saying the meeting was cancelled or rescheduled. This "
+               "platform publishes no cancellation field, so that reading "
+               "comes from the comment text, which is returned verbatim on "
+               "each record. Read the comment before relying on it, and "
+               "check the publisher's own page for anything that matters.",
                source_id=m.id)
 
     block = {"source_ref": src_ref, "source_id": m.id,
-             "records": records, "record_count": len(records),
+             "records": inline, "record_count": len(records),
              "window": {"start_date": start_date, "end_date": end_date},
              "body_filter": body or None,
              "source_url": url}
+    if handle:
+        block["full_records_ref"] = handle
     if not records:
         block["note"] = (
             f"{m.name} published no meetings between {start_date} and "
@@ -351,6 +373,64 @@ def _meetings_block(b: EnvelopeBuilder, m: SourceManifest,
               "does not publish through the platform would not appear "
               "here either.")
     return block
+
+
+def _meeting_record(meeting: Meeting) -> dict:
+    record = {
+        "body": meeting.body,
+        "date": meeting.meeting_date,
+        "time": meeting.meeting_time,
+        "time_zone": meeting.time_zone,
+        # The publisher's own value, and only ever that. It says
+        # whether the AGENDA is final, which is not whether the
+        # meeting is happening — the field name says so, and the
+        # tool description says so again.
+        "agenda_status": meeting.agenda_status,
+        "location": meeting.location,
+        # Links, returned as data and never followed.
+        "agenda_url": meeting.agenda_url,
+        "minutes_url": meeting.minutes_url,
+        "portal_url": meeting.portal_url,
+        "comment": meeting.comment,
+        # When the publisher last edited this notice. The comment is
+        # where a cancellation lives, so "when was this last
+        # revised" is the difference between a cancellation posted
+        # this morning and one posted years ago.
+        "last_modified": meeting.last_modified,
+    }
+    if meeting.cancellation_note:
+        record["cancellation_note"] = meeting.cancellation_note
+    return record
+
+
+def _store_full_meetings(ctx: RuntimeContext, b: EnvelopeBuilder,
+                         m: SourceManifest, records: list[dict],
+                         arguments: dict) -> str | None:
+    """Every meeting retrieved, in the store, and its handle; or None
+    where the payload cannot be kept, for the reasons geo's
+    `_store_full_records` gives. The inline records still stand."""
+    payload = {
+        "source_id": m.id,
+        "record_count": len(records),
+        "retrieved_at": _now(),
+        "records": [dict(r) for r in records],
+    }
+    try:
+        stored = ctx.results.put(
+            kind="results", payload=payload, media_type="application/json",
+            manifests=[m], origin_tool=b.tool_name,
+            origin_arguments=arguments)
+    except RetentionForbidden:
+        b.warn(WarningCode.terms_note,
+               f"{m.id}'s terms do not allow keeping a copy of its "
+               "records, so the meetings past the inline cap are not "
+               "stored. Narrow the window to see them.", m.id)
+        return None
+    except (ValueError, OSError):
+        return None
+    return b.add_resource(resource_ref(
+        stored, f"All {len(records)} meetings {m.id} returned for this "
+                "window, including the ones past the inline cap."))
 
 
 CIVIC_TOOLS.register(ToolSpec(

@@ -8,7 +8,7 @@ here. This directory owns tiers 2 and 3.
 commonwealth eval list                    # the suites, and what each covers
 commonwealth eval validate                # load every task; report trap coverage
 commonwealth eval run tier2               # oracle run over the default toolset
-commonwealth eval run tier2 --profile all # the same suite at 16 tools
+commonwealth eval run tier2 --profile all # the same suite over every tool
 ```
 
 ## Two modes, and the difference matters

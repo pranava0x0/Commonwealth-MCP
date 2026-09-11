@@ -275,7 +275,12 @@ class HttpFetcher:
         since some HTML sources (e.g. Virginia Law) signal "not found" by
         redirecting to a different page shape rather than a 404, and the
         caller needs to know which page it actually landed on."""
-        response, host = await self._fetch(url, {})
+        # None, not {}: httpx takes an empty dict as a query to SET, so
+        # `{}` stripped whatever query the URL carried. The Code's search
+        # watch asked for `search_cov?query=zoning` and fetched the bare
+        # page (found in review of PR #56); `_fetch` documents the same
+        # trap for redirect hops.
+        response, host = await self._fetch(url, None)
         return self._decode_html(response, host), response.url
 
     async def _fetch(self, url: str,

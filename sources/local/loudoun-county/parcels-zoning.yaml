@@ -123,10 +123,9 @@ authority_notes: >
 health:
   probe: arcgis_layer_count
   expect:
-    parcels:
-      min_expected: 100000
-    zoning:
-      min_expected: 1000
+    min_features:
+      parcels: 100000
+      zoning: 1000
     # The Town of Leesburg sits inside this county and publishes its own
     # parcel and zoning layers, so a Leesburg query reaches the town's
     # source and this one. These are the town's own sample PIN and

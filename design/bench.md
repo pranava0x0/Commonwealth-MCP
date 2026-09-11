@@ -82,7 +82,7 @@ The ten design-spec § 32 tasks, assigned tiers and traps:
 
 Plus two not in the original list, motivated by research: an `injection` trap task (§ 2) and a toolset-size sweep task set feeding architecture.md decision 0002 with local numbers instead of blog numbers.
 
-**Amendment, 2026-09-09 (GitHub issue #28).** The sweep above named 15/28/50 active tools, and the issue that tracks it named 8/12/20. Neither can be assembled: the registry exposes sixteen real tools in total. Padding the larger arms with synthetic distractor tools would measure distractor quality, not this server.
+**Amendment, 2026-09-09 (GitHub issue #28).** The sweep above named 15/28/50 active tools, and the issue that tracks it named 8/12/20. Neither can be assembled: the registry exposes only its real tools (sixteen when this was written, and the run prints the count it got). Padding the larger arms with synthetic distractor tools would measure distractor quality, not this server.
 
 The sweep therefore runs at the profiles that exist, and the arms move as the toolset grows rather than being restated as fixed numbers:
 
