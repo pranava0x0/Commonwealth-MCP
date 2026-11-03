@@ -8,6 +8,7 @@ suite of unfallible traps reports a perfect score over nothing.
 """
 import asyncio
 import json
+from datetime import date
 from pathlib import Path
 
 import pytest
@@ -83,6 +84,50 @@ def test_a_task_that_scores_nothing_is_refused(tmp_path):
     p = _write(tmp_path, "s", "t", {"id": "x", "tier": 2, "question": "q"})
     with pytest.raises(TaskLoadError, match="never fail"):
         load_task(p)
+
+
+@pytest.mark.parametrize(("bad_fields", "field"), [
+    ({"expected": {"arguments": "q=Fairfax"}}, "arguments"),
+    ({"expected": {"coverage": "covered"}}, "coverage"),
+    ({"expected": {"arguments": {"start_date": date(2030, 1, 1)}}}, "start_date"),
+    ({"expected": {"arguments": {"points": [float("nan")]}}}, "points"),
+    ({"expected": []}, "expected"),
+    ({"tier": "two"}, "tier"),
+    ({"score": [{"weight": 1}]}, "score"),
+    ({"traps": "registry_gap"}, "traps"),
+    ({"fixtures": {"source": 1}}, "fixtures"),
+    ({"expected": {"max_calls": True}}, "max_calls"),
+    *[({"expected": {key: "abc"}}, key) for key in
+      ("must_say", "must_not_say", "must_warn", "candidates", "sources_returned")],
+    ({"expected": {"sources_returned": 2}}, "sources_returned"),
+])
+def test_invalid_shapes_name_the_task_and_field(tmp_path, bad_fields, field):
+    p = _write(tmp_path, "s", "bad-input", {
+        "id": "case", "tier": 2, "question": "q", "score": ["tool_choice"], **bad_fields})
+    with pytest.raises(TaskLoadError) as exc:
+        load_task(p)
+    assert str(p) in str(exc.value) and field in str(exc.value)
+
+
+def test_validate_and_run_reject_the_same_input_before_writing_results(tmp_path, monkeypatch, capsys):
+    import sys
+    from commonwealth.cli import __main__ as cli
+
+    doc = {"id": "case", "tier": 2, "question": "q", "score": ["argument_match"],
+           "expected": {"tool": "civic.search_meetings",
+                        "arguments": {"start_date": date(2030, 1, 1)}}}
+    p = _write(tmp_path, "s", "date", doc)
+    monkeypatch.setattr(cli, "EVALS_DIR", tmp_path)
+    for args in (["validate"], ["run", "s", "--out", str(tmp_path / "output")]):
+        monkeypatch.setattr(sys, "argv", ["commonwealth", "eval", *args])
+        assert cli.main() == 1
+        streams = capsys.readouterr()
+        message = streams.err + streams.out
+        assert str(p) in message and "start_date" in message and "quote dates" in message
+    assert not (tmp_path / "output").exists()
+    doc["expected"]["arguments"]["start_date"] = "2030-01-01"
+    p.write_text(yaml.safe_dump(doc))
+    assert json.loads(json.dumps(load_task(p).expected_arguments)) == {"start_date": "2030-01-01"}
 
 
 def test_duplicate_task_ids_are_refused(tmp_path):

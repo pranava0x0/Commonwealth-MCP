@@ -12,7 +12,7 @@ fixtures: [va-fairfax-parcels-zoning, va-vgin-statewide-parcels]
 expected:
   jurisdiction: va:fairfax-county
   capability: parcel.lookup
-  answerable: partial
+  coverage: {registry: partial}
   reason: source_unavailable
   must_say:
     - "registered"

@@ -10,7 +10,7 @@ toolset: default
 fixtures: [va-vienna-town-zoning, va-fairfax-parcels-zoning, va-vgin-statewide-parcels]
 expected:
   jurisdiction: va:vienna-town
-  sources_returned: 2
+  sources_returned: [va-vienna-town-zoning, va-fairfax-parcels-zoning]
   parcel_source_for_the_town_answer: va-fairfax-parcels-zoning
   districts:
     va-vienna-town-zoning: [AC]

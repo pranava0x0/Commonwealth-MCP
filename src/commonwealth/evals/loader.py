@@ -9,7 +9,10 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Any
+from typing import Annotated, Any
+
+from pydantic import BeforeValidator, ConfigDict, Field, JsonValue, TypeAdapter, ValidationError, with_config
+from typing_extensions import NotRequired, TypedDict
 
 import yaml
 
@@ -59,21 +62,78 @@ class Task:
         return dict(self.expected.get("arguments") or {})
 
 
-def _require(doc: dict, key: str, path: Path) -> Any:
-    if key not in doc:
-        raise TaskLoadError(f"{path}: task has no {key!r}")
-    return doc[key]
+# Preserve additional walk-specific assertions for the multi-step skill tasks.
+# Fields consumed directly by a scorer have an explicit, non-coercing type.
+@with_config(ConfigDict(extra="allow"))
+class _Expected(TypedDict, total=False):
+    tool: str
+    arguments: dict[str, JsonValue]
+    coverage: dict[str, str]
+    requires_user_choice: bool
+    found: bool
+    answerable: bool
+    next_action: str
+    jurisdiction: str
+    must_warn: list[str]
+    must_say: list[str]
+    must_not_say: list[str]
+    candidates: list[str]
+    sources_returned: list[str]
+    max_calls: Annotated[int, Field(ge=0)]
+    record_count_over: int
+
+
+@with_config(ConfigDict(extra="forbid"))
+class _Score(TypedDict):
+    kind: str
+
+
+def _score_rule(value: object) -> object:
+    """Keep the compact score: [tool_choice] spelling."""
+    return {"kind": value} if isinstance(value, str) else value
+
+
+@with_config(ConfigDict(extra="forbid"))
+class _TaskFile(TypedDict):
+    id: str
+    tier: Annotated[int, Field(ge=2, le=3)]
+    question: str
+    toolset: NotRequired[str]
+    expected: NotRequired[_Expected]
+    score: NotRequired[list[Annotated[_Score, BeforeValidator(_score_rule)]]]
+    traps: NotRequired[list[str]]
+    fixtures: NotRequired[list[str]]
+    skill: NotRequired[str]
+    partner: NotRequired[str]
+    inject: NotRequired[dict[str, JsonValue]]
+    note: NotRequired[str]
+
+
+# YAML also admits dates, sets, non-string keys, and non-finite numbers.
+# Check the entire document, including walk-specific fields, before it can
+# reach a scorer or be copied into a JSON transcript by write_result.
+_TASK_FILE = TypeAdapter(_TaskFile)
+_JSON_DOCUMENT = TypeAdapter(dict[str, JsonValue], config=ConfigDict(allow_inf_nan=False))
 
 
 def load_task(path: Path, split: str = "public") -> Task:
     try:
-        doc = yaml.safe_load(path.read_text())
-    except yaml.YAMLError as err:
+        raw = yaml.safe_load(path.read_text(encoding="utf-8"))
+    except (yaml.YAMLError, UnicodeError) as err:
         raise TaskLoadError(f"{path}: not valid YAML ({err})") from err
-    if not isinstance(doc, dict):
+    if not isinstance(raw, dict):
         raise TaskLoadError(f"{path}: task file is not a mapping")
 
-    fixtures = list(doc.get("fixtures") or [])
+    try:
+        doc = _TASK_FILE.validate_python(raw, strict=True)
+        _JSON_DOCUMENT.validate_python(raw, strict=True)
+    except ValidationError as err:
+        first = err.errors(include_url=False, include_input=False)[0]
+        location = ".".join(str(part) for part in first["loc"])
+        hint = " (quote dates as strings)" if first["type"] == "invalid-json-value" else ""
+        raise TaskLoadError(f"{path}: {location}: {first['msg']}{hint}") from err
+
+    fixtures = doc.get("fixtures", [])
     # A declared fixture that is not on disk makes the declaration
     # meaningless, and `eval validate` accepting a misspelled or deleted
     # directory is exactly how it stops being a check. The names are
@@ -96,7 +156,7 @@ def load_task(path: Path, split: str = "public") -> Task:
             f"design/bench.md § 2 defines {sorted(TRAP_KINDS)}")
 
     raw_score = doc.get("score") or []
-    kinds = [s["kind"] if isinstance(s, dict) else str(s) for s in raw_score]
+    kinds = [s["kind"] for s in raw_score]
     unknown = set(kinds) - SCORE_KINDS
     if unknown:
         raise TaskLoadError(
@@ -107,9 +167,9 @@ def load_task(path: Path, split: str = "public") -> Task:
             f"{path}: task scores nothing, so it can never fail")
 
     return Task(
-        id=str(_require(doc, "id", path)),
-        tier=int(_require(doc, "tier", path)),
-        question=str(_require(doc, "question", path)),
+        id=doc["id"],
+        tier=doc["tier"],
+        question=doc["question"],
         toolset=str(doc.get("toolset") or "default"),
         path=path,
         fixtures=fixtures,

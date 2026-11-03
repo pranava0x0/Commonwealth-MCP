@@ -11,7 +11,7 @@ fixtures: [va-vienna-town-zoning, va-fairfax-parcels-zoning, va-vgin-admin-bound
 expected:
   jurisdiction: va:vienna-town
   layered_above: [va:fairfax-county, va]
-  sources_returned: 2
+  sources_returned: [va-vienna-town-zoning, va-fairfax-parcels-zoning]
   districts:
     va-vienna-town-zoning: [AC]
     va-fairfax-parcels-zoning: [AC]

@@ -358,9 +358,7 @@ async def test_two_road_sources_come_back_unreconciled(ctx):
     env = await find_roads(ctx, jurisdiction="Vienna",
                            lon=-77.2653, lat=38.9012)
     sources = [b["source_id"] for b in env.data["results"]]
-    assert len(sources) == task["expected"]["sources_returned"], sources
-    assert "va-vdot-lrs-routes" in sources
-    assert "va-vgin-road-centerlines" in sources
+    assert sorted(sources) == sorted(task["expected"]["sources_returned"])
 
 
 async def test_a_locality_with_no_source_reads_as_not_covered(ctx):
@@ -462,7 +460,7 @@ async def test_two_governments_answer_one_point_and_neither_is_picked(ctx):
     env = await find_zoning(ctx, jurisdiction="Vienna", lon=lon, lat=lat)
     districts = {blk["source_id"]: [r["district"] for r in blk["records"]]
                  for blk in env.data["results"]}
-    assert len(districts) == task["expected"]["sources_returned"]
+    assert set(districts) == set(task["expected"]["sources_returned"])
     assert districts == task["expected"]["districts"], districts
     assert env.data["comparison"]["agreement"] is task["expected"]["agreement"]
     for blk in env.data["results"]:
@@ -482,7 +480,7 @@ async def test_a_town_district_is_read_over_the_county_parcel(ctx):
 
     env = await find_zoning(ctx, jurisdiction="Vienna", pin=pin)
     by = {blk["source_id"]: blk for blk in env.data["results"]}
-    assert len(by) == task["expected"]["sources_returned"]
+    assert set(by) == set(task["expected"]["sources_returned"])
     town = by["va-vienna-town-zoning"]
     assert town["parcel_source_id"] == \
         task["expected"]["parcel_source_for_the_town_answer"]

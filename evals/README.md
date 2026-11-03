@@ -45,6 +45,12 @@ directories under `tests/fixtures/sources/`; nothing here reaches the
 network, because a bench that did would score whether a government host
 was slow that morning.
 
+`eval validate` and `eval run` check the same task schema before scoring.
+Quote dates in YAML arguments (for example, `start_date: "2030-01-01"`):
+the runner needs JSON strings, and YAML reads an unquoted date as a date
+object. Put source IDs, warning codes and required phrases in lists, even
+when there is only one. Invalid inputs report the file and field.
+
 ## The public/hidden split
 
 `design/bench.md` § 3: the repo carries task YAML, fixtures, scorers and

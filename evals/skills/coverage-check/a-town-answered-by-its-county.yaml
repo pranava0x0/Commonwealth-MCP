@@ -12,7 +12,7 @@ expected:
   jurisdiction: va:vienna-town
   capability: zoning.lookup
   answerable: true
-  sources_returned: 2
+  sources_returned: [va-vienna-town-zoning, va-fairfax-parcels-zoning]
   must_say:
     - "Vienna"
     - "Fairfax County"
