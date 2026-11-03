@@ -18,7 +18,10 @@ metadata:
 **Step 1 — Match the motion.** Resolve the locality. Ask for a choice if
 the name is ambiguous. Use `meeting.search` for the named body and date,
 then `meeting_agenda.lookup` for the source ID and event ID together.
-Follow page links to find the matter file and action in the question.
+When matching by matter file or title, read every agenda page. One file
+can appear on several items at the same meeting, with different actions
+and votes. Match the action as well as the file; never pool those votes.
+If a later page fails, say the match is incomplete.
 A commission recommendation and a council decision can concern the same
 ordinance. When more than one motion fits, show the alternatives and ask
 which vote is meant.

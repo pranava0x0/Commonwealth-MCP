@@ -1461,14 +1461,18 @@ def _sample_meetings(m: SourceManifest, ctx: RuntimeContext) -> int:
     if cancelled:
         windows.append(("cancellation", *cancelled))
 
-    async def record_pages(read, identifier):
+    async def record_ids(read, identifier, key):
         offset = 0
-        count = 0
+        seen = set()
         for _ in range(20):
             page = await read(m, identifier, offset)
-            count += len(page.records)
+            for row in page.records:
+                if row[key] in seen:
+                    raise InvalidQuery(f"Repeated {key} {row[key]} while recording {identifier}. "
+                                       "The pages do not establish a complete sample.")
+                seen.add(row[key])
             if page.next_offset is None:
-                return count
+                return seen
             offset = page.next_offset
         raise InvalidQuery("The sample exceeded 20 pages. Choose a smaller "
                            "meeting before replacing its recorded fixture.")
@@ -1488,11 +1492,18 @@ def _sample_meetings(m: SourceManifest, ctx: RuntimeContext) -> int:
         sample_event = m.health.expect.get("sample_event_id")
         if sample_event:
             sample_date = m.health.expect["sample_event_date"]
-            await adapter.search_meetings(m, sample_date, sample_date)
-            out["agenda_items"] = await record_pages(adapter.agenda_items, sample_event)
+            notices, _, _ = await adapter.search_meetings(m, sample_date, sample_date)
+            if not any(n.event_id == sample_event and n.meeting_date == sample_date for n in notices):
+                raise InvalidQuery(f"Event {sample_event} not found in the notices for {sample_date}.")
+            item_ids = await record_ids(adapter.agenda_items, sample_event, "item_id")
+            vote_items = m.health.expect.get("sample_vote_items", [])
+            missing = set(vote_items) - item_ids
+            if missing:
+                raise InvalidQuery(f"Vote sample items {sorted(missing)} not found on event {sample_event}.")
+            out["agenda_items"] = len(item_ids)
             out["vote_rows"] = {
-                item: await record_pages(adapter.item_votes, item)
-                for item in m.health.expect.get("sample_vote_items", [])}
+                item: len(await record_ids(adapter.item_votes, item, "vote_id"))
+                for item in vote_items}
         return out
 
     try:

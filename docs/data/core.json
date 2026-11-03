@@ -509,7 +509,7 @@
    "known_limitations": [
     "No cancellation field. The platform publishes an agenda-publication status (\"Final\", \"Final-revised\") and nothing that says a meeting was cancelled or rescheduled; where a locality records that at all, it records it in the free-text comment. Cancelled meetings are returned rather than omitted, with the comment verbatim and a note saying the reading came from prose, not from a published field.\n",
     "Meeting times are local wall-clock strings with no offset in the payload. The zone is declared in this manifest, not read from the publisher.\n",
-    "Agenda and minutes documents are links, never content. This project does not fetch them, because the egress allowlist is pinned per manifest to the API host and the documents live on a different one. What a meeting is ABOUT is in the agenda PDF, so a body name and a date are not a summary of what will be discussed.\n",
+    "Agenda and minutes documents are links, never content. This project does not fetch them, because the egress allowlist is pinned per manifest to the API host and the documents live on a different one. The publisher also provides structured agenda items and votes. This registry serves only the calendar: as of 2026-11-03, reuse terms for a raw agenda and vote recording have not been established.\n",
     "The calendar covers the bodies this locality publishes through the platform. A body that meets and is not published here is absent from the answer, and absence is not evidence it did not meet.\n"
    ]
   },

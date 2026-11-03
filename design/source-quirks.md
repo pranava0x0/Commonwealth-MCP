@@ -622,3 +622,27 @@ There, the publisher runs no full-text operation and building one would
 be this project answering a question the source cannot. Here the
 publisher hands over the whole dataset deliberately, and filtering what
 they published whole is reading it, not inventing an operation over it.
+
+### Albemarle agenda and vote coverage
+
+Checked 2026-11-03. The [Board of Supervisors](https://www.albemarle.org/government/board-of-supervisors/)
+publishes its [September 2 meeting](https://albemarle.legistar.com/MeetingDetail.aspx?LEGID=1558&GID=561&G=0F98DBBA-4095-49BE-99DD-067A5CF2E1D2) on Legistar.
+The [API agenda](https://webapi.legistar.com/v1/albemarle/events/1558/eventitems)
+returned 50 distinct items in five pages of ten. To repeat the check, use
+`$orderby=EventItemAgendaSequence,EventItemId`, `$top=11`, and `$skip`
+values 0, 10, 20, 30 and 40; the eleventh row is the next page's first.
+
+File 26-388 appeared at offsets 0 and 30, on two different actions.
+The [votes for item 36632](https://webapi.legistar.com/v1/albemarle/eventitems/36632/votes)
+contained six named rows. The [votes for item 36671](https://webapi.legistar.com/v1/albemarle/eventitems/36671/votes)
+were empty. Use the agenda item ID to identify the roll call; both rows
+carry the same file number.
+
+The [API documentation](https://webapi.legistar.com/Help) describes public
+reads. The [portal terms](https://albemarle.legistar.com/Terms.aspx)
+reserve rights in site content. Neither source established permission to
+redistribute a verbatim API response, which can include narrative text as
+well as vote counts. We have not added a fixture or enabled structured
+lookups for this county. Revisit when the county or platform provides
+applicable reuse terms, or a separately reviewed recording method can
+replay the workflow without redistributing that text.

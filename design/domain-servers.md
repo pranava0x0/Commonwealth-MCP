@@ -211,6 +211,10 @@ its block's `source_id` identify one meeting. Pass both to
 same source ID and the returned `item_id` to `civic.get_item_votes`.
 Both tools are available in the civic and all profiles.
 
+Albemarle County remains calendar-only. Its API does publish item and vote
+rows; the open question is whether we can redistribute a raw recording.
+See the [September 2 meeting and rights review](source-quirks.md#albemarle-agenda-and-vote-coverage).
+
 IDs are local to the publisher. Neither lookup tries a neighboring
 government or follows a document link. Each response contains one page;
 `record_count` counts that page. Pass the `next` arguments to the same

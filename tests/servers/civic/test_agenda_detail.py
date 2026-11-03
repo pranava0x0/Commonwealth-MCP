@@ -78,6 +78,40 @@ class RefusingFetcher:
         raise AssertionError("this input must not make a request")
 
 
+@pytest.mark.parametrize(("fault", "error"), [
+    ("event", "not found in the notices"), ("item", "not found on event"),
+    ("overlap", "Repeated item_id"), (None, None),
+])
+def test_sample_must_trace_votes_to_a_dated_notice(tmp_path, monkeypatch, capsys, fault, error):
+    from commonwealth.cli import __main__ as cli
+    from commonwealth.adapters.replay import ReplayFetcher
+
+    ctx = build_ctx()
+    manifest = ctx.sources.get(RICHMOND).model_copy(deep=True)
+    fixture = json.loads((FIXTURES_DIR / RICHMOND / "recorded.json").read_text())
+    exchanges = fixture["exchanges"]
+    if fault == "event":
+        manifest.health.expect["sample_event_id"] = "999999"
+    elif fault == "item":
+        manifest.health.expect["sample_vote_items"] = ["999999"]
+    elif fault == "overlap":
+        first, second = [e["response"] for e in exchanges if e["url"].endswith("/eventitems")]
+        second[0]["EventItemId"] = first[0]["EventItemId"]
+    monkeypatch.setattr(cli, "HttpFetcher", lambda **_: ReplayFetcher(exchanges))
+    monkeypatch.setattr(cli, "PROJECT_ROOT", tmp_path)
+    monkeypatch.setattr(cli, "FIXTURES_DIR", tmp_path)
+    path = tmp_path / RICHMOND / "recorded.json"
+    path.parent.mkdir()
+    path.write_text("previous recording")
+    result = cli._sample_meetings(manifest, ctx)
+    if error:
+        assert result == 1 and error in capsys.readouterr().err
+        assert path.read_text() == "previous recording"
+    else:
+        assert result == 0
+        assert json.loads(path.read_text())["summary"] == fixture["summary"]
+
+
 async def test_source_identity_is_not_a_url_or_a_fallback_to_another_calendar():
     ctx = build_ctx(agenda_fetcher=RefusingFetcher())
     for sid in ("https://webapi.legistar.com/v1/richmondva", "va-vgin-parcels"):
