@@ -135,9 +135,8 @@ async def test_a_vienna_parcel_number_reads_the_town_over_the_county_parcel(
                        if ref not in vienna["parcel_evidence_refs"]]
     assert zoning_evidence, "the district carries no evidence of its own"
     for e in zoning_evidence:
-        link = urlsplit(e.locator)
-        assert link.netloc == "services1.arcgis.com"
-        assert link.path.endswith("/Proposed_Districts/FeatureServer/0/query")
+        # The district alone cannot identify a polygon if the town reuses its OID.
+        assert e.locator is None
         assert f"parcel_geometry_from:{FAIRFAX}" in e.transformations, (
             e.transformations)
 

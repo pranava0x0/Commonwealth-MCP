@@ -170,6 +170,33 @@ def _has_publisher_oid(info: dict, layer: LayerDecl) -> bool:
                for f in info.get("fields") or [] if isinstance(f, dict))
 
 
+def _parcel_locator(url: str, layer_key: str, layer: LayerDecl, attrs: dict,
+                    out_fields: str) -> str | None:
+    """An object ID alone can point at a different parcel after a layer refresh."""
+    rid = attrs.get(layer.id_field)
+    if type(rid) is not int:
+        return None
+    terms = [f"{layer.id_field} = {rid}"]
+    keys = ["pin"]
+    if layer_key == "zoning":
+        keys.append("district")
+    if "fips" in layer.field_mapping:
+        keys.append("fips")
+    for key in keys:
+        field = layer.field_mapping.get(key)
+        value = attrs.get(field)
+        if type(value) is int:
+            literal = str(value)
+        elif isinstance(value, str) and value.strip() and key not in layer.numeric_fields:
+            literal = "'" + value.replace("'", "''") + "'"
+        else:
+            return None
+        terms.append(f"{field} = {literal}")
+    selector = urlencode({"where": " AND ".join(terms), "outFields": out_fields,
+                          "returnGeometry": "false", "f": "pjson"})
+    return f"{url}?{selector}"
+
+
 def _apply_exposure_allowlist(manifest: SourceManifest, payload: dict,
                               layer: LayerDecl | None) -> dict:
     """../../../design/architecture.md decision 0014 § 3: for a `sensitive_public` source, `exposure_
@@ -534,8 +561,8 @@ class ArcGISAdapter:
             transformations.append(f"pagination:pages={pages_read}")
 
         # Use the actual query endpoint (including any per-layer service
-        # override). Link only public parcel/zoning attributes; copying the
-        # original parameters would also disclose the user's PIN or geometry.
+        # override). Some publishers recycle object IDs. Match the returned
+        # parcel number as well, never the caller's search or geometry.
         link_records = (layer_key in {"parcels", "zoning"} and distinct_fields is None
                         and manifest.access.mode == "anonymous"
                         and manifest.access.data_classification == DataClassification.open
@@ -571,11 +598,8 @@ class ArcGISAdapter:
                 canonical[f"{canon}_label"] = (
                     None if raw_code is None else labels.get(str(raw_code)))
             rid = attrs.get(layer.id_field)
-            locator = None
-            if link_records and type(rid) is int:
-                selector = urlencode({"objectIds": rid, "outFields": params["outFields"],
-                                      "returnGeometry": "false", "f": "pjson"})
-                locator = f"{url}?{selector}"
+            locator = (_parcel_locator(url, layer_key, layer, attrs, params["outFields"])
+                       if link_records else None)
             records.append(ArcGISRecord(
                 canonical=canonical,
                 record_id=f"{layer.id_field}:{rid}",

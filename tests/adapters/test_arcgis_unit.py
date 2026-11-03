@@ -1,5 +1,6 @@
 """ArcGIS adapter over recorded exchanges (never synthesized shapes)."""
 import json
+from urllib.parse import parse_qs, urlsplit
 
 import pytest
 from pydantic import ValidationError
@@ -94,13 +95,16 @@ async def test_parcel_locator_requires_a_publisher_object_id(metadata, oid, link
     class Fetcher:
         async def fetch_json(self, url, params):
             if url.endswith("/query"):
-                return {"features": [{"attributes": {"OBJECTID": oid}}]}
+                return {"features": [{"attributes": {"OBJECTID": oid, "PIN": "12'34"}}]}
             return metadata
 
     adapter = ArcGISAdapter(fetcher=Fetcher(), cache=TTLCache())
     result = await adapter.query(_real_manifest(), "parcels", where_equals={"pin": "123"})
     record, = result.records
     assert (record.locator is not None) == linked
+    if linked:
+        assert parse_qs(urlsplit(record.locator).query)["where"] == [
+            "OBJECTID = 9 AND PIN = '12''34'"]
 
 
 async def test_unknown_canonical_field_is_invalid_query(adapter):

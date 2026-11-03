@@ -135,8 +135,9 @@ async def test_publisher_parcel_id_keeps_both_districts_and_their_own_evidence(c
         link = urlsplit(evidence[ref].locator)
         assert link.netloc == "services1.arcgis.com"
         assert link.path.endswith("/Zoning_Hosted/FeatureServer/0/query")
+        oid = {"C2": 78, "ARS": 4333}[row["district"]]
         assert parse_qs(link.query) == {
-            "objectIds": [{"C2": "78", "ARS": "4333"}[row["district"]]],
+            "where": [f"OBJECTID = {oid} AND ParcelID = '{pin}' AND Zoning = '{row['district']}'"],
             "outFields": ["OBJECTID,ParcelID,Primary_,Split,Zoning,Zoning_Description"],
             "returnGeometry": ["false"], "f": ["pjson"],
         }
