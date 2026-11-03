@@ -94,6 +94,16 @@ def test_cli_rejects_positional_json_before_dispatch():
         spec.check_arguments(["a positional argument"])
 
 
+async def test_mcp_does_not_reinterpret_a_boolean_or_string_as_a_page_offset():
+    source = "va-richmond-city-meetings"
+    async with Client(build_server(build_ctx(), "civic")) as client:
+        for tool, ident in [("civic.get_meeting_agenda", {"event_id": "5144"}),
+                            ("civic.get_item_votes", {"item_id": "268162"})]:
+            for offset in (False, "0"):
+                result = await client.call_tool(tool, {"source_id": source, **ident, "offset": offset})
+                assert result.is_error and "offset" in result.content[0].text
+
+
 def test_configuring_a_domain_cannot_launch_an_older_commonwealth_from_path(monkeypatch):
     import sys
 

@@ -35,8 +35,9 @@ log = logging.getLogger("commonwealth.servers")
 
 SERVER_INSTRUCTIONS = (
     "Commonwealth-MCP serves Virginia public-data queries with provenance. "
-    "Read coverage before concluding anything: result='empty' with "
-    "registry='covered' means the searched systems hold no record; "
+    "An empty result describes this query and page. Check registry, execution "
+    "and pagination before reporting that no matching records were returned. "
+    "A failed source or an incomplete search leaves matches unknown; "
     "registry='none' means Commonwealth has no source for that place and "
     "the record may still exist. When a result sets requires_user_choice, "
     "present the candidates to the user and do not pick one. Zoning answers "

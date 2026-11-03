@@ -22,6 +22,8 @@ from __future__ import annotations
 
 from collections.abc import Awaitable, Callable
 
+from pydantic import StrictInt
+
 from ..adapters.agenda_platform import (MAX_RANGE_DAYS, DetailPage, Meeting,
                                        check_detail_args, check_range)
 from ..adapters.virginia_law import CodeSection
@@ -520,14 +522,14 @@ async def _meeting_detail(ctx: RuntimeContext, b: EnvelopeBuilder, source_id: st
 
 
 async def get_meeting_agenda(ctx: RuntimeContext, source_id: str, event_id: str,
-                             offset: int = 0) -> Envelope:
+                             offset: StrictInt = 0) -> Envelope:
     return await _meeting_detail(ctx, _builder(ctx, "civic.get_meeting_agenda"),
                                  source_id, "meeting_agenda.lookup", "event_id",
                                  event_id, offset, ctx.agendas.agenda_items)
 
 
 async def get_item_votes(ctx: RuntimeContext, source_id: str, item_id: str,
-                         offset: int = 0) -> Envelope:
+                         offset: StrictInt = 0) -> Envelope:
     return await _meeting_detail(ctx, _builder(ctx, "civic.get_item_votes"),
                                  source_id, "meeting_votes.lookup", "item_id",
                                  item_id, offset, ctx.agendas.item_votes)
