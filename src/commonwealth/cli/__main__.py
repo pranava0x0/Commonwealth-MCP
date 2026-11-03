@@ -172,6 +172,7 @@ def cmd_tools_call(args: argparse.Namespace) -> int:
     except json.JSONDecodeError as err:
         return _fail(f"--args is not valid JSON: {err}")
     try:
+        spec.check_arguments(tool_args)
         envelope = asyncio.run(spec.fn(ctx, **tool_args))
     except CommonwealthError as err:
         print(json.dumps({"error": err.code, "message": str(err)}, indent=2))

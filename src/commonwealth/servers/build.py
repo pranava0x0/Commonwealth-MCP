@@ -22,7 +22,7 @@ from mcp.types import ToolAnnotations
 
 from ..core.audit import error_record, record_from_envelope
 from ..core.tracing import trace_call
-from ..core.errors import CommonwealthError
+from ..core.errors import CommonwealthError, InvalidQuery
 from ..core.results import KINDS
 from ..core.skills import SkillRequirements, load_skills, unroutable_capabilities
 from ..core.toolreg import (DEPRECATED_TOOL_ALIASES, ToolSpec, expand_profile, server_name)
@@ -42,6 +42,42 @@ SERVER_INSTRUCTIONS = (
     "present the candidates to the user and do not pick one. Zoning answers "
     "are screening evidence, never legal determinations."
 )
+
+
+class CommonwealthServer(MCPServer):
+    """Validate names on the raw MCP call before SDK argument coercion."""
+
+    def __init__(self, ctx: RuntimeContext, **options):
+        super().__init__(name=ctx.server_name, version=ctx.server_version, **options)
+        self.runtime = ctx
+        self.contracts: dict[str, ToolSpec] = {}
+
+    def register(self, name: str, spec: ToolSpec, description: str,
+                 annotations: ToolAnnotations) -> None:
+        self.tool(name=name, description=description, annotations=annotations)(
+            _bind(spec, self.runtime))
+        self.contracts[name] = spec
+
+    async def list_tools(self):
+        tools = await super().list_tools()
+        for tool in tools:
+            if tool.name in self.contracts:
+                tool.input_schema["additionalProperties"] = False
+        return tools
+
+    async def call_tool(self, name: str, arguments: dict[str, Any], context=None):
+        if spec := self.contracts.get(name):
+            try:
+                spec.check_arguments(arguments)
+            except InvalidQuery as err:
+                ctx = self.runtime
+                ctx.audit.append(error_record(
+                    tool=name, args=arguments, error_code=err.code, duration_ms=0,
+                    server=ctx.server_name, server_version=ctx.server_version,
+                    registry_revision=ctx.sources.revision,
+                    sensitive=ctx.has_sensitive_sources()))
+                raise ToolError(err.model_message()) from err
+        return await super().call_tool(name, arguments, context)
 
 
 def _bind(spec: ToolSpec, ctx: RuntimeContext):
@@ -233,25 +269,19 @@ def build_server(ctx: RuntimeContext, profile: str = "default") -> MCPServer:
     skills = load_skills(SKILLS_DIR)
     check_skill_capabilities(ctx, skills)
     specs = expand_profile(profile, registries())
-    server = MCPServer(name=ctx.server_name, version=ctx.server_version,
-                       instructions=SERVER_INSTRUCTIONS,
-                       middleware=[_trace_middleware])
+    server = CommonwealthServer(ctx, instructions=SERVER_INSTRUCTIONS,
+                                middleware=[_trace_middleware])
     _register_result_resources(server, ctx)
     _register_skill_prompts(server, ctx, skills, specs, profile)
     annotations = ToolAnnotations(read_only_hint=True, destructive_hint=False,
                                   open_world_hint=True)
-    registered: dict[str, ToolSpec] = {}
     for spec in specs:
-        server.tool(name=spec.name, description=spec.description,
-                    annotations=annotations)(_bind(spec, ctx))
-        registered[spec.name] = spec
+        server.register(spec.name, spec, spec.description, annotations)
 
     for old_name, current in DEPRECATED_TOOL_ALIASES.items():
-        spec = registered.get(current)
+        spec = server.contracts.get(current)
         if spec is None:
             continue  # alias targets a tool outside this profile
-        server.tool(
-            name=old_name,
-            description=f"Deprecated alias of {current}. " + spec.description,
-            annotations=annotations)(_bind(spec, ctx))
+        server.register(old_name, spec, f"Deprecated alias of {current}. " + spec.description,
+                        annotations)
     return server

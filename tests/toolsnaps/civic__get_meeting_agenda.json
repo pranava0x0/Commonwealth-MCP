@@ -6,6 +6,7 @@
  },
  "description": "Read the published agenda items for one local meeting. Pass the source_id and event_id from civic.search_meetings together. Items carry agenda order, matter file, title and any recorded action. Follow next for another page. Listing a proposal does not establish adoption.",
  "input_schema": {
+  "additionalProperties": false,
   "properties": {
    "event_id": {
     "title": "Event Id",

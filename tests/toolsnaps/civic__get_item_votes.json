@@ -6,6 +6,7 @@
  },
  "description": "Read the individual votes published for one local agenda item. Pass the source_id and item_id from civic.get_meeting_agenda together. Follow next for another page. An empty list establishes neither how anyone voted nor whether a vote took place.",
  "input_schema": {
+  "additionalProperties": false,
   "properties": {
    "item_id": {
     "title": "Item Id",

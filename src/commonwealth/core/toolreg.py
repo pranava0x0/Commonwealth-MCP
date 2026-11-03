@@ -10,10 +10,13 @@
 """
 from __future__ import annotations
 
+import inspect
 import logging
 from collections.abc import Awaitable, Callable
 from dataclasses import dataclass, field
 from typing import Any
+
+from .errors import InvalidQuery
 
 log = logging.getLogger("commonwealth.toolreg")
 
@@ -32,6 +35,21 @@ class ToolSpec:
     toolset: str                  # e.g. "default", "discovery", "spatial"
     contract_version: str
     fn: Callable[..., Awaitable[Any]]
+
+    def check_arguments(self, arguments: object) -> None:
+        """Reject unknown or missing names before an SDK can discard them."""
+        if not isinstance(arguments, dict):
+            raise InvalidQuery("Tool arguments must be a JSON object.")
+        signature = inspect.signature(self.fn)
+        allowed = [name for name in signature.parameters if name != "ctx"]
+        if unknown := sorted(arguments.keys() - set(allowed)):
+            raise InvalidQuery(f"Unknown argument(s) {unknown!r} for {self.name}. "
+                               f"Accepted arguments: {', '.join(allowed)}.")
+        try:
+            signature.bind(None, **arguments)
+        except TypeError as err:
+            raise InvalidQuery(f"{self.name}: {err}. Accepted arguments: "
+                               f"{', '.join(allowed)}.") from err
 
 
 @dataclass

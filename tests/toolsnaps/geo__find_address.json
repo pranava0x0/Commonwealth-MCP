@@ -6,6 +6,7 @@
  },
  "description": "Find address-point records in a Virginia jurisdiction, by address string or by a lon/lat point. The string path is a PREFIX match on the publisher's own spelling (\"6800 BEULAH ST\"), not a fuzzy search \u2014 use geo.resolve_location when the input is a typed address that needs interpreting. A record's `po_name` is a POSTAL city and is never the government: a Fairfax County address reads \"ALEXANDRIA\". Read `locality` and `fips` for the jurisdiction. An empty result means this publisher has no record, which is not the same as no such address existing.",
  "input_schema": {
+  "additionalProperties": false,
   "properties": {
    "address": {
     "default": "",

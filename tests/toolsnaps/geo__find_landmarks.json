@@ -6,6 +6,7 @@
  },
  "description": "Find named public places in a Virginia jurisdiction \u2014 schools, libraries, fire stations, DMV offices, state parks \u2014 by name prefix, by the publisher's own place_type vocabulary, or near a lon/lat point. NOT an inventory: a place missing from this layer may simply never have been added, so an empty result never means there is no school there. Each record names the organisation it came from, and that organisation is its authority, not the map publisher. Record URLs are returned as data and are never fetched. Pass at least one filter.",
  "input_schema": {
+  "additionalProperties": false,
   "properties": {
    "jurisdiction": {
     "title": "Jurisdiction",

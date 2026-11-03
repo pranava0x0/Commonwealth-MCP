@@ -23,7 +23,10 @@
 `commonwealth-geo` serves the geo tools and registry discovery. These
 are stdio entry points for the same server builder and wheel. A client
 can run one using `commonwealth serve --profile civic` or `--profile geo`.
-The existing profiles keep their names and tool selections.
+The existing profiles keep their names and tool selections. Every tool
+rejects unknown argument names and lists the names it accepts. A
+misspelled body filter or page offset therefore stops the call before
+it queries a publisher.
 
 ## 2. `commonwealth-registry` (toolset: `discovery`)
 

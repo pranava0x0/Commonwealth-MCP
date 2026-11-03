@@ -1,12 +1,15 @@
 import tomllib
 
+import pytest
+
 from mcp.client import Client
 
 from commonwealth.cli import configure
+from commonwealth.core.errors import InvalidQuery
 from commonwealth.core.registry import OperationalState
 from commonwealth.core.skills import load_skills
 from commonwealth.runtime import SKILLS_DIR
-from commonwealth.servers.build import build_server
+from commonwealth.servers.build import build_server, registries
 from tests.conftest import build_ctx
 
 
@@ -62,3 +65,27 @@ async def test_prompt_explains_a_registry_gap_and_a_profile_gap_independently():
         walk = prompt.messages[0].content.text
         assert "No active source currently answers:" in walk
         assert "Profile 'geo' omits" in walk
+
+
+async def test_misspelled_filters_and_offsets_cannot_succeed_on_a_broader_query():
+    async with Client(build_server(build_ctx(), "civic")) as client:
+        tools = (await client.list_tools()).tools
+        assert all(t.input_schema["additionalProperties"] is False for t in tools)
+        for tool, arguments, typo, valid in (
+            ("civic.get_meeting_agenda", {"source_id": "va-richmond-city-meetings",
+                                          "event_id": "5144"}, "offest", "offset"),
+            ("civic.search_meetings", {"jurisdiction": "Richmond City",
+                                       "start_date": "2026-09-01", "end_date": "2026-09-01"},
+             "bdy", "body"),
+        ):
+            res = await client.call_tool(tool, {**arguments, typo: "unexpected"})
+            assert res.is_error
+            message = res.content[0].text
+            assert "InvalidQuery" in message and typo in message and valid in message
+            assert "unexpected" not in message
+
+
+def test_cli_rejects_positional_json_before_dispatch():
+    spec = registries()["civic"].tools()[0]
+    with pytest.raises(InvalidQuery, match="JSON object"):
+        spec.check_arguments(["a positional argument"])

@@ -6,6 +6,7 @@
  },
  "description": "Find hospitals and urgent-care facilities near a lon/lat point in a Virginia locality, or by name prefix. This reads a LOCALITY'S OWN MAP of the facilities inside it, not a state licensing register: Virginia licenses hospitals through VDH, which publishes nothing this server can query. Coverage is thin \u2014 only localities that publish such a layer are registered, and everywhere else returns coverage registry=none, which means this project has nowhere to look and never that there is no hospital there. Physician offices, clinics, dialysis centres, pharmacies and EMS are not in these layers, and no record says whether a facility is open, what it offers, or whether it takes a given patient. An empty answer is not evidence that care is unavailable near a point.",
  "input_schema": {
+  "additionalProperties": false,
   "properties": {
    "jurisdiction": {
     "title": "Jurisdiction",

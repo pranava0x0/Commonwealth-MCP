@@ -6,6 +6,7 @@
  },
  "description": "Search the Government Source Registry: which registered public systems cover a capability or jurisdiction, with authority level and current state. Use to answer 'what does Commonwealth cover?' before assuming coverage. Not a data query tool \u2014 use the geo.* tools for actual records.",
  "input_schema": {
+  "additionalProperties": false,
   "properties": {
    "capability": {
     "default": "",
