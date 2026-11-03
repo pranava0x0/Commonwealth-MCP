@@ -5,8 +5,8 @@
   "servers": 3,
   "tools": 19,
   "packages": 3,
-  "sources": 30,
-  "sources_active": 23,
+  "sources": 31,
+  "sources_active": 24,
   "sources_proposed": 7,
   "capabilities": 15,
   "jurisdictions": 323,
@@ -889,6 +889,27 @@
    ]
   },
   {
+   "id": "va-roanoke-county-zoning",
+   "name": "Roanoke County Zoning Open Data",
+   "jurisdiction": "va:roanoke-county",
+   "jurisdiction_name": "Roanoke County",
+   "answers": [
+    "zoning"
+   ],
+   "publisher": "Roanoke County GIS Services",
+   "authority_level": "primary",
+   "capabilities": [
+    "zoning.lookup"
+   ],
+   "data_classification": "open",
+   "declared_state": "active",
+   "terms_url": "https://www.arcgis.com/home/item.html?id=5f6e5905dd3f442aafeeccfb1173387e",
+   "known_limitations": [
+    "A split parcel can have multiple zoning rows. Primary marks the county assessment designation only.",
+    "The county notes that the layer includes some land taxed in adjacent jurisdictions. A match does not establish jurisdiction or permitted use."
+   ]
+  },
+  {
    "id": "va-scc",
    "name": "State Corporation Commission (business entities and utilities)",
    "jurisdiction": "va",
@@ -1660,7 +1681,7 @@
    "call": 26
   }
  ],
- "doctor_output": "commonwealth 0.1.0.dev0\npython 3.12.15\nmcp sdk 2.1.1\njurisdiction table: 323 rows\nsource manifests: 30 (registry revision 2026-11-03)\nmanifests valid: 30/30\ndefault profile: 10 tools: registry.resolve_jurisdiction, geo.find_parcel, geo.find_zoning, geo.find_boundaries, geo.find_address, geo.resolve_location, geo.find_buildings, geo.find_environmental_sites, civic.get_code_section, civic.search_meetings\n(live source probes skipped; pass --live)\n\u2713 doctor: 0 problem(s)\n\nnext: point a client at it\n  commonwealth configure claude-code\n  commonwealth configure --help    # claude, codex, cursor, vscode",
+ "doctor_output": "commonwealth 0.1.0.dev0\npython 3.12.15\nmcp sdk 2.1.1\njurisdiction table: 323 rows\nsource manifests: 31 (registry revision 2026-11-03)\nmanifests valid: 31/31\ndefault profile: 10 tools: registry.resolve_jurisdiction, geo.find_parcel, geo.find_zoning, geo.find_boundaries, geo.find_address, geo.resolve_location, geo.find_buildings, geo.find_environmental_sites, civic.get_code_section, civic.search_meetings\n(live source probes skipped; pass --live)\n\u2713 doctor: 0 problem(s)\n\nnext: point a client at it\n  commonwealth configure claude-code\n  commonwealth configure --help    # claude, codex, cursor, vscode",
  "plugin": {
   "name": "commonwealth-mcp",
   "marketplace_name": "commonwealth-mcp",
@@ -1830,9 +1851,9 @@
   ]
  },
  "demo_meta": {
-  "generated_at": "2026-11-03T12:31:15Z",
+  "generated_at": "2026-11-03T15:24:28Z",
   "mode": "fixtures",
-  "call_count": 55,
+  "call_count": 56,
   "fixture_recorded_at": "2026-09-02T05:29:35Z"
  }
 }

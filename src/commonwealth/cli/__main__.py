@@ -1055,7 +1055,14 @@ async def _sample_zoning_only(adapter, m, params, ctx, recorder) -> dict:
         out["alongside"].append({"source": o.id,
                                  "point_districts": districts(oq)})
 
-    if pin:
+    if pin and "pin" in adapter.mapped_canonical_fields(m, "zoning"):
+        by_pin = await adapter.query(m, "zoning", where_equals={"pin": pin})
+        if not by_pin.records:
+            raise CommonwealthError(f"no zoning rows for declared sample_pin {pin!r}")
+        out["sample_pin"] = pin
+        out["pin_districts"] = districts(by_pin)
+        await adapter.query(m, "zoning", where_equals={"pin": "NO SUCH PIN"})
+    elif pin:
         # geo.find_zoning borrows the polygon from the first parcel source
         # in the stack that has the PIN, and records a miss for the ones
         # asked before it; the miss replays too.

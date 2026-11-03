@@ -527,6 +527,12 @@ DEMO_GROUPS = [
          "The city labels this polygon B1, Central Business District."),
     ]),
 
+    ("Read a split parcel in Roanoke County", "The county's zoning layer "
+     "links both districts to the same parcel ID.", [
+        ("geo.find_zoning", {"jurisdiction": "Roanoke County", "pin": "098.02-02-16.00-0000"},
+         "C2 is primary for assessment. The county also records ARS on this parcel."),
+    ]),
+
 ]
 
 # The flat, ordered trail. The groups above are the reading order;

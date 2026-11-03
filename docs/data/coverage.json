@@ -25144,6 +25144,12 @@
      ]
     },
     {
+     "jurisdiction": "va:roanoke-county",
+     "sources": [
+      "va-roanoke-county-zoning"
+     ]
+    },
+    {
      "jurisdiction": "va:round-hill-town",
      "sources": [
       "va-loudoun-county-parcels-zoning"
@@ -25154,6 +25160,12 @@
      "sources": [
       "va-fairfax-parcels-zoning",
       "va-vienna-town-zoning"
+     ]
+    },
+    {
+     "jurisdiction": "va:vinton-town",
+     "sources": [
+      "va-roanoke-county-zoning"
      ]
     },
     {
@@ -25405,7 +25417,6 @@
     "va:richmond-county",
     "va:ridgeway-town",
     "va:roanoke-city",
-    "va:roanoke-county",
     "va:rockbridge-county",
     "va:rockingham-county",
     "va:rocky-mount-town",
@@ -25449,7 +25460,6 @@
     "va:troutville-town",
     "va:urbanna-town",
     "va:victoria-town",
-    "va:vinton-town",
     "va:virgilina-town",
     "va:virginia-beach-city",
     "va:wachapreague-town",

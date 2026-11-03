@@ -563,7 +563,15 @@ async def find_zoning(ctx: RuntimeContext, jurisdiction: str,
         parcel_evidence_refs: list[str] = []
         polygons_used = 0
         try:
-            if pin:
+            direct_pin = bool(pin) and "pin" in ctx.arcgis.mapped_canonical_fields(m, "zoning")
+            if direct_pin:
+                # Some publishers key their zoning polygons by parcel ID.
+                # Every matching row is evidence, including non-primary
+                # parts of a split parcel. No parcel geometry was consulted.
+                where = _scoped_where(ctx, m, "zoning", stack, {"pin": pin})
+                q = await ctx.arcgis.query(m, "zoning", where_equals=where)
+                q.transformations.append("zoning_by_parcel_id")
+            elif pin:
                 if "parcels" in ctx.arcgis.layer_keys(m):
                     # The parcel query is a real consulted source too:
                     # its geometry is what determines the zoning answer,
@@ -676,6 +684,12 @@ async def find_zoning(ctx: RuntimeContext, jurisdiction: str,
         block = _records_block(
             b, _source_entry(b, m, q), q, m, ctx,
             {"jurisdiction": jurisdiction, "pin": pin, "lon": lon, "lat": lat})
+        if direct_pin:
+            block["lookup_method"] = "zoning_by_parcel_id"
+            if m.jurisdiction != stack[0]:
+                block["note"] = (f"The parcel ID was checked in {m.jurisdiction}'s "
+                                 f"zoning records. A match alone does not place the "
+                                 f"parcel in {stack[0]}.")
         if parcel_evidence_refs:
             block["parcel_evidence_refs"] = parcel_evidence_refs
             block["parcel_polygons_intersected"] = polygons_used

@@ -1,0 +1,15 @@
+id: step-parcel-roanoke-split-zoning
+tier: 2
+skill: parcel-zoning-screen
+question: Which districts does Roanoke County list for parcel 098.02-02-16.00-0000?
+fixtures: [va-roanoke-county-zoning]
+expected:
+  tool: geo.find_zoning
+  arguments: {jurisdiction: Roanoke County, pin: "098.02-02-16.00-0000"}
+  data: {results: [{lookup_method: zoning_by_parcel_id, record_count: 2}]}
+  must_say: [County-C2, County-ARS]
+  must_warn: [screening_only]
+  coverage: {result: hit, execution: complete, pagination: complete}
+  sources_returned: [va-roanoke-county-zoning]
+score: [retrieval_correctness, coverage_honesty, source_and_jurisdiction, provenance_present]
+traps: []

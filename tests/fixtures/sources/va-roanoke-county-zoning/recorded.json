@@ -1,0 +1,1438 @@
+{
+ "source_id": "va-roanoke-county-zoning",
+ "recorded_at": "2026-11-03T15:22:20Z",
+ "rights": {
+  "sources": [
+   {
+    "source_id": "va-roanoke-county-zoning",
+    "publisher": "Roanoke County GIS Services",
+    "terms_url": "https://www.arcgis.com/home/item.html?id=5f6e5905dd3f442aafeeccfb1173387e"
+   }
+  ],
+  "note": "Recorded government-published responses; third-party content excluded from the repo's CC0 grant (../../../design/architecture.md decision 0011). Each publisher's own terms govern its own responses."
+ },
+ "summary": {
+  "health:zoning": {
+   "layer": "zoning",
+   "feature_count": 46903,
+   "min_expected": 42000,
+   "healthy": true
+  },
+  "sample_point": [
+   -80.055,
+   37.225
+  ],
+  "point_districts": [
+   "AG3"
+  ],
+  "sterling_loudoun": {
+   "point": [
+    -77.408014727372,
+    39.025534437083
+   ],
+   "record_count": 0
+  },
+  "alongside": [],
+  "sample_pin": "098.02-02-16.00-0000",
+  "pin_districts": [
+   "ARS",
+   "C2"
+  ]
+ },
+ "exchanges": [
+  {
+   "url": "https://services1.arcgis.com/VlZ73DcE2ya6FnSK/arcgis/rest/services/Zoning_Hosted/FeatureServer/0/query",
+   "params": {
+    "f": "json",
+    "where": "1=1",
+    "returnCountOnly": "true"
+   },
+   "response": {
+    "count": 46903
+   }
+  },
+  {
+   "url": "https://services1.arcgis.com/VlZ73DcE2ya6FnSK/arcgis/rest/services/Zoning_Hosted/FeatureServer/0/query",
+   "params": {
+    "f": "json",
+    "outFields": "OBJECTID,ParcelID,Primary_,Split,Zoning,Zoning_Description",
+    "resultRecordCount": "50",
+    "returnGeometry": "false",
+    "geometry": "{\"x\": -80.055, \"y\": 37.225, \"spatialReference\": {\"wkid\": 4326}}",
+    "geometryType": "esriGeometryPoint",
+    "inSR": "4326",
+    "spatialRel": "esriSpatialRelIntersects"
+   },
+   "response": {
+    "objectIdFieldName": "OBJECTID",
+    "uniqueIdField": {
+     "name": "OBJECTID",
+     "isSystemMaintained": true
+    },
+    "globalIdFieldName": "GlobalID",
+    "geometryType": "esriGeometryPolygon",
+    "spatialReference": {
+     "wkid": 102747,
+     "latestWkid": 2284
+    },
+    "fields": [
+     {
+      "name": "OBJECTID",
+      "type": "esriFieldTypeOID",
+      "alias": "OBJECTID",
+      "sqlType": "sqlTypeOther",
+      "domain": null,
+      "defaultValue": null
+     },
+     {
+      "name": "ParcelID",
+      "type": "esriFieldTypeString",
+      "alias": "ParcelID",
+      "sqlType": "sqlTypeOther",
+      "length": 21,
+      "domain": null,
+      "defaultValue": null
+     },
+     {
+      "name": "Primary_",
+      "type": "esriFieldTypeString",
+      "alias": "Primary",
+      "sqlType": "sqlTypeOther",
+      "length": 3,
+      "domain": null,
+      "defaultValue": null
+     },
+     {
+      "name": "Split",
+      "type": "esriFieldTypeString",
+      "alias": "Split",
+      "sqlType": "sqlTypeOther",
+      "length": 3,
+      "domain": null,
+      "defaultValue": null
+     },
+     {
+      "name": "Zoning",
+      "type": "esriFieldTypeString",
+      "alias": "Zoning",
+      "sqlType": "sqlTypeOther",
+      "length": 5,
+      "domain": null,
+      "defaultValue": null
+     },
+     {
+      "name": "Zoning_Description",
+      "type": "esriFieldTypeString",
+      "alias": "Zoning Description",
+      "sqlType": "sqlTypeOther",
+      "length": 12,
+      "domain": null,
+      "defaultValue": null
+     }
+    ],
+    "features": [
+     {
+      "attributes": {
+       "OBJECTID": 27672,
+       "ParcelID": "075.00-01-32.00-0000",
+       "Primary_": "Yes",
+       "Split": "No",
+       "Zoning": "AG3",
+       "Zoning_Description": "County-AG3"
+      }
+     }
+    ]
+   }
+  },
+  {
+   "url": "https://services1.arcgis.com/VlZ73DcE2ya6FnSK/arcgis/rest/services/Zoning_Hosted/FeatureServer/0",
+   "params": {
+    "f": "json"
+   },
+   "response": {
+    "currentVersion": 12,
+    "id": 0,
+    "name": "Zoning",
+    "type": "Feature Layer",
+    "serviceItemId": "5f6e5905dd3f442aafeeccfb1173387e",
+    "cacheMaxAge": 30,
+    "displayField": "Name",
+    "description": "Municipal or local government laws that dictate how real property can and cannot be used in certain areas. Zoning laws limit commercial use of land in order to prevent oil, manufacturing or other types of businesses from building in residential neighborhoods. However, these laws can be modified or suspended if construction of the property will serve to help the community advance economically.All areas of land in Roanoke County have a zoning use restriction. This zoning polygon feature was created separately from our Parcel feature because some parcels have more than one zoning designation. The outside boundary of our zoning features match the outside boundary of our Parcel feature. This feature designates one of the the zoning areas as \"Primary\" to assign a zoning feature to our Assess Pro Real Estate system.It should also be noted that there are some areas of land inside the boundaries of Roanoke County that are actually located and taxed in adjacent jurisdictions. These areas have a psuedo parcelid and are included in the zoning feature. This polygon feature is part of a Editing topology along with or parcel feature and our Administration feature. This prevents self-intersection and gaps, while ensuring complete coverage amongst the participating features.",
+    "copyrightText": "Roanoke County",
+    "defaultVisibility": true,
+    "editingInfo": {
+     "lastEditDate": 1793639849654,
+     "schemaLastEditDate": 1793639849654,
+     "dataLastEditDate": 1793639849654
+    },
+    "relationships": [],
+    "isDataVersioned": false,
+    "hasContingentValuesDefinition": false,
+    "supportsAppend": true,
+    "supportsCalculate": true,
+    "supportsASyncCalculate": true,
+    "supportsTruncate": true,
+    "supportsAttachmentsByUploadId": true,
+    "supportsAttachmentsResizing": true,
+    "supportsRollbackOnFailureParameter": true,
+    "supportsStatistics": true,
+    "supportsExceedsLimitStatistics": true,
+    "supportsAdvancedQueries": true,
+    "supportsValidateSql": true,
+    "supportsCoordinatesQuantization": true,
+    "supportsLayerOverrides": true,
+    "supportsTilesAndBasicQueriesMode": true,
+    "supportsFieldDescriptionProperty": true,
+    "supportsQuantizationEditMode": true,
+    "supportsColumnStoreIndex": true,
+    "supportsApplyEditsWithGlobalIds": true,
+    "supportsMultiScaleGeometry": true,
+    "supportsReturningQueryGeometry": true,
+    "enableNullGeometry": false,
+    "hasGeometryProperties": true,
+    "geometryProperties": {
+     "shapeAreaFieldName": "Shape__Area",
+     "shapeLengthFieldName": "Shape__Length",
+     "units": "esriFeet"
+    },
+    "advancedQueryCapabilities": {
+     "supportsPagination": true,
+     "supportsPaginationOnAggregatedQueries": true,
+     "supportsQueryRelatedPagination": true,
+     "supportsQueryWithDistance": true,
+     "supportsOutDistance": true,
+     "supportsReturningQueryExtent": true,
+     "supportsStatistics": true,
+     "supportsOrderBy": true,
+     "supportsDistinct": true,
+     "supportsQueryWithResultType": true,
+     "supportsSqlExpression": true,
+     "supportsTimeRelation": true,
+     "supportsAdvancedQueryRelated": true,
+     "supportsCountDistinct": true,
+     "supportsPercentileStatistics": true,
+     "supportsApproxPercentileStatistics": true,
+     "supportsSpatialAggregationStatistics": true,
+     "supportsTrueCurve": true,
+     "supportedSpatialAggregationStatistics": [
+      "EnvelopeAggregate",
+      "CentroidAggregate",
+      "ConvexHullAggregate"
+     ],
+     "supportsLod": true,
+     "supportsQueryWithLodSR": false,
+     "supportedLodTypes": [
+      "geohash"
+     ],
+     "supportsReturningGeometryCentroid": true,
+     "supportsReturningGeometryEnvelope": true,
+     "supportsReturningGeometryProperties": true,
+     "supportsQueryWithDatumTransformation": true,
+     "supportsCurrentUserQueries": true,
+     "supportsHavingClause": true,
+     "supportsOutFieldSQLExpression": true,
+     "supportsMaxRecordCountFactor": true,
+     "supportsTopFeaturesQuery": true,
+     "supportsDisjointSpatialRel": true,
+     "supportsQueryWithCacheHint": true,
+     "supportedOperationsWithCacheHint": [
+      "query",
+      "queryTopFilter",
+      "queryAnalytics",
+      "queryAttachments",
+      "queryRelated",
+      "queryBins",
+      "queryPivot"
+     ],
+     "supportsQueryAnalytic": true,
+     "supportsQueryPivot": true,
+     "supportsQueryBins": true,
+     "supportsDefaultSR": true,
+     "supportsTranslations": false,
+     "supportsAggIds": true,
+     "supportsQueryWithCollation": true,
+     "supportsISODOW": true,
+     "supportsISOWeek": true,
+     "supportsFullTextSearch": true,
+     "fullTextSearchCapabilities": {
+      "supportsAccentSensitivity": true,
+      "supportsStopWords": true,
+      "supportsSearchOperator": true,
+      "supportsOperator": true
+     }
+    },
+    "advancedQueryAnalyticCapabilities": {
+     "supportsLinearRegression": true,
+     "supportsTrendlineRegression": true,
+     "supportsAsync": true,
+     "supportsPercentileAnalytic": true
+    },
+    "queryBinsCapabilities": {
+     "supportsAsync": true,
+     "supportsAutoIntervalBin": true,
+     "supportsFixedIntervalBin": true,
+     "supportsFixedBoundariesBin": true,
+     "supportsDateBin": true,
+     "supportsClassificationBin": true,
+     "supportsStackBy": true,
+     "supportsSplitBy": true,
+     "supportsFirstDayOfWeek": true,
+     "supportsSnapToData": true,
+     "supportsReturnFullIntervalBin": true,
+     "supportsReturnStackValueRange": true,
+     "supportsNormalization": true,
+     "supportedStatisticTypes": [
+      "COUNT",
+      "SUM",
+      "AVG",
+      "VAR",
+      "STDDEV",
+      "MIN",
+      "MAX",
+      "PERCENTILE_CONT",
+      "PERCENTILE_DISC",
+      "APPROX_PERCENTILE_CONT",
+      "APPROX_PERCENTILE_DISC",
+      "CentroidAggregate",
+      "EnvelopeAggregate",
+      "ConvexHullAggregate"
+     ],
+     "supportedNormalizationTypes": [
+      "boxCox",
+      "field",
+      "inverse",
+      "log",
+      "naturalLog",
+      "percentOfTotal",
+      "squareRoot"
+     ]
+    },
+    "supportedOperationsWithCollation": "query,addField,updateField",
+    "advancedEditingCapabilities": {
+     "supportedSqlFormatsInCalculate": [
+      "standard"
+     ],
+     "supportsAsyncApplyEdits": true,
+     "supportsReturnEditResults": true,
+     "supportsApplyEditsbyUploadID": true,
+     "supportedApplyEditsUploadIDFormats": "JSON,PBF",
+     "supportsTranslation": false,
+     "supportsMaxTranslations": 10
+    },
+    "infoInEstimates": [
+     "extent",
+     "count"
+    ],
+    "useStandardizedQueries": true,
+    "geometryType": "esriGeometryPolygon",
+    "minScale": 0,
+    "maxScale": 0,
+    "extent": {
+     "xmin": 10970670.040094808,
+     "ymin": 3567876.529981479,
+     "xmax": 11093075.040034965,
+     "ymax": 3666733.119997561,
+     "spatialReference": {
+      "wkid": 102747,
+      "latestWkid": 2284
+     }
+    },
+    "spatialReference": {
+     "wkid": 102747,
+     "latestWkid": 2284
+    },
+    "drawingInfo": {
+     "renderer": {
+      "type": "simple",
+      "symbol": {
+       "type": "esriSFS",
+       "style": "esriSFSSolid",
+       "color": [
+        217,
+        199,
+        252,
+        255
+       ],
+       "outline": {
+        "type": "esriSLS",
+        "style": "esriSLSSolid",
+        "color": [
+         110,
+         110,
+         110,
+         255
+        ],
+        "width": 0.7
+       }
+      }
+     },
+     "scaleSymbols": true,
+     "transparency": 0,
+     "labelingInfo": null
+    },
+    "allowGeometryUpdates": true,
+    "trueCurveSupportMode": "OGC",
+    "supportedCurveTypes": [
+     "esriGeometryCircularArc"
+    ],
+    "supportedTrueCurvePbfFeatureEncodings": [
+     "esriCompressedShapeBuffer",
+     "esriDefault"
+    ],
+    "allowTrueCurvesUpdates": true,
+    "onlyAllowTrueCurveUpdatesByTrueCurveClients": true,
+    "hasAttachments": false,
+    "htmlPopupType": "esriServerHTMLPopupTypeAsHTMLText",
+    "hasMetadata": true,
+    "hasM": false,
+    "hasZ": false,
+    "objectIdField": "OBJECTID",
+    "uniqueIdField": {
+     "name": "OBJECTID",
+     "isSystemMaintained": true
+    },
+    "globalIdField": "GlobalID",
+    "typeIdField": "",
+    "collation": {
+     "locale": "neutral",
+     "caseSensitive": false,
+     "accentSensitive": true
+    },
+    "fields": [
+     {
+      "name": "OBJECTID",
+      "type": "esriFieldTypeOID",
+      "alias": "OBJECTID",
+      "sqlType": "sqlTypeOther",
+      "nullable": false,
+      "editable": false,
+      "domain": null,
+      "defaultValue": null
+     },
+     {
+      "name": "ParcelID",
+      "type": "esriFieldTypeString",
+      "alias": "ParcelID",
+      "sqlType": "sqlTypeOther",
+      "length": 21,
+      "nullable": true,
+      "editable": true,
+      "domain": null,
+      "defaultValue": null
+     },
+     {
+      "name": "Zoning",
+      "type": "esriFieldTypeString",
+      "alias": "Zoning",
+      "sqlType": "sqlTypeOther",
+      "length": 5,
+      "nullable": true,
+      "editable": true,
+      "domain": null,
+      "defaultValue": null
+     },
+     {
+      "name": "Primary_",
+      "type": "esriFieldTypeString",
+      "alias": "Primary",
+      "sqlType": "sqlTypeOther",
+      "length": 3,
+      "nullable": true,
+      "editable": true,
+      "domain": null,
+      "defaultValue": null
+     },
+     {
+      "name": "Split",
+      "type": "esriFieldTypeString",
+      "alias": "Split",
+      "sqlType": "sqlTypeOther",
+      "length": 3,
+      "nullable": true,
+      "editable": true,
+      "domain": null,
+      "defaultValue": null
+     },
+     {
+      "name": "Split_Number",
+      "type": "esriFieldTypeInteger",
+      "alias": "Split Number",
+      "sqlType": "sqlTypeOther",
+      "nullable": true,
+      "editable": true,
+      "domain": null,
+      "defaultValue": null
+     },
+     {
+      "name": "Zoning_Description",
+      "type": "esriFieldTypeString",
+      "alias": "Zoning Description",
+      "sqlType": "sqlTypeOther",
+      "length": 12,
+      "nullable": true,
+      "editable": true,
+      "domain": null,
+      "defaultValue": null
+     },
+     {
+      "name": "Full_Description",
+      "type": "esriFieldTypeString",
+      "alias": "Full Description",
+      "sqlType": "sqlTypeOther",
+      "length": 50,
+      "nullable": true,
+      "editable": true,
+      "domain": null,
+      "defaultValue": null
+     },
+     {
+      "name": "Zoning_Parcel",
+      "type": "esriFieldTypeString",
+      "alias": "Zoning Parcel",
+      "sqlType": "sqlTypeOther",
+      "length": 30,
+      "nullable": true,
+      "editable": true,
+      "domain": null,
+      "defaultValue": null
+     },
+     {
+      "name": "ParcelID_Zoning",
+      "type": "esriFieldTypeString",
+      "alias": "ParcelID Zoning",
+      "sqlType": "sqlTypeOther",
+      "length": 1073741822,
+      "nullable": true,
+      "editable": true,
+      "domain": null,
+      "defaultValue": null
+     },
+     {
+      "name": "ActionNo",
+      "type": "esriFieldTypeString",
+      "alias": "ActionNo",
+      "sqlType": "sqlTypeOther",
+      "length": 20,
+      "nullable": true,
+      "editable": true,
+      "domain": null,
+      "defaultValue": null
+     },
+     {
+      "name": "ActionNo2",
+      "type": "esriFieldTypeString",
+      "alias": "ActionNo2",
+      "sqlType": "sqlTypeOther",
+      "length": 20,
+      "nullable": true,
+      "editable": true,
+      "domain": null,
+      "defaultValue": null
+     },
+     {
+      "name": "ActionNo3",
+      "type": "esriFieldTypeString",
+      "alias": "ActionNo3",
+      "sqlType": "sqlTypeOther",
+      "length": 20,
+      "nullable": true,
+      "editable": true,
+      "domain": null,
+      "defaultValue": null
+     },
+     {
+      "name": "ActionNo4",
+      "type": "esriFieldTypeString",
+      "alias": "ActionNo4",
+      "sqlType": "sqlTypeOther",
+      "length": 20,
+      "nullable": true,
+      "editable": true,
+      "domain": null,
+      "defaultValue": null
+     },
+     {
+      "name": "Date",
+      "type": "esriFieldTypeDate",
+      "alias": "Date",
+      "sqlType": "sqlTypeOther",
+      "length": 8,
+      "nullable": true,
+      "editable": true,
+      "domain": null,
+      "defaultValue": null,
+      "precision": 1
+     },
+     {
+      "name": "Date2",
+      "type": "esriFieldTypeDate",
+      "alias": "Date2",
+      "sqlType": "sqlTypeOther",
+      "length": 8,
+      "nullable": true,
+      "editable": true,
+      "domain": null,
+      "defaultValue": null,
+      "precision": 1
+     },
+     {
+      "name": "Date3",
+      "type": "esriFieldTypeDate",
+      "alias": "Date3",
+      "sqlType": "sqlTypeOther",
+      "length": 8,
+      "nullable": true,
+      "editable": true,
+      "domain": null,
+      "defaultValue": null,
+      "precision": 1
+     },
+     {
+      "name": "Date4",
+      "type": "esriFieldTypeDate",
+      "alias": "Date4",
+      "sqlType": "sqlTypeOther",
+      "length": 8,
+      "nullable": true,
+      "editable": true,
+      "domain": null,
+      "defaultValue": null,
+      "precision": 1
+     },
+     {
+      "name": "Ordinance",
+      "type": "esriFieldTypeString",
+      "alias": "Ordinance",
+      "sqlType": "sqlTypeOther",
+      "length": 20,
+      "nullable": true,
+      "editable": true,
+      "domain": null,
+      "defaultValue": null
+     },
+     {
+      "name": "Ordinance2",
+      "type": "esriFieldTypeString",
+      "alias": "Ordinance2",
+      "sqlType": "sqlTypeOther",
+      "length": 20,
+      "nullable": true,
+      "editable": true,
+      "domain": null,
+      "defaultValue": null
+     },
+     {
+      "name": "Ordinance3",
+      "type": "esriFieldTypeString",
+      "alias": "Ordinance3",
+      "sqlType": "sqlTypeOther",
+      "length": 20,
+      "nullable": true,
+      "editable": true,
+      "domain": null,
+      "defaultValue": null
+     },
+     {
+      "name": "Ordinance4",
+      "type": "esriFieldTypeString",
+      "alias": "Ordinance4",
+      "sqlType": "sqlTypeOther",
+      "length": 20,
+      "nullable": true,
+      "editable": true,
+      "domain": null,
+      "defaultValue": null
+     },
+     {
+      "name": "Name",
+      "type": "esriFieldTypeString",
+      "alias": "Name",
+      "sqlType": "sqlTypeOther",
+      "length": 50,
+      "nullable": true,
+      "editable": true,
+      "domain": null,
+      "defaultValue": null
+     },
+     {
+      "name": "Name2",
+      "type": "esriFieldTypeString",
+      "alias": "Name2",
+      "sqlType": "sqlTypeOther",
+      "length": 50,
+      "nullable": true,
+      "editable": true,
+      "domain": null,
+      "defaultValue": null
+     },
+     {
+      "name": "Name3",
+      "type": "esriFieldTypeString",
+      "alias": "Name3",
+      "sqlType": "sqlTypeOther",
+      "length": 50,
+      "nullable": true,
+      "editable": true,
+      "domain": null,
+      "defaultValue": null
+     },
+     {
+      "name": "Name4",
+      "type": "esriFieldTypeString",
+      "alias": "Name4",
+      "sqlType": "sqlTypeOther",
+      "length": 50,
+      "nullable": true,
+      "editable": true,
+      "domain": null,
+      "defaultValue": null
+     },
+     {
+      "name": "ZoneFrom",
+      "type": "esriFieldTypeString",
+      "alias": "ZoneFrom",
+      "sqlType": "sqlTypeOther",
+      "length": 10,
+      "nullable": true,
+      "editable": true,
+      "domain": null,
+      "defaultValue": null
+     },
+     {
+      "name": "ZoneFrom2",
+      "type": "esriFieldTypeString",
+      "alias": "ZoneFrom2",
+      "sqlType": "sqlTypeOther",
+      "length": 10,
+      "nullable": true,
+      "editable": true,
+      "domain": null,
+      "defaultValue": null
+     },
+     {
+      "name": "ZoneFrom3",
+      "type": "esriFieldTypeString",
+      "alias": "ZoneFrom3",
+      "sqlType": "sqlTypeOther",
+      "length": 10,
+      "nullable": true,
+      "editable": true,
+      "domain": null,
+      "defaultValue": null
+     },
+     {
+      "name": "ZoneFrom4",
+      "type": "esriFieldTypeString",
+      "alias": "ZoneFrom4",
+      "sqlType": "sqlTypeOther",
+      "length": 10,
+      "nullable": true,
+      "editable": true,
+      "domain": null,
+      "defaultValue": null
+     },
+     {
+      "name": "ZoneTo",
+      "type": "esriFieldTypeString",
+      "alias": "ZoneTo",
+      "sqlType": "sqlTypeOther",
+      "length": 10,
+      "nullable": true,
+      "editable": true,
+      "domain": null,
+      "defaultValue": null
+     },
+     {
+      "name": "ZoneTo2",
+      "type": "esriFieldTypeString",
+      "alias": "ZoneTo2",
+      "sqlType": "sqlTypeOther",
+      "length": 10,
+      "nullable": true,
+      "editable": true,
+      "domain": null,
+      "defaultValue": null
+     },
+     {
+      "name": "ZoneTo3",
+      "type": "esriFieldTypeString",
+      "alias": "ZoneTo3",
+      "sqlType": "sqlTypeOther",
+      "length": 10,
+      "nullable": true,
+      "editable": true,
+      "domain": null,
+      "defaultValue": null
+     },
+     {
+      "name": "ZoneTo4",
+      "type": "esriFieldTypeString",
+      "alias": "ZoneTo4",
+      "sqlType": "sqlTypeOther",
+      "length": 10,
+      "nullable": true,
+      "editable": true,
+      "domain": null,
+      "defaultValue": null
+     },
+     {
+      "name": "Planner",
+      "type": "esriFieldTypeString",
+      "alias": "Planner",
+      "sqlType": "sqlTypeOther",
+      "length": 25,
+      "nullable": true,
+      "editable": true,
+      "domain": null,
+      "defaultValue": null
+     },
+     {
+      "name": "Planner2",
+      "type": "esriFieldTypeString",
+      "alias": "Planner2",
+      "sqlType": "sqlTypeOther",
+      "length": 25,
+      "nullable": true,
+      "editable": true,
+      "domain": null,
+      "defaultValue": null
+     },
+     {
+      "name": "Planner3",
+      "type": "esriFieldTypeString",
+      "alias": "Planner3",
+      "sqlType": "sqlTypeOther",
+      "length": 25,
+      "nullable": true,
+      "editable": true,
+      "domain": null,
+      "defaultValue": null
+     },
+     {
+      "name": "Planner4",
+      "type": "esriFieldTypeString",
+      "alias": "Planner4",
+      "sqlType": "sqlTypeOther",
+      "length": 25,
+      "nullable": true,
+      "editable": true,
+      "domain": null,
+      "defaultValue": null
+     },
+     {
+      "name": "Status",
+      "type": "esriFieldTypeString",
+      "alias": "Status",
+      "sqlType": "sqlTypeOther",
+      "length": 25,
+      "nullable": true,
+      "editable": true,
+      "domain": null,
+      "defaultValue": null
+     },
+     {
+      "name": "Status2",
+      "type": "esriFieldTypeString",
+      "alias": "Status2",
+      "sqlType": "sqlTypeOther",
+      "length": 25,
+      "nullable": true,
+      "editable": true,
+      "domain": null,
+      "defaultValue": null
+     },
+     {
+      "name": "Status3",
+      "type": "esriFieldTypeString",
+      "alias": "Status3",
+      "sqlType": "sqlTypeOther",
+      "length": 25,
+      "nullable": true,
+      "editable": true,
+      "domain": null,
+      "defaultValue": null
+     },
+     {
+      "name": "Status4",
+      "type": "esriFieldTypeString",
+      "alias": "Status4",
+      "sqlType": "sqlTypeOther",
+      "length": 25,
+      "nullable": true,
+      "editable": true,
+      "domain": null,
+      "defaultValue": null
+     },
+     {
+      "name": "Comments",
+      "type": "esriFieldTypeString",
+      "alias": "Comments",
+      "sqlType": "sqlTypeOther",
+      "length": 150,
+      "nullable": true,
+      "editable": true,
+      "domain": null,
+      "defaultValue": null
+     },
+     {
+      "name": "Comments2",
+      "type": "esriFieldTypeString",
+      "alias": "Comments2",
+      "sqlType": "sqlTypeOther",
+      "length": 150,
+      "nullable": true,
+      "editable": true,
+      "domain": null,
+      "defaultValue": null
+     },
+     {
+      "name": "Comments3",
+      "type": "esriFieldTypeString",
+      "alias": "Comments3",
+      "sqlType": "sqlTypeOther",
+      "length": 150,
+      "nullable": true,
+      "editable": true,
+      "domain": null,
+      "defaultValue": null
+     },
+     {
+      "name": "Comments4",
+      "type": "esriFieldTypeString",
+      "alias": "Comments4",
+      "sqlType": "sqlTypeOther",
+      "length": 150,
+      "nullable": true,
+      "editable": true,
+      "domain": null,
+      "defaultValue": null
+     },
+     {
+      "name": "Review_Date",
+      "type": "esriFieldTypeDate",
+      "alias": "Review Date",
+      "sqlType": "sqlTypeOther",
+      "length": 8,
+      "nullable": true,
+      "editable": true,
+      "domain": null,
+      "defaultValue": null,
+      "precision": 1
+     },
+     {
+      "name": "Letter_Sent",
+      "type": "esriFieldTypeDate",
+      "alias": "Letter Sent",
+      "sqlType": "sqlTypeOther",
+      "length": 8,
+      "nullable": true,
+      "editable": true,
+      "domain": null,
+      "defaultValue": null,
+      "precision": 1
+     },
+     {
+      "name": "Expire_Date",
+      "type": "esriFieldTypeDate",
+      "alias": "Expire Date",
+      "sqlType": "sqlTypeOther",
+      "length": 8,
+      "nullable": true,
+      "editable": true,
+      "domain": null,
+      "defaultValue": null,
+      "precision": 1
+     },
+     {
+      "name": "Created_User",
+      "type": "esriFieldTypeString",
+      "alias": "Created User",
+      "sqlType": "sqlTypeOther",
+      "length": 25,
+      "nullable": true,
+      "editable": true,
+      "domain": null,
+      "defaultValue": null
+     },
+     {
+      "name": "Create_Date",
+      "type": "esriFieldTypeDate",
+      "alias": "Create_Date",
+      "sqlType": "sqlTypeOther",
+      "length": 8,
+      "nullable": true,
+      "editable": true,
+      "domain": null,
+      "defaultValue": null,
+      "precision": 1
+     },
+     {
+      "name": "Last_Edited_User",
+      "type": "esriFieldTypeString",
+      "alias": "Last Edited User",
+      "sqlType": "sqlTypeOther",
+      "length": 25,
+      "nullable": true,
+      "editable": true,
+      "domain": null,
+      "defaultValue": null
+     },
+     {
+      "name": "Last_Edited_Date",
+      "type": "esriFieldTypeDate",
+      "alias": "Last_Edited_Date",
+      "sqlType": "sqlTypeOther",
+      "length": 8,
+      "nullable": true,
+      "editable": true,
+      "domain": null,
+      "defaultValue": null,
+      "precision": 1
+     },
+     {
+      "name": "GlobalID",
+      "type": "esriFieldTypeGlobalID",
+      "alias": "GlobalID",
+      "sqlType": "sqlTypeOther",
+      "length": 38,
+      "nullable": false,
+      "editable": false,
+      "domain": null,
+      "defaultValue": null
+     },
+     {
+      "name": "RuleID",
+      "type": "esriFieldTypeInteger",
+      "alias": "RuleID",
+      "sqlType": "sqlTypeOther",
+      "nullable": true,
+      "editable": true,
+      "domain": {
+       "type": "codedValue",
+       "name": "Zoning_Rep_Rules",
+       "mergePolicy": "esriMPTDefaultValue",
+       "splitPolicy": "esriSPTDefaultValue",
+       "description": "Representation rules",
+       "codedValues": [
+        {
+         "name": "AG3",
+         "code": 1
+        },
+        {
+         "name": "EP",
+         "code": 2
+        },
+        {
+         "name": "AG1",
+         "code": 3
+        },
+        {
+         "name": "AR",
+         "code": 4
+        },
+        {
+         "name": "AV",
+         "code": 5
+        },
+        {
+         "name": "C1",
+         "code": 6
+        },
+        {
+         "name": "C2",
+         "code": 7
+        },
+        {
+         "name": "I1",
+         "code": 8
+        },
+        {
+         "name": "I2",
+         "code": 9
+        },
+        {
+         "name": "MUD",
+         "code": 10
+        },
+        {
+         "name": "PCD",
+         "code": 11
+        },
+        {
+         "name": "PRD",
+         "code": 12
+        },
+        {
+         "name": "PTD",
+         "code": 13
+        },
+        {
+         "name": "R1",
+         "code": 14
+        },
+        {
+         "name": "R2",
+         "code": 15
+        },
+        {
+         "name": "R3",
+         "code": 16
+        },
+        {
+         "name": "R4",
+         "code": 17
+        },
+        {
+         "name": "RB",
+         "code": 18
+        },
+        {
+         "name": "PO",
+         "code": 19
+        },
+        {
+         "name": "GB",
+         "code": 20
+        },
+        {
+         "name": "CB",
+         "code": 21
+        },
+        {
+         "name": "M1",
+         "code": 22
+        },
+        {
+         "name": "M2; M2C",
+         "code": 23
+        },
+        {
+         "name": "Free Representation",
+         "code": -1
+        }
+       ]
+      },
+      "defaultValue": null
+     },
+     {
+      "name": "Override",
+      "type": "esriFieldTypeBlob",
+      "alias": "Override",
+      "sqlType": "sqlTypeOther",
+      "nullable": true,
+      "editable": true,
+      "domain": null,
+      "defaultValue": null
+     },
+     {
+      "name": "Shape__Area",
+      "type": "esriFieldTypeDouble",
+      "alias": "Shape__Area",
+      "sqlType": "sqlTypeDouble",
+      "nullable": true,
+      "editable": false,
+      "domain": null,
+      "defaultValue": null
+     },
+     {
+      "name": "Shape__Length",
+      "type": "esriFieldTypeDouble",
+      "alias": "Shape__Length",
+      "sqlType": "sqlTypeDouble",
+      "nullable": true,
+      "editable": false,
+      "domain": null,
+      "defaultValue": null
+     }
+    ],
+    "indexes": [
+     {
+      "name": "PK__ZONING_H__F4B70D85CFA95567",
+      "fields": "OBJECTID",
+      "isAscending": true,
+      "isUnique": true,
+      "description": "",
+      "indexType": "Attribute"
+     },
+     {
+      "name": "user_16399.ZONING_HOSTED_ZONING_Shape_sidx",
+      "fields": "Shape",
+      "isAscending": true,
+      "isUnique": false,
+      "description": "",
+      "indexType": "Spatial"
+     },
+     {
+      "name": "FDO_GlobalID",
+      "fields": "GlobalID",
+      "isAscending": true,
+      "isUnique": true,
+      "description": "",
+      "indexType": "Attribute"
+     },
+     {
+      "name": "Shape__Area_Index",
+      "fields": "Shape__Area",
+      "isAscending": true,
+      "isUnique": false,
+      "description": "",
+      "indexType": "Attribute"
+     },
+     {
+      "name": "Shape__Length_Index",
+      "fields": "Shape__Length",
+      "isAscending": true,
+      "isUnique": false,
+      "description": "",
+      "indexType": "Attribute"
+     }
+    ],
+    "dateFieldsTimeReference": {
+     "timeZone": "UTC",
+     "timeZoneIANA": "Etc/UTC",
+     "respectsDaylightSaving": false
+    },
+    "preferredTimeReference": null,
+    "types": [],
+    "templates": [
+     {
+      "name": "Zoning",
+      "description": "",
+      "drawingTool": "esriFeatureEditToolPolygon",
+      "prototype": {
+       "attributes": {
+        "RuleID": null,
+        "Override": null,
+        "ParcelID": null,
+        "Zoning": null,
+        "Primary_": null,
+        "Split": null,
+        "Split_Number": null,
+        "Zoning_Description": null,
+        "Full_Description": null,
+        "Zoning_Parcel": null,
+        "ParcelID_Zoning": null,
+        "ActionNo": null,
+        "ActionNo2": null,
+        "ActionNo3": null,
+        "ActionNo4": null,
+        "Date": null,
+        "Date2": null,
+        "Date3": null,
+        "Date4": null,
+        "Ordinance": null,
+        "Ordinance2": null,
+        "Ordinance3": null,
+        "Ordinance4": null,
+        "Name": null,
+        "Name2": null,
+        "Name3": null,
+        "Name4": null,
+        "ZoneFrom": null,
+        "ZoneFrom2": null,
+        "ZoneFrom3": null,
+        "ZoneFrom4": null,
+        "ZoneTo": null,
+        "ZoneTo2": null,
+        "ZoneTo3": null,
+        "ZoneTo4": null,
+        "Planner": null,
+        "Planner2": null,
+        "Planner3": null,
+        "Planner4": null,
+        "Status": null,
+        "Status2": null,
+        "Status3": null,
+        "Status4": null,
+        "Comments": null,
+        "Comments2": null,
+        "Comments3": null,
+        "Comments4": null,
+        "Review_Date": null,
+        "Letter_Sent": null,
+        "Expire_Date": null,
+        "Created_User": null,
+        "Create_Date": null,
+        "Last_Edited_User": null,
+        "Last_Edited_Date": null
+       }
+      }
+     }
+    ],
+    "supportedQueryFormats": "JSON, geoJSON, PBF",
+    "supportedAppendFormats": "sqlite,geoPackage,shapefile,filegdb,featureCollection,geojson,csv,excel,jsonl,featureService,pbf",
+    "supportedAppendSourceFilterFormats": "sqlite,geoPackage,shapefile,filegdb,featureService",
+    "supportedExportFormats": "csv,shapefile,sqlite,geoPackage,filegdb,featureCollection,geojson,kml,excel,parquet",
+    "supportedConvertFileFormats": "JSON,PBF,Parquet",
+    "supportedConvertContentFormats": "LayerEditCollection,FeatureCollection",
+    "supportedSpatialRelationships": [
+     "esriSpatialRelIntersects",
+     "esriSpatialRelContains",
+     "esriSpatialRelCrosses",
+     "esriSpatialRelEnvelopeIntersects",
+     "esriSpatialRelIndexIntersects",
+     "esriSpatialRelOverlaps",
+     "esriSpatialRelTouches",
+     "esriSpatialRelWithin",
+     "esriSpatialRelDisjoint",
+     "esriSpatialRelRelation"
+    ],
+    "guidFormat": "",
+    "supportsContingentValues": true,
+    "supportsEditingContingentValues": true,
+    "supportedContingentValuesFormats": "JSON, PBF",
+    "supportsFieldGroups": true,
+    "supportedSyncDataOptions": 260,
+    "hasStaticData": true,
+    "maxRecordCount": 2000,
+    "standardMaxRecordCount": 2000,
+    "maxIdsCount": 1000000,
+    "standardMaxRecordCountNoGeometry": 32000,
+    "tileMaxRecordCount": 4000,
+    "maxRecordCountFactor": 1,
+    "capabilities": "Query,Extract"
+   }
+  },
+  {
+   "url": "https://services1.arcgis.com/VlZ73DcE2ya6FnSK/arcgis/rest/services/Zoning_Hosted/FeatureServer/0/query",
+   "params": {
+    "f": "json",
+    "outFields": "OBJECTID,ParcelID,Primary_,Split,Zoning,Zoning_Description",
+    "resultRecordCount": "50",
+    "returnGeometry": "false",
+    "geometry": "{\"x\": -77.408014727372, \"y\": 39.025534437083, \"spatialReference\": {\"wkid\": 4326}}",
+    "geometryType": "esriGeometryPoint",
+    "inSR": "4326",
+    "spatialRel": "esriSpatialRelIntersects"
+   },
+   "response": {
+    "objectIdFieldName": "OBJECTID",
+    "uniqueIdField": {
+     "name": "OBJECTID",
+     "isSystemMaintained": true
+    },
+    "globalIdFieldName": "GlobalID",
+    "features": []
+   }
+  },
+  {
+   "url": "https://services1.arcgis.com/VlZ73DcE2ya6FnSK/arcgis/rest/services/Zoning_Hosted/FeatureServer/0/query",
+   "params": {
+    "f": "json",
+    "outFields": "OBJECTID,ParcelID,Primary_,Split,Zoning,Zoning_Description",
+    "resultRecordCount": "50",
+    "returnGeometry": "false",
+    "where": "ParcelID = '098.02-02-16.00-0000'"
+   },
+   "response": {
+    "objectIdFieldName": "OBJECTID",
+    "uniqueIdField": {
+     "name": "OBJECTID",
+     "isSystemMaintained": true
+    },
+    "globalIdFieldName": "GlobalID",
+    "geometryType": "esriGeometryPolygon",
+    "spatialReference": {
+     "wkid": 102747,
+     "latestWkid": 2284
+    },
+    "fields": [
+     {
+      "name": "OBJECTID",
+      "type": "esriFieldTypeOID",
+      "alias": "OBJECTID",
+      "sqlType": "sqlTypeOther",
+      "domain": null,
+      "defaultValue": null
+     },
+     {
+      "name": "ParcelID",
+      "type": "esriFieldTypeString",
+      "alias": "ParcelID",
+      "sqlType": "sqlTypeOther",
+      "length": 21,
+      "domain": null,
+      "defaultValue": null
+     },
+     {
+      "name": "Primary_",
+      "type": "esriFieldTypeString",
+      "alias": "Primary",
+      "sqlType": "sqlTypeOther",
+      "length": 3,
+      "domain": null,
+      "defaultValue": null
+     },
+     {
+      "name": "Split",
+      "type": "esriFieldTypeString",
+      "alias": "Split",
+      "sqlType": "sqlTypeOther",
+      "length": 3,
+      "domain": null,
+      "defaultValue": null
+     },
+     {
+      "name": "Zoning",
+      "type": "esriFieldTypeString",
+      "alias": "Zoning",
+      "sqlType": "sqlTypeOther",
+      "length": 5,
+      "domain": null,
+      "defaultValue": null
+     },
+     {
+      "name": "Zoning_Description",
+      "type": "esriFieldTypeString",
+      "alias": "Zoning Description",
+      "sqlType": "sqlTypeOther",
+      "length": 12,
+      "domain": null,
+      "defaultValue": null
+     }
+    ],
+    "features": [
+     {
+      "attributes": {
+       "OBJECTID": 78,
+       "ParcelID": "098.02-02-16.00-0000",
+       "Primary_": "Yes",
+       "Split": "Yes",
+       "Zoning": "C2",
+       "Zoning_Description": "County-C2"
+      }
+     },
+     {
+      "attributes": {
+       "OBJECTID": 4333,
+       "ParcelID": "098.02-02-16.00-0000",
+       "Primary_": "No",
+       "Split": "Yes",
+       "Zoning": "ARS",
+       "Zoning_Description": "County-ARS"
+      }
+     }
+    ]
+   }
+  },
+  {
+   "url": "https://services1.arcgis.com/VlZ73DcE2ya6FnSK/arcgis/rest/services/Zoning_Hosted/FeatureServer/0/query",
+   "params": {
+    "f": "json",
+    "outFields": "OBJECTID,ParcelID,Primary_,Split,Zoning,Zoning_Description",
+    "resultRecordCount": "50",
+    "returnGeometry": "false",
+    "where": "ParcelID = 'NO SUCH PIN'"
+   },
+   "response": {
+    "objectIdFieldName": "OBJECTID",
+    "uniqueIdField": {
+     "name": "OBJECTID",
+     "isSystemMaintained": true
+    },
+    "globalIdFieldName": "GlobalID",
+    "features": []
+   }
+  }
+ ]
+}

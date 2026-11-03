@@ -90,7 +90,7 @@ workflow directly. For file-based discovery, copy a directory printed by
 |---|---|
 | Which government covers a place? | Names, FIPS codes, addresses, ZIP codes and coordinates; the table contains 133 counties and independent cities and 189 towns |
 | What parcel is here? | Fairfax County, Loudoun County, Richmond City, Charles City County, the Town of Leesburg, and VGIN statewide parcels |
-| How is a parcel zoned? | Fairfax and Loudoun counties, Richmond and Winchester cities, and the towns of Leesburg and Vienna. In Winchester the city publishes base districts; overlays are separate. A point in Vienna returns the town's layer and the county's, both unranked |
+| How is a parcel zoned? | Fairfax, Loudoun and Roanoke counties, Richmond and Winchester cities, and the towns of Leesburg and Vienna. In Winchester the city publishes base districts; overlays are separate. A point in Vienna returns the town's layer and the county's, both unranked |
 | Which address points, buildings, roads or public places are nearby? | VGIN statewide layers; VDOT road routes |
 | Which water-quality stations are nearby? | DEQ monitoring stations, including historical stations |
 | Where is a government boundary? | VGIN locality and town polygons |
@@ -183,7 +183,7 @@ retrieved; it does not remove upstream query limits.
 ## What remains
 
 Directly integrated local sources cover a handful of places: Fairfax,
-Loudoun and Charles City counties, Richmond and Winchester cities, and the Towns of Leesburg
+Loudoun, Roanoke and Charles City counties, Richmond and Winchester cities, and the Towns of Leesburg
 and Vienna for parcels and zoning, and five localities for public
 meetings. Adding another locality's layer is the most useful contribution
 and the best-documented path ([CONTRIBUTING.md](CONTRIBUTING.md)); the

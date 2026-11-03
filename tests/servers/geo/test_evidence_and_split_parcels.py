@@ -115,3 +115,36 @@ def test_the_polygon_bound_is_declared_and_small():
     walk is bounded; a PIN matching more than a handful is a data problem
     rather than a parcel."""
     assert 1 < MAX_PARCEL_POLYGONS <= 10
+
+
+async def test_publisher_parcel_id_keeps_both_districts_and_their_own_evidence(cw_ctx):
+    pin = "098.02-02-16.00-0000"
+    env = await find_zoning(cw_ctx, jurisdiction="Roanoke County", pin=pin)
+    block, = env.data["results"]
+    assert block["lookup_method"] == "zoning_by_parcel_id"
+    assert "parcel_polygons_intersected" not in block
+    evidence = {e.id: e for e in env.evidence}
+    assert {(row["district"], row["assessment_primary"], row["split"])
+            for row in block["records"]} == {("C2", "Yes", "Yes"), ("ARS", "No", "Yes")}
+    for row in block["records"]:
+        ref, = row["evidence_refs"]
+        assert row["pin"] == pin and evidence[ref].record_id == row["record_id"]
+        assert evidence[ref].source_ref == block["source_ref"]
+        assert "zoning_by_parcel_id" in evidence[ref].transformations
+
+
+async def test_missed_county_id_and_unregistered_city_are_distinct(cw_ctx):
+    county = await find_zoning(cw_ctx, jurisdiction="Roanoke County", pin="NO SUCH PIN")
+    city = await find_zoning(cw_ctx, jurisdiction="Roanoke City", pin="098.02-02-16.00-0000")
+    assert county.coverage.registry.value == "covered"
+    assert county.coverage.execution.value == "complete"
+    assert county.coverage.result.value == "empty"
+    assert county.data["results"][0]["lookup_method"] == "zoning_by_parcel_id"
+    assert city.coverage.registry.value == "none" and city.data["results"] == []
+
+
+async def test_county_pin_lookup_does_not_confirm_town_location(cw_ctx):
+    env = await find_zoning(cw_ctx, jurisdiction="Town of Vinton", pin="098.02-02-16.00-0000")
+    block, = env.data["results"]
+    assert block["source_id"] == "va-roanoke-county-zoning" and block["record_count"] == 2
+    assert "does not place the parcel in va:vinton-town" in block["note"]
