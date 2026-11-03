@@ -2,13 +2,13 @@
  "version": "0.1.0.dev0",
  "registry_revision": "2026-11-03",
  "counts": {
-  "servers": 3,
-  "tools": 19,
-  "packages": 3,
-  "sources": 31,
-  "sources_active": 24,
+  "servers": 4,
+  "tools": 25,
+  "packages": 4,
+  "sources": 37,
+  "sources_active": 30,
   "sources_proposed": 7,
-  "capabilities": 15,
+  "capabilities": 21,
   "jurisdictions": 323,
   "trap_pairs": 5
  },
@@ -380,6 +380,158 @@
    "description": "Find hospitals and urgent-care facilities near a lon/lat point in a Virginia locality, or by name prefix. This reads a LOCALITY'S OWN MAP of the facilities inside it, not a state licensing register: Virginia licenses hospitals through VDH, which publishes nothing this server can query. Coverage is thin \u2014 only localities that publish such a layer are registered, and everywhere else returns coverage registry=none, which means this project has nowhere to look and never that there is no hospital there. Physician offices, clinics, dialysis centres, pharmacies and EMS are not in these layers, and no record says whether a facility is open, what it offers, or whether it takes a given patient. An empty answer is not evidence that care is unavailable near a point."
   },
   {
+   "name": "records.get_bill",
+   "package": "records",
+   "toolset": "records",
+   "contract_version": "1",
+   "parameters": [
+    {
+     "name": "session",
+     "required": true
+    },
+    {
+     "name": "bill",
+     "required": true
+    },
+    {
+     "name": "history_offset",
+     "required": false
+    }
+   ],
+   "summary": "Read a Virginia legislative session's bill record, published text-version identifiers and history.",
+   "description": "Read a Virginia legislative session's bill record, published text-version identifiers and history. Pass session 20251 and bill HB1600, for example. History references identify actions for get_bill_votes."
+  },
+  {
+   "name": "records.get_bill_votes",
+   "package": "records",
+   "toolset": "records",
+   "contract_version": "1",
+   "parameters": [
+    {
+     "name": "session",
+     "required": true
+    },
+    {
+     "name": "bill",
+     "required": true
+    },
+    {
+     "name": "history_ref",
+     "required": true
+    },
+    {
+     "name": "offset",
+     "required": false
+    }
+   ],
+   "summary": "Read the recorded member votes for one Virginia legislative bill action.",
+   "description": "Read the recorded member votes for one Virginia legislative bill action. Pass its session, bill and History_refid from get_bill; use next_offset for additional members."
+  },
+  {
+   "name": "records.get_election_results",
+   "package": "records",
+   "toolset": "records",
+   "contract_version": "1",
+   "parameters": [
+    {
+     "name": "election_date",
+     "required": true
+    },
+    {
+     "name": "office",
+     "required": true
+    },
+    {
+     "name": "locality",
+     "required": true
+    },
+    {
+     "name": "offset",
+     "required": false
+    }
+   ],
+   "summary": "Read historical Virginia candidate and summary rows by election date, office and exact reporting locality (e.g.",
+   "description": "Read historical Virginia candidate and summary rows by election date, office and exact reporting locality (e.g. Accomack County). Locality totals only. No precinct summing or live winner calls. Offices: Governor, Lieutenant Governor, Attorney General, President, U.S. Senate, U.S. House, State Senate, State Representative."
+  },
+  {
+   "name": "records.search_purchases",
+   "package": "records",
+   "toolset": "records",
+   "contract_version": "1",
+   "parameters": [
+    {
+     "name": "agency",
+     "required": false
+    },
+    {
+     "name": "vendor",
+     "required": false
+    },
+    {
+     "name": "order",
+     "required": false
+    },
+    {
+     "name": "offset",
+     "required": false
+    }
+   ],
+   "summary": "Search FY2025 eVA purchase-order lines by exact agency, vendor, or order number.",
+   "description": "Search FY2025 eVA purchase-order lines by exact agency, vendor, or order number. Returns ordered amounts and status; these are not payments or open solicitations. Use next_offset to page."
+  },
+  {
+   "name": "records.find_flood_zones",
+   "package": "records",
+   "toolset": "records",
+   "contract_version": "1",
+   "parameters": [
+    {
+     "name": "jurisdiction",
+     "required": true
+    },
+    {
+     "name": "lon",
+     "required": false
+    },
+    {
+     "name": "lat",
+     "required": false
+    },
+    {
+     "name": "pin",
+     "required": false
+    }
+   ],
+   "summary": "Intersect effective FEMA flood zones and map panels in Virginia with a point or the polygons of a parcel PIN.",
+   "description": "Intersect effective FEMA flood zones and map panels in Virginia with a point or the polygons of a parcel PIN. Reports each intersecting zone and panel with its effective date. An empty map is not a flood-risk determination."
+  },
+  {
+   "name": "records.find_permit_outfalls",
+   "package": "records",
+   "toolset": "records",
+   "contract_version": "1",
+   "parameters": [
+    {
+     "name": "jurisdiction",
+     "required": true
+    },
+    {
+     "name": "lon",
+     "required": true
+    },
+    {
+     "name": "lat",
+     "required": true
+    },
+    {
+     "name": "radius_meters",
+     "required": false
+    }
+   ],
+   "summary": "Find Virginia DEQ permitted discharge outfalls within a radius of a point.",
+   "description": "Find Virginia DEQ permitted discharge outfalls within a radius of a point. Returns permit and facility identifiers, not inspection or violation records. Radius is in metres (1\u201310000)."
+  },
+  {
    "name": "registry.resolve_jurisdiction",
    "package": "registry",
    "toolset": "discovery-min",
@@ -603,6 +755,46 @@
    ]
   },
   {
+   "id": "va-dcr-flood-hazards",
+   "name": "Virginia effective flood zones and FIRM panels",
+   "jurisdiction": "va",
+   "jurisdiction_name": "Virginia, statewide",
+   "answers": [
+    "flood zones and panels"
+   ],
+   "publisher": "Virginia DCR (FEMA National Flood Hazard Layer)",
+   "authority_level": "official_secondary",
+   "capabilities": [
+    "flood_zone.lookup"
+   ],
+   "data_classification": "open",
+   "declared_state": "active",
+   "terms_url": "https://dsfmportal.dcr.virginia.gov/server/rest/services/Floodplains/NFHL_Layers/MapServer",
+   "known_limitations": [
+    "Digital map coverage can be missing. A mapped zone is not an insurance determination or a prediction of flooding."
+   ]
+  },
+  {
+   "id": "va-deq-permit-outfalls",
+   "name": "VPDES permit outfalls",
+   "jurisdiction": "va",
+   "jurisdiction_name": "Virginia, statewide",
+   "answers": [
+    "permit outfalls"
+   ],
+   "publisher": "Virginia Department of Environmental Quality",
+   "authority_level": "primary",
+   "capabilities": [
+    "permit_outfall.lookup"
+   ],
+   "data_classification": "open",
+   "declared_state": "active",
+   "terms_url": "https://gisdata.deq.virginia.gov/mapper_ext/DataFactSheets/Water_Permitting/VPDESOutfallsDEQFactSheet.pdf",
+   "known_limitations": [
+    "An outfall is a permitted discharge location, not evidence of a violation or a measurement of water quality."
+   ]
+  },
+  {
    "id": "va-deq-water-quality-stations",
    "name": "DEQ Water Quality Monitoring Stations",
    "jurisdiction": "va",
@@ -627,6 +819,26 @@
    ]
   },
   {
+   "id": "va-eva-order-lines",
+   "name": "eVA FY2025 purchase order lines",
+   "jurisdiction": "va",
+   "jurisdiction_name": "Virginia, statewide",
+   "answers": [
+    "purchase order lines"
+   ],
+   "publisher": "Virginia Department of General Services, eVA",
+   "authority_level": "primary",
+   "capabilities": [
+    "purchase_order.search"
+   ],
+   "data_classification": "open",
+   "declared_state": "active",
+   "terms_url": "https://data.virginia.gov/dataset/eva-procurement-data-2025-virginia",
+   "known_limitations": [
+    "FY2025 order lines, not open solicitations, invoices or proof of payment. Values can include changes and negative amounts."
+   ]
+  },
+  {
    "id": "va-eva-procurement",
    "name": "eVA (Virginia procurement)",
    "jurisdiction": "va",
@@ -639,7 +851,7 @@
    "declared_state": "proposed",
    "terms_url": "https://eva.virginia.gov/",
    "known_limitations": [
-    "No endpoint discovery has run. Whether eVA exposes solicitations or awards through anything other than its own web UI is an open question, not a recorded finding.\n",
+    "The FY2025 order-line archive is registered separately as va-eva-order-lines. Whether eVA exposes live solicitations or awards through anything other than its own web UI is an open question, not a recorded finding.\n",
     "Procurement records name private parties, so the data-classification review here is a real one rather than a formality \u2014 an award record is public, a losing bidder's contact details may not be.\n"
    ]
   },
@@ -706,6 +918,26 @@
    ]
   },
   {
+   "id": "va-historical-election-results",
+   "name": "Virginia historical election returns",
+   "jurisdiction": "va",
+   "jurisdiction_name": "Virginia, statewide",
+   "answers": [
+    "historical election returns"
+   ],
+   "publisher": "Virginia Department of Elections (historical elections database)",
+   "authority_level": "primary",
+   "capabilities": [
+    "election_results.lookup"
+   ],
+   "data_classification": "open",
+   "declared_state": "active",
+   "terms_url": "https://historical.elections.virginia.gov/search",
+   "known_limitations": [
+    "Historical returns only. Locality totals only. Precinct rows are not summed; statewide results are not returned."
+   ]
+  },
+  {
    "id": "va-leesburg-town-parcels-zoning",
    "name": "Town of Leesburg Parcels and Zoning (ArcGIS Online)",
    "jurisdiction": "va:leesburg-town",
@@ -747,6 +979,28 @@
     "The bulk files are whole-session snapshots, not a query service. Answering \"which bills mention X\" from them means downloading the session and filtering locally. That is reading what the publisher chose to hand over whole, which is a different thing from the full-text search the Code of Virginia does not offer (issue #12) \u2014 there the publisher runs no such operation at all.\n",
     "The keyed JSON API remains the only route to anything the bulk files do not carry, and obtaining that key is a registration form a human fills in.\n",
     "Bill identity is versioned \u2014 introduced, engrossed, enrolled. The bulk BILLS.CSV carries one row per bill with its latest actions, so a tool built on it must say which version it is describing rather than implying \"the bill\".\n"
+   ]
+  },
+  {
+   "id": "va-lis-session-files",
+   "name": "LIS legislative session files",
+   "jurisdiction": "va",
+   "jurisdiction_name": "Virginia, statewide",
+   "answers": [
+    "bill history",
+    "legislative roll calls"
+   ],
+   "publisher": "Virginia General Assembly, Division of Legislative Automated Systems",
+   "authority_level": "primary",
+   "capabilities": [
+    "bill.lookup",
+    "bill_votes.lookup"
+   ],
+   "data_classification": "open",
+   "declared_state": "active",
+   "terms_url": "https://help.lis.virginia.gov/data/index.asp",
+   "known_limitations": [
+    "Returns the bill record and published text-version identifiers, not the bill text. Member votes are joined only by an exact history reference."
    ]
   },
   {
@@ -795,6 +1049,26 @@
     "Zoning here is the county's GIS rendering of its adopted ordinance, not the ordinance. The adopted Loudoun County Zoning Ordinance governs, and a district shown here is screening evidence.\n",
     "Loudoun maintains two zoning ordinances in parallel. The registered layer is the current one; ground still governed by the 1972 ordinance is carried on a separate layer that is not registered here, so a district read from this source is the current ordinance's answer and may not be the only one that applies.\n",
     "The incorporated towns inside Loudoun \u2014 Leesburg among them \u2014 adopt and administer their own zoning. A point inside a town returns the county's layer and the town's where one is registered, and the town is the government that zones it.\n"
+   ]
+  },
+  {
+   "id": "va-norfolk-city-zoning",
+   "name": "Norfolk zoning districts",
+   "jurisdiction": "va:norfolk-city",
+   "jurisdiction_name": "Norfolk City",
+   "answers": [
+    "zoning"
+   ],
+   "publisher": "City of Norfolk Department of Planning and Community Development",
+   "authority_level": "primary",
+   "capabilities": [
+    "zoning.lookup"
+   ],
+   "data_classification": "open",
+   "declared_state": "active",
+   "terms_url": "https://www.norfolk.gov/3918/Open-Data-Policy-PDF",
+   "known_limitations": [
+    "Base zoning polygons only. Conditional zoning and future land use are separate layers."
    ]
   },
   {
@@ -1186,11 +1460,15 @@
  ],
  "capabilities": [
   "address.lookup",
+  "bill.lookup",
+  "bill_votes.lookup",
   "boundary.lookup",
   "building.lookup",
   "code_section.lookup",
   "code_structure.browse",
+  "election_results.lookup",
   "environmental_site.lookup",
+  "flood_zone.lookup",
   "geocode.address",
   "health_facility.lookup",
   "landmark.lookup",
@@ -1198,6 +1476,8 @@
   "meeting_agenda.lookup",
   "meeting_votes.lookup",
   "parcel.lookup",
+  "permit_outfall.lookup",
+  "purchase_order.search",
   "road.lookup",
   "zoning.lookup"
  ],
@@ -1205,6 +1485,14 @@
   "address.lookup": {
    "question": "What is at this address?",
    "subject": "addresses"
+  },
+  "bill.lookup": {
+   "question": "What happened to this bill in this session?",
+   "subject": "bill history"
+  },
+  "bill_votes.lookup": {
+   "question": "How did legislators vote on this bill action?",
+   "subject": "legislative roll calls"
   },
   "boundary.lookup": {
    "question": "Where does this jurisdiction end?",
@@ -1222,9 +1510,17 @@
    "question": "How is the Code of Virginia organised?",
    "subject": "the Code's contents"
   },
+  "election_results.lookup": {
+   "question": "How many votes did each candidate receive here?",
+   "subject": "historical election returns"
+  },
   "environmental_site.lookup": {
    "question": "Is anything monitored near here?",
    "subject": "monitored sites"
+  },
+  "flood_zone.lookup": {
+   "question": "Which mapped flood zones and panels intersect this location?",
+   "subject": "flood zones and panels"
   },
   "geocode.address": {
    "question": "Where is this address, and whose government is it?",
@@ -1253,6 +1549,14 @@
   "parcel.lookup": {
    "question": "What is this parcel?",
    "subject": "parcels"
+  },
+  "permit_outfall.lookup": {
+   "question": "Which permitted discharge locations are nearby?",
+   "subject": "permit outfalls"
+  },
+  "purchase_order.search": {
+   "question": "Which purchase order lines did this agency or vendor record?",
+   "subject": "purchase order lines"
   },
   "road.lookup": {
    "question": "What roads are here, and what are they called?",
@@ -1319,6 +1623,18 @@
    "civic.get_code_section",
    "civic.search_meetings",
    "civic.browse_code"
+  ],
+  "records": [
+   "registry.resolve_jurisdiction",
+   "registry.search_sources",
+   "registry.describe_source",
+   "registry.source_status",
+   "records.get_bill",
+   "records.get_bill_votes",
+   "records.get_election_results",
+   "records.search_purchases",
+   "records.find_flood_zones",
+   "records.find_permit_outfalls"
   ],
   "geo": [
    "registry.resolve_jurisdiction",
@@ -1681,7 +1997,7 @@
    "call": 26
   }
  ],
- "doctor_output": "commonwealth 0.1.0.dev0\npython 3.12.15\nmcp sdk 2.1.1\njurisdiction table: 323 rows\nsource manifests: 31 (registry revision 2026-11-03)\nmanifests valid: 31/31\ndefault profile: 10 tools: registry.resolve_jurisdiction, geo.find_parcel, geo.find_zoning, geo.find_boundaries, geo.find_address, geo.resolve_location, geo.find_buildings, geo.find_environmental_sites, civic.get_code_section, civic.search_meetings\n(live source probes skipped; pass --live)\n\u2713 doctor: 0 problem(s)\n\nnext: point a client at it\n  commonwealth configure claude-code\n  commonwealth configure --help    # claude, codex, cursor, vscode",
+ "doctor_output": "commonwealth 0.1.0.dev0\npython 3.12.15\nmcp sdk 2.1.1\njurisdiction table: 323 rows\nsource manifests: 37 (registry revision 2026-11-03)\nmanifests valid: 37/37\ndefault profile: 10 tools: registry.resolve_jurisdiction, geo.find_parcel, geo.find_zoning, geo.find_boundaries, geo.find_address, geo.resolve_location, geo.find_buildings, geo.find_environmental_sites, civic.get_code_section, civic.search_meetings\n(live source probes skipped; pass --live)\n\u2713 doctor: 0 problem(s)\n\nnext: point a client at it\n  commonwealth configure claude-code\n  commonwealth configure --help    # claude, codex, cursor, vscode",
  "plugin": {
   "name": "commonwealth-mcp",
   "marketplace_name": "commonwealth-mcp",
@@ -1851,9 +2167,9 @@
   ]
  },
  "demo_meta": {
-  "generated_at": "2026-11-03T15:39:56Z",
+  "generated_at": "2026-11-03T18:55:42Z",
   "mode": "fixtures",
-  "call_count": 56,
+  "call_count": 63,
   "fixture_recorded_at": "2026-09-02T05:29:35Z"
  }
 }

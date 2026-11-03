@@ -96,7 +96,7 @@ coverage:
       rather than implying "the bill".
 
 authority_notes: >
-  Bulk endpoint, verified 2026-09-10 and not yet read by anything:
+  Bulk endpoint, verified 2026-09-10 and now served by va-lis-session-files:
   https://lis.blob.core.windows.net/lisfiles/<year><session-type>/<FILE>
   — e.g. .../20261/BILLS.CSV for the 2026 regular session. Keyless,
   documented at help.lis.virginia.gov/data/, updated hourly during

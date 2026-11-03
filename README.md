@@ -141,11 +141,36 @@ commonwealth configure claude-code --profile civic
 commonwealth configure claude-code --profile geo
 ```
 
-These write separate entries, `commonwealth-civic` and `commonwealth-geo`.
-Each includes registry discovery. Install either on its own or use the
-`all` profile on the existing server to get both domains in one process.
-The package also installs `commonwealth-civic` and `commonwealth-geo` as
-direct stdio launch commands.
+For legislative, election, purchase-order, flood-map and discharge-permit
+records, add a third server:
+
+```bash
+commonwealth configure claude-code --profile records
+```
+
+Each named server has registry discovery and its own stdio launch command:
+`commonwealth-civic`, `commonwealth-geo`, or `commonwealth-records`.
+The existing `all` profile combines geo and civic. Add the records profile
+alongside it to reach all 25 distinct tools.
+
+| Lookup | Tool | What the publisher supplies |
+| --- | --- | --- |
+| Norfolk base zoning | `geo.find_zoning` | A city zoning district at a point. It does not determine permitted uses. |
+| Flood map | `records.find_flood_zones` | Mapped zones and effective panels at a point, or intersecting a parcel where a polygon source is registered. An empty map does not establish low risk. |
+| Discharge permits | `records.find_permit_outfalls` | DEQ outfall locations, permits and facilities within a radius of 1–10,000 metres. These are not violations or pollution measurements. |
+| Legislative bills | `records.get_bill` | A bill in a named LIS session, its dated text identifiers, latest actions and paged history. |
+| Legislative roll calls | `records.get_bill_votes` | A recorded vote joined to the bill and history reference, with member IDs, names where published and original vote codes. |
+| Historical elections | `records.get_election_results` | Published locality rows for an exact date and one of eight offices. Candidate rows and the publisher’s summary rows must not be added together. No live election calls. |
+| State purchases | `records.search_purchases` | FY2025 eVA order lines by exact vendor, agency or order number. Ordered amounts are not proof of payment. |
+
+For example, call `records.get_bill` with `{"session":"20251","bill":"HB1600"}`.
+Pass a returned `History_refid` as `history_ref` to `records.get_bill_votes`
+with the same session and bill. Action `2518627` has 100 member positions;
+follow `next_offset` until it is null. For order lines, try
+`{"order":"A204_Z0081911"}`. The [recorded examples](docs/demos.html)
+include all six new records tools. To refresh an example from its publisher,
+use `commonwealth sources sample SOURCE_ID` from a checkout. The
+[source inventory](THIRD_PARTY_DATA.yml) lists the publisher and terms for each fixture.
 
 Client configuration support does not imply hosted access. There is no
 public hosted endpoint in this project.

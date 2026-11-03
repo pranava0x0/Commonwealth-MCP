@@ -1,4 +1,4 @@
-"""Build a wheel, install it outside the checkout, and exercise both MCP servers."""
+"""Build a wheel, install it outside the checkout, and exercise the named MCP servers."""
 import asyncio
 from pathlib import Path
 import subprocess
@@ -40,8 +40,9 @@ async def probe(profile: str, expected_tool: str, prompt: str, question: str | N
         print(f"{name}: {len(tools)} tools, {prompt} loaded, Richmond City resolved")
 
 
-async def check_both() -> None:
+async def check_servers() -> None:
     await probe("civic", "civic.get_meeting_agenda", "recorded-vote-check", "Who voted?")
+    await probe("records", "records.get_bill", "coverage-check")
     await probe("geo", "geo.find_parcel", "parcel-zoning-screen")
 
 
@@ -61,6 +62,6 @@ def check_wheel() -> None:
 
 if __name__ == "__main__":
     if sys.argv[1:] == ["--probe"]:
-        asyncio.run(check_both())
+        asyncio.run(check_servers())
     else:
         check_wheel()

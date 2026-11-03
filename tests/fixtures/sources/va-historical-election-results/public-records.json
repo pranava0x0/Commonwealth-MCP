@@ -1,0 +1,11 @@
+{
+ "source_id": "va-historical-election-results",
+ "recorded_at": "2026-11-03T18:48:04Z",
+ "publisher": "Virginia Department of Elections (historical elections database)",
+ "terms_url": "https://historical.elections.virginia.gov/search",
+ "selection": "CSV headers and selected rows for one published example, re-encoded as UTF-8. CKAN records are requested with a field allowlist.",
+ "downloads": {
+  "https://va2.elstats3.civera.com/api/download_search.csv?search=%7B%22global%22%3A%7B%22years%22%3A%7B%22from%22%3A2021%2C%22to%22%3A2021%7D%7D%2C%22contests%22%3A%7B%22offices%22%3A%5B%7B%22id%22%3A3%7D%5D%2C%22divisions%22%3A%5B%5D%2C%22candidates%22%3A%5B%5D%7D%2C%22ballotQuestions%22%3A%7B%22text%22%3A%22%22%2C%22types%22%3A%5B%5D%2C%22number%22%3A%22%22%2C%22divisions%22%3A%5B%5D%7D%2C%22specialElectionsOnly%22%3Afalse%2C%22voterStats%22%3Afalse%2C%22stages%22%3A%5B%5D%7D": "contest_id,election_id,election_date,election_type,primary_party,question_text,question_type,office_id,office_name,office_modifier,district_id,district_type,district_name,candidate_id,candidate_name,retention_candidate_id,retention_candidate_name,division_id,division_type,division_name,vote_channel,is_winner,number_seats,candidate_party_id,candidate_party_name,votes\r\n147466,432,2021-11-02T00:00:00Z,General Election,,,,3,Governor,,1,State,Virginia,85397,Glenn Allen Youngkin,,,2928,Locality,Accomack County,,true,1,2,Republican,7878\r\n147466,432,2021-11-02T00:00:00Z,General Election,,,,3,Governor,,1,State,Virginia,29549,Terence Richard McAuliffe,,,2928,Locality,Accomack County,,false,1,1,Democratic,4948\r\n147466,432,2021-11-02T00:00:00Z,General Election,,,,3,Governor,,1,State,Virginia,85398,Princess Latece Teira Blanding,,,2928,Locality,Accomack County,,false,1,491,Liberation,67\r\n147466,432,2021-11-02T00:00:00Z,General Election,,,,3,Governor,,1,State,Virginia,6,Write-Ins,,,2928,Locality,Accomack County,,false,1,,,4\r\n147466,432,2021-11-02T00:00:00Z,General Election,,,,3,Governor,,1,State,Virginia,4,Total Votes Cast,,,2928,Locality,Accomack County,,false,1,,,12897\r\n147466,432,2021-11-02T00:00:00Z,General Election,,,,3,Governor,,1,State,Virginia,3,Undervotes,,,2928,Locality,Accomack County,,false,1,,,0\r\n"
+ },
+ "exchanges": []
+}

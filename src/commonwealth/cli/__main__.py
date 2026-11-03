@@ -115,6 +115,11 @@ def cmd_doctor(args: argparse.Namespace) -> int:
                 except CommonwealthError as err:
                     print(f"✗ live {m.id}: {err.code}: {err}")
                     problems += 1
+            elif m.adapter.type == "public_records":
+                from .record_samples import public_health
+                line, ok = public_health(ctx, m)
+                print(f"{'✓' if ok else '✗'} live {m.id}: {line}")
+                problems += 0 if ok else 1
             elif m.adapter.type == "agenda_platform":
                 line, ok = _meeting_health_line(ctx, m)
                 print(f"{'✓' if ok else '✗'} live {m.id}: {line}")
@@ -345,6 +350,13 @@ def cmd_sources_probe(args: argparse.Namespace) -> int:
             except CommonwealthError as err:
                 print(f"✗ {sid}: {err.code}: {err}")
                 problems += 1
+            continue
+        if m.adapter.type == "public_records":
+            from .record_samples import public_health
+            checked += 1
+            line, ok = public_health(ctx, m)
+            print(f"{'✓' if ok else '✗'} {sid}: {line}")
+            problems += 0 if ok else 1
             continue
         if m.adapter.type == "agenda_platform":
             checked += 1
@@ -1178,6 +1190,12 @@ def cmd_sources_sample(args: argparse.Namespace) -> int:
     m = ctx.sources.get(args.source_id)
     if m is None:
         return _fail(f"unknown source {args.source_id!r}")
+    if m.adapter.type == "public_records":
+        from .record_samples import sample_public
+        try:
+            return sample_public(m, FIXTURES_DIR)
+        except CommonwealthError as err:
+            return _fail(f"{err.code}: {err}")
     if m.adapter.type == "arcgis_geocode":
         return _sample_geocoder(m, ctx)
     if m.adapter.type == "agenda_platform":
@@ -1188,6 +1206,14 @@ def cmd_sources_sample(args: argparse.Namespace) -> int:
     params = arcgis_mod.ArcGISParams.model_validate(
         m.adapter.model_dump(exclude={"type"}))
     adapter, recorder = _recording_adapter_for(m)
+
+    if m.capability_ids() & {"flood_zone.lookup", "permit_outfall.lookup"}:
+        from .record_samples import sample_map
+        try:
+            summary = asyncio.run(sample_map(m, adapter, recorder, ctx))
+        except CommonwealthError as err:
+            return _fail(f"{err.code}: {err}")
+        return _write_fixture(m, recorder, summary, ctx)
 
     if "environmental_site.lookup" in m.capability_ids():
         try:
@@ -1663,6 +1689,10 @@ def _domain_server(profile: str) -> int:
     args = parser.parse_args()
     args.profile = profile
     return cmd_serve(args)
+
+
+def records_server() -> int:
+    return _domain_server("records")
 
 
 def civic_server() -> int:

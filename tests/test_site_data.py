@@ -88,10 +88,9 @@ def test_the_demo_trail_exercises_every_registered_tool(demo):
 
     Derived from the tool registry, per the structural rule in
     design/testing-and-demos.md § 4: never a hand-typed list."""
-    from commonwealth.core import toolreg
     from commonwealth.servers.build import registries
 
-    registered = {s.name for s in toolreg.expand_profile("all", registries())}
+    registered = {s.name for reg in registries().values() for s in reg.tools()}
     assert registered, "no tools registered — the derivation basis vanished"
     demonstrated = {c["audit"]["tool"] for c in demo["calls"]}
     missing = sorted(registered - demonstrated)

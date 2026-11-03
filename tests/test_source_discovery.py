@@ -32,8 +32,8 @@ async def test_discovery_distinguishes_local_gaps_registered_sources_and_catalog
     assert len(fetcher.calls) == 1
     assert result["next_start"] == 8 and result["datasets_examined"] == 4
     assert [(c["jurisdiction"], c["local_coverage"], c["kind"]) for c in result["candidates"]] == [
-        ("va:prince-william-county", "local_gap", "layer"), ("va:norfolk-city", "local_gap", "link"),
-        ("va:winchester-city", "local_source", "layer"), (None, "unassessed", "link")]
+        ("va:prince-william-county", "local_gap", "layer"), ("va:winchester-city", "local_source", "layer"),
+        ("va:norfolk-city", "local_source", "link"), (None, "unassessed", "link")]
     assert result["candidates"][0]["resource_url"] == pw
 
 

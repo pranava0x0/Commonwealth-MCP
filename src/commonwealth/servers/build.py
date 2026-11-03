@@ -28,6 +28,7 @@ from ..core.skills import SkillRequirements, load_skills, unroutable_capabilitie
 from ..core.toolreg import (DEPRECATED_TOOL_ALIASES, ToolSpec, expand_profile, server_name)
 from ..domains.civic import CIVIC_TOOLS
 from ..domains.geo import GEO_TOOLS
+from ..domains.records import RECORD_TOOLS
 from ..domains.registry import REGISTRY_TOOLS
 from ..runtime import SKILLS_DIR, RuntimeContext
 
@@ -125,7 +126,7 @@ def _bind(spec: ToolSpec, ctx: RuntimeContext):
 
 
 def registries():
-    return {"registry": REGISTRY_TOOLS, "geo": GEO_TOOLS, "civic": CIVIC_TOOLS}
+    return {"registry": REGISTRY_TOOLS, "geo": GEO_TOOLS, "civic": CIVIC_TOOLS, "records": RECORD_TOOLS}
 
 
 def check_skill_capabilities(ctx: RuntimeContext,

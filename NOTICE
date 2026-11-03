@@ -45,6 +45,12 @@ https://www.arcgis.com/home/item.html?id=5f6e5905dd3f442aafeeccfb1173387e
 The publisher specifies CC BY without a version. The sample selects and
 maps fields from the county layer.
 
+Virginia Department of General Services, eVA FY2025 purchase order lines:
+https://data.virginia.gov/dataset/eva-procurement-data-2025-virginia
+Open Data Commons Attribution License. The fixture and demo select published
+order fields; they omit addresses and contact details. Other Virginia source
+credits and original publisher terms are listed in THIRD_PARTY_DATA.yml.
+
 --------------------------------------------------------------------------
 Incorporated code
 --------------------------------------------------------------------------
