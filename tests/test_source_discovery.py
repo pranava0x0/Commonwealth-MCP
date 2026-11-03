@@ -8,7 +8,8 @@ from commonwealth.core.registry import AutomationStatus
 
 
 def portal(response, rows=4, start=0):
-    return ReplayFetcher([{"url": PORTAL, "params": {"q": "zoning", "rows": rows, "start": start},
+    return ReplayFetcher([{"url": PORTAL, "params": {"q": "zoning", "rows": rows, "start": start,
+                           "sort": "score desc, metadata_modified desc, id asc"},
                            "response": response}])
 
 
@@ -59,6 +60,16 @@ async def test_portal_access_change_stops_the_request(cw_ctx):
     with pytest.raises(TermsRestricted):
         await discover(cw_ctx, "zoning", 4, fetcher=fetcher)
     assert not fetcher.calls
+
+
+async def test_overlays_and_centroids_cannot_fill_base_polygon_coverage(cw_ctx):
+    rows = [dataset("Prince William County", title, "https://example.org/MapServer/0")
+            for title in ["Zoning Overlays", "Parcel Centroids", "Prince William Zoning"]]
+    result = await discover(cw_ctx, "zoning", 4, fetcher=portal(
+        {"success": True, "result": {"count": 3, "results": rows}}))
+    assert [(c["title"], c["local_coverage"]) for c in result["candidates"]] == [
+        ("Prince William Zoning", "local_gap"), ("Zoning Overlays", "unassessed"),
+        ("Parcel Centroids", "unassessed")]
 
 
 async def test_non_web_and_credential_urls_are_not_offered_as_candidates(cw_ctx):

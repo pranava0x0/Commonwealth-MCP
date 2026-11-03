@@ -14,6 +14,7 @@ PORTAL = "https://data.virginia.gov/api/3/action/package_search"
 _SERVICE = re.compile(r"/(?:FeatureServer|MapServer)(?:/([0-9]+))?/?$", re.I)
 _KINDS = ["layer", "service", "link"]
 _COVERAGE = ["local_gap", "local_source", "unassessed"]
+_PAGE_SORT = "score desc, metadata_modified desc, id asc"
 
 
 def _text(value: object) -> str:
@@ -49,10 +50,19 @@ def _locality(ctx: RuntimeContext, publisher: str) -> str | None:
 
 
 def _coverage(ctx: RuntimeContext, title: str, locality: str | None) -> tuple[str | None, str]:
-    matches = [cap for pattern, cap in [(r"\bzoning\b", "zoning.lookup"),
-                                        (r"\bparcels?\b", "parcel.lookup")]
-               if re.search(pattern, title, re.I)]
-    capability = matches[0] if len(matches) == 1 else None
+    # A zoning overlay, variance application or parcel centroid cannot
+    # fill the gap for a base district or parcel polygon on its title alone.
+    name = title.casefold()
+    if locality:
+        gov = ctx.jurisdictions.get(locality)
+        short = re.sub(r" (?:city|county|\(town\))$", "", gov.name.casefold())
+        for prefix in (gov.name.casefold(), short):
+            name = name.removeprefix(prefix + " ")
+    capability = None
+    if re.fullmatch(r"(?:base )?zoning(?: districts?| boundaries| map)?", name):
+        capability = "zoning.lookup"
+    elif re.fullmatch(r"(?:tax )?parcels?(?: boundaries| polygons)?", name):
+        capability = "parcel.lookup"
     if not capability or not locality:
         return capability, "unassessed"
     return capability, ("local_source" if ctx.sources.select(capability, [locality]) else "local_gap")
@@ -72,7 +82,8 @@ async def discover(ctx: RuntimeContext, query: str, limit: int = 20, start: int 
         raise TermsRestricted("The portal manifest does not permit catalog API searches.")
     if fetcher is None:
         fetcher = HttpFetcher(policy=egress_policy_for(manifest, PORTAL))
-    response = await fetcher.fetch_json(PORTAL, {"q": query, "rows": limit, "start": start})
+    response = await fetcher.fetch_json(PORTAL, {"q": query, "rows": limit, "start": start,
+                                                 "sort": _PAGE_SORT})
     if response.get("success") is not True:
         raise SourceUnavailable("The Virginia Open Data Portal did not complete this search.")
     result = response.get("result")
