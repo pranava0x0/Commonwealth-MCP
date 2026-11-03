@@ -1,0 +1,58 @@
+id: va-deq-permit-outfalls
+name: VPDES permit outfalls
+jurisdiction: va
+publisher:
+  agency: Virginia Department of Environmental Quality
+  authority_level: primary
+domains:
+- geo
+- environment
+capabilities:
+- id: permit_outfall.lookup
+  tool_hint: records.find_permit_outfalls
+adapter:
+  type: arcgis
+  service_url: https://gisdata.deq.virginia.gov/arcgis/rest/services/public/EDMA/MapServer
+  field_mapping_version: '1'
+  layers:
+    outfalls:
+      layer_id: 119
+      id_field: OBJECTID
+      geometry: point
+      field_mapping:
+        permit: VAP_PMT_NO
+        outfall_id: OUTFALL_ID
+        outfall_number: OUTFALLNO
+        facility: FAC_NAME
+        permit_type: VAP_TYPE
+        major_minor: VAP_MAJOR_MINOR
+access:
+  mode: anonymous
+  automation_status: public_api
+  terms_url: https://gisdata.deq.virginia.gov/mapper_ext/DataFactSheets/Water_Permitting/VPDESOutfallsDEQFactSheet.pdf
+  terms_notes: DEQ describes the data as public domain, permits copying and requests citation. Reference
+    use only.
+  terms_reviewed_at: '2026-11-03'
+  data_classification: open
+freshness:
+  expected_cadence: unknown
+  cadence_source: No guaranteed refresh interval for an individual record.
+  ttl_hint_seconds: 3600
+coverage:
+  geography: va
+  temporal: current
+  known_limitations:
+  - An outfall is a permitted discharge location, not evidence of a violation or a measurement of water
+    quality.
+authority_notes: DEQ describes the data as public domain, permits copying and requests citation. Reference
+  use only.
+health:
+  probe: arcgis_layer_count
+  expect:
+    min_features:
+      outfalls: 1000
+lifecycle:
+  declared_state: active
+  added: '2026-11-03'
+  last_verified: '2026-11-03'
+  verified_by: pranava0x0

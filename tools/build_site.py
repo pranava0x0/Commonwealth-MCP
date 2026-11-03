@@ -163,6 +163,12 @@ def skill_roster() -> list[dict]:
 # covers the live capability vocabulary, so a new capability fails the
 # build rather than rendering as a bare id.
 CAPABILITY_COPY = {
+    "flood_zone.lookup": ("Which mapped flood zones and panels intersect this location?", "flood zones and panels"),
+    "permit_outfall.lookup": ("Which permitted discharge locations are nearby?", "permit outfalls"),
+    "bill.lookup": ("What happened to this bill in this session?", "bill history"),
+    "bill_votes.lookup": ("How did legislators vote on this bill action?", "legislative roll calls"),
+    "election_results.lookup": ("How many votes did each candidate receive here?", "historical election returns"),
+    "purchase_order.search": ("Which purchase order lines did this agency or vendor record?", "purchase order lines"),
     "address.lookup": ("What is at this address?", "addresses"),
     "boundary.lookup": ("Where does this jurisdiction end?", "boundaries"),
     "building.lookup": ("Is this ground built on?", "buildings"),
@@ -525,6 +531,29 @@ DEMO_GROUPS = [
      "for this point. Its overlay districts are separate layers.", [
         ("geo.find_zoning", {"jurisdiction": "Winchester City", "lon": -78.164, "lat": 39.185},
          "The city labels this polygon B1, Central Business District."),
+    ]),
+
+    ("Read a split parcel in Roanoke County", "The county's zoning layer "
+     "links both districts to the same parcel ID.", [
+        ("geo.find_zoning", {"jurisdiction": "Roanoke County", "pin": "098.02-02-16.00-0000"},
+         "C2 is primary for assessment. The county also records ARS on this parcel."),
+    ]),
+
+    ("Read Virginia public records", "The records server adds state datasets alongside local zoning.", [
+        ("geo.find_zoning", {"jurisdiction": "Norfolk City", "lon": -76.2859, "lat": 36.8508},
+         "Norfolk maps this point in HC-EF."),
+        ("records.find_flood_zones", {"jurisdiction": "Norfolk City", "lon": -76.295, "lat": 36.85},
+         "Read the effective FEMA zone alongside the DCR map panel."),
+        ("records.find_permit_outfalls", {"jurisdiction": "Richmond City", "lon": -77.436, "lat": 37.5407},
+         "DEQ identifies permitted discharge locations along the James."),
+        ("records.get_bill", {"session": "20251", "bill": "HB1600"},
+         "Read the Virginia budget bill's recorded actions and document identifiers."),
+        ("records.get_bill_votes", {"session": "20251", "bill": "HB1600", "history_ref": "H02V2512236"},
+         "Read the individual votes on the House Appropriations action."),
+        ("records.get_election_results", {"election_date": "2021-11-02", "office": "Governor", "locality": "Accomack County"},
+         "Use the county return without summing precincts."),
+        ("records.search_purchases", {"order": "A204_Z0081911"},
+         "See the six FY2025 purchase-order lines DGS reports for this order."),
     ]),
 
 ]
@@ -1003,6 +1032,12 @@ class TrackingFetcher:
                 policy=EgressPolicy(allowed_hosts=frozenset({host})))
         return self._live_fetchers[host]
 
+    async def fetch_bytes(self, url):
+        inner = self._inner or self._fetcher_for_live(url)
+        data = await inner.fetch_bytes(url)
+        self.calls.append({"url": url, "params": {}, "response": {"csv_bytes_read": len(data)}})
+        return data
+
     async def fetch_json(self, url: str, params: dict) -> dict:
         inner = self._inner or self._fetcher_for_live(url)
         response = await inner.fetch_json(url, params)
@@ -1065,14 +1100,20 @@ async def run_demo(mode: str) -> dict:
                        virginia_law=_virginia_law_adapter(mode),
                        agendas=AgendaPlatformAdapter(fetcher=tracker))
 
+    from commonwealth.adapters.public_records import PublicRecordsAdapter
+    from commonwealth.fixtures import PublicReplay
+    records_tracker = TrackingFetcher(PublicReplay() if mode == "fixtures" else None)
+    records_tracker.calls = tracker.calls
+    ctx.public_records = PublicRecordsAdapter(records_tracker)
     server = build_server(ctx, profile="all")
+    records_server = build_server(ctx, profile="records")
     calls: list[dict] = []
     # Where each walk starts and how long it runs, so the trail page can
     # head each run of cards with what that run demonstrates. Spans rather
     # than nested lists: the flat `calls` list stays the trail, which is
     # what the audit hook, the tests and every `#call-N` link index into.
     groups = []
-    async with Client(server) as client:
+    async with Client(server) as client, Client(records_server) as records_client:
         for title, group_note, group_calls in DEMO_GROUPS:
             groups.append({"title": title, "note": group_note,
                            "first": len(calls), "count": len(group_calls)})
@@ -1081,7 +1122,8 @@ async def run_demo(mode: str) -> dict:
                             else no_match_pin if v == "__NO_MATCH_PIN__" else v)
                         for k, v in raw_args.items()}
                 before = len(tracker.calls)
-                result = await client.call_tool(tool, args)
+                chosen = records_client if tool.startswith("records.") else client
+                result = await chosen.call_tool(tool, args)
                 after = len(tracker.calls)
                 calls.append({
                     "note": note,

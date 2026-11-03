@@ -1,0 +1,158 @@
+{
+ "source_id": "va-eva-order-lines",
+ "recorded_at": "2026-11-03T18:48:02Z",
+ "publisher": "Virginia Department of General Services, eVA",
+ "terms_url": "https://data.virginia.gov/dataset/eva-procurement-data-2025-virginia",
+ "selection": "CSV headers and selected rows for one published example, re-encoded as UTF-8. CKAN records are requested with a field allowlist.",
+ "downloads": {},
+ "exchanges": [
+  {
+   "url": "https://data.virginia.gov/api/3/action/datastore_search",
+   "params": {
+    "resource_id": "b8dc22a8-e96e-460f-9d5c-8dede67fddda",
+    "filters": "{\"Order_#\": \"A204_Z0081911\"}",
+    "fields": "_id,Order_#,Order_Line_Number,Entity_Description,Vendor_Name,Ordered_Date,Item_Description,Line_Total,Order_Status,Contract_Number",
+    "sort": "_id asc",
+    "limit": 26,
+    "offset": 0,
+    "include_total": "false"
+   },
+   "response": {
+    "help": "https://data.virginia.gov/api/3/action/help_show?name=datastore_search",
+    "success": true,
+    "result": {
+     "fields": [
+      {
+       "id": "_id",
+       "type": "int"
+      },
+      {
+       "id": "Order_#",
+       "type": "text"
+      },
+      {
+       "id": "Order_Line_Number",
+       "type": "text"
+      },
+      {
+       "id": "Entity_Description",
+       "type": "text"
+      },
+      {
+       "id": "Vendor_Name",
+       "type": "text"
+      },
+      {
+       "id": "Ordered_Date",
+       "type": "text"
+      },
+      {
+       "id": "Item_Description",
+       "type": "text"
+      },
+      {
+       "id": "Line_Total",
+       "type": "text"
+      },
+      {
+       "id": "Order_Status",
+       "type": "text"
+      },
+      {
+       "id": "Contract_Number",
+       "type": "text"
+      }
+     ],
+     "filters": {
+      "Order_#": "A204_Z0081911"
+     },
+     "include_total": false,
+     "limit": 26,
+     "offset": 0,
+     "records_format": "objects",
+     "resource_id": "b8dc22a8-e96e-460f-9d5c-8dede67fddda",
+     "sort": "_id asc",
+     "total_estimation_threshold": null,
+     "records": [
+      {
+       "_id": 1,
+       "Order_#": "A204_Z0081911",
+       "Order_Line_Number": "2",
+       "Entity_Description": "College of William & Mary",
+       "Vendor_Name": "TSRC INC RADFORD",
+       "Ordered_Date": "2024-12-13",
+       "Item_Description": "Business Source 1/3 Tab Cut Recycled Top Tab File",
+       "Line_Total": "26.45",
+       "Order_Status": "Ordered",
+       "Contract_Number": null
+      },
+      {
+       "_id": 2,
+       "Order_#": "A204_Z0081911",
+       "Order_Line_Number": "3",
+       "Entity_Description": "College of William & Mary",
+       "Vendor_Name": "TSRC INC RADFORD",
+       "Ordered_Date": "2024-12-13",
+       "Item_Description": "BIC Xtra Strong No. 2 Mechanical Pencils - #2 Lea",
+       "Line_Total": "7.04",
+       "Order_Status": "Ordered",
+       "Contract_Number": null
+      },
+      {
+       "_id": 3,
+       "Order_#": "A204_Z0081911",
+       "Order_Line_Number": "4",
+       "Entity_Description": "College of William & Mary",
+       "Vendor_Name": "TSRC INC RADFORD",
+       "Ordered_Date": "2024-12-13",
+       "Item_Description": "At-A-Glance QuickNotes Appointment Book Planner -",
+       "Line_Total": "30.6",
+       "Order_Status": "Ordered",
+       "Contract_Number": null
+      },
+      {
+       "_id": 4,
+       "Order_#": "A204_Z0081911",
+       "Order_Line_Number": "5",
+       "Entity_Description": "College of William & Mary",
+       "Vendor_Name": "TSRC INC RADFORD",
+       "Ordered_Date": "2024-12-13",
+       "Item_Description": "At-A-Glance Wall Calendar - Large Size - Julian D",
+       "Line_Total": "20.03",
+       "Order_Status": "Ordered",
+       "Contract_Number": null
+      },
+      {
+       "_id": 5,
+       "Order_#": "A204_Z0081911",
+       "Order_Line_Number": "6",
+       "Entity_Description": "College of William & Mary",
+       "Vendor_Name": "TSRC INC RADFORD",
+       "Ordered_Date": "2024-12-13",
+       "Item_Description": "Cambridge WorkStyle Focus Planner - Monthly, Week",
+       "Line_Total": "14.81",
+       "Order_Status": "Ordered",
+       "Contract_Number": null
+      },
+      {
+       "_id": 127539,
+       "Order_#": "A204_Z0081911",
+       "Order_Line_Number": "1",
+       "Entity_Description": "College of William & Mary",
+       "Vendor_Name": "TSRC INC RADFORD",
+       "Ordered_Date": "2024-12-13",
+       "Item_Description": "Bostitch 3-hole Punch - 3 Punch Head(s) - 12 Shee",
+       "Line_Total": "14.74",
+       "Order_Status": "Ordered",
+       "Contract_Number": null
+      }
+     ],
+     "_links": {
+      "start": "/api/3/action/datastore_search?fields=_id%2COrder_%23%2COrder_Line_Number%2CEntity_Description%2CVendor_Name%2COrdered_Date%2CItem_Description%2CLine_Total%2COrder_Status%2CContract_Number&filters=%7B%22Order_%23%22%3A+%22A204_Z0081911%22%7D&include_total=false&limit=26&resource_id=b8dc22a8-e96e-460f-9d5c-8dede67fddda&sort=_id+asc",
+      "next": "/api/3/action/datastore_search?fields=_id%2COrder_%23%2COrder_Line_Number%2CEntity_Description%2CVendor_Name%2COrdered_Date%2CItem_Description%2CLine_Total%2COrder_Status%2CContract_Number&filters=%7B%22Order_%23%22%3A+%22A204_Z0081911%22%7D&include_total=false&limit=26&offset=26&resource_id=b8dc22a8-e96e-460f-9d5c-8dede67fddda&sort=_id+asc"
+     }
+    }
+   }
+  }
+ ]
+}

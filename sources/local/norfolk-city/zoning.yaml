@@ -1,0 +1,58 @@
+id: va-norfolk-city-zoning
+name: Norfolk zoning districts
+jurisdiction: va:norfolk-city
+publisher:
+  agency: City of Norfolk Department of Planning and Community Development
+  authority_level: primary
+domains:
+- geo
+- planning
+capabilities:
+- id: zoning.lookup
+  tool_hint: geo.find_zoning
+adapter:
+  type: arcgis
+  service_url: https://gisshare.norfolk.gov/pubserver/rest/services/OpenData/Planning/MapServer
+  field_mapping_version: '1'
+  layers:
+    zoning:
+      layer_id: 1
+      id_field: OBJECTID
+      geometry: polygon
+      field_mapping:
+        district: ZONE
+        district_type: TYPE
+        ordinance: ORDINANCE
+        ordinance_date: ORDDATE
+access:
+  mode: anonymous
+  automation_status: public_api
+  terms_url: https://www.norfolk.gov/3918/Open-Data-Policy-PDF
+  terms_notes: Section 5 of the Norfolk Open Data Policy dedicates published datasets to the public
+    domain. The city credits its planning department for this layer.
+  terms_reviewed_at: '2026-11-03'
+  data_classification: open
+freshness:
+  expected_cadence: unknown
+  cadence_source: No guaranteed refresh interval for an individual record.
+  ttl_hint_seconds: 3600
+coverage:
+  geography: va:norfolk-city
+  temporal: current
+  known_limitations:
+  - Base zoning polygons only. Conditional zoning and future land use are separate layers.
+authority_notes: Section 5 of the Norfolk Open Data Policy dedicates published datasets to the public
+  domain. The city credits its planning department for this layer.
+health:
+  probe: arcgis_layer_count
+  expect:
+    sample_point:
+    - -76.2859
+    - 36.8508
+    min_features:
+      zoning: 5000
+lifecycle:
+  declared_state: active
+  added: '2026-11-03'
+  last_verified: '2026-11-03'
+  verified_by: pranava0x0

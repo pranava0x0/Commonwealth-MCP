@@ -1,0 +1,44 @@
+id: va-historical-election-results
+name: Virginia historical election returns
+jurisdiction: va
+publisher:
+  agency: Virginia Department of Elections (historical elections database)
+  authority_level: primary
+domains:
+- civic
+capabilities:
+- id: election_results.lookup
+  tool_hint: records.get_election_results
+adapter:
+  type: public_records
+  dataset: elections
+  service_url: https://va2.elstats3.civera.com/api/download_search.csv
+access:
+  mode: anonymous
+  automation_status: public_download
+  terms_url: https://historical.elections.virginia.gov/search
+  terms_notes: The Department links a public CSV download served by Civera. Attribute the Virginia Department
+    of Elections. The export separates contest totals and reporting divisions.
+  terms_reviewed_at: '2026-11-03'
+  data_classification: open
+  terms_gap: The historical database offers public exports; no separate open license was identified.
+    The fixture retains only selected factual rows.
+freshness:
+  expected_cadence: unknown
+  cadence_source: No guaranteed refresh interval for an individual record.
+  ttl_hint_seconds: 3600
+coverage:
+  geography: va
+  temporal: range
+  known_limitations:
+  - Historical returns only. Locality totals only. Precinct rows are not summed; statewide results are not returned.
+authority_notes: The Department links a public CSV download served by Civera. Attribute the Virginia
+  Department of Elections. The export separates contest totals and reporting divisions.
+health:
+  probe: public_record_lookup
+  expect: {}
+lifecycle:
+  declared_state: active
+  added: '2026-11-03'
+  last_verified: '2026-11-03'
+  verified_by: pranava0x0

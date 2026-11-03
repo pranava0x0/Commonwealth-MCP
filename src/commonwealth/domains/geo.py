@@ -9,6 +9,7 @@ outages, and empty results are three different coverage shapes, never one.
 from __future__ import annotations
 
 import re
+from collections.abc import Collection
 from dataclasses import dataclass
 
 from ..adapters.arcgis import ArcGISQueryResult, ArcGISRecord
@@ -110,7 +111,7 @@ def _records_block(b: EnvelopeBuilder, src_ref: str, q: ArcGISQueryResult,
                + "Narrow the query to see more of them inline.", m.id)
     rows = []
     for r in inline:
-        ev = b.add_evidence(source_ref=src_ref, record_id=r.record_id,
+        ev = b.add_evidence(source_ref=src_ref, record_id=r.record_id, locator=r.locator,
                             retrieved_at=q.retrieved_at,
                             transformations=q.transformations,
                             payload_hash=q.payload_hash())
@@ -144,7 +145,8 @@ def _store_full_records(ctx: RuntimeContext, b: EnvelopeBuilder,
         "record_count": len(q.records),
         "retrieved_at": q.retrieved_at,
         "transformations": q.transformations,
-        "records": [{**r.canonical, "record_id": r.record_id}
+        "records": [{**r.canonical, "record_id": r.record_id,
+                     **({"locator": r.locator} if r.locator else {})}
                     for r in q.records],
     }
     try:
@@ -170,7 +172,7 @@ def _store_full_records(ctx: RuntimeContext, b: EnvelopeBuilder,
                 "query, including the ones past the inline cap."))
 
 
-def _pagination_dim(results: list[ArcGISQueryResult]) -> PaginationCoverage:
+def _pagination_dim(results: Collection[ArcGISQueryResult]) -> PaginationCoverage:
     if not results:
         return PaginationCoverage.unknown
     if any(q.exceeded_transfer_limit for q in results):
@@ -178,34 +180,52 @@ def _pagination_dim(results: list[ArcGISQueryResult]) -> PaginationCoverage:
     return PaginationCoverage.complete
 
 
-def _compare(blocks: list[dict], field_name: str) -> dict | None:
-    """Cross-source surface (0005-C): when two sources answered, say whether
-    they agree on the primary field, and never merge them. A source with no
-    matching record is not a disagreement — it has nothing to compare, which
-    is a different and accurate shape (e.g. VGIN's statewide data-call lag on a
-    parcel the locality's own system already has)."""
-    # A block with no source entry was never queried (a town's zoning
-    # with no parcel polygon to read over); it has no answer to compare.
-    blocks = [blk for blk in blocks if blk.get("source_ref")]
-    if len(blocks) < 2:
+def _compare(answers: dict[str, ArcGISQueryResult], field_name: str, *,
+             incomplete_inputs: bool = False) -> dict | None:
+    """Compare publisher values before the inline display cap is applied."""
+    if len(answers) < 2:
         return None
-    sets = [sorted({r.get(field_name) for r in blk["records"]
-                    if r.get(field_name) is not None})
-            for blk in blocks]
-    per_source = [{"source_ref": blk["source_ref"], "values": vals}
-                 for blk, vals in zip(blocks, sets)]
-    if any(not s for s in sets):
-        return {"compared_field": field_name, "agreement": None,
-               "per_source": per_source,
-               "note": "At least one source returned no matching record; "
-                       "there is nothing to compare against the other "
-                       "source's answer."}
-    agreement = sets[0] == sets[1]
-    out = {"compared_field": field_name, "agreement": agreement,
-           "per_source": per_source}
-    if not agreement:
-        out["note"] = ("Official sources disagree; both answers are shown "
-                       "and neither has been reconciled away.")
+    values_by_source = {}
+    missing_value = False
+    for ref, q in answers.items():
+        values = {r.canonical.get(field_name) for r in q.records}
+        if None in values or "" in values:
+            missing_value = True
+            values.difference_update({None, ""})
+        values_by_source[ref] = values
+
+    agreement = None
+    note = None
+    if incomplete_inputs or any(q.exceeded_transfer_limit for q in answers.values()):
+        note = ("Only part of the requested records or parcel geometry was checked; "
+                "the values shown cannot establish agreement or disagreement.")
+    elif any(not q.records for q in answers.values()):
+        note = ("At least one source returned no matching record; "
+                "there is nothing to compare against the other source's answer.")
+    elif missing_value:
+        note = f"At least one record has no {field_name} value to compare."
+    else:
+        first = next(iter(values_by_source.values()))
+        agreement = all(values == first for values in values_by_source.values())
+        if not agreement:
+            note = ("Official sources disagree; both answers are shown "
+                    "and neither has been reconciled away.")
+
+    shared = set.intersection(*values_by_source.values())
+    per_source = []
+    for ref, values in values_by_source.items():
+        # If the display limit hides a difference, show a differing value
+        # first so the reader can see why the comparison says False.
+        capped = len(values) > INLINE_RECORD_CAP
+        ordered = sorted(values, key=lambda v: (capped and agreement is False and v in shared,
+                                                 str(v), type(v).__name__))
+        summary = {"source_ref": ref, "values": ordered[:INLINE_RECORD_CAP]}
+        if capped:
+            summary["distinct_values_retrieved"] = len(values)
+        per_source.append(summary)
+    out = {"compared_field": field_name, "agreement": agreement, "per_source": per_source}
+    if note:
+        out["note"] = note
     return out
 
 
@@ -363,7 +383,7 @@ async def find_parcel(ctx: RuntimeContext, jurisdiction: str,
                                             selected, builder=b)
     blocks: list[dict] = []
     failures = []
-    queries: list[ArcGISQueryResult] = []
+    answers: dict[str, ArcGISQueryResult] = {}
     for m in selected:
         try:
             if pin:
@@ -375,21 +395,22 @@ async def find_parcel(ctx: RuntimeContext, jurisdiction: str,
         except CommonwealthError as err:
             failures.append(failure(m.id, err.code, str(err)))
             continue
-        queries.append(q)
+        source_ref = _source_entry(b, m, q)
+        answers[source_ref] = q
         blocks.append(_records_block(
-            b, _source_entry(b, m, q), q, m, ctx,
+            b, source_ref, q, m, ctx,
             {"jurisdiction": jurisdiction, "pin": pin, "lon": lon, "lat": lat}))
     execution = (ExecutionCoverage.complete if not failures
                  else ExecutionCoverage.failed if not blocks
                  else ExecutionCoverage.partial)
     total = sum(blk["record_count"] for blk in blocks)
     data: dict = {"results": blocks}
-    comparison = _compare(blocks, "pin")
+    comparison = _compare(answers, "pin")
     if comparison:
         data["comparison"] = comparison
     coverage = Coverage(
         registry=registry_dim, execution=execution,
-        pagination=_pagination_dim(queries),
+        pagination=_pagination_dim(answers.values()),
         result=result_dim(total),
         jurisdictions_searched=stack if selected else [],
         jurisdictions_unavailable=gaps,
@@ -550,7 +571,9 @@ async def find_zoning(ctx: RuntimeContext, jurisdiction: str,
     blocks: list[dict] = []
     failures = []
     queries: list[ArcGISQueryResult] = []
-    parcel_note: str | None = None
+    answers: dict[str, ArcGISQueryResult] = {}
+    parcel_notes: list[str] = []
+    skipped_polygons = False
 
     # A zoning source that publishes no parcel layer answers a parcel
     # number by borrowing the polygon from a parcel source above it in
@@ -562,8 +585,17 @@ async def find_zoning(ctx: RuntimeContext, jurisdiction: str,
     for m in selected:
         parcel_evidence_refs: list[str] = []
         polygons_used = 0
+        source_note = None
         try:
-            if pin:
+            direct_pin = bool(pin) and "pin" in ctx.arcgis.mapped_canonical_fields(m, "zoning")
+            if direct_pin:
+                # Some publishers key their zoning polygons by parcel ID.
+                # Every matching row is evidence, including non-primary
+                # parts of a split parcel. No parcel geometry was consulted.
+                where = _scoped_where(ctx, m, "zoning", stack, {"pin": pin})
+                q = await ctx.arcgis.query(m, "zoning", where_equals=where)
+                q.transformations.append("zoning_by_parcel_id")
+            elif pin:
                 if "parcels" in ctx.arcgis.layer_keys(m):
                     # The parcel query is a real consulted source too:
                     # its geometry is what determines the zoning answer,
@@ -580,6 +612,7 @@ async def find_zoning(ctx: RuntimeContext, jurisdiction: str,
                                        "note": f"no parcel with PIN {pin!r} "
                                                f"in {m.id}"})
                         queries.append(pq)
+                        answers[parcel_ref] = pq
                         continue
                 else:
                     if borrowed is None:
@@ -609,14 +642,19 @@ async def find_zoning(ctx: RuntimeContext, jurisdiction: str,
                 used = pq.records[:MAX_PARCEL_POLYGONS]
                 polygons_used = len(used)
                 if len(pq.records) > len(used):
-                    parcel_note = (
-                        f"PIN {pin!r} matched {len(pq.records)} parcel "
-                        f"polygons; the first {len(used)} were intersected "
+                    skipped_polygons = True
+                    source_note = (
+                        f"{m.id}: The parcel lookup retrieved {len(pq.records)} polygons "
+                        f"for PIN {pin!r}; the first {len(used)} were intersected "
                         "and the rest were not. Narrow the query — this "
                         "answer covers part of the parcel.")
+                elif pq.exceeded_transfer_limit:
+                    source_note = (f"{m.id}: The parcel lookup was truncated. The zoning search "
+                                   f"used only the parcel polygons retrieved ({len(used)}); "
+                                   "other parts may have different districts.")
                 elif len(used) > 1:
-                    parcel_note = (
-                        f"PIN {pin!r} matched {len(used)} parcel polygons. "
+                    source_note = (
+                        f"{m.id}: PIN {pin!r} matched {len(used)} parcel polygons. "
                         "All were intersected and the districts below are "
                         "the union across them, so more than one district "
                         "here means the parcel is split, not that the "
@@ -631,7 +669,7 @@ async def find_zoning(ctx: RuntimeContext, jurisdiction: str,
                 q = None
                 for parcel in used:
                     this_ref = b.add_evidence(
-                        source_ref=parcel_ref, record_id=parcel.record_id,
+                        source_ref=parcel_ref, record_id=parcel.record_id, locator=parcel.locator,
                         retrieved_at=pq.retrieved_at,
                         transformations=pq.transformations,
                         payload_hash=pq.payload_hash())
@@ -672,10 +710,20 @@ async def find_zoning(ctx: RuntimeContext, jurisdiction: str,
         except CommonwealthError as err:
             _note_failure(failures, m.id, err)
             continue
+        source_ref = _source_entry(b, m, q)
         queries.append(q)
+        answers[source_ref] = q
         block = _records_block(
-            b, _source_entry(b, m, q), q, m, ctx,
+            b, source_ref, q, m, ctx,
             {"jurisdiction": jurisdiction, "pin": pin, "lon": lon, "lat": lat})
+        if direct_pin:
+            block["lookup_method"] = "zoning_by_parcel_id"
+            if m.jurisdiction != stack[0]:
+                block["note"] = (f"The parcel ID was checked in {m.jurisdiction}'s "
+                                 f"zoning records. A match alone does not place the "
+                                 f"parcel in {stack[0]}.")
+        if source_note:
+            parcel_notes.append(source_note)
         if parcel_evidence_refs:
             block["parcel_evidence_refs"] = parcel_evidence_refs
             block["parcel_polygons_intersected"] = polygons_used
@@ -708,14 +756,16 @@ async def find_zoning(ctx: RuntimeContext, jurisdiction: str,
                  else ExecutionCoverage.partial)
     total = sum(blk["record_count"] for blk in blocks)
     data = {"results": blocks}
-    if parcel_note:
-        data["parcel_note"] = parcel_note
-    comparison = _compare(blocks, "district")
+    if parcel_notes:
+        data["parcel_note"] = " ".join(parcel_notes)
+    pagination = (PaginationCoverage.truncated if skipped_polygons else _pagination_dim(queries))
+    comparison = _compare(answers, "district",
+                          incomplete_inputs=pagination == PaginationCoverage.truncated)
     if comparison:
         data["comparison"] = comparison
     coverage = Coverage(
         registry=registry_dim, execution=execution,
-        pagination=_pagination_dim(queries),
+        pagination=pagination,
         result=result_dim(total),
         jurisdictions_searched=stack if selected else [],
         jurisdictions_unavailable=gaps,
@@ -1044,7 +1094,7 @@ async def find_address(ctx: RuntimeContext, jurisdiction: str,
                                             stack, selected, builder=b)
     blocks: list[dict] = []
     failures = []
-    queries: list[ArcGISQueryResult] = []
+    answers: dict[str, ArcGISQueryResult] = {}
     for m in selected:
         try:
             # Scoped on BOTH paths. The string path needs it so a street
@@ -1067,9 +1117,10 @@ async def find_address(ctx: RuntimeContext, jurisdiction: str,
         except CommonwealthError as err:
             failures.append(failure(m.id, err.code, str(err)))
             continue
-        queries.append(q)
+        source_ref = _source_entry(b, m, q)
+        answers[source_ref] = q
         block = _records_block(
-            b, _source_entry(b, m, q), q, m, ctx,
+            b, source_ref, q, m, ctx,
             {"jurisdiction": jurisdiction, "address": address, "lon": lon, "lat": lat})
         if scope_note:
             block["widened_scope"] = scope_note
@@ -1097,12 +1148,12 @@ async def find_address(ctx: RuntimeContext, jurisdiction: str,
                  else ExecutionCoverage.partial)
     total = sum(blk["record_count"] for blk in blocks)
     data: dict = {"results": blocks}
-    comparison = _compare(blocks, "full_address")
+    comparison = _compare(answers, "full_address")
     if comparison:
         data["comparison"] = comparison
     return b.build(data, Coverage(
         registry=registry_dim, execution=execution,
-        pagination=_pagination_dim(queries), result=result_dim(total),
+        pagination=_pagination_dim(answers.values()), result=result_dim(total),
         jurisdictions_searched=stack if selected else [],
         jurisdictions_unavailable=gaps, source_failures=failures,
         known_limitations=sorted({lim for m in selected
@@ -1727,7 +1778,7 @@ async def find_buildings(ctx: RuntimeContext, jurisdiction: str,
                 parcel_ref = _source_entry(b, pm, pq)
                 parcel_evidence_ref = b.add_evidence(
                     source_ref=parcel_ref,
-                    record_id=pq.records[0].record_id,
+                    record_id=pq.records[0].record_id, locator=pq.records[0].locator,
                     retrieved_at=pq.retrieved_at,
                     transformations=pq.transformations,
                     payload_hash=pq.payload_hash())
@@ -2010,7 +2061,7 @@ async def find_roads(ctx: RuntimeContext, jurisdiction: str,
                                             stack, selected, builder=b)
     blocks: list[dict] = []
     failures = []
-    queries: list[ArcGISQueryResult] = []
+    answers: dict[str, ArcGISQueryResult] = {}
     unscoped: list[str] = []
     unscoped_by_geometry: list[str] = []
     widened: dict[str, str] = {}
@@ -2044,9 +2095,10 @@ async def find_roads(ctx: RuntimeContext, jurisdiction: str,
         except CommonwealthError as err:
             failures.append(failure(m.id, err.code, str(err)))
             continue
-        queries.append(q)
+        source_ref = _source_entry(b, m, q)
+        answers[source_ref] = q
         block = _records_block(
-            b, _source_entry(b, m, q), q, m, ctx,
+            b, source_ref, q, m, ctx,
             {"jurisdiction": jurisdiction, "street_name": street_name, "lon": lon, "lat": lat, "radius_meters": radius_meters})
         block["layer"] = layer_key
         for row in block["records"]:
@@ -2063,7 +2115,7 @@ async def find_roads(ctx: RuntimeContext, jurisdiction: str,
                  else ExecutionCoverage.partial)
     total = sum(blk["record_count"] for blk in blocks)
     data: dict = {"results": blocks}
-    comparison = _compare(blocks, "street_name")
+    comparison = _compare(answers, "street_name")
     if comparison:
         if comparison["agreement"] is False:
             # Only when they actually differ. `agreement: None` means one
@@ -2109,7 +2161,7 @@ async def find_roads(ctx: RuntimeContext, jurisdiction: str,
                "both answers are shown unreconciled.")
     return b.build(data, Coverage(
         registry=registry_dim, execution=execution,
-        pagination=_pagination_dim(queries), result=result_dim(total),
+        pagination=_pagination_dim(answers.values()), result=result_dim(total),
         jurisdictions_searched=stack if selected else [],
         jurisdictions_unavailable=gaps, source_failures=failures,
         known_limitations=sorted({lim for m in selected

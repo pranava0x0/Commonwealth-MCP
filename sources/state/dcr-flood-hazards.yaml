@@ -1,0 +1,66 @@
+id: va-dcr-flood-hazards
+name: Virginia effective flood zones and FIRM panels
+jurisdiction: va
+publisher:
+  agency: Virginia DCR (FEMA National Flood Hazard Layer)
+  authority_level: official_secondary
+domains:
+- geo
+- environment
+capabilities:
+- id: flood_zone.lookup
+  tool_hint: records.find_flood_zones
+adapter:
+  type: arcgis
+  service_url: https://dsfmportal.dcr.virginia.gov/server/rest/services/Floodplains/NFHL_Layers/MapServer
+  field_mapping_version: '1'
+  layers:
+    zones:
+      layer_id: 27
+      id_field: OBJECTID
+      geometry: polygon
+      field_mapping:
+        zone: FLD_ZONE
+        subtype: ZONE_SUBTY
+        special_flood_hazard: SFHA_TF
+        study: DFIRM_ID
+        source_citation: SOURCE_CIT
+    panels:
+      layer_id: 1
+      id_field: OBJECTID
+      geometry: polygon
+      field_mapping:
+        panel: FIRM_PAN
+        effective_date: EFF_DATE
+        study: STUDY_ID
+access:
+  mode: anonymous
+  automation_status: public_api
+  terms_url: https://dsfmportal.dcr.virginia.gov/server/rest/services/Floodplains/NFHL_Layers/MapServer
+  terms_notes: DCR serves FEMA effective flood hazard data for reference through VFRIS. Attribute FEMA
+    and DCR.
+  terms_reviewed_at: '2026-11-03'
+  data_classification: open
+freshness:
+  expected_cadence: unknown
+  cadence_source: No guaranteed refresh interval for an individual record.
+  ttl_hint_seconds: 3600
+coverage:
+  geography: va
+  temporal: current
+  known_limitations:
+  - Digital map coverage can be missing. A mapped zone is not an insurance determination or a prediction
+    of flooding.
+authority_notes: DCR serves FEMA effective flood hazard data for reference through VFRIS. Attribute
+  FEMA and DCR.
+health:
+  probe: arcgis_layer_count
+  expect:
+    min_features:
+      zones: 1000
+      panels: 100
+lifecycle:
+  declared_state: active
+  added: '2026-11-03'
+  last_verified: '2026-11-03'
+  verified_by: pranava0x0

@@ -270,6 +270,10 @@ class HttpFetcher:
         response, host = await self._fetch(url, params)
         return self._decode_json_list(response, host)
 
+    async def fetch_bytes(self, url: str) -> bytes:
+        body, host = await self._fetch(url, None)
+        return self._checked_body(body, host)
+
     async def fetch_html(self, url: str) -> tuple[str, str]:
         """Returns (html, final_url) — the final URL after any redirects,
         since some HTML sources (e.g. Virginia Law) signal "not found" by

@@ -23,7 +23,7 @@ access:
   automation_status: unknown
   terms_url: https://eva.virginia.gov/
   terms_notes: >
-    Not reviewed, and not researched. The site answered 200 on 2026-08-29;
+    The live solicitation service has not been reviewed. The site answered 200 on 2026-08-29;
     nothing else about it has been checked.
   data_classification: open
 
@@ -37,7 +37,8 @@ coverage:
   temporal: current
   known_limitations:
     - >
-      No endpoint discovery has run. Whether eVA exposes solicitations or
+      The FY2025 order-line archive is registered separately as va-eva-order-lines.
+      Whether eVA exposes live solicitations or
       awards through anything other than its own web UI is an open
       question, not a recorded finding.
     - >

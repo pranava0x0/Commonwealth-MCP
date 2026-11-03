@@ -14,6 +14,7 @@ re-record that changes what the town publishes changes the test with it.
 from __future__ import annotations
 
 import json
+from urllib.parse import urlsplit
 
 import pytest
 
@@ -123,6 +124,10 @@ async def test_a_vienna_parcel_number_reads_the_town_over_the_county_parcel(
     parcel_evidence = [evidence[ref] for ref in vienna["parcel_evidence_refs"]]
     assert {provenance[e.source_ref].source_id
             for e in parcel_evidence} == {FAIRFAX}
+    for e in parcel_evidence:
+        link = urlsplit(e.locator)
+        assert link.netloc == "www.fairfaxcounty.gov"
+        assert link.path.endswith("/OpenData_A9/FeatureServer/0/query")
     district = vienna["records"][0]
     assert set(vienna["parcel_evidence_refs"]) <= set(district["evidence_refs"]), (
         "the district rests on the parcel polygon that produced it")
@@ -130,6 +135,8 @@ async def test_a_vienna_parcel_number_reads_the_town_over_the_county_parcel(
                        if ref not in vienna["parcel_evidence_refs"]]
     assert zoning_evidence, "the district carries no evidence of its own"
     for e in zoning_evidence:
+        # The district alone cannot identify a polygon if the town reuses its OID.
+        assert e.locator is None
         assert f"parcel_geometry_from:{FAIRFAX}" in e.transformations, (
             e.transformations)
 
@@ -410,9 +417,13 @@ async def test_a_truncated_borrowed_parcel_query_truncates_the_zoning_answer(
     env = await find_zoning(truncating, jurisdiction="Vienna",
                             pin=s["sample_pin"])
     assert env.coverage.pagination.value == "truncated"
+    comparison = env.data["comparison"]
+    assert all(src["values"] == ["AC"] for src in comparison["per_source"])
+    assert comparison["agreement"] is None
 
     clean = await find_zoning(ctx, jurisdiction="Vienna",
                               pin=s["sample_pin"])
+    assert clean.data["comparison"]["agreement"] is True
     assert clean.coverage.pagination.value == "complete", (
         "the same call over an untruncated parcel layer is complete, so "
         "the assertion above is about the cap and not about this PIN")

@@ -70,30 +70,37 @@ finding sends you to the escalation table.
   format before concluding it does not exist. Publishers embed spacing
   ("0102 14  0231"), and a re-spaced PIN misses.
 - *Empty with `coverage.registry: none`* means no parcel source is
-  registered for this locality. Say that, and stop; there is nothing to
-  screen.
+  registered for this locality. Report the missing parcel record. If the caller
+  supplied a PIN or point, still check the zoning source: it may publish its
+  own parcel IDs or answer directly at the point.
 
 **Step 2 — `zoning.lookup`.** Read the district on the parcel's ground.
 
 - *A hit* gives one or more districts. Where the parcel is split across
   polygons, the districts are the union across all of them and the result
   says how many polygons were intersected. Report every district and say
-  the parcel is split. Two districts here are not two sources disagreeing.
+  the zoning is split if the districts differ. Several parcel polygons in
+  one district still yield one district. If pagination is truncated, name
+  the districts found and say that more may be present.
+- *A publisher matches the PIN directly* (`lookup_method: zoning_by_parcel_id`):
+  cite the zoning rows themselves. In Roanoke County a split PIN can have a
+  primary assessment district and another district. Report both. The primary
+  flag does not establish which uses are permitted.
 - *Two sources answering* means two governments or two publishers both
   cover this ground, and both answers are returned unranked. Report both
   with each source named, and read `comparison.agreement` rather than
   assuming: `true` means they gave the same district and you say so,
   `false` means they disagree and the disagreement is the finding.
+  `null` means the comparison is inconclusive. Give the reason from
+  `comparison.note` even when the visible district names match.
   A point in the Town of Vienna returns the town's layer and Fairfax
   County's, and they agree. Do not pick one, and do not average them.
-- *Empty with `coverage.registry: covered`* means the zoning layer has no
-  polygon on this parcel. That is a real gap in the publisher's data, not
-  an absence of zoning.
+- *Empty with `coverage.registry: covered`* with complete execution and pagination means
+  the lookup returned no match. Say whether the source was queried by parcel
+  ID or by geometry. Neither establishes an absence of zoning.
 - *Empty with `coverage.registry: none`* means no zoning source is
   registered for this locality. **Say "not covered", never "unzoned".**
-  A handful of Virginia governments have registered zoning sources: one
-  county, one city, and two towns as of 2026-09-07. Elsewhere, this
-  project has not registered where to read zoning. Reporting that gap as
+  Check the registry for current coverage. Reporting that gap as
   unzoned land is the worst answer this skill can give.
 
 ## 3. Escalation table
@@ -121,7 +128,11 @@ Report four parts every time, in this order.
    address or a point.
 2. **The evidence matrix.** One row per claim: the claim, the source that
    published it, when it was retrieved, and the evidence reference from
-   the envelope. A district with no source named is not a finding.
+   the envelope. If the evidence includes a `locator`, link that row to
+   the publisher's record. The link shows the current attributes; it is
+   not a copy of what the publisher returned at retrieval time. If a row
+   disappears or no longer matches, repeat the original lookup before
+   citing it as current.
 3. **Unresolved gaps.** Each as its own kind: no source registered, source
    registered but returned nothing, source failed. Three different facts,
    three different sentences.

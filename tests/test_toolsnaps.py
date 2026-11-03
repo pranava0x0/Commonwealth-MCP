@@ -18,9 +18,10 @@ def _current_snaps() -> dict[str, dict]:
     from tests.conftest import build_ctx
 
     async def collect() -> dict[str, dict]:
-        server = build_server(build_ctx(), profile="all")
-        async with Client(server) as client:
-            tools = (await client.list_tools()).tools
+        tools = []
+        for profile in ("all", "records"):
+            async with Client(build_server(build_ctx(), profile=profile)) as client:
+                tools.extend((await client.list_tools()).tools)
         return {
             t.name: {
                 "description": t.description,

@@ -608,12 +608,15 @@ function renderTools(core){
   const packages = [...new Set(core.tools.map(t=>t.package))].sort();
   const inDefault = new Set(core.profiles.default);
   const profileSelect = document.getElementById("tool-profile");
+  const catalog = el("option", "", "Entire catalog (" + core.tools.length + ")");
+  catalog.value = "";
+  profileSelect.append(catalog);
   for (const [name, tools] of Object.entries(core.profiles)){
     const option = el("option","",name + " (" + tools.length + ")");
     option.value = name;
     profileSelect.append(option);
   }
-  profileSelect.value = "all";
+  profileSelect.value = "";
   profileSelect.addEventListener("change", draw);
   let active = "";
 
@@ -637,7 +640,7 @@ function renderTools(core){
   }
 
   function matches(t, q){
-    if (!core.profiles[profileSelect.value].includes(t.name)) return false;
+    if (profileSelect.value && !core.profiles[profileSelect.value].includes(t.name)) return false;
     if (active && t.package !== active) return false;
     if (!q) return true;
     const hay = [t.name, t.package, t.toolset, t.description,
@@ -666,7 +669,7 @@ function renderTools(core){
     }
     // Expanding for a search or a filter shows everything that matched;
     // the unfiltered list is the one that holds tools back.
-    const initial = (q || active || profileSelect.value !== "all") ? ordered.length
+    const initial = (q || active || profileSelect.value !== "") ? ordered.length
       : ordered.findIndex((n,i)=> ordered.slice(0,i)
           .filter(x=>x.classList.contains("tool-card")).length ===
           inDefault.size);
@@ -856,6 +859,27 @@ function renderCall(call, i){
     (a.args ? JSON.stringify(a.args) : `[names only: ${a.arg_names}]`) +
     (a.request_id ? ` · request ${a.request_id.slice(0,8)}` : ""));
   card.append(line);
+
+  if (["geo.find_parcel", "geo.find_zoning"].includes(a.tool) && call.envelope){
+    const sources = new Map(call.envelope.provenance.map(s => [s.id, s]));
+    const seen = new Set();
+    const list = el("ul");
+    for (const evidence of call.envelope.evidence){
+      const href = safeHref(evidence.locator);
+      const source = sources.get(evidence.source_ref);
+      if (!href || !source || seen.has(href)) continue;
+      seen.add(href);
+      const link = el("a", "", source.dataset + " · " + evidence.record_id);
+      link.href = href;
+      const item = el("li");
+      item.append(link);
+      list.append(item);
+    }
+    if (list.childElementCount)
+      card.append(el("p", "srcline", "Publisher records (live):"), list,
+        el("p", "srcline", "A publisher can replace or renumber a row. " +
+          "Compare it with the recorded answer below."));
+  }
 
   if (call.http_calls !== undefined){
     if (call.http_calls.length){

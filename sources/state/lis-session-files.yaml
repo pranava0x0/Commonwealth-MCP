@@ -1,0 +1,45 @@
+id: va-lis-session-files
+name: LIS legislative session files
+jurisdiction: va
+publisher:
+  agency: Virginia General Assembly, Division of Legislative Automated Systems
+  authority_level: primary
+domains:
+- civic
+capabilities:
+- id: bill.lookup
+  tool_hint: records.get_bill
+- id: bill_votes.lookup
+  tool_hint: records.get_bill_votes
+adapter:
+  type: public_records
+  dataset: lis
+  service_url: https://lis.blob.core.windows.net/lisfiles
+access:
+  mode: anonymous
+  automation_status: public_download
+  terms_url: https://help.lis.virginia.gov/data/index.asp
+  terms_notes: DLAS documents anonymous automatic download and reuse of the public session files. These
+    files are separate from the keyed API.
+  terms_reviewed_at: '2026-11-03'
+  data_classification: open
+freshness:
+  expected_cadence: unknown
+  cadence_source: No guaranteed refresh interval for an individual record.
+  ttl_hint_seconds: 3600
+coverage:
+  geography: va
+  temporal: range
+  known_limitations:
+  - Returns the bill record and published text-version identifiers, not the bill text. Member votes
+    are joined only by an exact history reference.
+authority_notes: DLAS documents anonymous automatic download and reuse of the public session files.
+  These files are separate from the keyed API.
+health:
+  probe: public_record_lookup
+  expect: {}
+lifecycle:
+  declared_state: active
+  added: '2026-11-03'
+  last_verified: '2026-11-03'
+  verified_by: pranava0x0

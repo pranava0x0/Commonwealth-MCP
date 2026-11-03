@@ -20,6 +20,7 @@ from .adapters.agenda_platform import AgendaPlatformAdapter
 from .adapters.arcgis import ArcGISAdapter
 from .adapters.arcgis_geocode import ArcGISGeocodeAdapter
 from .adapters.base import TTLCache
+from .adapters.public_records import PublicRecordsAdapter
 from .adapters.replay import HtmlReplayFetcher, ReplayFetcher
 from .adapters.virginia_law import VirginiaLawAdapter
 from .core.jurisdiction import JurisdictionTable
@@ -138,7 +139,7 @@ def fixture_vintage(name: str) -> str | None:
     the API recording is the directory's vintage). None when neither
     exists or neither says.
     """
-    for filename in ("recorded.json", "api-recorded.json"):
+    for filename in ("recorded.json", "api-recorded.json", "public-records.json"):
         path = FIXTURES_DIR / name / filename
         if path.exists():
             return json.loads(path.read_text()).get("recorded_at")
@@ -151,6 +152,23 @@ def fixture_vintage(name: str) -> str | None:
 # fixture; one entry nothing will ever request keeps that check honest
 # and makes any real request against this seam fail as unrecorded.
 _UNDECLARED = "commonwealth://no-fixtures-declared"
+
+
+class PublicReplay(ReplayFetcher):
+    def __init__(self, fixtures=None):
+        self.downloads = {}
+        exchanges = []
+        for file in sorted(FIXTURES_DIR.glob("*/public-records.json")):
+            if fixtures is None or file.parent.name in fixtures:
+                doc = json.loads(file.read_text())
+                self.downloads.update(doc["downloads"])
+                exchanges.extend(doc["exchanges"])
+        super().__init__(exchanges or [{"url": _UNDECLARED, "params": {}, "response": {}}])
+
+    async def fetch_bytes(self, url):
+        if url not in self.downloads:
+            raise AssertionError(f"No CSV recording for {url}")
+        return self.downloads[url].encode("utf-8")
 
 
 def replay_context(fixtures: list[str] | None = None,
@@ -194,4 +212,5 @@ def replay_context(fixtures: list[str] | None = None,
             fetcher=HtmlReplayFetcher(pages),
             json_fetcher=ReplayFetcher(api)),
         agendas=AgendaPlatformAdapter(fetcher=ReplayFetcher(pool)),
+        public_records=PublicRecordsAdapter(PublicReplay(fixtures)),
         results=MemoryResultStore(deterministic=True))

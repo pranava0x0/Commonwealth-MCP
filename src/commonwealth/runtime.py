@@ -11,6 +11,7 @@ from .adapters import ADAPTER_VERSIONS
 from .adapters.agenda_platform import AgendaPlatformAdapter
 from .adapters.arcgis import ArcGISAdapter
 from .adapters.arcgis_geocode import ArcGISGeocodeAdapter
+from .adapters.public_records import PublicRecordsAdapter
 from .adapters.virginia_law import VirginiaLawAdapter
 from .core.audit import AuditLog
 from .core.jurisdiction import JurisdictionTable
@@ -85,6 +86,7 @@ class RuntimeContext:
     virginia_law: VirginiaLawAdapter = field(default_factory=VirginiaLawAdapter)
     agendas: AgendaPlatformAdapter = field(
         default_factory=AgendaPlatformAdapter)
+    public_records: PublicRecordsAdapter = field(default_factory=PublicRecordsAdapter)
     server_name: str = "commonwealth"
     server_version: str = __version__
     adapters: dict[str, str] = field(

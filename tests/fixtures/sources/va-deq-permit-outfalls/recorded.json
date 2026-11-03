@@ -1,0 +1,1020 @@
+{
+ "source_id": "va-deq-permit-outfalls",
+ "recorded_at": "2026-11-03T18:48:07Z",
+ "rights": {
+  "sources": [
+   {
+    "source_id": "va-deq-permit-outfalls",
+    "publisher": "Virginia Department of Environmental Quality",
+    "terms_url": "https://gisdata.deq.virginia.gov/mapper_ext/DataFactSheets/Water_Permitting/VPDESOutfallsDEQFactSheet.pdf"
+   }
+  ],
+  "note": "Recorded government-published responses; third-party content excluded from the repo's CC0 grant (../../../design/architecture.md decision 0011). Each publisher's own terms govern its own responses."
+ },
+ "summary": {
+  "health:outfalls": {
+   "layer": "outfalls",
+   "feature_count": 10843,
+   "min_expected": 1000,
+   "healthy": true
+  },
+  "outfalls:(-77.436, 37.5407)": 7,
+  "outfalls:(-74.5, 36.5)": 0
+ },
+ "exchanges": [
+  {
+   "url": "https://gisdata.deq.virginia.gov/arcgis/rest/services/public/EDMA/MapServer/119/query",
+   "params": {
+    "f": "json",
+    "where": "1=1",
+    "returnCountOnly": "true"
+   },
+   "response": {
+    "count": 10843
+   }
+  },
+  {
+   "url": "https://gisdata.deq.virginia.gov/arcgis/rest/services/public/EDMA/MapServer/119/query",
+   "params": {
+    "f": "json",
+    "outFields": "FAC_NAME,OBJECTID,OUTFALLNO,OUTFALL_ID,VAP_MAJOR_MINOR,VAP_PMT_NO,VAP_TYPE",
+    "resultRecordCount": "50",
+    "returnGeometry": "false",
+    "geometry": "{\"x\": -77.436, \"y\": 37.5407, \"spatialReference\": {\"wkid\": 4326}}",
+    "geometryType": "esriGeometryPoint",
+    "inSR": "4326",
+    "spatialRel": "esriSpatialRelIntersects",
+    "distance": "1609.0",
+    "units": "esriSRUnit_Meter"
+   },
+   "response": {
+    "displayFieldName": "FAC_NAME",
+    "fieldAliases": {
+     "FAC_NAME": "FAC_NAME",
+     "OBJECTID": "OBJECTID",
+     "OUTFALLNO": "OUTFALLNO",
+     "OUTFALL_ID": "OUTFALL_ID",
+     "VAP_MAJOR_MINOR": "VAP_MAJOR_MINOR",
+     "VAP_PMT_NO": "VAP_PMT_NO",
+     "VAP_TYPE": "VAP_TYPE"
+    },
+    "fields": [
+     {
+      "name": "FAC_NAME",
+      "type": "esriFieldTypeString",
+      "alias": "FAC_NAME",
+      "length": 50
+     },
+     {
+      "name": "OBJECTID",
+      "type": "esriFieldTypeOID",
+      "alias": "OBJECTID"
+     },
+     {
+      "name": "OUTFALLNO",
+      "type": "esriFieldTypeString",
+      "alias": "OUTFALLNO",
+      "length": 12
+     },
+     {
+      "name": "OUTFALL_ID",
+      "type": "esriFieldTypeString",
+      "alias": "OUTFALL_ID",
+      "length": 255
+     },
+     {
+      "name": "VAP_MAJOR_MINOR",
+      "type": "esriFieldTypeString",
+      "alias": "VAP_MAJOR_MINOR",
+      "length": 1
+     },
+     {
+      "name": "VAP_PMT_NO",
+      "type": "esriFieldTypeString",
+      "alias": "VAP_PMT_NO",
+      "length": 9
+     },
+     {
+      "name": "VAP_TYPE",
+      "type": "esriFieldTypeString",
+      "alias": "VAP_TYPE",
+      "length": 8
+     }
+    ],
+    "features": [
+     {
+      "attributes": {
+       "FAC_NAME": "Richmond WWTP",
+       "OBJECTID": 1511,
+       "OUTFALLNO": "VA0063177006",
+       "OUTFALL_ID": "VA0063177006",
+       "VAP_MAJOR_MINOR": "M",
+       "VAP_PMT_NO": "VA0063177",
+       "VAP_TYPE": "VPDES_IP"
+      }
+     },
+     {
+      "attributes": {
+       "FAC_NAME": "Richmond WWTP",
+       "OBJECTID": 1512,
+       "OUTFALLNO": "VA0063177009",
+       "OUTFALL_ID": "VA0063177009",
+       "VAP_MAJOR_MINOR": "M",
+       "VAP_PMT_NO": "VA0063177",
+       "VAP_TYPE": "VPDES_IP"
+      }
+     },
+     {
+      "attributes": {
+       "FAC_NAME": "Richmond WWTP",
+       "OBJECTID": 1513,
+       "OUTFALLNO": "VA0063177010",
+       "OUTFALL_ID": "VA0063177010",
+       "VAP_MAJOR_MINOR": "M",
+       "VAP_PMT_NO": "VA0063177",
+       "VAP_TYPE": "VPDES_IP"
+      }
+     },
+     {
+      "attributes": {
+       "FAC_NAME": "Richmond WWTP",
+       "OBJECTID": 1526,
+       "OUTFALLNO": "VA0063177034",
+       "OUTFALL_ID": "VA0063177034",
+       "VAP_MAJOR_MINOR": "M",
+       "VAP_PMT_NO": "VA0063177",
+       "VAP_TYPE": "VPDES_IP"
+      }
+     },
+     {
+      "attributes": {
+       "FAC_NAME": "Richmond WWTP",
+       "OBJECTID": 1529,
+       "OUTFALLNO": "VA0063177040",
+       "OUTFALL_ID": "VA0063177040",
+       "VAP_MAJOR_MINOR": "M",
+       "VAP_PMT_NO": "VA0063177",
+       "VAP_TYPE": "VPDES_IP"
+      }
+     },
+     {
+      "attributes": {
+       "FAC_NAME": "Richmond WWTP",
+       "OBJECTID": 9445,
+       "OUTFALLNO": "VA0063177007",
+       "OUTFALL_ID": "VA0063177007",
+       "VAP_MAJOR_MINOR": "M",
+       "VAP_PMT_NO": "VA0063177",
+       "VAP_TYPE": "VPDES_IP"
+      }
+     },
+     {
+      "attributes": {
+       "FAC_NAME": "Norfolk Southern Railway Co Richmond Yard",
+       "OBJECTID": 10837,
+       "OUTFALLNO": "VAR052628001",
+       "OUTFALL_ID": "VAR052628001",
+       "VAP_MAJOR_MINOR": null,
+       "VAP_PMT_NO": "VAR052628",
+       "VAP_TYPE": "SWI_GP"
+      }
+     }
+    ]
+   }
+  },
+  {
+   "url": "https://gisdata.deq.virginia.gov/arcgis/rest/services/public/EDMA/MapServer/119",
+   "params": {
+    "f": "json"
+   },
+   "response": {
+    "extent": {
+     "ymin": 4375143.533799998,
+     "xmin": -9309154.2617,
+     "ymax": 4779851.503799997,
+     "xmax": -8389944.08,
+     "spatialReference": {
+      "falseM": -100000,
+      "xyTolerance": 0.001,
+      "mUnits": 10000,
+      "zUnits": 1,
+      "latestWkid": 3857,
+      "zTolerance": 2,
+      "wkid": 102100,
+      "xyUnits": 148923141.92838538,
+      "mTolerance": 0.001,
+      "falseX": -20037700,
+      "falseY": -30241100,
+      "falseZ": 0
+     }
+    },
+    "maxRecordCount": 1000,
+    "datesInUnknownTimezone": false,
+    "ownershipBasedAccessControlForFeatures": {
+     "allowOthersToQuery": true
+    },
+    "type": "Feature Layer",
+    "maxSelectionCount": 2000,
+    "subtypes": [],
+    "relationships": [],
+    "cimVersion": "3.7.0",
+    "isDataArchived": false,
+    "id": 119,
+    "archivingInfo": {
+     "startArchivingMoment": -1,
+     "supportsQueryWithHistoricMoment": false
+    },
+    "spatialReference": {
+     "falseM": -100000,
+     "xyTolerance": 0.001,
+     "mUnits": 10000,
+     "zUnits": 1,
+     "latestWkid": 3857,
+     "zTolerance": 2,
+     "wkid": 102100,
+     "xyUnits": 148923141.92838538,
+     "mTolerance": 0.001,
+     "falseX": -20037700,
+     "falseY": -30241100,
+     "falseZ": 0
+    },
+    "subtypeFieldName": null,
+    "supportsStatistics": true,
+    "hasLastEditTime": true,
+    "standardMaxRecordCount": 32000,
+    "isDataVersioned": false,
+    "supportsAdvancedQueries": true,
+    "parentLayer": {
+     "name": "Water Permitting Layers",
+     "id": 225
+    },
+    "subLayers": [],
+    "currentVersion": 12.1,
+    "referenceScale": 0,
+    "canScaleSymbols": false,
+    "name": "VPDES Outfalls (Daily)",
+    "displayField": "FAC_NAME",
+    "fields": [
+     {
+      "nullable": false,
+      "domain": null,
+      "name": "OBJECTID",
+      "alias": "OBJECTID",
+      "type": "esriFieldTypeOID"
+     },
+     {
+      "nullable": true,
+      "domain": null,
+      "name": "SHAPE",
+      "alias": "SHAPE",
+      "type": "esriFieldTypeGeometry"
+     },
+     {
+      "nullable": true,
+      "domain": null,
+      "name": "OUTFALL_ID",
+      "length": 255,
+      "alias": "OUTFALL_ID",
+      "type": "esriFieldTypeString"
+     },
+     {
+      "nullable": true,
+      "domain": null,
+      "name": "INSERTED_BY",
+      "length": 50,
+      "alias": "INSERTED_BY",
+      "type": "esriFieldTypeString"
+     },
+     {
+      "nullable": true,
+      "domain": null,
+      "name": "INSERTED_DATE",
+      "length": 8,
+      "alias": "INSERTED_DATE",
+      "type": "esriFieldTypeDate"
+     },
+     {
+      "nullable": true,
+      "domain": null,
+      "name": "CHANGED_BY",
+      "length": 50,
+      "alias": "CHANGED_BY",
+      "type": "esriFieldTypeString"
+     },
+     {
+      "nullable": true,
+      "domain": null,
+      "name": "CHANGED_DATE",
+      "length": 8,
+      "alias": "CHANGED_DATE",
+      "type": "esriFieldTypeDate"
+     },
+     {
+      "nullable": true,
+      "domain": null,
+      "name": "REFERENCE_POINT",
+      "length": 50,
+      "alias": "REFERENCE_POINT",
+      "type": "esriFieldTypeString"
+     },
+     {
+      "nullable": true,
+      "domain": null,
+      "name": "VERIFYDATE",
+      "length": 8,
+      "alias": "VERIFYDATE",
+      "type": "esriFieldTypeDate"
+     },
+     {
+      "nullable": true,
+      "domain": null,
+      "name": "VERIFIEDBY",
+      "length": 50,
+      "alias": "VERIFIEDBY",
+      "type": "esriFieldTypeString"
+     },
+     {
+      "nullable": true,
+      "domain": null,
+      "name": "OUTFALLNO",
+      "length": 12,
+      "alias": "OUTFALLNO",
+      "type": "esriFieldTypeString"
+     },
+     {
+      "nullable": true,
+      "domain": null,
+      "name": "VAP_PMT_NO",
+      "length": 9,
+      "alias": "VAP_PMT_NO",
+      "type": "esriFieldTypeString"
+     },
+     {
+      "nullable": true,
+      "domain": null,
+      "name": "VAP_TYPE",
+      "length": 8,
+      "alias": "VAP_TYPE",
+      "type": "esriFieldTypeString"
+     },
+     {
+      "nullable": true,
+      "domain": null,
+      "name": "VAP_TYPE_ALT_VERSION",
+      "length": 7,
+      "alias": "VAP_TYPE_ALT_VERSION",
+      "type": "esriFieldTypeString"
+     },
+     {
+      "nullable": false,
+      "domain": null,
+      "name": "FAC_NAME",
+      "length": 50,
+      "alias": "FAC_NAME",
+      "type": "esriFieldTypeString"
+     },
+     {
+      "nullable": true,
+      "domain": null,
+      "name": "VAP_MAJOR_MINOR",
+      "length": 1,
+      "alias": "VAP_MAJOR_MINOR",
+      "type": "esriFieldTypeString"
+     },
+     {
+      "nullable": true,
+      "domain": null,
+      "name": "Lat",
+      "alias": "Lat",
+      "type": "esriFieldTypeDouble"
+     },
+     {
+      "nullable": true,
+      "domain": null,
+      "name": "Lon",
+      "alias": "Lon",
+      "type": "esriFieldTypeDouble"
+     }
+    ],
+    "maxRecordCountFactor": 1,
+    "dateFieldsTimeReference": null,
+    "preferredTimeReference": null,
+    "useStandardizedQueries": true,
+    "sourceSpatialReference": {
+     "falseM": -100000,
+     "xyTolerance": 0.001,
+     "mUnits": 10000,
+     "zUnits": 10000,
+     "latestWkid": 3857,
+     "zTolerance": 0.001,
+     "wkid": 102100,
+     "xyUnits": 10000,
+     "mTolerance": 0.001,
+     "falseX": -20037700,
+     "falseY": -30241100,
+     "falseZ": -100000
+    },
+    "description": "",
+    "canModifyLayer": false,
+    "supportedSpatialRelationships": [
+     "esriSpatialRelIntersects",
+     "esriSpatialRelContains",
+     "esriSpatialRelCrosses",
+     "esriSpatialRelEnvelopeIntersects",
+     "esriSpatialRelIndexIntersects",
+     "esriSpatialRelOverlaps",
+     "esriSpatialRelTouches",
+     "esriSpatialRelWithin",
+     "esriSpatialRelRelation"
+    ],
+    "standardMaxRecordCountNoGeometry": 32000,
+    "indexes": [
+     {
+      "name": "FDO_OBJECTID",
+      "isUnique": true,
+      "description": "",
+      "fields": "OBJECTID",
+      "isAscending": true
+     },
+     {
+      "name": "FDO_SHAPE",
+      "isUnique": false,
+      "description": "",
+      "fields": "SHAPE",
+      "isAscending": true
+     }
+    ],
+    "htmlPopupType": "esriServerHTMLPopupTypeAsHTMLText",
+    "supportsDatumTransformation": true,
+    "minScale": 0,
+    "supportsDynamicLegends": true,
+    "hasAttachments": false,
+    "advancedQueryCapabilities": {
+     "supportsStatistics": true,
+     "supportsSqlExpression": true,
+     "supportsQueryWithResultType": true,
+     "supportsTrueCurve": true,
+     "supportsOrderBy": true,
+     "supportsQueryRelatedPagination": true,
+     "supportsSqlFormat": false,
+     "useStandardizedQueries": true,
+     "supportsLod": false,
+     "supportsQueryWithDistance": true,
+     "supportsQueryWithCacheHint": false,
+     "supportsQueryWithDatumTransformation": true,
+     "supportsCountDistinct": true,
+     "supportsCurrentUserQueries": true,
+     "supportsAdvancedQueryRelated": true,
+     "supportsReturningQueryExtent": true,
+     "supportsQueryWithLodSR": false,
+     "supportsPagination": true,
+     "supportsMaxRecordCountFactor": false,
+     "supportsDistinct": true,
+     "supportsTimeRelation": true,
+     "supportsQueryAnalytic": false,
+     "supportsPercentileStatistics": true,
+     "supportsHavingClause": true
+    },
+    "subtypeField": null,
+    "serviceItemId": "4748cfd94a9d461e82d3189183c0431e",
+    "supportsCoordinatesQuantization": true,
+    "capabilities": "Map,Query,Data",
+    "maxScale": 0,
+    "supportsExceedsLimitStatistics": true,
+    "defaultVisibility": false,
+    "hasMetadata": true,
+    "tileMaxRecordCount": 8000,
+    "typeIdField": null,
+    "defaultSubtypeCode": null,
+    "supportedQueryFormats": "JSON, geoJSON, PBF",
+    "hasLabels": false,
+    "drawingInfo": {
+     "renderer": {
+      "uniqueValueGroups": [
+       {
+        "heading": "Permit Type",
+        "classes": [
+         {
+          "symbol": {
+           "imageData": "iVBORw0KGgoAAAANSUhEUgAAABQAAAATCAYAAACQjC21AAAACXBIWXMAAA7EAAAOxAGVKw4bAAAB60lEQVQ4jcXUX0jTURTA8e/WkqaVaZAJ7skilMgQ8UEfCkRLRclFMHqMAgULEvVBXA6Roj8KGlIkPolihYZKGflUKShubqgo25wiTvazhymiONt0svmw/TY3hwmdp/s79/4+557L5co45pD9F/DTU+RjRi40fmPxn8EXKm6OztEVf5ZTZbmo3w3RemSwsojm09GUVpcQJZXAoIEWl5sCySp3PuhwRgy2PSRBv8SPkkyuZV3x5fOvI72qoOB5LxbNXZSaHrSHgvUq7s8KtDaoOBcXE1xMcR7ePkDxqo9fFUW8aRrgWUjwSSGfL8aiVCuRhjsK2QmoUSL/OoF6Y4u8y4nkVHWwGQhKTkrJfpQjxv664P0QbDqg/DackfvmCtPBZCPto544CAbdwhqTQKI/WNsNr/v3xzNW6Hgs3q3ZhmlsEuuBLa9v0am1cCsj2Zcz2Q4ee2LDAct2xkXH4f8xoKUr8xIvM5J9u6wuhlETbLug7p4YHNSzvWynOSQI7FhWmPJv23NthDbYdYPnLvrHiBGzbt67PiSIfZ0vM1byUpPE+UBsZxcW/mAI/D8I7NfRnp2CJjWJBMLEsBHnvED7oSDgtAjeNsKC3/WYp638jARkdoWGG3VMhwMdTu+8OyLw95S3clD1SOLYH9g9TzCcWU42v2cAAAAASUVORK5CYII=",
+           "yoffset": 0,
+           "width": 15,
+           "xoffset": 0,
+           "angle": 0,
+           "type": "esriPMS",
+           "contentType": "image/png",
+           "url": "d29786df6d48cbc485587690976576dd",
+           "height": 14
+          },
+          "values": [
+           [
+            "CRT_GP"
+           ],
+           [
+            "CWD_GP"
+           ],
+           [
+            "CWF_GP"
+           ],
+           [
+            "MIN_GP"
+           ],
+           [
+            "PETR_GP"
+           ],
+           [
+            "PWTP_GP"
+           ],
+           [
+            "SF_GP"
+           ],
+           [
+            "SWG_GP"
+           ],
+           [
+            "SWI_GP"
+           ]
+          ],
+          "description": "General Permits",
+          "label": "General Permits"
+         },
+         {
+          "symbol": {
+           "imageData": "iVBORw0KGgoAAAANSUhEUgAAABQAAAATCAYAAACQjC21AAAACXBIWXMAAA7EAAAOxAGVKw4bAAAB00lEQVQ4jcXUTyiDYRzA8e/WiKJw8Oewo8sSl7WDHShFuODorig5iB208bYW+VtIRE6icFCkyc2/2jIRa6t3jZTVTjtoK7MNbdT2bjaLld/peX/P835+z+/p6VGQ41D8C7izQ6HVSvnsLI9/BicmaLRY2Coro6CvD8PyMku/BoeGmC8qolenI18uB7OZhXCYNpmMjtVVQlmDa2tUXF9z3NlJbX19PN/airymhrbxcdyCQJcgYPsRNBrpdjpZMpkoKS1NLaZUwuIiyqkpTgcHmZmbYzQtODDAbmUlXQYD8kxHoVDAyAiFh4cY/H6aq6tpGh4mkAzK8vLQ9vRIsddXWFmBQAD6+6G4OD7X3g6iSN32NtFeUsB3r5dboCoR1Othevpz7HDAxoZ0ty4XotXK07ctPz+zabPRolbHc6L4/Tgafj94PFxKjiPx4+CALY2GSbU6vkudDiwWCAZhbEwKms0EPR7m04JAxO3mLrHt6LXxeuHtDaJ3MTEuLnBdXcXWpwXx+dhzOGhWqaT5ZCwSgYcHbpL/TwH391nXahFUKirIEOfnhO7vWf8RBEJfbWcEj45w2e2cZAPidGJqaMCeCXx5ic2/ZwWencUqp1TPJnL+wH4Aaw2bqIo8sHcAAAAASUVORK5CYII=",
+           "yoffset": 0,
+           "width": 15,
+           "xoffset": 0,
+           "angle": 0,
+           "type": "esriPMS",
+           "contentType": "image/png",
+           "url": "a5cac5a3e543e960b8e075edfd019210",
+           "height": 14
+          },
+          "values": [
+           [
+            "VPDES_IP"
+           ]
+          ],
+          "description": "Individual Permits",
+          "label": "Individual Permits"
+         }
+        ]
+       }
+      ],
+      "field1": "VAP_TYPE",
+      "authoringInfo": {
+       "colorRamp": {
+        "colorRamps": [
+         {
+          "toColor": [
+           252,
+           220,
+           204,
+           255
+          ],
+          "fromColor": [
+           252,
+           220,
+           204,
+           255
+          ],
+          "type": "algorithmic",
+          "algorithm": "esriCIELabAlgorithm"
+         },
+         {
+          "toColor": [
+           179,
+           180,
+           252,
+           255
+          ],
+          "fromColor": [
+           179,
+           180,
+           252,
+           255
+          ],
+          "type": "algorithmic",
+          "algorithm": "esriCIELabAlgorithm"
+         },
+         {
+          "toColor": [
+           179,
+           252,
+           191,
+           255
+          ],
+          "fromColor": [
+           179,
+           252,
+           191,
+           255
+          ],
+          "type": "algorithmic",
+          "algorithm": "esriCIELabAlgorithm"
+         },
+         {
+          "toColor": [
+           182,
+           237,
+           252,
+           255
+          ],
+          "fromColor": [
+           182,
+           237,
+           252,
+           255
+          ],
+          "type": "algorithmic",
+          "algorithm": "esriCIELabAlgorithm"
+         },
+         {
+          "toColor": [
+           252,
+           179,
+           212,
+           255
+          ],
+          "fromColor": [
+           252,
+           179,
+           212,
+           255
+          ],
+          "type": "algorithmic",
+          "algorithm": "esriCIELabAlgorithm"
+         },
+         {
+          "toColor": [
+           252,
+           251,
+           192,
+           255
+          ],
+          "fromColor": [
+           252,
+           251,
+           192,
+           255
+          ],
+          "type": "algorithmic",
+          "algorithm": "esriCIELabAlgorithm"
+         },
+         {
+          "toColor": [
+           221,
+           212,
+           252,
+           255
+          ],
+          "fromColor": [
+           221,
+           212,
+           252,
+           255
+          ],
+          "type": "algorithmic",
+          "algorithm": "esriCIELabAlgorithm"
+         },
+         {
+          "toColor": [
+           236,
+           182,
+           252,
+           255
+          ],
+          "fromColor": [
+           236,
+           182,
+           252,
+           255
+          ],
+          "type": "algorithmic",
+          "algorithm": "esriCIELabAlgorithm"
+         },
+         {
+          "toColor": [
+           212,
+           252,
+           227,
+           255
+          ],
+          "fromColor": [
+           212,
+           252,
+           227,
+           255
+          ],
+          "type": "algorithmic",
+          "algorithm": "esriCIELabAlgorithm"
+         },
+         {
+          "toColor": [
+           252,
+           183,
+           182,
+           255
+          ],
+          "fromColor": [
+           252,
+           183,
+           182,
+           255
+          ],
+          "type": "algorithmic",
+          "algorithm": "esriCIELabAlgorithm"
+         },
+         {
+          "toColor": [
+           252,
+           207,
+           224,
+           255
+          ],
+          "fromColor": [
+           252,
+           207,
+           224,
+           255
+          ],
+          "type": "algorithmic",
+          "algorithm": "esriCIELabAlgorithm"
+         },
+         {
+          "toColor": [
+           223,
+           252,
+           179,
+           255
+          ],
+          "fromColor": [
+           223,
+           252,
+           179,
+           255
+          ],
+          "type": "algorithmic",
+          "algorithm": "esriCIELabAlgorithm"
+         },
+         {
+          "toColor": [
+           252,
+           246,
+           215,
+           255
+          ],
+          "fromColor": [
+           252,
+           246,
+           215,
+           255
+          ],
+          "type": "algorithmic",
+          "algorithm": "esriCIELabAlgorithm"
+         }
+        ],
+        "type": "multipart"
+       }
+      },
+      "uniqueValueInfos": [
+       {
+        "symbol": {
+         "imageData": "iVBORw0KGgoAAAANSUhEUgAAABQAAAATCAYAAACQjC21AAAACXBIWXMAAA7EAAAOxAGVKw4bAAAB60lEQVQ4jcXUX0jTURTA8e/WkqaVaZAJ7skilMgQ8UEfCkRLRclFMHqMAgULEvVBXA6Roj8KGlIkPolihYZKGflUKShubqgo25wiTvazhymiONt0svmw/TY3hwmdp/s79/4+557L5co45pD9F/DTU+RjRi40fmPxn8EXKm6OztEVf5ZTZbmo3w3RemSwsojm09GUVpcQJZXAoIEWl5sCySp3PuhwRgy2PSRBv8SPkkyuZV3x5fOvI72qoOB5LxbNXZSaHrSHgvUq7s8KtDaoOBcXE1xMcR7ePkDxqo9fFUW8aRrgWUjwSSGfL8aiVCuRhjsK2QmoUSL/OoF6Y4u8y4nkVHWwGQhKTkrJfpQjxv664P0QbDqg/DackfvmCtPBZCPto544CAbdwhqTQKI/WNsNr/v3xzNW6Hgs3q3ZhmlsEuuBLa9v0am1cCsj2Zcz2Q4ee2LDAct2xkXH4f8xoKUr8xIvM5J9u6wuhlETbLug7p4YHNSzvWynOSQI7FhWmPJv23NthDbYdYPnLvrHiBGzbt67PiSIfZ0vM1byUpPE+UBsZxcW/mAI/D8I7NfRnp2CJjWJBMLEsBHnvED7oSDgtAjeNsKC3/WYp638jARkdoWGG3VMhwMdTu+8OyLw95S3clD1SOLYH9g9TzCcWU42v2cAAAAASUVORK5CYII=",
+         "yoffset": 0,
+         "width": 15,
+         "xoffset": 0,
+         "angle": 0,
+         "type": "esriPMS",
+         "contentType": "image/png",
+         "url": "d29786df6d48cbc485587690976576dd",
+         "height": 14
+        },
+        "label": "General Permits",
+        "value": "CRT_GP"
+       },
+       {
+        "symbol": {
+         "imageData": "iVBORw0KGgoAAAANSUhEUgAAABQAAAATCAYAAACQjC21AAAACXBIWXMAAA7EAAAOxAGVKw4bAAAB60lEQVQ4jcXUX0jTURTA8e/WkqaVaZAJ7skilMgQ8UEfCkRLRclFMHqMAgULEvVBXA6Roj8KGlIkPolihYZKGflUKShubqgo25wiTvazhymiONt0svmw/TY3hwmdp/s79/4+557L5co45pD9F/DTU+RjRi40fmPxn8EXKm6OztEVf5ZTZbmo3w3RemSwsojm09GUVpcQJZXAoIEWl5sCySp3PuhwRgy2PSRBv8SPkkyuZV3x5fOvI72qoOB5LxbNXZSaHrSHgvUq7s8KtDaoOBcXE1xMcR7ePkDxqo9fFUW8aRrgWUjwSSGfL8aiVCuRhjsK2QmoUSL/OoF6Y4u8y4nkVHWwGQhKTkrJfpQjxv664P0QbDqg/DackfvmCtPBZCPto544CAbdwhqTQKI/WNsNr/v3xzNW6Hgs3q3ZhmlsEuuBLa9v0am1cCsj2Zcz2Q4ee2LDAct2xkXH4f8xoKUr8xIvM5J9u6wuhlETbLug7p4YHNSzvWynOSQI7FhWmPJv23NthDbYdYPnLvrHiBGzbt67PiSIfZ0vM1byUpPE+UBsZxcW/mAI/D8I7NfRnp2CJjWJBMLEsBHnvED7oSDgtAjeNsKC3/WYp638jARkdoWGG3VMhwMdTu+8OyLw95S3clD1SOLYH9g9TzCcWU42v2cAAAAASUVORK5CYII=",
+         "yoffset": 0,
+         "width": 15,
+         "xoffset": 0,
+         "angle": 0,
+         "type": "esriPMS",
+         "contentType": "image/png",
+         "url": "d29786df6d48cbc485587690976576dd",
+         "height": 14
+        },
+        "label": "General Permits",
+        "value": "CWD_GP"
+       },
+       {
+        "symbol": {
+         "imageData": "iVBORw0KGgoAAAANSUhEUgAAABQAAAATCAYAAACQjC21AAAACXBIWXMAAA7EAAAOxAGVKw4bAAAB60lEQVQ4jcXUX0jTURTA8e/WkqaVaZAJ7skilMgQ8UEfCkRLRclFMHqMAgULEvVBXA6Roj8KGlIkPolihYZKGflUKShubqgo25wiTvazhymiONt0svmw/TY3hwmdp/s79/4+557L5co45pD9F/DTU+RjRi40fmPxn8EXKm6OztEVf5ZTZbmo3w3RemSwsojm09GUVpcQJZXAoIEWl5sCySp3PuhwRgy2PSRBv8SPkkyuZV3x5fOvI72qoOB5LxbNXZSaHrSHgvUq7s8KtDaoOBcXE1xMcR7ePkDxqo9fFUW8aRrgWUjwSSGfL8aiVCuRhjsK2QmoUSL/OoF6Y4u8y4nkVHWwGQhKTkrJfpQjxv664P0QbDqg/DackfvmCtPBZCPto544CAbdwhqTQKI/WNsNr/v3xzNW6Hgs3q3ZhmlsEuuBLa9v0am1cCsj2Zcz2Q4ee2LDAct2xkXH4f8xoKUr8xIvM5J9u6wuhlETbLug7p4YHNSzvWynOSQI7FhWmPJv23NthDbYdYPnLvrHiBGzbt67PiSIfZ0vM1byUpPE+UBsZxcW/mAI/D8I7NfRnp2CJjWJBMLEsBHnvED7oSDgtAjeNsKC3/WYp638jARkdoWGG3VMhwMdTu+8OyLw95S3clD1SOLYH9g9TzCcWU42v2cAAAAASUVORK5CYII=",
+         "yoffset": 0,
+         "width": 15,
+         "xoffset": 0,
+         "angle": 0,
+         "type": "esriPMS",
+         "contentType": "image/png",
+         "url": "d29786df6d48cbc485587690976576dd",
+         "height": 14
+        },
+        "label": "General Permits",
+        "value": "CWF_GP"
+       },
+       {
+        "symbol": {
+         "imageData": "iVBORw0KGgoAAAANSUhEUgAAABQAAAATCAYAAACQjC21AAAACXBIWXMAAA7EAAAOxAGVKw4bAAAB60lEQVQ4jcXUX0jTURTA8e/WkqaVaZAJ7skilMgQ8UEfCkRLRclFMHqMAgULEvVBXA6Roj8KGlIkPolihYZKGflUKShubqgo25wiTvazhymiONt0svmw/TY3hwmdp/s79/4+557L5co45pD9F/DTU+RjRi40fmPxn8EXKm6OztEVf5ZTZbmo3w3RemSwsojm09GUVpcQJZXAoIEWl5sCySp3PuhwRgy2PSRBv8SPkkyuZV3x5fOvI72qoOB5LxbNXZSaHrSHgvUq7s8KtDaoOBcXE1xMcR7ePkDxqo9fFUW8aRrgWUjwSSGfL8aiVCuRhjsK2QmoUSL/OoF6Y4u8y4nkVHWwGQhKTkrJfpQjxv664P0QbDqg/DackfvmCtPBZCPto544CAbdwhqTQKI/WNsNr/v3xzNW6Hgs3q3ZhmlsEuuBLa9v0am1cCsj2Zcz2Q4ee2LDAct2xkXH4f8xoKUr8xIvM5J9u6wuhlETbLug7p4YHNSzvWynOSQI7FhWmPJv23NthDbYdYPnLvrHiBGzbt67PiSIfZ0vM1byUpPE+UBsZxcW/mAI/D8I7NfRnp2CJjWJBMLEsBHnvED7oSDgtAjeNsKC3/WYp638jARkdoWGG3VMhwMdTu+8OyLw95S3clD1SOLYH9g9TzCcWU42v2cAAAAASUVORK5CYII=",
+         "yoffset": 0,
+         "width": 15,
+         "xoffset": 0,
+         "angle": 0,
+         "type": "esriPMS",
+         "contentType": "image/png",
+         "url": "d29786df6d48cbc485587690976576dd",
+         "height": 14
+        },
+        "label": "General Permits",
+        "value": "MIN_GP"
+       },
+       {
+        "symbol": {
+         "imageData": "iVBORw0KGgoAAAANSUhEUgAAABQAAAATCAYAAACQjC21AAAACXBIWXMAAA7EAAAOxAGVKw4bAAAB60lEQVQ4jcXUX0jTURTA8e/WkqaVaZAJ7skilMgQ8UEfCkRLRclFMHqMAgULEvVBXA6Roj8KGlIkPolihYZKGflUKShubqgo25wiTvazhymiONt0svmw/TY3hwmdp/s79/4+557L5co45pD9F/DTU+RjRi40fmPxn8EXKm6OztEVf5ZTZbmo3w3RemSwsojm09GUVpcQJZXAoIEWl5sCySp3PuhwRgy2PSRBv8SPkkyuZV3x5fOvI72qoOB5LxbNXZSaHrSHgvUq7s8KtDaoOBcXE1xMcR7ePkDxqo9fFUW8aRrgWUjwSSGfL8aiVCuRhjsK2QmoUSL/OoF6Y4u8y4nkVHWwGQhKTkrJfpQjxv664P0QbDqg/DackfvmCtPBZCPto544CAbdwhqTQKI/WNsNr/v3xzNW6Hgs3q3ZhmlsEuuBLa9v0am1cCsj2Zcz2Q4ee2LDAct2xkXH4f8xoKUr8xIvM5J9u6wuhlETbLug7p4YHNSzvWynOSQI7FhWmPJv23NthDbYdYPnLvrHiBGzbt67PiSIfZ0vM1byUpPE+UBsZxcW/mAI/D8I7NfRnp2CJjWJBMLEsBHnvED7oSDgtAjeNsKC3/WYp638jARkdoWGG3VMhwMdTu+8OyLw95S3clD1SOLYH9g9TzCcWU42v2cAAAAASUVORK5CYII=",
+         "yoffset": 0,
+         "width": 15,
+         "xoffset": 0,
+         "angle": 0,
+         "type": "esriPMS",
+         "contentType": "image/png",
+         "url": "d29786df6d48cbc485587690976576dd",
+         "height": 14
+        },
+        "label": "General Permits",
+        "value": "PETR_GP"
+       },
+       {
+        "symbol": {
+         "imageData": "iVBORw0KGgoAAAANSUhEUgAAABQAAAATCAYAAACQjC21AAAACXBIWXMAAA7EAAAOxAGVKw4bAAAB60lEQVQ4jcXUX0jTURTA8e/WkqaVaZAJ7skilMgQ8UEfCkRLRclFMHqMAgULEvVBXA6Roj8KGlIkPolihYZKGflUKShubqgo25wiTvazhymiONt0svmw/TY3hwmdp/s79/4+557L5co45pD9F/DTU+RjRi40fmPxn8EXKm6OztEVf5ZTZbmo3w3RemSwsojm09GUVpcQJZXAoIEWl5sCySp3PuhwRgy2PSRBv8SPkkyuZV3x5fOvI72qoOB5LxbNXZSaHrSHgvUq7s8KtDaoOBcXE1xMcR7ePkDxqo9fFUW8aRrgWUjwSSGfL8aiVCuRhjsK2QmoUSL/OoF6Y4u8y4nkVHWwGQhKTkrJfpQjxv664P0QbDqg/DackfvmCtPBZCPto544CAbdwhqTQKI/WNsNr/v3xzNW6Hgs3q3ZhmlsEuuBLa9v0am1cCsj2Zcz2Q4ee2LDAct2xkXH4f8xoKUr8xIvM5J9u6wuhlETbLug7p4YHNSzvWynOSQI7FhWmPJv23NthDbYdYPnLvrHiBGzbt67PiSIfZ0vM1byUpPE+UBsZxcW/mAI/D8I7NfRnp2CJjWJBMLEsBHnvED7oSDgtAjeNsKC3/WYp638jARkdoWGG3VMhwMdTu+8OyLw95S3clD1SOLYH9g9TzCcWU42v2cAAAAASUVORK5CYII=",
+         "yoffset": 0,
+         "width": 15,
+         "xoffset": 0,
+         "angle": 0,
+         "type": "esriPMS",
+         "contentType": "image/png",
+         "url": "d29786df6d48cbc485587690976576dd",
+         "height": 14
+        },
+        "label": "General Permits",
+        "value": "PWTP_GP"
+       },
+       {
+        "symbol": {
+         "imageData": "iVBORw0KGgoAAAANSUhEUgAAABQAAAATCAYAAACQjC21AAAACXBIWXMAAA7EAAAOxAGVKw4bAAAB60lEQVQ4jcXUX0jTURTA8e/WkqaVaZAJ7skilMgQ8UEfCkRLRclFMHqMAgULEvVBXA6Roj8KGlIkPolihYZKGflUKShubqgo25wiTvazhymiONt0svmw/TY3hwmdp/s79/4+557L5co45pD9F/DTU+RjRi40fmPxn8EXKm6OztEVf5ZTZbmo3w3RemSwsojm09GUVpcQJZXAoIEWl5sCySp3PuhwRgy2PSRBv8SPkkyuZV3x5fOvI72qoOB5LxbNXZSaHrSHgvUq7s8KtDaoOBcXE1xMcR7ePkDxqo9fFUW8aRrgWUjwSSGfL8aiVCuRhjsK2QmoUSL/OoF6Y4u8y4nkVHWwGQhKTkrJfpQjxv664P0QbDqg/DackfvmCtPBZCPto544CAbdwhqTQKI/WNsNr/v3xzNW6Hgs3q3ZhmlsEuuBLa9v0am1cCsj2Zcz2Q4ee2LDAct2xkXH4f8xoKUr8xIvM5J9u6wuhlETbLug7p4YHNSzvWynOSQI7FhWmPJv23NthDbYdYPnLvrHiBGzbt67PiSIfZ0vM1byUpPE+UBsZxcW/mAI/D8I7NfRnp2CJjWJBMLEsBHnvED7oSDgtAjeNsKC3/WYp638jARkdoWGG3VMhwMdTu+8OyLw95S3clD1SOLYH9g9TzCcWU42v2cAAAAASUVORK5CYII=",
+         "yoffset": 0,
+         "width": 15,
+         "xoffset": 0,
+         "angle": 0,
+         "type": "esriPMS",
+         "contentType": "image/png",
+         "url": "d29786df6d48cbc485587690976576dd",
+         "height": 14
+        },
+        "label": "General Permits",
+        "value": "SF_GP"
+       },
+       {
+        "symbol": {
+         "imageData": "iVBORw0KGgoAAAANSUhEUgAAABQAAAATCAYAAACQjC21AAAACXBIWXMAAA7EAAAOxAGVKw4bAAAB60lEQVQ4jcXUX0jTURTA8e/WkqaVaZAJ7skilMgQ8UEfCkRLRclFMHqMAgULEvVBXA6Roj8KGlIkPolihYZKGflUKShubqgo25wiTvazhymiONt0svmw/TY3hwmdp/s79/4+557L5co45pD9F/DTU+RjRi40fmPxn8EXKm6OztEVf5ZTZbmo3w3RemSwsojm09GUVpcQJZXAoIEWl5sCySp3PuhwRgy2PSRBv8SPkkyuZV3x5fOvI72qoOB5LxbNXZSaHrSHgvUq7s8KtDaoOBcXE1xMcR7ePkDxqo9fFUW8aRrgWUjwSSGfL8aiVCuRhjsK2QmoUSL/OoF6Y4u8y4nkVHWwGQhKTkrJfpQjxv664P0QbDqg/DackfvmCtPBZCPto544CAbdwhqTQKI/WNsNr/v3xzNW6Hgs3q3ZhmlsEuuBLa9v0am1cCsj2Zcz2Q4ee2LDAct2xkXH4f8xoKUr8xIvM5J9u6wuhlETbLug7p4YHNSzvWynOSQI7FhWmPJv23NthDbYdYPnLvrHiBGzbt67PiSIfZ0vM1byUpPE+UBsZxcW/mAI/D8I7NfRnp2CJjWJBMLEsBHnvED7oSDgtAjeNsKC3/WYp638jARkdoWGG3VMhwMdTu+8OyLw95S3clD1SOLYH9g9TzCcWU42v2cAAAAASUVORK5CYII=",
+         "yoffset": 0,
+         "width": 15,
+         "xoffset": 0,
+         "angle": 0,
+         "type": "esriPMS",
+         "contentType": "image/png",
+         "url": "d29786df6d48cbc485587690976576dd",
+         "height": 14
+        },
+        "label": "General Permits",
+        "value": "SWG_GP"
+       },
+       {
+        "symbol": {
+         "imageData": "iVBORw0KGgoAAAANSUhEUgAAABQAAAATCAYAAACQjC21AAAACXBIWXMAAA7EAAAOxAGVKw4bAAAB60lEQVQ4jcXUX0jTURTA8e/WkqaVaZAJ7skilMgQ8UEfCkRLRclFMHqMAgULEvVBXA6Roj8KGlIkPolihYZKGflUKShubqgo25wiTvazhymiONt0svmw/TY3hwmdp/s79/4+557L5co45pD9F/DTU+RjRi40fmPxn8EXKm6OztEVf5ZTZbmo3w3RemSwsojm09GUVpcQJZXAoIEWl5sCySp3PuhwRgy2PSRBv8SPkkyuZV3x5fOvI72qoOB5LxbNXZSaHrSHgvUq7s8KtDaoOBcXE1xMcR7ePkDxqo9fFUW8aRrgWUjwSSGfL8aiVCuRhjsK2QmoUSL/OoF6Y4u8y4nkVHWwGQhKTkrJfpQjxv664P0QbDqg/DackfvmCtPBZCPto544CAbdwhqTQKI/WNsNr/v3xzNW6Hgs3q3ZhmlsEuuBLa9v0am1cCsj2Zcz2Q4ee2LDAct2xkXH4f8xoKUr8xIvM5J9u6wuhlETbLug7p4YHNSzvWynOSQI7FhWmPJv23NthDbYdYPnLvrHiBGzbt67PiSIfZ0vM1byUpPE+UBsZxcW/mAI/D8I7NfRnp2CJjWJBMLEsBHnvED7oSDgtAjeNsKC3/WYp638jARkdoWGG3VMhwMdTu+8OyLw95S3clD1SOLYH9g9TzCcWU42v2cAAAAASUVORK5CYII=",
+         "yoffset": 0,
+         "width": 15,
+         "xoffset": 0,
+         "angle": 0,
+         "type": "esriPMS",
+         "contentType": "image/png",
+         "url": "d29786df6d48cbc485587690976576dd",
+         "height": 14
+        },
+        "label": "General Permits",
+        "value": "SWI_GP"
+       },
+       {
+        "symbol": {
+         "imageData": "iVBORw0KGgoAAAANSUhEUgAAABQAAAATCAYAAACQjC21AAAACXBIWXMAAA7EAAAOxAGVKw4bAAAB00lEQVQ4jcXUTyiDYRzA8e/WiKJw8Oewo8sSl7WDHShFuODorig5iB208bYW+VtIRE6icFCkyc2/2jIRa6t3jZTVTjtoK7MNbdT2bjaLld/peX/P835+z+/p6VGQ41D8C7izQ6HVSvnsLI9/BicmaLRY2Coro6CvD8PyMku/BoeGmC8qolenI18uB7OZhXCYNpmMjtVVQlmDa2tUXF9z3NlJbX19PN/airymhrbxcdyCQJcgYPsRNBrpdjpZMpkoKS1NLaZUwuIiyqkpTgcHmZmbYzQtODDAbmUlXQYD8kxHoVDAyAiFh4cY/H6aq6tpGh4mkAzK8vLQ9vRIsddXWFmBQAD6+6G4OD7X3g6iSN32NtFeUsB3r5dboCoR1Othevpz7HDAxoZ0ty4XotXK07ctPz+zabPRolbHc6L4/Tgafj94PFxKjiPx4+CALY2GSbU6vkudDiwWCAZhbEwKms0EPR7m04JAxO3mLrHt6LXxeuHtDaJ3MTEuLnBdXcXWpwXx+dhzOGhWqaT5ZCwSgYcHbpL/TwH391nXahFUKirIEOfnhO7vWf8RBEJfbWcEj45w2e2cZAPidGJqaMCeCXx5ic2/ZwWencUqp1TPJnL+wH4Aaw2bqIo8sHcAAAAASUVORK5CYII=",
+         "yoffset": 0,
+         "width": 15,
+         "xoffset": 0,
+         "angle": 0,
+         "type": "esriPMS",
+         "contentType": "image/png",
+         "url": "a5cac5a3e543e960b8e075edfd019210",
+         "height": 14
+        },
+        "label": "Individual Permits",
+        "value": "VPDES_IP"
+       }
+      ],
+      "type": "uniqueValue",
+      "fieldDelimiter": ","
+     },
+     "scaleSymbols": true,
+     "transparency": 0,
+     "labelingInfo": null
+    },
+    "geometryField": {
+     "name": "SHAPE",
+     "alias": "SHAPE",
+     "type": "esriFieldTypeGeometry"
+    },
+    "copyrightText": "",
+    "geometryType": "esriGeometryPoint"
+   }
+  },
+  {
+   "url": "https://gisdata.deq.virginia.gov/arcgis/rest/services/public/EDMA/MapServer/119/query",
+   "params": {
+    "f": "json",
+    "outFields": "FAC_NAME,OBJECTID,OUTFALLNO,OUTFALL_ID,VAP_MAJOR_MINOR,VAP_PMT_NO,VAP_TYPE",
+    "resultRecordCount": "50",
+    "returnGeometry": "false",
+    "geometry": "{\"x\": -74.5, \"y\": 36.5, \"spatialReference\": {\"wkid\": 4326}}",
+    "geometryType": "esriGeometryPoint",
+    "inSR": "4326",
+    "spatialRel": "esriSpatialRelIntersects",
+    "distance": "1609.0",
+    "units": "esriSRUnit_Meter"
+   },
+   "response": {
+    "displayFieldName": "FAC_NAME",
+    "fieldAliases": {
+     "FAC_NAME": "FAC_NAME",
+     "OBJECTID": "OBJECTID",
+     "OUTFALLNO": "OUTFALLNO",
+     "OUTFALL_ID": "OUTFALL_ID",
+     "VAP_MAJOR_MINOR": "VAP_MAJOR_MINOR",
+     "VAP_PMT_NO": "VAP_PMT_NO",
+     "VAP_TYPE": "VAP_TYPE"
+    },
+    "fields": [
+     {
+      "name": "FAC_NAME",
+      "type": "esriFieldTypeString",
+      "alias": "FAC_NAME",
+      "length": 50
+     },
+     {
+      "name": "OBJECTID",
+      "type": "esriFieldTypeOID",
+      "alias": "OBJECTID"
+     },
+     {
+      "name": "OUTFALLNO",
+      "type": "esriFieldTypeString",
+      "alias": "OUTFALLNO",
+      "length": 12
+     },
+     {
+      "name": "OUTFALL_ID",
+      "type": "esriFieldTypeString",
+      "alias": "OUTFALL_ID",
+      "length": 255
+     },
+     {
+      "name": "VAP_MAJOR_MINOR",
+      "type": "esriFieldTypeString",
+      "alias": "VAP_MAJOR_MINOR",
+      "length": 1
+     },
+     {
+      "name": "VAP_PMT_NO",
+      "type": "esriFieldTypeString",
+      "alias": "VAP_PMT_NO",
+      "length": 9
+     },
+     {
+      "name": "VAP_TYPE",
+      "type": "esriFieldTypeString",
+      "alias": "VAP_TYPE",
+      "length": 8
+     }
+    ],
+    "features": []
+   }
+  }
+ ]
+}

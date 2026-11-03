@@ -180,6 +180,12 @@ def test_the_codex_prompts_are_the_ones_the_quick_start_shows():
 # is what keeps this from going stale — a new capability in the vocabulary
 # fails the test until it is named here.
 CAPABILITY_TOOLS = {
+    "flood_zone.lookup": "records.find_flood_zones",
+    "permit_outfall.lookup": "records.find_permit_outfalls",
+    "bill.lookup": "records.get_bill",
+    "bill_votes.lookup": "records.get_bill_votes",
+    "election_results.lookup": "records.get_election_results",
+    "purchase_order.search": "records.search_purchases",
     "address.lookup": "geo.find_address",
     "boundary.lookup": "geo.find_boundaries",
     "building.lookup": "geo.find_buildings",

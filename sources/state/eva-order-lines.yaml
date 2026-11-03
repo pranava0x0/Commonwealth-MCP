@@ -1,0 +1,43 @@
+id: va-eva-order-lines
+name: eVA FY2025 purchase order lines
+jurisdiction: va
+publisher:
+  agency: Virginia Department of General Services, eVA
+  authority_level: primary
+domains:
+- procurement
+capabilities:
+- id: purchase_order.search
+  tool_hint: records.search_purchases
+adapter:
+  type: public_records
+  dataset: eva
+  service_url: https://data.virginia.gov/api/3/action/datastore_search
+access:
+  mode: anonymous
+  automation_status: public_api
+  terms_url: https://data.virginia.gov/dataset/eva-procurement-data-2025-virginia
+  terms_notes: The DGS FY2025 dataset specifies Open Data Commons Attribution License. Data via Virginia
+    Open Data Portal, selected fields only.
+  terms_reviewed_at: '2026-11-03'
+  data_classification: open
+freshness:
+  expected_cadence: unknown
+  cadence_source: No guaranteed refresh interval for an individual record.
+  ttl_hint_seconds: 3600
+coverage:
+  geography: va
+  temporal: range
+  known_limitations:
+  - FY2025 order lines, not open solicitations, invoices or proof of payment. Values can include changes
+    and negative amounts.
+authority_notes: The DGS FY2025 dataset specifies Open Data Commons Attribution License. Data via Virginia
+  Open Data Portal, selected fields only.
+health:
+  probe: public_record_lookup
+  expect: {}
+lifecycle:
+  declared_state: active
+  added: '2026-11-03'
+  last_verified: '2026-11-03'
+  verified_by: pranava0x0

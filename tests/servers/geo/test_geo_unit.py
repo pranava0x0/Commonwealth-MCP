@@ -128,3 +128,27 @@ async def test_unknown_jurisdiction_is_empty_with_guidance(cw_ctx):
     env = await find_parcel(cw_ctx, jurisdiction="Atlantis", pin="x")
     assert env.coverage.result.value == "empty"
     assert "resolve_jurisdiction" in env.data["note"]
+
+
+@pytest.mark.parametrize("extra_district", ["Z-9", None])
+async def test_district_past_inline_cap_still_changes_agreement(sample_pin, monkeypatch,
+                                                               extra_district):
+    # Model a mirror that returned the primary district and one extra district.
+    exchanges = secondary_exchanges()
+    for ex in exchanges:
+        features = ex["response"].get("features") or []
+        if features and "ZONECODE" in features[0]["attributes"]:
+            attrs = features[0]["attributes"]
+            features.append({"attributes": {**attrs, "OBJECTID": -1, "ZONECODE": extra_district}})
+    ctx = build_ctx(extra_manifests=[make_secondary_manifest()], extra_exchanges=exchanges)
+    monkeypatch.setattr("commonwealth.domains.geo.INLINE_RECORD_CAP", 1)
+    env = await find_zoning(ctx, jurisdiction="Fairfax County", pin=sample_pin)
+    assert [blk["records"][0]["district"] for blk in env.data["results"]] == ["R-3", "R-3"]
+    comparison = env.data["comparison"]
+    if extra_district is None:
+        assert comparison["agreement"] is None
+        assert "no district value" in comparison["note"]
+    else:
+        assert comparison["agreement"] is False
+        assert comparison["per_source"][1]["distinct_values_retrieved"] == 2
+        assert comparison["per_source"][1]["values"] == ["Z-9"]

@@ -1,5 +1,6 @@
 """ArcGIS adapter over recorded exchanges (never synthesized shapes)."""
 import json
+from urllib.parse import parse_qs, urlsplit
 
 import pytest
 from pydantic import ValidationError
@@ -48,6 +49,8 @@ async def test_sensitive_public_filters_before_cache_and_mapping():
 
         async def fetch_json(self, url, params):
             self.calls += 1
+            if not url.endswith("/query"):
+                return {"objectIdField": "OBJECTID"}
             return {"features": [{"attributes": {
                 "OBJECTID": 1, "PIN": "0102 14  0231",
                 "PARCEL_TYPE": "not on the allowlist"}}]}
@@ -57,6 +60,7 @@ async def test_sensitive_public_filters_before_cache_and_mapping():
     q = await adapter.query(manifest, "parcels",
                             where_equals={"pin": "0102 14  0231"})
     rec = q.records[0]
+    assert rec.locator is None
     assert rec.raw == {"OBJECTID": 1, "PIN": "0102 14  0231"}, (
         "PARCEL_TYPE is not allowlisted and must be dropped from raw, even "
         "though id_field (OBJECTID) is always retained")
@@ -75,6 +79,32 @@ async def test_query_by_pin_maps_canonical_fields(adapter, sample_pin):
     assert "PIN" in rec.raw, "raw source fields stay available"
     assert q.transformations == ["field_mapping:v1"]
     assert q.payload_hash().startswith("sha256:")
+
+
+@pytest.mark.parametrize(("metadata", "oid", "linked"), [
+    ({"fields": [{"name": "OBJECTID", "type": "esriFieldTypeOID"}]}, 9, True),
+    ({}, 9, False),
+    ({"objectIdField": "OTHER_ID"}, 9, False),
+    ({"fields": [{"name": "OBJECTID", "type": "esriFieldTypeInteger"}]}, 9, False),
+    ({"objectIdField": "OBJECTID", "uniqueIdInfo": {"OIDFieldContainsHashValue": True}},
+     9, False),
+    ({"objectIdField": "OBJECTID"}, "nine", False),
+    ({"objectIdField": "OBJECTID"}, True, False),
+])
+async def test_parcel_locator_requires_a_publisher_object_id(metadata, oid, linked):
+    class Fetcher:
+        async def fetch_json(self, url, params):
+            if url.endswith("/query"):
+                return {"features": [{"attributes": {"OBJECTID": oid, "PIN": "12'34"}}]}
+            return metadata
+
+    adapter = ArcGISAdapter(fetcher=Fetcher(), cache=TTLCache())
+    result = await adapter.query(_real_manifest(), "parcels", where_equals={"pin": "123"})
+    record, = result.records
+    assert (record.locator is not None) == linked
+    if linked:
+        assert parse_qs(urlsplit(record.locator).query)["where"] == [
+            "OBJECTID = 9 AND PIN = '12''34'"]
 
 
 async def test_unknown_canonical_field_is_invalid_query(adapter):

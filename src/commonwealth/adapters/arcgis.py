@@ -13,7 +13,7 @@ import hashlib
 import json
 from dataclasses import dataclass
 from typing import Any
-from urllib.parse import urlparse
+from urllib.parse import urlencode, urlparse
 
 from pydantic import BaseModel, ConfigDict, Field, model_validator
 
@@ -127,6 +127,8 @@ class ArcGISRecord:
     # donut and its centroid lands in the city. Never use it to decide
     # containment (docs/audits/centroid-property-2026-08-28.json).
     centroid: dict | None = None
+    # A live publisher query for this row, not a snapshot of the response.
+    locator: str | None = None
 
 
 @dataclass
@@ -153,6 +155,46 @@ def _params_of(manifest: SourceManifest) -> ArcGISParams:
 
 def _layer_root(p: ArcGISParams, layer: LayerDecl) -> str:
     return layer.service_url or p.service_url
+
+
+def _has_publisher_oid(info: dict, layer: LayerDecl) -> bool:
+    """MapServer layers may identify their OID only through the fields list."""
+    unique = info.get("uniqueIdInfo")
+    if unique is not None and (not isinstance(unique, dict)
+                               or unique.get("OIDFieldContainsHashValue")):
+        return False
+    declared = info.get("objectIdField")
+    if declared:
+        return declared == layer.id_field
+    return any(f.get("name") == layer.id_field and f.get("type") == "esriFieldTypeOID"
+               for f in info.get("fields") or [] if isinstance(f, dict))
+
+
+def _parcel_locator(url: str, layer_key: str, layer: LayerDecl, attrs: dict,
+                    out_fields: str) -> str | None:
+    """An object ID alone can point at a different parcel after a layer refresh."""
+    rid = attrs.get(layer.id_field)
+    if type(rid) is not int:
+        return None
+    terms = [f"{layer.id_field} = {rid}"]
+    keys = ["pin"]
+    if layer_key == "zoning":
+        keys.append("district")
+    if "fips" in layer.field_mapping:
+        keys.append("fips")
+    for key in keys:
+        field = layer.field_mapping.get(key)
+        value = attrs.get(field)
+        if type(value) is int:
+            literal = str(value)
+        elif isinstance(value, str) and value.strip() and key not in layer.numeric_fields:
+            literal = "'" + value.replace("'", "''") + "'"
+        else:
+            return None
+        terms.append(f"{field} = {literal}")
+    selector = urlencode({"where": " AND ".join(terms), "outFields": out_fields,
+                          "returnGeometry": "false", "f": "pjson"})
+    return f"{url}?{selector}"
 
 
 def _apply_exposure_allowlist(manifest: SourceManifest, payload: dict,
@@ -518,6 +560,13 @@ class ArcGISAdapter:
         if pages_read > 1:
             transformations.append(f"pagination:pages={pages_read}")
 
+        # Use the actual query endpoint (including any per-layer service
+        # override). Some publishers recycle object IDs. Match the returned
+        # parcel number as well, never the caller's search or geometry.
+        link_records = (layer_key in {"parcels", "zoning"} and distinct_fields is None
+                        and manifest.access.mode == "anonymous"
+                        and manifest.access.data_classification == DataClassification.open
+                        and _has_publisher_oid(info, layer))
         records = []
         for feat in features:
             attrs = feat.get("attributes", {})
@@ -549,12 +598,14 @@ class ArcGISAdapter:
                 canonical[f"{canon}_label"] = (
                     None if raw_code is None else labels.get(str(raw_code)))
             rid = attrs.get(layer.id_field)
+            locator = (_parcel_locator(url, layer_key, layer, attrs, params["outFields"])
+                       if link_records else None)
             records.append(ArcGISRecord(
                 canonical=canonical,
                 record_id=f"{layer.id_field}:{rid}",
                 raw=attrs,
                 geometry=feat.get("geometry"),
-                centroid=feat.get("centroid")))
+                centroid=feat.get("centroid"), locator=locator))
 
         updated = _epoch_ms_to_iso(
             (info.get("editingInfo") or {}).get("lastEditDate"))

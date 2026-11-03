@@ -25,7 +25,7 @@ Nineteen tools, ten of them in the default set and fourteen in discovery.
   Richmond City, Charles City County, and the Town of Leesburg publish
   their own; VGIN publishes a statewide layer. Where two cover the same ground both are returned,
   unranked, and a disagreement is reported as a disagreement.
-- How a parcel is zoned, in Fairfax and Loudoun counties, Richmond and Winchester cities, and the towns
+- How a parcel is zoned, in Fairfax, Loudoun and Roanoke counties, Richmond and Winchester cities, and the towns
   of Leesburg and Vienna. A point in Vienna returns the town's layer and
   the county's, both unranked. This is
   screening evidence from a local GIS layer. Winchester's layer covers
