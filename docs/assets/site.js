@@ -873,7 +873,9 @@ function renderCall(call, i){
       list.append(item);
     }
     if (list.childElementCount)
-      card.append(el("p", "srcline", "Current records at the publisher:"), list);
+      card.append(el("p", "srcline", "Publisher records (live):"), list,
+        el("p", "srcline", "A publisher can replace or renumber a row. " +
+          "Compare it with the recorded answer below."));
   }
 
   if (call.http_calls !== undefined){

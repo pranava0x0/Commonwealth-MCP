@@ -126,7 +126,9 @@ Report four parts every time, in this order.
    published it, when it was retrieved, and the evidence reference from
    the envelope. If the evidence includes a `locator`, link that row to
    the publisher's record. The link shows the current attributes; it is
-   not a copy of what the publisher returned at retrieval time.
+   not a copy of what the publisher returned at retrieval time. If a row
+   disappears or no longer matches, repeat the original lookup before
+   citing it as current.
 3. **Unresolved gaps.** Each as its own kind: no source registered, source
    registered but returned nothing, source failed. Three different facts,
    three different sentences.
