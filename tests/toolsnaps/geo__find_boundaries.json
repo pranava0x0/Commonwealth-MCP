@@ -6,6 +6,7 @@
  },
  "description": "Get a Virginia jurisdiction's official boundary: FIPS, GNIS, area, jurisdiction type, bounding box, and the publisher's own centroid. Use to confirm WHICH government's territory is meant and how big it is. Independent cities are returned as their own territory, never as part of the county sharing their name. Screening geometry only \u2014 it is generalized and the publisher disclaims survey use, so never decide from it which side of a boundary an address sits on. Pass detail='full' for vertices. Not a containment test: to find which jurisdiction covers a point, use registry.resolve_jurisdiction with lon/lat.",
  "input_schema": {
+  "additionalProperties": false,
   "properties": {
    "detail": {
     "default": "concise",

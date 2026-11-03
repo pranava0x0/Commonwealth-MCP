@@ -74,8 +74,9 @@ coverage:
       Agenda and minutes documents are links, never content. This project
       does not fetch them, because the egress allowlist is pinned per
       manifest to the API host and the documents live on a different one.
-      What a meeting is ABOUT is in the agenda PDF, so a body name and a
-      date are not a summary of what will be discussed.
+      The publisher also provides structured agenda items and votes. This
+      registry serves only the calendar: as of 2026-11-03, reuse terms
+      for a raw agenda and vote recording have not been established.
     - >
       The calendar covers the bodies this locality publishes through the
       platform. A body that meets and is not published here is absent

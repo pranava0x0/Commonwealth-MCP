@@ -1,7 +1,7 @@
 """Civic tools: the Code of Virginia, and local public meetings
 (design/domain-servers.md § 4).
 
-Three tools over two very different publishers. The Code is one
+These tools read state law and local meeting records. The Code is one
 statewide text, read by citation (`get_code_section`) or walked through
 its own table of contents (`browse_code`). Meetings are per locality
 (`search_meetings`), and are the first thing this server reads that a
@@ -20,8 +20,12 @@ result is surfaced, never merged into one answer.
 """
 from __future__ import annotations
 
-from ..adapters.agenda_platform import (MAX_RANGE_DAYS, Meeting,
-                                        check_range)
+from collections.abc import Awaitable, Callable
+
+from pydantic import StrictInt
+
+from ..adapters.agenda_platform import (MAX_RANGE_DAYS, DetailPage, Meeting,
+                                       check_detail_args, check_range)
 from ..adapters.virginia_law import CodeSection
 from ..core.assemble import (EnvelopeBuilder, failure, gap, result_dim,
                              resolve_frame, selection_coverage)
@@ -258,15 +262,21 @@ async def search_meetings(ctx: RuntimeContext, jurisdiction: str,
     blocks: list[dict] = []
     failures = []
     total = 0
+    capped = False
     for m in selected:
         try:
-            meetings, url = await ctx.agendas.search_meetings(
+            meetings, url, at_cap = await ctx.agendas.search_meetings(
                 m, start_date, end_date, body or None)
         except CommonwealthError as err:
             failures.append(failure(m.id, err.code, str(err)))
             continue
         block = _meetings_block(ctx, b, m, meetings, url, start_date,
                                 end_date, body, arguments)
+        if at_cap:
+            capped = True
+            block["note"] = (
+                "The publisher returned its maximum calendar page before "
+                "body filtering. More meetings may match; narrow the dates.")
         if borrowed:
             asked = _display(ctx, stack[0])
             block["scope_note"] = (
@@ -283,9 +293,8 @@ async def search_meetings(ctx: RuntimeContext, jurisdiction: str,
                  else ExecutionCoverage.partial)
     coverage = Coverage(
         registry=registry_dim, execution=execution,
-        # The publisher applies the date window itself and returns the
-        # whole of it; there is no paging to be partway through.
-        pagination=PaginationCoverage.complete,
+        pagination=(PaginationCoverage.truncated if capped else
+                    PaginationCoverage.complete),
         result=result_dim(total),
         jurisdictions_searched=stack if selected else [],
         jurisdictions_unavailable=gaps,
@@ -377,6 +386,7 @@ def _meetings_block(ctx: RuntimeContext, b: EnvelopeBuilder,
 
 def _meeting_record(meeting: Meeting) -> dict:
     record = {
+        "event_id": meeting.event_id,
         "body": meeting.body,
         "date": meeting.meeting_date,
         "time": meeting.meeting_time,
@@ -455,3 +465,88 @@ CIVIC_TOOLS.register(ToolSpec(
         "from prose. The agenda link is data and is never fetched, so "
         "what a meeting is ABOUT is not in this answer."),
     toolset="default", contract_version="1", fn=search_meetings))
+
+
+async def _meeting_detail(ctx: RuntimeContext, b: EnvelopeBuilder, source_id: str,
+                          capability: str, id_field: str, record_id: str, offset: int,
+                          read_page: Callable[[SourceManifest, str, int], Awaitable[DetailPage]]
+                          ) -> Envelope:
+    check_detail_args(record_id, offset)
+    if not isinstance(source_id, str):
+        raise InvalidQuery("source_id must be the calendar source ID from a meeting result.")
+    m = ctx.sources.get(source_id)
+    if m is None or m.adapter.type != "agenda_platform":
+        raise InvalidQuery("Pass the source_id from the meeting result. "
+                           "Event and item IDs belong to one calendar.")
+    reason = ("no_registered_source" if capability not in m.capability_ids()
+              else ctx.sources.unavailable_reason(m))
+    if reason:
+        return b.build({"results": [], "source_id": m.id}, Coverage(
+            registry=(RegistryCoverage.none if reason == "no_registered_source"
+                      else RegistryCoverage.partial),
+            execution=ExecutionCoverage.complete, pagination=PaginationCoverage.unknown,
+            jurisdictions_unavailable=[gap(m.jurisdiction, reason)], result=result_dim(0)))
+
+    try:
+        page = await read_page(m, record_id, offset)
+    except CommonwealthError as err:
+        return b.build({"results": []}, Coverage(
+            registry=RegistryCoverage.covered, execution=ExecutionCoverage.failed,
+            pagination=PaginationCoverage.unknown, result=result_dim(0),
+            jurisdictions_searched=[m.jurisdiction],
+            source_failures=[failure(m.id, err.code, str(err))]))
+
+    now = _now()
+    src = b.add_source(source_id=m.id, publisher=m.publisher.agency,
+                       system=m.adapter.type, dataset=m.name, jurisdiction=m.jurisdiction,
+                       authority_level=m.publisher.authority_level, access_path=AccessPath.live,
+                       source_updated_at=max((r["last_modified"] for r in page.records
+                                              if r["last_modified"]), default=None),
+                       retrieved_at=now, cache_age_seconds=0, manifest=m)
+    row_id = "item_id" if id_field == "event_id" else "vote_id"
+    for row in page.records:
+        row["evidence_refs"] = [b.add_evidence(
+            source_ref=src, record_id=row[row_id], retrieved_at=now, transformations=[],
+            locator=f"{page.url}/{row[row_id]}")]
+    block = {"source_ref": src, "source_id": m.id, id_field: record_id,
+             "records": page.records, "record_count": len(page.records), "offset": offset,
+             "source_url": page.url, "next": None}
+    if page.next_offset is not None:
+        block["next"] = {"source_id": m.id, id_field: record_id, "offset": page.next_offset}
+    return b.build({"results": [block]}, Coverage(
+        registry=RegistryCoverage.covered, execution=ExecutionCoverage.complete,
+        pagination=(PaginationCoverage.truncated if page.next_offset is not None
+                    else PaginationCoverage.complete),
+        result=result_dim(len(page.records)), jurisdictions_searched=[m.jurisdiction],
+        known_limitations=m.coverage.known_limitations))
+
+
+async def get_meeting_agenda(ctx: RuntimeContext, source_id: str, event_id: str,
+                             offset: StrictInt = 0) -> Envelope:
+    return await _meeting_detail(ctx, _builder(ctx, "civic.get_meeting_agenda"),
+                                 source_id, "meeting_agenda.lookup", "event_id",
+                                 event_id, offset, ctx.agendas.agenda_items)
+
+
+async def get_item_votes(ctx: RuntimeContext, source_id: str, item_id: str,
+                         offset: StrictInt = 0) -> Envelope:
+    return await _meeting_detail(ctx, _builder(ctx, "civic.get_item_votes"),
+                                 source_id, "meeting_votes.lookup", "item_id",
+                                 item_id, offset, ctx.agendas.item_votes)
+
+
+CIVIC_TOOLS.register(ToolSpec(
+    name="civic.get_meeting_agenda",
+    description="Read the published agenda items for one local meeting. Pass the "
+                "source_id and event_id from civic.search_meetings together. Items "
+                "carry agenda order, matter file, title and any recorded action. "
+                "Follow next for another page. Listing a proposal does not establish adoption.",
+    toolset="meetings", contract_version="1", fn=get_meeting_agenda))
+
+CIVIC_TOOLS.register(ToolSpec(
+    name="civic.get_item_votes",
+    description="Read the individual votes published for one local agenda item. Pass the "
+                "source_id and item_id from civic.get_meeting_agenda together. Follow "
+                "next for another page. An empty list establishes neither how anyone "
+                "voted nor whether a vote took place.",
+    toolset="meetings", contract_version="1", fn=get_item_votes))

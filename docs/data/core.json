@@ -1,14 +1,14 @@
 {
  "version": "0.1.0.dev0",
- "registry_revision": "2026-09-10",
+ "registry_revision": "2026-11-03",
  "counts": {
-  "servers": 1,
-  "tools": 17,
+  "servers": 3,
+  "tools": 19,
   "packages": 3,
   "sources": 29,
   "sources_active": 22,
   "sources_proposed": 7,
-  "capabilities": 13,
+  "capabilities": 15,
   "jurisdictions": 323,
   "trap_pairs": 5
  },
@@ -70,6 +70,50 @@
    ],
    "summary": "Find a Virginia locality's public meetings between two dates \u2014 the body, when it meets, where, and a link to the agenda document.",
    "description": "Find a Virginia locality's public meetings between two dates \u2014 the body, when it meets, where, and a link to the agenda document. Both dates are required and the window is capped at 400 days: there is no default range, because a silently widened query answers a different question. `body` narrows to bodies whose name contains it. Meetings come from the civic-tech platform the locality publishes through, not from the locality's own servers, and only a few Virginia localities are registered \u2014 a locality with no registered source returns coverage registry=none, which means this project has nowhere to look, never that the government does not meet. `agenda_status` is the publisher's status for the AGENDA, not for the meeting; the platform publishes no cancellation field at all, so a cancelled meeting is returned like any other with its comment text carrying the cancellation and a `cancellation_note` saying that reading came from prose. The agenda link is data and is never fetched, so what a meeting is ABOUT is not in this answer."
+  },
+  {
+   "name": "civic.get_meeting_agenda",
+   "package": "civic",
+   "toolset": "meetings",
+   "contract_version": "1",
+   "parameters": [
+    {
+     "name": "source_id",
+     "required": true
+    },
+    {
+     "name": "event_id",
+     "required": true
+    },
+    {
+     "name": "offset",
+     "required": false
+    }
+   ],
+   "summary": "Read the published agenda items for one local meeting.",
+   "description": "Read the published agenda items for one local meeting. Pass the source_id and event_id from civic.search_meetings together. Items carry agenda order, matter file, title and any recorded action. Follow next for another page. Listing a proposal does not establish adoption."
+  },
+  {
+   "name": "civic.get_item_votes",
+   "package": "civic",
+   "toolset": "meetings",
+   "contract_version": "1",
+   "parameters": [
+    {
+     "name": "source_id",
+     "required": true
+    },
+    {
+     "name": "item_id",
+     "required": true
+    },
+    {
+     "name": "offset",
+     "required": false
+    }
+   ],
+   "summary": "Read the individual votes published for one local agenda item.",
+   "description": "Read the individual votes published for one local agenda item. Pass the source_id and item_id from civic.get_meeting_agenda together. Follow next for another page. An empty list establishes neither how anyone voted nor whether a vote took place."
   },
   {
    "name": "geo.find_parcel",
@@ -465,7 +509,7 @@
    "known_limitations": [
     "No cancellation field. The platform publishes an agenda-publication status (\"Final\", \"Final-revised\") and nothing that says a meeting was cancelled or rescheduled; where a locality records that at all, it records it in the free-text comment. Cancelled meetings are returned rather than omitted, with the comment verbatim and a note saying the reading came from prose, not from a published field.\n",
     "Meeting times are local wall-clock strings with no offset in the payload. The zone is declared in this manifest, not read from the publisher.\n",
-    "Agenda and minutes documents are links, never content. This project does not fetch them, because the egress allowlist is pinned per manifest to the API host and the documents live on a different one. What a meeting is ABOUT is in the agenda PDF, so a body name and a date are not a summary of what will be discussed.\n",
+    "Agenda and minutes documents are links, never content. This project does not fetch them, because the egress allowlist is pinned per manifest to the API host and the documents live on a different one. The publisher also provides structured agenda items and votes. This registry serves only the calendar: as of 2026-11-03, reuse terms for a raw agenda and vote recording have not been established.\n",
     "The calendar covers the bodies this locality publishes through the platform. A body that meets and is not published here is absent from the answer, and absence is not evidence it did not meet.\n"
    ]
   },
@@ -475,12 +519,16 @@
    "jurisdiction": "va:alexandria-city",
    "jurisdiction_name": "Alexandria City",
    "answers": [
-    "public meetings"
+    "public meetings",
+    "agenda items",
+    "recorded votes"
    ],
    "publisher": "Alexandria City government (Office of the City Clerk)",
    "authority_level": "primary",
    "capabilities": [
-    "meeting.search"
+    "meeting.search",
+    "meeting_agenda.lookup",
+    "meeting_votes.lookup"
    ],
    "data_classification": "open",
    "declared_state": "active",
@@ -488,7 +536,7 @@
    "known_limitations": [
     "No cancellation field. The platform publishes an agenda-publication status (\"Final\", \"Final-revised\") and nothing that says a meeting was cancelled or rescheduled; where a locality records that at all, it records it in the free-text comment. Cancelled meetings are returned rather than omitted, with the comment verbatim and a note saying the reading came from prose, not from a published field.\n",
     "Meeting times are local wall-clock strings with no offset in the payload. The zone is declared in this manifest, not read from the publisher.\n",
-    "Agenda and minutes documents are links, never content. This project does not fetch them, because the egress allowlist is pinned per manifest to the API host and the documents live on a different one. What a meeting is ABOUT is in the agenda PDF, so a body name and a date are not a summary of what will be discussed.\n",
+    "Agenda and minutes documents are links, never content. This project does not fetch them, because the egress allowlist is pinned per manifest to the API host and the documents live on a different one. The API publishes structured agenda items separately. A listed item does not establish adoption. The API may return no individual votes even where an item has a recorded action.\n",
     "The calendar covers the bodies this locality publishes through the platform. A body that meets and is not published here is absent from the answer, and absence is not evidence it did not meet.\n"
    ]
   },
@@ -796,12 +844,16 @@
    "jurisdiction": "va:richmond-city",
    "jurisdiction_name": "Richmond City",
    "answers": [
-    "public meetings"
+    "public meetings",
+    "agenda items",
+    "recorded votes"
    ],
    "publisher": "Richmond City government (Office of the City Clerk)",
    "authority_level": "primary",
    "capabilities": [
-    "meeting.search"
+    "meeting.search",
+    "meeting_agenda.lookup",
+    "meeting_votes.lookup"
    ],
    "data_classification": "open",
    "declared_state": "active",
@@ -809,7 +861,7 @@
    "known_limitations": [
     "No cancellation field. The platform publishes an agenda-publication status (\"Final\", \"Final-revised\") and nothing that says a meeting was cancelled or rescheduled; where a locality records that at all, it records it in the free-text comment. Cancelled meetings are returned rather than omitted, with the comment verbatim and a note saying the reading came from prose, not from a published field.\n",
     "Meeting times are local wall-clock strings with no offset in the payload. The zone is declared in this manifest, not read from the publisher.\n",
-    "Agenda and minutes documents are links, never content. This project does not fetch them, because the egress allowlist is pinned per manifest to the API host and the documents live on a different one. What a meeting is ABOUT is in the agenda PDF, so a body name and a date are not a summary of what will be discussed.\n",
+    "Agenda and minutes documents are links, never content. This project does not fetch them, because the egress allowlist is pinned per manifest to the API host and the documents live on a different one. The API publishes structured agenda items separately. A listed item does not establish adoption. The API may return no individual votes even where an item has a recorded action.\n",
     "The calendar covers the bodies this locality publishes through the platform. A body that meets and is not published here is absent from the answer, and absence is not evidence it did not meet.\n"
    ]
   },
@@ -1101,6 +1153,8 @@
   "health_facility.lookup",
   "landmark.lookup",
   "meeting.search",
+  "meeting_agenda.lookup",
+  "meeting_votes.lookup",
   "parcel.lookup",
   "road.lookup",
   "zoning.lookup"
@@ -1143,8 +1197,16 @@
    "subject": "public places"
   },
   "meeting.search": {
-   "question": "When does this government meet, and about what?",
+   "question": "When does this government meet?",
    "subject": "public meetings"
+  },
+  "meeting_agenda.lookup": {
+   "question": "What was on this meeting\u2019s agenda?",
+   "subject": "agenda items"
+  },
+  "meeting_votes.lookup": {
+   "question": "How did members vote on this item?",
+   "subject": "recorded votes"
   },
   "parcel.lookup": {
    "question": "What is this parcel?",
@@ -1216,6 +1278,33 @@
    "civic.search_meetings",
    "civic.browse_code"
   ],
+  "geo": [
+   "registry.resolve_jurisdiction",
+   "registry.search_sources",
+   "registry.describe_source",
+   "registry.source_status",
+   "geo.find_parcel",
+   "geo.find_zoning",
+   "geo.find_boundaries",
+   "geo.find_address",
+   "geo.resolve_location",
+   "geo.find_buildings",
+   "geo.find_landmarks",
+   "geo.find_roads",
+   "geo.find_environmental_sites",
+   "geo.find_health_facilities"
+  ],
+  "civic": [
+   "registry.resolve_jurisdiction",
+   "registry.search_sources",
+   "registry.describe_source",
+   "registry.source_status",
+   "civic.get_code_section",
+   "civic.browse_code",
+   "civic.search_meetings",
+   "civic.get_meeting_agenda",
+   "civic.get_item_votes"
+  ],
   "all": [
    "registry.resolve_jurisdiction",
    "registry.search_sources",
@@ -1233,7 +1322,9 @@
    "geo.find_health_facilities",
    "civic.get_code_section",
    "civic.browse_code",
-   "civic.search_meetings"
+   "civic.search_meetings",
+   "civic.get_meeting_agenda",
+   "civic.get_item_votes"
   ]
  },
  "skills": [
@@ -1314,6 +1405,39 @@
    "steps": [
     "1 \u2014 `parcel.lookup`",
     "2 \u2014 `zoning.lookup`"
+   ]
+  },
+  {
+   "name": "public-meeting-brief",
+   "status": "shipped",
+   "capabilities": [
+    "meeting.search",
+    "meeting_agenda.lookup"
+   ],
+   "optional": [],
+   "description": "Prepare a brief on a Virginia local meeting: identify the session, check for changes in the notice, and report the published agenda items that concern the reader.",
+   "prompt": "What was on the Richmond City Planning Commission agenda on September 1, 2026?",
+   "steps": [
+    "1 \u2014 Identify the meeting",
+    "2 \u2014 Read the notice before the agenda",
+    "3 \u2014 Read the published items"
+   ]
+  },
+  {
+   "name": "recorded-vote-check",
+   "status": "shipped",
+   "capabilities": [
+    "meeting.search",
+    "meeting_agenda.lookup",
+    "meeting_votes.lookup"
+   ],
+   "optional": [],
+   "description": "Check how a named member or body voted on a particular item of Virginia local business.",
+   "prompt": "How did the Richmond City Planning Commission vote on the minutes on September 1, 2026?",
+   "steps": [
+    "1 \u2014 Match the motion",
+    "2 \u2014 Read the votes on that item",
+    "3 \u2014 Cite the action and the votes separately"
    ]
   },
   {
@@ -1515,15 +1639,15 @@
    "call": 26
   }
  ],
- "doctor_output": "commonwealth 0.1.0.dev0\npython 3.12.13\nmcp sdk 2.1.1\njurisdiction table: 323 rows\nsource manifests: 29 (registry revision 2026-09-10)\nmanifests valid: 29/29\ndefault profile: 10 tools: registry.resolve_jurisdiction, geo.find_parcel, geo.find_zoning, geo.find_boundaries, geo.find_address, geo.resolve_location, geo.find_buildings, geo.find_environmental_sites, civic.get_code_section, civic.search_meetings\n(live source probes skipped; pass --live)\n\u2713 doctor: 0 problem(s)\n\nnext: point a client at it\n  commonwealth configure claude-code\n  commonwealth configure --help    # claude, codex, cursor, vscode",
+ "doctor_output": "commonwealth 0.1.0.dev0\npython 3.12.15\nmcp sdk 2.1.1\njurisdiction table: 323 rows\nsource manifests: 29 (registry revision 2026-11-03)\nmanifests valid: 29/29\ndefault profile: 10 tools: registry.resolve_jurisdiction, geo.find_parcel, geo.find_zoning, geo.find_boundaries, geo.find_address, geo.resolve_location, geo.find_buildings, geo.find_environmental_sites, civic.get_code_section, civic.search_meetings\n(live source probes skipped; pass --live)\n\u2713 doctor: 0 problem(s)\n\nnext: point a client at it\n  commonwealth configure claude-code\n  commonwealth configure --help    # claude, codex, cursor, vscode",
  "plugin": {
   "name": "commonwealth-mcp",
   "marketplace_name": "commonwealth-mcp",
   "marketplace": "pranava0x0/Commonwealth-MCP",
   "path": "plugins/commonwealth-mcp",
-  "skill_count": 6,
+  "skill_count": 8,
   "profile": "all",
-  "tool_count": 17
+  "tool_count": 19
  },
  "demo_apps": {
   "screen": [
@@ -1612,7 +1736,7 @@
      {
       "label": "Zoning",
       "tool": "geo.find_zoning",
-      "call": 44
+      "call": 47
      }
     ]
    }
@@ -1685,9 +1809,9 @@
   ]
  },
  "demo_meta": {
-  "generated_at": "2026-09-11T17:35:24Z",
+  "generated_at": "2026-11-03T10:13:49Z",
   "mode": "fixtures",
-  "call_count": 51,
+  "call_count": 54,
   "fixture_recorded_at": "2026-09-02T05:29:35Z"
  }
 }

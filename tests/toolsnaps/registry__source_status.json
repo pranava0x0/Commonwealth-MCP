@@ -6,6 +6,7 @@
  },
  "description": "Declared and operational state for registered sources. Use when a query reported a source failure and you need to say whether the source is known-down.",
  "input_schema": {
+  "additionalProperties": false,
   "properties": {
    "source_id": {
     "default": "",

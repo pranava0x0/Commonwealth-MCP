@@ -10,8 +10,10 @@ from __future__ import annotations
 
 import inspect
 import logging
+from collections import defaultdict
 import time
 from collections.abc import Mapping
+from dataclasses import replace
 from typing import Any
 
 from mcp.server import MCPServer
@@ -20,10 +22,10 @@ from mcp.types import ToolAnnotations
 
 from ..core.audit import error_record, record_from_envelope
 from ..core.tracing import trace_call
-from ..core.errors import CommonwealthError
+from ..core.errors import CommonwealthError, InvalidQuery
 from ..core.results import KINDS
-from ..core.skills import load_skills, unroutable_capabilities
-from ..core.toolreg import (DEPRECATED_TOOL_ALIASES, ToolSpec, expand_profile)
+from ..core.skills import SkillRequirements, load_skills, unroutable_capabilities
+from ..core.toolreg import (DEPRECATED_TOOL_ALIASES, ToolSpec, expand_profile, server_name)
 from ..domains.civic import CIVIC_TOOLS
 from ..domains.geo import GEO_TOOLS
 from ..domains.registry import REGISTRY_TOOLS
@@ -33,13 +35,52 @@ log = logging.getLogger("commonwealth.servers")
 
 SERVER_INSTRUCTIONS = (
     "Commonwealth-MCP serves Virginia public-data queries with provenance. "
-    "Read coverage before concluding anything: result='empty' with "
-    "registry='covered' means the searched systems hold no record; "
+    "An empty result describes this query and page. Check registry, execution "
+    "and pagination before reporting that no matching records were returned. "
+    "A failed source or an incomplete search leaves matches unknown; "
     "registry='none' means Commonwealth has no source for that place and "
     "the record may still exist. When a result sets requires_user_choice, "
     "present the candidates to the user and do not pick one. Zoning answers "
     "are screening evidence, never legal determinations."
 )
+
+
+class CommonwealthServer(MCPServer):
+    """Validate names on the raw MCP call before SDK argument coercion."""
+
+    def __init__(self, ctx: RuntimeContext, **options):
+        super().__init__(name=ctx.server_name, version=ctx.server_version, **options)
+        self.runtime = ctx
+        self.contracts: dict[str, ToolSpec] = {}
+
+    def register(self, name: str, spec: ToolSpec, description: str,
+                 annotations: ToolAnnotations) -> None:
+        self.tool(name=name, description=description, annotations=annotations)(
+            _bind(spec, self.runtime))
+        self.contracts[name] = spec
+
+    async def list_tools(self):
+        tools = await super().list_tools()
+        for tool in tools:
+            if tool.name in self.contracts:
+                tool.input_schema["additionalProperties"] = False
+        return tools
+
+    async def call_tool(self, name: str, arguments: dict[str, Any], context=None):
+        if spec := self.contracts.get(name):
+            try:
+                spec.check_arguments(arguments)
+            except InvalidQuery as err:
+                ctx = self.runtime
+                ctx.audit.append(error_record(
+                    # Unknown fields may contain credentials even when all
+                    # registered sources are open. Keep field names only.
+                    tool=name, args=arguments if isinstance(arguments, dict) else {},
+                    error_code=err.code, duration_ms=0, server=ctx.server_name,
+                    server_version=ctx.server_version,
+                    registry_revision=ctx.sources.revision, sensitive=True))
+                raise ToolError(err.model_message()) from err
+        return await super().call_tool(name, arguments, context)
 
 
 def _bind(spec: ToolSpec, ctx: RuntimeContext):
@@ -87,7 +128,8 @@ def registries():
     return {"registry": REGISTRY_TOOLS, "geo": GEO_TOOLS, "civic": CIVIC_TOOLS}
 
 
-def check_skill_capabilities(ctx: RuntimeContext) -> list[str]:
+def check_skill_capabilities(ctx: RuntimeContext,
+                             skills: list[SkillRequirements] | None = None) -> list[str]:
     """Warn when a skill needs a capability this registry cannot serve.
 
     design/hub-catalog.md § 2 asks for this and it had nothing to check
@@ -107,7 +149,8 @@ def check_skill_capabilities(ctx: RuntimeContext) -> list[str]:
     Returns the warnings emitted, so a caller (and a test) can see what it
     found rather than having to read the log.
     """
-    skills = load_skills(SKILLS_DIR)
+    if skills is None:
+        skills = load_skills(SKILLS_DIR)
     missing = unroutable_capabilities(skills,
                                       ctx.sources.servable_capabilities())
     notes = []
@@ -119,6 +162,45 @@ def check_skill_capabilities(ctx: RuntimeContext) -> list[str]:
         log.warning(note)
         notes.append(note)
     return notes
+
+
+def _register_skill_prompts(server: MCPServer, ctx: RuntimeContext,
+                            skills: list[SkillRequirements], specs: list[ToolSpec],
+                            profile: str) -> None:
+    exposed = {spec.name for spec in specs}
+    hints = defaultdict(set)
+    for manifest in ctx.sources.manifests.values():
+        for cap in manifest.capabilities:
+            if cap.tool_hint:
+                hints[cap.id].add(cap.tool_hint)
+
+    def bind(skill: SkillRequirements):
+        def instructions():
+            lines = [skill.body, skill.compatibility]
+            missing = set(skill.required_capabilities) - ctx.sources.servable_capabilities()
+            if missing:
+                lines.append("No active source currently answers: " + ", ".join(sorted(missing)) + ".")
+            absent = [c for c in (*skill.required_capabilities, *skill.optional_capabilities)
+                      if hints[c] and not hints[c].intersection(exposed)]
+            if absent:
+                lines.append(f"Profile {profile!r} omits the registered tools for "
+                             + ", ".join(absent) + ". Use the all profile for those steps.")
+            unavailable = set(skill.required_registry_tools) - exposed
+            if unavailable:
+                lines.append(f"Profile {profile!r} omits required discovery tools: "
+                             + ", ".join(sorted(unavailable)) + ". Use the discovery or all profile.")
+            return "\n\n".join(line for line in lines if line)
+
+        async def walk() -> str:
+            return instructions()
+
+        async def with_question(question: str) -> list[str]:
+            return [instructions(), question]
+
+        return with_question if skill.accepts_question else walk
+
+    for skill in skills:
+        server.prompt(name=skill.name, description=skill.description)(bind(skill))
 
 
 def _register_result_resources(server: MCPServer,
@@ -192,26 +274,23 @@ async def _trace_middleware(request_ctx, call_next):
 
 
 def build_server(ctx: RuntimeContext, profile: str = "default") -> MCPServer:
-    check_skill_capabilities(ctx)
+    ctx = replace(ctx, server_name=server_name(profile, ctx.server_name))
+    skills = load_skills(SKILLS_DIR)
+    check_skill_capabilities(ctx, skills)
     specs = expand_profile(profile, registries())
-    server = MCPServer(name=ctx.server_name, version=ctx.server_version,
-                       instructions=SERVER_INSTRUCTIONS,
-                       middleware=[_trace_middleware])
+    server = CommonwealthServer(ctx, instructions=SERVER_INSTRUCTIONS,
+                                middleware=[_trace_middleware])
     _register_result_resources(server, ctx)
+    _register_skill_prompts(server, ctx, skills, specs, profile)
     annotations = ToolAnnotations(read_only_hint=True, destructive_hint=False,
                                   open_world_hint=True)
-    registered: dict[str, ToolSpec] = {}
     for spec in specs:
-        server.tool(name=spec.name, description=spec.description,
-                    annotations=annotations)(_bind(spec, ctx))
-        registered[spec.name] = spec
+        server.register(spec.name, spec, spec.description, annotations)
 
     for old_name, current in DEPRECATED_TOOL_ALIASES.items():
-        spec = registered.get(current)
+        spec = server.contracts.get(current)
         if spec is None:
             continue  # alias targets a tool outside this profile
-        server.tool(
-            name=old_name,
-            description=f"Deprecated alias of {current}. " + spec.description,
-            annotations=annotations)(_bind(spec, ctx))
+        server.register(old_name, spec, f"Deprecated alias of {current}. " + spec.description,
+                        annotations)
     return server

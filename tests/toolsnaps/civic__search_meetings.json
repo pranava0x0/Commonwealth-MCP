@@ -6,6 +6,7 @@
  },
  "description": "Find a Virginia locality's public meetings between two dates \u2014 the body, when it meets, where, and a link to the agenda document. Both dates are required and the window is capped at 400 days: there is no default range, because a silently widened query answers a different question. `body` narrows to bodies whose name contains it. Meetings come from the civic-tech platform the locality publishes through, not from the locality's own servers, and only a few Virginia localities are registered \u2014 a locality with no registered source returns coverage registry=none, which means this project has nowhere to look, never that the government does not meet. `agenda_status` is the publisher's status for the AGENDA, not for the meeting; the platform publishes no cancellation field at all, so a cancelled meeting is returned like any other with its comment text carrying the cancellation and a `cancellation_note` saying that reading came from prose. The agenda link is data and is never fetched, so what a meeting is ABOUT is not in this answer.",
  "input_schema": {
+  "additionalProperties": false,
   "properties": {
    "body": {
     "default": "",

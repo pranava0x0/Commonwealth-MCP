@@ -6,6 +6,7 @@
  },
  "description": "Find building footprints at a lon/lat point (with a radius) or on a parcel PIN in a Virginia jurisdiction. Answers 'is this ground built on, and how much of it'. An empty result is NOT evidence of vacant land \u2014 this is a derived layer whose coverage varies by locality. Height, storey, and class fields are frequently null, which means the publisher has no value. Footprint area is published in Web Mercator, where area is inflated about 1.6x at Virginia's latitudes; both the publisher's number and a converted approximation are returned, each labelled. A dense urban query truncates \u2014 narrow the radius rather than reading a short list as the whole answer.",
  "input_schema": {
+  "additionalProperties": false,
   "properties": {
    "jurisdiction": {
     "title": "Jurisdiction",

@@ -10,9 +10,7 @@ description: >
   walk does not reach one, the answer says so and names no section.
 license: Apache-2.0
 compatibility: >
-  Requires Commonwealth-MCP v0.x under a profile carrying the civic
-  toolset, which walking the contents needs; the `discovery` profile and
-  above have it.
+  Requires Code section and contents tools in the discovery, civic or all profile.
 metadata:
   commonwealth:
     required_capabilities:

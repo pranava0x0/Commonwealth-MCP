@@ -43,3 +43,6 @@ jobs:
 
       - name: Writing checker
         run: python tools/check_writing.py --code
+
+      - name: Installed wheel serves tools and prompts over stdio
+        run: python tools/check_installed_servers.py

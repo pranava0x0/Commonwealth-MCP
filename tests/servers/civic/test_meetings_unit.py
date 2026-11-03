@@ -172,7 +172,7 @@ async def test_a_row_maps_to_the_publishers_own_values():
     manifest = registry.get("va-richmond-city-meetings")
     exchanges = _recorded("va-richmond-city-meetings")["exchanges"]
     adapter = AgendaPlatformAdapter(fetcher=ReplayFetcher(exchanges))
-    meetings, url = await adapter.search_meetings(
+    meetings, url, _ = await adapter.search_meetings(
         manifest, "2026-09-01", "2026-09-30")
 
     assert "richmondva" in url
@@ -201,9 +201,9 @@ async def test_a_body_filter_narrows_without_reordering():
     exchanges = _recorded("va-richmond-city-meetings")["exchanges"]
     adapter = AgendaPlatformAdapter(fetcher=ReplayFetcher(exchanges))
 
-    everything, _ = await adapter.search_meetings(
+    everything, _, _ = await adapter.search_meetings(
         manifest, "2026-09-01", "2026-09-30")
-    planning, _ = await adapter.search_meetings(
+    planning, _, _ = await adapter.search_meetings(
         manifest, "2026-09-01", "2026-09-30", body="planning")
 
     assert planning, "the recorded window has a Planning Commission meeting"
@@ -278,7 +278,7 @@ async def test_every_meeting_carries_the_publishers_last_edit():
     manifest = registry.get("va-richmond-city-meetings")
     exchanges = _recorded("va-richmond-city-meetings")["exchanges"]
     adapter = AgendaPlatformAdapter(fetcher=ReplayFetcher(exchanges))
-    meetings, _ = await adapter.search_meetings(
+    meetings, _, _ = await adapter.search_meetings(
         manifest, "2026-09-01", "2026-09-30")
 
     rows = {str(r["EventId"]): r for r in _one_recorded_window(

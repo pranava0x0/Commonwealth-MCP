@@ -1,8 +1,8 @@
 # The Commonwealth-MCP plugin bundle
 
 One install that registers the MCP server and the workflow skills that use
-it. Without this, a person copies each skill directory into their client's
-skills folder by hand and wires the server separately.
+it. Clients that support MCP prompts can also use these workflows through
+a configured server without installing the plugin.
 
 ```
 plugins/commonwealth-mcp/
@@ -23,8 +23,7 @@ a bare clone. A test asserts the two launch the same profile; a client
 that read both would otherwise get two different tool lists.
 
 The profile is `all`, and that is a requirement rather than a preference:
-the bundle carries six skills, and three of them walk tools the `default`
-profile leaves out. A test derives the needed tools from each skill's own
+several bundled skills walk tools the `default` profile leaves out. A test derives the needed tools from each skill's own
 frontmatter, so adding a skill that needs more fails until the profile
 covers it.
 
@@ -46,7 +45,7 @@ has the four steps. Then, in Claude Code:
 
 For a client with no plugin system, `commonwealth configure <client>` writes
 the server entry on its own and fills in the absolute path to the checkout.
-That path installs no skills.
+That path installs no local skill files. The server offers each walk as an MCP prompt.
 
 ## What the manifests must agree about
 

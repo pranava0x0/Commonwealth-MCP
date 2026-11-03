@@ -6,6 +6,7 @@
  },
  "description": "Full registry entry for one source id: publisher, authority, terms, limitations. Use when the user asks where an answer came from or what a source's caveats are.",
  "input_schema": {
+  "additionalProperties": false,
   "properties": {
    "source_id": {
     "title": "Source Id",

@@ -6,6 +6,7 @@
  },
  "description": "Get the text of a Code of Virginia section by its citation (e.g. '1-500', '18.2-57'). Direct lookup only \u2014 this is not a full-text search; the caller must already know or have found the section number. Results carry the section's own citation history exactly as published, with a link to the live page. A missing section (repealed, renumbered, or never existed) returns found=False, not an error.",
  "input_schema": {
+  "additionalProperties": false,
   "properties": {
    "citation": {
     "title": "Citation",

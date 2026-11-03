@@ -21,6 +21,7 @@ printed even when the answer is a hit.
 
 | Script | The question |
 |---|---|
+| [trace_a_local_vote.py](trace_a_local_vote.py) | Which votes did Richmond publish on the minutes and on an ordinance at the same Planning Commission meeting? |
 | [whose_government.py](whose_government.py) | Which government covers a mailing address, an ambiguous name, and a ZIP that crosses boundaries? |
 | [screen_a_parcel.py](screen_a_parcel.py) | Who governs this parcel, how is it zoned, what is built on it, what is monitored nearby? |
 | [what_is_covered.py](what_is_covered.py) | What does this project cover, and what does an empty answer mean here? |

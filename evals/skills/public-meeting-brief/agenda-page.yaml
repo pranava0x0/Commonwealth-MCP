@@ -1,0 +1,23 @@
+id: public-meeting-brief-agenda-page
+tier: 3
+skill: public-meeting-brief
+question: What was on the second page of the September 1 Richmond City Planning Commission agenda
+  (event 5144)?
+toolset: civic
+fixtures:
+- va-richmond-city-meetings
+expected:
+  tool: civic.get_meeting_agenda
+  arguments:
+    source_id: va-richmond-city-meetings
+    event_id: '5144'
+    offset: 10
+  must_say:
+  - ORD. 2026-093
+  coverage:
+    pagination: complete
+score:
+- kind: retrieval_correctness
+- kind: coverage_honesty
+- kind: provenance_present
+traps: []

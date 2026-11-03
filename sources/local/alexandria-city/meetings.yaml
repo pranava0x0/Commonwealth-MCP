@@ -18,6 +18,10 @@ domains: [civic]
 capabilities:
   - id: meeting.search
     tool_hint: civic.search_meetings
+  - id: meeting_agenda.lookup
+    tool_hint: civic.get_meeting_agenda
+  - id: meeting_votes.lookup
+    tool_hint: civic.get_item_votes
 
 adapter:
   type: agenda_platform
@@ -74,8 +78,9 @@ coverage:
       Agenda and minutes documents are links, never content. This project
       does not fetch them, because the egress allowlist is pinned per
       manifest to the API host and the documents live on a different one.
-      What a meeting is ABOUT is in the agenda PDF, so a body name and a
-      date are not a summary of what will be discussed.
+      The API publishes structured agenda items separately. A listed
+      item does not establish adoption. The API may return no individual
+      votes even where an item has a recorded action.
     - >
       The calendar covers the bodies this locality publishes through the
       platform. A body that meets and is not published here is absent
@@ -98,9 +103,12 @@ health:
     # A body this locality has published through the platform for years,
     # used as a liveness check that this client's calendar answers.
     known_body: "City Council"
+    sample_event_date: "2026-09-08"
+    sample_event_id: "2757"
+    sample_vote_items: ["63229"]
 
 lifecycle:
   declared_state: active
   added: "2026-09-09"
-  last_verified: "2026-09-09"
+  last_verified: "2026-11-03"
   verified_by: pranava0x0

@@ -1,0 +1,20 @@
+id: public-meeting-brief-calendar-gap
+tier: 3
+skill: public-meeting-brief
+question: What was on the Fairfax County public meeting agenda on September 1, 2026?
+toolset: civic
+fixtures:
+- va-richmond-city-meetings
+expected:
+  tool: civic.search_meetings
+  arguments:
+    jurisdiction: Fairfax County
+    start_date: '2026-09-01'
+    end_date: '2026-09-01'
+  coverage:
+    registry: none
+    result: empty
+score:
+- kind: coverage_honesty
+traps:
+- registry_gap

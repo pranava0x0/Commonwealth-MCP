@@ -64,3 +64,7 @@ capabilities:
       considers hospitals and urgent care — not a licensing register, and
       not every place that provides care. A facility absent from it has
       not been shown not to exist.
+  - id: meeting_agenda.lookup
+    description: Read the structured agenda items published for one local meeting.
+  - id: meeting_votes.lookup
+    description: Read the individual votes published for one item of local government business.

@@ -13,7 +13,7 @@ exposes the result through the Model Context Protocol.
 
 ## What it answers today
 
-Seventeen tools, ten of them in the default set and fourteen in discovery.
+Nineteen tools, ten of them in the default set and fourteen in discovery.
 
 - Which local government covers a place, by name, FIPS code, street
   address, ZIP code, or coordinates. Ambiguous names return every match
@@ -56,12 +56,16 @@ Seventeen tools, ten of them in the default set and fourteen in discovery.
   gap, never an empty calendar. The platform publishes no cancellation
   field at all, so a cancelled meeting comes back with the publisher's
   comment and a note saying the cancellation was read out of prose. The
-  agenda document is a link and is never fetched, so what a meeting is
-  about is not in the answer.
+  agenda document itself is a link. In Richmond City and Alexandria City,
+  the civic server also reads structured agenda items and individual
+  votes. Look up the source and event ID together, then use that source
+  and the returned item ID for the vote records.
 
-Six skills package those into workflows — the order to ask in, and what
+The skills package those tools into workflows — the order to ask in, and what
 an empty answer means at each step:
 
+- `public-meeting-brief`: read a local notice and its published agenda.
+- `recorded-vote-check`: trace a motion to the individual votes on that item.
 - `whose-government`: which government covers a place, from a name,
   address, ZIP, or coordinate.
 - `parcel-zoning-screen`: a parcel's zoning district and what the record
@@ -78,7 +82,8 @@ an empty answer means at each step:
 They install with the server as a plugin bundle: add the marketplace
 `pranava0x0/Commonwealth-MCP` and install `commonwealth-mcp`. For a client
 with no plugin system, `commonwealth configure <client>` writes the server
-entry alone.
+entry. Clients can discover the walks with MCP prompts/list and read them
+with prompts/get. The civic and geo profiles can run as separate servers.
 
 An answer too large to return inline comes back summarised with a
 `commonwealth://` handle to everything that was retrieved, readable as an

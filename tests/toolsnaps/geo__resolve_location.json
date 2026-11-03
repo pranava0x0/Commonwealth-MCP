@@ -6,6 +6,7 @@
  },
  "description": "Turn a Virginia street address or a 5-digit ZIP into the government that covers it. Use this FIRST when the user gives an address \u2014 the other tools take a jurisdiction name or a coordinate, not an address. An address is geocoded and the resulting point is placed by point-in-polygon; the geocoder's own city field is a POSTAL city and is never the answer (a Fairfax County address reads 'Alexandria'). A ZIP returns every locality it touches: ZIPs are delivery routes and cross government boundaries constantly, so a multi-locality ZIP comes back as candidates with requires_user_choice and must go to the user unchosen. Pass exactly one of `address` or `zip_code`.",
  "input_schema": {
+  "additionalProperties": false,
   "properties": {
    "address": {
     "default": "",

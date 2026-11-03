@@ -1,0 +1,19 @@
+id: recorded-vote-check-unsupported-source
+tier: 3
+skill: recorded-vote-check
+question: Can you read recorded votes for item 268162 from the Hampton City calendar?
+toolset: civic
+fixtures:
+- va-richmond-city-meetings
+expected:
+  tool: civic.get_item_votes
+  arguments:
+    source_id: va-hampton-city-meetings
+    item_id: '268162'
+  coverage:
+    registry: none
+    result: empty
+score:
+- kind: coverage_honesty
+traps:
+- registry_gap

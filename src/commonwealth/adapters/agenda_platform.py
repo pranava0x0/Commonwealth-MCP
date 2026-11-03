@@ -36,16 +36,20 @@ evidence a locality is on the API. Only the API answers that question.
 from __future__ import annotations
 
 import re
+from collections.abc import Callable
 from dataclasses import dataclass
-from datetime import date, datetime, timedelta
+from datetime import UTC, date, datetime, timedelta
 from typing import Any
 
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel, ConfigDict, Field
 
 from ..core.errors import InvalidQuery, SourceUnavailable
 from ..core.registry import SourceManifest, register_adapter_params
 from .base import (HttpFetcher, JsonListFetcher, egress_policy_for,
                    log_source_call)
+
+
+_CLIENT = re.compile(r"^[a-z0-9][a-z0-9-]*$")
 
 
 class AgendaPlatformParams(BaseModel):
@@ -56,7 +60,7 @@ class AgendaPlatformParams(BaseModel):
     # meetings from another's on this platform, and putting it here is
     # what makes registering the sixth locality a file rather than a
     # patch. Path segment, so it is pattern-checked before it is used.
-    client: str
+    client: str = Field(pattern=_CLIENT.pattern)
     # Where a human reads the same calendar. Returned as data on every
     # record so an answer can be checked against the publisher's own
     # page; never fetched (the egress allowlist is pinned to the API
@@ -73,13 +77,6 @@ class AgendaPlatformParams(BaseModel):
 
 register_adapter_params("agenda_platform", AgendaPlatformParams)
 
-
-# The vendor's client identifiers are lowercase alphanumeric path
-# segments. Checked rather than trusted for the reason the Code's
-# numbers are: this becomes a URL path, and `client="../../v1/other"`
-# would read a different locality's calendar and report it under this
-# manifest's name — a wrong answer wearing a correct one's clothes.
-_CLIENT = re.compile(r"^[a-z0-9][a-z0-9-]*$")
 
 # An unbounded date range is refused rather than silently defaulted
 # (issue #13): a query with no end quietly returning a decade of
@@ -119,7 +116,7 @@ class Meeting:
 
 
 def _segment(value: str, field: str) -> str:
-    if not _CLIENT.fullmatch(value):
+    if not isinstance(value, str) or not _CLIENT.fullmatch(value):
         raise InvalidQuery(
             f"{field} {value!r} is not a valid agenda-platform client "
             "identifier. They are lowercase alphanumeric, e.g. "
@@ -244,17 +241,70 @@ def _utc(value: str) -> str | None:
     guess: a freshness claim invented from an unparseable string is
     worse than admitting the vintage is unknown.
     """
-    if not value:
+    if not value or "T" not in value:
         return None
     try:
-        parsed = datetime.fromisoformat(value.rstrip("Z"))
-    except ValueError:
+        parsed = datetime.fromisoformat(value)
+        if parsed.tzinfo is not None:
+            parsed = parsed.astimezone(UTC)
+    except (ValueError, OverflowError):
         return None
     return parsed.replace(microsecond=0).strftime("%Y-%m-%dT%H:%M:%SZ")
 
 
+
+# A lookahead row distinguishes the last full page from a partial answer.
+DETAIL_PAGE_SIZE = 10
+
+
+def _params(manifest: SourceManifest) -> AgendaPlatformParams:
+    values = manifest.adapter.model_dump(exclude={"type"})
+    _segment(values.get("client", ""), "client")
+    return AgendaPlatformParams.model_validate(values)
+
+
+def check_detail_args(record_id: str, offset: int) -> None:
+    if (not isinstance(record_id, str) or not re.fullmatch(r"[1-9][0-9]{0,9}", record_id)
+            or int(record_id) > 2**31 - 1):
+        raise InvalidQuery("Pass the positive decimal ID returned by the previous lookup.")
+    if type(offset) is not int or not 0 <= offset <= 2**31 - 1:
+        raise InvalidQuery("offset must be a nonnegative 32-bit integer.")
+
+
+@dataclass
+class DetailPage:
+    records: list[dict]
+    url: str
+    next_offset: int | None
+
+
+def _record_id(row: dict, field: str) -> str:
+    value = row.get(field)
+    if type(value) is not int or value <= 0:
+        raise SourceUnavailable(f"The agenda platform returned a row without a valid {field}.")
+    return str(value)
+
+
+def _agenda_item(row: dict) -> dict:
+    return {"item_id": _record_id(row, "EventItemId"),
+            "title": row.get("EventItemTitle"),
+            "sequence": row.get("EventItemAgendaSequence"),
+            "agenda_number": row.get("EventItemAgendaNumber"),
+            "matter_file": row.get("EventItemMatterFile"),
+            "action": row.get("EventItemActionName"),
+            "passed_flag": row.get("EventItemPassedFlagName"),
+            "last_modified": _utc(_text(row, "EventItemLastModifiedUtc"))}
+
+
+def _vote(row: dict) -> dict:
+    return {"vote_id": _record_id(row, "VoteId"),
+            "person": row.get("VotePersonName"),
+            "vote": row.get("VoteValueName"),
+            "last_modified": _utc(_text(row, "VoteLastModifiedUtc"))}
+
+
 class AgendaPlatformAdapter:
-    version = "0.1.0"
+    version = "0.2.0"
 
     def __init__(self, fetcher: JsonListFetcher | None = None) -> None:
         self._fetcher = fetcher
@@ -268,19 +318,19 @@ class AgendaPlatformAdapter:
     async def search_meetings(self, manifest: SourceManifest,
                               start_date: str, end_date: str,
                               body: str | None = None
-                              ) -> tuple[list[Meeting], str]:
+                              ) -> tuple[list[Meeting], str, bool]:
         """Meetings in a date window, as the publisher orders them.
 
-        Returns the meetings and the URL they came from. The window is
+        Returns meetings, the endpoint URL, and whether the raw page reached
+        the vendor's 1,000-row limit. The window is
         applied by the publisher through its own filter rather than by
         fetching everything and trimming: the caller's question travels
         to the service that can answer it, and the answer is the
         publisher's own selection.
         """
-        p = AgendaPlatformParams.model_validate(
-            manifest.adapter.model_dump(exclude={"type"}))
+        p = _params(manifest)
         start, end = check_range(start_date, end_date)
-        client = _segment(p.client, "client")
+        client = p.client
         base = p.service_url.rstrip("/")
         url = f"{base}/{client}/events"
 
@@ -315,7 +365,41 @@ class AgendaPlatformAdapter:
         log_source_call(manifest, "search_meetings",
                         {"start_date": start_date, "end_date": end_date,
                          "body": body or ""}, len(meetings))
-        return meetings, url
+        return meetings, url, len(payload) >= 1000
+
+    async def agenda_items(self, manifest: SourceManifest, event_id: str,
+                           offset: int = 0) -> DetailPage:
+        check_detail_args(event_id, offset)
+        return await self._detail_page(
+            manifest, f"events/{event_id}/eventitems", offset,
+            "EventItemAgendaSequence,EventItemId", "EventItemEventId",
+            event_id, _agenda_item)
+
+    async def item_votes(self, manifest: SourceManifest, item_id: str,
+                         offset: int = 0) -> DetailPage:
+        check_detail_args(item_id, offset)
+        return await self._detail_page(
+            manifest, f"eventitems/{item_id}/votes", offset, "VoteId",
+            "VoteEventItemId", item_id, _vote)
+
+    async def _detail_page(self, manifest: SourceManifest, endpoint: str,
+                           offset: int, order: str, parent_field: str,
+                           parent_id: str, project: Callable[[dict], dict]) -> DetailPage:
+        p = _params(manifest)
+        url = f"{p.service_url.rstrip('/')}/{p.client}/{endpoint}"
+        params = {"$top": DETAIL_PAGE_SIZE + 1, "$skip": offset, "$orderby": order}
+        fetcher = self._fetcher_for(manifest, p.service_url)
+        rows = _rows(await fetcher.fetch_json_list(url, params))
+        if any(_record_id(row, parent_field) != parent_id for row in rows):
+            raise SourceUnavailable("The agenda platform returned records for a different item or meeting.")
+        if len(rows) > DETAIL_PAGE_SIZE + 1:
+            raise SourceUnavailable("The agenda platform ignored the requested page size.")
+        more = len(rows) > DETAIL_PAGE_SIZE
+        log_source_call(manifest, endpoint.rsplit("/", 1)[1],
+                        {"parent_id": parent_id, "offset": offset},
+                        min(len(rows), DETAIL_PAGE_SIZE))
+        return DetailPage([project(row) for row in rows[:DETAIL_PAGE_SIZE]], url,
+                          offset + DETAIL_PAGE_SIZE if more else None)
 
     @staticmethod
     def _meeting(row: dict, p: AgendaPlatformParams) -> Meeting:
@@ -346,7 +430,7 @@ class AgendaPlatformAdapter:
             portal_url=_text(row, "EventInSiteURL") or p.portal_url,
             comment=comment,
             cancellation_note=_cancellation_note(comment),
-            event_id=_text(row, "EventId"),
+            event_id=_record_id(row, "EventId"),
             # The only freshness signal this platform publishes.
             # Carried through to the envelope, where it becomes both the
             # record's own `last_modified` and the source entry's
@@ -367,14 +451,13 @@ class AgendaPlatformAdapter:
         a real empty calendar is a healthy answer.
         """
         today = date.today()
-        meetings, _ = await self.search_meetings(
+        meetings, _, capped = await self.search_meetings(
             manifest, (today - timedelta(days=180)).isoformat(),
             today.isoformat())
         out: dict[str, Any] = {"window_days": 180,
-                               "meetings": len(meetings)}
+                               "meetings": len(meetings), "at_page_cap": capped}
         if known_body:
+            present = any(known_body.casefold() in m.body.casefold() for m in meetings)
             out["body"] = {"name": known_body,
-                           "found": any(known_body.casefold()
-                                        in m.body.casefold()
-                                        for m in meetings)}
+                           "found": None if capped and not present else present}
         return out

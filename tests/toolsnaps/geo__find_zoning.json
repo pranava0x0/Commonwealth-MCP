@@ -6,6 +6,7 @@
  },
  "description": "Find the zoning district(s) for a parcel PIN or lon/lat point in a Virginia jurisdiction. Screening only: results state the GIS layer's answer, never a legal determination \u2014 repeat the screening_only warning to the user. When two official sources are registered, both are queried and any disagreement is shown, not reconciled. Use geo.find_parcel first when you need the parcel record itself.",
  "input_schema": {
+  "additionalProperties": false,
   "properties": {
    "jurisdiction": {
     "title": "Jurisdiction",

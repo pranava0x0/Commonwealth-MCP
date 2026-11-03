@@ -6,6 +6,7 @@
  },
  "description": "Find road segments and routes in a Virginia jurisdiction, by street-name prefix or near a lon/lat point. TWO official sources answer this and they are expected to disagree: VDOT's route inventory is a linear-referencing model with its own route names and measures, VGIN's centerlines are an aggregation of local submissions with segment-level detail. Both are returned unreconciled and the comparison block says whether their names agree \u2014 a difference is usually a difference in how the road is modelled, not an error. Centerlines are not right-of-way boundaries. A road along a locality line belongs to both localities in the results.",
  "input_schema": {
+  "additionalProperties": false,
   "properties": {
    "jurisdiction": {
     "title": "Jurisdiction",

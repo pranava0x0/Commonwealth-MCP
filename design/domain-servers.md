@@ -17,6 +17,17 @@
 7. **Deprecation aliases from day one:** the alias table exists (empty) in core; renames are additive with aliases, per the github-mcp-server mechanism.
 8. **Toolsets:** each server declares `default` (the small daily-driver set) plus named extras; `discovery` (registry tools) and `spatial` (geo primitives) stay out of `default` per architecture.md decision 0001. As built (recorded 2026-08-28): one registry tool, `registry.resolve_jurisdiction`, rides in `default` via a `discovery-min` toolset — every skill walk's step 1 is resolution (design/skills.md § 2), and the meta-tool selection hazard 0001 guards against lives in the search/describe/status tools, which stay out. A refinement of 0001's letter, not its reasoning. Ratified 2026-08-29 as a dated amendment to decision 0001, which also records what would change it back (a Tier-2 sweep showing the tool called when the question did not need it).
 
+### Running a domain on its own
+
+`commonwealth-civic` serves the civic tools and registry discovery;
+`commonwealth-geo` serves the geo tools and registry discovery. These
+are stdio entry points for the same server builder and wheel. A client
+can run one using `commonwealth serve --profile civic` or `--profile geo`.
+The existing profiles keep their names and tool selections. Every tool
+rejects unknown argument names and lists the names it accepts. A
+misspelled body filter or page offset therefore stops the call before
+it queries a publisher.
+
 ## 2. `commonwealth-registry` (toolset: `discovery`)
 
 | Tool | Contract sketch |
@@ -191,6 +202,25 @@ endpoint — public and keyless — answered every query on 2026-09-08 with
 "The Search Appliance is down" (design/source-quirks.md § 18). `get_bill`
 and `search_legislation` still wait on the LIS key registration named in
 issue #11.
+
+### Following a meeting to an agenda item and a vote
+
+In Richmond City and Alexandria City, a calendar entry's `event_id` and
+its block's `source_id` identify one meeting. Pass both to
+`civic.get_meeting_agenda`. For the individual votes on an item, pass the
+same source ID and the returned `item_id` to `civic.get_item_votes`.
+Both tools are available in the civic and all profiles.
+
+Albemarle County remains calendar-only. Its API does publish item and vote
+rows; the open question is whether we can redistribute a raw recording.
+See the [September 2 meeting and rights review](source-quirks.md#albemarle-agenda-and-vote-coverage).
+
+IDs are local to the publisher. Neither lookup tries a neighboring
+government or follows a document link. Each response contains one page;
+`record_count` counts that page. Pass the `next` arguments to the same
+tool while they are present. An item can carry a recorded action without
+any individual vote records. Only the votes endpoint supplies member
+votes.
 
 ## 5. What deliberately does not exist in V1
 

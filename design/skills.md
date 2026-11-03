@@ -22,7 +22,16 @@ Repo layout: `plugins/commonwealth-mcp/skills/<name>/SKILL.md` in the monorepo f
 
 It sat at `skills/` at the root until 2026-09-08, when #53 built the plugin bundle. A client discovers a plugin's skills by convention, in a `skills/` directory under the plugin root, so the skills moved under the bundle rather than being copied into it. `pyproject.toml` force-includes that directory into the wheel at `commonwealth/_data/skills` and `runtime.SKILLS_DIR` prefers the checkout, so the repo holds one copy and the package holds one.
 
-Distribution: the plugin bundle, which installs the server and the skills together, and the standard skill installation paths for a client with no plugin system. The "Skills over MCP" extension is tracked as the eventual channel so servers can advertise their own workflows (unshipped mechanics; do not build against it yet).
+MCP clients can list the bundled skills with `prompts/list` and request
+the Markdown walk with `prompts/get`. Each prompt has the skill's name
+and description. A skill can declare `metadata.commonwealth.prompt_input:
+question` to request a free-text question, returned as a separate user
+message. Other walks take no arguments. A missing required capability
+is reported in the prompt. The plugin and wheel read the same files.
+
+`public-meeting-brief` follows a calendar notice to its agenda.
+`recorded-vote-check` follows a specific motion to its individual votes.
+Both need the civic or all profile.
 
 ## 2. Skill shape: findings drive the walk
 

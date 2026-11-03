@@ -20,7 +20,7 @@ from ..adapters import arcgis as arcgis_mod
 from ..adapters.base import HttpFetcher, egress_policy_for
 from ..core import toolreg
 from ..core.envelope import utc_now_iso
-from ..core.errors import CommonwealthError
+from ..core.errors import CommonwealthError, InvalidQuery
 from ..adapters.replay import ReplayFetcher
 from ..core.registry import (INVENTORY_ADAPTER, SourceManifest,
                              validate_manifest)
@@ -115,6 +115,10 @@ def cmd_doctor(args: argparse.Namespace) -> int:
                 except CommonwealthError as err:
                     print(f"✗ live {m.id}: {err.code}: {err}")
                     problems += 1
+            elif m.adapter.type == "agenda_platform":
+                line, ok = _meeting_health_line(ctx, m)
+                print(f"{'✓' if ok else '✗'} live {m.id}: {line}")
+                problems += 0 if ok else 1
             elif m.adapter.type == INVENTORY_ADAPTER:
                 # Not a gap: an inventory row names a publisher with no
                 # endpoint behind it, so there is nothing to probe and
@@ -172,6 +176,7 @@ def cmd_tools_call(args: argparse.Namespace) -> int:
     except json.JSONDecodeError as err:
         return _fail(f"--args is not valid JSON: {err}")
     try:
+        spec.check_arguments(tool_args)
         envelope = asyncio.run(spec.fn(ctx, **tool_args))
     except CommonwealthError as err:
         print(json.dumps({"error": err.code, "message": str(err)}, indent=2))
@@ -320,27 +325,9 @@ def cmd_sources_probe(args: argparse.Namespace) -> int:
             continue
         if m.adapter.type == "agenda_platform":
             checked += 1
-            try:
-                h = asyncio.run(ctx.agendas.health(
-                    m, m.health.expect.get("known_body")))
-            except CommonwealthError as err:
-                print(f"✗ {sid}: {err.code}: {err}")
-                problems += 1
-                continue
-            body = h.get("body")
-            # An empty calendar is a healthy answer, so the probe reports
-            # what came back rather than grading it on a record count. The
-            # declared body is the real check: this client answering with
-            # a calendar that never mentions its own council is the shape
-            # a silently-repointed client identifier would take.
-            found = body is None or body["found"]
-            print(f"{'✓' if found else '✗'} {sid}: {h['meetings']} meeting(s) "
-                  f"in the last {h['window_days']} days"
-                  + (f", {body['name']!r} "
-                     f"{'present' if body['found'] else 'ABSENT'}"
-                     if body else ""))
-            if not found:
-                problems += 1
+            line, ok = _meeting_health_line(ctx, m)
+            print(f"{'✓' if ok else '✗'} {sid}: {line}")
+            problems += 0 if ok else 1
             continue
         if m.adapter.type == INVENTORY_ADAPTER:
             # Inventory has no endpoint by construction, so "not probed"
@@ -1381,7 +1368,10 @@ def cmd_sources_sample(args: argparse.Namespace) -> int:
 
 
 def service_url_of(m: SourceManifest) -> str | None:
-    url = m.adapter.model_dump().get("service_url")
+    params = m.adapter.model_dump()
+    url = params.get("service_url")
+    if url and m.adapter.type == "agenda_platform":
+        return f"{url.rstrip('/')}/{params['client']}"
     return url.rstrip("/") if url else None
 
 
@@ -1397,7 +1387,7 @@ def owning_source(url: str, ctx: RuntimeContext) -> SourceManifest | None:
     best = None
     for m in ctx.sources.manifests.values():
         base = service_url_of(m)
-        if base and url.startswith(base) and (
+        if base and (url == base or url.startswith(base + "/")) and (
                 best is None or len(base) > len(service_url_of(best))):
             best = m
     return best
@@ -1471,18 +1461,49 @@ def _sample_meetings(m: SourceManifest, ctx: RuntimeContext) -> int:
     if cancelled:
         windows.append(("cancellation", *cancelled))
 
+    async def record_ids(read, identifier, key):
+        offset = 0
+        seen = set()
+        for _ in range(20):
+            page = await read(m, identifier, offset)
+            for row in page.records:
+                if row[key] in seen:
+                    raise InvalidQuery(f"Repeated {key} {row[key]} while recording {identifier}. "
+                                       "The pages do not establish a complete sample.")
+                seen.add(row[key])
+            if page.next_offset is None:
+                return seen
+            offset = page.next_offset
+        raise InvalidQuery("The sample exceeded 20 pages. Choose a smaller "
+                           "meeting before replacing its recorded fixture.")
+
     async def run() -> dict:
         out: dict[str, Any] = {"client": p.client, "windows": {}}
         for label, start, end in windows:
-            meetings, url = await adapter.search_meetings(m, start, end)
+            meetings, url, at_cap = await adapter.search_meetings(m, start, end)
             out["windows"][label] = {
                 "start_date": start, "end_date": end,
-                "meetings": len(meetings),
+                "meetings": len(meetings), "at_page_cap": at_cap,
                 "bodies": sorted({x.body for x in meetings})[:8],
                 "with_agenda": sum(1 for x in meetings if x.agenda_url),
                 "cancellation_notes": sum(1 for x in meetings
                                           if x.cancellation_note),
                 "url": url}
+        sample_event = m.health.expect.get("sample_event_id")
+        if sample_event:
+            sample_date = m.health.expect["sample_event_date"]
+            notices, _, _ = await adapter.search_meetings(m, sample_date, sample_date)
+            if not any(n.event_id == sample_event and n.meeting_date == sample_date for n in notices):
+                raise InvalidQuery(f"Event {sample_event} not found in the notices for {sample_date}.")
+            item_ids = await record_ids(adapter.agenda_items, sample_event, "item_id")
+            vote_items = m.health.expect.get("sample_vote_items", [])
+            missing = set(vote_items) - item_ids
+            if missing:
+                raise InvalidQuery(f"Vote sample items {sorted(missing)} not found on event {sample_event}.")
+            out["agenda_items"] = len(item_ids)
+            out["vote_rows"] = {
+                item: len(await record_ids(adapter.item_votes, item, "vote_id"))
+                for item in vote_items}
         return out
 
     try:
@@ -1518,6 +1539,22 @@ def _write_fixture(m: SourceManifest, recorder: "_RecordingFetcher",
           f"{path.relative_to(PROJECT_ROOT)}")
     print(f"sample summary: {json.dumps(summary, default=str)}")
     return 0
+
+
+def _meeting_health_line(ctx: RuntimeContext, m: SourceManifest) -> tuple[str, bool]:
+    try:
+        health = asyncio.run(ctx.agendas.health(m, m.health.expect.get("known_body")))
+    except CommonwealthError as err:
+        return f"{err.code}: {err}", False
+    line = (f"{health['meetings']} meeting(s) retrieved in the last "
+            f"{health['window_days']} days")
+    if health["at_page_cap"]:
+        line += " (publisher page limit reached)"
+    if body := health.get("body"):
+        finding = {True: "present", False: "ABSENT", None: "unknown beyond the page limit"}
+        line += f", {body['name']!r} {finding[body['found']]}"
+        return line, body["found"] is True
+    return line, True
 
 
 def _law_health_lines(ctx: RuntimeContext,
@@ -1589,6 +1626,23 @@ def cmd_serve(args: argparse.Namespace) -> int:
     return 0
 
 
+def _domain_server(profile: str) -> int:
+    parser = argparse.ArgumentParser(
+        prog=f"commonwealth-{profile}", description=f"Serve the {profile} MCP tools.")
+    parser.add_argument("--transport", choices=["stdio", "http"], default="stdio")
+    args = parser.parse_args()
+    args.profile = profile
+    return cmd_serve(args)
+
+
+def civic_server() -> int:
+    return _domain_server("civic")
+
+
+def geo_server() -> int:
+    return _domain_server("geo")
+
+
 def cmd_configure(args: argparse.Namespace) -> int:
     from . import configure as cfg
 
@@ -1638,11 +1692,11 @@ def cmd_configure(args: argparse.Namespace) -> int:
     path.write_text(after)
     verb = "updated" if before else "created"
     print(f"{verb} {path}")
-    print(f"  server {cfg.SERVER_KEY!r}, profile {args.profile!r}")
+    print(f"  server {cfg.server_name(args.profile)!r}, profile {args.profile!r}")
     if client.note:
         print(f"  note: {client.note}")
     others = [k for k in (existing.get(client.key) or {})
-              if k != cfg.SERVER_KEY]
+              if k != cfg.server_name(args.profile)]
     if others:
         print(f"  left alone: {', '.join(sorted(others))}")
     return 0
@@ -1884,7 +1938,7 @@ def main() -> int:
     evr.set_defaults(fn=cmd_eval_run)
 
     sv2 = sub.add_parser("serve", help="run the MCP server")
-    sv2.add_argument("--profile", default="default")
+    sv2.add_argument("--profile", choices=sorted(toolreg.PROFILES), default="default")
     sv2.add_argument("--transport", choices=["stdio", "http"],
                      default="stdio")
     sv2.set_defaults(fn=cmd_serve)

@@ -6,6 +6,7 @@
  },
  "description": "Walk the Code of Virginia's table of contents. No arguments lists the titles; `title` lists that title's chapters; `title` and `chapter` list that chapter's sections. Each row carries the arguments for the next step down, and a section row carries the citation to pass to civic.get_code_section for its text. This is the publisher's own contents listing, not a search: there is no full-text search over the Code of Virginia from any public endpoint, so a question about what the law SAYS has to become a walk to a section and then a read of it. Headings are headings \u2014 a chapter named for zoning is not a promise about what its sections contain.",
  "input_schema": {
+  "additionalProperties": false,
   "properties": {
    "chapter": {
     "default": "",

@@ -26,16 +26,21 @@ class SkillRequirements:
     path: Path
     required_capabilities: tuple[str, ...]
     optional_capabilities: tuple[str, ...]
+    description: str = ""
+    compatibility: str = ""
+    body: str = ""
+    accepts_question: bool = False
+    required_registry_tools: tuple[str, ...] = ()
 
 
-def _frontmatter(text: str) -> dict:
-    """The YAML block a SKILL.md opens with, or {} when there is none."""
-    if not text.startswith("---\n"):
-        return {}
-    parts = text.split("---\n", 2)
-    if len(parts) < 3:
-        return {}
-    return yaml.safe_load(parts[1]) or {}
+def _split_skill(text: str) -> tuple[dict, str]:
+    """Split only at delimiter lines; keep later Markdown rules in the walk."""
+    lines = text.splitlines(keepends=True)
+    if lines and lines[0].rstrip("\r\n") == "---":
+        for i, line in enumerate(lines[1:], 1):
+            if line.rstrip("\r\n") == "---":
+                return yaml.safe_load("".join(lines[1:i])) or {}, "".join(lines[i + 1:]).strip()
+    return {}, text.strip()
 
 
 def load_skills(skills_dir: Path) -> list[SkillRequirements]:
@@ -50,11 +55,16 @@ def load_skills(skills_dir: Path) -> list[SkillRequirements]:
         return []
     out = []
     for path in sorted(skills_dir.glob("*/SKILL.md")):
-        fm = _frontmatter(path.read_text())
+        fm, body = _split_skill(path.read_text(encoding="utf-8"))
         cw = (fm.get("metadata") or {}).get("commonwealth") or {}
         out.append(SkillRequirements(
             name=fm.get("name") or path.parent.name,
             path=path,
+            description=(fm.get("description") or "").strip(),
+            compatibility=(fm.get("compatibility") or "").strip(),
+            body=body,
+            accepts_question=cw.get("prompt_input") == "question",
+            required_registry_tools=tuple(cw.get("required_registry_tools") or ()),
             required_capabilities=tuple(cw.get("required_capabilities") or ()),
             optional_capabilities=tuple(cw.get("optional_capabilities") or ()),
         ))
