@@ -417,9 +417,13 @@ async def test_a_truncated_borrowed_parcel_query_truncates_the_zoning_answer(
     env = await find_zoning(truncating, jurisdiction="Vienna",
                             pin=s["sample_pin"])
     assert env.coverage.pagination.value == "truncated"
+    comparison = env.data["comparison"]
+    assert all(src["values"] == ["AC"] for src in comparison["per_source"])
+    assert comparison["agreement"] is None
 
     clean = await find_zoning(ctx, jurisdiction="Vienna",
                               pin=s["sample_pin"])
+    assert clean.data["comparison"]["agreement"] is True
     assert clean.coverage.pagination.value == "complete", (
         "the same call over an untruncated parcel layer is complete, so "
         "the assertion above is about the cap and not about this PIN")

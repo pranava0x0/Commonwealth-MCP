@@ -158,3 +158,15 @@ async def test_county_pin_lookup_does_not_confirm_town_location(cw_ctx):
     block, = env.data["results"]
     assert block["source_id"] == "va-roanoke-county-zoning" and block["record_count"] == 2
     assert "does not place the parcel in va:vinton-town" in block["note"]
+
+
+async def test_unchecked_parcel_polygons_make_zoning_incomplete(cw_ctx, split_pin, monkeypatch):
+    # Use both sides of a real split geometry but allow only one intersection.
+    monkeypatch.setattr("commonwealth.domains.geo.MAX_PARCEL_POLYGONS", 1)
+    env = await find_zoning(cw_ctx, jurisdiction="Richmond City", pin=split_pin)
+    block, = env.data["results"]
+    assert block["parcel_polygons_intersected"] == 1
+    assert block["records"][0]["district"] == "R-6"
+    assert env.coverage.pagination.value == "truncated"
+    assert env.coverage.execution.value == "complete"  # Neither service failed.
+    assert "covers part of the parcel" in env.data["parcel_note"]

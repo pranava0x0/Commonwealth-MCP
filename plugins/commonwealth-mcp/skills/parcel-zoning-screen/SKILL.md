@@ -79,7 +79,9 @@ finding sends you to the escalation table.
 - *A hit* gives one or more districts. Where the parcel is split across
   polygons, the districts are the union across all of them and the result
   says how many polygons were intersected. Report every district and say
-  the parcel is split. Two districts here are not two sources disagreeing.
+  the zoning is split if the districts differ. Several parcel polygons in
+  one district still yield one district. If pagination is truncated, name
+  the districts found and say that more may be present.
 - *A publisher matches the PIN directly* (`lookup_method: zoning_by_parcel_id`):
   cite the zoning rows themselves. In Roanoke County a split PIN can have a
   primary assessment district and another district. Report both. The primary
@@ -89,6 +91,8 @@ finding sends you to the escalation table.
   with each source named, and read `comparison.agreement` rather than
   assuming: `true` means they gave the same district and you say so,
   `false` means they disagree and the disagreement is the finding.
+  `null` means the comparison is inconclusive. Give the reason from
+  `comparison.note` even when the visible district names match.
   A point in the Town of Vienna returns the town's layer and Fairfax
   County's, and they agree. Do not pick one, and do not average them.
 - *Empty with `coverage.registry: covered`* with complete execution and pagination means

@@ -1,0 +1,18 @@
+id: step-parcel-richmond-two-polygons-one-district
+tier: 2
+skill: parcel-zoning-screen
+question: Which districts did the city find across the polygons of Richmond parcel E0000720034?
+fixtures: [va-richmond-city-parcels-zoning]
+expected:
+  tool: geo.find_zoning
+  arguments: {jurisdiction: Richmond City, pin: E0000720034}
+  data:
+    results:
+      - source_id: va-richmond-city-parcels-zoning
+        parcel_polygons_intersected: 2
+        record_count: 1
+        records: [{district: R-6}]
+  coverage: {result: hit, execution: complete, pagination: complete}
+  must_warn: [screening_only]
+score: [retrieval_correctness, coverage_honesty, provenance_present]
+traps: []
