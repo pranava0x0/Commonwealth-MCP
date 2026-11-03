@@ -68,7 +68,8 @@ async def test_prompt_explains_a_registry_gap_and_a_profile_gap_independently():
 
 
 async def test_misspelled_filters_and_offsets_cannot_succeed_on_a_broader_query():
-    async with Client(build_server(build_ctx(), "civic")) as client:
+    ctx = build_ctx()
+    async with Client(build_server(ctx, "civic")) as client:
         tools = (await client.list_tools()).tools
         assert all(t.input_schema["additionalProperties"] is False for t in tools)
         for tool, arguments, typo, valid in (
@@ -83,6 +84,8 @@ async def test_misspelled_filters_and_offsets_cannot_succeed_on_a_broader_query(
             message = res.content[0].text
             assert "InvalidQuery" in message and typo in message and valid in message
             assert "unexpected" not in message
+            assert ctx.audit.records[-1].args is None
+            assert typo in ctx.audit.records[-1].arg_names
 
 
 def test_cli_rejects_positional_json_before_dispatch():

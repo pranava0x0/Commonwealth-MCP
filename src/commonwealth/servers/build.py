@@ -72,10 +72,12 @@ class CommonwealthServer(MCPServer):
             except InvalidQuery as err:
                 ctx = self.runtime
                 ctx.audit.append(error_record(
-                    tool=name, args=arguments, error_code=err.code, duration_ms=0,
-                    server=ctx.server_name, server_version=ctx.server_version,
-                    registry_revision=ctx.sources.revision,
-                    sensitive=ctx.has_sensitive_sources()))
+                    # Unknown fields may contain credentials even when all
+                    # registered sources are open. Keep field names only.
+                    tool=name, args=arguments if isinstance(arguments, dict) else {},
+                    error_code=err.code, duration_ms=0, server=ctx.server_name,
+                    server_version=ctx.server_version,
+                    registry_revision=ctx.sources.revision, sensitive=True))
                 raise ToolError(err.model_message()) from err
         return await super().call_tool(name, arguments, context)
 
