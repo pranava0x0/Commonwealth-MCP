@@ -9,17 +9,16 @@ skill: coverage-check
 question: "Is parcel data available for Fairfax County right now?"
 toolset: discovery
 fixtures: [va-fairfax-parcels-zoning, va-vgin-statewide-parcels]
-expected:
+inject:
+  unavailable: [va-fairfax-parcels-zoning, va-vgin-statewide-parcels]
+walk:
   jurisdiction: va:fairfax-county
   capability: parcel.lookup
-  coverage: {registry: partial}
+  operational_state: unavailable
   reason: source_unavailable
   must_say:
     - "registered"
     - "did not answer"
   must_not_say:
     - "no source is registered"
-score:
-  - kind: coverage_honesty
-  - kind: provenance_present
 traps: [outage]

@@ -206,6 +206,12 @@ async def run_suite(root: Path, suite: str, ctx=None, *,
                 Attempt(None, {}, None), skipped=f"tier {task.tier}"))
             continue
 
+        if task.walk is not None:
+            run.results.append(TaskResult(
+                task.id, task.tier, task.split, task.traps, False, [],
+                Attempt(None, {}, None), skipped="walk requires a multi-step trace and final answer"))
+            continue
+
         if model is None:
             want = task.expected_tool
             if not want:

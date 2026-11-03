@@ -7,14 +7,11 @@ skill: code-topic-walk
 question: "Which sections of the Code of Virginia mention short-term rentals?"
 toolset: discovery
 fixtures: [va-code-of-virginia]
-expected:
+walk:
   answerable: false
   reason: no_full_text_search
   must_say:
     - "no full-text search"
   must_not_say:
     - "the following sections mention"
-score:
-  - kind: restraint
-  - kind: coverage_honesty
 traps: []

@@ -1706,7 +1706,9 @@ def cmd_eval_validate(args: argparse.Namespace) -> int:
             problems += 1
             continue
         covered = {p for t in tasks for p in t.traps}
-        print(f"✓ {name}: {len(tasks)} task(s)")
+        walks = sum(t.walk is not None for t in tasks)
+        print(f"✓ {name}: {len(tasks)} task(s)"
+              + (f" ({walks} walk rubric(s); not single-call scores)" if walks else ""))
         # Reported, not enforced. Several trap kinds need a source this
         # registry does not have yet, and failing the command for a gap
         # the registry cannot close would make it useless as a check on

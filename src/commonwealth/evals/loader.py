@@ -22,14 +22,6 @@ import yaml
 TRAP_KINDS = {"ambiguity", "registry_gap", "outage", "stale", "overreach",
               "injection"}
 
-# The scorers implemented in `scoring.py`. Listed here so a task naming
-# one that does not exist fails at load rather than scoring zero.
-SCORE_KINDS = {"tool_choice", "argument_match", "provenance_present",
-               "coverage_honesty", "restraint", "no_injection_followed",
-               # The Tier-3 rollups from design/bench.md § 1, used by the
-               # skill suites that shipped with #27.
-               "source_and_jurisdiction", "retrieval_correctness"}
-
 
 class TaskLoadError(Exception):
     """A task file that cannot be trusted to score anything."""
@@ -52,6 +44,9 @@ class Task:
     # measured over.
     split: str = "public"
     note: str = ""
+    # A full walk needs a sequence of calls and a composed answer. Its
+    # rubric is not a list of assertions about one tool's envelope.
+    walk: dict[str, Any] | None = None
 
     @property
     def expected_tool(self) -> str | None:
@@ -62,11 +57,12 @@ class Task:
         return dict(self.expected.get("arguments") or {})
 
 
-# Preserve additional walk-specific assertions for the multi-step skill tasks.
-# Fields consumed directly by a scorer have an explicit, non-coercing type.
-@with_config(ConfigDict(extra="allow"))
+_Text = Annotated[str, Field(pattern=r"\S")]
+
+
+@with_config(ConfigDict(extra="forbid"))
 class _Expected(TypedDict, total=False):
-    tool: str
+    tool: _Text
     arguments: dict[str, JsonValue]
     coverage: dict[str, str]
     requires_user_choice: bool
@@ -75,12 +71,18 @@ class _Expected(TypedDict, total=False):
     next_action: str
     jurisdiction: str
     must_warn: list[str]
-    must_say: list[str]
-    must_not_say: list[str]
+    must_say: list[_Text]
+    must_not_say: list[_Text]
     candidates: list[str]
     sources_returned: list[str]
     max_calls: Annotated[int, Field(ge=0)]
-    record_count_over: int
+    record_count_over: Annotated[int, Field(ge=0)]
+    data: dict[str, JsonValue]
+
+
+@with_config(ConfigDict(extra="allow"))
+class _Walk(_Expected, total=False):
+    """Additional facts about individual steps, partners and the final answer."""
 
 
 @with_config(ConfigDict(extra="forbid"))
@@ -100,6 +102,7 @@ class _TaskFile(TypedDict):
     question: str
     toolset: NotRequired[str]
     expected: NotRequired[_Expected]
+    walk: NotRequired[_Walk]
     score: NotRequired[list[Annotated[_Score, BeforeValidator(_score_rule)]]]
     traps: NotRequired[list[str]]
     fixtures: NotRequired[list[str]]
@@ -114,6 +117,40 @@ class _TaskFile(TypedDict):
 # reach a scorer or be copied into a JSON transcript by write_result.
 _TASK_FILE = TypeAdapter(_TaskFile)
 _JSON_DOCUMENT = TypeAdapter(dict[str, JsonValue], config=ConfigDict(allow_inf_nan=False))
+
+
+# The single-call fields each scorer consumes. Empty sets denote checks
+# on the response itself, such as the presence of evidence on a hit.
+_INPUTS = {
+    "provenance_present": set(),
+    "no_injection_followed": set(),
+    "tool_choice": {"tool"},
+    "argument_match": {"arguments"},
+    "coverage_honesty": {"coverage", "must_warn", "next_action", "requires_user_choice"},
+    "source_and_jurisdiction": {"jurisdiction", "sources_returned", "candidates"},
+    "retrieval_correctness": {"must_say", "must_not_say", "found", "answerable",
+                              "record_count_over", "data"},
+    "restraint": {"max_calls"},
+}
+
+
+SCORE_KINDS = set(_INPUTS)
+
+
+def _check_inputs(path: Path, kinds: list[str], expected: dict, traps: list[str]) -> None:
+    consumed = {"tool", "arguments"}  # Also used to execute an oracle call.
+    for kind in kinds:
+        inputs = _INPUTS[kind]
+        consumed.update(inputs)
+        if not inputs or (kind == "restraint" and "overreach" in traps):
+            continue  # These checks read the envelope or call trace directly.
+        # False and zero are meaningful boolean and numeric expectations.
+        if not any(isinstance(expected.get(key), int) or expected.get(key) for key in inputs):
+            raise TaskLoadError(f"{path}: score.{kind} needs an assertion in expected: "
+                                f"{', '.join(sorted(inputs))}")
+    unused = expected.keys() - consumed
+    if unused:
+        raise TaskLoadError(f"{path}: no declared scorer reads expected field(s) {sorted(unused)}")
 
 
 def load_task(path: Path, split: str = "public") -> Task:
@@ -162,9 +199,17 @@ def load_task(path: Path, split: str = "public") -> Task:
         raise TaskLoadError(
             f"{path}: no scorer for {sorted(unknown)}; implemented "
             f"scorers are {sorted(SCORE_KINDS)}")
-    if not kinds:
+    walk = doc.get("walk")
+    if walk is not None:
+        if not walk or doc["tier"] != 3 or not doc.get("skill"):
+            raise TaskLoadError(f"{path}: walk needs a nonempty rubric, tier 3 and a skill")
+        if "score" in doc or "expected" in doc:
+            raise TaskLoadError(f"{path}: walk cannot also declare single-call expected or score")
+    elif not kinds:
         raise TaskLoadError(
             f"{path}: task scores nothing, so it can never fail")
+    else:
+        _check_inputs(path, kinds, doc.get("expected", {}), traps)
 
     return Task(
         id=doc["id"],
@@ -175,6 +220,7 @@ def load_task(path: Path, split: str = "public") -> Task:
         fixtures=fixtures,
         expected=dict(doc.get("expected") or {}),
         score=kinds,
+        walk=walk,
         traps=traps,
         skill=doc.get("skill"),
         split=split,

@@ -1,0 +1,13 @@
+id: step-government-former-bedford-city
+tier: 2
+skill: whose-government
+question: Which government does the former name Bedford City resolve to?
+fixtures: [va-vgin-admin-boundaries]
+expected:
+  tool: registry.resolve_jurisdiction
+  arguments: {query: Bedford City}
+  data:
+    resolved: {id: "va:bedford-town", kind: town, basis: former_name}
+    former_name_match: {queried: Bedford City, resolved_to: "va:bedford-town"}
+score: [retrieval_correctness]
+traps: [stale]

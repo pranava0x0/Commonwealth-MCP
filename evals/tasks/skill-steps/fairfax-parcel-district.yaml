@@ -1,0 +1,16 @@
+id: step-parcel-fairfax-district
+tier: 2
+skill: parcel-zoning-screen
+question: Which district does Fairfax County return for parcel 0102 14  0231?
+fixtures: [va-fairfax-parcels-zoning, va-vgin-admin-boundaries]
+expected:
+  tool: geo.find_zoning
+  arguments: {jurisdiction: Fairfax County, pin: "0102 14  0231"}
+  data:
+    results:
+      - source_id: va-fairfax-parcels-zoning
+        parcel_polygons_intersected: 1
+        records: [{district: R-3}]
+  must_warn: [screening_only]
+score: [retrieval_correctness, coverage_honesty, provenance_present]
+traps: []

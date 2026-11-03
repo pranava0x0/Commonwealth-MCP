@@ -6,9 +6,8 @@ skill: whose-government
 question: "Who governs 127 Center St S, Vienna, VA 22180?"
 toolset: default
 fixtures: [va-vgin-composite-locator, va-vgin-admin-boundaries]
-expected:
+walk:
   jurisdiction: va:vienna-town
   layered: [va:fairfax-county, va]
   must_say: ["Vienna", "Fairfax County"]
-score: [{kind: retrieval_correctness}, {kind: coverage_honesty}]
 traps: []

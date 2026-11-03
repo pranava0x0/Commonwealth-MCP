@@ -6,9 +6,8 @@ skill: whose-government
 question: "Which government covers Bedford City?"
 toolset: default
 fixtures: [va-vgin-admin-boundaries]
-expected:
+walk:
   jurisdiction: va:bedford-town
   basis: former_name
   must_say: ["town", "2013"]
-score: [{kind: retrieval_correctness}, {kind: coverage_honesty}]
 traps: [stale]

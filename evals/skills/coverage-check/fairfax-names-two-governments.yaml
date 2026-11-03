@@ -7,7 +7,7 @@ skill: coverage-check
 question: "Is zoning covered for Fairfax?"
 toolset: discovery
 fixtures: [va-vgin-admin-boundaries, va-fairfax-parcels-zoning]
-expected:
+walk:
   requires_user_choice: true
   candidates: [va:fairfax-county, va:fairfax-city]
   must_say:
@@ -17,7 +17,4 @@ expected:
     # The failure: answering for the county because it is the one with a
     # source, which turns an ambiguity into a coverage claim.
     - "yes, zoning is covered"
-score:
-  - kind: coverage_honesty
-  - kind: restraint
 traps: [ambiguity]

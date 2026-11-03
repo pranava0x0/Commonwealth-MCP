@@ -8,11 +8,11 @@ skill: coverage-check
 question: "Can you tell me how a parcel in Craig County is zoned?"
 toolset: discovery
 fixtures: [va-vgin-admin-boundaries]
-expected:
+walk:
   jurisdiction: va:craig-county
   capability: zoning.lookup
   answerable: false
-  reason: no_source_registered
+  reason: no_registered_source
   must_say:
     - "no source is registered"
     - "Craig County"
@@ -20,7 +20,4 @@ expected:
     - unzoned
     - "no zoning"
     - "not zoned"
-score:
-  - kind: coverage_honesty
-  - kind: restraint
 traps: [registry_gap]

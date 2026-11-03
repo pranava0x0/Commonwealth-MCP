@@ -8,7 +8,7 @@ skill: coverage-check
 question: "What zoning coverage is there for the Town of Vienna?"
 toolset: discovery
 fixtures: [va-vienna-town-zoning, va-fairfax-parcels-zoning]
-expected:
+walk:
   jurisdiction: va:vienna-town
   capability: zoning.lookup
   answerable: true
@@ -16,7 +16,4 @@ expected:
   must_say:
     - "Vienna"
     - "Fairfax County"
-score:
-  - kind: coverage_honesty
-  - kind: provenance_present
 traps: []

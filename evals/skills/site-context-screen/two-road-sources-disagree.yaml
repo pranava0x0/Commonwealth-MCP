@@ -6,9 +6,8 @@ skill: site-context-screen
 question: "What road is at -77.2653, 38.9012 in Vienna?"
 toolset: all
 fixtures: [va-vdot-lrs-routes, va-vgin-road-centerlines, va-vgin-admin-boundaries]
-expected:
+walk:
   sources_returned: [va-vdot-lrs-routes, va-vgin-road-centerlines]
   must_say: ["VDOT", "VGIN"]
   must_not_say: ["right-of-way", "frontage"]
-score: [{kind: source_and_jurisdiction}, {kind: restraint}]
 traps: []

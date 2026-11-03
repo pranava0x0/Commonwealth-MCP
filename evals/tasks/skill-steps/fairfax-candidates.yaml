@@ -1,0 +1,13 @@
+id: step-coverage-fairfax-candidates
+tier: 2
+skill: coverage-check
+question: Which governments could the name Fairfax refer to before a coverage lookup?
+fixtures: [va-vgin-admin-boundaries]
+expected:
+  tool: registry.resolve_jurisdiction
+  arguments: {query: Fairfax}
+  data: {resolved: null}
+  requires_user_choice: true
+  candidates: [va:fairfax-city, va:fairfax-county]
+score: [retrieval_correctness, coverage_honesty, source_and_jurisdiction]
+traps: [ambiguity]

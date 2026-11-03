@@ -7,7 +7,7 @@ skill: parcel-zoning-screen
 question: "What is the zoning for parcel E0000720034 in Richmond City?"
 toolset: default
 fixtures: [va-richmond-city-parcels-zoning, va-vgin-admin-boundaries]
-expected:
+walk:
   jurisdiction: va:richmond-city
   parcel_polygons_intersected: 2
   coverage:
@@ -20,8 +20,4 @@ expected:
     # between sources, and calling it one sends the caller to the wrong
     # question.
     - "sources disagree"
-score:
-  - kind: provenance_present
-  - kind: coverage_honesty
-  - kind: restraint
 traps: []

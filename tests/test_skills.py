@@ -18,12 +18,14 @@ import pytest
 import yaml
 
 from commonwealth.core.errors import SourceUnavailable
-from commonwealth.core.registry import SourceRegistry
+from commonwealth.core.registry import OperationalState, SourceRegistry
 from commonwealth.core.skills import load_skills
+from commonwealth.domains.civic import browse_code, get_code_section
 from commonwealth.domains.geo import (find_buildings, find_environmental_sites,
                                       find_parcel, find_roads, find_zoning,
                                       resolve_location)
-from commonwealth.domains.registry import resolve_jurisdiction
+from commonwealth.domains.registry import resolve_jurisdiction, search_sources, source_status
+from commonwealth.fixtures import replay_context
 from commonwealth.runtime import PROJECT_ROOT, SOURCES_DIR
 from commonwealth.servers.build import registries
 from tests.conftest import ReplayFetcher, build_ctx, load_all_recordings
@@ -144,6 +146,37 @@ def test_no_two_skills_claim_the_same_name():
     assert len(SKILL_NAMES) == len(set(SKILL_NAMES))
 
 
+async def test_code_topic_walk_follows_the_published_contents_to_the_cited_text():
+    task = _task("code-topic-walk", "zoning-authority-from-a-topic")
+    ctx = replay_context(task["fixtures"])
+    want = task["walk"]
+    args = {}
+    for level in ("title", "chapter", "citation"):
+        env = await browse_code(ctx, **args)
+        row, = [r for r in env.data["results"][0]["records"] if r["number"] == want[level]]
+        args = row["cite_with"] if level == "citation" else row["next"]
+    section = await get_code_section(ctx, **args)
+    record, = section.data["results"]
+    assert record["citation"] == want["citation"]
+    assert record["found"] and record["paragraphs"] and record["evidence_refs"]
+
+
+async def test_coverage_walk_finds_registered_sources_during_a_simulated_outage():
+    task = _task("coverage-check", "registered-and-not-answering")
+    ctx = replay_context(task["fixtures"])
+    rubric = task["walk"]
+    for sid in task["inject"]["unavailable"]:
+        ctx.sources.set_operational(sid, OperationalState.unavailable)
+    matches = await search_sources(ctx, jurisdiction=rubric["jurisdiction"],
+                                   capability=rubric["capability"])
+    assert "va-fairfax-parcels-zoning" in {row["id"] for row in matches.data["sources"]}
+    for sid in task["inject"]["unavailable"]:
+        status = await source_status(ctx, source_id=sid)
+        row, = status.data["sources"]
+        assert row["id"] == sid and row["declared_state"] == "active"
+        assert row["operational_state"] == rubric["operational_state"]
+
+
 # --- parcel-zoning-screen, replayed (issue #27's four cases) --------------
 
 async def test_one_polygon_parcel_returns_one_district(ctx):
@@ -158,7 +191,7 @@ async def test_one_polygon_parcel_returns_one_district(ctx):
     block = env.data["results"][0]
     assert block["parcel_polygons_intersected"] == 1
     districts = [r["district"] for r in block["records"]]
-    assert districts == task["expected"]["districts"], districts
+    assert districts == task["walk"]["districts"], districts
     assert env.coverage.registry.value == "covered"
     assert env.coverage.result.value == "hit"
 
@@ -176,7 +209,7 @@ async def test_a_split_parcel_reports_every_polygons_district(ctx):
                             pin="E0000720034")
     block = env.data["results"][0]
     assert (block["parcel_polygons_intersected"]
-            == task["expected"]["parcel_polygons_intersected"])
+            == task["walk"]["parcel_polygons_intersected"])
     assert env.data["parcel_note"], (
         "nothing tells the caller the parcel is split rather than the "
         "sources disagreeing")
@@ -226,7 +259,7 @@ async def test_the_ambiguity_trap_returns_candidates_and_chooses_nothing(
     assert env.requires_user_choice is True
     assert env.data["resolved"] is None, "the envelope picked one"
     ids = {c["id"] for c in env.data["candidates"]}
-    assert set(task["expected"]["candidates"]) <= ids, ids
+    assert set(task["walk"]["candidates"]) <= ids, ids
 
 
 async def test_the_outage_trap_is_a_failure_not_an_empty_answer(ctx):
@@ -247,7 +280,7 @@ async def test_the_outage_trap_is_a_failure_not_an_empty_answer(ctx):
     env = await find_zoning(build_ctx(fetcher=_Outage()),
                             jurisdiction="Fairfax County",
                             pin="0102 14  0231")
-    expected = task["expected"]["coverage"]
+    expected = task["walk"]["coverage"]
     assert env.coverage.execution.value == expected["execution"]
     assert env.coverage.result.value == expected["result"]
     assert env.coverage.registry.value == expected["registry"], (
@@ -266,7 +299,7 @@ async def test_an_ambiguous_name_returns_both_and_picks_neither(ctx):
     assert env.requires_user_choice is True
     assert env.data["resolved"] is None, "the envelope picked one"
     ids = {c["id"] for c in env.data["candidates"]}
-    assert set(task["expected"]["candidates"]) <= ids, ids
+    assert set(task["walk"]["candidates"]) <= ids, ids
     for candidate in env.data["candidates"]:
         assert candidate["distinguisher"], (
             "a candidate with no distinguisher cannot be chosen between")
@@ -287,9 +320,9 @@ async def test_a_town_address_returns_the_town_and_its_county(ctx):
     task = _task("whose-government", "town-and-county-both")
     env = await resolve_location(ctx,
                                  address="127 Center St S, Vienna, VA 22180")
-    assert env.data["resolved"]["id"] == task["expected"]["jurisdiction"]
+    assert env.data["resolved"]["id"] == task["walk"]["jurisdiction"]
     layered = {a["id"] for a in env.data["layered_authorities"]}
-    assert set(task["expected"]["layered"]) <= layered, layered
+    assert set(task["walk"]["layered"]) <= layered, layered
 
 
 async def test_a_zip_returns_every_locality_it_touches(ctx):
@@ -298,7 +331,7 @@ async def test_a_zip_returns_every_locality_it_touches(ctx):
     task = _task("whose-government", "zip-spanning-localities")
     env = await resolve_location(ctx, zip_code="24450")
     ids = {loc["id"] for loc in env.data["localities_touched"]}
-    assert ids == set(task["expected"]["localities"]), ids
+    assert ids == set(task["walk"]["localities"]), ids
 
 
 async def test_a_surrendered_charter_resolves_to_what_it_became(ctx):
@@ -306,8 +339,8 @@ async def test_a_surrendered_charter_resolves_to_what_it_became(ctx):
     which is a fact the answer should carry."""
     task = _task("whose-government", "a-city-that-became-a-town")
     env = await resolve_jurisdiction(ctx, query="Bedford City")
-    assert env.data["resolved"]["id"] == task["expected"]["jurisdiction"]
-    assert env.data["resolved"]["basis"] == task["expected"]["basis"]
+    assert env.data["resolved"]["id"] == task["walk"]["jurisdiction"]
+    assert env.data["resolved"]["basis"] == task["walk"]["basis"]
     layered = {a["id"] for a in env.data["layered_authorities"]}
     assert "va:bedford-county" in layered, (
         "the county that now governs the ground is missing")
@@ -323,8 +356,8 @@ async def test_a_truncated_building_answer_keeps_what_it_retrieved(ctx):
                                lon=-77.4360, lat=37.5407,
                                radius_meters=800.0)
     block = env.data["results"][0]
-    assert len(block["records"]) == task["expected"]["inline_records"]
-    assert block["record_count"] > task["expected"]["record_count_over"]
+    assert len(block["records"]) == task["walk"]["inline_records"]
+    assert block["record_count"] > task["walk"]["record_count_over"]
     assert block["full_records_ref"], "the retrieved records were dropped"
     stored = ctx.results.get(block["full_records_ref"])
     assert len(stored.payload["records"]) == block["record_count"]
@@ -341,8 +374,8 @@ async def test_no_monitoring_station_is_never_an_all_clear(ctx):
     # The warning legitimately contains "safe" — in "NOT a determination
     # that any site is safe" — so scanning for the word would fail on the
     # disclaimer that makes the answer correct. What the model then does
-    # with this is the task file's `must_not_say`, which #28's scorer
-    # checks against a model's output rather than against an envelope.
+    # with this is the task file's `must_not_say`, which needs the
+    # model's final answer and isn't scored by this replay.
     prose = " ".join(w.message for w in env.warnings).lower()
     assert "not a complete inventory" in prose, (
         "an empty environmental answer that does not say the layer is no "
@@ -358,7 +391,7 @@ async def test_two_road_sources_come_back_unreconciled(ctx):
     env = await find_roads(ctx, jurisdiction="Vienna",
                            lon=-77.2653, lat=38.9012)
     sources = [b["source_id"] for b in env.data["results"]]
-    assert sorted(sources) == sorted(task["expected"]["sources_returned"])
+    assert sorted(sources) == sorted(task["walk"]["sources_returned"])
 
 
 async def test_a_locality_with_no_source_reads_as_not_covered(ctx):
@@ -368,7 +401,7 @@ async def test_a_locality_with_no_source_reads_as_not_covered(ctx):
     assert env.coverage.registry.value == "none"
     assert [a.suggested_capability for a in env.next_actions] == [
         _task("site-context-screen",
-              "no-source-for-this-locality")["expected"]["next_action"]]
+              "no-source-for-this-locality")["walk"]["next_action"]]
 
 
 # --- the startup capability check (design/hub-catalog.md § 2) --------------
@@ -451,18 +484,18 @@ async def test_two_governments_answer_one_point_and_neither_is_picked(ctx):
     assert str(lon) in task["question"] and str(lat) in task["question"]
 
     frame = await resolve_jurisdiction(ctx, lon=lon, lat=lat)
-    assert frame.data["resolved"]["id"] == task["expected"]["jurisdiction"]
+    assert frame.data["resolved"]["id"] == task["walk"]["jurisdiction"]
     layered = {a["id"] for a in frame.data["layered_authorities"]}
-    assert set(task["expected"]["layered_above"]) <= layered, (
+    assert set(task["walk"]["layered_above"]) <= layered, (
         "the county governs this ground too, and a walk that reads only "
         f"the resolved leaf misses its zoning layer: {layered}")
 
     env = await find_zoning(ctx, jurisdiction="Vienna", lon=lon, lat=lat)
     districts = {blk["source_id"]: [r["district"] for r in blk["records"]]
                  for blk in env.data["results"]}
-    assert set(districts) == set(task["expected"]["sources_returned"])
-    assert districts == task["expected"]["districts"], districts
-    assert env.data["comparison"]["agreement"] is task["expected"]["agreement"]
+    assert set(districts) == set(task["walk"]["sources_returned"])
+    assert districts == task["walk"]["districts"], districts
+    assert env.data["comparison"]["agreement"] is task["walk"]["agreement"]
     for blk in env.data["results"]:
         assert blk["source_ref"], "a district with no source named"
 
@@ -480,11 +513,11 @@ async def test_a_town_district_is_read_over_the_county_parcel(ctx):
 
     env = await find_zoning(ctx, jurisdiction="Vienna", pin=pin)
     by = {blk["source_id"]: blk for blk in env.data["results"]}
-    assert set(by) == set(task["expected"]["sources_returned"])
+    assert set(by) == set(task["walk"]["sources_returned"])
     town = by["va-vienna-town-zoning"]
     assert town["parcel_source_id"] == \
-        task["expected"]["parcel_source_for_the_town_answer"]
+        task["walk"]["parcel_source_for_the_town_answer"]
     districts = {sid: [r["district"] for r in blk["records"]]
                  for sid, blk in by.items()}
-    assert districts == task["expected"]["districts"], districts
+    assert districts == task["walk"]["districts"], districts
     assert "screening_only" in {w.code for w in env.warnings}
