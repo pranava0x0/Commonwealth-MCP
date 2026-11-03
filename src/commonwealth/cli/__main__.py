@@ -188,6 +188,29 @@ def cmd_tools_call(args: argparse.Namespace) -> int:
 
 # --- sources ---------------------------------------------------------------
 
+
+def cmd_sources_discover(args: argparse.Namespace) -> int:
+    from .discover import discover
+    from ..core.results import MemoryResultStore
+
+    try:
+        result = asyncio.run(discover(load_context(results=MemoryResultStore()),
+                                      args.query, args.limit, args.start))
+    except CommonwealthError as err:
+        return _fail(err.model_message())
+    if args.json:
+        print(json.dumps(result, indent=2))
+        return 0
+    print(f"Examined {result['datasets_examined']} of {result['total_datasets']} matching datasets. "
+          "Catalog leads only; verify the publisher's service and terms.")
+    for row in result["candidates"]:
+        print(f"{row['title']} | {row['publisher'] or 'unknown publisher'} | {row['kind']} | "
+              f"{row['local_coverage']} | catalog modified: {row['catalog_modified'] or 'unknown'}"
+              f"\n  {row['resource_url']}")
+    if result["next_start"] is not None:
+        print(f"Next page: repeat with --start {result['next_start']}")
+    return 0
+
 def _validate_all(ctx: RuntimeContext, quiet: bool = False) -> int:
     known_j = ctx.jurisdictions.ids()
     total_problems = 0
@@ -1868,6 +1891,12 @@ def main() -> int:
 
     s = sub.add_parser("sources", help="validate, probe, or sample sources")
     ssub = s.add_subparsers(dest="sources_command", required=True)
+    sd = ssub.add_parser("discover", help="find candidate publisher services in Virginia's catalog")
+    sd.add_argument("query", help="portal search terms, for example 'zoning'")
+    sd.add_argument("--limit", type=int, default=20, help="datasets per portal page (1–50)")
+    sd.add_argument("--start", type=int, default=0, help="dataset offset in the portal results")
+    sd.add_argument("--json", action="store_true")
+    sd.set_defaults(fn=cmd_sources_discover)
     sv = ssub.add_parser("validate")
     sv.set_defaults(fn=cmd_sources_validate)
     sp = ssub.add_parser("probe")

@@ -53,9 +53,12 @@ parts that matter most:
   API (`webapi.legistar.com/v1/<client>/bodies`), not on the portal —
   `<anything>.legistar.com` answers HTTP 200, including names that are
   not clients.
-- The state's open-data portal, data.virginia.gov, lists many locality
-  layers with their ArcGIS URLs. It is where to find a source, not a
-  source to cite: register the locality's own service it points at.
+- Run `commonwealth sources discover "zoning" --limit 10` to search
+  Virginia's open-data portal. Each result shows its catalog publisher,
+  resource URL and catalog modification date. A `layer` or `service` URL
+  is a candidate ArcGIS endpoint; a `link` needs manual inspection.
+  Use `--json` for structured output and `--start` for the next page.
+  Verify the layer and its reuse terms at the publisher before registration.
 
 Existing manifests in `sources/local/` and `sources/state/` are the
 working examples.

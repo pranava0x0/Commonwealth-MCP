@@ -1,5 +1,5 @@
 # Inventory only (design/source-registry.md § 6.3). Unlike the VDH row, this
-# one records a working API found and deliberately not wired up: the portal
+# one records a working API used for contributor discovery only: the portal
 # is a catalog of other agencies' datasets, and registering a catalog as a
 # source would put a second, weaker copy of the registry inside the
 # registry.
@@ -21,11 +21,15 @@ adapter:
 
 access:
   mode: anonymous
-  automation_status: unknown
-  terms_url: https://data.virginia.gov/pages/terms-of-use
+  automation_status: public_api
+  terms_url: https://data.virginia.gov/pages/user-guide
   terms_notes: >
-    Not reviewed. The API answers anonymously today, which is a fact about
-    reachability and not a licence.
+    The portal's user guide invites the public to connect via APIs and
+    links to the CKAN API. Contributor discovery reads catalog metadata
+    anonymously. This does not grant reuse rights in any linked dataset;
+    check each publisher's terms separately. The old terms-of-use URL
+    displayed an index of pages, not a license.
+  terms_reviewed_at: "2026-11-03"
   data_classification: open
 
 freshness:

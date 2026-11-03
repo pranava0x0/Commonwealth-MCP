@@ -521,6 +521,12 @@ DEMO_GROUPS = [
          'An unknown capability returns an InvalidQuery error.'),
     ]),
 
+    ("Read Winchester's base zoning", "The city publishes a base district "
+     "for this point. Its overlay districts are separate layers.", [
+        ("geo.find_zoning", {"jurisdiction": "Winchester City", "lon": -78.164, "lat": 39.185},
+         "The city labels this polygon B1, Central Business District."),
+    ]),
+
 ]
 
 # The flat, ordered trail. The groups above are the reading order;
