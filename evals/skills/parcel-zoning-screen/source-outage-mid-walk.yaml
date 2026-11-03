@@ -12,7 +12,7 @@ inject:
   # the same injection rather than recording a second copy of it.
   layer: zoning
   status: 503
-expected:
+walk:
   coverage:
     # Fairfax has one zoning source, so its outage takes the whole step
     # down: execution is `failed`, not `partial`. Partial is what a second
@@ -26,7 +26,4 @@ expected:
   must_not_say:
     # An outage is not an empty result, and the envelope keeps them apart.
     - "no zoning district"
-score:
-  - kind: coverage_honesty
-  - kind: restraint
 traps: [outage]

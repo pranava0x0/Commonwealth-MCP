@@ -1,0 +1,12 @@
+id: step-code-missing-section
+tier: 2
+skill: code-topic-walk
+question: Does section 1-999999 return a section record?
+fixtures: [va-code-of-virginia]
+expected:
+  tool: civic.get_code_section
+  arguments: {citation: "1-999999"}
+  data: {results: [{source_id: va-code-of-virginia, found: false, source_ref: null}]}
+  coverage: {execution: complete, result: empty}
+score: [retrieval_correctness, coverage_honesty]
+traps: []

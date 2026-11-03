@@ -8,7 +8,7 @@ question: "Screen 21641 Ridgetop Cir, Sterling, VA 20166 for flood, wetlands and
 toolset: default
 partner: none
 fixtures: [va-vgin-composite-locator, va-vgin-admin-boundaries, va-vgin-statewide-parcels]
-expected:
+walk:
   jurisdiction: va:loudoun-county
   halves_reported: [virginia]
   must_say:
@@ -18,7 +18,4 @@ expected:
     - "no flood hazard"
     - "no wetlands"
     - "clear"
-score:
-  - kind: coverage_honesty
-  - kind: restraint
 traps: [outage]

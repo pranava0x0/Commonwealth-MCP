@@ -6,9 +6,8 @@ skill: whose-government
 question: "Which local government covers 6800 Beulah St, Alexandria, VA 22310?"
 toolset: default
 fixtures: [va-vgin-composite-locator, va-vgin-admin-boundaries]
-expected:
+walk:
   jurisdiction: va:fairfax-county
   must_say: ["Fairfax County", "postal"]
   must_not_say: ["Alexandria City is the government"]
-score: [{kind: retrieval_correctness}, {kind: provenance_present}, {kind: restraint}]
 traps: []

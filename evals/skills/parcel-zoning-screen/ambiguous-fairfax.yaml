@@ -6,13 +6,10 @@ skill: parcel-zoning-screen
 question: "What is the zoning for 10455 Armstrong Street in Fairfax?"
 toolset: default
 fixtures: [va-vgin-admin-boundaries, va-vgin-composite-locator]
-expected:
+walk:
   requires_user_choice: true
   candidates: [va:fairfax-county, va:fairfax-city]
   must_say:
     - "Fairfax City"
     - "Fairfax County"
-score:
-  - kind: coverage_honesty
-  - kind: restraint
 traps: [ambiguity]

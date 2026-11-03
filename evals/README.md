@@ -9,6 +9,7 @@ commonwealth eval list                    # the suites, and what each covers
 commonwealth eval validate                # load every task; report trap coverage
 commonwealth eval run tier2               # oracle run over the default toolset
 commonwealth eval run tier2 --profile all # the same suite over every tool
+commonwealth eval run skill-steps --profile all # recorded steps from the six skills
 ```
 
 ## Two modes, and the difference matters
@@ -30,11 +31,20 @@ costs money (`design/bench.md` § 6), and no client is wired — `--model`
 says so rather than pretending. Wiring one is what remains of GitHub
 issue #28.
 
+A Tier-3 file with a `walk:` rubric describes a sequence of calls and the
+answer a model should give. Both the oracle and the single-call model client
+skip it and exclude it from the score. For example, one Fairfax walk expects
+the model to ask which government the user means before contacting a federal
+partner. The separate `skill-steps` case checks that the resolver returned
+both governments and selected neither. Passing it does not show that a model
+stopped or asked. Run `pytest tests/test_skills.py` to replay longer workflows, including
+browsing the Code through a title and chapter to the published section text.
+
 ## Layout
 
 ```text
 evals/
-  tasks/<suite>/*.yaml      Tier-2 tasks, the public set
+  tasks/<suite>/*.yaml      public single-call tasks, including skill-steps
   skills/<skill>/*.yaml     Tier-3 walks, one directory per shipped skill
   baselines/*.json          results keyed by (suite, model, toolset)
   hidden/                   the maintainer-held half of the split (§ 3)
@@ -44,6 +54,21 @@ Every task is the `design/bench.md` § 2 format. `fixtures:` names
 directories under `tests/fixtures/sources/`; nothing here reaches the
 network, because a bench that did would score whether a government host
 was slow that morning.
+
+`eval validate` and `eval run` check the same task schema before scoring.
+Quote dates in YAML arguments (for example, `start_date: "2030-01-01"`):
+the runner needs JSON strings, and YAML reads an unquoted date as a date
+object. Put source IDs, warning codes and required phrases in lists, even
+when there is only one. Invalid inputs report the file and field.
+
+For a single-call task, every field in `expected` must be used by the call
+or a named scorer. Use `expected.data` with `retrieval_correctness` for
+structural assertions: objects check the named fields, arrays check their
+length and order, and scalars must match in value and type. For example,
+`data: {results: [{found: false}]}` requires one result with an explicit
+boolean; a missing field does not count as false. In a walk, put facts about
+different steps and final-answer wording under `walk`, without `expected`
+or `score`. These rubrics have no automated whole-walk score.
 
 ## The public/hidden split
 

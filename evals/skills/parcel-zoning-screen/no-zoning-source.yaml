@@ -7,7 +7,7 @@ skill: parcel-zoning-screen
 question: "What is the zoning for parcel 7-4-B-2 in Charles City County?"
 toolset: default
 fixtures: [va-charles-city-county-parcels, va-vgin-admin-boundaries]
-expected:
+walk:
   jurisdiction: va:charles-city-county
   parcel:
     coverage: {registry: covered, result: hit}
@@ -20,7 +20,4 @@ expected:
     # this project has not registered where to read it.
     - unzoned
     - "no zoning"
-score:
-  - kind: coverage_honesty
-  - kind: restraint
 traps: [registry_gap]

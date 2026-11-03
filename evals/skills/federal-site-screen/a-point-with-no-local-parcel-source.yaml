@@ -8,7 +8,7 @@ question: "What do I need to know about the ground at 21641 Ridgetop Cir, Sterli
 toolset: default
 partner: nepa-mcp
 fixtures: [va-vgin-composite-locator, va-vgin-admin-boundaries, va-vgin-statewide-parcels]
-expected:
+walk:
   jurisdiction: va:loudoun-county
   parcel_source: va-vgin-statewide-parcels
   zoning:
@@ -19,8 +19,4 @@ expected:
     - "screening"
   must_not_say:
     - unzoned
-score:
-  - kind: retrieval_correctness
-  - kind: provenance_present
-  - kind: coverage_honesty
 traps: [registry_gap]

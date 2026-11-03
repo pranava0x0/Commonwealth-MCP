@@ -1,0 +1,11 @@
+id: step-site-richmond-footprint-count
+tier: 2
+skill: site-context-screen
+question: How many building footprints did the source retrieve within 800 m of -77.4360, 37.5407?
+fixtures: [va-vgin-building-footprints, va-vgin-admin-boundaries]
+expected:
+  tool: geo.find_buildings
+  arguments: {jurisdiction: Richmond City, lon: -77.4360, lat: 37.5407, radius_meters: 800.0}
+  data: {results: [{source_id: va-vgin-building-footprints, record_count: 205}]}
+score: [retrieval_correctness, provenance_present]
+traps: []

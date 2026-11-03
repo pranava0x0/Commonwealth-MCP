@@ -8,6 +8,7 @@ suite of unfallible traps reports a perfect score over nothing.
 """
 import asyncio
 import json
+from datetime import date
 from pathlib import Path
 
 import pytest
@@ -85,10 +86,67 @@ def test_a_task_that_scores_nothing_is_refused(tmp_path):
         load_task(p)
 
 
+@pytest.mark.parametrize(("bad_fields", "field"), [
+    ({"expected": {"arguments": "q=Fairfax"}}, "arguments"),
+    ({"expected": {"coverage": "covered"}}, "coverage"),
+    ({"expected": {"arguments": {"start_date": date(2030, 1, 1)}}}, "start_date"),
+    ({"expected": {"arguments": {"points": [float("nan")]}}}, "points"),
+    ({"expected": []}, "expected"),
+    ({"tier": "two"}, "tier"),
+    ({"score": [{"weight": 1}]}, "score"),
+    ({"traps": "registry_gap"}, "traps"),
+    ({"fixtures": {"source": 1}}, "fixtures"),
+    ({"expected": {"max_calls": True}}, "max_calls"),
+    ({"expected": {"must_say": [" "]}}, "must_say"),
+    ({"expected": {"record_count_over": -1}}, "record_count_over"),
+    *[({"expected": {key: "abc"}}, key) for key in
+      ("must_say", "must_not_say", "must_warn", "candidates", "sources_returned")],
+    ({"expected": {"sources_returned": 2}}, "sources_returned"),
+])
+def test_invalid_shapes_name_the_task_and_field(tmp_path, bad_fields, field):
+    p = _write(tmp_path, "s", "bad-input", {
+        "id": "case", "tier": 2, "question": "q", "score": ["tool_choice"], **bad_fields})
+    with pytest.raises(TaskLoadError) as exc:
+        load_task(p)
+    assert str(p) in str(exc.value) and field in str(exc.value)
+
+
+@pytest.mark.parametrize("scalar", ["2030-02-31", "!!timestamp tomorrow", "!!int nope", "!!bool maybe"])
+def test_bad_yaml_scalar_reports_its_file_and_source_line(tmp_path, scalar):
+    p = tmp_path / "bad-scalar.yaml"
+    p.write_text(f"expected:\n  arguments:\n    start_date: {scalar}\n")
+    with pytest.raises(TaskLoadError) as exc:
+        load_task(p)
+    message = str(exc.value)
+    assert str(p) in message and "line 3" in message and "start_date:" in message
+
+
+def test_validate_and_run_reject_the_same_input_before_writing_results(tmp_path, monkeypatch, capsys):
+    import sys
+    from commonwealth.cli import __main__ as cli
+
+    doc = {"id": "case", "tier": 2, "question": "q", "score": ["argument_match"],
+           "expected": {"tool": "civic.search_meetings",
+                        "arguments": {"start_date": date(2030, 1, 1)}}}
+    p = _write(tmp_path, "s", "date", doc)
+    monkeypatch.setattr(cli, "EVALS_DIR", tmp_path)
+    for args in (["validate"], ["run", "s", "--out", str(tmp_path / "output")]):
+        monkeypatch.setattr(sys, "argv", ["commonwealth", "eval", *args])
+        assert cli.main() == 1
+        streams = capsys.readouterr()
+        message = streams.err + streams.out
+        assert str(p) in message and "start_date" in message and "quote dates" in message
+    assert not (tmp_path / "output").exists()
+    doc["expected"]["arguments"]["start_date"] = "2030-01-01"
+    p.write_text(yaml.safe_dump(doc))
+    assert json.loads(json.dumps(load_task(p).expected_arguments)) == {"start_date": "2030-01-01"}
+
+
 def test_duplicate_task_ids_are_refused(tmp_path):
     for name in ("a", "b"):
         _write(tmp_path, "s", name, {
             "id": "same", "tier": 2, "question": "q",
+            "expected": {"tool": "geo.find_zoning"},
             "score": [{"kind": "tool_choice"}]})
     with pytest.raises(TaskLoadError, match="more than one task with id"):
         load_suite(tmp_path, "s")
@@ -241,8 +299,64 @@ def test_a_tier3_task_is_skipped_in_oracle_mode_with_a_reason(ctx):
     run = asyncio.run(run_suite(EVALS, "skill:whose-government", ctx,
                                 profile="all"))
     assert run.executed == 0
-    assert all("oracle mode" in (r.skipped or "") or r.skipped
-               for r in run.results)
+    assert all("multi-step trace and final answer" in r.skipped for r in run.results)
+
+
+def test_single_call_model_cannot_be_scored_as_a_walk(ctx):
+    class SingleCall:
+        name = "single-call"
+
+        async def choose(self, question, tools):
+            pytest.fail("the single-call client cannot supply a walk transcript")
+
+    run = asyncio.run(run_suite(EVALS, "skill:federal-site-screen", ctx, model=SingleCall()))
+    assert run.executed == 0 and run.results
+    assert not any(r.scores for r in run.results)
+
+
+@pytest.mark.parametrize(("extra", "message"), [
+    ({"expected": {"arguments": {"a": 1}}, "score": ["tool_choice"]}, "score.tool_choice"),
+    ({"expected": {"coverage": {}}, "score": ["coverage_honesty"]}, "score.coverage_honesty"),
+    ({"expected": {"data": {"found": False}}, "score": ["provenance_present"]}, "data"),
+    ({"score": ["restraint"]}, "score.restraint"),
+    ({"walk": {}, "skill": "sample"}, "nonempty rubric"),
+    ({"walk": {"must_say": ["stop"]}, "skill": "sample", "score": ["restraint"]}, "walk cannot"),
+])
+def test_task_cannot_declare_an_unused_or_uncheckable_assertion(tmp_path, extra, message):
+    p = _write(tmp_path, "s", "invalid", {"id": "bad", "tier": 3, "question": "q", **extra})
+    with pytest.raises(TaskLoadError) as exc:
+        load_task(p)
+    assert str(p) in str(exc.value) and message in str(exc.value)
+
+
+def test_skill_steps_replay_with_only_their_declared_recordings():
+    from commonwealth.fixtures import replay_context
+
+    run = asyncio.run(run_suite(EVALS, "skill-steps", profile="all", context_factory=replay_context))
+    assert run.results and all(r.passed and not r.skipped for r in run.results), [
+        (r.task_id, r.skipped, r.scores) for r in run.results if not r.passed]
+
+
+@pytest.mark.parametrize("data", [
+    {"found": False, "results": [{"found": True, "source_ref": None}]},
+    {"results": [{"found": False}]},
+    {"results": [{"found": 0, "source_ref": None}]},
+    {"results": []},
+])
+def test_a_wrong_missing_or_mistyped_record_field_fails_even_if_the_envelope_is_empty(data):
+    task = _task(score=["retrieval_correctness"],
+                 expected={"data": {"results": [{"found": False, "source_ref": None}]}})
+    attempt = Attempt("x", {}, {"coverage": {"result": "empty"}, "data": data})
+    assert not score_task(task, attempt)[0].passed
+
+
+@pytest.mark.parametrize(("field", "kind", "result"), [
+    ("answerable", "retrieval_correctness", "empty"),
+    ("found", "retrieval_correctness", "hit"),
+])
+def test_a_missing_boolean_cannot_be_inferred_from_the_coverage_result(field, kind, result):
+    task = _task(score=[kind], expected={field: result == "hit"})
+    assert not score_task(task, Attempt("x", {}, {"coverage": {"result": result}}))[0].passed
 
 
 def test_a_task_whose_tool_is_outside_the_profile_is_skipped(ctx, tmp_path):

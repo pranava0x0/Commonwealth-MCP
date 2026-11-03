@@ -1,0 +1,16 @@
+# Fairfax alone names both an independent city and a county; it gives no site coordinate.
+id: skill-fss-ambiguity
+tier: 3
+skill: federal-site-screen
+question: "Screen a site in Fairfax for environmental constraints."
+toolset: default
+partner: nepa-mcp
+fixtures: [va-vgin-admin-boundaries]
+walk:
+  requires_user_choice: true
+  candidates: [va:fairfax-county, va:fairfax-city]
+  federal_calls_made: 0
+  must_say:
+    - "Fairfax City"
+    - "Fairfax County"
+traps: [ambiguity]

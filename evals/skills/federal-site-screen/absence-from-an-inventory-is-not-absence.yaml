@@ -9,7 +9,7 @@ question: "Are there wetlands or monitored contamination at 21641 Ridgetop Cir, 
 toolset: discovery
 partner: nepa-mcp
 fixtures: [va-vgin-composite-locator, va-vgin-admin-boundaries, va-deq-water-quality-stations]
-expected:
+walk:
   environmental_sites:
     coverage: {registry: covered, result: empty}
   must_say:
@@ -18,7 +18,4 @@ expected:
   must_not_say:
     - "no wetlands are present"
     - "the site is clean"
-score:
-  - kind: coverage_honesty
-  - kind: restraint
 traps: []

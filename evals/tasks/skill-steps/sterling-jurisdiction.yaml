@@ -1,0 +1,13 @@
+id: step-federal-sterling-jurisdiction
+tier: 2
+skill: federal-site-screen
+question: Which Virginia jurisdiction governs 21641 Ridgetop Cir, Sterling, VA 20166?
+fixtures: [va-vgin-composite-locator, va-vgin-admin-boundaries]
+expected:
+  tool: geo.resolve_location
+  arguments: {address: "21641 Ridgetop Cir, Sterling, VA 20166"}
+  data:
+    geocode: {postal_city: STERLING}
+    resolved: {id: "va:loudoun-county", basis: geocode_then_point_in_polygon}
+score: [retrieval_correctness, provenance_present]
+traps: []

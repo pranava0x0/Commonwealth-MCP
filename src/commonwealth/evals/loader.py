@@ -9,7 +9,10 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Any
+from typing import Annotated, Any
+
+from pydantic import BeforeValidator, ConfigDict, Field, JsonValue, TypeAdapter, ValidationError, with_config
+from typing_extensions import NotRequired, TypedDict
 
 import yaml
 
@@ -19,17 +22,24 @@ import yaml
 TRAP_KINDS = {"ambiguity", "registry_gap", "outage", "stale", "overreach",
               "injection"}
 
-# The scorers implemented in `scoring.py`. Listed here so a task naming
-# one that does not exist fails at load rather than scoring zero.
-SCORE_KINDS = {"tool_choice", "argument_match", "provenance_present",
-               "coverage_honesty", "restraint", "no_injection_followed",
-               # The Tier-3 rollups from design/bench.md § 1, used by the
-               # skill suites that shipped with #27.
-               "source_and_jurisdiction", "retrieval_correctness"}
-
 
 class TaskLoadError(Exception):
     """A task file that cannot be trusted to score anything."""
+
+
+class _TaskYamlLoader(yaml.SafeLoader):
+    def construct_object(self, node, deep=False):
+        # PyYAML's scalar constructors can raise ordinary Python exceptions,
+        # e.g. datetime.date raises ValueError on an unquoted February 31.
+        # Preserve the token's location before the task schema sees the file.
+        try:
+            return super().construct_object(node, deep=deep)
+        except (ValueError, OverflowError, LookupError, AttributeError) as err:
+            if not isinstance(node, yaml.ScalarNode):
+                raise
+            raise yaml.constructor.ConstructorError(
+                None, None, f"invalid {node.tag.rsplit(':', 1)[-1]} scalar",
+                node.start_mark) from err
 
 
 @dataclass
@@ -49,6 +59,9 @@ class Task:
     # measured over.
     split: str = "public"
     note: str = ""
+    # A full walk needs a sequence of calls and a composed answer. Its
+    # rubric is not a list of assertions about one tool's envelope.
+    walk: dict[str, Any] | None = None
 
     @property
     def expected_tool(self) -> str | None:
@@ -59,21 +72,120 @@ class Task:
         return dict(self.expected.get("arguments") or {})
 
 
-def _require(doc: dict, key: str, path: Path) -> Any:
-    if key not in doc:
-        raise TaskLoadError(f"{path}: task has no {key!r}")
-    return doc[key]
+_Text = Annotated[str, Field(pattern=r"\S")]
+
+
+@with_config(ConfigDict(extra="forbid"))
+class _Expected(TypedDict, total=False):
+    tool: _Text
+    arguments: dict[str, JsonValue]
+    coverage: dict[str, str]
+    requires_user_choice: bool
+    found: bool
+    answerable: bool
+    next_action: str
+    jurisdiction: str
+    must_warn: list[str]
+    must_say: list[_Text]
+    must_not_say: list[_Text]
+    candidates: list[str]
+    sources_returned: list[str]
+    max_calls: Annotated[int, Field(ge=0)]
+    record_count_over: Annotated[int, Field(ge=0)]
+    data: dict[str, JsonValue]
+
+
+@with_config(ConfigDict(extra="allow"))
+class _Walk(_Expected, total=False):
+    """Additional facts about individual steps, partners and the final answer."""
+
+
+@with_config(ConfigDict(extra="forbid"))
+class _Score(TypedDict):
+    kind: str
+
+
+def _score_rule(value: object) -> object:
+    """Keep the compact score: [tool_choice] spelling."""
+    return {"kind": value} if isinstance(value, str) else value
+
+
+@with_config(ConfigDict(extra="forbid"))
+class _TaskFile(TypedDict):
+    id: str
+    tier: Annotated[int, Field(ge=2, le=3)]
+    question: str
+    toolset: NotRequired[str]
+    expected: NotRequired[_Expected]
+    walk: NotRequired[_Walk]
+    score: NotRequired[list[Annotated[_Score, BeforeValidator(_score_rule)]]]
+    traps: NotRequired[list[str]]
+    fixtures: NotRequired[list[str]]
+    skill: NotRequired[str]
+    partner: NotRequired[str]
+    inject: NotRequired[dict[str, JsonValue]]
+    note: NotRequired[str]
+
+
+# YAML also admits dates, sets, non-string keys, and non-finite numbers.
+# Check the entire document, including walk-specific fields, before it can
+# reach a scorer or be copied into a JSON transcript by write_result.
+_TASK_FILE = TypeAdapter(_TaskFile)
+_JSON_DOCUMENT = TypeAdapter(dict[str, JsonValue], config=ConfigDict(allow_inf_nan=False))
+
+
+# The single-call fields each scorer consumes. Empty sets denote checks
+# on the response itself, such as the presence of evidence on a hit.
+_INPUTS = {
+    "provenance_present": set(),
+    "no_injection_followed": set(),
+    "tool_choice": {"tool"},
+    "argument_match": {"arguments"},
+    "coverage_honesty": {"coverage", "must_warn", "next_action", "requires_user_choice"},
+    "source_and_jurisdiction": {"jurisdiction", "sources_returned", "candidates"},
+    "retrieval_correctness": {"must_say", "must_not_say", "found", "answerable",
+                              "record_count_over", "data"},
+    "restraint": {"max_calls"},
+}
+
+
+SCORE_KINDS = set(_INPUTS)
+
+
+def _check_inputs(path: Path, kinds: list[str], expected: dict, traps: list[str]) -> None:
+    consumed = {"tool", "arguments"}  # Also used to execute an oracle call.
+    for kind in kinds:
+        inputs = _INPUTS[kind]
+        consumed.update(inputs)
+        if not inputs or (kind == "restraint" and "overreach" in traps):
+            continue  # These checks read the envelope or call trace directly.
+        # False and zero are meaningful boolean and numeric expectations.
+        if not any(isinstance(expected.get(key), int) or expected.get(key) for key in inputs):
+            raise TaskLoadError(f"{path}: score.{kind} needs an assertion in expected: "
+                                f"{', '.join(sorted(inputs))}")
+    unused = expected.keys() - consumed
+    if unused:
+        raise TaskLoadError(f"{path}: no declared scorer reads expected field(s) {sorted(unused)}")
 
 
 def load_task(path: Path, split: str = "public") -> Task:
     try:
-        doc = yaml.safe_load(path.read_text())
-    except yaml.YAMLError as err:
+        raw = yaml.load(path.read_text(encoding="utf-8"), Loader=_TaskYamlLoader)
+    except (yaml.YAMLError, UnicodeError) as err:
         raise TaskLoadError(f"{path}: not valid YAML ({err})") from err
-    if not isinstance(doc, dict):
+    if not isinstance(raw, dict):
         raise TaskLoadError(f"{path}: task file is not a mapping")
 
-    fixtures = list(doc.get("fixtures") or [])
+    try:
+        doc = _TASK_FILE.validate_python(raw, strict=True)
+        _JSON_DOCUMENT.validate_python(raw, strict=True)
+    except ValidationError as err:
+        first = err.errors(include_url=False, include_input=False)[0]
+        location = ".".join(str(part) for part in first["loc"])
+        hint = " (quote dates as strings)" if first["type"] == "invalid-json-value" else ""
+        raise TaskLoadError(f"{path}: {location}: {first['msg']}{hint}") from err
+
+    fixtures = doc.get("fixtures", [])
     # A declared fixture that is not on disk makes the declaration
     # meaningless, and `eval validate` accepting a misspelled or deleted
     # directory is exactly how it stops being a check. The names are
@@ -96,25 +208,34 @@ def load_task(path: Path, split: str = "public") -> Task:
             f"design/bench.md § 2 defines {sorted(TRAP_KINDS)}")
 
     raw_score = doc.get("score") or []
-    kinds = [s["kind"] if isinstance(s, dict) else str(s) for s in raw_score]
+    kinds = [s["kind"] for s in raw_score]
     unknown = set(kinds) - SCORE_KINDS
     if unknown:
         raise TaskLoadError(
             f"{path}: no scorer for {sorted(unknown)}; implemented "
             f"scorers are {sorted(SCORE_KINDS)}")
-    if not kinds:
+    walk = doc.get("walk")
+    if walk is not None:
+        if not walk or doc["tier"] != 3 or not doc.get("skill"):
+            raise TaskLoadError(f"{path}: walk needs a nonempty rubric, tier 3 and a skill")
+        if "score" in doc or "expected" in doc:
+            raise TaskLoadError(f"{path}: walk cannot also declare single-call expected or score")
+    elif not kinds:
         raise TaskLoadError(
             f"{path}: task scores nothing, so it can never fail")
+    else:
+        _check_inputs(path, kinds, doc.get("expected", {}), traps)
 
     return Task(
-        id=str(_require(doc, "id", path)),
-        tier=int(_require(doc, "tier", path)),
-        question=str(_require(doc, "question", path)),
+        id=doc["id"],
+        tier=doc["tier"],
+        question=doc["question"],
         toolset=str(doc.get("toolset") or "default"),
         path=path,
         fixtures=fixtures,
         expected=dict(doc.get("expected") or {}),
         score=kinds,
+        walk=walk,
         traps=traps,
         skill=doc.get("skill"),
         split=split,

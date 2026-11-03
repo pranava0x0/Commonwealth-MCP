@@ -124,9 +124,10 @@ def score_coverage_honesty(task, attempt: Attempt) -> Score:
 
     if task.expected.get("requires_user_choice") is not None:
         want_choice = bool(task.expected["requires_user_choice"])
-        got_choice = bool(env.get("requires_user_choice"))
+        # The wire serializer omits this field when no choice is required.
+        got_choice = env.get("requires_user_choice", False)
         checks.append(f"requires_user_choice={got_choice}")
-        if got_choice != want_choice:
+        if got_choice is not want_choice:
             bad.append(f"requires_user_choice: expected {want_choice}, "
                        f"got {got_choice}")
 
@@ -267,15 +268,32 @@ def score_source_and_jurisdiction(task, attempt: Attempt) -> Score:
                  "; ".join(bad) if bad else "; ".join(checks))
 
 
+def _data_difference(want, got, path="data") -> str | None:
+    """Objects assert named fields; lists assert length, order and elements."""
+    if type(want) is not type(got):
+        return f"{path}: expected {type(want).__name__}, got {type(got).__name__}"
+    if isinstance(want, dict):
+        for key, value in want.items():
+            if key not in got:
+                return f"{path}.{key}: missing"
+            if reason := _data_difference(value, got[key], f"{path}.{key}"):
+                return reason
+    elif isinstance(want, list):
+        if len(want) != len(got):
+            return f"{path}: expected {len(want)} elements, got {len(got)}"
+        for i, value in enumerate(want):
+            if reason := _data_difference(value, got[i], f"{path}[{i}]"):
+                return reason
+    elif want != got:
+        return f"{path}: expected {want!r}, got {got!r}"
+    return None
+
+
 def score_retrieval_correctness(task, attempt: Attempt) -> Score:
     """Did the retrieval bring back what the task says it should?
 
-    `must_say` and `must_not_say` are written against the ANSWER a model
-    composes. There is no answer in an oracle run, so they are checked
-    against the envelope the answer would be composed from — which is a
-    proxy, and a weaker one: text present in the envelope may still be
-    left out of a model's answer. It is the strongest mechanical check
-    available without a model, and the model run scores the answer.
+    All checks here concern a single envelope. Prose requirements for
+    a composed answer belong in a walk rubric.
     """
     import json
 
@@ -285,6 +303,11 @@ def score_retrieval_correctness(task, attempt: Attempt) -> Score:
                      f"no envelope to check ({attempt.error or 'no call'})")
     blob = json.dumps(env.get("data") or {}).lower()
     bad, checks = [], []
+
+    if "data" in task.expected:
+        checks.append("asserted data fields matched")
+        if reason := _data_difference(task.expected["data"], env.get("data")):
+            bad.append(reason)
 
     must = [str(s) for s in (task.expected.get("must_say") or [])]
     if must:
@@ -303,10 +326,9 @@ def score_retrieval_correctness(task, attempt: Attempt) -> Score:
     for key in ("found", "answerable"):
         if key in task.expected:
             want = bool(task.expected[key])
-            got = bool((env.get("data") or {}).get(key)) or (
-                _coverage(env).get("result") == "hit")
+            got = (env.get("data") or {}).get(key)
             checks.append(f"{key}={got}")
-            if got != want:
+            if got is not want:
                 bad.append(f"{key}: expected {want}, got {got}")
 
     over = task.expected.get("record_count_over")

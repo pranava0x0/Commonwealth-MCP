@@ -7,11 +7,10 @@ skill: site-context-screen
 question: "What buildings are within 800 m of -77.4360, 37.5407 in Richmond City?"
 toolset: default
 fixtures: [va-vgin-building-footprints, va-vgin-admin-boundaries]
-expected:
+walk:
   inline_records: 25
   record_count_over: 25
   resource_handle: true
   must_say: ["205"]
   must_not_say: ["25 buildings"]
-score: [{kind: coverage_honesty}, {kind: retrieval_correctness}]
 traps: []

@@ -48,6 +48,13 @@ score:
 traps: []
 ```
 
+For a full Tier-3 walk, use `walk:` in place of `expected:` and
+`score:`. It records requirements for the sequence and final answer.
+The single-call runner skips these rubrics. A reproducible step from a
+walk can have its own Tier-2 task ID in `evals/tasks/skill-steps/`, with
+an expected tool call and assertions about its response. Only that step
+counts toward the step suite's score.
+
 Trap kinds (every domain needs at least one task per kind):
 
 - `ambiguity`: Fairfax City/County, vendor-alias collisions. Pass = surfacing candidates, fail = silent choice.

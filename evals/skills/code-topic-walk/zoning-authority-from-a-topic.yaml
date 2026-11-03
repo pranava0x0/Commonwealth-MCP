@@ -8,7 +8,7 @@ skill: code-topic-walk
 question: "What does Virginia law say about a locality's authority to adopt a zoning ordinance?"
 toolset: discovery
 fixtures: [va-code-of-virginia]
-expected:
+walk:
   title: "15.2"
   chapter: "22"
   citation: "15.2-2200"
@@ -20,7 +20,4 @@ expected:
     # the method whatever citation it lands on.
     - "searched the Code"
     - "search results"
-score:
-  - kind: retrieval_correctness
-  - kind: provenance_present
 traps: []

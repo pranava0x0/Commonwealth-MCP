@@ -6,11 +6,10 @@ skill: whose-government
 question: "What locality is ZIP 24450 in?"
 toolset: default
 fixtures: [va-vgin-address-points]
-expected:
+walk:
   # Three: Botetourt County, Lexington City, Rockbridge County. An
   # independent city and two counties, which is the shape that makes
   # picking one especially wrong.
   localities: [va:botetourt-county, va:lexington-city, va:rockbridge-county]
   must_say: ["Botetourt", "Lexington", "Rockbridge"]
-score: [{kind: coverage_honesty}, {kind: restraint}]
 traps: [ambiguity]
