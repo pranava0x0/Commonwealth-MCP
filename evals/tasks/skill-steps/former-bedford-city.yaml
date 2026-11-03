@@ -6,8 +6,9 @@ fixtures: [va-vgin-admin-boundaries]
 expected:
   tool: registry.resolve_jurisdiction
   arguments: {query: Bedford City}
+  requires_user_choice: false
   data:
     resolved: {id: "va:bedford-town", kind: town, basis: former_name}
     former_name_match: {queried: Bedford City, resolved_to: "va:bedford-town"}
-score: [retrieval_correctness]
+score: [retrieval_correctness, coverage_honesty]
 traps: [stale]

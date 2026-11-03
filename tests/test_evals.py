@@ -351,7 +351,6 @@ def test_a_wrong_missing_or_mistyped_record_field_fails_even_if_the_envelope_is_
 
 
 @pytest.mark.parametrize(("field", "kind", "result"), [
-    ("requires_user_choice", "coverage_honesty", "empty"),
     ("answerable", "retrieval_correctness", "empty"),
     ("found", "retrieval_correctness", "hit"),
 ])

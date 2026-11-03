@@ -124,7 +124,8 @@ def score_coverage_honesty(task, attempt: Attempt) -> Score:
 
     if task.expected.get("requires_user_choice") is not None:
         want_choice = bool(task.expected["requires_user_choice"])
-        got_choice = env.get("requires_user_choice")
+        # The wire serializer omits this field when no choice is required.
+        got_choice = env.get("requires_user_choice", False)
         checks.append(f"requires_user_choice={got_choice}")
         if got_choice is not want_choice:
             bad.append(f"requires_user_choice: expected {want_choice}, "
