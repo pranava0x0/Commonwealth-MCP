@@ -161,7 +161,9 @@ def check_skill_capabilities(ctx: RuntimeContext,
     return notes
 
 
-def _register_skill_prompts(server, ctx, skills, specs, profile):
+def _register_skill_prompts(server: MCPServer, ctx: RuntimeContext,
+                            skills: list[SkillRequirements], specs: list[ToolSpec],
+                            profile: str) -> None:
     exposed = {spec.name for spec in specs}
     hints = defaultdict(set)
     for manifest in ctx.sources.manifests.values():
@@ -169,7 +171,7 @@ def _register_skill_prompts(server, ctx, skills, specs, profile):
             if cap.tool_hint:
                 hints[cap.id].add(cap.tool_hint)
 
-    def bind(skill):
+    def bind(skill: SkillRequirements):
         def instructions():
             lines = [skill.body, skill.compatibility]
             missing = set(skill.required_capabilities) - ctx.sources.servable_capabilities()
@@ -180,6 +182,10 @@ def _register_skill_prompts(server, ctx, skills, specs, profile):
             if absent:
                 lines.append(f"Profile {profile!r} omits the registered tools for "
                              + ", ".join(absent) + ". Use the all profile for those steps.")
+            unavailable = set(skill.required_registry_tools) - exposed
+            if unavailable:
+                lines.append(f"Profile {profile!r} omits required discovery tools: "
+                             + ", ".join(sorted(unavailable)) + ". Use the discovery or all profile.")
             return "\n\n".join(line for line in lines if line)
 
         async def walk() -> str:

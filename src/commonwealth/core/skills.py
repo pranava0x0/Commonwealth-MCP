@@ -30,6 +30,7 @@ class SkillRequirements:
     compatibility: str = ""
     body: str = ""
     accepts_question: bool = False
+    required_registry_tools: tuple[str, ...] = ()
 
 
 def _split_skill(text: str) -> tuple[dict, str]:
@@ -63,6 +64,7 @@ def load_skills(skills_dir: Path) -> list[SkillRequirements]:
             compatibility=(fm.get("compatibility") or "").strip(),
             body=body,
             accepts_question=cw.get("prompt_input") == "question",
+            required_registry_tools=tuple(cw.get("required_registry_tools") or ()),
             required_capabilities=tuple(cw.get("required_capabilities") or ()),
             optional_capabilities=tuple(cw.get("optional_capabilities") or ()),
         ))

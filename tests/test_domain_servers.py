@@ -89,3 +89,20 @@ def test_cli_rejects_positional_json_before_dispatch():
     spec = registries()["civic"].tools()[0]
     with pytest.raises(InvalidQuery, match="JSON object"):
         spec.check_arguments(["a positional argument"])
+
+
+def test_configuring_a_domain_cannot_launch_an_older_commonwealth_from_path(monkeypatch):
+    import sys
+
+    monkeypatch.setattr(configure.shutil, "which", lambda _: "/other/env/bin/commonwealth")
+    assert configure.server_entry("civic") == {
+        "command": sys.executable, "args": ["-m", "commonwealth.cli", "serve", "--profile", "civic"]}
+
+
+async def test_coverage_prompt_names_the_missing_registry_tools_on_default():
+    async with Client(build_server(build_ctx(), "default")) as client:
+        text = (await client.get_prompt("coverage-check")).messages[0].content.text
+        assert "omits required discovery tools" in text and "registry.search_sources" in text
+    async with Client(build_server(build_ctx(), "geo")) as client:
+        text = (await client.get_prompt("coverage-check")).messages[0].content.text
+        assert "omits required discovery tools" not in text

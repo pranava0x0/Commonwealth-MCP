@@ -569,13 +569,14 @@ function renderSkills(core){
 
 /* --- tools reference --------------------------------------------------- */
 
-function toolRow(t, profileOf){
+function toolRow(t, profiles){
   const row = el("details","card tool-card");
   const head = el("summary","tool-head");
   head.append(el("code","tool-name",t.name));
   head.append(el("span","tool-summary",t.summary));
-  head.append(el("span","chip",profileOf(t.name)));
+  head.append(el("span","chip",t.package));
   row.append(head);
+  row.append(el("p","meta", "Profiles: " + profiles.join(", ") + "."));
 
   // Read off the bound function at build time, so the page cannot
   // advertise an argument the server does not take.
@@ -606,17 +607,19 @@ function renderTools(core){
   const filters = document.getElementById("tool-filters");
   const packages = [...new Set(core.tools.map(t=>t.package))].sort();
   const inDefault = new Set(core.profiles.default);
-  const profileOf = name => inDefault.has(name) ? "default"
-    : core.profiles.discovery.includes(name) ? "discovery" : "all";
+  const profileSelect = document.getElementById("tool-profile");
+  for (const [name, tools] of Object.entries(core.profiles)){
+    const option = el("option","",name + " (" + tools.length + ")");
+    option.value = name;
+    profileSelect.append(option);
+  }
+  profileSelect.value = "all";
+  profileSelect.addEventListener("change", draw);
   let active = "";
 
   document.getElementById("profiles-line").textContent =
-    "Models pick the wrong tool more often as the list grows, so a profile " +
-    "limits how many are exposed at once: " +
-    Object.entries(core.profiles)
-      .map(([k,v])=>`${k} exposes ${v.length}`).join(", ") + ". " +
-    "Rows are grouped by package, each package's default-profile tools " +
-    "first, and the chip on a row says which profile carries it.";
+    "Choose the profile your client runs. Open a tool to see its arguments " +
+    "and every profile that includes it.";
 
   for (const pkg of packages){
     const n = core.tools.filter(t=>t.package === pkg).length;
@@ -634,6 +637,7 @@ function renderTools(core){
   }
 
   function matches(t, q){
+    if (!core.profiles[profileSelect.value].includes(t.name)) return false;
     if (active && t.package !== active) return false;
     if (!q) return true;
     const hay = [t.name, t.package, t.toolset, t.description,
@@ -657,11 +661,12 @@ function renderTools(core){
       ordered.push(head, ...rows
         .sort((a,b)=> (inDefault.has(b.name) - inDefault.has(a.name)) ||
                       a.name.localeCompare(b.name))
-        .map(t=>toolRow(t, profileOf)));
+        .map(t=>toolRow(t, Object.keys(core.profiles)
+          .filter(p=>core.profiles[p].includes(t.name)))));
     }
     // Expanding for a search or a filter shows everything that matched;
     // the unfiltered list is the one that holds tools back.
-    const initial = (q || active) ? ordered.length
+    const initial = (q || active || profileSelect.value !== "all") ? ordered.length
       : ordered.findIndex((n,i)=> ordered.slice(0,i)
           .filter(x=>x.classList.contains("tool-card")).length ===
           inDefault.size);

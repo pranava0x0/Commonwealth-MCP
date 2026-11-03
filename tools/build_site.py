@@ -857,9 +857,7 @@ def build_catalog() -> dict:
         "version": __version__,
         "registry_revision": ctx.sources.revision,
         "counts": {
-            # Declared, not derived from a collection: build_server() always
-            # returns exactly one MCPServer (../design/architecture.md decision 0001, "one process").
-            "servers": 1,
+            "servers": len({toolreg.server_name(p) for p in profiles}),
             "tools": len(tools),
             "packages": len(regs),
             "sources": len(sources),

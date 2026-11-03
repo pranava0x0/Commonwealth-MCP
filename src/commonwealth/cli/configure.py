@@ -23,7 +23,7 @@ import sys
 from dataclasses import dataclass
 from pathlib import Path
 
-from ..core.toolreg import server_name
+from ..core.toolreg import DOMAIN_PROFILES, server_name
 
 SERVER_KEY = "commonwealth"
 
@@ -104,7 +104,9 @@ def launch_command() -> dict:
 
 
 def server_entry(profile: str) -> dict:
-    launch = launch_command()
+    # A different commonwealth earlier on PATH may predate the domain servers.
+    launch = ({"command": sys.executable, "args": ["-m", "commonwealth.cli"]}
+              if profile in DOMAIN_PROFILES else launch_command())
     return {
         "command": launch["command"],
         "args": [*launch["args"], "serve", "--profile", profile],

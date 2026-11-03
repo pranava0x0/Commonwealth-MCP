@@ -10,9 +10,10 @@ description: >
   answer a locality has no source behind.
 license: Apache-2.0
 compatibility: >
-  Requires Commonwealth-MCP v0.x with the `discovery` or `all` profile.
+  Requires registry discovery in the discovery, civic, geo or all profile.
 metadata:
   commonwealth:
+    required_registry_tools: [registry.search_sources, registry.describe_source, registry.source_status]
     required_capabilities:
       - boundary.lookup
     optional_capabilities:
