@@ -115,6 +115,10 @@ def cmd_doctor(args: argparse.Namespace) -> int:
                 except CommonwealthError as err:
                     print(f"✗ live {m.id}: {err.code}: {err}")
                     problems += 1
+            elif m.adapter.type == "agenda_platform":
+                line, ok = _meeting_health_line(ctx, m)
+                print(f"{'✓' if ok else '✗'} live {m.id}: {line}")
+                problems += 0 if ok else 1
             elif m.adapter.type == INVENTORY_ADAPTER:
                 # Not a gap: an inventory row names a publisher with no
                 # endpoint behind it, so there is nothing to probe and
@@ -321,27 +325,9 @@ def cmd_sources_probe(args: argparse.Namespace) -> int:
             continue
         if m.adapter.type == "agenda_platform":
             checked += 1
-            try:
-                h = asyncio.run(ctx.agendas.health(
-                    m, m.health.expect.get("known_body")))
-            except CommonwealthError as err:
-                print(f"✗ {sid}: {err.code}: {err}")
-                problems += 1
-                continue
-            body = h.get("body")
-            # An empty calendar is a healthy answer, so the probe reports
-            # what came back rather than grading it on a record count. The
-            # declared body is the real check: this client answering with
-            # a calendar that never mentions its own council is the shape
-            # a silently-repointed client identifier would take.
-            found = body is None or body["found"]
-            print(f"{'✓' if found else '✗'} {sid}: {h['meetings']} meeting(s) "
-                  f"in the last {h['window_days']} days"
-                  + (f", {body['name']!r} "
-                     f"{'present' if body['found'] else 'ABSENT'}"
-                     if body else ""))
-            if not found:
-                problems += 1
+            line, ok = _meeting_health_line(ctx, m)
+            print(f"{'✓' if ok else '✗'} {sid}: {line}")
+            problems += 0 if ok else 1
             continue
         if m.adapter.type == INVENTORY_ADAPTER:
             # Inventory has no endpoint by construction, so "not probed"
@@ -1531,6 +1517,22 @@ def _write_fixture(m: SourceManifest, recorder: "_RecordingFetcher",
           f"{path.relative_to(PROJECT_ROOT)}")
     print(f"sample summary: {json.dumps(summary, default=str)}")
     return 0
+
+
+def _meeting_health_line(ctx: RuntimeContext, m: SourceManifest) -> tuple[str, bool]:
+    try:
+        health = asyncio.run(ctx.agendas.health(m, m.health.expect.get("known_body")))
+    except CommonwealthError as err:
+        return f"{err.code}: {err}", False
+    line = (f"{health['meetings']} meeting(s) retrieved in the last "
+            f"{health['window_days']} days")
+    if health["at_page_cap"]:
+        line += " (publisher page limit reached)"
+    if body := health.get("body"):
+        finding = {True: "present", False: "ABSENT", None: "unknown beyond the page limit"}
+        line += f", {body['name']!r} {finding[body['found']]}"
+        return line, body["found"] is True
+    return line, True
 
 
 def _law_health_lines(ctx: RuntimeContext,

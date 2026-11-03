@@ -203,10 +203,6 @@ endpoint — public and keyless — answered every query on 2026-09-08 with
 and `search_legislation` still wait on the LIS key registration named in
 issue #11.
 
-## 5. What deliberately does not exist in V1
-
-Finance, infrastructure, environment, people servers stay at design-spec sketch level; their tool lists are not contracts yet, and writing them before their sources are registered would freeze guesses (data assumptions are guesses until the data is queried). The design spec's lists remain the shape for those phases; each gets a contract page in this spec's format when its Phase begins. NEPA-MCP federation covers the environmental screen in the meantime via the external-catalog entry (design/hub-catalog.md § 1).
-
 ### Following a meeting to an agenda item and a vote
 
 In Richmond City and Alexandria City, a calendar entry's `event_id` and
@@ -221,3 +217,7 @@ government or follows a document link. Each response contains one page;
 tool while they are present. An item can carry a recorded action without
 any individual vote records. Only the votes endpoint supplies member
 votes.
+
+## 5. What deliberately does not exist in V1
+
+Finance, infrastructure, environment, people servers stay at design-spec sketch level; their tool lists are not contracts yet, and writing them before their sources are registered would freeze guesses (data assumptions are guesses until the data is queried). The design spec's lists remain the shape for those phases; each gets a contract page in this spec's format when its Phase begins. NEPA-MCP federation covers the environmental screen in the meantime via the external-catalog entry (design/hub-catalog.md § 1).

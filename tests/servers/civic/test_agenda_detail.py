@@ -119,3 +119,34 @@ async def test_calendar_page_cap_is_detected_before_body_filtering():
 def test_utc_normalizes_offsets_and_refuses_a_date_without_time():
     assert _utc("2026-11-03T23:00:00-05:00") == "2026-11-04T04:00:00Z"
     assert _utc("2026-11-03") is None
+
+
+def test_calendar_health_cannot_confirm_absence_beyond_the_publisher_limit():
+    from commonwealth.cli.__main__ import _meeting_health_line
+
+    sample = json.loads((FIXTURES_DIR / RICHMOND / "recorded.json").read_text())
+    row = next(r for r in sample["exchanges"][0]["response"]
+               if r["EventBodyName"] == "Planning Commission")
+
+    class CappedFetcher:
+        async def fetch_json_list(self, url, params):
+            return [row] * 1000
+
+    ctx = build_ctx(agenda_fetcher=CappedFetcher())
+    line, ok = _meeting_health_line(ctx, ctx.sources.get(RICHMOND))
+    assert not ok and "unknown beyond the page limit" in line
+    assert "ABSENT" not in line
+
+
+def test_a_malformed_client_is_refused_at_manifest_load(tmp_path):
+    import shutil
+
+    from commonwealth.core.registry import SourceRegistry
+    from commonwealth.runtime import SOURCES_DIR
+
+    root = tmp_path / "sources"
+    shutil.copytree(SOURCES_DIR, root)
+    manifest = root / "local" / "richmond-city" / "meetings.yaml"
+    manifest.write_text(manifest.read_text().replace("client: richmondva", "client: ../alexandria"))
+    with pytest.raises(ValueError, match="client"):
+        SourceRegistry.load(root)

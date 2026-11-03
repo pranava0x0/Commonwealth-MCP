@@ -1,7 +1,7 @@
 """Civic tools: the Code of Virginia, and local public meetings
 (design/domain-servers.md § 4).
 
-Three tools over two very different publishers. The Code is one
+These tools read state law and local meeting records. The Code is one
 statewide text, read by citation (`get_code_section`) or walked through
 its own table of contents (`browse_code`). Meetings are per locality
 (`search_meetings`), and are the first thing this server reads that a
@@ -20,8 +20,10 @@ result is surfaced, never merged into one answer.
 """
 from __future__ import annotations
 
-from ..adapters.agenda_platform import (MAX_RANGE_DAYS, Meeting,
-                                        check_range)
+from collections.abc import Awaitable, Callable
+
+from ..adapters.agenda_platform import (MAX_RANGE_DAYS, DetailPage, Meeting,
+                                       check_detail_args, check_range)
 from ..adapters.virginia_law import CodeSection
 from ..core.assemble import (EnvelopeBuilder, failure, gap, result_dim,
                              resolve_frame, selection_coverage)
@@ -463,11 +465,13 @@ CIVIC_TOOLS.register(ToolSpec(
     toolset="default", contract_version="1", fn=search_meetings))
 
 
-async def _meeting_detail(ctx, b, source_id, capability, id_field, record_id,
-                          offset, read_page) -> Envelope:
-    from ..adapters.agenda_platform import check_detail_args
-
+async def _meeting_detail(ctx: RuntimeContext, b: EnvelopeBuilder, source_id: str,
+                          capability: str, id_field: str, record_id: str, offset: int,
+                          read_page: Callable[[SourceManifest, str, int], Awaitable[DetailPage]]
+                          ) -> Envelope:
     check_detail_args(record_id, offset)
+    if not isinstance(source_id, str):
+        raise InvalidQuery("source_id must be the calendar source ID from a meeting result.")
     m = ctx.sources.get(source_id)
     if m is None or m.adapter.type != "agenda_platform":
         raise InvalidQuery("Pass the source_id from the meeting result. "

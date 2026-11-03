@@ -37,8 +37,8 @@ uv pip install --python .venv/bin/python -e . --group dev
 The example prints results for an address in Sterling: a parcel found in
 statewide records, a zoning coverage gap, and no matching landmark records
 within the query radius. It runs offline by default. Add `--live` to query
-the government services. See [examples/](examples/README.md) for five other
-workflows.
+the government services. See [examples/](examples/README.md) for other workflows, including
+[a meeting-to-vote example](examples/trace_a_local_vote.py).
 
 On Windows, virtual-environment executables live under `.venv\Scripts\`.
 
