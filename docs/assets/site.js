@@ -608,12 +608,15 @@ function renderTools(core){
   const packages = [...new Set(core.tools.map(t=>t.package))].sort();
   const inDefault = new Set(core.profiles.default);
   const profileSelect = document.getElementById("tool-profile");
+  const catalog = el("option", "", "Entire catalog (" + core.tools.length + ")");
+  catalog.value = "";
+  profileSelect.append(catalog);
   for (const [name, tools] of Object.entries(core.profiles)){
     const option = el("option","",name + " (" + tools.length + ")");
     option.value = name;
     profileSelect.append(option);
   }
-  profileSelect.value = "all";
+  profileSelect.value = "";
   profileSelect.addEventListener("change", draw);
   let active = "";
 
@@ -637,7 +640,7 @@ function renderTools(core){
   }
 
   function matches(t, q){
-    if (!core.profiles[profileSelect.value].includes(t.name)) return false;
+    if (profileSelect.value && !core.profiles[profileSelect.value].includes(t.name)) return false;
     if (active && t.package !== active) return false;
     if (!q) return true;
     const hay = [t.name, t.package, t.toolset, t.description,
@@ -666,7 +669,7 @@ function renderTools(core){
     }
     // Expanding for a search or a filter shows everything that matched;
     // the unfiltered list is the one that holds tools back.
-    const initial = (q || active || profileSelect.value !== "all") ? ordered.length
+    const initial = (q || active || profileSelect.value !== "") ? ordered.length
       : ordered.findIndex((n,i)=> ordered.slice(0,i)
           .filter(x=>x.classList.contains("tool-card")).length ===
           inDefault.size);
