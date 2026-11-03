@@ -857,6 +857,25 @@ function renderCall(call, i){
     (a.request_id ? ` · request ${a.request_id.slice(0,8)}` : ""));
   card.append(line);
 
+  if (["geo.find_parcel", "geo.find_zoning"].includes(a.tool) && call.envelope){
+    const sources = new Map(call.envelope.provenance.map(s => [s.id, s]));
+    const seen = new Set();
+    const list = el("ul");
+    for (const evidence of call.envelope.evidence){
+      const href = safeHref(evidence.locator);
+      const source = sources.get(evidence.source_ref);
+      if (!href || !source || seen.has(href)) continue;
+      seen.add(href);
+      const link = el("a", "", source.dataset + " · " + evidence.record_id);
+      link.href = href;
+      const item = el("li");
+      item.append(link);
+      list.append(item);
+    }
+    if (list.childElementCount)
+      card.append(el("p", "srcline", "Current records at the publisher:"), list);
+  }
+
   if (call.http_calls !== undefined){
     if (call.http_calls.length){
       const wrap = el("div","http-calls");

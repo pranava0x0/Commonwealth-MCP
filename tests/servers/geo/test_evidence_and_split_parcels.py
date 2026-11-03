@@ -8,6 +8,7 @@ than from the spec — so the wire stayed wrong while the tests stayed
 green. These are written from the spec.
 """
 import json
+from urllib.parse import parse_qs, urlsplit
 
 import pytest
 
@@ -131,6 +132,14 @@ async def test_publisher_parcel_id_keeps_both_districts_and_their_own_evidence(c
         assert row["pin"] == pin and evidence[ref].record_id == row["record_id"]
         assert evidence[ref].source_ref == block["source_ref"]
         assert "zoning_by_parcel_id" in evidence[ref].transformations
+        link = urlsplit(evidence[ref].locator)
+        assert link.netloc == "services1.arcgis.com"
+        assert link.path.endswith("/Zoning_Hosted/FeatureServer/0/query")
+        assert parse_qs(link.query) == {
+            "objectIds": [{"C2": "78", "ARS": "4333"}[row["district"]]],
+            "outFields": ["OBJECTID,ParcelID,Primary_,Split,Zoning,Zoning_Description"],
+            "returnGeometry": ["false"], "f": ["pjson"],
+        }
 
 
 async def test_missed_county_id_and_unregistered_city_are_distinct(cw_ctx):

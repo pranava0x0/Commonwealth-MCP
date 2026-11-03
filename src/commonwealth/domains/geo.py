@@ -110,7 +110,7 @@ def _records_block(b: EnvelopeBuilder, src_ref: str, q: ArcGISQueryResult,
                + "Narrow the query to see more of them inline.", m.id)
     rows = []
     for r in inline:
-        ev = b.add_evidence(source_ref=src_ref, record_id=r.record_id,
+        ev = b.add_evidence(source_ref=src_ref, record_id=r.record_id, locator=r.locator,
                             retrieved_at=q.retrieved_at,
                             transformations=q.transformations,
                             payload_hash=q.payload_hash())
@@ -144,7 +144,8 @@ def _store_full_records(ctx: RuntimeContext, b: EnvelopeBuilder,
         "record_count": len(q.records),
         "retrieved_at": q.retrieved_at,
         "transformations": q.transformations,
-        "records": [{**r.canonical, "record_id": r.record_id}
+        "records": [{**r.canonical, "record_id": r.record_id,
+                     **({"locator": r.locator} if r.locator else {})}
                     for r in q.records],
     }
     try:
@@ -639,7 +640,7 @@ async def find_zoning(ctx: RuntimeContext, jurisdiction: str,
                 q = None
                 for parcel in used:
                     this_ref = b.add_evidence(
-                        source_ref=parcel_ref, record_id=parcel.record_id,
+                        source_ref=parcel_ref, record_id=parcel.record_id, locator=parcel.locator,
                         retrieved_at=pq.retrieved_at,
                         transformations=pq.transformations,
                         payload_hash=pq.payload_hash())
@@ -1741,7 +1742,7 @@ async def find_buildings(ctx: RuntimeContext, jurisdiction: str,
                 parcel_ref = _source_entry(b, pm, pq)
                 parcel_evidence_ref = b.add_evidence(
                     source_ref=parcel_ref,
-                    record_id=pq.records[0].record_id,
+                    record_id=pq.records[0].record_id, locator=pq.records[0].locator,
                     retrieved_at=pq.retrieved_at,
                     transformations=pq.transformations,
                     payload_hash=pq.payload_hash())

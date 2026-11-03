@@ -13,7 +13,7 @@ import hashlib
 import json
 from dataclasses import dataclass
 from typing import Any
-from urllib.parse import urlparse
+from urllib.parse import urlencode, urlparse
 
 from pydantic import BaseModel, ConfigDict, Field, model_validator
 
@@ -127,6 +127,8 @@ class ArcGISRecord:
     # donut and its centroid lands in the city. Never use it to decide
     # containment (docs/audits/centroid-property-2026-08-28.json).
     centroid: dict | None = None
+    # A live publisher query for this row, not a snapshot of the response.
+    locator: str | None = None
 
 
 @dataclass
@@ -153,6 +155,19 @@ def _params_of(manifest: SourceManifest) -> ArcGISParams:
 
 def _layer_root(p: ArcGISParams, layer: LayerDecl) -> str:
     return layer.service_url or p.service_url
+
+
+def _has_publisher_oid(info: dict, layer: LayerDecl) -> bool:
+    """MapServer layers may identify their OID only through the fields list."""
+    unique = info.get("uniqueIdInfo")
+    if unique is not None and (not isinstance(unique, dict)
+                               or unique.get("OIDFieldContainsHashValue")):
+        return False
+    declared = info.get("objectIdField")
+    if declared:
+        return declared == layer.id_field
+    return any(f.get("name") == layer.id_field and f.get("type") == "esriFieldTypeOID"
+               for f in info.get("fields") or [] if isinstance(f, dict))
 
 
 def _apply_exposure_allowlist(manifest: SourceManifest, payload: dict,
@@ -518,6 +533,13 @@ class ArcGISAdapter:
         if pages_read > 1:
             transformations.append(f"pagination:pages={pages_read}")
 
+        # Use the actual query endpoint (including any per-layer service
+        # override). Link only public parcel/zoning attributes; copying the
+        # original parameters would also disclose the user's PIN or geometry.
+        link_records = (layer_key in {"parcels", "zoning"} and distinct_fields is None
+                        and manifest.access.mode == "anonymous"
+                        and manifest.access.data_classification == DataClassification.open
+                        and _has_publisher_oid(info, layer))
         records = []
         for feat in features:
             attrs = feat.get("attributes", {})
@@ -549,12 +571,17 @@ class ArcGISAdapter:
                 canonical[f"{canon}_label"] = (
                     None if raw_code is None else labels.get(str(raw_code)))
             rid = attrs.get(layer.id_field)
+            locator = None
+            if link_records and type(rid) is int:
+                selector = urlencode({"objectIds": rid, "outFields": params["outFields"],
+                                      "returnGeometry": "false", "f": "pjson"})
+                locator = f"{url}?{selector}"
             records.append(ArcGISRecord(
                 canonical=canonical,
                 record_id=f"{layer.id_field}:{rid}",
                 raw=attrs,
                 geometry=feat.get("geometry"),
-                centroid=feat.get("centroid")))
+                centroid=feat.get("centroid"), locator=locator))
 
         updated = _epoch_ms_to_iso(
             (info.get("editingInfo") or {}).get("lastEditDate"))
