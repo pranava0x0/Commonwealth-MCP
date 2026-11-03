@@ -30,7 +30,8 @@ async def test_every_tool_has_output_schema_and_stable_order(server):
                      "geo.find_environmental_sites",
                      "geo.find_health_facilities",
                      "civic.get_code_section", "civic.browse_code",
-                     "civic.search_meetings"], (
+                     "civic.search_meetings", "civic.get_meeting_agenda",
+                     "civic.get_item_votes"], (
         "registration order changed — that is a contract change, make it "
         "deliberately")
     async with Client(server) as client:

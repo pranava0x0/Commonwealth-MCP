@@ -411,6 +411,15 @@ class SourceRegistry:
         return any(capability in m.capability_ids()
                    for m in self.manifests.values())
 
+    def unavailable_reason(self, m: SourceManifest) -> str | None:
+        """Why an exact source cannot be queried, including its health overlay."""
+        if self.operational(m.id) == OperationalState.unavailable:
+            return "source_unavailable"
+        if (m.lifecycle.declared_state != DeclaredState.active
+                or m.access.automation_status not in ACTIVATABLE):
+            return "source_not_activated"
+        return None
+
     def servable_capabilities(self) -> set[str]:
         """Capabilities at least one selectable source declares, anywhere.
 
@@ -422,9 +431,7 @@ class SourceRegistry:
         """
         return {c
                 for m in self.manifests.values()
-                if m.lifecycle.declared_state == DeclaredState.active
-                and m.access.automation_status in ACTIVATABLE
-                and self.operational(m.id) != OperationalState.unavailable
+                if self.unavailable_reason(m) is None
                 for c in m.capability_ids()}
 
     def select(self, capability: str,
@@ -445,9 +452,7 @@ class SourceRegistry:
             m for m in self.manifests.values()
             if capability in m.capability_ids()
             and m.jurisdiction in jurisdiction_ids
-            and m.lifecycle.declared_state == DeclaredState.active
-            and m.access.automation_status in ACTIVATABLE
-            and self.operational(m.id) != OperationalState.unavailable
+            and self.unavailable_reason(m) is None
         ]
         candidates.sort(key=lambda m: (
             authority_order[m.publisher.authority_level],
@@ -466,9 +471,7 @@ class SourceRegistry:
                 out.append((jid, "no_registered_source"))
                 continue
             selectable = [m for m in js
-                          if m.lifecycle.declared_state == DeclaredState.active
-                          and m.access.automation_status in ACTIVATABLE
-                          and self.operational(m.id) != OperationalState.unavailable]
+                          if self.unavailable_reason(m) is None]
             if not selectable:
                 if any(self.operational(m.id) == OperationalState.unavailable
                        for m in js):

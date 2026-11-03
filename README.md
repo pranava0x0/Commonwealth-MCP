@@ -71,7 +71,7 @@ The examples, the recorded fixtures and the tests are repo-only.
 ### Server and skills in one install
 
 `plugins/commonwealth-mcp/` is a plugin bundle: the server entry and the
-six skills together. In a client that reads a marketplace:
+workflow skills together. In a client that reads a marketplace:
 
 ```
 /plugin marketplace add pranava0x0/Commonwealth-MCP
@@ -80,9 +80,9 @@ six skills together. In a client that reads a marketplace:
 
 Install the package first, so `commonwealth serve` is on the path. For a
 client with no plugin system, `commonwealth configure <client>` writes the
-server entry on its own; skills then travel as files, copied from a
-directory `commonwealth skills list` prints into the client's skills
-folder.
+server entry. Clients with MCP prompt support can list and open each
+workflow directly. For file-based discovery, copy a directory printed by
+`commonwealth skills list` into the client’s skills folder.
 
 ## What works
 
@@ -97,6 +97,7 @@ folder.
 | What does a Code of Virginia section say? | Section lookup by citation |
 | Which part of the Code covers this subject? | The Code's own table of contents: titles, chapters, sections. A walk to a citation, not a full-text search — no public endpoint offers one |
 | When does a local government meet? | Richmond City, Alexandria City, Albemarle County, Hampton City and Petersburg City, from the agenda platform each publishes through. The platform has no cancellation field, so a cancellation is read from the publisher's comment and labelled as a reading |
+| What was on a meeting agenda, and how did members vote? | Richmond City and Alexandria City publish structured agenda items and individual vote records. An empty vote list does not establish how anyone voted |
 | Where are the hospitals and urgent care? | Loudoun County's own map of them — a county's list, not a state licensing register, with no hours or services |
 
 A registered statewide layer does not guarantee complete or current records
@@ -131,6 +132,20 @@ preserved. The server uses local stdio transport:
 ```bash
 .venv/bin/commonwealth serve
 ```
+
+For a client used only for meeting and Code research, configure the civic
+server. The geo server includes parcels, zoning and other spatial tools:
+
+```bash
+commonwealth configure claude-code --profile civic
+commonwealth configure claude-code --profile geo
+```
+
+These write separate entries, `commonwealth-civic` and `commonwealth-geo`.
+Each includes registry discovery. Install either on its own or use the
+`all` profile on the existing server to get both domains in one process.
+The package also installs `commonwealth-civic` and `commonwealth-geo` as
+direct stdio launch commands.
 
 Client configuration support does not imply hosted access. There is no
 public hosted endpoint in this project.

@@ -23,6 +23,8 @@ import sys
 from dataclasses import dataclass
 from pathlib import Path
 
+from ..core.toolreg import server_name
+
 SERVER_KEY = "commonwealth"
 
 
@@ -117,7 +119,7 @@ def merged(existing: dict, client: Client, profile: str) -> dict:
     """
     out = dict(existing)
     servers = dict(out.get(client.key) or {})
-    servers[SERVER_KEY] = server_entry(profile)
+    servers[server_name(profile)] = server_entry(profile)
     out[client.key] = servers
     return out
 
@@ -181,6 +183,6 @@ def render_toml_block(profile: str) -> str:
     """
     entry = server_entry(profile)
     args = ", ".join(json.dumps(a) for a in entry["args"])
-    return (f'[mcp_servers.{SERVER_KEY}]\n'
+    return (f'[mcp_servers.{server_name(profile)}]\n'
             f'command = {json.dumps(entry["command"])}\n'
             f'args = [{args}]\n')

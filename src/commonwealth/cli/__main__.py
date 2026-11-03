@@ -1381,7 +1381,10 @@ def cmd_sources_sample(args: argparse.Namespace) -> int:
 
 
 def service_url_of(m: SourceManifest) -> str | None:
-    url = m.adapter.model_dump().get("service_url")
+    params = m.adapter.model_dump()
+    url = params.get("service_url")
+    if url and m.adapter.type == "agenda_platform":
+        return f"{url.rstrip('/')}/{params['client']}"
     return url.rstrip("/") if url else None
 
 
@@ -1397,7 +1400,7 @@ def owning_source(url: str, ctx: RuntimeContext) -> SourceManifest | None:
     best = None
     for m in ctx.sources.manifests.values():
         base = service_url_of(m)
-        if base and url.startswith(base) and (
+        if base and (url == base or url.startswith(base + "/")) and (
                 best is None or len(base) > len(service_url_of(best))):
             best = m
     return best
@@ -1474,15 +1477,24 @@ def _sample_meetings(m: SourceManifest, ctx: RuntimeContext) -> int:
     async def run() -> dict:
         out: dict[str, Any] = {"client": p.client, "windows": {}}
         for label, start, end in windows:
-            meetings, url = await adapter.search_meetings(m, start, end)
+            meetings, url, at_cap = await adapter.search_meetings(m, start, end)
             out["windows"][label] = {
                 "start_date": start, "end_date": end,
-                "meetings": len(meetings),
+                "meetings": len(meetings), "at_page_cap": at_cap,
                 "bodies": sorted({x.body for x in meetings})[:8],
                 "with_agenda": sum(1 for x in meetings if x.agenda_url),
                 "cancellation_notes": sum(1 for x in meetings
                                           if x.cancellation_note),
                 "url": url}
+        sample_event = m.health.expect.get("sample_event_id")
+        if sample_event:
+            sample_date = m.health.expect["sample_event_date"]
+            await adapter.search_meetings(m, sample_date, sample_date)
+            page = await adapter.agenda_items(m, sample_event)
+            if page.next_offset is not None:
+                await adapter.agenda_items(m, sample_event, page.next_offset)
+            for item in m.health.expect.get("sample_vote_items", []):
+                await adapter.item_votes(m, item)
         return out
 
     try:
@@ -1589,6 +1601,23 @@ def cmd_serve(args: argparse.Namespace) -> int:
     return 0
 
 
+def _domain_server(profile: str) -> int:
+    parser = argparse.ArgumentParser(
+        prog=f"commonwealth-{profile}", description=f"Serve the {profile} MCP tools.")
+    parser.add_argument("--transport", choices=["stdio", "http"], default="stdio")
+    args = parser.parse_args()
+    args.profile = profile
+    return cmd_serve(args)
+
+
+def civic_server() -> int:
+    return _domain_server("civic")
+
+
+def geo_server() -> int:
+    return _domain_server("geo")
+
+
 def cmd_configure(args: argparse.Namespace) -> int:
     from . import configure as cfg
 
@@ -1638,11 +1667,11 @@ def cmd_configure(args: argparse.Namespace) -> int:
     path.write_text(after)
     verb = "updated" if before else "created"
     print(f"{verb} {path}")
-    print(f"  server {cfg.SERVER_KEY!r}, profile {args.profile!r}")
+    print(f"  server {cfg.server_name(args.profile)!r}, profile {args.profile!r}")
     if client.note:
         print(f"  note: {client.note}")
     others = [k for k in (existing.get(client.key) or {})
-              if k != cfg.SERVER_KEY]
+              if k != cfg.server_name(args.profile)]
     if others:
         print(f"  left alone: {', '.join(sorted(others))}")
     return 0
@@ -1884,7 +1913,7 @@ def main() -> int:
     evr.set_defaults(fn=cmd_eval_run)
 
     sv2 = sub.add_parser("serve", help="run the MCP server")
-    sv2.add_argument("--profile", default="default")
+    sv2.add_argument("--profile", choices=sorted(toolreg.PROFILES), default="default")
     sv2.add_argument("--transport", choices=["stdio", "http"],
                      default="stdio")
     sv2.set_defaults(fn=cmd_serve)

@@ -1,0 +1,24 @@
+id: recorded-vote-check-action-only
+tier: 3
+skill: recorded-vote-check
+question: Who voted aye on Richmond City Planning Commission item 268154, ORD. 2026-093?
+toolset: civic
+fixtures:
+- va-richmond-city-meetings
+expected:
+  tool: civic.get_item_votes
+  arguments:
+    source_id: va-richmond-city-meetings
+    item_id: '268154'
+  coverage:
+    registry: covered
+    execution: complete
+    result: empty
+  must_not_say:
+  - Burchell Pinnock
+  - unanimous
+score:
+- kind: coverage_honesty
+- kind: retrieval_correctness
+traps:
+- overreach

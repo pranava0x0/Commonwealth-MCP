@@ -28,6 +28,8 @@ commonwealth = "commonwealth.cli.__main__:main"
 # an executable named after the package. Without this alias that lookup
 # fails and the published listing's install line does not work.
 commonwealth-mcp = "commonwealth.cli.__main__:main"
+commonwealth-civic = "commonwealth.cli.__main__:civic_server"
+commonwealth-geo = "commonwealth.cli.__main__:geo_server"
 
 [build-system]
 requires = ["hatchling"]

@@ -1,0 +1,22 @@
+id: recorded-vote-check-published-votes
+tier: 3
+skill: recorded-vote-check
+question: How did the Richmond City Planning Commissioners vote on item 268162, the minutes?
+toolset: civic
+fixtures:
+- va-richmond-city-meetings
+expected:
+  tool: civic.get_item_votes
+  arguments:
+    source_id: va-richmond-city-meetings
+    item_id: '268162'
+  must_say:
+  - Burchell Pinnock
+  - Aye
+  coverage:
+    result: hit
+score:
+- kind: retrieval_correctness
+- kind: provenance_present
+- kind: coverage_honesty
+traps: []

@@ -189,6 +189,8 @@ CAPABILITY_TOOLS = {
     "geocode.address": "geo.resolve_location",
     "health_facility.lookup": "geo.find_health_facilities",
     "landmark.lookup": "geo.find_landmarks",
+    "meeting_agenda.lookup": "civic.get_meeting_agenda",
+    "meeting_votes.lookup": "civic.get_item_votes",
     "meeting.search": "civic.search_meetings",
     "parcel.lookup": "geo.find_parcel",
     "road.lookup": "geo.find_roads",

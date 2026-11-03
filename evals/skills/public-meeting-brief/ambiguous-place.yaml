@@ -1,0 +1,20 @@
+id: public-meeting-brief-ambiguous-place
+tier: 3
+skill: public-meeting-brief
+question: Brief me on the Fairfax meeting on September 1, 2026.
+toolset: civic
+fixtures:
+- va-richmond-city-meetings
+expected:
+  tool: registry.resolve_jurisdiction
+  arguments:
+    query: Fairfax
+  requires_user_choice: true
+  candidates:
+  - va:fairfax-county
+  - va:fairfax-city
+score:
+- kind: coverage_honesty
+- kind: source_and_jurisdiction
+traps:
+- ambiguity

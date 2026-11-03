@@ -178,7 +178,9 @@ CAPABILITY_COPY = {
                               "care?", "hospitals and urgent care"),
     "landmark.lookup": ("Which schools, libraries, or fire stations are "
                         "nearby?", "public places"),
-    "meeting.search": ("When does this government meet, and about what?",
+    "meeting_agenda.lookup": ("What was on this meeting’s agenda?", "agenda items"),
+    "meeting_votes.lookup": ("How did members vote on this item?", "recorded votes"),
+    "meeting.search": ("When does this government meet?",
                        "public meetings"),
     "parcel.lookup": ("What is this parcel?", "parcels"),
     "road.lookup": ("What roads are here, and what are they called?",
@@ -458,6 +460,22 @@ DEMO_GROUPS = [
          'The same question where no agenda source is registered. Coverage '
          'says none. Fairfax County meets constantly; this project has '
          'nowhere to read it, and the two must never render the same way.'),
+     ]),
+
+    ('From a planning meeting to a recorded vote',
+     'Follow the city’s identifiers from the September 1 Planning Commission '
+     'calendar entry to its agenda and the named votes on the minutes.', [
+        ("civic.get_meeting_agenda", {"source_id": "va-richmond-city-meetings",
+                                     "event_id": "5144"},
+         "The agenda gives each item its own ID. The minutes and a proposed "
+         "ordinance are separate items, even at the same meeting."),
+        ("civic.get_item_votes", {"source_id": "va-richmond-city-meetings",
+                                  "item_id": "268162"},
+         "The individual votes recorded on the minutes."),
+        ("civic.get_item_votes", {"source_id": "va-richmond-city-meetings",
+                                  "item_id": "268154"},
+         "The commission recorded an action on this ordinance, but this "
+         "endpoint returned no individual votes."),
      ]),
 
     ('The ways an answer comes back with no data',

@@ -207,10 +207,10 @@ def test_the_oracle_run_passes_every_committed_tier2_task(ctx):
 
 
 @pytest.mark.parametrize("profile,expected_tools",
-                         [("default", 10), ("discovery", 14), ("all", 17)])
+                         [("default", 10), ("discovery", 14), ("all", 19)])
 def test_the_sweep_runs_at_every_real_toolset_size(ctx, profile,
                                                    expected_tools):
-    """The 10/14/16 arms from bench.md § 5's 2026-09-09 amendment. The
+    """The three general-purpose profiles used in the tool-selection sweep. The
     tool counts are asserted so a profile that grows past its ceiling
     shows up here rather than in a published number."""
     run = asyncio.run(run_suite(EVALS, "tier2", ctx, profile=profile))

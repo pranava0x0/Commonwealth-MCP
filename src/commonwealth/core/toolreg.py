@@ -74,6 +74,8 @@ PROFILES: dict[str, list[tuple[str, str]]] = {
     "discovery": [("registry", "discovery-min"), ("registry", "discovery"),
                   ("geo", "default"), ("civic", "default"),
                   ("civic", "discovery")],
+    "geo": [("registry", "*"), ("geo", "*")],
+    "civic": [("registry", "*"), ("civic", "*")],
     "all": [("registry", "*"), ("geo", "*"), ("civic", "*")],
 }
 
@@ -84,6 +86,13 @@ PROFILES: dict[str, list[tuple[str, str]]] = {
 # and a hard floor would refuse to start the server that exists whenever
 # a domain is still being built. The amendment on 0002 records that
 # split.
+DOMAIN_PROFILES = frozenset({"geo", "civic"})
+
+
+def server_name(profile: str, base: str = "commonwealth") -> str:
+    return f"{base}-{profile}" if profile in DOMAIN_PROFILES else base
+
+
 PROFILE_FLOOR = 8
 PROFILE_DEFAULT_CEILING = 12
 PROFILE_HARD_CEILING = 20
