@@ -15,6 +15,14 @@ next:
 Setup and tests are in the README. The tests replay recorded government
 responses, so `pytest` works with no network.
 
+Run `python tools/check_installed_servers.py` with Python 3.12 or later to
+check the package a user would install. It builds a wheel in a temporary
+directory, installs it into a fresh environment, and starts both named
+servers over stdio. It lists tools, reads a skill prompt, and resolves
+Richmond City from the bundled jurisdiction table on each server. Package
+installation may need a Python package index; the server checks disable
+government network requests. CI runs the same command on pull requests.
+
 ## Adding a government source
 
 The most valuable contribution, and the one this project is shaped around.
