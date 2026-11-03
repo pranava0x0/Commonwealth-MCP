@@ -5,8 +5,8 @@
   "servers": 3,
   "tools": 19,
   "packages": 3,
-  "sources": 29,
-  "sources_active": 22,
+  "sources": 30,
+  "sources_active": 23,
   "sources_proposed": 7,
   "capabilities": 15,
   "jurisdictions": 323,
@@ -808,7 +808,7 @@
    "capabilities": [],
    "data_classification": "open",
    "declared_state": "proposed",
-   "terms_url": "https://data.virginia.gov/pages/terms-of-use",
+   "terms_url": "https://data.virginia.gov/pages/user-guide",
    "known_limitations": [
     "Verified 2026-08-29: CKAN 2.9.11 with the Action API reachable anonymously (`/api/3/action/status_show` returns 200), 64 publishing organizations.\n",
     "This is a catalog, not a data source. Its records describe other agencies' datasets; a query against it answers \"who published something about X\", never \"what is at this address\". The capability it would answer is dataset discovery, which overlaps `registry.search_sources` and needs a design decision before a tool, not just a manifest.\n",
@@ -1139,6 +1139,27 @@
     "Zoning only. The town publishes no parcel layer; a parcel-number query borrows the parcel polygon from Fairfax County's or VGIN's layer and intersects it with this one.",
     "The layer carries the district code and its description and nothing else; proffers, overlays, and dates are not in it.",
     "The service behind this layer is named Proposed_Districts. It is the layer the town's current zoning map displays (checked 2026-09-07); the name is left over from the ordinance rewrite it was drawn for."
+   ]
+  },
+  {
+   "id": "va-winchester-city-zoning",
+   "name": "City of Winchester Zoning",
+   "jurisdiction": "va:winchester-city",
+   "jurisdiction_name": "Winchester City",
+   "answers": [
+    "zoning"
+   ],
+   "publisher": "City of Winchester, Virginia (GIS)",
+   "authority_level": "primary",
+   "capabilities": [
+    "zoning.lookup"
+   ],
+   "data_classification": "open",
+   "declared_state": "active",
+   "terms_url": "https://www.arcgis.com/home/item.html?id=ad0eecdf518d4595bd5aeabb582e8962",
+   "known_limitations": [
+    "Base zoning districts only. Separate overlay layers are not queried.",
+    "The district shown at a point is screening evidence; confirm permitted uses with the city."
    ]
   }
  ],
@@ -1639,7 +1660,7 @@
    "call": 26
   }
  ],
- "doctor_output": "commonwealth 0.1.0.dev0\npython 3.12.15\nmcp sdk 2.1.1\njurisdiction table: 323 rows\nsource manifests: 29 (registry revision 2026-11-03)\nmanifests valid: 29/29\ndefault profile: 10 tools: registry.resolve_jurisdiction, geo.find_parcel, geo.find_zoning, geo.find_boundaries, geo.find_address, geo.resolve_location, geo.find_buildings, geo.find_environmental_sites, civic.get_code_section, civic.search_meetings\n(live source probes skipped; pass --live)\n\u2713 doctor: 0 problem(s)\n\nnext: point a client at it\n  commonwealth configure claude-code\n  commonwealth configure --help    # claude, codex, cursor, vscode",
+ "doctor_output": "commonwealth 0.1.0.dev0\npython 3.12.15\nmcp sdk 2.1.1\njurisdiction table: 323 rows\nsource manifests: 30 (registry revision 2026-11-03)\nmanifests valid: 30/30\ndefault profile: 10 tools: registry.resolve_jurisdiction, geo.find_parcel, geo.find_zoning, geo.find_boundaries, geo.find_address, geo.resolve_location, geo.find_buildings, geo.find_environmental_sites, civic.get_code_section, civic.search_meetings\n(live source probes skipped; pass --live)\n\u2713 doctor: 0 problem(s)\n\nnext: point a client at it\n  commonwealth configure claude-code\n  commonwealth configure --help    # claude, codex, cursor, vscode",
  "plugin": {
   "name": "commonwealth-mcp",
   "marketplace_name": "commonwealth-mcp",
@@ -1809,9 +1830,9 @@
   ]
  },
  "demo_meta": {
-  "generated_at": "2026-11-03T10:13:49Z",
+  "generated_at": "2026-11-03T12:31:15Z",
   "mode": "fixtures",
-  "call_count": 54,
+  "call_count": 55,
   "fixture_recorded_at": "2026-09-02T05:29:35Z"
  }
 }

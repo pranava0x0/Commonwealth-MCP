@@ -1,0 +1,19 @@
+id: skill-pzs-winchester-point
+tier: 3
+skill: parcel-zoning-screen
+question: What base zoning does Winchester City show at longitude -78.164, latitude 39.185?
+toolset: geo
+fixtures: [va-winchester-city-zoning]
+expected:
+  tool: geo.find_zoning
+  arguments: {jurisdiction: Winchester City, lon: -78.164, lat: 39.185}
+  jurisdiction: va:winchester-city
+  sources_returned: [va-winchester-city-zoning]
+  coverage: {registry: covered, result: hit}
+  must_say: [B1, Central Business District]
+score:
+  - kind: source_and_jurisdiction
+  - kind: retrieval_correctness
+  - kind: provenance_present
+  - kind: coverage_honesty
+traps: []

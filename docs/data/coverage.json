@@ -25155,6 +25155,12 @@
       "va-fairfax-parcels-zoning",
       "va-vienna-town-zoning"
      ]
+    },
+    {
+     "jurisdiction": "va:winchester-city",
+     "sources": [
+      "va-winchester-city-zoning"
+     ]
     }
    ],
    "gaps": [
@@ -25460,7 +25466,6 @@
     "va:westmoreland-county",
     "va:white-stone-town",
     "va:williamsburg-city",
-    "va:winchester-city",
     "va:windsor-town",
     "va:wise-county",
     "va:wise-town",

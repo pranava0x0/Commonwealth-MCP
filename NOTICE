@@ -35,6 +35,11 @@ terms travel with them. They are NOT covered by the CC0 grant above.
 THIRD_PARTY_DATA.yml lists each source, its publisher, and where its terms
 are published. Check that file before redistributing any fixture.
 
+Winchester zoning data: City of Winchester, Virginia (GIS), "Zoning",
+https://www.arcgis.com/home/item.html?id=ad0eecdf518d4595bd5aeabb582e8962
+Licensed under CC BY 4.0: https://creativecommons.org/licenses/by/4.0/
+The sample and demo select and map fields from the city's layer.
+
 --------------------------------------------------------------------------
 Incorporated code
 --------------------------------------------------------------------------

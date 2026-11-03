@@ -150,6 +150,16 @@ sources:
   data_classification: open
   recorded_fixtures:
   - tests/fixtures/sources/va-vienna-town-zoning/recorded.json
+- id: va-winchester-city-zoning
+  name: City of Winchester Zoning
+  publisher: City of Winchester, Virginia (GIS)
+  manifest: sources/local/winchester-city/zoning.yaml
+  terms_url: https://www.arcgis.com/home/item.html?id=ad0eecdf518d4595bd5aeabb582e8962
+  terms_reviewed_at: '2026-11-03'
+  automation_status: public_api
+  data_classification: open
+  recorded_fixtures:
+  - tests/fixtures/sources/va-winchester-city-zoning/recorded.json
 - id: va-deq-water-quality-stations
   name: DEQ Water Quality Monitoring Stations
   publisher: Virginia Department of Environmental Quality (DEQ)
@@ -305,8 +315,8 @@ sources:
   name: Virginia Open Data Portal (CKAN)
   publisher: Virginia Office of Data Governance and Analytics
   manifest: sources/state/virginia-open-data.yaml
-  terms_url: https://data.virginia.gov/pages/terms-of-use
-  terms_reviewed_at: null
-  automation_status: unknown
+  terms_url: https://data.virginia.gov/pages/user-guide
+  terms_reviewed_at: '2026-11-03'
+  automation_status: public_api
   data_classification: open
   recorded_fixtures: []

@@ -1,0 +1,1164 @@
+{
+ "source_id": "va-winchester-city-zoning",
+ "recorded_at": "2026-11-03T12:28:14Z",
+ "rights": {
+  "sources": [
+   {
+    "source_id": "va-winchester-city-zoning",
+    "publisher": "City of Winchester, Virginia (GIS)",
+    "terms_url": "https://www.arcgis.com/home/item.html?id=ad0eecdf518d4595bd5aeabb582e8962"
+   }
+  ],
+  "note": "Recorded government-published responses; third-party content excluded from the repo's CC0 grant (../../../design/architecture.md decision 0011). Each publisher's own terms govern its own responses."
+ },
+ "summary": {
+  "health:zoning": {
+   "layer": "zoning",
+   "feature_count": 821,
+   "min_expected": 730,
+   "healthy": true
+  },
+  "sample_point": [
+   -78.164,
+   39.185
+  ],
+  "point_districts": [
+   "B1"
+  ],
+  "sterling_loudoun": {
+   "point": [
+    -77.408014727372,
+    39.025534437083
+   ],
+   "record_count": 0
+  },
+  "alongside": []
+ },
+ "exchanges": [
+  {
+   "url": "https://gis.winchesterva.gov/arcgis/rest/services/Winchester/Zoning/MapServer/0/query",
+   "params": {
+    "f": "json",
+    "where": "1=1",
+    "returnCountOnly": "true"
+   },
+   "response": {
+    "count": 821
+   }
+  },
+  {
+   "url": "https://gis.winchesterva.gov/arcgis/rest/services/Winchester/Zoning/MapServer/0/query",
+   "params": {
+    "f": "json",
+    "outFields": "MZONE,Name,OBJECTID",
+    "resultRecordCount": "50",
+    "returnGeometry": "false",
+    "geometry": "{\"x\": -78.164, \"y\": 39.185, \"spatialReference\": {\"wkid\": 4326}}",
+    "geometryType": "esriGeometryPoint",
+    "inSR": "4326",
+    "spatialRel": "esriSpatialRelIntersects"
+   },
+   "response": {
+    "displayFieldName": "Name",
+    "fieldAliases": {
+     "MZONE": "ZONE",
+     "Name": "NAME",
+     "OBJECTID": "OBJECTID"
+    },
+    "fields": [
+     {
+      "name": "MZONE",
+      "type": "esriFieldTypeString",
+      "alias": "ZONE",
+      "length": 4
+     },
+     {
+      "name": "Name",
+      "type": "esriFieldTypeString",
+      "alias": "NAME",
+      "length": 50
+     },
+     {
+      "name": "OBJECTID",
+      "type": "esriFieldTypeOID",
+      "alias": "OBJECTID"
+     }
+    ],
+    "features": [
+     {
+      "attributes": {
+       "MZONE": "B1",
+       "Name": "Central Business District",
+       "OBJECTID": 702
+      }
+     }
+    ]
+   }
+  },
+  {
+   "url": "https://gis.winchesterva.gov/arcgis/rest/services/Winchester/Zoning/MapServer/0",
+   "params": {
+    "f": "json"
+   },
+   "response": {
+    "currentVersion": 11.5,
+    "cimVersion": "3.5.0",
+    "id": 0,
+    "name": "Zoning",
+    "type": "Feature Layer",
+    "description": "",
+    "geometryType": "esriGeometryPolygon",
+    "sourceSpatialReference": {
+     "wkid": 102746,
+     "latestWkid": 2283,
+     "xyTolerance": 0.0032808333333333335,
+     "zTolerance": 0.001,
+     "mTolerance": 0.001,
+     "falseX": -110512500,
+     "falseY": -88858000,
+     "xyUnits": 3048.0060960121914,
+     "falseZ": 0,
+     "zUnits": 1,
+     "falseM": 0,
+     "mUnits": 1
+    },
+    "spatialReference": {
+     "wkid": 102746,
+     "latestWkid": 2283,
+     "xyTolerance": 0.003280833333333333,
+     "zTolerance": 2,
+     "mTolerance": 0.001,
+     "falseX": -110512500,
+     "falseY": -88858000,
+     "xyUnits": 36916142.964165,
+     "falseZ": 0,
+     "zUnits": 1,
+     "falseM": -100000,
+     "mUnits": 10000
+    },
+    "copyrightText": "",
+    "parentLayer": null,
+    "subLayers": [],
+    "minScale": 0,
+    "maxScale": 0,
+    "referenceScale": 0.0,
+    "drawingInfo": {
+     "renderer": {
+      "type": "uniqueValue",
+      "field1": "MZONE",
+      "field2": "Name",
+      "uniqueValueGroups": [
+       {
+        "heading": "",
+        "classes": [
+         {
+          "label": "B1, Central Business District",
+          "description": "B1, Central Business District",
+          "symbol": {
+           "type": "esriSFS",
+           "style": "esriSFSSolid",
+           "color": [
+            168,
+            0,
+            0,
+            255
+           ],
+           "outline": null
+          },
+          "values": [
+           [
+            "B1",
+            "Central Business District"
+           ]
+          ]
+         },
+         {
+          "label": "B2, Highway Commercial District",
+          "description": "B2, Highway Commercial District",
+          "symbol": {
+           "type": "esriSFS",
+           "style": "esriSFSSolid",
+           "color": [
+            255,
+            0,
+            0,
+            255
+           ],
+           "outline": null
+          },
+          "values": [
+           [
+            "B2",
+            "Highway Commercial District"
+           ]
+          ]
+         },
+         {
+          "label": "CM1, Commercial Industrial District",
+          "description": "CM1, Commercial Industrial District",
+          "symbol": {
+           "type": "esriSFS",
+           "style": "esriSFSSolid",
+           "color": [
+            0,
+            150,
+            255,
+            255
+           ],
+           "outline": null
+          },
+          "values": [
+           [
+            "CM1",
+            "Commercial Industrial District"
+           ]
+          ]
+         },
+         {
+          "label": "EIP, Education/Institution/Public Use District",
+          "description": "EIP, Education/Institution/Public Use District",
+          "symbol": {
+           "type": "esriSFS",
+           "style": "esriSFSSolid",
+           "color": [
+            38,
+            115,
+            0,
+            255
+           ],
+           "outline": null
+          },
+          "values": [
+           [
+            "EIP",
+            "Education/Institution/Public Use District"
+           ]
+          ]
+         },
+         {
+          "label": "HE1, Higher Education District",
+          "description": "HE1, Higher Education District",
+          "symbol": {
+           "type": "esriSFS",
+           "style": "esriSFSSolid",
+           "color": [
+            0,
+            100,
+            168,
+            255
+           ],
+           "outline": null
+          },
+          "values": [
+           [
+            "HE1",
+            "Higher Education District"
+           ]
+          ]
+         },
+         {
+          "label": "HR, High Density Residential District",
+          "description": "HR, High Density Residential District",
+          "symbol": {
+           "type": "esriSFS",
+           "style": "esriSFSSolid",
+           "color": [
+            168,
+            112,
+            0,
+            255
+           ],
+           "outline": null
+          },
+          "values": [
+           [
+            "HR",
+            "High Density Residential District"
+           ]
+          ]
+         },
+         {
+          "label": "HR1, Limited High Density Residential District",
+          "description": "HR1, Limited High Density Residential District",
+          "symbol": {
+           "type": "esriSFS",
+           "style": "esriSFSSolid",
+           "color": [
+            255,
+            123,
+            0,
+            255
+           ],
+           "outline": null
+          },
+          "values": [
+           [
+            "HR1",
+            "Limited High Density Residential District"
+           ]
+          ]
+         },
+         {
+          "label": "HS, Health Services District",
+          "description": "HS, Health Services District",
+          "symbol": {
+           "type": "esriSFS",
+           "style": "esriSFSSolid",
+           "color": [
+            115,
+            223,
+            255,
+            255
+           ],
+           "outline": null
+          },
+          "values": [
+           [
+            "HS",
+            "Health Services District"
+           ]
+          ]
+         },
+         {
+          "label": "LR, Low Density Residential District",
+          "description": "LR, Low Density Residential District",
+          "symbol": {
+           "type": "esriSFS",
+           "style": "esriSFSSolid",
+           "color": [
+            255,
+            250,
+            145,
+            255
+           ],
+           "outline": null
+          },
+          "values": [
+           [
+            "LR",
+            "Low Density Residential District"
+           ]
+          ]
+         },
+         {
+          "label": "M1, Limited Industrial District",
+          "description": "M1, Limited Industrial District",
+          "symbol": {
+           "type": "esriSFS",
+           "style": "esriSFSSolid",
+           "color": [
+            0,
+            38,
+            115,
+            255
+           ],
+           "outline": null
+          },
+          "values": [
+           [
+            "M1",
+            "Limited Industrial District"
+           ]
+          ]
+         },
+         {
+          "label": "M2, Intensive Industrial District",
+          "description": "M2, Intensive Industrial District",
+          "symbol": {
+           "type": "esriSFS",
+           "style": "esriSFSSolid",
+           "color": [
+            76,
+            0,
+            115,
+            255
+           ],
+           "outline": null
+          },
+          "values": [
+           [
+            "M2",
+            "Intensive Industrial District"
+           ]
+          ]
+         },
+         {
+          "label": "MC, Medical Center District",
+          "description": "MC, Medical Center District",
+          "symbol": {
+           "type": "esriSFS",
+           "style": "esriSFSSolid",
+           "color": [
+            190,
+            232,
+            255,
+            255
+           ],
+           "outline": null
+          },
+          "values": [
+           [
+            "MC",
+            "Medical Center District"
+           ]
+          ]
+         },
+         {
+          "label": "MR, Medium Density Residential District",
+          "description": "MR, Medium Density Residential District",
+          "symbol": {
+           "type": "esriSFS",
+           "style": "esriSFSSolid",
+           "color": [
+            255,
+            211,
+            127,
+            255
+           ],
+           "outline": null
+          },
+          "values": [
+           [
+            "MR",
+            "Medium Density Residential District"
+           ]
+          ]
+         },
+         {
+          "label": "RB1, Residential Business District",
+          "description": "RB1, Residential Business District",
+          "symbol": {
+           "type": "esriSFS",
+           "style": "esriSFSSolid",
+           "color": [
+            232,
+            190,
+            255,
+            255
+           ],
+           "outline": null
+          },
+          "values": [
+           [
+            "RB1",
+            "Residential Business District"
+           ]
+          ]
+         },
+         {
+          "label": "RO1, Residential Office District",
+          "description": "RO1, Residential Office District",
+          "symbol": {
+           "type": "esriSFS",
+           "style": "esriSFSSolid",
+           "color": [
+            255,
+            190,
+            190,
+            255
+           ],
+           "outline": null
+          },
+          "values": [
+           [
+            "RO1",
+            "Residential Office District"
+           ]
+          ]
+         }
+        ]
+       }
+      ],
+      "uniqueValueInfos": [
+       {
+        "symbol": {
+         "type": "esriSFS",
+         "style": "esriSFSSolid",
+         "color": [
+          168,
+          0,
+          0,
+          255
+         ],
+         "outline": null
+        },
+        "value": "B1,Central Business District",
+        "label": "B1, Central Business District"
+       },
+       {
+        "symbol": {
+         "type": "esriSFS",
+         "style": "esriSFSSolid",
+         "color": [
+          255,
+          0,
+          0,
+          255
+         ],
+         "outline": null
+        },
+        "value": "B2,Highway Commercial District",
+        "label": "B2, Highway Commercial District"
+       },
+       {
+        "symbol": {
+         "type": "esriSFS",
+         "style": "esriSFSSolid",
+         "color": [
+          0,
+          150,
+          255,
+          255
+         ],
+         "outline": null
+        },
+        "value": "CM1,Commercial Industrial District",
+        "label": "CM1, Commercial Industrial District"
+       },
+       {
+        "symbol": {
+         "type": "esriSFS",
+         "style": "esriSFSSolid",
+         "color": [
+          38,
+          115,
+          0,
+          255
+         ],
+         "outline": null
+        },
+        "value": "EIP,Education/Institution/Public Use District",
+        "label": "EIP, Education/Institution/Public Use District"
+       },
+       {
+        "symbol": {
+         "type": "esriSFS",
+         "style": "esriSFSSolid",
+         "color": [
+          0,
+          100,
+          168,
+          255
+         ],
+         "outline": null
+        },
+        "value": "HE1,Higher Education District",
+        "label": "HE1, Higher Education District"
+       },
+       {
+        "symbol": {
+         "type": "esriSFS",
+         "style": "esriSFSSolid",
+         "color": [
+          168,
+          112,
+          0,
+          255
+         ],
+         "outline": null
+        },
+        "value": "HR,High Density Residential District",
+        "label": "HR, High Density Residential District"
+       },
+       {
+        "symbol": {
+         "type": "esriSFS",
+         "style": "esriSFSSolid",
+         "color": [
+          255,
+          123,
+          0,
+          255
+         ],
+         "outline": null
+        },
+        "value": "HR1,Limited High Density Residential District",
+        "label": "HR1, Limited High Density Residential District"
+       },
+       {
+        "symbol": {
+         "type": "esriSFS",
+         "style": "esriSFSSolid",
+         "color": [
+          115,
+          223,
+          255,
+          255
+         ],
+         "outline": null
+        },
+        "value": "HS,Health Services District",
+        "label": "HS, Health Services District"
+       },
+       {
+        "symbol": {
+         "type": "esriSFS",
+         "style": "esriSFSSolid",
+         "color": [
+          255,
+          250,
+          145,
+          255
+         ],
+         "outline": null
+        },
+        "value": "LR,Low Density Residential District",
+        "label": "LR, Low Density Residential District"
+       },
+       {
+        "symbol": {
+         "type": "esriSFS",
+         "style": "esriSFSSolid",
+         "color": [
+          0,
+          38,
+          115,
+          255
+         ],
+         "outline": null
+        },
+        "value": "M1,Limited Industrial District",
+        "label": "M1, Limited Industrial District"
+       },
+       {
+        "symbol": {
+         "type": "esriSFS",
+         "style": "esriSFSSolid",
+         "color": [
+          76,
+          0,
+          115,
+          255
+         ],
+         "outline": null
+        },
+        "value": "M2,Intensive Industrial District",
+        "label": "M2, Intensive Industrial District"
+       },
+       {
+        "symbol": {
+         "type": "esriSFS",
+         "style": "esriSFSSolid",
+         "color": [
+          190,
+          232,
+          255,
+          255
+         ],
+         "outline": null
+        },
+        "value": "MC,Medical Center District",
+        "label": "MC, Medical Center District"
+       },
+       {
+        "symbol": {
+         "type": "esriSFS",
+         "style": "esriSFSSolid",
+         "color": [
+          255,
+          211,
+          127,
+          255
+         ],
+         "outline": null
+        },
+        "value": "MR,Medium Density Residential District",
+        "label": "MR, Medium Density Residential District"
+       },
+       {
+        "symbol": {
+         "type": "esriSFS",
+         "style": "esriSFSSolid",
+         "color": [
+          232,
+          190,
+          255,
+          255
+         ],
+         "outline": null
+        },
+        "value": "RB1,Residential Business District",
+        "label": "RB1, Residential Business District"
+       },
+       {
+        "symbol": {
+         "type": "esriSFS",
+         "style": "esriSFSSolid",
+         "color": [
+          255,
+          190,
+          190,
+          255
+         ],
+         "outline": null
+        },
+        "value": "RO1,Residential Office District",
+        "label": "RO1, Residential Office District"
+       }
+      ],
+      "fieldDelimiter": ",",
+      "authoringInfo": {
+       "colorRamp": {
+        "type": "multipart",
+        "colorRamps": [
+         {
+          "type": "algorithmic",
+          "algorithm": "esriCIELabAlgorithm",
+          "fromColor": [
+           184,
+           252,
+           192,
+           255
+          ],
+          "toColor": [
+           184,
+           252,
+           192,
+           255
+          ]
+         },
+         {
+          "type": "algorithmic",
+          "algorithm": "esriCIELabAlgorithm",
+          "fromColor": [
+           239,
+           182,
+           252,
+           255
+          ],
+          "toColor": [
+           239,
+           182,
+           252,
+           255
+          ]
+         },
+         {
+          "type": "algorithmic",
+          "algorithm": "esriCIELabAlgorithm",
+          "fromColor": [
+           252,
+           209,
+           189,
+           255
+          ],
+          "toColor": [
+           252,
+           209,
+           189,
+           255
+          ]
+         },
+         {
+          "type": "algorithmic",
+          "algorithm": "esriCIELabAlgorithm",
+          "fromColor": [
+           189,
+           229,
+           252,
+           255
+          ],
+          "toColor": [
+           189,
+           229,
+           252,
+           255
+          ]
+         },
+         {
+          "type": "algorithmic",
+          "algorithm": "esriCIELabAlgorithm",
+          "fromColor": [
+           252,
+           250,
+           179,
+           255
+          ],
+          "toColor": [
+           252,
+           250,
+           179,
+           255
+          ]
+         },
+         {
+          "type": "algorithmic",
+          "algorithm": "esriCIELabAlgorithm",
+          "fromColor": [
+           215,
+           252,
+           234,
+           255
+          ],
+          "toColor": [
+           215,
+           252,
+           234,
+           255
+          ]
+         },
+         {
+          "type": "algorithmic",
+          "algorithm": "esriCIELabAlgorithm",
+          "fromColor": [
+           252,
+           192,
+           218,
+           255
+          ],
+          "toColor": [
+           252,
+           192,
+           218,
+           255
+          ]
+         },
+         {
+          "type": "algorithmic",
+          "algorithm": "esriCIELabAlgorithm",
+          "fromColor": [
+           212,
+           204,
+           252,
+           255
+          ],
+          "toColor": [
+           212,
+           204,
+           252,
+           255
+          ]
+         },
+         {
+          "type": "algorithmic",
+          "algorithm": "esriCIELabAlgorithm",
+          "fromColor": [
+           252,
+           247,
+           212,
+           255
+          ],
+          "toColor": [
+           252,
+           247,
+           212,
+           255
+          ]
+         },
+         {
+          "type": "algorithmic",
+          "algorithm": "esriCIELabAlgorithm",
+          "fromColor": [
+           252,
+           179,
+           179,
+           255
+          ],
+          "toColor": [
+           252,
+           179,
+           179,
+           255
+          ]
+         },
+         {
+          "type": "algorithmic",
+          "algorithm": "esriCIELabAlgorithm",
+          "fromColor": [
+           188,
+           179,
+           252,
+           255
+          ],
+          "toColor": [
+           188,
+           179,
+           252,
+           255
+          ]
+         },
+         {
+          "type": "algorithmic",
+          "algorithm": "esriCIELabAlgorithm",
+          "fromColor": [
+           218,
+           252,
+           179,
+           255
+          ],
+          "toColor": [
+           218,
+           252,
+           179,
+           255
+          ]
+         },
+         {
+          "type": "algorithmic",
+          "algorithm": "esriCIELabAlgorithm",
+          "fromColor": [
+           224,
+           252,
+           212,
+           255
+          ],
+          "toColor": [
+           224,
+           252,
+           212,
+           255
+          ]
+         },
+         {
+          "type": "algorithmic",
+          "algorithm": "esriCIELabAlgorithm",
+          "fromColor": [
+           182,
+           252,
+           217,
+           255
+          ],
+          "toColor": [
+           182,
+           252,
+           217,
+           255
+          ]
+         },
+         {
+          "type": "algorithmic",
+          "algorithm": "esriCIELabAlgorithm",
+          "fromColor": [
+           182,
+           252,
+           251,
+           255
+          ],
+          "toColor": [
+           182,
+           252,
+           251,
+           255
+          ]
+         }
+        ]
+       }
+      }
+     },
+     "scaleSymbols": true,
+     "transparency": 50,
+     "labelingInfo": null
+    },
+    "defaultVisibility": true,
+    "extent": {
+     "xmin": 11567808.110220939,
+     "ymin": 7095339.104092851,
+     "xmax": 11585544.082622945,
+     "ymax": 7121964.2391626835,
+     "spatialReference": {
+      "wkid": 102746,
+      "latestWkid": 2283,
+      "xyTolerance": 0.003280833333333333,
+      "zTolerance": 2,
+      "mTolerance": 0.001,
+      "falseX": -110512500,
+      "falseY": -88858000,
+      "xyUnits": 36916142.964165,
+      "falseZ": 0,
+      "zUnits": 1,
+      "falseM": -100000,
+      "mUnits": 10000
+     }
+    },
+    "hasAttachments": false,
+    "htmlPopupType": "esriServerHTMLPopupTypeAsHTMLText",
+    "displayField": "Name",
+    "typeIdField": null,
+    "subtypeFieldName": null,
+    "subtypeField": null,
+    "defaultSubtypeCode": null,
+    "fields": [
+     {
+      "name": "OBJECTID",
+      "type": "esriFieldTypeOID",
+      "alias": "OBJECTID",
+      "domain": null
+     },
+     {
+      "name": "MZONE",
+      "type": "esriFieldTypeString",
+      "alias": "ZONE",
+      "length": 4,
+      "domain": null
+     },
+     {
+      "name": "Name",
+      "type": "esriFieldTypeString",
+      "alias": "NAME",
+      "length": 50,
+      "domain": null
+     },
+     {
+      "name": "Shape",
+      "type": "esriFieldTypeGeometry",
+      "alias": "SHAPE",
+      "domain": null
+     },
+     {
+      "name": "REZ_NUM",
+      "type": "esriFieldTypeString",
+      "alias": "REZ_NUM",
+      "length": 10,
+      "domain": null
+     },
+     {
+      "name": "DATE_APPROVED",
+      "type": "esriFieldTypeDate",
+      "alias": "DATE_APPROVED",
+      "length": 8,
+      "domain": null
+     }
+    ],
+    "geometryField": {
+     "name": "Shape",
+     "type": "esriFieldTypeGeometry",
+     "alias": "SHAPE"
+    },
+    "indexes": [
+     {
+      "name": "R341_pk",
+      "fields": "OBJECTID",
+      "isAscending": true,
+      "isUnique": true,
+      "description": ""
+     },
+     {
+      "name": "S315_idx",
+      "fields": "Shape",
+      "isAscending": true,
+      "isUnique": true,
+      "description": ""
+     }
+    ],
+    "subtypes": [],
+    "relationships": [],
+    "canModifyLayer": true,
+    "canScaleSymbols": false,
+    "hasLabels": false,
+    "capabilities": "Map,Query,Data",
+    "maxRecordCount": 2000,
+    "maxSelectionCount": 2000,
+    "supportsStatistics": true,
+    "supportsExceedsLimitStatistics": true,
+    "supportsAdvancedQueries": true,
+    "supportedQueryFormats": "JSON, geoJSON, PBF",
+    "isDataVersioned": false,
+    "ownershipBasedAccessControlForFeatures": {
+     "allowOthersToQuery": true
+    },
+    "useStandardizedQueries": true,
+    "supportedSpatialRelationships": [
+     "esriSpatialRelIntersects",
+     "esriSpatialRelContains",
+     "esriSpatialRelCrosses",
+     "esriSpatialRelEnvelopeIntersects",
+     "esriSpatialRelIndexIntersects",
+     "esriSpatialRelOverlaps",
+     "esriSpatialRelTouches",
+     "esriSpatialRelWithin",
+     "esriSpatialRelRelation"
+    ],
+    "advancedQueryCapabilities": {
+     "useStandardizedQueries": true,
+     "supportsStatistics": true,
+     "supportsPercentileStatistics": true,
+     "supportsHavingClause": true,
+     "supportsOrderBy": true,
+     "supportsDistinct": true,
+     "supportsCountDistinct": true,
+     "supportsAdvancedQueryRelated": true,
+     "supportsQueryRelatedPagination": true,
+     "supportsPagination": true,
+     "supportsLod": false,
+     "supportsQueryWithLodSR": false,
+     "supportsTrueCurve": true,
+     "supportsQueryWithDatumTransformation": true,
+     "supportsReturningQueryExtent": true,
+     "supportsQueryWithDistance": true,
+     "supportsSqlExpression": true,
+     "supportsTimeRelation": true,
+     "supportsSqlFormat": false,
+     "supportsQueryAnalytic": true,
+     "supportsCurrentUserQueries": true
+    },
+    "supportsDatumTransformation": true,
+    "advancedQueryAnalyticCapabilities": {
+     "supportsLinearRegression": true,
+     "supportsAsync": false,
+     "supportsPercentileAnalytic": true
+    },
+    "dateFieldsTimeReference": null,
+    "preferredTimeReference": null,
+    "datesInUnknownTimezone": false,
+    "hasGeometryProperties": true,
+    "geometryProperties": {
+     "shapeAreaFieldName": "Shape.STArea()",
+     "shapeLengthFieldName": "Shape.STLength()",
+     "units": "esriFeet",
+     "mapUnits": {
+      "uwkid": 9003
+     }
+    },
+    "hasMetadata": true,
+    "isDataArchived": false,
+    "archivingInfo": {
+     "supportsQueryWithHistoricMoment": false,
+     "startArchivingMoment": -1
+    },
+    "supportsCoordinatesQuantization": true,
+    "supportsDynamicLegends": true
+   }
+  },
+  {
+   "url": "https://gis.winchesterva.gov/arcgis/rest/services/Winchester/Zoning/MapServer/0/query",
+   "params": {
+    "f": "json",
+    "outFields": "MZONE,Name,OBJECTID",
+    "resultRecordCount": "50",
+    "returnGeometry": "false",
+    "geometry": "{\"x\": -77.408014727372, \"y\": 39.025534437083, \"spatialReference\": {\"wkid\": 4326}}",
+    "geometryType": "esriGeometryPoint",
+    "inSR": "4326",
+    "spatialRel": "esriSpatialRelIntersects"
+   },
+   "response": {
+    "displayFieldName": "Name",
+    "fieldAliases": {
+     "MZONE": "ZONE",
+     "Name": "NAME",
+     "OBJECTID": "OBJECTID"
+    },
+    "fields": [
+     {
+      "name": "MZONE",
+      "type": "esriFieldTypeString",
+      "alias": "ZONE",
+      "length": 4
+     },
+     {
+      "name": "Name",
+      "type": "esriFieldTypeString",
+      "alias": "NAME",
+      "length": 50
+     },
+     {
+      "name": "OBJECTID",
+      "type": "esriFieldTypeOID",
+      "alias": "OBJECTID"
+     }
+    ],
+    "features": []
+   }
+  }
+ ]
+}

@@ -8,6 +8,17 @@
 
 ## 1. Manifest schema v1
 
+For contributor discovery, `commonwealth sources discover QUERY` reads one
+page of the Virginia portal's CKAN catalog. Within that page it ranks
+local zoning and parcel gaps first, using a title hint and an unambiguous
+publishing locality. A `local_gap` means no selectable source of that
+kind is registered directly for the locality; statewide coverage is a
+separate question. Unknown publishers, overlays and other uncertain
+capabilities stay unassessed. Use the publisher's layer to verify data
+freshness; the catalog dates its own metadata. The command never follows
+a resource link or writes a manifest.
+Register and cite the publisher's service after checking it directly.
+
 One YAML file per source. Directory layout groups by publisher level: `sources/state/`, `sources/local/<jurisdiction-slug>/`, `sources/regional/`, `sources/federal-federated/`.
 
 ```yaml
