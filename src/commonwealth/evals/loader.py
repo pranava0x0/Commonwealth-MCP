@@ -27,6 +27,21 @@ class TaskLoadError(Exception):
     """A task file that cannot be trusted to score anything."""
 
 
+class _TaskYamlLoader(yaml.SafeLoader):
+    def construct_object(self, node, deep=False):
+        # PyYAML's scalar constructors can raise ordinary Python exceptions,
+        # e.g. datetime.date raises ValueError on an unquoted February 31.
+        # Preserve the token's location before the task schema sees the file.
+        try:
+            return super().construct_object(node, deep=deep)
+        except (ValueError, OverflowError, LookupError, AttributeError) as err:
+            if not isinstance(node, yaml.ScalarNode):
+                raise
+            raise yaml.constructor.ConstructorError(
+                None, None, f"invalid {node.tag.rsplit(':', 1)[-1]} scalar",
+                node.start_mark) from err
+
+
 @dataclass
 class Task:
     id: str
@@ -155,7 +170,7 @@ def _check_inputs(path: Path, kinds: list[str], expected: dict, traps: list[str]
 
 def load_task(path: Path, split: str = "public") -> Task:
     try:
-        raw = yaml.safe_load(path.read_text(encoding="utf-8"))
+        raw = yaml.load(path.read_text(encoding="utf-8"), Loader=_TaskYamlLoader)
     except (yaml.YAMLError, UnicodeError) as err:
         raise TaskLoadError(f"{path}: not valid YAML ({err})") from err
     if not isinstance(raw, dict):

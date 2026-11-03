@@ -111,6 +111,16 @@ def test_invalid_shapes_name_the_task_and_field(tmp_path, bad_fields, field):
     assert str(p) in str(exc.value) and field in str(exc.value)
 
 
+@pytest.mark.parametrize("scalar", ["2030-02-31", "!!timestamp tomorrow", "!!int nope", "!!bool maybe"])
+def test_bad_yaml_scalar_reports_its_file_and_source_line(tmp_path, scalar):
+    p = tmp_path / "bad-scalar.yaml"
+    p.write_text(f"expected:\n  arguments:\n    start_date: {scalar}\n")
+    with pytest.raises(TaskLoadError) as exc:
+        load_task(p)
+    message = str(exc.value)
+    assert str(p) in message and "line 3" in message and "start_date:" in message
+
+
 def test_validate_and_run_reject_the_same_input_before_writing_results(tmp_path, monkeypatch, capsys):
     import sys
     from commonwealth.cli import __main__ as cli
