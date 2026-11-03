@@ -1,6 +1,6 @@
 {
  "source_id": "va-richmond-city-meetings",
- "recorded_at": "2026-11-03T09:58:39Z",
+ "recorded_at": "2026-11-03T10:13:30Z",
  "rights": {
   "sources": [
    {
@@ -62,6 +62,11 @@
     "cancellation_notes": 3,
     "url": "https://webapi.legistar.com/v1/richmondva/events"
    }
+  },
+  "agenda_items": 19,
+  "vote_rows": {
+   "268162": 7,
+   "268154": 0
   }
  },
  "exchanges": [

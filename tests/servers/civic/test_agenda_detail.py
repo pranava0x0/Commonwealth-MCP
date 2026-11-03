@@ -57,6 +57,16 @@ async def test_alexandrias_item_and_source_travel_together(cw_ctx):
     block, = env.data["results"]
     assert env.provenance[0].jurisdiction == "va:alexandria-city"
     assert block["source_url"].endswith("/alexandria/events/2757/eventitems")
+    # A complete brief can follow every continuation, even for this longer agenda.
+    item_ids = [r["item_id"] for r in block["records"]]
+    next_page = block["next"]
+    while next_page:
+        following = await get_meeting_agenda(cw_ctx, **next_page)
+        page = following.data["results"][0]
+        item_ids.extend(r["item_id"] for r in page["records"])
+        next_page = page["next"]
+    fixture = json.loads((FIXTURES_DIR / ALEXANDRIA / "recorded.json").read_text())
+    assert len(set(item_ids)) == len(item_ids) == fixture["summary"]["agenda_items"]
     row = next(r for r in block["records"] if r["matter_file"] == "27-1208")
     votes = await get_item_votes(cw_ctx, block["source_id"], row["item_id"])
     assert votes.coverage.registry.value == "covered"

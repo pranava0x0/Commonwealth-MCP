@@ -4,13 +4,13 @@
  "model": "oracle",
  "toolset": "default",
  "tool_count": 10,
- "started_at": "2026-11-03T10:03:06Z",
+ "started_at": "2026-11-03T10:13:48Z",
  "fixture_recorded_at": "2026-09-02T05:29:35Z",
  "fixture_vintages": {
   "va-code-of-virginia": "2026-09-08T19:01:54Z",
   "va-deq-water-quality-stations": "2026-09-02T05:30:46Z",
   "va-fairfax-parcels-zoning": "2026-09-02T05:29:35Z",
-  "va-richmond-city-meetings": "2026-11-03T09:58:39Z"
+  "va-richmond-city-meetings": "2026-11-03T10:13:30Z"
  },
  "tasks_in_suite": 8,
  "tasks_executed": 8,

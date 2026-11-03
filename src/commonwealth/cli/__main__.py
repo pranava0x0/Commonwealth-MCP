@@ -20,7 +20,7 @@ from ..adapters import arcgis as arcgis_mod
 from ..adapters.base import HttpFetcher, egress_policy_for
 from ..core import toolreg
 from ..core.envelope import utc_now_iso
-from ..core.errors import CommonwealthError
+from ..core.errors import CommonwealthError, InvalidQuery
 from ..adapters.replay import ReplayFetcher
 from ..core.registry import (INVENTORY_ADAPTER, SourceManifest,
                              validate_manifest)
@@ -1461,6 +1461,18 @@ def _sample_meetings(m: SourceManifest, ctx: RuntimeContext) -> int:
     if cancelled:
         windows.append(("cancellation", *cancelled))
 
+    async def record_pages(read, identifier):
+        offset = 0
+        count = 0
+        for _ in range(20):
+            page = await read(m, identifier, offset)
+            count += len(page.records)
+            if page.next_offset is None:
+                return count
+            offset = page.next_offset
+        raise InvalidQuery("The sample exceeded 20 pages. Choose a smaller "
+                           "meeting before replacing its recorded fixture.")
+
     async def run() -> dict:
         out: dict[str, Any] = {"client": p.client, "windows": {}}
         for label, start, end in windows:
@@ -1477,11 +1489,10 @@ def _sample_meetings(m: SourceManifest, ctx: RuntimeContext) -> int:
         if sample_event:
             sample_date = m.health.expect["sample_event_date"]
             await adapter.search_meetings(m, sample_date, sample_date)
-            page = await adapter.agenda_items(m, sample_event)
-            if page.next_offset is not None:
-                await adapter.agenda_items(m, sample_event, page.next_offset)
-            for item in m.health.expect.get("sample_vote_items", []):
-                await adapter.item_votes(m, item)
+            out["agenda_items"] = await record_pages(adapter.agenda_items, sample_event)
+            out["vote_rows"] = {
+                item: await record_pages(adapter.item_votes, item)
+                for item in m.health.expect.get("sample_vote_items", [])}
         return out
 
     try:
